@@ -9,22 +9,22 @@ endif(WIN32)
 
 target_sources(MorpheusCore
     PUBLIC
-	    cpu.hpp
-		platform.hpp
-		game/game.hpp
-		gfx/render_system.hpp
+        cpu.hpp
+        platform.hpp
+        game/game.hpp
+        gfx/render_system.hpp
         gfx/render_target.hpp
         gfx/render_window.hpp
-		world/world_model.hpp
-		visualisation/visualisation.hpp
+        world/world_model.hpp
+        visualisation/visualisation.hpp
     PRIVATE
-	    cpu.cpp
-		game/game.cpp
-		gfx/render_system.cpp
+        cpu.cpp
+        game/game.cpp
+        gfx/render_system.cpp
         gfx/render_target.cpp
         gfx/render_window.cpp
-		world/world_model.cpp
-		visualisation/visualisation.cpp
+        world/world_model.cpp
+        visualisation/visualisation.cpp
 )
 
 if(WIN32)
@@ -41,8 +41,8 @@ target_include_directories(MorpheusCore
 
 target_compile_definitions(MorpheusCore 
     PUBLIC 
-	     MORPHEUS_SHARED_BUILD=1
-		 MORPHEUS_DLL_EXPORTS=1
+         MORPHEUS_SHARED_BUILD=1
+         MORPHEUS_DLL_EXPORTS=1
 )
 
 set_target_properties(MorpheusCore PROPERTIES FOLDER "Libraries")

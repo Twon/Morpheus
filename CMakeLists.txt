@@ -4,7 +4,7 @@ project(morpheus)
 
 # Include necessary submodules
 set(CMAKE_MODULE_PATH
-  "${PROJECT_SOURCE_DIR}/cmake"
+    "${PROJECT_SOURCE_DIR}/cmake"
 )
 
 include(Compiler)

@@ -1,7 +1,7 @@
 target_sources(MorpheusCore
     PRIVATE
-		"${CMAKE_CURRENT_LIST_DIR}/win32_render_window.hpp"
-		"${CMAKE_CURRENT_LIST_DIR}/win32_render_window.cpp"
+        "${CMAKE_CURRENT_LIST_DIR}/win32_render_window.hpp"
+        "${CMAKE_CURRENT_LIST_DIR}/win32_render_window.cpp"
         "${CMAKE_CURRENT_LIST_DIR}/CMakeLists.txt"
 )
 
