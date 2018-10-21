@@ -5,7 +5,7 @@ namespace morpheus::gfx::win32
 
 //---------------------------------------------------------------------------------------------------------------------
 
-render_window::~render_window() noexcept
+render_window::~render_window()
 {
 }
 

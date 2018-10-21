@@ -9,7 +9,7 @@ namespace morpheus::game
  */
 class MORPHEUS_API_EXPORT game {
 public:
-    virtual ~game() noexcept;
+    virtual ~game();
 
 private:
 };
