@@ -9,7 +9,7 @@ namespace morpheus::gfx::win32
  */
 class MORPHEUS_API_EXPORT render_window : public gfx::render_window {
 public:
-    virtual ~render_window() noexcept;
+    virtual ~render_window() override;
 
 private:
 };
