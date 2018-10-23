@@ -1,7 +1,7 @@
 add_library(MorpheusCore "")
 
 target_sources(MorpheusCore
-    PUBLIC
+    PRIVATE
         "${CMAKE_CURRENT_LIST_DIR}/cpu.hpp"
         "${CMAKE_CURRENT_LIST_DIR}/platform.hpp"
         "${CMAKE_CURRENT_LIST_DIR}/game/game.hpp"
