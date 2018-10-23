@@ -18,4 +18,4 @@ enable_testing()
 add_subdirectory(libraries)
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
-set_property(GLOBAL PROPERTY PREDEFINED_TARGETS_FOLDER "Targets")
+set_property(GLOBAL PROPERTY PREDEFINED_TARGETS_FOLDER "_BuildTargets")
