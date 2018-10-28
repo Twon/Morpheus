@@ -7,7 +7,7 @@ namespace morpheus::vis
 
 /*! \class visualisation
  */
-class MORPHEUS_API_EXPORT visualisation {
+class MORPHEUSCORE_EXPORT visualisation {
 public:
     virtual ~visualisation();
 

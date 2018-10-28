@@ -7,7 +7,7 @@ namespace morpheus::gfx
 
 /*! \class render_target
  */
-class MORPHEUS_API_EXPORT render_target {
+class MORPHEUSCORE_EXPORT render_target {
 public:
     virtual ~render_target();
 

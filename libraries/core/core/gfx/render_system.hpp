@@ -7,7 +7,7 @@ namespace morpheus::gfx
 
 /*! \class render_system
  */
-class MORPHEUS_API_EXPORT render_system {
+class MORPHEUSCORE_EXPORT render_system {
 public:
     virtual ~render_system();
 
