@@ -7,7 +7,7 @@ namespace morpheus::world
 
 /*! @class world
  */
-class MORPHEUS_API_EXPORT world_model {
+class MORPHEUSCORE_EXPORT world_model {
 public:
     virtual ~world_model() noexcept;
 

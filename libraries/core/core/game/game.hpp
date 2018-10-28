@@ -7,7 +7,7 @@ namespace morpheus::game
 
 /*! class render_system
  */
-class MORPHEUS_API_EXPORT game {
+class MORPHEUSCORE_EXPORT game {
 public:
     virtual ~game();
 

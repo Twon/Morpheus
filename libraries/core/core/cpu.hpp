@@ -29,7 +29,7 @@ using cpuid_leafs = std::vector<cpuid_results>;
         This type stores information about the capabilities of the central processing unit of the current target
         system.
  */
-class MORPHEUS_API_EXPORT cpu {
+class MORPHEUSCORE_EXPORT cpu {
 public:
     //! Default constructor.
     cpu();

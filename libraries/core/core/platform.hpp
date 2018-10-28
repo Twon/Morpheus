@@ -3,6 +3,8 @@
 
 // clang-format off
 //---------------------------------------------------------------------------------------------------------------------
+#include <cstdint>
+#include <core/morpheuscore_export.h>
 
     /*! @defgroup Compiler
             The compiler group of macros allow for compile time detection of the current compiler
@@ -160,24 +162,6 @@
         #endif
     #endif
     /*! @} */
-
-
-
-	#if !defined ( MORPHEUS_API_EXPORT )
-		#if ( MORPHEUS_BUILD_PLATFORM == MORPHEUS_TARGET_PLATFORM_PC_WINDOWS )
-			#if defined( MORPHEUS_SHARED_BUILD )
-				#if defined ( MORPHEUS_DLL_EXPORTS )
-					#define MORPHEUS_API_EXPORT		__declspec(dllexport)
-				#else
-					#define MORPHEUS_API_EXPORT		__declspec(dllimport)
-				#endif
-			#else
-				#define MORPHEUS_API_EXPORT
-			#endif
-		#else
-			#define	MORPHEUS_API_EXPORT
-		#endif
-	#endif // !defined ( MORPHEUS_API_EXPORT )
 
 //---------------------------------------------------------------------------------------------------------------------
 // clang-format on
