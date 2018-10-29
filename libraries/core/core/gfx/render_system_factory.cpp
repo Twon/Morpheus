@@ -1,13 +1,14 @@
-#include <metal/metal_render_system.hpp>
-#import <Metal/MTLDevice.h>
+#include <core/gfx/render_system_factory.hpp>
 
-namespace morpheus::gfx::metal
+namespace morpheus::gfx
 {
 
 //---------------------------------------------------------------------------------------------------------------------
 
-render_system::~render_system() noexcept {}
+render_system_factory::~render_system_factory()
+{
+}
 
 //---------------------------------------------------------------------------------------------------------------------
 
-} // namespace morpheus::gfx::metal
+} // namespace morpheus::gfx
