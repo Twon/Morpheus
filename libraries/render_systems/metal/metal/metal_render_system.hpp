@@ -7,7 +7,7 @@ namespace morpheus::gfx::metal
  */
 class render_system {
 public:
-    virtual ~render_system() noexcept;
+    virtual ~render_system();
 
 private:
 };
