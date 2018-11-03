@@ -1,6 +1,12 @@
 cmake_minimum_required(VERSION 3.12)
 
-project(morpheus)
+file(STRINGS "version.txt" MORPHEUS_VERSION)
+
+project(Morpheus
+    VERSION ${MORPHEUS_VERSION}
+    DESCRIPTION "A high performance focused game engine using object oriented techniques based in the latest C++"
+	LANGUAGES CXX
+)
 
 set(BUILD_SHARED_LIBS YES)
 
@@ -11,11 +17,11 @@ set(CMAKE_MODULE_PATH
 )
 
 include(Compiler)
+include(Documentation)
+include(IDESettings)
 include(ThirdParty)
 
 enable_testing()
 
 add_subdirectory(libraries)
 
-set_property(GLOBAL PROPERTY USE_FOLDERS ON)
-set_property(GLOBAL PROPERTY PREDEFINED_TARGETS_FOLDER "_BuildTargets")
