@@ -25,6 +25,11 @@ install:
   - cmd: conan --version
 
 build_script:
+  # Switch into the working directory build folder
+  - cmd: cd c:\projects\Morpheus
+  - cmd: mkdir build
+  - cmd: cd build
+
   # show settings
   - cmd: conan install ..  
   - cmd: cmake -version
@@ -32,9 +37,6 @@ build_script:
   - cmd: echo %configuration%
 
   # generate a solution file
-  - cmd: cd c:\projects\Morpheus
-  - cmd: mkdir build
-  - cmd: cd build
   - cmd: if "%platform%" == "x64" set cmake_platform=%platform%
   - cmd: cmake -g "Visual Studio 15 2017" .. -DCMAKE_GENERATOR_PLATFORM=%cmake_platform%
 
