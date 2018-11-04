@@ -26,7 +26,7 @@ install:
 
 build_script:
   # show settings
-  - cmd: conan install . -o gtest:shared=True  
+  - cmd: conan install ..  
   - cmd: cmake -version
   - cmd: echo %platform%
   - cmd: echo %configuration%
