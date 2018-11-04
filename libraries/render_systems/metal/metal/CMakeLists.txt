@@ -34,4 +34,9 @@ if (APPLE)
 			RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
 	)
 
+	install (TARGETS MorpheusRenderSystemMetal
+			 RUNTIME DESTINATION bin
+			 ARCHIVE DESTINATION lib
+			 LIBRARY DESTINATION lib
+	)	
 endif()

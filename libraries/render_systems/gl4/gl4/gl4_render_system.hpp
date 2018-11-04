@@ -6,6 +6,7 @@ namespace morpheus::gfx::gl4
 {
 
 /*! \class render_system
+        Rendering system abstraction based upon the OpenGL 4 graphics API.
  */
 class render_system {
 public:

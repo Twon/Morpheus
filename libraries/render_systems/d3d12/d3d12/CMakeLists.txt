@@ -34,7 +34,13 @@ set_target_properties(MorpheusRenderSystemD3D12
         RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
 )
 
-get_target_property(SOURCES_FILES MorpheusRenderSystemD3D12 SOURCES)
-source_group(TREE ${CMAKE_CURRENT_LIST_DIR} FILES ${SOURCES_FILES})
+#get_target_property(SOURCES_FILES MorpheusRenderSystemD3D12 SOURCES)
+#source_group(TREE ${CMAKE_CURRENT_LIST_DIR} FILES ${SOURCES_FILES})
+
+install (TARGETS MorpheusRenderSystemD3D12
+		 RUNTIME DESTINATION bin
+		 ARCHIVE DESTINATION lib
+		 LIBRARY DESTINATION lib
+)
 
 endif()

@@ -5,7 +5,9 @@
 namespace morpheus::world
 {
 
-/*! @class world
+/*! \class world_model
+        The world model is the component of the game abstracting the representation of the game
+        world.
  */
 class MORPHEUSCORE_EXPORT world_model {
 public:
