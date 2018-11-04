@@ -6,6 +6,7 @@ namespace morpheus::gfx::vulkan
 {
 
 /*! \class render_system
+        Rendering system abstraction based upon the Vulkan graphics API.
  */
 class render_system {
 public:

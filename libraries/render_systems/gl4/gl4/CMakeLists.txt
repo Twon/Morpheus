@@ -32,5 +32,10 @@ set_target_properties(MorpheusRenderSystemGL4
 		RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
 )
 
+install (TARGETS MorpheusRenderSystemGL4
+		 RUNTIME DESTINATION bin
+		 ARCHIVE DESTINATION lib
+		 LIBRARY DESTINATION lib
+)
 
 

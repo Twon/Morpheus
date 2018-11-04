@@ -24,4 +24,4 @@ include(ThirdParty)
 enable_testing()
 
 add_subdirectory(libraries)
-
+add_subdirectory(examples)

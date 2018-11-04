@@ -34,4 +34,10 @@ if (WIN32)
 			RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
 	)
 
+	install (TARGETS MorpheusRenderSystemVulkan
+			 RUNTIME DESTINATION bin
+			 ARCHIVE DESTINATION lib
+			 LIBRARY DESTINATION lib
+	)
+
 endif()
