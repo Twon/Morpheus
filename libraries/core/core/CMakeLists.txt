@@ -26,6 +26,8 @@ if(WIN32)
     add_subdirectory(gfx/win32)
 endif(WIN32)
 
+add_subdirectory(gfx/textures)
+
 get_target_property(SOURCES_FILES MorpheusCore SOURCES)
 source_group(TREE ${CMAKE_CURRENT_LIST_DIR} FILES ${SOURCES_FILES})
 
@@ -79,7 +81,7 @@ target_sources(TestMorpheusCore
 target_link_libraries(TestMorpheusCore
     PRIVATE
          catch2::catch2
-		 MorpheusCore
+         MorpheusCore
 )
 
 set_target_properties(TestMorpheusCore PROPERTIES FOLDER "Tests")

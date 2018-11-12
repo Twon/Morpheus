@@ -14,29 +14,29 @@ namespace morpheus::gfx
 class MORPHEUSCORE_EXPORT render_window : public render_target  {
 public:
    /// \name Life cycle
-	///@{
-	/*! Constructs a render target with the specified parameters.
-	    \param[in] width
+    ///@{
+    /*! Constructs a render target with the specified parameters.
+        \param[in] width
              The width in pixels of the render target.
-	    \param[in] height
+        \param[in] height
              The height in pixels of the render target.
-	    \param[in] colourDepth
+        \param[in] colourDepth
              The colour depth of the pixels of the render target.
-	    \param[in] startX
+        \param[in] startX
              The starting X position in pixels of the render window.
-	    \param[in] startY
+        \param[in] startY
              The starting Y position in pixels of the render window.
-	    \param[in] windowName
+        \param[in] windowName
              The name of the window.
-	 */
-	render_window(
-		const std::uint32_t width,
-		const std::uint32_t height,
-		const std::uint32_t colourDepth,
-		const std::uint32_t startX,
-		const std::uint32_t startY,
-		const std::string windowName
-	);
+     */
+    render_window(
+        const std::uint32_t width,
+        const std::uint32_t height,
+        const std::uint32_t colourDepth,
+        const std::uint32_t startX,
+        const std::uint32_t startY,
+        const std::string windowName
+    );
 
     //! Destructor
     virtual ~render_window() override;

@@ -8,7 +8,7 @@ namespace morpheus::gfx
 /*! \class render_target
         A render target defined a canvas onto which a render system can draw to.
  */
-class MORPHEUSCORE_EXPORT render_target {
+class MORPHEUSCORE_EXPORT image {
 public:
     /// \name Life cycle
     ///@{
@@ -20,14 +20,11 @@ public:
         \param[in] colourDepth
              The colour depth of the pixels of the render target.
      */
-    render_target(
+    image(
         const std::uint32_t width,
         const std::uint32_t height,
         const std::uint32_t colourDepth
     );
-
-    //! Destructor
-    virtual ~render_target();
     ///@}
 
 
