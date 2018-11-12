@@ -139,22 +139,22 @@
          */
         #define MORPHEUS_TARGET_PLATFORM_APPLE               1002
 
-        /*!	\def MORPHEUS_TARGET_PLATFORM_LINUX
+        /*!    \def MORPHEUS_TARGET_PLATFORM_LINUX
                 This token is used to signify the Linux PC platform.
          */
         #define MORPHEUS_TARGET_PLATFORM_LINUX               1003
 
         #if ( defined ( __WIN32__ ) || defined ( _WIN32 ) || defined ( WIN32 ) || defined ( _WIN64 ) )
 
-            #define MORPHEUS_BUILD_PLATFORM	MORPHEUS_TARGET_PLATFORM_PC_WINDOWS
+            #define MORPHEUS_BUILD_PLATFORM    MORPHEUS_TARGET_PLATFORM_PC_WINDOWS
 
         #elif defined ( __APPLE_CC__)
 
-            #define MORPHEUS_BUILD_PLATFORM	MORPHEUS_TARGET_PLATFORM_APPLE
+            #define MORPHEUS_BUILD_PLATFORM    MORPHEUS_TARGET_PLATFORM_APPLE
 
         #elif defined ( __linux )
 
-            #define MORPHEUS_BUILD_PLATFORM	MORPHEUS_TARGET_PLATFORM_LINUX
+            #define MORPHEUS_BUILD_PLATFORM    MORPHEUS_TARGET_PLATFORM_LINUX
 
         #else
 

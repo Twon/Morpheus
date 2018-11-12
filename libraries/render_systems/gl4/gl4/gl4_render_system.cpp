@@ -1,6 +1,12 @@
 #include <gl4/gl4_render_system.hpp>
 
-//#include <gl/GL.h>
+#if (MORPHEUS_BUILD_PLATFORM == MORPHEUS_TARGET_PLATFORM_PC_WINDOWS)
+#define NOMINMAX
+#define WIN32_LEAN_AND_MEAN
+#include <Windows.h>
+#endif // (MORPHEUS_BUILD_PLATFORM == MORPHEUS_TARGET_PLATFORM_PC_WINDOWS)
+
+#include <gl/GL.h>
 
 namespace morpheus::gfx::gl4
 {

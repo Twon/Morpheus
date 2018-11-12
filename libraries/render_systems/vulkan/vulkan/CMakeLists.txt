@@ -1,43 +1,48 @@
-if (WIN32)
+find_package(Vulkan)
 
-	add_library(MorpheusRenderSystemVulkan "")
-	target_sources(MorpheusRenderSystemVulkan
-		PRIVATE
-			"${CMAKE_CURRENT_LIST_DIR}/vulkan_render_system.hpp"
-			"${CMAKE_CURRENT_LIST_DIR}/vulkan_render_system.cpp"
-	)
+if (NOT ${Vulkan_FOUND})
 
-	target_compile_definitions(MorpheusRenderSystemVulkan
-		PUBLIC
-			MORPHEUS_SHARED_BUILD=1
-	)
+    message("Vulkan not found on the system.  Unable to support Vulkan based render system.")
 
-	target_include_directories(MorpheusRenderSystemVulkan
-		PUBLIC
-			"${CMAKE_CURRENT_LIST_DIR}/.."
-	)
+else()
+    add_library(MorpheusRenderSystemVulkan "")
+    target_sources(MorpheusRenderSystemVulkan
+        PRIVATE
+            "${CMAKE_CURRENT_LIST_DIR}/vulkan_render_system.hpp"
+            "${CMAKE_CURRENT_LIST_DIR}/vulkan_render_system.cpp"
+    )
 
-	target_link_libraries(MorpheusRenderSystemVulkan
-		PRIVATE
-			MorpheusCore
-	)
+    target_compile_definitions(MorpheusRenderSystemVulkan
+        PUBLIC
+            MORPHEUS_SHARED_BUILD=1
+    )
 
-	set_target_properties(MorpheusRenderSystemVulkan
-		PROPERTIES
-			 FOLDER "Libraries/RenderSystems"
-	)
+    target_include_directories(MorpheusRenderSystemVulkan
+        PUBLIC
+            "${CMAKE_CURRENT_LIST_DIR}/.."
+    )
 
-	set_target_properties(MorpheusRenderSystemVulkan
-		PROPERTIES
-			ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
-			LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
-			RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
-	)
+    target_link_libraries(MorpheusRenderSystemVulkan
+        PRIVATE
+            MorpheusCore
+    )
 
-	install (TARGETS MorpheusRenderSystemVulkan
-			 RUNTIME DESTINATION bin
-			 ARCHIVE DESTINATION lib
-			 LIBRARY DESTINATION lib
-	)
+    set_target_properties(MorpheusRenderSystemVulkan
+        PROPERTIES
+             FOLDER "Libraries/RenderSystems"
+    )
+
+    set_target_properties(MorpheusRenderSystemVulkan
+        PROPERTIES
+            ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
+            LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
+            RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
+    )
+
+    install (TARGETS MorpheusRenderSystemVulkan
+             RUNTIME DESTINATION bin
+             ARCHIVE DESTINATION lib
+             LIBRARY DESTINATION lib
+    )
 
 endif()

@@ -1,46 +1,56 @@
 if (WIN32)
 
-add_library(MorpheusRenderSystemD3D12 "")
-target_sources(MorpheusRenderSystemD3D12
-    PRIVATE
-	    "${CMAKE_CURRENT_LIST_DIR}/d3d12_render_system.hpp"
-	    "${CMAKE_CURRENT_LIST_DIR}/d3d12_render_system.cpp"
-)
+    find_package(D3D12)
 
-target_compile_definitions(MorpheusRenderSystemD3D12
-    PUBLIC
-	    MORPHEUS_SHARED_BUILD=1
-)
+    if (NOT ${OD3D12_FOUND})
 
-target_include_directories(MorpheusCore
-    PUBLIC
-        "${CMAKE_CURRENT_LIST_DIR}/.."
-)
+        message("D3D12 not found on the system.  Unable to support D3D12 based render system.")
 
-target_link_libraries(MorpheusRenderSystemD3D12
-    PRIVATE
-	    MorpheusCore
-)
+    else()
 
-set_target_properties(MorpheusRenderSystemD3D12
-    PROPERTIES
-	     FOLDER "Libraries/RenderSystems"
-)
+        add_library(MorpheusRenderSystemD3D12 "")
+        target_sources(MorpheusRenderSystemD3D12
+            PRIVATE
+                "${CMAKE_CURRENT_LIST_DIR}/d3d12_render_system.hpp"
+                "${CMAKE_CURRENT_LIST_DIR}/d3d12_render_system.cpp"
+        )
 
-set_target_properties(MorpheusRenderSystemD3D12
-    PROPERTIES
-        ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
-        LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
-        RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
-)
+        target_compile_definitions(MorpheusRenderSystemD3D12
+            PUBLIC
+                MORPHEUS_SHARED_BUILD=1
+        )
 
-#get_target_property(SOURCES_FILES MorpheusRenderSystemD3D12 SOURCES)
-#source_group(TREE ${CMAKE_CURRENT_LIST_DIR} FILES ${SOURCES_FILES})
+        target_include_directories(MorpheusCore
+            PUBLIC
+                "${CMAKE_CURRENT_LIST_DIR}/.."
+        )
 
-install (TARGETS MorpheusRenderSystemD3D12
-		 RUNTIME DESTINATION bin
-		 ARCHIVE DESTINATION lib
-		 LIBRARY DESTINATION lib
-)
+        target_link_libraries(MorpheusRenderSystemD3D12
+            PRIVATE
+                MorpheusCore
+                D3D12::D3D12
+        )
+
+        set_target_properties(MorpheusRenderSystemD3D12
+            PROPERTIES
+                 FOLDER "Libraries/RenderSystems"
+        )
+
+        set_target_properties(MorpheusRenderSystemD3D12
+            PROPERTIES
+                ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
+                LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
+                RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
+        )
+
+        #get_target_property(SOURCES_FILES MorpheusRenderSystemD3D12 SOURCES)
+        #source_group(TREE ${CMAKE_CURRENT_LIST_DIR} FILES ${SOURCES_FILES})
+
+        install (TARGETS MorpheusRenderSystemD3D12
+                 RUNTIME DESTINATION bin
+                 ARCHIVE DESTINATION lib
+                 LIBRARY DESTINATION lib
+        )
+    endif()
 
 endif()
