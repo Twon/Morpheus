@@ -18,11 +18,15 @@
 #   D3D12_FOUND          - True if D3D12 was found
 #   D3D12_INCLUDE_DIRS   - include directories for D3D12
 #   D3D12_LIBRARIES      - link against this library to use D3D12
+#   DXGI_INCLUDE_DIRS    - include directories for DXGI
+#   DXGI_LIBRARIES       - link against this library to use DXGI
 #
 # The module will also define two cache variables::
 #
 #   D3D12_INCLUDE_DIR    - the D3D12 include directory
 #   D3D12_LIBRARY        - the path to the D3D12 library
+#   DXGI_INCLUDE_DIR     - the DXGI include directory
+#   DXGI_LIBRARY         - the path to the DXGI library
 #
 
 # Find the Windows 10 SDK path.
@@ -57,7 +61,7 @@ set(D3D12_LIBRARIES ${D3D12_LIBRARY})
 set(D3D12_INCLUDE_DIRS ${D3D12_INCLUDE_DIR})
 
 
-# Find the d3d12 and dxgi include path, it will typically look something like this.
+# Find the dxgi include path, it will typically look something like this.
 # C:\Program Files (x86)\Windows Kits\10\Include\10.0.10586.0\shared\dxgi1_4.h
 find_path(DXGI_INCLUDE_DIR    # Set variable DXGI_INCLUDE_DIR
           dxgi1_6.h           # Find a path with dxgi1_6.h
