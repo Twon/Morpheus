@@ -5,7 +5,7 @@ file(STRINGS "version.txt" MORPHEUS_VERSION)
 project(Morpheus
     VERSION ${MORPHEUS_VERSION}
     DESCRIPTION "A high performance focused game engine using object oriented techniques based in the latest C++"
-	LANGUAGES CXX
+    LANGUAGES CXX
 )
 
 set(BUILD_SHARED_LIBS YES)
@@ -14,6 +14,7 @@ set(BUILD_SHARED_LIBS YES)
 set(CMAKE_MODULE_PATH
     "${CMAKE_BINARY_DIR}"
     "${PROJECT_SOURCE_DIR}/cmake"
+    "${PROJECT_SOURCE_DIR}/cmake/Modules"
 )
 
 include(Compiler)

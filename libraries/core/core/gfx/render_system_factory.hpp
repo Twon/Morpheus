@@ -12,7 +12,16 @@ namespace morpheus::gfx
  */
 class MORPHEUSCORE_EXPORT render_system_factory {
 public:
+    /// \name Life cycle
+    ///@{
+    /*! 
+        
+     */
+    render_system_factory();
+
+    //! Destructor
     virtual ~render_system_factory();
+    ///@}
 
 private:
 };

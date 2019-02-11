@@ -15,8 +15,18 @@ namespace morpheus::gfx
  */
 class MORPHEUSCORE_EXPORT render_system {
 public:
-    virtual ~render_system() = 0;
 
+
+    /// \name Life cycle
+    ///@{
+    /*! 
+
+     */
+    render_system();
+
+    //! Destructor
+    virtual ~render_system() = 0;
+    ///@}
 private:
 };
 
