@@ -1,8 +1,8 @@
 add_library(MorpheusRenderSystemGL4 "")
 target_sources(MorpheusRenderSystemGL4
 	PRIVATE
-		"${CMAKE_CURRENT_LIST_DIR}/gl4_render_system.hpp"
-		"${CMAKE_CURRENT_LIST_DIR}/gl4_render_system.cpp"
+		gl4_render_system.hpp
+		gl4_render_system.cpp
 )
 
 target_compile_definitions(MorpheusRenderSystemGL4
