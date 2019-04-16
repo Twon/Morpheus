@@ -6,7 +6,7 @@
 #include <Windows.h>
 #endif // (MORPHEUS_BUILD_PLATFORM == MORPHEUS_TARGET_PLATFORM_PC_WINDOWS)
 
-#include <gl/GL.h>
+#include <OpenGL/gl.h>
 
 namespace morpheus::gfx::gl4
 {

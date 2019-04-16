@@ -1,4 +1,4 @@
-find_package(OpenGL)
+find_package(OpenGL REQUIRED COMPONENTS OpenGL)
 
 if (NOT ${OPENGL_FOUND})
 
@@ -26,6 +26,7 @@ else()
     target_link_libraries(MorpheusRenderSystemGL4
         PRIVATE
             MorpheusCore
+            OpenGL::GL
     )
 
     set_target_properties(MorpheusRenderSystemGL4
@@ -46,5 +47,3 @@ else()
              LIBRARY DESTINATION lib
     )
 endif()
-
-s
