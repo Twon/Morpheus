@@ -39,7 +39,7 @@ public:
     std::uint32_t height() const noexcept { return mHeight; }
 
     //! The colour depth of the pixels of the render target.
-    std::uint32_t colout_depth() const noexcept { return mColourDepth; }
+    std::uint32_t colour_depth() const noexcept { return mColourDepth; }
 
 private:
     /// \name Data Members
