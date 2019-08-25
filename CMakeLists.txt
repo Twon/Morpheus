@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.12)
+cmake_minimum_required(VERSION 3.13)
 
 file(STRINGS "version.txt" MORPHEUS_VERSION)
 
@@ -23,6 +23,12 @@ include(IDESettings)
 include(ThirdParty)
 
 enable_testing()
+
+if(EXISTS ${CMAKE_BINARY_DIR}/conanbuildinfo_multi.cmake)
+    include(${CMAKE_BINARY_DIR}/conanbuildinfo_multi.cmake)
+else()
+    include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+endif()
 
 add_subdirectory(libraries)
 add_subdirectory(examples)
