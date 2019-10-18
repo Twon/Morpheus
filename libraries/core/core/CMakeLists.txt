@@ -2,24 +2,24 @@ add_library(MorpheusCore "")
 
 target_sources(MorpheusCore
     PRIVATE
-        "${CMAKE_CURRENT_LIST_DIR}/cpu.hpp"
-        "${CMAKE_CURRENT_LIST_DIR}/platform.hpp"
-        "${CMAKE_CURRENT_LIST_DIR}/game/game.hpp"
-        "${CMAKE_CURRENT_LIST_DIR}/gfx/render_system_factory.hpp"
-        "${CMAKE_CURRENT_LIST_DIR}/gfx/render_system.hpp"
-        "${CMAKE_CURRENT_LIST_DIR}/gfx/render_target.hpp"
-        "${CMAKE_CURRENT_LIST_DIR}/gfx/render_window.hpp"
-        "${CMAKE_CURRENT_LIST_DIR}/world/world_model.hpp"
-        "${CMAKE_CURRENT_LIST_DIR}/visualisation/visualisation.hpp"
+        cpu.hpp
+        platform.hpp
+        game/game.hpp
+        gfx/render_system_factory.hpp
+        gfx/render_system.hpp
+        gfx/render_target.hpp
+        gfx/render_window.hpp
+        world/world_model.hpp
+        visualisation/visualisation.hpp
     PRIVATE
-        "${CMAKE_CURRENT_LIST_DIR}/cpu.cpp"
-        "${CMAKE_CURRENT_LIST_DIR}/game/game.cpp"
-        "${CMAKE_CURRENT_LIST_DIR}/gfx/render_system_factory.cpp"
-        "${CMAKE_CURRENT_LIST_DIR}/gfx/render_system.cpp"
-        "${CMAKE_CURRENT_LIST_DIR}/gfx/render_target.cpp"
-        "${CMAKE_CURRENT_LIST_DIR}/gfx/render_window.cpp"
-        "${CMAKE_CURRENT_LIST_DIR}/world/world_model.cpp"
-        "${CMAKE_CURRENT_LIST_DIR}/visualisation/visualisation.cpp"
+        cpu.cpp
+        game/game.cpp
+        gfx/render_system_factory.cpp
+        gfx/render_system.cpp
+        gfx/render_target.cpp
+        gfx/render_window.cpp
+        world/world_model.cpp
+        visualisation/visualisation.cpp
 )
 
 if(WIN32)
@@ -75,7 +75,7 @@ target_include_directories(TestMorpheusCore
 
 target_sources(TestMorpheusCore
     PRIVATE
-        "${CMAKE_CURRENT_LIST_DIR}/cpu.test.cpp"
+        cpu.test.cpp
 )
 
 target_link_libraries(TestMorpheusCore
