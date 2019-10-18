@@ -93,7 +93,7 @@ include(WriteCompilerDetectionHeader)
 write_compiler_detection_header(
     FILE morpheuscore_compiler_detection.h
     PREFIX MORPHEUSCORE
-    COMPILERS GNU Clang MSVC Intel
+    COMPILERS GNU Clang MSVC Intel AppleClang
     FEATURES cxx_constexpr
 #    PROLOG "/// \\def"
 #    EPILOG "///"
