@@ -24,6 +24,11 @@ target_sources(MorpheusCore
         visualisation/visualisation.cpp
 )
 
+target_sources(TestMorpheusCore
+    PRIVATE
+        "${CMAKE_CURRENT_LIST_DIR}/cpu.test.cpp"
+)
+
 if(WIN32)
     add_subdirectory(gfx/win32)
 endif(WIN32)
@@ -81,6 +86,8 @@ set_target_properties(MorpheusCore TestMorpheusCore
 get_target_property(SOURCES_FILES MorpheusCore SOURCES)
 source_group(TREE ${CMAKE_CURRENT_LIST_DIR} FILES ${SOURCES_FILES})
 
+get_target_property(TEST_SOURCES_FILES TestMorpheusCore SOURCES)
+source_group(TREE ${CMAKE_CURRENT_LIST_DIR} FILES ${TEST_SOURCES_FILES})
 
 include(WriteCompilerDetectionHeader)
 write_compiler_detection_header(
@@ -107,7 +114,6 @@ install (TARGETS MorpheusCore
 # Hierarchically copy headers to the install dir
 install (DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/../core" DESTINATION include FILES_MATCHING PATTERN "*.hpp" )
 install (FILES "${CMAKE_CURRENT_BINARY_DIR}/morpheuscore_export.h" DESTINATION include/core )
-
+install (FILES "${CMAKE_CURRENT_BINARY_DIR}/morpheuscore_compiler_detection.h" DESTINATION include/core )
 get_target_property(TEST_SOURCES_FILES TestMorpheusCore SOURCES)
 source_group(TREE ${CMAKE_CURRENT_LIST_DIR} FILES ${TEST_SOURCES_FILES})
-
