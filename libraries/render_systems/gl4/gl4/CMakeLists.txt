@@ -1,4 +1,4 @@
-find_package(OpenGL)
+find_package(OpenGL REQUIRED COMPONENTS OpenGL)
 
 if (NOT ${OPENGL_FOUND})
 
@@ -9,8 +9,8 @@ else()
     add_library(MorpheusRenderSystemGL4 "")
     target_sources(MorpheusRenderSystemGL4
         PRIVATE
-            "${CMAKE_CURRENT_LIST_DIR}/gl4_render_system.hpp"
-            "${CMAKE_CURRENT_LIST_DIR}/gl4_render_system.cpp"
+            gl4_render_system.hpp
+            gl4_render_system.cpp
     )
 
     target_compile_definitions(MorpheusRenderSystemGL4
@@ -26,6 +26,7 @@ else()
     target_link_libraries(MorpheusRenderSystemGL4
         PRIVATE
             MorpheusCore
+            OpenGL::GL
     )
 
     set_target_properties(MorpheusRenderSystemGL4
@@ -46,4 +47,3 @@ else()
              LIBRARY DESTINATION lib
     )
 endif()
-

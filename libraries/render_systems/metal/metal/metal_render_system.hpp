@@ -3,7 +3,8 @@
 namespace morpheus::gfx::metal
 {
 
-/*! class render_system
+/*! \class render_system
+        Rendering system abstraction based upon the Metal graphics API.
  */
 class render_system {
 public:
