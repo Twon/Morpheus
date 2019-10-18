@@ -5,6 +5,7 @@
 //---------------------------------------------------------------------------------------------------------------------
 #include <cstdint>
 #include <core/morpheuscore_export.h>
+#include <core/morpheuscore_compiler_detection.h>
 
     /*! \defgroup Compiler Morpheus Supported Compilers
             The compiler group of macros allow for compile time detection of the current compiler
