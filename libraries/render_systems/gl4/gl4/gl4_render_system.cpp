@@ -6,7 +6,12 @@
 #include <Windows.h>
 #endif // (MORPHEUS_BUILD_PLATFORM == MORPHEUS_TARGET_PLATFORM_PC_WINDOWS)
 
+#if (MORPHEUS_BUILD_PLATFORM == MORPHEUS_TARGET_PLATFORM_APPLE)
 #include <OpenGL/gl.h>
+#else
+#include <GL/gl.h>
+#endif
+
 
 namespace morpheus::gfx::gl4
 {
