@@ -30,13 +30,13 @@ public:
 
 
     //! The width in pixels of the render target.
-    std::uint32_t width() const noexcept { return mWidth; }
+    constexpr std::uint32_t width() const noexcept { return mWidth; }
 
     //! The height in pixels of the render target.
-    std::uint32_t height() const noexcept { return mHeight; }
+    constexpr std::uint32_t height() const noexcept { return mHeight; }
 
     //! The colour depth of the pixels of the render target.
-    std::uint32_t colour_depth() const noexcept { return mColourDepth; }
+    constexpr std::uint32_t colour_depth() const noexcept { return mColourDepth; }
 
 private:
     /// \name Data Members

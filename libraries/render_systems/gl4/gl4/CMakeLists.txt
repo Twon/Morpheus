@@ -9,8 +9,10 @@ else()
     add_library(MorpheusRenderSystemGL4 "")
     add_executable(MorpheusRenderSystemGL4Test "")
 
-    add_subdirectory(wgl)
-
+    if (WIN32)
+        add_subdirectory(wgl)
+    endif(WIN32)
+    
     target_sources(MorpheusRenderSystemGL4
         PRIVATE
             gl4_render_system.hpp
@@ -29,15 +31,23 @@ else()
             "${CMAKE_CURRENT_LIST_DIR}/.."
     )
 
-    target_include_directories(MorpheusRenderSystemGL4Test
-        PUBLIC
-            "${CMAKE_CURRENT_LIST_DIR}/.."
-    )
-
     target_link_libraries(MorpheusRenderSystemGL4
         PRIVATE
             MorpheusCore
             OpenGL::GL
+    )
+    
+    get_target_property(SOURCES_FILES MorpheusRenderSystemGL4 SOURCES)
+    source_group(TREE ${CMAKE_CURRENT_LIST_DIR} FILES ${SOURCES_FILES})
+
+    target_sources(MorpheusRenderSystemGL4Test
+        PRIVATE
+            gl4_render_system.tests.cpp
+    )
+
+    target_include_directories(MorpheusRenderSystemGL4Test
+        PUBLIC
+            "${CMAKE_CURRENT_LIST_DIR}/.."
     )
 
     target_link_libraries(MorpheusRenderSystemGL4Test
@@ -58,16 +68,8 @@ else()
             RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
     )
 
-    get_target_property(SOURCES_FILES MorpheusRenderSystemGL4 SOURCES)
-    source_group(TREE ${CMAKE_CURRENT_LIST_DIR} FILES ${SOURCES_FILES})
-
     get_target_property(SOURCES_FILES_TEST MorpheusRenderSystemGL4Test SOURCES)
     source_group(TREE ${CMAKE_CURRENT_LIST_DIR} FILES ${SOURCES_FILES_TEST})
-
-    target_sources(MorpheusRenderSystemGL4Test
-        PRIVATE
-            ${SOURCES_FILES}
-    )
 
     install (TARGETS MorpheusRenderSystemGL4
              RUNTIME DESTINATION bin

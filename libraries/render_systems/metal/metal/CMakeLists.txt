@@ -24,7 +24,7 @@ if (APPLE)
 
     set_target_properties(MorpheusRenderSystemMetal
         PROPERTIES
-            FOLDER "Libraries/RenderSystems"
+            FOLDER "Libraries/RenderSystems/Metal"
     )
 
     set_target_properties(MorpheusRenderSystemMetal
