@@ -10,7 +10,7 @@ if(NOT googletest_POPULATED)
     add_subdirectory(${catch2_SOURCE_DIR} ${catch2_BINARY_DIR})
 endif()
 
-find_package(catch2)
+#find_package(catch2)
 
 
 find_package(fmt)

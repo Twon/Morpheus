@@ -53,7 +53,8 @@ else()
     target_link_libraries(MorpheusRenderSystemGL4Test
         PRIVATE
             MorpheusCore
-            catch2::catch2
+            Catch2::Catch2
+
     )
 
     set_target_properties(MorpheusRenderSystemGL4 MorpheusRenderSystemGL4Test

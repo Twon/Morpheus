@@ -39,6 +39,7 @@ else()
 
     target_sources(MorpheusRenderSystemVulkanTest
         PRIVATE
+            vulkan_error_code.tests.cpp
             vulkan_render_system.tests.cpp
     )
 
@@ -50,8 +51,9 @@ else()
     target_link_libraries(MorpheusRenderSystemVulkanTest
         PRIVATE
             MorpheusCore
-			Vulkan::Vulkan
-            catch2::catch2
+            MorpheusRenderSystemVulkan
+            Vulkan::Vulkan
+            Catch2::Catch2
     )
     
     enable_testing()
@@ -66,6 +68,7 @@ else()
 
     set_target_properties(MorpheusRenderSystemVulkan MorpheusRenderSystemVulkanTest
         PROPERTIES
+            WINDOWS_EXPORT_ALL_SYMBOLS TRUE #$<OR:<$<BUILD_INTERFACE:TRUE>,$<INSTALL_INTERFACE:FALSE>>
             FOLDER "Libraries/RenderSystems/Vulkan"
             ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
             LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"

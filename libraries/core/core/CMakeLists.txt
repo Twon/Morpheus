@@ -26,7 +26,7 @@ target_sources(MorpheusCore
 
 target_sources(TestMorpheusCore
     PRIVATE
-        "${CMAKE_CURRENT_LIST_DIR}/cpu.test.cpp"
+        cpu.test.cpp
 )
 
 if(WIN32)
@@ -71,7 +71,7 @@ target_link_libraries(MorpheusCore
 
 target_link_libraries(TestMorpheusCore
     PRIVATE
-         catch2::catch2
+         Catch2::Catch2
          MorpheusCore
 )
 
