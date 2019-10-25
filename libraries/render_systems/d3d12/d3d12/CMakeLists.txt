@@ -48,7 +48,7 @@ if (WIN32)
                 MorpheusCore
                 D3D12::DXGI
                 D3D12::D3D12
-				catch2::catch2
+                Catch2::Catch2
         )
 
         set_target_properties(MorpheusRenderSystemD3D12 MorpheusRenderSystemD3D12Test
