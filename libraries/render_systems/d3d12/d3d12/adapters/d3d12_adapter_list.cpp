@@ -1,6 +1,6 @@
 #include <d3d12/adapters/d3d12_adapter_list.hpp>
 #include <d3d12/adapters/d3d12_adapter.hpp>
-#include <fmt/core.h>
+//#include <fmt/core.h>
 
 namespace morpheus::gfx::d3d12
 {
@@ -13,7 +13,7 @@ namespace
         DXGIFactory dxgiFactory;
         if (FAILED(CreateDXGIFactory1(IID_PPV_ARGS(&dxgiFactory))))
         {
-            throw std::runtime_error(fmt::format("Unable to create DXGI Factory", "panic"));
+//            throw std::runtime_error(fmt::format("Unable to create DXGI Factory", "panic"));
         }
         return dxgiFactory;
     }
