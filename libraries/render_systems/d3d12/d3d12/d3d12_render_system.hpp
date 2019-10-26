@@ -1,6 +1,7 @@
 #pragma once
 
 #include <core/gfx/render_system.hpp>
+#include <wrl.h>
 
 namespace morpheus::gfx::d3d12
 {

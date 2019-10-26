@@ -43,8 +43,8 @@ public:
     ///@}
 
 private:
-    const std::uint32_t mStartX;
-    const std::uint32_t mStartY;
+    const std::uint32_t mStartX = 0;
+    const std::uint32_t mStartY = 0;
     const std::string mWindowName;
 };
 

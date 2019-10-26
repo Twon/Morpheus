@@ -1,10 +1,12 @@
 add_library(MorpheusCore "")
+add_executable(TestMorpheusCore "")
 
 target_sources(MorpheusCore
     PRIVATE
         cpu.hpp
         platform.hpp
         game/game.hpp
+        gfx/pixel.hpp
         gfx/render_system_factory.hpp
         gfx/render_system.hpp
         gfx/render_target.hpp
@@ -22,14 +24,22 @@ target_sources(MorpheusCore
         visualisation/visualisation.cpp
 )
 
+target_sources(TestMorpheusCore
+    PRIVATE
+        cpu.test.cpp
+)
+
 if(WIN32)
     add_subdirectory(gfx/win32)
 endif(WIN32)
 
+add_subdirectory(gfx/adapters)
 add_subdirectory(gfx/textures)
 
-get_target_property(SOURCES_FILES MorpheusCore SOURCES)
-source_group(TREE ${CMAKE_CURRENT_LIST_DIR} FILES ${SOURCES_FILES})
+target_sources(TestMorpheusCore
+    PRIVATE
+        cpu.test.cpp
+)
 
 target_include_directories(MorpheusCore
     PUBLIC
@@ -38,20 +48,59 @@ target_include_directories(MorpheusCore
         "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/..>"
 )
 
-target_compile_definitions(MorpheusCore 
-    PUBLIC 
-         MORPHEUS_SHARED_BUILD=1
-         MORPHEUS_DLL_EXPORTS=1
+target_include_directories(TestMorpheusCore
+    PUBLIC
+        "${CMAKE_CURRENT_LIST_DIR}/.."
 )
 
-set_target_properties(MorpheusCore
+#target_compile_definitions(MorpheusCore
+#    PUBLIC
+#         MORPHEUS_SHARED_BUILD=1
+#         MORPHEUS_DLL_EXPORTS=1
+#)
+
+target_compile_options(MorpheusCore
+    PRIVATE
+	    $<$<CXX_COMPILER_ID:MSVC>:/wd4251> # class 'foo' needs to have dll-interface to be used by clients of class 'bar'
+)
+
+target_link_libraries(MorpheusCore
+    PUBLIC
+#         fmt::fmt
+)
+
+target_link_libraries(TestMorpheusCore
+    PRIVATE
+         Catch2::Catch2
+         MorpheusCore
+)
+
+set_target_properties(MorpheusCore TestMorpheusCore
     PROPERTIES
-        FOLDER "Libraries"
+        FOLDER "Libraries/Core"
         ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
         LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
         RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
 )
 
+get_target_property(SOURCES_FILES MorpheusCore SOURCES)
+source_group(TREE ${CMAKE_CURRENT_LIST_DIR} FILES ${SOURCES_FILES})
+
+get_target_property(TEST_SOURCES_FILES TestMorpheusCore SOURCES)
+source_group(TREE ${CMAKE_CURRENT_LIST_DIR} FILES ${TEST_SOURCES_FILES})
+
+include(WriteCompilerDetectionHeader)
+write_compiler_detection_header(
+    FILE morpheuscore_compiler_detection.h
+    PREFIX MORPHEUSCORE
+    COMPILERS GNU Clang MSVC Intel AppleClang
+    FEATURES cxx_constexpr
+#    PROLOG "/// \\def"
+#    EPILOG "///"
+)
+
+set(CMAKE_CXX_VISIBILITY_PRESET hidden)
+set(CMAKE_VISIBILITY_INLINES_HIDDEN 1)
 include(GenerateExportHeader)
 generate_export_header(MorpheusCore)
 
@@ -65,29 +114,6 @@ install (TARGETS MorpheusCore
 # Hierarchically copy headers to the install dir
 install (DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/../core" DESTINATION include FILES_MATCHING PATTERN "*.hpp" )
 install (FILES "${CMAKE_CURRENT_BINARY_DIR}/morpheuscore_export.h" DESTINATION include/core )
-
-add_executable(TestMorpheusCore "")
-
-target_include_directories(TestMorpheusCore
-    PUBLIC
-        "${CMAKE_CURRENT_LIST_DIR}/.."
-)
-
-target_sources(TestMorpheusCore
-    PRIVATE
-        cpu.test.cpp
-)
-
-target_link_libraries(TestMorpheusCore
-    PRIVATE
-         catch2::catch2
-         MorpheusCore
-)
-
-set_target_properties(TestMorpheusCore PROPERTIES FOLDER "Tests")
-set_target_properties(TestMorpheusCore
-    PROPERTIES
-        ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
-        LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
-        RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
-)
+install (FILES "${CMAKE_CURRENT_BINARY_DIR}/morpheuscore_compiler_detection.h" DESTINATION include/core )
+get_target_property(TEST_SOURCES_FILES TestMorpheusCore SOURCES)
+source_group(TREE ${CMAKE_CURRENT_LIST_DIR} FILES ${TEST_SOURCES_FILES})

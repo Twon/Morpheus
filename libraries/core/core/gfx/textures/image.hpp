@@ -5,8 +5,8 @@
 namespace morpheus::gfx
 {
 
-/*! \class render_target
-        A render target defined a canvas onto which a render system can draw to.
+/*! \class image
+        The image abstracts the loading and saving of images files in CPU space.
  */
 class MORPHEUSCORE_EXPORT image {
 public:
@@ -30,13 +30,13 @@ public:
 
 
     //! The width in pixels of the render target.
-    std::uint32_t width() const noexcept { return mWidth; }
+    constexpr std::uint32_t width() const noexcept { return mWidth; }
 
     //! The height in pixels of the render target.
-    std::uint32_t height() const noexcept { return mHeight; }
+    constexpr std::uint32_t height() const noexcept { return mHeight; }
 
     //! The colour depth of the pixels of the render target.
-    std::uint32_t colout_depth() const noexcept { return mColourDepth; }
+    constexpr std::uint32_t colour_depth() const noexcept { return mColourDepth; }
 
 private:
     /// \name Data Members

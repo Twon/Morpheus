@@ -6,40 +6,80 @@ if (NOT ${Vulkan_FOUND})
 
 else()
     add_library(MorpheusRenderSystemVulkan "")
+    add_executable(MorpheusRenderSystemVulkanTest "")
+
+    add_subdirectory(adapters)
+
     target_sources(MorpheusRenderSystemVulkan
         PRIVATE
-            "${CMAKE_CURRENT_LIST_DIR}/vulkan_render_system.hpp"
-            "${CMAKE_CURRENT_LIST_DIR}/vulkan_render_system.cpp"
+            vulkan_error_code.hpp
+            vulkan_error_code.cpp
+            vulkan_render_system.hpp
+            vulkan_render_system.cpp
     )
-
-    target_compile_definitions(MorpheusRenderSystemVulkan
-        PUBLIC
-            MORPHEUS_SHARED_BUILD=1
-    )
-
+    
     target_include_directories(MorpheusRenderSystemVulkan
         PUBLIC
             "${CMAKE_CURRENT_LIST_DIR}/.."
     )
 
+    #target_compile_definitions(MorpheusRenderSystemVulkan
+    #    PUBLIC
+    #        MORPHEUS_SHARED_BUILD=1
+    #)
+
     target_link_libraries(MorpheusRenderSystemVulkan
         PRIVATE
             MorpheusCore
+            Vulkan::Vulkan
+    )
+    
+    get_target_property(SOURCES_FILES MorpheusRenderSystemVulkan SOURCES)
+    source_group(TREE ${CMAKE_CURRENT_LIST_DIR} FILES ${SOURCES_FILES})
+
+    target_sources(MorpheusRenderSystemVulkanTest
+        PRIVATE
+            vulkan_error_code.tests.cpp
+            vulkan_render_system.tests.cpp
     )
 
-    set_target_properties(MorpheusRenderSystemVulkan
-        PROPERTIES
-             FOLDER "Libraries/RenderSystems"
+    target_include_directories(MorpheusRenderSystemVulkanTest
+        PUBLIC
+            "${CMAKE_CURRENT_LIST_DIR}/.."
     )
 
-    set_target_properties(MorpheusRenderSystemVulkan
+    target_link_libraries(MorpheusRenderSystemVulkanTest
+        PRIVATE
+            MorpheusCore
+            MorpheusRenderSystemVulkan
+            Vulkan::Vulkan
+            Catch2::Catch2
+    )
+    
+    enable_testing()
+    add_test(
+        NAME MorpheusRenderSystemVulkanTest
+        COMMAND MorpheusRenderSystemVulkanTest
+        WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+
+    list(APPEND CMAKE_MODULE_PATH ${catch2_SOURCE_DIR}/contrib)
+    include(Catch)
+    catch_discover_tests(MorpheusRenderSystemVulkanTest)
+
+    set_target_properties(MorpheusRenderSystemVulkan MorpheusRenderSystemVulkanTest
         PROPERTIES
+            WINDOWS_EXPORT_ALL_SYMBOLS TRUE #$<OR:<$<BUILD_INTERFACE:TRUE>,$<INSTALL_INTERFACE:FALSE>>
+            FOLDER "Libraries/RenderSystems/Vulkan"
             ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
             LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
             RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
     )
 
-    install (TARGETS MorpheusRenderSystemVulkan
+    get_target_property(SOURCES_FILES_TEST MorpheusRenderSystemVulkanTest SOURCES)
+    source_group(TREE ${CMAKE_CURRENT_LIST_DIR} FILES ${SOURCES_FILES_TEST})
+
+
+	install (TARGETS MorpheusRenderSystemVulkan
              RUNTIME DESTINATION bin
              ARCHIVE DESTINATION lib
              LIBRARY DESTINATION lib

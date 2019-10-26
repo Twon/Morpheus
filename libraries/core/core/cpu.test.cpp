@@ -5,10 +5,7 @@
 #include <catch2/catch.hpp>
 #include <core/cpu.hpp>
 
-namespace morpheus
-{
-
-namespace test
+namespace morpheus::test
 {
 
 TEST_CASE("Cpu can be queried for processor info", "[morpheus.core.cpu]")
@@ -33,6 +30,4 @@ TEST_CASE("Cpu can be queried for processor info", "[morpheus.core.cpu]")
     // REQUIRE(processor.getVendorId().size() == 64);
 }
 
-} // namespace test
-
-} // namespace morpheus
+} // namespace morpheus::test
