@@ -10,7 +10,7 @@ else()
     add_executable(MorpheusRenderSystemGL4Test "")
 
     if (WIN32)
-        add_subdirectory(wgl)
+    #    add_subdirectory(wgl)
     endif(WIN32)
 
     target_sources(MorpheusRenderSystemGL4
