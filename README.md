@@ -1,7 +1,11 @@
 # Morpheus
 
-[![Build status](https://ci.appveyor.com/api/projects/status/c4fd0kxw0u0wm0t5/branch/master?svg=true)](https://ci.appveyor.com/project/Twon/morpheus/branch/master)
-![MIT](https://img.shields.io/badge/license-MIT-blue.svg)
+ [![Travis Build Status](https://travis-ci.org/twon/morpheus.svg?branch=master)](https://travis-ci.org/twon/morpheus)
+ [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/twon/morpheus?svg=true&branch=master)](https://ci.appveyor.com/project/twon/morpheus)
+ [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/twon/morpheus/master/LICENSE.MIT)
+ [![GitHub Issues](https://img.shields.io/github/issues/twon/morpheus.svg)](http://github.com/twon/morpheus/issues)
+
+
 
 =======
 
