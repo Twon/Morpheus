@@ -6,7 +6,7 @@ notifications:
 
 # Use Linux unless otherwise specified 
 os: linux
-dist: trusty
+dist: bionic
 language: python
 python:
   - "3.7"
