@@ -10,6 +10,14 @@ project(Morpheus
 
 set(BUILD_SHARED_LIBS YES)
 
+if(EXISTS ${CMAKE_BINARY_DIR}/conanbuildinfo_multi.cmake)
+    include(${CMAKE_BINARY_DIR}/conanbuildinfo_multi.cmake)
+else()
+    include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+endif()
+
+conan_basic_setup()
+
 # Include necessary submodules
 set(CMAKE_MODULE_PATH
     "${CMAKE_BINARY_DIR}"
@@ -23,12 +31,6 @@ include(IDESettings)
 include(ThirdParty)
 
 enable_testing()
-
-if(EXISTS ${CMAKE_BINARY_DIR}/conanbuildinfo_multi.cmake)
-    include(${CMAKE_BINARY_DIR}/conanbuildinfo_multi.cmake)
-else()
-    include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
-endif()
 
 add_subdirectory(libraries)
 add_subdirectory(examples)

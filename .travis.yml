@@ -142,11 +142,14 @@ install:
       export LDFLAGS="-L ${LLVM_INSTALL}/lib -l c++ -l c++abi"
       export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:${LLVM_INSTALL}/lib"
     fi
-  
+ 
+  - pip install conan
+
 before_script:
   # have CMake to generate build files
   - cd "${TRAVIS_BUILD_DIR}"
   - mkdir build && cd build
+  - conan install ../
   - cmake .. -DCMAKE_BUILD_TYPE=$BUILD_TYPE
 
 script:

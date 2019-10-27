@@ -8,5 +8,5 @@ range-v3/0.9.1@ericniebler/stable
 
 [generators]
 cmake
-cmake_paths
-cmake_find_package
+#cmake_paths
+#cmake_find_package
