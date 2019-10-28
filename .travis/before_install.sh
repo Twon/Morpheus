@@ -1,5 +1,8 @@
 #!/bin/bash
 
+set -e
+set -x
+
 if [ "$TRAVIS_OS_NAME" == "osx" ]; then
     brew update
     brew install openssl readline
