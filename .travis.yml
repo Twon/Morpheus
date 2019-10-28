@@ -7,10 +7,6 @@ notifications:
 # Use Linux unless otherwise specified 
 os: linux
 dist: bionic
-language: python
-python:
-  - "3.7"
-
 cache:
   directories:
     - ${TRAVIS_BUILD_DIR}/deps
@@ -28,12 +24,14 @@ matrix:
     - env: COMPILER=clang++ BUILD_TYPE=Debug 
       os: osx
       osx_image: xcode10.3
+      language: generic
       compiler: clang
 
     # XCode 11.1
     - env: COMPILER=clang++ BUILD_TYPE=Debug 
       os: osx
       osx_image: xcode11.1
+      language: generic
       compiler: clang
 
     ##########################################################################
@@ -42,6 +40,8 @@ matrix:
 
     # Clang 7.0
     - env: COMPILER=clang++-7 BUILD_TYPE=Debug 
+      language: python
+      python: "3.7"
       addons: &clang70
         apt:
           packages:
@@ -55,6 +55,8 @@ matrix:
 
     # Clang 8.0
     - env: COMPILER=clang++-7 BUILD_TYPE=Debug 
+      language: python
+      python: "3.7"
       addons: &clang80
         apt:
           packages:
@@ -72,6 +74,8 @@ matrix:
 
     # GCC 8
     - env: COMPILER=g++-8 BUILD_TYPE=Debug 
+      language: python
+      python: "3.7"
       addons: &gcc8
         apt:
           packages: g++-8
@@ -80,6 +84,8 @@ matrix:
 
     # GCC 9
     - env: COMPILER=g++-9 BUILD_TYPE=Debug 
+      language: python
+      python: "3.7"
       addons: &gcc9
         apt:
           packages: g++-9
