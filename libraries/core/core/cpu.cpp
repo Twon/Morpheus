@@ -7,7 +7,7 @@
 #endif
 
 #include <core/cpu.hpp>
-
+#include <algorithm>
 
 namespace morpheus
 {

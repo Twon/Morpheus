@@ -55,7 +55,7 @@ matrix:
               key_url: 'https://apt.llvm.org/llvm-snapshot.gpg.key'
 
     # Clang 8.0
-    - env: COMPILER=clang++-7 BUILD_TYPE=Debug 
+    - env: COMPILER=clang++-8 BUILD_TYPE=Debug 
       language: python
       python: "3.7"
       addons: &clang80
@@ -63,6 +63,7 @@ matrix:
           packages:
             - clang-8
             - g++-7
+            - libgl1-mesa-dev
           sources:
             - ubuntu-toolchain-r-test
             - llvm-toolchain-bionic-8
@@ -79,7 +80,9 @@ matrix:
       python: "3.7"
       addons: &gcc8
         apt:
-          packages: g++-8
+          packages:
+            - g++-8
+            - libgl1-mesa-dev
           sources:
             - ubuntu-toolchain-r-test
 
@@ -89,7 +92,9 @@ matrix:
       python: "3.7"
       addons: &gcc9
         apt:
-          packages: g++-9
+          packages: 
+            - g++-9
+            - libgl1-mesa-dev
           sources:
             - ubuntu-toolchain-r-test
 
