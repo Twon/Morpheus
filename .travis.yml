@@ -47,6 +47,7 @@ matrix:
           packages:
             - clang-7
             - g++-7
+            - libgl1-mesa-dev
           sources:
             - ubuntu-toolchain-r-test
             - llvm-toolchain-bionic-7
