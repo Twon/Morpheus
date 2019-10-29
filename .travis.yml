@@ -100,12 +100,9 @@ matrix:
 
 # Added following instructions from https://docs.travis-ci.com/user/installing-dependencies#Installing-Packages-with-the-APT-Addon
 before_install:
-  #- sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
-  #- sudo apt-get update -q
-  #- sudo apt-get install gcc-4.8 -y
-  #- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew list python3 &>/dev/null || brew install python3; fi
-  #- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install python3 || brew upgrade python3; fi
-  #- if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install pyenv-virtualenv; fi
+  - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
+  - sudo apt-get update -q
+  - sudo apt-get install gcc-4.8 -y
   - ./.travis/before_install.sh
   
 install:
