@@ -96,7 +96,7 @@ matrix:
             - g++-9
             - libgl1-mesa-dev
           sources:
-            - ppa:ubuntu-toolchain-r/test
+            - sourceline: 'ppa:ubuntu-toolchain-r/test'
 
 # Added following instructions from https://docs.travis-ci.com/user/installing-dependencies#Installing-Packages-with-the-APT-Addon
 before_install:
