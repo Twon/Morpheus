@@ -7,7 +7,8 @@
 #endif
 
 #include <core/cpu.hpp>
-
+#include <algorithm>
+#include <cstring>
 
 namespace morpheus
 {
@@ -82,10 +83,10 @@ const auto query_extended_leaf_functions(const uint32_t max_extended_leaf)
 const auto query_vendor_id(const cpuid_leafs& cached_leafs)
 {
     std::array<char, 16> string_buffer;
-    memset(&string_buffer[0], 0, sizeof(string_buffer));
-    memcpy(&string_buffer[0], &cached_leafs[0][1], sizeof(uint32_t));
-    memcpy(&string_buffer[4], &cached_leafs[0][3], sizeof(uint32_t));
-    memcpy(&string_buffer[8], &cached_leafs[0][2], sizeof(uint32_t));
+    std::memset(&string_buffer[0], 0, sizeof(string_buffer));
+    std::memcpy(&string_buffer[0], &cached_leafs[0][1], sizeof(uint32_t));
+    std::memcpy(&string_buffer[4], &cached_leafs[0][3], sizeof(uint32_t));
+    std::memcpy(&string_buffer[8], &cached_leafs[0][2], sizeof(uint32_t));
     return std::string(string_buffer.data());
 }
 
@@ -94,12 +95,12 @@ const auto query_vendor_id(const cpuid_leafs& cached_leafs)
 const auto query_brand_id(const cpuid_leafs& cached_leafs)
 {
     std::array<char, 64> string_buffer;
-    memset(&string_buffer[0], 0, sizeof(string_buffer));
+    std::memset(&string_buffer[0], 0, sizeof(string_buffer));
     if (cached_leafs.size() >= 5)
     {
-        memcpy(&string_buffer[0], &cached_leafs[2], sizeof(cpuid_results));
-        memcpy(&string_buffer[16], &cached_leafs[3], sizeof(cpuid_results));
-        memcpy(&string_buffer[32], &cached_leafs[4], sizeof(cpuid_results));
+        std::memcpy(&string_buffer[0], &cached_leafs[2], sizeof(cpuid_results));
+        std::memcpy(&string_buffer[16], &cached_leafs[3], sizeof(cpuid_results));
+        std::memcpy(&string_buffer[32], &cached_leafs[4], sizeof(cpuid_results));
     }
     return std::string(string_buffer.data());
 }
