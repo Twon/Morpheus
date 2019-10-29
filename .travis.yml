@@ -92,7 +92,7 @@ matrix:
       python: "3.7"
       addons: &gcc9
         apt:
-          packages: 
+          packages:
             - g++-9
             - libgl1-mesa-dev
           sources:
