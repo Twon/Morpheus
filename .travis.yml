@@ -104,7 +104,7 @@ before_install:
     if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
         sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
         sudo apt-get update -q
-        sudo apt-get install gcc-4.8 -y
+        sudo apt-get install gcc-9 -y
     fi
   - ./.travis/before_install.sh
   
