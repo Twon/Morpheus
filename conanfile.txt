@@ -1,7 +1,7 @@
 [requires]
 #propagate_const/1.0.0@bsi/testing
 #catch2/2.5.0@bincrafters/stable
-fmt/6.0.0@bincrafters/stable
+#fmt/6.0.0@bincrafters/stable
 gsl_microsoft/2.0.0@bincrafters/stable
 range-v3/0.9.1@ericniebler/stable
 #vulkan-sdk/1.0.46.0@alaingalvan/stable

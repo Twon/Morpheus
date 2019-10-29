@@ -66,7 +66,7 @@ target_compile_options(MorpheusCore
 
 target_link_libraries(MorpheusCore
     PUBLIC
-#         fmt::fmt
+        fmt::fmt
 )
 
 target_link_libraries(TestMorpheusCore

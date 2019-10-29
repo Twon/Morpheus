@@ -3,6 +3,7 @@
 set -e
 set -x
 
+# Example of how to run python on mac os x in travis from https://github.com/conan-io/hooks/blob/master/.travis/before_install.sh
 if [ "$TRAVIS_OS_NAME" == "osx" ]; then
     brew update
     brew install openssl readline
