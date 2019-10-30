@@ -18,7 +18,7 @@ set_source_files_properties(
 )
 
 
-target_sources(TestMorpheusCore
+target_sources(MorpheusCoreTests
     PRIVATE
         "${CMAKE_CURRENT_LIST_DIR}/adapter_list.test.cpp"
         "${CMAKE_CURRENT_LIST_DIR}/video_mode_list.test.cpp"

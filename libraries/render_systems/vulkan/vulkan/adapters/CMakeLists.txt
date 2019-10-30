@@ -17,7 +17,7 @@ set_source_files_properties(
         HEADER_FILE_ONLY TRUE # Since it's just a text file, it doesn't need compiled
 )
 
-target_sources(MorpheusRenderSystemVulkanTest
+target_sources(MorpheusRenderSystemVulkanTests
 	PRIVATE
 		"${CMAKE_CURRENT_LIST_DIR}/vulkan_adapter_list.test.cpp"
 		"${CMAKE_CURRENT_LIST_DIR}/vulkan_video_mode_list.test.cpp"

@@ -1,5 +1,5 @@
 add_library(MorpheusCore "")
-add_executable(TestMorpheusCore "")
+add_executable(MorpheusCoreTests "")
 
 target_sources(MorpheusCore
     PRIVATE
@@ -24,7 +24,7 @@ target_sources(MorpheusCore
         visualisation/visualisation.cpp
 )
 
-target_sources(TestMorpheusCore
+target_sources(MorpheusCoreTests
     PRIVATE
         cpu.test.cpp
 )
@@ -36,7 +36,7 @@ endif(WIN32)
 add_subdirectory(gfx/adapters)
 add_subdirectory(gfx/textures)
 
-target_sources(TestMorpheusCore
+target_sources(MorpheusCoreTests
     PRIVATE
         cpu.test.cpp
 )
@@ -48,7 +48,7 @@ target_include_directories(MorpheusCore
         "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/..>"
 )
 
-target_include_directories(TestMorpheusCore
+target_include_directories(MorpheusCoreTests
     PUBLIC
         "${CMAKE_CURRENT_LIST_DIR}/.."
 )
@@ -69,13 +69,13 @@ target_link_libraries(MorpheusCore
         fmt::fmt
 )
 
-target_link_libraries(TestMorpheusCore
+target_link_libraries(MorpheusCoreTests
     PRIVATE
          Catch2::Catch2
          MorpheusCore
 )
 
-set_target_properties(MorpheusCore TestMorpheusCore
+set_target_properties(MorpheusCore MorpheusCoreTests
     PROPERTIES
         FOLDER "Libraries/Core"
         ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
@@ -86,7 +86,7 @@ set_target_properties(MorpheusCore TestMorpheusCore
 get_target_property(SOURCES_FILES MorpheusCore SOURCES)
 source_group(TREE ${CMAKE_CURRENT_LIST_DIR} FILES ${SOURCES_FILES})
 
-get_target_property(TEST_SOURCES_FILES TestMorpheusCore SOURCES)
+get_target_property(TEST_SOURCES_FILES MorpheusCoreTests SOURCES)
 source_group(TREE ${CMAKE_CURRENT_LIST_DIR} FILES ${TEST_SOURCES_FILES})
 
 include(WriteCompilerDetectionHeader)
@@ -112,8 +112,25 @@ install (TARGETS MorpheusCore
 )
 
 # Hierarchically copy headers to the install dir
-install (DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/../core" DESTINATION include FILES_MATCHING PATTERN "*.hpp" )
-install (FILES "${CMAKE_CURRENT_BINARY_DIR}/morpheuscore_export.h" DESTINATION include/core )
-install (FILES "${CMAKE_CURRENT_BINARY_DIR}/morpheuscore_compiler_detection.h" DESTINATION include/core )
-get_target_property(TEST_SOURCES_FILES TestMorpheusCore SOURCES)
-source_group(TREE ${CMAKE_CURRENT_LIST_DIR} FILES ${TEST_SOURCES_FILES})
+install (
+    DIRECTORY
+        "${CMAKE_CURRENT_SOURCE_DIR}/../core"
+    DESTINATION
+        include
+    FILES_MATCHING PATTERN
+        "*.hpp"
+)
+
+install(
+    FILES
+        "${CMAKE_CURRENT_SOURCE_DIR}/morpheuscore_export.h"
+        "${CMAKE_CURRENT_SOURCE_DIR}/morpheuscore_compiler_detection.h"
+    DESTINATION
+        include/core
+)
+
+add_test(
+    NAME MorpheusCoreTests
+    COMMAND MorpheusCoreTests
+    WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+ catch_discover_tests(MorpheusCoreTests)

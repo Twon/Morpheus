@@ -7,7 +7,7 @@ if (NOT ${OPENGL_FOUND})
 else()
 
     add_library(MorpheusRenderSystemGL4 "")
-    add_executable(MorpheusRenderSystemGL4Test "")
+    add_executable(MorpheusRenderSystemGL4Tests "")
 
     if (WIN32)
     #    add_subdirectory(wgl)
@@ -40,29 +40,29 @@ else()
     get_target_property(SOURCES_FILES MorpheusRenderSystemGL4 SOURCES)
     source_group(TREE ${CMAKE_CURRENT_LIST_DIR} FILES ${SOURCES_FILES})
 
-    target_sources(MorpheusRenderSystemGL4Test
+    target_sources(MorpheusRenderSystemGL4Tests
         PRIVATE
             gl4_render_system.tests.cpp
     )
 
-    target_include_directories(MorpheusRenderSystemGL4Test
+    target_include_directories(MorpheusRenderSystemGL4Tests
         PUBLIC
             "${CMAKE_CURRENT_LIST_DIR}/.."
     )
 
-    target_link_libraries(MorpheusRenderSystemGL4Test
+    target_link_libraries(MorpheusRenderSystemGL4Tests
         PRIVATE
             MorpheusCore
             Catch2::Catch2
 
     )
 
-    set_target_properties(MorpheusRenderSystemGL4 MorpheusRenderSystemGL4Test
+    set_target_properties(MorpheusRenderSystemGL4 MorpheusRenderSystemGL4Tests
         PROPERTIES
             FOLDER "Libraries/RenderSystems/GL4"
     )
 
-    set_target_properties(MorpheusRenderSystemGL4 MorpheusRenderSystemGL4Test
+    set_target_properties(MorpheusRenderSystemGL4 MorpheusRenderSystemGL4Tests
         PROPERTIES
             WINDOWS_EXPORT_ALL_SYMBOLS TRUE
             ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
@@ -70,7 +70,7 @@ else()
             RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
     )
 
-    get_target_property(SOURCES_FILES_TEST MorpheusRenderSystemGL4Test SOURCES)
+    get_target_property(SOURCES_FILES_TEST MorpheusRenderSystemGL4Tests SOURCES)
     source_group(TREE ${CMAKE_CURRENT_LIST_DIR} FILES ${SOURCES_FILES_TEST})
 
     install (TARGETS MorpheusRenderSystemGL4
@@ -78,4 +78,11 @@ else()
              ARCHIVE DESTINATION lib
              LIBRARY DESTINATION lib
     )
+    
+    add_test(
+       NAME MorpheusRenderSystemGL4Tests
+       COMMAND MorpheusRenderSystemGL4Tests
+       WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+    catch_discover_tests(MorpheusRenderSystemGL4Tests)
+
 endif()
