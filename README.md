@@ -4,7 +4,7 @@
  [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/twon/morpheus?svg=true&branch=master)](https://ci.appveyor.com/project/twon/morpheus)
  [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/twon/morpheus/master/LICENSE.MIT)
  [![GitHub Issues](https://img.shields.io/github/issues/twon/morpheus.svg)](http://github.com/twon/morpheus/issues)
-
+ [![codecov](https://codecov.io/gh/twon/morpheus/branch/master/graph/badge.svg)](https://codecov.io/gh/twon/morpheus)
 
 
 =======
