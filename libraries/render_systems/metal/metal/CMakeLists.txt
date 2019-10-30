@@ -39,4 +39,12 @@ if (APPLE)
             ARCHIVE DESTINATION lib
             LIBRARY DESTINATION lib
     )
+    
+#    add_test(
+#        NAME MorpheusRenderSystemMetalTests
+#        COMMAND MorpheusRenderSystemMetalTests
+#        WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+#    catch_discover_tests(MorpheusRenderSystemMetalTests)
+    add_coverage(MorpheusRenderSystemMetal)
+    
 endif()

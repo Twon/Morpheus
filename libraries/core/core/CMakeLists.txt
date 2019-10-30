@@ -133,4 +133,6 @@ add_test(
     NAME MorpheusCoreTests
     COMMAND MorpheusCoreTests
     WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
- catch_discover_tests(MorpheusCoreTests)
+catch_discover_tests(MorpheusCoreTests)
+add_coverage(MorpheusCore)
+add_coverage(MorpheusCoreTests)

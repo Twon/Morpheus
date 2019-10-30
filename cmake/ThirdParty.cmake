@@ -13,9 +13,6 @@ if(NOT catch2_POPULATED)
     )
 endif()
 
-#find_package(catch2)
-
-
 FetchContent_Declare(
     fmt
     GIT_REPOSITORY https://github.com/fmtlib/fmt.git
@@ -27,4 +24,19 @@ if(NOT fmt_POPULATED)
     add_subdirectory(${fmt_SOURCE_DIR} ${fmt_BINARY_DIR})
 endif()
 
-#find_package(fmt)
+#if (ENABLE_CODE_COVERAGE)
+    FetchContent_Declare(
+        codecoverage
+        GIT_REPOSITORY https://github.com/RWTH-HPC/CMake-codecov.git
+    )
+
+    FetchContent_GetProperties(codecoverage)
+    if(NOT codecoverage_POPULATED)
+        FetchContent_Populate(codecoverage)
+        list(APPEND CMAKE_MODULE_PATH ${codecoverage_SOURCE_DIR}/cmake)
+    endif()
+    set(ENABLE_COVERAGE ON CACHE BOOL "Enable coverage build." FORCE)
+    find_package(codecov)
+    list(APPEND LCOV_REMOVE_PATTERNS "'/usr/*'")
+    list(APPEND LCOV_REMOVE_PATTERNS "'${CMAKE_CURRENT_BINARY_DIR}/*'")
+#endif()

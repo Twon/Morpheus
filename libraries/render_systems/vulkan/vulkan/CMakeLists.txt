@@ -80,5 +80,6 @@ else()
         COMMAND MorpheusRenderSystemVulkanTests
         WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
     catch_discover_tests(MorpheusRenderSystemVulkanTests)
-
+    add_coverage(MorpheusRenderSystemVulkan)
+    add_coverage(MorpheusRenderSystemVulkanTests)
 endif()
