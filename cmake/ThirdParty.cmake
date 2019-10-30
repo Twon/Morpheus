@@ -24,19 +24,22 @@ if(NOT fmt_POPULATED)
     add_subdirectory(${fmt_SOURCE_DIR} ${fmt_BINARY_DIR})
 endif()
 
-#if (ENABLE_CODE_COVERAGE)
-    FetchContent_Declare(
-        codecoverage
-        GIT_REPOSITORY https://github.com/RWTH-HPC/CMake-codecov.git
-    )
+FetchContent_Declare(
+    codecoverage
+    GIT_REPOSITORY https://github.com/RWTH-HPC/CMake-codecov.git
+)
 
-    FetchContent_GetProperties(codecoverage)
-    if(NOT codecoverage_POPULATED)
-        FetchContent_Populate(codecoverage)
-        list(APPEND CMAKE_MODULE_PATH ${codecoverage_SOURCE_DIR}/cmake)
-    endif()
-    set(ENABLE_COVERAGE ON CACHE BOOL "Enable coverage build." FORCE)
-    find_package(codecov)
+FetchContent_GetProperties(codecoverage)
+if(NOT codecoverage_POPULATED)
+    FetchContent_Populate(codecoverage)
+    list(APPEND CMAKE_MODULE_PATH ${codecoverage_SOURCE_DIR}/cmake)
+endif()
+
+set(ENABLE_COVERAGE ${ENABLE_CODE_COVERAGE} CACHE BOOL "Enable coverage build." FORCE)
+find_package(codecov)
+
+if (ENABLE_CODE_COVERAGE)
     list(APPEND LCOV_REMOVE_PATTERNS "'/usr/*'")
     list(APPEND LCOV_REMOVE_PATTERNS "'${CMAKE_CURRENT_BINARY_DIR}/*'")
-#endif()
+	set_target_properties(gcov lcov-capture lcov-capture-init lcov-genhtml PROPERTIES FOLDER ${MORPHEUS_PREDEFINED_TARGETS})
+endif()

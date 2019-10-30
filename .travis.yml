@@ -48,6 +48,8 @@ matrix:
             - clang-7
             - g++-7
             - libgl1-mesa-dev
+            - libvulkan1
+            - libvulkan-dev
           sources:
             - ubuntu-toolchain-r-test
             - llvm-toolchain-bionic-7
@@ -64,6 +66,8 @@ matrix:
             - clang-8
             - g++-7
             - libgl1-mesa-dev
+            - libvulkan1
+            - libvulkan-dev
           sources:
             - ubuntu-toolchain-r-test
             - llvm-toolchain-bionic-8
@@ -83,6 +87,8 @@ matrix:
           packages:
             - g++-8
             - libgl1-mesa-dev
+            - libvulkan1
+            - libvulkan-dev
           sources:
             - ubuntu-toolchain-r-test
 
@@ -95,6 +101,8 @@ matrix:
           packages:
             - g++-9
             - libgl1-mesa-dev
+            - libvulkan1
+            - libvulkan-dev
           sources:
             - sourceline: 'ppa:ubuntu-toolchain-r/test'
 

@@ -75,14 +75,20 @@ public:
             return "A surface has changed in such a way that it is no longer compatible with the swapchain, and further presentation requests using the swapchain will fail. Applications must query the new surface properties and recreate their swapchain if they wish to continue presenting to the surface.";
         case VK_ERROR_INCOMPATIBLE_DISPLAY_KHR:
             return "The display used by a swapchain does not use the same presentable image layout, or is incompatible in a way that prevents sharing an image";
+        case VK_ERROR_VALIDATION_FAILED_EXT:
+            return "The primary expected use of VK_ERROR_VALIDATION_FAILED_EXT is for validation layer testing. It's not expected that an application would see this this error code during normal use of the validation layers.";
         case VK_ERROR_INVALID_SHADER_NV:
             return "One or more shaders failed to compile or link. More details are reported back to the application via VK_EXT_debug_report if enabled.";
+        case VK_ERROR_INVALID_DRM_FORMAT_MODIFIER_PLANE_LAYOUT_EXT:
+            return "When creating an image with VkImageDrmFormatModifierExplicitCreateInfoEXT, it is the application’s responsibility to satisfy all valid usage requirements. However, the implementation must validate that the provided pPlaneLayouts, when combined with the provided drmFormatModifier and other creation parameters in VkImageCreateInfo and its pNext chain, produce a valid image.";
         case VK_ERROR_OUT_OF_POOL_MEMORY:
             return "A pool memory allocation has failed. This must only be returned if no attempt to allocate host or device memory was made to accommodate the new allocation. If the failure was definitely due to fragmentation of the pool, VK_ERROR_FRAGMENTED_POOL should be returned instead.";
         case VK_ERROR_INVALID_EXTERNAL_HANDLE:
             return "An external handle is not a valid handle of the specified type.";
         case VK_ERROR_FRAGMENTATION_EXT:
             return "A descriptor pool creation has failed due to fragmentation.";
+        case VK_ERROR_NOT_PERMITTED_EXT:
+            return "the driver implementation may deny requests to acquire a priority above the default priority (VK_QUEUE_GLOBAL_PRIORITY_MEDIUM_EXT) if the caller does not have sufficient privileges. In this scenario VK_ERROR_NOT_PERMITTED_EXT is returned.";                
         case VK_ERROR_INVALID_DEVICE_ADDRESS_EXT:
             return "A buffer creation failed because the requested address is not available.";
         case VK_ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT:
