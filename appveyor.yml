@@ -46,4 +46,4 @@ build_script:
   - cmd: msbuild Morpheus.sln /p:Configuration=%configuration% /toolsversion:15.0 /p:PlatformToolset=v141 /p:Platform=%msbuild_platform%
 
 test_script:
-#  - if "%configuration%" == "Debug" ctest -VV --schedule-random -C Debug
+  - if "%configuration%" == "Debug" ctest -C Debug

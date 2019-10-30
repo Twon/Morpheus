@@ -84,5 +84,6 @@ else()
        COMMAND MorpheusRenderSystemGL4Tests
        WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
     catch_discover_tests(MorpheusRenderSystemGL4Tests)
-
+    add_coverage(MorpheusRenderSystemGL4)
+    add_coverage(MorpheusRenderSystemGL4Tests)
 endif()

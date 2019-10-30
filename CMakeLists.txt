@@ -8,6 +8,12 @@ project(Morpheus
     LANGUAGES CXX
 )
 
+option(ENABLE_CODE_COVERAGE "Enable code coverage if available (Mac OS X currently not supported)" OFF)
+
+if (APPLE)
+    SET(ENABLE_CODE_COVERAGE OFF CACHE BOOL "Ensure code coverage is switched off for Mac OS until the code coverage library addresses the AppleClang issue" FORCE)
+endif()
+
 set(BUILD_SHARED_LIBS YES)
 
 if(EXISTS ${CMAKE_BINARY_DIR}/conanbuildinfo_multi.cmake)
@@ -57,3 +63,6 @@ set(CMAKE_SKIP_BUILD_RPATH  FALSE)
 add_subdirectory(libraries)
 add_subdirectory(examples)
 
+if (ENABLE_CODE_COVERAGE)
+    coverage_evaluate()
+endif()
