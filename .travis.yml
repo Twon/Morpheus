@@ -198,7 +198,7 @@ before_script:
 script:
   # build and run tests
   - cmake --build . -- -j${JOBS}
-  - ctest --output-on-failure -j${JOBS}
+  - ctest --output-on-failure -j${JOBS} -LE GPU
   # Waiting for the following issue to be fixed before Mac OS X support can be enabled: https://github.com/RWTH-HPC/CMake-codecov/pull/15
   - |
     if [[ "${TRAVIS_OS_NAME}" == "linux" ]] && [[ "${COVERAGE}" == "1" ]]; then
