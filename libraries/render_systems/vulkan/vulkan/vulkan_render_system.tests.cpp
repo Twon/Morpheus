@@ -59,6 +59,8 @@ TEST_CASE("Create a video mode list", "[morpheus.core.gfx.video_mode_list]")
 
     VkInstance instance;
     res = vkCreateInstance(&inst_info, nullptr, &instance);
+    if( res!= VK_SUCCESS )
+        return;
     CHECK(!res);
     
     uint32_t gpu_count = 0;
