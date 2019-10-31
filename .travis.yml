@@ -51,6 +51,7 @@ matrix:
             - libgl1-mesa-dev
             - libvulkan1
             - libvulkan-dev
+            - mesa-vulkan-drivers
           sources:
             - ubuntu-toolchain-r-test
             - llvm-toolchain-bionic-7
@@ -70,6 +71,7 @@ matrix:
             - libgl1-mesa-dev
             - libvulkan1
             - libvulkan-dev
+            - mesa-vulkan-drivers
           sources:
             - ubuntu-toolchain-r-test
             - llvm-toolchain-bionic-8
@@ -92,6 +94,7 @@ matrix:
             - libgl1-mesa-dev
             - libvulkan1
             - libvulkan-dev
+            - mesa-vulkan-drivers
           sources:
             - sourceline: 'ppa:ubuntu-toolchain-r/test'
 
@@ -107,6 +110,7 @@ matrix:
             - libgl1-mesa-dev
             - libvulkan1
             - libvulkan-dev
+            - mesa-vulkan-drivers
           sources:
             - sourceline: 'ppa:ubuntu-toolchain-r/test'
 
