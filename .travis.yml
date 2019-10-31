@@ -47,6 +47,7 @@ matrix:
           packages:
             - clang-7
             - g++-7
+            - lcov
             - libgl1-mesa-dev
             - libvulkan1
             - libvulkan-dev
@@ -65,6 +66,7 @@ matrix:
           packages:
             - clang-8
             - g++-7
+            - lcov
             - libgl1-mesa-dev
             - libvulkan1
             - libvulkan-dev
@@ -86,6 +88,7 @@ matrix:
         apt:
           packages:
             - g++-8
+            - lcov
             - libgl1-mesa-dev
             - libvulkan1
             - libvulkan-dev
@@ -100,6 +103,7 @@ matrix:
         apt:
           packages:
             - g++-9
+            - lcov
             - libgl1-mesa-dev
             - libvulkan1
             - libvulkan-dev
