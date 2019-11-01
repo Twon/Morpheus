@@ -47,7 +47,6 @@ matrix:
           packages:
             - clang-7
             - g++-7
-            - lcov
             - libgl1-mesa-dev
             - libvulkan1
             - libvulkan-dev
@@ -67,7 +66,6 @@ matrix:
           packages:
             - clang-8
             - g++-7
-            - lcov
             - libgl1-mesa-dev
             - libvulkan1
             - libvulkan-dev
@@ -90,7 +88,6 @@ matrix:
         apt:
           packages:
             - g++-8
-            - lcov
             - libgl1-mesa-dev
             - libvulkan1
             - libvulkan-dev
@@ -106,7 +103,6 @@ matrix:
         apt:
           packages:
             - g++-9
-            - lcov
             - libgl1-mesa-dev
             - libvulkan1
             - libvulkan-dev
@@ -158,6 +154,21 @@ install:
       which cmake || brew install cmake || brew upgrade cmake
     fi
   - cmake --version
+
+  ############################################################################
+  # Install a recent lcov (unless already installed on OS X) due to compatability 
+  # issues with GCC 8 & 9: https://github.com/linux-test-project/lcov/issues/58
+  ############################################################################
+  - LCOV_VERSION=1.14
+  - |
+    if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
+      LCOV_URL="https://github.com/linux-test-project/lcov/releases/download/v{LCOV_VERSION}/lcov-{LCOV_VERSION}.tar.gz"
+      mkdir lcov && travis_retry wget --no-check-certificate -O - ${LCOV_URL} | tar --strip-components=1 -xz -C lcov
+      export PATH=${DEPS_DIR}/lcov/bin:${PATH}
+    else
+      which lcov || brew install lcov || brew upgrade lcov
+    fi
+  - lcov --version
 
   ############################################################################
   # [linux]: Install the right version of libc++
