@@ -96,7 +96,7 @@ matrix:
             - sourceline: 'ppa:ubuntu-toolchain-r/test'
 
     # GCC 9
-    - env: COMPILER=g++-9 BUILD_TYPE=Debug COVERAGE=1 VULKAN_SDK_VER="1.1.121"
+    - env: COMPILER=g++-9 BUILD_TYPE=Debug COVERAGE=0 VULKAN_SDK_VER="1.1.121"
       language: python
       python: "3.7"
       addons: &gcc9
