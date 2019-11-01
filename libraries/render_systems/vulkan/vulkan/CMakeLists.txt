@@ -79,7 +79,8 @@ else()
         NAME MorpheusRenderSystemVulkanTests
         COMMAND MorpheusRenderSystemVulkanTests
         WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
-    catch_discover_tests(MorpheusRenderSystemVulkanTests)
+    set_tests_properties(MorpheusRenderSystemVulkanTests PROPERTIES LABELS "GPU")
+    catch_discover_tests(MorpheusRenderSystemVulkanTests PROPERTIES LABELS "GPU")
     add_coverage(MorpheusRenderSystemVulkan)
     add_coverage(MorpheusRenderSystemVulkanTests)
 endif()
