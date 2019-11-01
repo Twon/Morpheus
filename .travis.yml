@@ -162,7 +162,7 @@ install:
   - LCOV_VERSION=1.14
   - |
     if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
-      LCOV_URL="https://github.com/linux-test-project/lcov/releases/download/v{LCOV_VERSION}/lcov-{LCOV_VERSION}.tar.gz"
+      LCOV_URL="https://github.com/linux-test-project/lcov/releases/download/v${LCOV_VERSION}/lcov-${LCOV_VERSION}.tar.gz"
       mkdir lcov && travis_retry wget --no-check-certificate -O - ${LCOV_URL} | tar --strip-components=1 -xz -C lcov
       export PATH=${DEPS_DIR}/lcov/bin:${PATH}
     else
