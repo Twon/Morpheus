@@ -26,7 +26,11 @@ endif()
 
 FetchContent_Declare(
     codecoverage
-    GIT_REPOSITORY https://github.com/RWTH-HPC/CMake-codecov.git
+    #GIT_REPOSITORY https://github.com/RWTH-HPC/CMake-codecov.git
+
+    # Use branch fixing source file externsion comparison bug affecting files with ".tests.cpp" extension until its merged into the original repository 
+    GIT_REPOSITORY https://github.com/Twon/CMake-codecov.git
+    GIT_TAG fix_multi_extension_files
 )
 
 FetchContent_GetProperties(codecoverage)
