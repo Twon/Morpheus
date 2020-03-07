@@ -128,6 +128,8 @@ install:
         sudo wget -qO /etc/apt/sources.list.d/lunarg-vulkan-$VULKAN_SDK_VER-xenial.list http://packages.lunarg.com/vulkan/$VULKAN_SDK_VER/lunarg-vulkan-$VULKAN_SDK_VER-xenial.list &&
         sudo apt update &&
         sudo apt install lunarg-vulkan-sdk
+    else
+        brew install molten-vk
     fi
   # Set the ${CXX} variable properly
   - export CXX=${COMPILER}
