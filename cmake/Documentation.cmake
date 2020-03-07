@@ -8,12 +8,12 @@ if(MORPHEUS_BUILD_DOCUMENTATION)
         message(FATAL_ERROR "Doxygen is needed to build the documentation.")
     endif()
 
-	doxygen_add_docs(Documentation
+    doxygen_add_docs(Documentation
         WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/libraries/
-		COMMENT "Generating API documentation with Doxygen"
-	)	
-		
+        COMMENT "Generating API documentation with Doxygen"
+    )
+
     install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/html DESTINATION documentation)
-	
-	set_target_properties(Documentation PROPERTIES FOLDER ${MORPHEUS_PREDEFINED_TARGETS})
+
+    set_target_properties(Documentation PROPERTIES FOLDER ${MORPHEUS_PREDEFINED_TARGETS})
 endif()
