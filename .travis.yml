@@ -130,7 +130,7 @@ install:
         sudo apt install lunarg-vulkan-sdk
     else
         brew install molten-vk
-        set VULKAN_SDK=/usr/local/Cellar/molten-vk/
+        set VULKAN_SDK=/usr/local/opt/molten-vk
     fi
   # Set the ${CXX} variable properly
   - export CXX=${COMPILER}
