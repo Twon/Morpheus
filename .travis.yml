@@ -131,7 +131,6 @@ install:
     else
         brew install vulkan-headers
         brew install molten-vk
-        export VULKAN_SDK=`greadlink -f \`brew --prefix molten-vk\``
     fi
   # Set the ${CXX} variable properly
   - export CXX=${COMPILER}
