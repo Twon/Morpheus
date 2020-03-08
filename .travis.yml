@@ -129,8 +129,9 @@ install:
         sudo apt update &&
         sudo apt install lunarg-vulkan-sdk
     else
+        brew install coreutils
         brew install molten-vk
-        set VULKAN_SDK=/usr/local/opt/molten-vk
+        export VULKAN_SDK=`greadlink -f \`brew --prefix molten-vk\``
     fi
   # Set the ${CXX} variable properly
   - export CXX=${COMPILER}
