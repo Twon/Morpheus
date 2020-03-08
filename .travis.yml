@@ -130,6 +130,7 @@ install:
         sudo apt install lunarg-vulkan-sdk
     else
         brew install vulkan-headers
+        brew cask install apenngrace/vulkan/vulkan-sdk
         brew install molten-vk
     fi
   # Set the ${CXX} variable properly
