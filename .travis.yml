@@ -130,7 +130,6 @@ install:
         sudo apt install lunarg-vulkan-sdk
     else
         brew cask install apenngrace/vulkan/vulkan-sdk
-        brew install molten-vk
     fi
   # Set the ${CXX} variable properly
   - export CXX=${COMPILER}
