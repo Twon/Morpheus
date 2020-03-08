@@ -129,7 +129,7 @@ install:
         sudo apt update &&
         sudo apt install lunarg-vulkan-sdk
     else
-        brew install coreutils
+        brew install vulkan-headers
         brew install molten-vk
         export VULKAN_SDK=`greadlink -f \`brew --prefix molten-vk\``
     fi
