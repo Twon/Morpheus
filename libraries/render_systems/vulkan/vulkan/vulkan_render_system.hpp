@@ -1,6 +1,8 @@
 #pragma once
 
 #include <core/gfx/render_system.hpp>
+#include <vulkan/vulkan.h>
+#include <vector>
 
 namespace morpheus::gfx::vulkan
 {
@@ -10,9 +12,12 @@ namespace morpheus::gfx::vulkan
  */
 class render_system : public gfx::render_system {
 public:
-    virtual ~render_system();
+    render_system();
+    virtual ~render_system() override;
 
 private:
+    std::tuple<uint32_t, uint32_t, uint32_t> mVulkanVersion;
+    std::vector<VkLayerProperties> mAvailableLayers;
 };
 
 } // namespace morpheus::gfx::vulkan
