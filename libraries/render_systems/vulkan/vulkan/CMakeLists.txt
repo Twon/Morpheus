@@ -1,4 +1,5 @@
 find_package(Vulkan)
+find_package(glfw3)
 
 if (NOT ${Vulkan_FOUND})
 
@@ -9,6 +10,7 @@ else()
     add_executable(MorpheusRenderSystemVulkanTests "")
 
     add_subdirectory(adapters)
+    add_subdirectory(primitive)
 
     target_sources(MorpheusRenderSystemVulkan
         PRIVATE
@@ -32,6 +34,7 @@ else()
         PRIVATE
             MorpheusCore
             Vulkan::Vulkan
+#            glfw::glfw
     )
     
     get_target_property(SOURCES_FILES MorpheusRenderSystemVulkan SOURCES)

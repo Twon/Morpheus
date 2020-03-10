@@ -1,13 +1,7 @@
 target_sources(MorpheusRenderSystemVulkan
     PRIVATE
-        "vulkan_adapter.hpp"
-        "vulkan_adapter.cpp"
-        "vulkan_adapter_list.hpp"
-        "vulkan_adapter_list.cpp"
-        "vulkan_video_mode.hpp"
-        "vulkan_video_mode.cpp"
-        "vulkan_video_mode_list.hpp"
-        "vulkan_video_mode_list.cpp"
+		vulkan_instance.hpp
+		vulkan_instance.cpp
         "CMakeLists.txt"
 )
 
@@ -19,7 +13,6 @@ set_source_files_properties(
 
 target_sources(MorpheusRenderSystemVulkanTests
 	PRIVATE
-		"vulkan_adapter_list.tests.cpp"
-		"vulkan_video_mode_list.tests.cpp"
+		vulkan_instance.tests.cpp
         "CMakeLists.txt"
 )

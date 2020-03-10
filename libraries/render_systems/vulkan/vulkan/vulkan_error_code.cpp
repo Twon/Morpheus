@@ -51,7 +51,7 @@ public:
             return "Initialization of an object could not be completed for implementation-specific reasons.";
         case VK_ERROR_DEVICE_LOST:
             return "The logical or physical device has been lost.";
-            case VK_ERROR_MEMORY_MAP_FAILED:
+        case VK_ERROR_MEMORY_MAP_FAILED:
             return "Mapping of a memory object has failed.";
         case VK_ERROR_LAYER_NOT_PRESENT:
             return "A requested layer is not present or could not be loaded.";
