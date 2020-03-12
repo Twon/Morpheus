@@ -21,10 +21,10 @@ TEST_CASE("Walk a Vulkan instance application info entity through its Life-cycle
                 REQUIRE(vulkan_primitive.pNext == nullptr);
                 REQUIRE(vulkan_primitive.pApplicationName != nullptr);
                 REQUIRE(std::string_view(vulkan_primitive.pApplicationName) == application_name);
-                REQUIRE(vulkan_primitive.applicationVersion == 1);
+                REQUIRE(vulkan_primitive.applicationVersion == VK_MAKE_VERSION(1, 0, 0));
                 REQUIRE(vulkan_primitive.pEngineName != nullptr);
                 REQUIRE(std::string_view(vulkan_primitive.pEngineName) == application_name);
-                REQUIRE(vulkan_primitive.engineVersion == 1);
+                REQUIRE(vulkan_primitive.engineVersion == VK_MAKE_VERSION(1, 0, 0));
                 REQUIRE(vulkan_primitive.apiVersion == get_highest_supported_instance_version());
             }
         }
@@ -47,6 +47,29 @@ TEST_CASE("Walk a Vulkan instance create info entity through its Life-cycle", "[
                 REQUIRE(vulkan_primitive.pNext == nullptr);
                 REQUIRE(vulkan_primitive.flags == 0);
                 REQUIRE(vulkan_primitive.pApplicationInfo == nullptr);
+                REQUIRE(vulkan_primitive.enabledLayerCount == 0);
+                REQUIRE(vulkan_primitive.ppEnabledLayerNames == nullptr);
+                REQUIRE(vulkan_primitive.enabledExtensionCount == 0);
+                REQUIRE(vulkan_primitive.ppEnabledExtensionNames == nullptr);
+            }
+        }
+    }
+    GIVEN("A create_info constructed with app_info")
+    {
+        const std::string application_name = "Test application";
+        instance::application_info app_info(std::move(application_name));
+        instance::create_info info(app_info);
+
+        WHEN("Default-constructed")
+        {
+            const auto& vulkan_primitive = static_cast<const VkInstanceCreateInfo&>(info);
+
+            THEN("Ensure no copies or deletes occur")
+            {
+                REQUIRE(vulkan_primitive.sType == VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO);
+                REQUIRE(vulkan_primitive.pNext == nullptr);
+                REQUIRE(vulkan_primitive.flags == 0);
+                REQUIRE(vulkan_primitive.pApplicationInfo == app_info.operator&());
                 REQUIRE(vulkan_primitive.enabledLayerCount == 0);
                 REQUIRE(vulkan_primitive.ppEnabledLayerNames == nullptr);
                 REQUIRE(vulkan_primitive.enabledExtensionCount == 0);
