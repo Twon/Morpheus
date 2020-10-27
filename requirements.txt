@@ -7,7 +7,7 @@ chardet==3.0.4
 colorama==0.4.1
 conan==1.19.1
 conan-package-tools==0.29.3
-cryptography==2.3.1
+cryptography==3.2
 deprecation==2.0.7
 distro==1.1.0
 fasteners==0.15
