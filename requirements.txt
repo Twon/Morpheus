@@ -24,7 +24,7 @@ packaging==19.2
 patch==1.16
 pluginbase==0.7
 pycparser==2.19
-Pygments==2.4.2
+Pygments==2.7.4
 PyJWT==1.7.1
 pylint==2.4.2
 pyOpenSSL==18.0.0
