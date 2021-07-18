@@ -1,10 +1,15 @@
 [requires]
-#propagate_const/1.0.0@bsi/testing
-#catch2/2.5.0@bincrafters/stable
-#fmt/6.0.0@bincrafters/stable
-gsl_microsoft/2.0.0@bincrafters/stable
-range-v3/0.9.1@ericniebler/stable
+catch2/2.13.6
+fmt/8.0.1
+#range-v3/0.11.0
+#trompeloeil/41
+ms-gsl/3.1.0
+vulkan-headers/1.2.184
+
+#propagate_const/1.0.0@mmha/testing
+
 #vulkan-sdk/1.0.46.0@alaingalvan/stable
+#glfw/3.3@bincrafters/stable
 
 [generators]
 cmake
