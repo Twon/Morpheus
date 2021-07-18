@@ -73,10 +73,10 @@ else()
     get_target_property(SOURCES_FILES_TEST MorpheusRenderSystemGL4Tests SOURCES)
     source_group(TREE ${CMAKE_CURRENT_LIST_DIR} FILES ${SOURCES_FILES_TEST})
 
-    install (TARGETS MorpheusRenderSystemGL4
-             RUNTIME DESTINATION bin
-             ARCHIVE DESTINATION lib
-             LIBRARY DESTINATION lib
+    install(TARGETS MorpheusRenderSystemGL4
+            RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+            ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+            LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     )
     
     add_test(

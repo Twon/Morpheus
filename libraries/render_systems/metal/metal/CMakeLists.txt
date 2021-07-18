@@ -35,9 +35,9 @@ if (APPLE)
     )
 
     install(TARGETS MorpheusRenderSystemMetal
-            RUNTIME DESTINATION bin
-            ARCHIVE DESTINATION lib
-            LIBRARY DESTINATION lib
+            RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+            ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+            LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     )
     
 #    add_test(

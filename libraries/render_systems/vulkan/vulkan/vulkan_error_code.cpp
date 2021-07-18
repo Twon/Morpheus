@@ -1,11 +1,5 @@
-//
-//  vulkan_error_code.c
-//  MorpheusRenderSystemVulkan
-//
-//  Created by Antony Peacock on 21/10/2019.
-//
-
 #include <vulkan/vulkan_error_code.hpp>
+
 
 namespace morpheus::gfx::vulkan
 {
@@ -20,12 +14,12 @@ public:
     /*! Queries a short form descriptive name for the category.
         \return Short form name of the category.
      */
-    virtual const char* name() const noexcept override final { return "vulkan_error_category"; }
+    const char* name() const noexcept override final { return "vulkan_error_category"; }
 
     /*! Queries an error string describing the error.
         \return The error message.
      */
-    virtual std::string message(int c) const override final
+    std::string message(int c) const override final
     {
         switch (static_cast<VkResult>(c))
         {
