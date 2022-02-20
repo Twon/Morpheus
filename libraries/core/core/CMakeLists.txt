@@ -6,20 +6,11 @@ target_sources(MorpheusCore
         cpu.hpp
         platform.hpp
         game/game.hpp
-        gfx/pixel.hpp
-        gfx/render_system_factory.hpp
-        gfx/render_system.hpp
-        gfx/render_target.hpp
-        gfx/render_window.hpp
         world/world_model.hpp
         visualisation/visualisation.hpp
     PRIVATE
         cpu.cpp
         game/game.cpp
-        gfx/render_system_factory.cpp
-        gfx/render_system.cpp
-        gfx/render_target.cpp
-        gfx/render_window.cpp
         world/world_model.cpp
         visualisation/visualisation.cpp
 )
@@ -29,12 +20,9 @@ target_sources(MorpheusCoreTests
         cpu.test.cpp
 )
 
-if(WIN32)
-    add_subdirectory(gfx/win32)
-endif(WIN32)
-
-add_subdirectory(gfx/adapters)
-add_subdirectory(gfx/textures)
+add_subdirectory(gfx)
+add_subdirectory(meta)
+add_subdirectory(serialisation)
 
 target_sources(MorpheusCoreTests
     PRIVATE
