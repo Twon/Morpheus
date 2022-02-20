@@ -2,6 +2,8 @@
 
 #include <core/gfx/render_system.hpp>
 #include <vulkan/vulkan.h>
+
+#include <tuple>
 #include <vector>
 
 namespace morpheus::gfx::vulkan

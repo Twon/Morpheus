@@ -1,7 +1,7 @@
-#ifndef MORPHEUS_VULKAN_INSTANCE_HPP
-#define MORPHEUS_VULKAN_INSTANCE_HPP
+#pragma once
 
-#include <vulkan/vulkan.h>
+#include <vulkan/vulkan_core.h>
+
 #include <string>
 #include <optional>
 #include <vector>
@@ -90,6 +90,3 @@ namespace morpheus::gfx::vulkan::primitives
     };
 
 } // namespace morpheus::gfx::vulkan
-
-
-#endif //MORPHEUS_VULKAN_INSTANCE_HPP

@@ -1,4 +1,7 @@
 #include "vulkan_instance.hpp"
+
+#include <algorithm>
+#include <stdexcept>
 #include <utility>
 #include <tuple>
 

@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.15)
+cmake_minimum_required(VERSION 3.18)
 
 file(STRINGS "version.txt" MORPHEUS_VERSION)
 
@@ -23,7 +23,7 @@ set(BUILD_SHARED_LIBS YES)
 
 # Include necessary submodules
 list(APPEND CMAKE_MODULE_PATH
-${CMAKE_BINARY_DIR}
+    ${CMAKE_BINARY_DIR}
     ${PROJECT_SOURCE_DIR}/cmake
     ${PROJECT_SOURCE_DIR}/cmake/Modules
 )

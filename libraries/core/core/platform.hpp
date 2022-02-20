@@ -149,7 +149,7 @@
 
             #define MORPHEUS_BUILD_PLATFORM    MORPHEUS_TARGET_PLATFORM_PC_WINDOWS
 
-        #elif defined ( __APPLE_CC__)
+        #elif defined ( __APPLE_CC__ )
 
             #define MORPHEUS_BUILD_PLATFORM    MORPHEUS_TARGET_PLATFORM_APPLE
 
