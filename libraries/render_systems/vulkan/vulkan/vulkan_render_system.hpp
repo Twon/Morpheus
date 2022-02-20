@@ -1,6 +1,7 @@
 #pragma once
 
 #include <core/gfx/render_system.hpp>
+#include <vulkan/adapters/vulkan_adapter_list.hpp>
 #include <vulkan/version.hpp>
 
 #include <vulkan/vulkan.hpp>
@@ -27,6 +28,7 @@ private:
     Version mVulkanVersion; /// The instance version of Vulkan available.
     std::vector<vk::ExtensionProperties> mAvailableExtensions; /// The available Vulkan extension properties.
     std::vector<vk::LayerProperties> mAvailableLayers; /// The available Vulkan layer properties.
+    AdapterList mAdapters;
 };
 
 } // namespace morpheus::gfx::vulkan

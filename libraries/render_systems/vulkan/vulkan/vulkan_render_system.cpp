@@ -30,10 +30,11 @@ render_system::render_system(std::string_view const appName, std::string_view co
 
         // create an Instance
         return vk::raii::Instance( mContext, instanceCreateInfo );
-    }(appName, engineName)),
-    mVulkanVersion(mContext.enumerateInstanceVersion()),
-    mAvailableExtensions(mContext.enumerateInstanceExtensionProperties()),
-    mAvailableLayers(mContext.enumerateInstanceLayerProperties())
+    }(appName, engineName))
+,   mVulkanVersion(mContext.enumerateInstanceVersion())
+,   mAvailableExtensions(mContext.enumerateInstanceExtensionProperties())
+,   mAvailableLayers(mContext.enumerateInstanceLayerProperties())
+,   mAdapters(mInstance)
 {
 }
 

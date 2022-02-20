@@ -1,7 +1,6 @@
-#find_package(volk REQUIRED)
 find_package(VulkanHeaders REQUIRED)
 
-if (NOT ${Vulkan_FOUND})
+if (NOT ${VulkanHeaders_FOUND})
     message("Vulkan not found on the system.  Unable to support Vulkan based render system.")
     return()
 endif()
@@ -10,7 +9,6 @@ add_library(MorpheusRenderSystemVulkan "")
 add_executable(MorpheusRenderSystemVulkanTests "")
 
 add_subdirectory(adapters)
-add_subdirectory(primitive)
 
 target_sources(MorpheusRenderSystemVulkan
     PUBLIC
