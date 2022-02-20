@@ -7,3 +7,7 @@
 
 #define CATCH_CONFIG_MAIN
 #include <catch2/catch.hpp>
+
+TEST_CASE("Iterates over the adapters in the list", "[morpheus.core.gfx.gl4.render_system]")
+{
+}

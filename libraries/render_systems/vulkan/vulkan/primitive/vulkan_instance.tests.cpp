@@ -4,7 +4,7 @@
 
 using namespace morpheus::gfx::vulkan::primitives;
 
-TEST_CASE("Walk a Vulkan instance application info entity through its Life-cycle", "[morpheus.gfx.vulkan.instance.application_info]")
+/*TEST_CASE("Walk a Vulkan instance application info entity through its Life-cycle", "[morpheus.gfx.vulkan.instance.application_info]")
 {
     GIVEN("A default constructed application_info instance")//The ability to track internal copies and deletes of the default constructor")
     {
@@ -84,3 +84,4 @@ TEST_CASE("Walk a Vulkan instance through its Life-cycle", "[morpheus.gfx.vulkan
 {
 
 }
+*/

@@ -1,36 +1,13 @@
 #include <vulkan/vulkan_render_system.hpp>
+#include <vulkan/vulkan.h>
 
+VULKAN_HPP_DEFAULT_DISPATCH_LOADER_DYNAMIC_STORAGE
 
 namespace morpheus::gfx::vulkan
 {
 
 namespace
 {
-
-const auto get_vulkan_version()
-{
-    uint32_t version = 0;
-    vkEnumerateInstanceVersion(&version);
-    return std::tuple(VK_VERSION_MAJOR(version), VK_VERSION_MINOR(version),  VK_VERSION_PATCH(version));
-}
-
-const auto get_instance_layer_properties()
-{
-    uint32_t instance_layer_count = 0;
-    VkResult res = vkEnumerateInstanceLayerProperties(&instance_layer_count, nullptr);
-    std::vector<VkLayerProperties> layers(instance_layer_count);
-    res = vkEnumerateInstanceLayerProperties(&instance_layer_count, layers.data());
-    return layers;
-}
-
-const auto get_instance_extension_properties()
-{
-    uint32_t instance_extension_count = 0;
-    VkResult res = vkEnumerateInstanceExtensionProperties(nullptr, &instance_extension_count, nullptr);
-    std::vector<VkExtensionProperties> extensions(instance_extension_count);
-    res = vkEnumerateInstanceExtensionProperties(nullptr, &instance_extension_count, extensions.data());
-    return extensions;
-}
 
 const auto get_physical_devices()
 {
@@ -42,11 +19,22 @@ const auto get_physical_devices()
 
 //---------------------------------------------------------------------------------------------------------------------
 
-render_system::render_system()
-:   mVulkanVersion(get_vulkan_version()),
-    mAvailableLayers(get_instance_layer_properties())
-{
+render_system::render_system(std::string_view const appName, std::string_view const engineName)
+:   mInstance([&](auto const appName, auto const engineName)
+    {
+        // initialize the vk::ApplicationInfo structure
+        vk::ApplicationInfo applicationInfo( appName.data(), 1, engineName.data(), 1, VK_API_VERSION_1_1 );
 
+        // initialize the vk::InstanceCreateInfo
+        vk::InstanceCreateInfo instanceCreateInfo( {}, &applicationInfo );
+
+        // create an Instance
+        return vk::raii::Instance( mContext, instanceCreateInfo );
+    }(appName, engineName)),
+    mVulkanVersion(mContext.enumerateInstanceVersion()),
+    mAvailableExtensions(mContext.enumerateInstanceExtensionProperties()),
+    mAvailableLayers(mContext.enumerateInstanceLayerProperties())
+{
 }
 
 //---------------------------------------------------------------------------------------------------------------------

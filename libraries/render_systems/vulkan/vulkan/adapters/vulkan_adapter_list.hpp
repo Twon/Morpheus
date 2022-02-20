@@ -2,6 +2,8 @@
 
 #include <core/gfx/adapters/adapter.hpp>
 
+#include <vector>
+
 namespace morpheus::gfx::vulkan
 {
 
@@ -19,7 +21,11 @@ public:
     ///@}
 
 private:
+    using PhysicalDevices = std::vector<vk::PhysicalDevice>;
 
+    vk::Instance mInstance; /// Vulkan instance stores all per instance state.
+    PhysicalDevices mPhysicalDevices; /// All physical devices on the target host.
+    vk::PhysicalDevice mPhysicalDevice; /// Physical device (GPU) that Vulkan will use.
 };
 
 } // namespace morpheus::gfx::vulkan

@@ -7,12 +7,12 @@
 
 #define CATCH_CONFIG_MAIN
 #include <catch2/catch.hpp>
-#include <vulkan/vulkan.h>
+#include <vulkan/vulkan.hpp>
 
 
 #include <iostream>
 #include <vector>
-
+/*
 TEST_CASE("Create a video mode list", "[morpheus.core.gfx.video_mode_list]")
 {
     uint32_t version = 0;
@@ -30,14 +30,14 @@ TEST_CASE("Create a video mode list", "[morpheus.core.gfx.video_mode_list]")
     std::transform(layers.begin(), layers.end(), layer_names.begin(), [](const auto& element) { return element.layerName;});
     std::for_each(layers.begin(), layers.end(),  [](const auto& element) { INFO("Layer: " << element.layerName);});
 
-/*    for (const auto& element : layers)
-    {
-        res = vkEnumerateInstanceExtensionProperties(layer_name, &instance_extension_count, NULL);
-
-    }
-    layer_props.instance_extensions.resize(instance_extension_count);
-    instance_extensions = layer_props.instance_extensions.data();
-    res = vkEnumerateInstanceExtensionProperties(layer_name, &instance_extension_count, instance_extensions);*/
+//    for (const auto& element : layers)
+//    {
+//        res = vkEnumerateInstanceExtensionProperties(layer_name, &instance_extension_count, NULL);
+//
+//    }
+//    layer_props.instance_extensions.resize(instance_extension_count);
+//    instance_extensions = layer_props.instance_extensions.data();
+//    res = vkEnumerateInstanceExtensionProperties(layer_name, &instance_extension_count, instance_extensions);
     
     char const * const app_name = "My Vulkan Test Case";
     VkApplicationInfo app_info = {};
@@ -78,3 +78,4 @@ TEST_CASE("Create a video mode list", "[morpheus.core.gfx.video_mode_list]")
     CHECK(!res);
     CHECK(gpu_count > 0);
 }
+*/

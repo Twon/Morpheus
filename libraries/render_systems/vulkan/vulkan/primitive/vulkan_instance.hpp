@@ -1,6 +1,6 @@
 #pragma once
 
-#include <vulkan/vulkan_core.h>
+#include <vulkan/vulkan.hpp>
 
 #include <string>
 #include <optional>
@@ -12,30 +12,30 @@ namespace morpheus::gfx::vulkan::primitives
         \return
             Vulkan API version.
      */
-    uint32_t get_highest_supported_instance_version();
+    /*uint32_t get_highest_supported_instance_version();
 
     std::vector<VkLayerProperties> enumerate_instance_layer_properties();
 
-    std::vector<VkExtensionProperties> enumerate_instance_extension_properties(const std::optional<std::string>& layer);
+    std::vector<VkExtensionProperties> enumerate_instance_extension_properties(const std::optional<std::string>& layer);*/
 
     /*! \class instance
             A video mode describes a mode of available settings for an graphics adapter.
      */
-    class instance {
+/*    class instance {
     public:
 
         class application_info {
         public:
-            /*!
-                \param[in] name
-                    The application name
-             */
+            ///
+            /// \param[in] name
+            ///     The application name
+             
             application_info(std::string name) noexcept;
 
-            //! Access the address of the underlying Vulkan structure.
+            /// Access the address of the underlying Vulkan structure.
             const VkApplicationInfo* operator&() const noexcept { return &mInfo; }
 
-            //! Access the underlying Vulkan structure.
+            /// Access the underlying Vulkan structure.
             explicit operator const VkApplicationInfo& () const noexcept { return mInfo; }
 
         private:
@@ -45,25 +45,22 @@ namespace morpheus::gfx::vulkan::primitives
 
         class create_info {
         public:
-            /*!
+            
 
-               \param[in] app_info
-               \param[in] layers
-             */
+            /// \param[in] app_info
+            /// \param[in] layers
             create_info(
                 const std::optional<std::vector<VkLayerProperties>>& layers = std::optional<std::vector<VkLayerProperties>>()
             ) noexcept;
 
-            /*!
+            
 
-               \param[in] app_info
-               \param[in] layers
-             */
+            /// \param[in] app_info
+            /// \param[in] layers
             create_info(
                 const application_info& app_info,
                 const std::optional<std::vector<VkLayerProperties>>& layers = std::optional<std::vector<VkLayerProperties>>()
             ) noexcept;
-
 
             //! Access the address of the underlying Vulkan structure.
             const VkInstanceCreateInfo* operator&() const noexcept { return &mInfo; }
@@ -86,7 +83,7 @@ namespace morpheus::gfx::vulkan::primitives
         instance& operator=(instance&&)=delete;
 
     private:
-        VkInstance mInstance;
-    };
+        vk::Instance mInstance; /// Vulkan instance stores all per instance state.
+    };*/
 
-} // namespace morpheus::gfx::vulkan
+} // namespace morpheus::gfx::vulkan::primitives

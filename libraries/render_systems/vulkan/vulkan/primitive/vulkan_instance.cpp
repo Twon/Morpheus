@@ -9,7 +9,7 @@ namespace morpheus::gfx::vulkan::primitives
 {
     uint32_t get_highest_supported_instance_version()
     {
-        uint32_t version = VK_API_VERSION_1_0;
+/*        uint32_t version = VK_API_VERSION_1_0;
 
         const auto instance_version_func = vkGetInstanceProcAddr(nullptr, "vkEnumerateInstanceVersion");
         if (instance_version_func)
@@ -18,13 +18,14 @@ namespace morpheus::gfx::vulkan::primitives
             const auto enum_version_func = reinterpret_cast<vkEnumerateInstanceVersion_func>(instance_version_func);
             enum_version_func(&version);
         }
-        return version;
+        return version;*/
+        return 0;
 //        return std::make_tuple(VK_VERSION_MAJOR(version), VK_VERSION_MINOR(version), VK_VERSION_PATCH(version));
     }
 
-    std::vector<VkLayerProperties> enumerate_instance_layer_properties()
+    auto enumerate_instance_layer_properties()
     {
-        VkResult res = VK_SUCCESS;
+/*        VkResult res = VK_SUCCESS;
         uint32_t instance_layer_count = 0;
         std::vector<VkLayerProperties> layers;
         do{
@@ -36,13 +37,14 @@ namespace morpheus::gfx::vulkan::primitives
             }
         }
         while(res == VK_INCOMPLETE);
-        return layers;
+        return layers;*/
+
     }
 
 
-    std::vector<VkExtensionProperties> enumerate_instance_extension_properties(const std::optional<std::string>& layer)
+    auto enumerate_instance_extension_properties(const std::optional<std::string>& layer)
     {
-        VkResult res = VK_SUCCESS;
+/*        VkResult res = VK_SUCCESS;
         uint32_t instance_extensions_count = 0;
         std::vector<VkExtensionProperties> extensions;
         do{
@@ -54,7 +56,7 @@ namespace morpheus::gfx::vulkan::primitives
             }
         }
         while(res == VK_INCOMPLETE);
-        return extensions;
+        return extensions;*/
     }
 
 
@@ -70,11 +72,11 @@ namespace morpheus::gfx::vulkan::primitives
     } VkApplicationInfo;
 */
 
-    instance::application_info::application_info(std::string name) noexcept
+/*    instance::application_info::application_info(std::string name) noexcept
     :   mName(std::move(name)),
         mInfo{ VK_STRUCTURE_TYPE_APPLICATION_INFO, nullptr, mName.c_str(), VK_MAKE_VERSION(1, 0, 0), mName.c_str(), VK_MAKE_VERSION(1, 0, 0), get_highest_supported_instance_version()}
     {
-    }
+    }*/
 
     /*
 
@@ -91,7 +93,7 @@ namespace morpheus::gfx::vulkan::primitives
 
      */
 
-    instance::create_info::create_info(
+/*    instance::create_info::create_info(
         const std::optional<std::vector<VkLayerProperties>>& layers
     ) noexcept
     :    mInfo{ VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO, nullptr, 0,
@@ -132,6 +134,6 @@ namespace morpheus::gfx::vulkan::primitives
     instance::~instance()
     {
         vkDestroyInstance(mInstance, nullptr);
-    }
+    }*/
 
 } // namespace morpheus::gfx::vulkan
