@@ -15,11 +15,7 @@ target_sources(MorpheusCore
         visualisation/visualisation.cpp
 )
 
-target_sources(MorpheusCoreTests
-    PRIVATE
-        cpu.test.cpp
-)
-
+add_subdirectory(conformance)
 add_subdirectory(gfx)
 add_subdirectory(meta)
 add_subdirectory(serialisation)
@@ -55,6 +51,7 @@ target_compile_options(MorpheusCore
 target_link_libraries(MorpheusCore
     PUBLIC
         fmt::fmt
+        range-v3::range-v3
 )
 
 target_link_libraries(MorpheusCoreTests
