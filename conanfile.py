@@ -53,7 +53,8 @@ class Morpheus(ConanFile):
     generators = "cmake_find_package", "cmake_find_package_multi", "virtualenv"
     requires = (
         "catch2/2.13.8", 
-        "fmt/8.1.1", 
+        "fmt/8.1.1",
+        "range-v3/0.11.0",
         "trompeloeil/41",
         "vulkan-headers/1.3.204.0"
     )

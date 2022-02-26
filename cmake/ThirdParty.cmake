@@ -1,5 +1,6 @@
 find_package(Catch2 REQUIRED)
 find_package(fmt REQUIRED)
+find_package(range-v3 REQUIRED)
 
 FetchContent_Declare(codecoverage GIT_REPOSITORY https://github.com/RWTH-HPC/CMake-codecov.git)
 FetchContent_GetProperties(codecoverage)

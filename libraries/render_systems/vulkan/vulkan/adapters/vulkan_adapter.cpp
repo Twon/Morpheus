@@ -1,21 +1,19 @@
-#include <vulkan/adapters/vulkan_adapter.hpp>
+#include "vulkan/adapters/vulkan_adapter.hpp"
+#include "core/conformance/ranges.hpp"
 
 namespace morpheus::gfx::vulkan
 {
 
-//---------------------------------------------------------------------------------------------------------------------
-
-adapter::adapter(
-    const std::uint32_t width,
-    const std::uint32_t height,
-    const std::uint32_t colourDepth
-)
-:   mWidth(width),
-    mHeight(height),
-    mColourDepth(colourDepth)
+Adapter::Adapter(vk::raii::PhysicalDevice&& physicalDevice)
+:   mPhysicalDevice(std::move(physicalDevice))
 {
 }
 
-//---------------------------------------------------------------------------------------------------------------------
+AdapterList enumerateAdapters(vk::raii::Instance const& instance)
+{    
+    AdapterList adapters;
+    ranges::move(instance.enumeratePhysicalDevices(), std::back_inserter(adapters));
+    return adapters;
+}
 
 } // namespace morpheus::gfx::vulkan

@@ -19,7 +19,7 @@ const auto get_physical_devices()
 
 //---------------------------------------------------------------------------------------------------------------------
 
-render_system::render_system(std::string_view const appName, std::string_view const engineName)
+RenderSystem::RenderSystem(std::string_view const appName, std::string_view const engineName)
 :   mInstance([&](auto const appName, auto const engineName)
     {
         // initialize the vk::ApplicationInfo structure
@@ -34,13 +34,13 @@ render_system::render_system(std::string_view const appName, std::string_view co
 ,   mVulkanVersion(mContext.enumerateInstanceVersion())
 ,   mAvailableExtensions(mContext.enumerateInstanceExtensionProperties())
 ,   mAvailableLayers(mContext.enumerateInstanceLayerProperties())
-,   mAdapters(mInstance)
+,   mAdapters(enumerateAdapters(mInstance))
 {
 }
 
 //---------------------------------------------------------------------------------------------------------------------
 
-render_system::~render_system()
+RenderSystem::~RenderSystem()
 {
 
 }

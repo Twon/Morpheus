@@ -34,6 +34,7 @@ target_compile_definitions(MorpheusRenderSystemVulkan
 target_precompile_headers(MorpheusRenderSystemVulkan
     PRIVATE
         <vulkan/vulkan.hpp>
+        <vulkan/vulkan_raii.hpp>
 #        <volk.h>
 )
 

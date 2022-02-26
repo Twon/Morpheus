@@ -12,7 +12,7 @@ namespace morpheus::gfx::vulkan
 /*! \class adapter_list
 
  */
-class AdapterList {
+/*class AdapterList {
 public:
 
     AdapterList(vk::raii::Instance const& instance) 
@@ -31,6 +31,6 @@ private:
     vk::raii::Instance const& mInstance; /// Vulkan instance stores all per instance state.   
     PhysicalDevices mPhysicalDevices; /// All physical devices on the target host.
     vk::PhysicalDevice mPhysicalDevice; /// Physical device (GPU) that Vulkan will use.
-};
+};*/
 
 } // namespace morpheus::gfx::vulkan

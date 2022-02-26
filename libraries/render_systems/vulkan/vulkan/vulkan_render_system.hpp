@@ -1,7 +1,7 @@
 #pragma once
 
 #include <core/gfx/render_system.hpp>
-#include <vulkan/adapters/vulkan_adapter_list.hpp>
+#include <vulkan/adapters/vulkan_adapter.hpp>
 #include <vulkan/version.hpp>
 
 #include <vulkan/vulkan.hpp>
@@ -14,14 +14,15 @@
 namespace morpheus::gfx::vulkan
 {
 
-/*! \class render_system
+/*! \class RenderSystem
         Rendering system abstraction based upon the Vulkan graphics API.
  */
-class render_system : public gfx::render_system {
+class RenderSystem : public gfx::render_system {
 public:
-    render_system(std::string_view const appName, std::string_view const engineName);
-    virtual ~render_system() override;
+    RenderSystem(std::string_view const appName, std::string_view const engineName);
+    virtual ~RenderSystem() override;
 
+    auto const& adapters() const { return mAdapters; }
 private:
     vk::raii::Context mContext; /// Vulkan context including loader.
     vk::raii::Instance mInstance; /// Vulkan instance stores all per instance state.
