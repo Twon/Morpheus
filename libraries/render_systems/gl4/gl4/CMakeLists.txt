@@ -8,17 +8,18 @@ endif()
 add_library(MorpheusRenderSystemGL4 "")
 add_executable(MorpheusRenderSystemGL4Tests "")
 
-if (WIN32)
-#    add_subdirectory(wgl)
-endif(WIN32)
-
 target_sources(MorpheusRenderSystemGL4
+    PUBLIC
+        render_system.hpp
+        type_mapping.hpp
     PRIVATE
-        gl4_render_system.hpp
-        gl4_render_system.cpp
-        gl4_type_mapping.hpp
-        gl4_type_mapping.cpp
+        render_system.cpp
+        type_mapping.cpp
 )
+
+if (WIN32)
+    add_subdirectory(wgl)
+endif(WIN32)
 
 #target_compile_definitions(MorpheusRenderSystemGL4
 #    PUBLIC
@@ -41,12 +42,12 @@ source_group(TREE ${CMAKE_CURRENT_LIST_DIR} FILES ${SOURCES_FILES})
 
 target_sources(MorpheusRenderSystemGL4Tests
     PRIVATE
-        gl4_render_system.tests.cpp
+        render_system.tests.cpp
 )
 
 target_include_directories(MorpheusRenderSystemGL4Tests
     PUBLIC
-        "${CMAKE_CURRENT_LIST_DIR}/.."
+        ${CMAKE_CURRENT_LIST_DIR}/..
 )
 
 target_link_libraries(MorpheusRenderSystemGL4Tests
@@ -57,15 +58,11 @@ target_link_libraries(MorpheusRenderSystemGL4Tests
 
 set_target_properties(MorpheusRenderSystemGL4 MorpheusRenderSystemGL4Tests
     PROPERTIES
-        FOLDER "Libraries/RenderSystems/GL4"
-)
-
-set_target_properties(MorpheusRenderSystemGL4 MorpheusRenderSystemGL4Tests
-    PROPERTIES
         WINDOWS_EXPORT_ALL_SYMBOLS TRUE
-        ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
-        LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
-        RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
+        FOLDER "Libraries/RenderSystems/GL4"
+        ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
+        LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
+        RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
 )
 
 get_target_property(SOURCES_FILES_TEST MorpheusRenderSystemGL4Tests SOURCES)

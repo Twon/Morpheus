@@ -1,4 +1,4 @@
-#include <gl4/gl4_type_mapping.hpp>
+#include <gl4/type_mapping.hpp>
 
 namespace morpheus::gfx::gl4
 {

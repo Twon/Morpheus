@@ -10,7 +10,7 @@ namespace morpheus::gfx::gl4
  */
 class render_system : public gfx::render_system {
 public:
-    virtual ~render_system() override;
+    virtual ~render_system() override = default;
 
 private:
 };
