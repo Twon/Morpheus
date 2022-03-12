@@ -8,16 +8,18 @@ endif()
 add_library(MorpheusRenderSystemVulkan "")
 add_executable(MorpheusRenderSystemVulkanTests "")
 
-add_subdirectory(adapters)
-
 target_sources(MorpheusRenderSystemVulkan
     PUBLIC
+        adapter.hpp
         version.hpp
-        vulkan_error_code.hpp
-        vulkan_render_system.hpp
+        video_mode.hpp
+        error_codes.hpp
+        render_system.hpp
     PRIVATE
-        vulkan_error_code.cpp
-        vulkan_render_system.cpp
+        adapter.cpp
+        video_mode.cpp
+        error_codes.cpp
+        render_system.cpp
 )
 
 target_include_directories(MorpheusRenderSystemVulkan
@@ -35,15 +37,12 @@ target_precompile_headers(MorpheusRenderSystemVulkan
     PRIVATE
         <vulkan/vulkan.hpp>
         <vulkan/vulkan_raii.hpp>
-#        <volk.h>
 )
 
 target_link_libraries(MorpheusRenderSystemVulkan
     PUBLIC
         MorpheusCore
         Vulkan::Headers
-    PRIVATE
-#        volk::volk
 )
 
 get_target_property(SOURCES_FILES MorpheusRenderSystemVulkan SOURCES)
@@ -51,13 +50,10 @@ source_group(TREE ${CMAKE_CURRENT_LIST_DIR} FILES ${SOURCES_FILES})
 
 target_sources(MorpheusRenderSystemVulkanTests
     PRIVATE
-        vulkan_error_code.tests.cpp
-        vulkan_render_system.tests.cpp
-)
-
-target_include_directories(MorpheusRenderSystemVulkanTests
-    PUBLIC
-        "${CMAKE_CURRENT_LIST_DIR}/.."
+        adapter.tests.cpp
+        video_mode.tests.cpp
+        error_codes.tests.cpp
+        render_system.tests.cpp
 )
 
 target_link_libraries(MorpheusRenderSystemVulkanTests
@@ -68,11 +64,11 @@ target_link_libraries(MorpheusRenderSystemVulkanTests
 
 set_target_properties(MorpheusRenderSystemVulkan MorpheusRenderSystemVulkanTests
     PROPERTIES
-        WINDOWS_EXPORT_ALL_SYMBOLS TRUE #$<OR:<$<BUILD_INTERFACE:TRUE>,$<INSTALL_INTERFACE:FALSE>>
+        WINDOWS_EXPORT_ALL_SYMBOLS TRUE
         FOLDER "Libraries/RenderSystems/Vulkan"
-        ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
-        LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
-        RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
+        ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
+        LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
+        RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
 )
 
 get_target_property(SOURCES_FILES_TEST MorpheusRenderSystemVulkanTests SOURCES)

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <core/gfx/render_system.hpp>
-#include <vulkan/adapters/vulkan_adapter.hpp>
+#include <vulkan/adapter.hpp>
 #include <vulkan/version.hpp>
 
 #include <vulkan/vulkan.hpp>

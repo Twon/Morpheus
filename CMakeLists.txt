@@ -62,6 +62,6 @@ set(CMAKE_SKIP_BUILD_RPATH  FALSE)
 add_subdirectory(libraries)
 add_subdirectory(examples)
 
-if (ENABLE_CODE_COVERAGE)
+if (MORPHEUS_CODE_COVERAGE)
     coverage_evaluate()
 endif()

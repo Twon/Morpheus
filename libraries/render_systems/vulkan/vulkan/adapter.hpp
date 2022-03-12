@@ -1,7 +1,11 @@
 #pragma once
 
+#include "vulkan/video_mode.hpp"
 #include "core/platform.hpp"
 
+#include <vulkan/vulkan_raii.hpp>
+
+#include <string>
 #include <vector>
 
 namespace morpheus::gfx::vulkan
@@ -16,7 +20,9 @@ public:
     Adapter(vk::raii::PhysicalDevice&& physicalDevice);
     ///@}
 
+    std::string getName() const;
 
+    
 private:
     vk::raii::PhysicalDevice mPhysicalDevice;
 };

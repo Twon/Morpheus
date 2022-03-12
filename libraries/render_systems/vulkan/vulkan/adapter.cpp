@@ -1,4 +1,4 @@
-#include "vulkan/adapters/vulkan_adapter.hpp"
+#include "vulkan/adapter.hpp"
 #include "core/conformance/ranges.hpp"
 
 namespace morpheus::gfx::vulkan
@@ -7,6 +7,11 @@ namespace morpheus::gfx::vulkan
 Adapter::Adapter(vk::raii::PhysicalDevice&& physicalDevice)
 :   mPhysicalDevice(std::move(physicalDevice))
 {
+}
+
+std::string Adapter::getName() const
+{
+    return mPhysicalDevice.getProperties().deviceName;
 }
 
 AdapterList enumerateAdapters(vk::raii::Instance const& instance)

@@ -1,12 +1,6 @@
-//
-//  vulkan_render_system.tests.cpp
-//  MorpheusRenderSystemVulkanTest
-//
-//  Created by Antony Peacock on 20/10/2019.
-//
+#include "vulkan/error_codes.hpp"
 
 #include <catch2/catch.hpp>
-#include <vulkan/vulkan_error_code.hpp>
 #include <string_view>
 #include <array>
 

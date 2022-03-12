@@ -1,4 +1,5 @@
 add_subdirectory(adapters)
+add_subdirectory(concepts)
 add_subdirectory(textures)
 if(WIN32)
     add_subdirectory(win32)

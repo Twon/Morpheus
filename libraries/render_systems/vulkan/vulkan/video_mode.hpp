@@ -2,13 +2,15 @@
 
 #include <core/platform.hpp>
 
+#include <vector>
+
 namespace morpheus::gfx::vulkan
 {
 
-/*! \class video_mode
+/*! \class VideoMode
         A video mode describes a mode of available settings for an graphics adapter.
  */
-class video_mode {
+class VideoMode {
 public:
     /*! Constructs a render target with the specified parameters.
         \param[in] width
@@ -18,9 +20,11 @@ public:
         \param[in] colourDepth
              The colour depth of the pixels of the render target.
      */
-    video_mode() = default;
+    VideoMode() = default;
 private:
 
 };
+
+using VideoModeList = std::vector<VideoMode>;
 
 } // namespace morpheus::gfx::vulkan

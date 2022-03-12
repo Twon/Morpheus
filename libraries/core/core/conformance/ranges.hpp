@@ -1,8 +1,28 @@
 #pragma once
 
-#if __has_include(<ranges>)
+#include <version>
+
+/*#if __has_include(<ranges>)
 #include <ranges>
-#endif
+#endif*/
+
+
+//#if _GLIBCXX_HOSTED
+//#error "Poo poo poo"
+//#endif
+
+//#ifdef _GLIBCXX_HOSTED
+/*#if (__cpp_lib_ranges == 201911L) // !defined(__cpp_lib_ranges) 
+#error "Range library and constrained algorithms"
+#elif (__cpp_lib_ranges >= 202106L)
+#error "Non-default-initialisable views"
+#elif (__cpp_lib_ranges >= 202110L)
+#error "Views with ownership"
+#elif (__cpp_lib_ranges >= 202202L)
+#error "std::ranges::range_adaptor_closure"
+#else 
+#error "All is good in the world"
+#endif*/
 
 #if (__cpp_lib_ranges >= 202202L)
 

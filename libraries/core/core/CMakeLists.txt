@@ -45,6 +45,7 @@ target_include_directories(MorpheusCoreTests
 
 target_compile_options(MorpheusCore
     PRIVATE
+        -enable-hosted-libstdcxx
 	    $<$<CXX_COMPILER_ID:MSVC>:/wd4251> # class 'foo' needs to have dll-interface to be used by clients of class 'bar'
 )
 
