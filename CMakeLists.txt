@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.13)
+cmake_minimum_required(VERSION 3.18)
 
 file(STRINGS "version.txt" MORPHEUS_VERSION)
 
@@ -8,28 +8,28 @@ project(Morpheus
     LANGUAGES CXX
 )
 
-option(ENABLE_CODE_COVERAGE "Enable code coverage if available (Mac OS X currently not supported)" OFF)
+#------------------------------------------------------------------------------------------------------------------------------------------
+# Standard CMake Includes
+include(CTest)
+include(FetchContent)
+include(GNUInstallDirs)
+include(CMakeDependentOption)
+include(CMakePackageConfigHelpers)
 
-if (APPLE)
-    SET(ENABLE_CODE_COVERAGE OFF CACHE BOOL "Ensure code coverage is switched off for Mac OS until the code coverage library addresses the AppleClang issue" FORCE)
-endif()
+cmake_dependent_option(MORPHEUS_CODE_COVERAGE "Enable code coverage" ON "\"${CMAKE_CXX_COMPILER_ID}\" STREQUAL \"Clang\" OR \"${CMAKE_CXX_COMPILER_ID}\" STREQUAL \"GNU\"" OFF)
+
 
 set(BUILD_SHARED_LIBS YES)
 
-if(EXISTS ${CMAKE_BINARY_DIR}/conanbuildinfo_multi.cmake)
-    include(${CMAKE_BINARY_DIR}/conanbuildinfo_multi.cmake)
-else()
-    include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
-endif()
-
-conan_basic_setup(KEEP_RPATHS)
-
 # Include necessary submodules
 list(APPEND CMAKE_MODULE_PATH
+    ${CMAKE_BINARY_DIR}
     ${PROJECT_SOURCE_DIR}/cmake
     ${PROJECT_SOURCE_DIR}/cmake/Modules
 )
 
+#------------------------------------------------------------------------------------------------------------------------------------------
+# Custom CMake Includes
 include(Compiler)
 include(Documentation)
 include(IDESettings)
@@ -40,7 +40,6 @@ enable_testing()
 
 #------------------------------------------------------------------------------------------------------------------------------------------
 # Offer the user the choice of overriding the installation directories
-include(GNUInstallDirs)
 set(INSTALL_LIBDIR ${CMAKE_INSTALL_LIBDIR} CACHE PATH "Installation directory for libraries")
 set(INSTALL_BINDIR ${CMAKE_INSTALL_BINDIR} CACHE PATH "Installation directory for executables")
 set(INSTALL_INCLUDEDIR ${CMAKE_INSTALL_INCLUDEDIR} CACHE PATH "Installation directory for header files")
@@ -63,6 +62,6 @@ set(CMAKE_SKIP_BUILD_RPATH  FALSE)
 add_subdirectory(libraries)
 add_subdirectory(examples)
 
-if (ENABLE_CODE_COVERAGE)
+if (MORPHEUS_CODE_COVERAGE)
     coverage_evaluate()
 endif()

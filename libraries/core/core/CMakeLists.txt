@@ -6,35 +6,19 @@ target_sources(MorpheusCore
         cpu.hpp
         platform.hpp
         game/game.hpp
-        gfx/pixel.hpp
-        gfx/render_system_factory.hpp
-        gfx/render_system.hpp
-        gfx/render_target.hpp
-        gfx/render_window.hpp
         world/world_model.hpp
         visualisation/visualisation.hpp
     PRIVATE
         cpu.cpp
         game/game.cpp
-        gfx/render_system_factory.cpp
-        gfx/render_system.cpp
-        gfx/render_target.cpp
-        gfx/render_window.cpp
         world/world_model.cpp
         visualisation/visualisation.cpp
 )
 
-target_sources(MorpheusCoreTests
-    PRIVATE
-        cpu.test.cpp
-)
-
-if(WIN32)
-    add_subdirectory(gfx/win32)
-endif(WIN32)
-
-add_subdirectory(gfx/adapters)
-add_subdirectory(gfx/textures)
+add_subdirectory(conformance)
+add_subdirectory(gfx)
+add_subdirectory(meta)
+add_subdirectory(serialisation)
 
 target_sources(MorpheusCoreTests
     PRIVATE
@@ -43,9 +27,9 @@ target_sources(MorpheusCoreTests
 
 target_include_directories(MorpheusCore
     PUBLIC
-        "$<INSTALL_INTERFACE:include/>"
-        "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/..>"
-        "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/..>"
+        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/..>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/..>
 )
 
 target_include_directories(MorpheusCoreTests
@@ -61,12 +45,14 @@ target_include_directories(MorpheusCoreTests
 
 target_compile_options(MorpheusCore
     PRIVATE
+#        -enable-hosted-libstdcxx
 	    $<$<CXX_COMPILER_ID:MSVC>:/wd4251> # class 'foo' needs to have dll-interface to be used by clients of class 'bar'
 )
 
 target_link_libraries(MorpheusCore
     PUBLIC
         fmt::fmt
+        range-v3::range-v3
 )
 
 target_link_libraries(MorpheusCoreTests
@@ -104,11 +90,11 @@ set(CMAKE_VISIBILITY_INLINES_HIDDEN 1)
 include(GenerateExportHeader)
 generate_export_header(MorpheusCore)
 
-install (TARGETS MorpheusCore
-         RUNTIME DESTINATION bin
-         ARCHIVE DESTINATION lib
-         LIBRARY DESTINATION lib
-         PUBLIC_HEADER DESTINATION include/core
+install(TARGETS MorpheusCore
+        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/core
 )
 
 # Hierarchically copy headers to the install dir
@@ -116,7 +102,7 @@ install (
     DIRECTORY
         "${CMAKE_CURRENT_SOURCE_DIR}/../core"
     DESTINATION
-        include
+        ${CMAKE_INSTALL_INCLUDEDIR}/core
     FILES_MATCHING PATTERN
         "*.hpp"
 )
@@ -126,7 +112,7 @@ install(
         "${CMAKE_CURRENT_SOURCE_DIR}/morpheuscore_export.h"
         "${CMAKE_CURRENT_SOURCE_DIR}/morpheuscore_compiler_detection.h"
     DESTINATION
-        include/core
+        ${CMAKE_INSTALL_INCLUDEDIR}/core
 )
 
 add_test(

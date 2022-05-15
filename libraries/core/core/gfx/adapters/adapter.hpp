@@ -2,11 +2,6 @@
 
 #include <core/platform.hpp>
 
-#if (MORPHEUSCORE_COMPILER_IS_MSVC)
-#pragma warning( push )  
-#pragma warning( disable : 4251 ) // 'foo' needs to have dll-interface to be used by clients of class 'bar'
-#endif
-
 namespace morpheus::gfx
 {
 
@@ -58,8 +53,3 @@ private:
 };
 
 } // namespace morpheus::gfx
-
-
-#if (MORPHEUSCORE_COMPILER_IS_MSVC)
-#pragma warning( pop )   
-#endif

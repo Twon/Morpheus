@@ -1,0 +1,20 @@
+add_subdirectory(adapters)
+add_subdirectory(concepts)
+add_subdirectory(textures)
+if(WIN32)
+    add_subdirectory(win32)
+endif(WIN32)
+
+target_sources(MorpheusCore
+    PUBLIC
+        pixel.hpp
+        render_system_factory.hpp
+        render_system.hpp
+        render_target.hpp
+        render_window.hpp
+    PRIVATE
+        render_system_factory.cpp
+        render_system.cpp
+        render_target.cpp
+        render_window.cpp
+)

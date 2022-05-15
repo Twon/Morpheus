@@ -1,45 +1,15 @@
-include(FetchContent)
-FetchContent_Declare(
-    catch2
-    GIT_REPOSITORY https://github.com/catchorg/Catch2.git
-)
+find_package(Catch2 REQUIRED)
+find_package(fmt REQUIRED)
+find_package(range-v3 REQUIRED)
 
-FetchContent_GetProperties(catch2)
-if(NOT catch2_POPULATED)
-    FetchContent_Populate(catch2)
-    add_subdirectory(${catch2_SOURCE_DIR} ${catch2_BINARY_DIR})
-    list(APPEND CMAKE_MODULE_PATH
-        ${catch2_SOURCE_DIR}/contrib
-    )
-endif()
-
-FetchContent_Declare(
-    fmt
-    GIT_REPOSITORY https://github.com/fmtlib/fmt.git
-)
-
-FetchContent_GetProperties(fmt)
-if(NOT fmt_POPULATED)
-    FetchContent_Populate(fmt)
-    add_subdirectory(${fmt_SOURCE_DIR} ${fmt_BINARY_DIR})
-endif()
-
-FetchContent_Declare(
-    codecoverage
-    #GIT_REPOSITORY https://github.com/RWTH-HPC/CMake-codecov.git
-
-    # Use branch fixing source file externsion comparison bug affecting files with ".tests.cpp" extension until its merged into the original repository 
-    GIT_REPOSITORY https://github.com/Twon/CMake-codecov.git
-    GIT_TAG fix_multi_extension_files
-)
-
+FetchContent_Declare(codecoverage GIT_REPOSITORY https://github.com/RWTH-HPC/CMake-codecov.git)
 FetchContent_GetProperties(codecoverage)
 if(NOT codecoverage_POPULATED)
     FetchContent_Populate(codecoverage)
     list(APPEND CMAKE_MODULE_PATH ${codecoverage_SOURCE_DIR}/cmake)
 endif()
 
-set(ENABLE_COVERAGE ${ENABLE_CODE_COVERAGE} CACHE BOOL "Enable coverage build." FORCE)
+set(ENABLE_COVERAGE ${MORPHEUS_CODE_COVERAGE} CACHE BOOL "Enable coverage build." FORCE)
 find_package(codecov)
 
 if (ENABLE_CODE_COVERAGE)

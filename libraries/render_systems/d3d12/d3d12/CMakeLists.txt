@@ -74,10 +74,10 @@ if (WIN32)
                 ${SOURCES_FILES}
         )
 
-        install (TARGETS MorpheusRenderSystemD3D12
-                 RUNTIME DESTINATION bin
-                 ARCHIVE DESTINATION lib
-                 LIBRARY DESTINATION lib
+        install(TARGETS MorpheusRenderSystemD3D12
+                RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+                ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+                LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
         )
     endif()
 
