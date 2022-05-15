@@ -17,7 +17,7 @@ std::string Adapter::getName() const
 AdapterList enumerateAdapters(vk::raii::Instance const& instance)
 {    
     AdapterList adapters;
-    ranges::move(instance.enumeratePhysicalDevices(), std::back_inserter(adapters));
+    ranges::move(instance.enumeratePhysicalDevices(), ranges::back_inserter(adapters));
     return adapters;
 }
 

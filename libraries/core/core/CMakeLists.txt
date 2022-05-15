@@ -27,9 +27,9 @@ target_sources(MorpheusCoreTests
 
 target_include_directories(MorpheusCore
     PUBLIC
-        "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/>"
-        "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/..>"
-        "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/..>"
+        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/..>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/..>
 )
 
 target_include_directories(MorpheusCoreTests
@@ -45,7 +45,7 @@ target_include_directories(MorpheusCoreTests
 
 target_compile_options(MorpheusCore
     PRIVATE
-        -enable-hosted-libstdcxx
+#        -enable-hosted-libstdcxx
 	    $<$<CXX_COMPILER_ID:MSVC>:/wd4251> # class 'foo' needs to have dll-interface to be used by clients of class 'bar'
 )
 

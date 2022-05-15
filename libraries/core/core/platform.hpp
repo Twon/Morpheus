@@ -1,12 +1,12 @@
 #ifndef MORPHEUS_PLATFORM_H
 #define MORPHEUS_PLATFORM_H
 
-// clang-format off
-//---------------------------------------------------------------------------------------------------------------------
-#include <cstdint>
 #include <core/morpheuscore_export.h>
 #include <core/morpheuscore_compiler_detection.h>
+#include <cstdint>
 
+// clang-format off
+//---------------------------------------------------------------------------------------------------------------------
     /*! \defgroup Compiler Morpheus Supported Compilers
             The compiler group of macros allow for compile time detection of the current compiler
             and version.
@@ -164,7 +164,15 @@
 
         #endif
     #endif
-    /*! @} */
+    /// @}
+
+    /*! \def MORPHEUS_COMPILER_DEAD_CODE_ELIMINATION
+            Macro present when dead code elimination is enabled in the build.
+    */
+    #if (MORPHEUS_IS_GCC_COMPATIBLE_COMPILER && __OPTIMIZE__) || \
+        (MORPHEUS_IS_VISUALSTUDIO_COMPILER && !defined __MSVC_RUNTIME_CHECKS && defined NDEBUG)
+        #define MORPHEUS_COMPILER_DEAD_CODE_ELIMINATION
+    #endif
 
 //---------------------------------------------------------------------------------------------------------------------
 // clang-format on
