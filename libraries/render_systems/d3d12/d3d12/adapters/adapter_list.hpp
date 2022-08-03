@@ -1,7 +1,6 @@
 #pragma once
 
 
-#include <core/gfx/adapters/adapter_list.hpp>
 #include <wrl.h>
 #include <dxgi1_6.h>
 
@@ -17,7 +16,7 @@ using DXGIFactory = Microsoft::WRL::ComPtr<IDXGIFactory4>;
 /*! \class adapter_list
 
  */
-class adapter_list : public morpheus::gfx::adapter_list {
+class adapter_list {
 public:
 
     /// \name Life cycle

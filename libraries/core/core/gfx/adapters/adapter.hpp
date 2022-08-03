@@ -2,53 +2,41 @@
 
 #include <core/platform.hpp>
 
+#include <compare>
+#include <concepts>
+
 namespace morpheus::gfx
 {
 
 /*! \class adapter
-        Describes an available graphic devices on the target platform.
+        Describes an available graphic adapter on the target platform.
  */
-class MORPHEUSCORE_EXPORT adapter {
+template<std::regular IdType>
+class Adapter {
 public:
     /// \name Life cycle
     ///@{
-    adapter() = default;
+    constexpr Adapter() noexcept = default;
 
     /*! Constructs a render target with the specified parameters.
         \param[in] width
              The width in pixels of the render target.
-        \param[in] height
-             The height in pixels of the render target.
-        \param[in] colourDepth
-             The colour depth of the pixels of the render target.
      */
-    adapter(
-        const std::uint32_t width,
-        const std::uint32_t height,
-        const std::uint32_t colourDepth
-    );
+    Adapter(
+        const IdType adapterId
+    )
+    :   mAdapterId(adapterId)
+    {
+    }
     ///@}
 
+    IdType const& getId() const noexcept { return mAdapterId; }
 
-
-    //! The width in pixels of the render target.
-    std::uint32_t width() const noexcept { return mWidth; }
-
-    //! The height in pixels of the render target.
-    std::uint32_t height() const noexcept { return mHeight; }
-
-    //! The colour depth of the pixels of the render target.
-    std::uint32_t colour_depth() const noexcept { return mColourDepth; }
-
+    [[nodiscard]] constexpr auto operator<=>(Adapter const& rhs) const noexcept = default;
 private:
     /// \name Data Members
     ///@{
-    //! The width in pixels of the render target.
-    std::uint32_t mWidth = 0;
-    //! The height in pixels of the render target.
-    std::uint32_t mHeight = 0;
-    //! The colour depth of the pixels of the render target.
-    std::uint32_t mColourDepth = 0;
+    IdType mAdapterId;
     ///@}
 };
 

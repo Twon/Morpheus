@@ -9,7 +9,7 @@ Adapter::Adapter(vk::raii::PhysicalDevice&& physicalDevice)
 {
 }
 
-std::string Adapter::getName() const
+std::string Adapter::getName() const noexcept
 {
     return mPhysicalDevice.getProperties().deviceName;
 }

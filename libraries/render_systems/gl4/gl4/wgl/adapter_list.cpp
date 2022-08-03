@@ -1,4 +1,4 @@
-#include <gl4/wgl/adapters/wgl_adapter_list.hpp>
+#include <gl4/wgl/adapter_list.hpp>
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
@@ -37,7 +37,6 @@ namespace
 //---------------------------------------------------------------------------------------------------------------------
 
 adapter_list::adapter_list()
-:    gfx::adapter_list(gfx::adapter_list::adapter_container())
 {
 
 }

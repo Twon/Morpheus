@@ -1,5 +1,5 @@
-#include <d3d12/adapters/d3d12_adapter_list.hpp>
-#include <d3d12/adapters/d3d12_adapter.hpp>
+#include <d3d12/adapters/adapter_list.hpp>
+#include <d3d12/adapters/adapter.hpp>
 //#include <fmt/core.h>
 
 namespace morpheus::gfx::d3d12
@@ -38,8 +38,7 @@ namespace
 //---------------------------------------------------------------------------------------------------------------------
 
 adapter_list::adapter_list()
-:   gfx::adapter_list(gfx::adapter_list::adapter_container()),
-    mDxgiFactory(createDXGIFactory())
+:   mDxgiFactory(createDXGIFactory())
 {
     createAdapters(mDxgiFactory);
 }

@@ -18,7 +18,7 @@ namespace morpheus::gfx
 
 /*! \class adapter_list
 
- */
+
 class MORPHEUSCORE_EXPORT adapter_list {
 public:
 
@@ -41,7 +41,7 @@ public:
 //        iterator& operator++(); //prefix increment
 //        reference operator*() const;
 //        friend void swap(iterator& lhs, iterator& rhs); //C++11 I think
-    };*/
+    };
 
     //adapter_list() {}
 
@@ -55,7 +55,7 @@ protected:
     /*! Constructs an adapter list from a container of adapters.
         \param[in] adapters
              A container of all availalbe adapters.
-     */
+     
     adapter_list(adapter_container adapters);
     ///@}
 
@@ -66,6 +66,7 @@ private:
     adapter_container mAdapters;
     ///@}
 };
+*/
 
 } // namespace morpheus::gfx
 

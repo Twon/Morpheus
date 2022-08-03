@@ -1,21 +1,36 @@
-#include <gl4/wgl/adapters/wgl_video_mode.hpp>
+#include <gl4/wgl/video_mode.hpp>
+
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
 
 namespace morpheus::gfx::gl4::wgl
 {
 
-//---------------------------------------------------------------------------------------------------------------------
-
-video_mode::video_mode(
-    const std::uint32_t width,
-    const std::uint32_t height,
-    const std::uint32_t colourDepth
-)
-:   mWidth(width),
-    mHeight(height),
-    mColourDepth(colourDepth)
+concurrency::Generator<VideoMode> enumerateVideoModes(Adapter const& adapter)
 {
-}
+	auto devMode = DEVMODE{ .dmSize = sizeof(DEVMODE) };
 
-//---------------------------------------------------------------------------------------------------------------------
+	// This is a loop with an early loop exit point, hence no condition for the loop
+	for (DWORD dwCurrentSetting = 0; /* NO CONDITION */; ++dwCurrentSetting)
+	{
+		// Break out of the loop it there is no more video modes to enumerate
+		if (!EnumDisplaySettings(adapter.getId().c_str(), dwCurrentSetting, &devMode)) {
+			break;
+		}
+
+		// Only add the video mode if it is 16 or 32 bit colour
+		if ((16 != devMode.dmBitsPerPel) && (32 != devMode.dmBitsPerPel)) {
+			continue;
+		}
+
+		co_yield VideoMode(
+			static_cast<std::uint16_t>(devMode.dmPelsWidth),
+			static_cast<std::uint16_t>(devMode.dmPelsHeight),
+			static_cast<std::uint16_t>(devMode.dmBitsPerPel),
+			static_cast<std::uint16_t>(devMode.dmDisplayFrequency)/*,
+			((32 == DevMode.dmBitsPerPel) ? PF_X8R8G8B8 : PF_R5G6B5)*/
+		);
+	}
+}
 
 } // namespace morpheus::gfx::gl4::wgl

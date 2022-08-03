@@ -1,4 +1,4 @@
-#include <d3d12/adapters/d3d12_adapter.hpp>
+#include <d3d12/adapters/adapter.hpp>
 #include <utility>
 
 namespace morpheus::gfx::d3d12

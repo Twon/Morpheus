@@ -8,7 +8,7 @@ namespace morpheus::gfx::gl4::wgl
 /*! \class adapter_list
 
  */
-class adapter_list : public morpheus::gfx::adapter_list {
+class adapter_list {
 public:
 
     adapter_list();

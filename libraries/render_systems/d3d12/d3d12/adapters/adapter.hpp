@@ -3,7 +3,7 @@
 #include <wrl.h>
 #include <dxgi1_6.h>
 #include <core/platform.hpp>
-#include <d3d12/adapters/d3d12_video_mode_list.hpp>
+#include <d3d12/adapters/video_mode_list.hpp>
 
 namespace morpheus::gfx::d3d12
 {
@@ -31,10 +31,10 @@ public:
     ///@}
 
     //! The DXGI adapter interface.
-    const DXGIAdapter& dxgi_adapter() const noexcept { return mDxgiAdapter; }
+    DXGIAdapter const& dxgi_adapter() const noexcept { return mDxgiAdapter; }
 
     //! The DXGI adapter description.
-    const DXGI_ADAPTER_DESC1& dxgi_description() const noexcept { return mDescription; }
+    DXGI_ADAPTER_DESC1 const& dxgi_description() const noexcept { return mDescription; }
 
 private:
     /// \name Data Members

@@ -7,7 +7,7 @@ target_sources(MorpheusCore
 
 target_sources(MorpheusCoreTests
     PUBLIC
-        assert.tests.hpp
-        verify.tests.hpp
+        assert.tests.cpp
+        verify.tests.cpp
 )
 

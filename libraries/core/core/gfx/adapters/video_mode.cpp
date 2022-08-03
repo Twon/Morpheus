@@ -5,14 +5,16 @@ namespace morpheus::gfx
 
 //---------------------------------------------------------------------------------------------------------------------
 
-video_mode::video_mode(
-    const std::uint32_t width,
-    const std::uint32_t height,
-    const std::uint32_t colourDepth
+constexpr VideoMode::VideoMode(
+    const std::uint16_t width,
+    const std::uint16_t height,
+    const std::uint16_t colourDepth,
+    const std::uint16_t refreshRate
 )
 :   mWidth(width),
     mHeight(height),
-    mColourDepth(colourDepth)
+    mColourDepth(colourDepth),
+    mRefreshRate(refreshRate)
 {
 }
 

@@ -9,8 +9,8 @@ target_sources(MorpheusRenderSystemGL4
         video_mode.cpp
 )
 
-target_sources(MorpheusRenderSystemGL4Test
+target_sources(MorpheusRenderSystemGL4Tests
     PRIVATE
         adapter.tests.cpp
-        video_mode_list.tests.cpp
+        video_mode.tests.cpp
 )

@@ -25,6 +25,7 @@ using std::ranges::distance;
 using std::ranges::back_inserter;
 using std::ranges::input_range;
 using std::ranges::move;
+using std::ranges::iterator_t;
 using std::ranges::range_value_t;
 
 using std::ranges::lower_bound;
@@ -57,6 +58,7 @@ using ::ranges::distance;
 using ::ranges::back_inserter;
 using ::ranges::input_range;
 using ::ranges::move;
+using ::ranges::iterator_t;
 using ::ranges::range_value_t;
 
 using ::ranges::lower_bound;

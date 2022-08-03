@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.18)
+cmake_minimum_required(VERSION 3.22)
 
 file(STRINGS "version.txt" MORPHEUS_VERSION)
 
@@ -7,6 +7,8 @@ project(Morpheus
     DESCRIPTION "A high performance focused game engine using object oriented techniques based in the latest C++"
     LANGUAGES CXX
 )
+
+cmake_policy(SET CMP0127 NEW)
 
 #------------------------------------------------------------------------------------------------------------------------------------------
 # Standard CMake Includes

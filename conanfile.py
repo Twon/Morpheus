@@ -52,8 +52,9 @@ class Morpheus(ConanFile):
     exports_sources = ["CMakeLists.txt", "LICENSE", "version.txt", "cmake/*", "examples/*" "libraries/*"]
     generators = "cmake_find_package", "cmake_find_package_multi", "virtualenv"
     requires = (
-        "catch2/2.13.8", 
+        "catch2/2.13.9", 
         "fmt/8.1.1",
+        "ms-gsl/4.0.0",
         "range-v3/0.11.0",
         "trompeloeil/41",
         "vulkan-headers/1.3.204.0"
@@ -66,8 +67,8 @@ class Morpheus(ConanFile):
 
     def build_requirements(self):
         # Ensure the package is build against a version of CMake from 3.16 onwards.
-        if CMake.get_version() < Version("3.21"):
-            self.build_requires("cmake/3.21.0")
+        if CMake.get_version() < Version("3.23"):
+            self.build_requires("cmake/3.23.1")
 
     def requirements(self):
         if self.settings.os in ["Macos", "iOS", "tvOS"] and self.settings.compiler == "apple-clang":

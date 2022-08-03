@@ -20,7 +20,7 @@ public:
     Adapter(vk::raii::PhysicalDevice&& physicalDevice);
     ///@}
 
-    std::string getName() const;
+    std::string getName() const noexcept;
 
     
 private:
