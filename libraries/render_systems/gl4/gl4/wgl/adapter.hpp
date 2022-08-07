@@ -1,7 +1,7 @@
 #pragma once
 
 #include <core/concurrency/generator.hpp>
-#include <core/gfx/adapters/adapter.hpp>
+#include <core/gfx/adapter.hpp>
 #include <core/platform.hpp>
 
 #include <string>

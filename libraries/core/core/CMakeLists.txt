@@ -116,8 +116,7 @@ install (
 
 install(
     FILES
-        ${CMAKE_CURRENT_SOURCE_DIR}/morpheuscore_export.h
-        ${CMAKE_CURRENT_SOURCE_DIR}/morpheuscore_compiler_detection.h
+        ${CMAKE_CURRENT_BINARY_DIR}/morpheuscore_export.h
     DESTINATION
         ${CMAKE_INSTALL_INCLUDEDIR}/core
 )

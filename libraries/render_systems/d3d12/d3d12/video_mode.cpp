@@ -1,4 +1,4 @@
-#include <d3d12/adapters/video_mode.hpp>
+#include <d3d12/video_mode.hpp>
 
 namespace morpheus::gfx::d3d12
 {

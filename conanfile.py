@@ -54,6 +54,8 @@ class Morpheus(ConanFile):
     requires = (
         "catch2/2.13.9", 
         "fmt/8.1.1",
+        "glbinding/3.1.0",
+        "glew/2.2.0",
         "ms-gsl/4.0.0",
         "range-v3/0.11.0",
         "trompeloeil/41",
@@ -66,7 +68,7 @@ class Morpheus(ConanFile):
         self.version = version.strip()
 
     def build_requirements(self):
-        # Ensure the package is build against a version of CMake from 3.16 onwards.
+        # Ensure the package is build against a version of CMake from 3.23 onwards.
         if CMake.get_version() < Version("3.23"):
             self.build_requires("cmake/3.23.1")
 
@@ -109,12 +111,14 @@ class Morpheus(ConanFile):
                         self.settings.compiler,
                         self.settings.compiler.version))
 
-    def generate(self):
-        tc = CMakeToolchain(self, generator=os.getenv("CONAN_CMAKE_GENERATOR"))
-        tc.variables["MORPHEUS_BUILD_DOCS"] = self.options.build_docs
-        tc.generate()
-        deps = CMakeDeps(self)
-        deps.generate()
+#    def generate(self):
+#        tc = CMakeToolchain(self, generator=os.getenv("CONAN_CMAKE_GENERATOR"))
+#        tc.variables["MORPHEUS_BUILD_DOCS"] = self.options.build_docs
+#        tc.generate()
+#        deps = CMakeDeps(self)
+        #import pdb; pdb.pm()
+#        breakpoint()
+#        deps.generate()
 
 #    def source(self):
 #        tools.get(**self.conan_data["sources"][self.version],

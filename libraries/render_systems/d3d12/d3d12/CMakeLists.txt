@@ -60,6 +60,7 @@ if (WIN32)
 
         set_target_properties(MorpheusRenderSystemD3D12 MorpheusRenderSystemD3D12Test
             PROPERTIES
+                FOLDER "Libraries/RenderSystems/D3D12"
                 ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
                 LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
                 RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin

@@ -1,4 +1,4 @@
-#include <d3d12/d3d12_type_mapping.hpp>
+#include <d3d12/type_mapping.hpp>
 
 namespace morpheus::gfx::d3d12
 {

@@ -2,7 +2,7 @@
 
 #include <gl4/wgl/adapter.hpp>
 #include <core/concurrency/generator.hpp>
-#include <core/gfx/adapters/video_mode.hpp>
+#include <core/gfx/video_mode.hpp>
 #include <core/platform.hpp>
 
 namespace morpheus::gfx::gl4::wgl

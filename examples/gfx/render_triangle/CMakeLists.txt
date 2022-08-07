@@ -7,10 +7,6 @@ target_link_libraries(RenderTriangle
 
 set_target_properties(RenderTriangle
     PROPERTIES
-         FOLDER "Examples/Gfx"
-)
-
-set_target_properties(RenderTriangle
-    PROPERTIES
-        RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
+         FOLDER Examples/Gfx
+         RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
 )

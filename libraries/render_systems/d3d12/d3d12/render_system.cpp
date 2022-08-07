@@ -1,4 +1,4 @@
-#include <d3d12/d3d12_render_system.hpp>
+#include <d3d12/render_system.hpp>
 
 namespace morpheus::gfx::d3d12
 {

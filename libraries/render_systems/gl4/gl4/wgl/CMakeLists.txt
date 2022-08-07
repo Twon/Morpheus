@@ -1,11 +1,9 @@
 target_sources(MorpheusRenderSystemGL4
     PUBLIC
         adapter.hpp
-        adapter_list.hpp
         video_mode.hpp
     PRIVATE
         adapter.cpp
-        adapter_list.cpp
         video_mode.cpp
 )
 

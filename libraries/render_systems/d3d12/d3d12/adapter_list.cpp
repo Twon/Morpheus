@@ -1,5 +1,5 @@
-#include <d3d12/adapters/adapter_list.hpp>
-#include <d3d12/adapters/adapter.hpp>
+#include <d3d12/adapter_list.hpp>
+#include <d3d12/adapter.hpp>
 //#include <fmt/core.h>
 
 namespace morpheus::gfx::d3d12

@@ -1,4 +1,4 @@
-#include <d3d12/adapters/adapter_list.hpp>
+#include <d3d12/adapter_list.hpp>
 #include <catch2/catch.hpp>
 
 namespace morpheus::gfx::d3d12::test

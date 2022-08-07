@@ -1,5 +1,5 @@
+#include <gl4/wgl/adapter.hpp>
 #include <catch2/catch.hpp>
-#include <gl4/wgl/adapter_list.hpp>
 
 namespace morpheus::test
 {
@@ -16,10 +16,10 @@ TEST_CASE("Iterates over the adapters in the list", "[morpheus.core.gfx.adapter_
         //adapter_list adapters;
         THEN("Loop over all adapters using native for loop syntax")
         {
-            /*for (const auto& adapter : adapters)
+            for (auto& adapter : enumerateAdapters())
             {
-
-            }*/
+                INFO("The adapter id is: " << adapter.getId());
+            }
         }
     }
 }

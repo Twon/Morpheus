@@ -4,6 +4,8 @@
 
 #include <compare>
 #include <concepts>
+#include <string>
+#include <string_view>
 
 namespace morpheus::gfx
 {
@@ -23,20 +25,23 @@ public:
              The width in pixels of the render target.
      */
     Adapter(
-        const IdType adapterId
+        const IdType adapterId,
+        const std::string_view name
     )
     :   mAdapterId(adapterId)
+    ,    mName(name)
     {
     }
     ///@}
 
-    IdType const& getId() const noexcept { return mAdapterId; }
-
+    [[nodiscard]] constexpr auto const& getId() const noexcept { return mAdapterId; }
+    [[nodiscard]] constexpr auto const& getName() const noexcept { return mName; }
     [[nodiscard]] constexpr auto operator<=>(Adapter const& rhs) const noexcept = default;
 private:
     /// \name Data Members
     ///@{
-    IdType mAdapterId;
+    IdType mAdapterId; 
+    std::string mName;
     ///@}
 };
 

@@ -1,9 +1,9 @@
 #pragma once
 
-#include <wrl.h>
-#include <dxgi1_6.h>
+#include <d3d12/video_mode_list.hpp>
 #include <core/platform.hpp>
-#include <d3d12/adapters/video_mode_list.hpp>
+#include <dxgi1_6.h>
+#include <wrl.h>
 
 namespace morpheus::gfx::d3d12
 {
