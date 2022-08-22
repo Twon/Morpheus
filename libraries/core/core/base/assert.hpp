@@ -40,6 +40,11 @@ enum class MORPHEUSCORE_EXPORT AssertType
     Verify  /// Verify behavour calls the handler and unconditionally calls halt.
 };
 
+/// Trigger thhe global assert handler. 
+/// \param[in] expr String representation of the condition.
+/// \param[in] file The source file where the assert orginated.
+/// \param[in] line The source line where the assert originated.
+/// \param[in] message An optional message describing the assert.
 MORPHEUSCORE_EXPORT void assertHandler(AssertType type, std::string_view const expr, std::string_view const file, std::uint32_t line, std::string_view message = std::string_view());
 
 
@@ -56,7 +61,7 @@ MORPHEUSCORE_EXPORT void assertHandler(AssertType type, std::string_view const e
 #if defined (MORPHEUS_ASSERT_ENABLED)
     #define MORPHEUS_ASSERT_HANDLER(type, expr, msg) \
         do \
-            if ((!static_cast<bool>(expr)))\
+            if ((!static_cast<bool>(expr))) [[unlikely]] \
                 assertHandler(type, #expr, __FILE__, __LINE__, msg); \
         while(0)
 #else
