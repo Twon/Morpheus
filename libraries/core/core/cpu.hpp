@@ -1,10 +1,10 @@
-
 #pragma once
 
+#include <core/platform.hpp>
 #include <array>
+#include <cstdint>
 #include <string>
 #include <vector>
-#include <core/platform.hpp>
 
 #if (MORPHEUS_COMPILER == MORPHEUS_VISUALSTUDIO_COMPILER)
 #pragma warning(push)
@@ -18,35 +18,35 @@ namespace morpheus
         Simple type to store the results of a call to the cpuid instruction which returns 4 registers of 32-bit size
         (to EAX, EBX, ECX and EDX registers).
  */
-using cpuid_results = std::array<uint32_t, 4>;
+using CpuidResults = std::array<uint32_t, 4>;
 
 /*! \typedef cpuid_leafs
 
  */
-using cpuid_leafs = std::vector<cpuid_results>;
+using CpuidLeafs = std::vector<CpuidResults>;
 
 /*! \class cpu
         This type stores information about the capabilities of the central processing unit of the current target
         system.
  */
-class MORPHEUSCORE_EXPORT cpu {
+class MORPHEUSCORE_EXPORT Cpu {
 public:
     //! Default constructor.
-    cpu();
+    Cpu();
 
     //! Get the CPU vendor ID string.
-    const std::string& getVendorId() const noexcept { return vendor_id; }
+    [[nodiscard]] auto const& getVendorId() const noexcept { return mVendorId; }
 
     //! Get the CPU brand ID string.
-    const std::string& getBrandId() const noexcept { return brand_id; }
+    [[nodiscard]] auto const& getBrandId() const noexcept { return mBrandId; }
 
 private:
-    const uint32_t max_leaf;          //!< Maximum available leaf function for the cpuid instruction.
-    const uint32_t max_extended_leaf; //!< Maximum available extended leaf function for the cpuid instruction.
-    const cpuid_leafs leafs;          //!< Cached results of executing the standard cpuid leaf functions.
-    const cpuid_leafs extended_leafs; //!< Cached results of executing the extended cpuid leaf functions.
-    const std::string vendor_id;
-    const std::string brand_id;
+    std::uint32_t mMaxLeaf;          //!< Maximum available leaf function for the cpuid instruction.
+    std::uint32_t mMaxExtendedLeaf; //!< Maximum available extended leaf function for the cpuid instruction.
+    CpuidLeafs mLeafs;          //!< Cached results of executing the standard cpuid leaf functions.
+    CpuidLeafs mExtendedLeafs; //!< Cached results of executing the extended cpuid leaf functions.
+    std::string mVendorId;
+    std::string mBrandId;
 };
 
 } // namespace morpheus

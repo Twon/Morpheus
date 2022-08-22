@@ -58,7 +58,7 @@
             Macro present when dead code elimination is enabled in the build.
     */
     #if (MORPHEUS_IS_GCC_COMPATIBLE_COMPILER && __OPTIMIZE__) || \
-        (MORPHEUS_IS_VISUALSTUDIO_COMPILER && !defined __MSVC_RUNTIME_CHECKS && defined NDEBUG)
+        (MORPHEUS_IS_VISUALSTUDIO_COMPATIBLE_COMPILER && !defined __MSVC_RUNTIME_CHECKS && defined NDEBUG)
         #define MORPHEUS_COMPILER_DEAD_CODE_ELIMINATION
     #endif
 

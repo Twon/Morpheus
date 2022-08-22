@@ -52,6 +52,7 @@ class Morpheus(ConanFile):
     exports_sources = ["CMakeLists.txt", "LICENSE", "version.txt", "cmake/*", "examples/*" "libraries/*"]
     generators = "cmake_find_package", "cmake_find_package_multi", "virtualenv"
     requires = (
+        "boost/1.79.0",
         "catch2/2.13.9", 
         "fmt/8.1.1",
         "glbinding/3.1.0",

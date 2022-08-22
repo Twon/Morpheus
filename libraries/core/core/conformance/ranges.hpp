@@ -1,6 +1,6 @@
 #pragma once
 
-#include <version>
+#include <core/conformance/version.hpp>
 
 #if __has_include(<ranges>)
 #include <ranges>
@@ -24,6 +24,7 @@ using std::ranges::distance;
 
 using std::ranges::back_inserter;
 using std::ranges::input_range;
+using std::ranges::find;
 using std::ranges::move;
 using std::ranges::iterator_t;
 using std::ranges::range_value_t;
@@ -38,6 +39,7 @@ using std::ranges::transform;
 #else
 
 #include <range/v3/algorithm/lower_bound.hpp>
+#include <range/v3/algorithm/find.hpp>
 #include <range/v3/algorithm/move.hpp>
 #include <range/v3/algorithm/transform.hpp>
 //#include <range/v3/functional/comparisons.hpp>
@@ -57,6 +59,7 @@ using ::ranges::distance;
 
 using ::ranges::back_inserter;
 using ::ranges::input_range;
+using ::ranges::find;
 using ::ranges::move;
 using ::ranges::iterator_t;
 using ::ranges::range_value_t;

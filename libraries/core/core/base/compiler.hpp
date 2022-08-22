@@ -108,7 +108,7 @@
                 compile code paths if the current compiler is compatible with the settings of the
                 Visual Studio compiler.
          */
-        #define MORPHEUS_IS_VISUALSTUDIO_COMPILER \
+        #define MORPHEUS_IS_VISUALSTUDIO_COMPATIBLE_COMPILER \
                     (MORPHEUS_COMPILER == MORPHEUS_VISUALSTUDIO_COMPILER)  || \
                     (MORPHEUS_INTEL_COMPILER_FOR_WINDOWS)
 

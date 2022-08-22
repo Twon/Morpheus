@@ -41,7 +41,7 @@ namespace mopheus
     #if (MORPHEUS_IS_GCC_COMPATIBLE_COMPILER)
         // https://clang.llvm.org/docs/AddressSanitizer.html#disabling-instrumentation-with-attribute-no-sanitize-address
         #define MORPHEUS_NO_SANITIZE_ADDRESS __attribute__((no_sanitize("address")))
-    #else if (MORPHEUS_IS_VISUALSTUDIO_COMPILER)
+    #else if (MORPHEUS_IS_VISUALSTUDIO_COMPATIBLE_COMPILER)
         // https://docs.microsoft.com/en-us/cpp/sanitizers/asan-building?view=msvc-160
         #define MORPHEUS_NO_SANITIZE_ADDRESS __declspec(no_sanitize_address)
     #else
