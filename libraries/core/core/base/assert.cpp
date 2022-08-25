@@ -10,7 +10,7 @@ namespace morpheus
 
 AssertHandler gAssertHandler = [](Assertion assertion)
 {
-    auto const debugMessage = fmt_ns::format("{}({}): assertion[{}]: {}", assertion.file, assertion.line, assertion.expression, assertion.message);
+    auto const debugMessage = fmt_ns::format("{}({}): assertion[{}]: {}", assertion.location.file_name(), assertion.location.line(), assertion.expression, assertion.message);
     debugPring(debugMessage);
     return true;
 };
@@ -25,16 +25,16 @@ void setAssertHandler(AssertHandler handler)
     return gAssertHandler;
 }
 
-void assertHandler(AssertType type, std::string_view const expr, std::string_view const file, std::uint32_t line, std::string_view message)
+void assertHandler(AssertType type, sl_ns::source_location const location, std::string_view const expr, std::string_view message)
 {
     if (type == AssertType::Assert)
     {
-        if (getAssertHandler()(Assertion{ expr, file, line, std::string(message) }))
+        if (getAssertHandler()(Assertion{ location, expr, std::string(message) }))
             MORPHEUS_BREAKPOINT();
     }
     else
     {
-        getAssertHandler()(Assertion{ expr, file, line, std::string(message) });
+        getAssertHandler()(Assertion{ location, expr, std::string(message) });
         MORPHEUS_BREAKPOINT();
     }
 }

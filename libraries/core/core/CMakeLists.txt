@@ -3,15 +3,14 @@ add_executable(MorpheusCoreTests "")
 
 target_include_directories(MorpheusCore
     PUBLIC
-        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/>
+        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/..>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/..>
 )
 
 target_sources(MorpheusCore
-    PRIVATE
+    PUBLIC
         cpu.hpp
-        platform.hpp
         game/game.hpp
         world/world_model.hpp
         visualisation/visualisation.hpp
@@ -57,6 +56,7 @@ target_compile_options(MorpheusCore
 
 target_link_libraries(MorpheusCore
     PUBLIC
+        Boost::headers
         fmt::fmt
         range-v3::range-v3
 )
@@ -81,17 +81,6 @@ source_group(TREE ${CMAKE_CURRENT_LIST_DIR} FILES ${SOURCES_FILES})
 get_target_property(TEST_SOURCES_FILES MorpheusCoreTests SOURCES)
 source_group(TREE ${CMAKE_CURRENT_LIST_DIR} FILES ${TEST_SOURCES_FILES})
 
-#[[
-include(WriteCompilerDetectionHeader)
-write_compiler_detection_header(
-    FILE morpheuscore_compiler_detection.h
-    PREFIX MORPHEUSCORE
-    COMPILERS GNU Clang MSVC Intel AppleClang
-    FEATURES cxx_constexpr
-#    PROLOG "/// \\def"
-#    EPILOG "///"
-)
-]]
 set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 set(CMAKE_VISIBILITY_INLINES_HIDDEN 1)
 include(GenerateExportHeader)

@@ -1,5 +1,6 @@
 target_sources(MorpheusCore
-    PRIVATE
+    PUBLIC
         image.hpp
+    PRIVATE
         image.cpp
 )

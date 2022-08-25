@@ -3,6 +3,7 @@ target_sources(MorpheusCore
         assert.hpp
         compiler.hpp
         debugging.hpp
+        platform.hpp
         sanitizers.hpp
         unreachable.hpp
         verify.hpp
@@ -11,14 +12,8 @@ target_sources(MorpheusCore
         debugging.cpp
 )
 
-target_link_libraries(MorpheusCore
-    PUBLIC
-        Boost::headers
-)
-
 target_sources(MorpheusCoreTests
     PRIVATE
         assert.tests.cpp
         verify.tests.cpp
 )
-

@@ -1,4 +1,4 @@
-#include <core/platform.hpp>
+#include <core/base/platform.hpp>
 
 #if (MORPHEUS_IS_GCC_COMPATIBLE_COMPILER)
 #include <cpuid.h>

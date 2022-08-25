@@ -1,6 +1,7 @@
 #pragma once
 
-#include <core/platform.hpp>
+#include <core/base/platform.hpp>
+
 #include <array>
 #include <cstdint>
 #include <string>

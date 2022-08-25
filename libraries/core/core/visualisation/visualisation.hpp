@@ -1,6 +1,6 @@
 #pragma once
 
-#include <core/platform.hpp>
+#include <core/base/platform.hpp>
 #include <memory>
 
 namespace morpheus::gfx

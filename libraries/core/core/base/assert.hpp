@@ -1,6 +1,7 @@
 #pragma once
 
-#include <core/platform.hpp>
+#include <core/base/platform.hpp>
+#include <core/conformance/source_location.hpp>
 
 #include <cstdint>
 #include <functional>
@@ -14,9 +15,8 @@ namespace morpheus
 ///     Minium required information to report an assetion.
 struct Assertion
 {
+    sl_ns::source_location location;
     std::string_view expression;
-    std::string_view file;
-    std::uint32_t line;
     std::string message;
 };
     
@@ -41,11 +41,10 @@ enum class MORPHEUSCORE_EXPORT AssertType
 };
 
 /// Trigger thhe global assert handler. 
+/// \param[in] location The source file location where the assert orginated.
 /// \param[in] expr String representation of the condition.
-/// \param[in] file The source file where the assert orginated.
-/// \param[in] line The source line where the assert originated.
 /// \param[in] message An optional message describing the assert.
-MORPHEUSCORE_EXPORT void assertHandler(AssertType type, std::string_view const expr, std::string_view const file, std::uint32_t line, std::string_view message = std::string_view());
+MORPHEUSCORE_EXPORT void assertHandler(AssertType type, sl_ns::source_location const location, std::string_view const expr, std::string_view message = std::string_view());
 
 
 /// \def MORPHEUS_ASSERT_ENABLED
@@ -62,8 +61,9 @@ MORPHEUSCORE_EXPORT void assertHandler(AssertType type, std::string_view const e
     #define MORPHEUS_ASSERT_HANDLER(type, expr, msg) \
         do \
             if ((!static_cast<bool>(expr))) [[unlikely]] \
-                assertHandler(type, #expr, __FILE__, __LINE__, msg); \
+                assertHandler(type, MORPHEUS_CURRENT_LOCATION, #expr, msg); \
         while(0)
+
 #else
     #define MORPHEUS_ASSERT_HANDLER(type, expr, msg)
 #endif

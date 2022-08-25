@@ -4,6 +4,7 @@ target_sources(MorpheusCore
         function_ref.hpp
         print.hpp
         ranges.hpp
+        source_location.hpp
         version.hpp
 )
 

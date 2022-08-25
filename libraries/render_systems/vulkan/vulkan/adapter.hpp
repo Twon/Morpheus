@@ -1,7 +1,7 @@
 #pragma once
 
 #include "vulkan/video_mode.hpp"
-#include "core/platform.hpp"
+#include <core/base/platform.hpp>
 
 #include <vulkan/vulkan_raii.hpp>
 

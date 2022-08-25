@@ -14,9 +14,18 @@ list(APPEND LANGUAGES OBJCXX)
 
 add_library(MorpheusRenderSystemMetal "")
 target_sources(MorpheusRenderSystemMetal
-    PRIVATE 
+    PUBLIC
+        adapter.hpp
+        adapter_list.hpp
         metal_render_system.hpp
+        video_mode.hp
+        video_mode_list.hpp
+    PRIVATE
+        adapter.cpp
+        adapter_list.cpp
         metal_render_system.mm
+        video_mode.cpp
+        video_mode_list.cpp
 )
 
 target_compile_definitions(MorpheusRenderSystemMetal
@@ -26,7 +35,7 @@ target_compile_definitions(MorpheusRenderSystemMetal
 
 target_include_directories(MorpheusRenderSystemMetal
     PUBLIC
-        "${CMAKE_CURRENT_LIST_DIR}/.."
+        ${CMAKE_CURRENT_LIST_DIR}/..
 )
 
 target_link_libraries(MorpheusRenderSystemMetal
@@ -36,9 +45,11 @@ target_link_libraries(MorpheusRenderSystemMetal
         moltenvk::moltenvk
 )
 
-set_target_properties(MorpheusRenderSystemMetal
-    PROPERTIES
-        FOLDER "Libraries/RenderSystems/Metal"
+add_executable(MorpheusRenderSystemMetalTests "")
+target_sources(MorpheusRenderSystemMetalTests
+    PRIVATE
+        adapter_list.test.cpp
+        video_mode_list.test.cpp
 )
 
 set_target_properties(MorpheusRenderSystemMetal
@@ -50,9 +61,10 @@ set_target_properties(MorpheusRenderSystemMetal
 
 set_target_properties(MorpheusRenderSystemMetal
     PROPERTIES
-        ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
-        LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib"
-        RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin"
+        FOLDER Libraries/RenderSystems/Metal
+        ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
+        LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
+        RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
 )
 
 install(TARGETS MorpheusRenderSystemMetal
@@ -61,10 +73,10 @@ install(TARGETS MorpheusRenderSystemMetal
         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
 )
 
-#    add_test(
-#        NAME MorpheusRenderSystemMetalTests
-#        COMMAND MorpheusRenderSystemMetalTests
-#        WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
-#    catch_discover_tests(MorpheusRenderSystemMetalTests)
+add_test(
+    NAME MorpheusRenderSystemMetalTests
+    COMMAND MorpheusRenderSystemMetalTests
+    WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+catch_discover_tests(MorpheusRenderSystemMetalTests)
 add_coverage(MorpheusRenderSystemMetal)
 

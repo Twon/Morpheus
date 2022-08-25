@@ -41,9 +41,6 @@ target_link_libraries(MorpheusRenderSystemGL4
         glbinding::glbinding
 )
 
-get_target_property(SOURCES_FILES MorpheusRenderSystemGL4 SOURCES)
-source_group(TREE ${CMAKE_CURRENT_LIST_DIR} FILES ${SOURCES_FILES})
-
 target_sources(MorpheusRenderSystemGL4Tests
     PRIVATE
         render_system.tests.cpp
@@ -69,9 +66,6 @@ set_target_properties(MorpheusRenderSystemGL4 MorpheusRenderSystemGL4Tests
         LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
         RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
 )
-
-get_target_property(SOURCES_FILES_TEST MorpheusRenderSystemGL4Tests SOURCES)
-source_group(TREE ${CMAKE_CURRENT_LIST_DIR} FILES ${SOURCES_FILES_TEST})
 
 install(TARGETS MorpheusRenderSystemGL4
         RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
