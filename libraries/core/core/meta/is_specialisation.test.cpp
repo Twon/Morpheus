@@ -1,7 +1,7 @@
 
 #include "core/meta/is_specialisation.hpp"
 
-#include <catch2/catch.hpp>
+#include <catch2/catch_all.hpp>
 #include <array>
 
 namespace morpheus::test

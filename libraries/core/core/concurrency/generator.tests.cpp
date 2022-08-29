@@ -1,7 +1,9 @@
 #include "core/conformance/ranges.hpp"
 #include "core/concurrency/generator.hpp"
-#include <catch2/catch.hpp>
+
+#include <catch2/catch_all.hpp>
 #include <iostream>
+
 namespace morpheus::concurrency
 {
 
@@ -17,6 +19,17 @@ TEST_CASE("Test a iterator traits hold true for generator iterators", "[morpheus
 TEST_CASE("Ensure generator iterators meet required concepts", "[morpheus.concurrency.generator.concepts]")
 {
     STATIC_REQUIRE(std::indirectly_readable<Generator<int>::iterator>);
+
+    STATIC_REQUIRE(std::weakly_incrementable<Generator<int>::iterator> );
+    STATIC_REQUIRE(std::semiregular<Generator<int>::iterator> );
+
+
+    STATIC_REQUIRE(ranges::detail::_borrowed_range<Generator<int>> );
+    STATIC_REQUIRE(ranges::_begin_::has_member_begin<Generator<int>> );
+
+    STATIC_REQUIRE(requires(Generator<int> r) { ranges::begin(r); } );
+    STATIC_REQUIRE(ranges::range<Generator<int>>);
+//    STATIC_REQUIRE(ranges::range<Generator<int>>);
 }
 
 
@@ -28,8 +41,8 @@ TEST_CASE("Test a simple integrer based coroutine", "[morpheus.concurrency.gener
         }
     };
 
-    auto const expectedRange = std::views::iota(0, 5) | std::views::transform([](auto x) { return x*5; });
-    REQUIRE(std::ranges::equal(generateSequence(0, 25, 5), expectedRange));
+    auto const expectedRange = ranges::views::iota(0, 5) | ranges::views::transform([](auto x) { return x*5; });
+    REQUIRE(ranges::equal(generateSequence(0, 25, 5), expectedRange));
 }
 
 }

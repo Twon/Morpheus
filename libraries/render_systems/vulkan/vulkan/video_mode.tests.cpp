@@ -1,4 +1,4 @@
-#include <catch2/catch.hpp>
+#include <catch2/catch_all.hpp>
 /*#include <core/gfx/adapters/video_mode_list.hpp>
 #include <catch2/catch.hpp>
 

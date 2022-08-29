@@ -30,7 +30,7 @@ using AssertHandler = std::function<bool(Assertion)>;
 MORPHEUSCORE_EXPORT void setAssertHandler(AssertHandler handler);
 
 /// Access the globally enable assert handler.
-MORPHEUSCORE_EXPORT [[nodiscard]] AssertHandler const& getAssertHandler();
+[[nodiscard]] MORPHEUSCORE_EXPORT AssertHandler const& getAssertHandler();
 
 /// \enum AssertType
 ///     Defines the behavour type for assert handlers.

@@ -1,7 +1,8 @@
 #pragma once
 
+#include <core/conformance/coro.hpp>
+
 #include <cassert>
-#include <coroutine>
 #include <iterator>
 
 namespace morpheus::concurrency
@@ -17,7 +18,7 @@ template<typename T>
 struct Generator {
 
     struct promise_type;
-    using handle_type = std::coroutine_handle<promise_type>;
+    using handle_type = coro_ns::coroutine_handle<promise_type>;
     using value_type = T;
     using reference = std::conditional_t<std::is_reference_v<T>, T, const value_type&>;
     using pointer = std::add_pointer_t<reference>;
@@ -36,21 +37,21 @@ struct Generator {
 
     struct promise_type {
         auto initial_suspend() {
-            return std::suspend_always{};
+            return coro_ns::suspend_always{};
         }
         auto final_suspend() noexcept {
-            return std::suspend_always{};
+            return coro_ns::suspend_always{};
         }
         auto get_return_object() {
             return Generator{ handle_type::from_promise(*this) };
         }
         auto return_void() {
-            return std::suspend_never{};
+            return coro_ns::suspend_never{};
         }
 
         auto yield_value(const T value) {
             current_value = value;
-            return std::suspend_always{};
+            return coro_ns::suspend_always{};
         }
         [[noreturn]] void unhandled_exception() {
             throw;
@@ -66,6 +67,10 @@ struct Generator {
         using pointer = Generator::pointer;
         using difference_type = std::ptrdiff_t;
         using iterator_category = std::input_iterator_tag;
+
+        iterator() = default;
+        iterator(iterator const& rhs) noexcept = default;
+        iterator& operator=(iterator const& other) noexcept = default;
 
         iterator(iterator&& rhs) noexcept : handle(std::exchange(rhs.handle, {})) {}
         iterator& operator=(iterator&& other) noexcept
@@ -101,16 +106,20 @@ struct Generator {
 
     private:
         friend Generator;
-        explicit iterator(std::coroutine_handle<promise_type> h) noexcept : handle(h) {}
+        explicit iterator(coro_ns::coroutine_handle<promise_type> h) noexcept : handle(h) {}
 
-        std::coroutine_handle<promise_type> handle;
+        coro_ns::coroutine_handle<promise_type> handle;
     };
 
     [[nodiscard]] iterator begin() const noexcept
     {
         // Pre: Coroutine is suspended at its initial suspend point
         assert(coro && "Can't call begin on moved-from generator");
+#if (__cpp_impl_coroutine >= 201902L)
         coro.resume();
+#else
+        const_cast<Generator*>(this)->coro.resume(); // std::experimental::resume is not marked const.
+#endif
         return iterator(coro);
     }
 
@@ -122,4 +131,7 @@ private:
 }
 
 template<typename T>
-inline constexpr bool std::ranges::enable_view<morpheus::concurrency::Generator<T>> = true;
+inline constexpr bool ::morpheus::ranges::enable_view<morpheus::concurrency::Generator<T>> = true;
+
+template<class T>
+inline constexpr bool ::morpheus::ranges::enable_borrowed_range<morpheus::concurrency::Generator<T>> = true;

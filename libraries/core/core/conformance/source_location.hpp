@@ -10,7 +10,7 @@ namespace morpheus { namespace sl_ns = std; }
 #else
 
 #include<boost/assert/source_location.hpp>
-namespace morpheus { namespace sl_ns = fmt; }
+namespace morpheus { namespace sl_ns = boost; }
 
 #define MORPHEUS_CURRENT_LOCATION BOOST_CURRENT_LOCATION
 
