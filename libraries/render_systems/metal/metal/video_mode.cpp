@@ -1,4 +1,4 @@
-#include <core/gfx/adapters/video_mode.hpp>
+#include <metal/video_mode.hpp>
 
 namespace morpheus::gfx
 {

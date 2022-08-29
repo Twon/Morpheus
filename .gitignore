@@ -1,7 +1,6 @@
 .idea
 .vs
 .vscode
-[Bb]uild
-[Bb]uild_xcode
+[Bb]uild*
 cmake-build-debug
 [Oo]ut

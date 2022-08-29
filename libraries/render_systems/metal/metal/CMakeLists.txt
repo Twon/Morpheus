@@ -16,16 +16,12 @@ add_library(MorpheusRenderSystemMetal "")
 target_sources(MorpheusRenderSystemMetal
     PUBLIC
         adapter.hpp
-        adapter_list.hpp
         metal_render_system.hpp
-        video_mode.hp
-        video_mode_list.hpp
+        video_mode.hpp
     PRIVATE
         adapter.cpp
-        adapter_list.cpp
         metal_render_system.mm
         video_mode.cpp
-        video_mode_list.cpp
 )
 
 target_compile_definitions(MorpheusRenderSystemMetal
@@ -39,8 +35,9 @@ target_include_directories(MorpheusRenderSystemMetal
 )
 
 target_link_libraries(MorpheusRenderSystemMetal
-    PRIVATE
+    PUBLIC
         MorpheusCore
+        indirect_value::indirect_value
     PRIVATE
         moltenvk::moltenvk
 )
@@ -48,8 +45,14 @@ target_link_libraries(MorpheusRenderSystemMetal
 add_executable(MorpheusRenderSystemMetalTests "")
 target_sources(MorpheusRenderSystemMetalTests
     PRIVATE
-        adapter_list.test.cpp
-        video_mode_list.test.cpp
+        adapter.tests.cpp
+        video_mode.tests.cpp
+)
+
+target_link_libraries(MorpheusRenderSystemMetalTests
+    PRIVATE
+        MorpheusRenderSystemMetal
+        Catch2::Catch2
 )
 
 set_target_properties(MorpheusRenderSystemMetal
@@ -59,7 +62,7 @@ set_target_properties(MorpheusRenderSystemMetal
         CMAKE_OBJCXX_EXTENSIONS OFF
 )
 
-set_target_properties(MorpheusRenderSystemMetal
+set_target_properties(MorpheusRenderSystemMetal MorpheusRenderSystemMetalTests
     PROPERTIES
         FOLDER Libraries/RenderSystems/Metal
         ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
