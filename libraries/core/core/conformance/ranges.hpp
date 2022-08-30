@@ -6,11 +6,17 @@
 #include <ranges>
 #endif
 
+#if (__cpp_lib_ranges >= 202110L)
 #include <iterator>
-
-#if (__cpp_lib_ranges >= 202202L)
 namespace morpheus { namespace ranges = std::ranges; }
+
+namespace std::ranges
+{ 
+    using std::back_inserter; // https://github.com/ericniebler/range-v3/issues/867
+}
+
 #else
+#error "Why we here"
 #include <range/v3/algorithm.hpp>
 #include <range/v3/iterator.hpp>
 //#include <range/v3/range/concepts.hpp>

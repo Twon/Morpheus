@@ -6,6 +6,7 @@
 #include <concepts>
 #include <string>
 #include <string_view>
+#include <type_traits>
 
 namespace morpheus::gfx
 {
@@ -18,17 +19,15 @@ class Adapter {
 public:
     /// \name Life cycle
     ///@{
+    /// Default construction.
     constexpr Adapter() noexcept = default;
 
-    /*! Constructs a render target with the specified parameters.
-        \param[in] width
-             The width in pixels of the render target.
-     */
-    Adapter(
-        const IdType adapterId,
-        const std::string_view name
-    )
-    :   mAdapterId(adapterId)
+    /// Constructs an adapter from name and id.
+    constexpr Adapter(
+        IdType adapterId,
+        std::string_view const name
+    )   noexcept(noexcept(std::is_nothrow_move_assignable_v<IdType>))
+    :    mAdapterId(adapterId)
     ,    mName(name)
     {
     }

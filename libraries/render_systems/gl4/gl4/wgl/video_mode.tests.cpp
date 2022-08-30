@@ -1,4 +1,4 @@
-#include <catch2/catch.hpp>
+#include <catch2/catch_all.hpp>
 #include <gl4/wgl/video_mode.hpp>
 
 namespace morpheus::test
