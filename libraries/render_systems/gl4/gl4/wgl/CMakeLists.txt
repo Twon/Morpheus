@@ -20,6 +20,7 @@ target_compile_options(MorpheusRenderSystemGL4
 target_sources(MorpheusRenderSystemGL4Tests
     PRIVATE
         adapter.tests.cpp
+        context.tests.cpp
         video_mode.tests.cpp
 )
 
