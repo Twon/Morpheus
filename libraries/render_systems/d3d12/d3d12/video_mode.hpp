@@ -1,5 +1,7 @@
 #pragma once
 
+#include <d3d12/prerequisites.hpp>
+
 namespace morpheus::gfx::d3d12
 {
 

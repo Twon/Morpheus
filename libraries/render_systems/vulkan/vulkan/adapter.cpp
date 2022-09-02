@@ -1,4 +1,5 @@
 #include "vulkan/adapter.hpp"
+#include "core/base/assert.hpp"
 #include "core/conformance/ranges.hpp"
 
 namespace morpheus::gfx::vulkan
@@ -9,9 +10,11 @@ Adapter::Adapter(vk::raii::PhysicalDevice&& physicalDevice)
 {
 }
 
-std::string Adapter::getName() const noexcept
-{
-    return mPhysicalDevice.getProperties().deviceName;
+[[nodiscard]] Vendor Adapter::getVendor() const noexcept
+{ 
+    auto const vendor = vendorFromPciId(mPhysicalDevice.getProperties().vendorID);
+    MORPHEUS_ASSERT(vendor);
+    return *vendor;
 }
 
 AdapterList enumerateAdapters(vk::raii::Instance const& instance)

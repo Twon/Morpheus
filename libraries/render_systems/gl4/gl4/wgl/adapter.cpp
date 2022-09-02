@@ -1,13 +1,10 @@
 #include <gl4/wgl/adapter.hpp>
 #include <gl4/wgl/context.hpp>
 #include <gl4/wgl/verify.hpp>
-#include <GL/glew.h>
-#include <GL/wglew.h>
+#include <gl4/prerequisites.hpp>
 
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
-#include <string_view>
-#include <GL/gl.h>
+#include <regex>
+#include <sstream>
 
 // https://stackoverflow.com/questions/16823372/forcing-machine-to-use-dedicated-graphics-card
 #ifdef _WIN32
@@ -34,6 +31,24 @@ auto getModuleHandle()
 	auto const result = GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT, &findAddressFrom, &hinst);
 	MORPHEUS_WGL_VERIFY(result);
 	return hinst;
+}
+
+auto pciIdFromDeviceId(std::string_view const deviceId)
+{
+	auto const pciIdStr = deviceId.substr(deviceId.find_first_not_of("PCI\\VEN_"), 4);
+	std::uint32_t pciId = 0;
+	std::stringstream ss;
+	ss << std::hex << pciIdStr;
+	ss >> pciId;
+	return pciId;
+}
+
+auto vendorFromDeviceId(std::string_view const deviceId)
+{
+	auto const pciId = pciIdFromDeviceId(deviceId);
+	auto const vendor = vendorFromPciId(pciId);
+	MORPHEUS_VERIFY(vendor);
+	return *vendor;
 }
 
 }
@@ -100,7 +115,11 @@ concurrency::Generator<Adapter> enumerateAdapters()
 		// If the device is attached to the desktop, i.e. a graphics card
 		if (displayDevice.StateFlags & DISPLAY_DEVICE_ATTACHED_TO_DESKTOP)
 		{
-			co_yield Adapter(displayDevice.DeviceName, displayDevice.DeviceString);
+			co_yield Adapter(
+				displayDevice.DeviceName, 
+				displayDevice.DeviceString, 
+				vendorFromDeviceId(displayDevice.DeviceID)
+			);
 
 			// Set the current display device to the the primary device
 			if (displayDevice.StateFlags & DISPLAY_DEVICE_PRIMARY_DEVICE)
@@ -113,3 +132,4 @@ concurrency::Generator<Adapter> enumerateAdapters()
 }
 
 } // namespace morpheus::gfx::gl4::wgl
+ 

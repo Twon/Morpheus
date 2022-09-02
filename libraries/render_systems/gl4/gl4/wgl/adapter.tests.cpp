@@ -1,4 +1,5 @@
 #include <gl4/wgl/adapter.hpp>
+#include <core/gfx/concepts/adapter.hpp>
 #include <catch2/catch_all.hpp>
 
 #include <boost/dll/shared_library.hpp>
@@ -18,12 +19,20 @@ extern "C" __declspec(dllexport) DWORD NvOptimusEnablement = 0x00000001;
 extern "C" __declspec(dllexport) DWORD AmdPowerXpressRequestHighPerformance = 0x00000001;
 #endif
 
-namespace morpheus::test
+namespace morpheus::gfx::gl4::wgl
 {
-using namespace morpheus::gfx::gl4::wgl;
 
 TEST_CASE("Create an adapter mode list", "[morpheus.core.gfx.gl.wgl.adapter_list]")
 {
+}
+
+TEST_CASE("Concept checks for WGL adapters", "[morpheus.gfx.gl.wgl.adapter.concepts]")
+{
+//    STATIC_REQUIRE(concepts::VideoMode<VideoMode>);
+    //STATIC_REQUIRE(requires(Adapter t) { { t.getName() } -> std::convertible_to<std::string_view>; });
+    //STATIC_REQUIRE(requires(Adapter t) { { t.getVideoModes() } -> morpheus::gfx::concepts::VideoModeRange; });
+
+//    STATIC_REQUIRE(gfx::concepts::Adapter<Adapter>);
 }
 
 TEST_CASE("Iterates over the adapters in the list", "[morpheus.core.gfx.gl.wgl.adapter_list]")
@@ -160,4 +169,4 @@ TEST_CASE("Iterates over the adapters in the list via openCL", "[morpheus.core.g
     }
 }*/
 
-} // namespace morpheus::test
+} // namespace morpheus::gfx::gl4::wgl

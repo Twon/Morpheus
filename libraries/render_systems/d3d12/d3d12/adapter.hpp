@@ -1,11 +1,11 @@
 #pragma once
 
+#include <d3d12/prerequisites.hpp>
 #include <d3d12/video_mode_list.hpp>
 #include <core/base/platform.hpp>
 #include <core/concurrency/generator.hpp>
 #include <core/gfx/adapter.hpp>
-#include <dxgi1_6.h>
-#include <wrl.h>
+
 #include <string_view>
 
 namespace morpheus::gfx::d3d12
@@ -31,16 +31,13 @@ public:
     ///@}
 
     //! The DXGI adapter interface.
-    [[nodiscard]] DXGIAdapter const& dxgi_adapter() const noexcept { return mDxgiAdapter; }
+    [[nodiscard]] DXGIAdapter const& dxgiAdapter() const noexcept { return mDxgiAdapter; }
 
     //! The DXGI adapter description.
-    [[nodiscard]] DXGI_ADAPTER_DESC1 const& dxgi_description() const noexcept { return mDescription; }
+    [[nodiscard]] DXGI_ADAPTER_DESC1 const& dxgDescription() const noexcept { return mDescription; }
 
-    [[nodiscard]] constexpr auto const& getId() const noexcept { return mDescription.DeviceId; }
-    [[nodiscard]] constexpr auto const& getName() const noexcept {
-        return mDescription.Description;
-        //std::string_view(mDescription.Description); }
-    }
+    [[nodiscard]] auto getId() const noexcept { return mDescription.DeviceId; }
+    [[nodiscard]] std::wstring_view getName() const noexcept { return mDescription.Description; }
     [[nodiscard]] constexpr auto operator<=>(Adapter const& rhs) const noexcept = default;
 private:
     /// \name Data Members
@@ -48,7 +45,7 @@ private:
     //! The interface to the DXGI object.
     DXGIAdapter mDxgiAdapter;
     //! The DXGI adapter description.
-    DXGI_ADAPTER_DESC1 mDescription;
+    DXGI_ADAPTER_DESC1 mDescription = {};
     ///@}
 };
 

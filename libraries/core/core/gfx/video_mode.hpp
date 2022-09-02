@@ -40,11 +40,12 @@ public:
     [[nodiscard]] constexpr auto height() const noexcept { return mHeight; }
 
     //! The colour depth of the pixels of the render target.
-    [[nodiscard]] constexpr auto colour_depth() const noexcept { return mColourDepth; }
+    [[nodiscard]] constexpr auto colourDepth() const noexcept { return mColourDepth; }
 
     //! The colour depth of the pixels of the render target.
-    [[nodiscard]] constexpr auto refresh_rate() const noexcept { return mRefreshRate; }
+    [[nodiscard]] constexpr auto refreshRate() const noexcept { return mRefreshRate; }
 
+    //! The three-way operator provides strong ordering of types.
     [[nodiscard]] constexpr auto operator<=>(VideoMode const& rhs) const noexcept = default;
 private:
     /// \name Data Members

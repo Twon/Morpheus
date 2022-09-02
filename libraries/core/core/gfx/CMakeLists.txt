@@ -14,11 +14,14 @@ target_sources(MorpheusCore
         render_system.hpp
         render_target.hpp
         render_window.hpp
+        vendor.hpp
+        video_mode.hpp
     PRIVATE
         adapter.cpp
         render_system_factory.cpp
         render_system.cpp
         render_target.cpp
         render_window.cpp
+        vendor.cpp
         video_mode.cpp
 )

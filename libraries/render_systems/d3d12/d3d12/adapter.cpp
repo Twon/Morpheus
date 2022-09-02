@@ -1,6 +1,6 @@
 #include <core/conformance/format.hpp>
-#include <d3d12/adapter_list.hpp>
 #include <d3d12/adapter.hpp>
+#include <d3d12/verify.hpp>
 
 #include <exception>
 #include <utility>
@@ -22,34 +22,24 @@ using DXGIOutput = Microsoft::WRL::ComPtr<IDXGIOutput>;
 auto createDXGIFactory()
 {
     DXGIFactory dxgiFactory;
-    if (FAILED(CreateDXGIFactory1(IID_PPV_ARGS(&dxgiFactory))))
-    {
-        throw std::runtime_error(fmt_ns::format("Unable to create DXGI Factory", "panic"));
-    }
+    MORPHEUS_D3D12_VERIFY(CreateDXGIFactory1(IID_PPV_ARGS(&dxgiFactory)));
     return dxgiFactory;
 }
 
 auto getAdapterDescription(const DXGIAdapter& adapter)
 {
     DXGI_ADAPTER_DESC1 desc{};
-    adapter->GetDesc1(&desc);
+    MORPHEUS_D3D12_VERIFY(adapter->GetDesc1(&desc));
     return desc;
 }
 
 auto getOutputModes(const DXGIOutput& output)
 {
 	UINT numModes = 0;
-	auto hr = output->GetDisplayModeList(DXGI_FORMAT_R8G8B8A8_UNORM, 0, &numModes, nullptr);
-    if (FAILED(hr)) {
-
-    }
+    MORPHEUS_D3D12_VERIFY(output->GetDisplayModeList(DXGI_FORMAT_R8G8B8A8_UNORM, 0, &numModes, nullptr));
 
     std::vector<DXGI_MODE_DESC> displayModes(numModes);
-	hr = output->GetDisplayModeList(DXGI_FORMAT_R8G8B8A8_UNORM, 0, &numModes, displayModes.data());
-    if (FAILED(hr)) {
-
-    }
-
+    MORPHEUS_D3D12_VERIFY(output->GetDisplayModeList(DXGI_FORMAT_R8G8B8A8_UNORM, 0, &numModes, displayModes.data()));
     return displayModes;
 }
 
@@ -88,10 +78,11 @@ concurrency::Generator<Adapter> enumerateAdapters()
     DXGIAdapter pDXGIAdapter;
     for (UINT adapterId = 0; DXGI_ERROR_NOT_FOUND != dxgiFactory->EnumAdapters1(adapterId, &pDXGIAdapter); ++adapterId)
     {
-        //            // Ignore software adapters
-        //            if (graphics_adapter.dxgi_description.Flags & DXGI_ADAPTER_FLAG_SOFTWARE) {
-        //                continue;
-        //            }
+        // Ignore software adapters
+//        if (graphics_adapter.dxgi_description.Flags & DXGI_ADAPTER_FLAG_SOFTWARE) {
+//            continue;
+//        }
+
         co_yield Adapter(pDXGIAdapter);
     }
 }

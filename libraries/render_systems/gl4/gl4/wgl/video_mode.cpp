@@ -1,7 +1,6 @@
 #include <gl4/wgl/video_mode.hpp>
+#include <gl4/prerequisites.hpp>
 
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
 
 namespace morpheus::gfx::gl4::wgl
 {

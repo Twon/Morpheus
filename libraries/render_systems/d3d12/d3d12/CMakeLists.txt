@@ -14,14 +14,13 @@ if (WIN32)
         target_sources(MorpheusRenderSystemD3D12
             PUBLIC
                 adapter.hpp
-                adapter_list.hpp
                 render_system.hpp
                 type_mapping.hpp
+                verify.hpp
                 video_mode.hpp
                 video_mode_list.hpp
             PRIVATE
                 adapter.cpp
-                adapter_list.cpp
                 render_system.cpp
                 type_mapping.cpp
                 video_mode.cpp
@@ -68,7 +67,7 @@ if (WIN32)
 
         target_sources(MorpheusRenderSystemD3D12Test
             PRIVATE
-                adapter_list.tests.cpp
+                adapter.tests.cpp
                 video_mode_list.tests.cpp
         )
 

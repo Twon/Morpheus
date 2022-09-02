@@ -32,7 +32,7 @@ TEST_CASE("Create a video mode list", "[morpheus.core.gfx.video_mode_list]")
 //    layer_props.instance_extensions.resize(instance_extension_count);
 //    instance_extensions = layer_props.instance_extensions.data();
 //    res = vkEnumerateInstanceExtensionProperties(layer_name, &instance_extension_count, instance_extensions);
-    
+    CHECK(true);
     char const * const appName = "My Vulkan Test Case";
     char const * const engineName = "My Vulkan Test Case Engine";
     vk::raii::Context context;
@@ -40,10 +40,18 @@ TEST_CASE("Create a video mode list", "[morpheus.core.gfx.video_mode_list]")
     vk::InstanceCreateInfo instanceCreateInfo({}, &applicationInfo);
     vk::raii::Instance instance(context, instanceCreateInfo);
     auto const physicalDevices = instance.enumeratePhysicalDevices();
-    INFO("The num physical devices is " << physicalDevices.size());
+    WARN("The num physical devices is " << physicalDevices.size());
+    for (auto const& device : physicalDevices)
+    {
+        auto const& props = device.getProperties();
+        WARN("Devices apiVersion is " << props.apiVersion);
+        WARN("Devices driverVersion is " << props.driverVersion);
+        WARN("Devices vendorId is " << props.vendorID);
+        CHECK(true);
+        //    auto const displayProperties = device.getDisplayPropertiesKHR();
+        //    INFO("The num physical devices displays is " << displayProperties.size());
 
-
-
+    }
 //    std::vector<VkPhysicalDeviceProperties> devices_properties(gpu_count);
 //    res = vkEnumeratePhysicalDevices(instance, &gpu_count, devices.data());
 //    vkGetPhysicalDeviceProperties(devices[0], &devices_properties[0]);
