@@ -43,9 +43,9 @@ public:
 private:
     /// \name Data Members
     ///@{
-    IdType mAdapterId; 
+    IdType mAdapterId = {};
     std::string mName;
-    Vendor mVendor;
+    Vendor mVendor = Vendor::Unknown;
     ///@}
 };
 

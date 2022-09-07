@@ -5,6 +5,7 @@
 #include <core/base/platform.hpp>
 #include <core/concurrency/generator.hpp>
 #include <core/gfx/adapter.hpp>
+#include <core/gfx/vendor.hpp>
 
 #include <string_view>
 
@@ -17,9 +18,9 @@ namespace morpheus::gfx::d3d12
 using DXGIAdapter = Microsoft::WRL::ComPtr<IDXGIAdapter1>;
 
 
-/*! \class adapter
-        Describes an available graphic devices on the target platform.
- */
+/// \class adapter
+///     Describes an available graphic devices on the target platform.
+///
 class Adapter {
 public:
     /// \name Life cycle
@@ -38,6 +39,7 @@ public:
 
     [[nodiscard]] auto getId() const noexcept { return mDescription.DeviceId; }
     [[nodiscard]] std::wstring_view getName() const noexcept { return mDescription.Description; }
+    [[nodiscard]] Vendor getVendor() const noexcept;
     [[nodiscard]] constexpr auto operator<=>(Adapter const& rhs) const noexcept = default;
 private:
     /// \name Data Members

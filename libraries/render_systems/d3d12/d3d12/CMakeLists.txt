@@ -51,14 +51,13 @@ if (WIN32)
 
         target_link_libraries(MorpheusRenderSystemD3D12Test
             PRIVATE
-                MorpheusCore
-                D3D12::DXGI
-                D3D12::D3D12
+                MorpheusRenderSystemD3D12
                 Catch2::Catch2
         )
 
         set_target_properties(MorpheusRenderSystemD3D12 MorpheusRenderSystemD3D12Test
             PROPERTIES
+                WINDOWS_EXPORT_ALL_SYMBOLS TRUE
                 FOLDER "Libraries/RenderSystems/D3D12"
                 ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
                 LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib

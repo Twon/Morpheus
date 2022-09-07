@@ -45,9 +45,6 @@ target_link_libraries(MorpheusRenderSystemVulkan
         Vulkan::Headers
 )
 
-get_target_property(SOURCES_FILES MorpheusRenderSystemVulkan SOURCES)
-source_group(TREE ${CMAKE_CURRENT_LIST_DIR} FILES ${SOURCES_FILES})
-
 target_sources(MorpheusRenderSystemVulkanTests
     PRIVATE
         adapter.tests.cpp
@@ -70,10 +67,6 @@ set_target_properties(MorpheusRenderSystemVulkan MorpheusRenderSystemVulkanTests
         LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
         RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
 )
-
-get_target_property(SOURCES_FILES_TEST MorpheusRenderSystemVulkanTests SOURCES)
-source_group(TREE ${CMAKE_CURRENT_LIST_DIR} FILES ${SOURCES_FILES_TEST})
-
 
 install(TARGETS MorpheusRenderSystemVulkan MorpheusRenderSystemVulkanTests
     RUNTIME DESTINATION bin

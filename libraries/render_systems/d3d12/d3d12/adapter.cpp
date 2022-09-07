@@ -55,8 +55,7 @@ auto getOutputModes(const DXGIAdapter& adapter)
             displayModes.end(),
             std::make_move_iterator(outputDisplayModes.begin()),
             std::make_move_iterator(outputDisplayModes.end())
-        );
-            
+        );            
     }
 
     return displayModes;
@@ -67,9 +66,16 @@ auto getOutputModes(const DXGIAdapter& adapter)
 Adapter::Adapter(
     DXGIAdapter dxgiAdapter
 )
-:   mDxgiAdapter(std::move(dxgiAdapter)),
-    mDescription(getAdapterDescription(mDxgiAdapter))
+:   mDxgiAdapter(std::move(dxgiAdapter))
+,   mDescription(getAdapterDescription(mDxgiAdapter))
 {
+}
+
+[[nodiscard]] Vendor Adapter::getVendor() const noexcept
+{
+    auto const vendor = vendorFromPciId(mDescription.VendorId);
+    MORPHEUS_ASSERT(vendor);
+    return *vendor;
 }
 
 concurrency::Generator<Adapter> enumerateAdapters() 
