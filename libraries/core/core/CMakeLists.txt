@@ -57,8 +57,6 @@ target_compile_options(MorpheusCore
 target_link_libraries(MorpheusCore
     PUBLIC
         Boost::headers
-        fmt::fmt
-        range-v3::range-v3
 )
 
 target_link_libraries(MorpheusCoreTests
