@@ -77,7 +77,7 @@ jobs:
         if: matrix.settings.compiler.type == 'CLANG' && matrix.settings.lib == 'libc++'
         shell: bash
         run: |
-          sudo apt install -y libc++-${{ matrix.config.compiler.version }}-dev libc++abi-${{ matrix.config.compiler.version }}-dev libunwind-${{ matrix.config.compiler.version }}-dev
+          sudo apt install -y libc++-${{ matrix.settings.compiler.version }}-dev libc++abi-${{ matrix.settings.compiler.version }}-dev libunwind-${{ matrix.settings.compiler.version }}-dev
       - name: Select Xcode ${{matrix.settings.compiler.version}}
         if: matrix.settings.os == 'macos-latest'
         uses: maxim-lobanov/setup-xcode@v1
