@@ -16,7 +16,6 @@ namespace std::ranges
 }
 
 #else
-#error "Why we here"
 #include <range/v3/algorithm.hpp>
 #include <range/v3/iterator.hpp>
 //#include <range/v3/range/concepts.hpp>
