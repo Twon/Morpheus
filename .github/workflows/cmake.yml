@@ -23,6 +23,7 @@ jobs:
                 {
                   type: CLANG,
                   version: 13,
+                  conan: "clang", 
                   cc: "clang-13",
                   cxx: "clang++-13",
                   std: 20,
@@ -41,6 +42,7 @@ jobs:
                 {
                   type: APPLE_CLANG,
                   version: "13.0",
+                  conan: "apple-clang",
                   cc: "clang",
                   cxx: "clang++",
                   std: 20,
