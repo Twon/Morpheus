@@ -73,6 +73,11 @@ jobs:
         with:
           version: ${{ matrix.settings.compiler.version }}
           platform: x64
+      - name: Install Libc++
+        if: matrix.config.compiler.type == 'CLANG' && matrix.config.lib == 'libc++'
+        shell: bash
+        run: |
+          sudo apt install -y libc++-${{ matrix.config.compiler.version }}-dev libc++abi-${{ matrix.config.compiler.version }}-dev libunwind-${{ matrix.config.compiler.version }}-dev
       - name: Select Xcode ${{matrix.settings.compiler.version}}
         if: matrix.settings.os == 'macos-latest'
         uses: maxim-lobanov/setup-xcode@v1
@@ -82,6 +87,7 @@ jobs:
         if: matrix.settings.os == 'ubuntu-20.04'
         run: |
           sudo apt-get -y install libgl-dev
+          sudo apt-get -y install libopengl-dev
           sudo apt-get -y install libglu1-mesa-dev
       - name: Set up Python
         uses: actions/setup-python@v2
