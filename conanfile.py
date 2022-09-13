@@ -31,7 +31,7 @@ required_conan_version = ">=1.33.0"
 class Morpheus(ConanFile):
     name = "morpheus"
     homepage = "https://github.com/Twon/Morpheus"
-    description = "Cross plafrom game engine build using C++20"
+    description = "Cross plafrom game engine build using C++23"
     topics = ("game-engine", "rendering-engine")
     license = "MIT"
     url = "https://github.com/Twon/Morpheus"
@@ -59,6 +59,7 @@ class Morpheus(ConanFile):
         "glew/2.2.0",
         "ms-gsl/4.0.0",
         "range-v3/0.12.0",
+        "tl-expected/20190710",
         "trompeloeil/42",
         "vulkan-headers/1.3.221"
     )
