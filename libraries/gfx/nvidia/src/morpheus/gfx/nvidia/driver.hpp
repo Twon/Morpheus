@@ -29,7 +29,7 @@ public:
     Driver& operator=(Driver&&) = delete;
 
 
-    NvAPI_QueryInterface_t QueryInterface;
+    NvAPI_QueryInterface_t NvAPI_QueryInterface;
     NvAPI_Initialize_t NvAPI_Initialize;
     NvAPI_Unload_t NvAPI_Unload;
     NvAPI_GetErrorMessage_t NvAPI_GetErrorMessage;

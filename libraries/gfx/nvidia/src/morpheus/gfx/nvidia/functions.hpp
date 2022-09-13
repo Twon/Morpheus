@@ -5,8 +5,8 @@
 
 namespace morpheus::gfx::nvidia::nvapi
 {
-
-    using NvAPI_QueryInterface_t = void* (__cdecl*)(unsigned int offset);
+    using NvAPI_QueryInterface_Signature = void* (__cdecl)(NvU32 offset);
+    using NvAPI_QueryInterface_t = void* (__cdecl*)(NvU32 offset);
     using NvAPI_Initialize_t = NvAPI_Status(__cdecl*)();
     using NvAPI_Unload_t = NvAPI_Status(__cdecl*)();
     using NvAPI_GetErrorMessage_t = NvAPI_Status(__cdecl*)(NvAPI_Status nr, NvAPI_ShortString szDesc);

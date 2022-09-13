@@ -454,14 +454,14 @@ constexpr std::uint32_t offset_NvAPI_GPU_GetAllDisplayIds = 0x785210A2UL;
 
 Driver::Driver()
 :   mNvapi(nvapiLibarayPath, boost::dll::load_mode::search_system_folders)
-,   QueryInterface(mNvapi.get<NvAPI_QueryInterface_t>("nvapi_QueryInterface"))
-,   NvAPI_Initialize(reinterpret_cast<NvAPI_Initialize_t>(QueryInterface(offset_NvAPI_Initialize)))
-,   NvAPI_Unload(reinterpret_cast<NvAPI_Unload_t>(QueryInterface(offset_NvAPI_Unload)))
-,   NvAPI_GetErrorMessage((reinterpret_cast<NvAPI_GetErrorMessage_t>(QueryInterface(offset_NvAPI_GetErrorMessage))))
-,   NvAPI_EnumPhysicalGPUs(reinterpret_cast<NvAPI_EnumPhysicalGPUs_t>(QueryInterface(offset_NvAPI_EnumPhysicalGPUs)))
-,   NvAPI_GPU_GetFullName(reinterpret_cast<NvAPI_GPU_GetFullName_t>(QueryInterface(offset_NvAPI_GPU_GetFullName)))
-,   NvAPI_GPU_GetAdapterIdFromPhysicalGpu(reinterpret_cast<NvAPI_GPU_GetAdapterIdFromPhysicalGpu_t>(QueryInterface(offset_NvAPI_GPU_GetAdapterIdFromPhysicalGpu)))
-,   NvAPI_GPU_GetAllDisplayIds(reinterpret_cast<NvAPI_GPU_GetAllDisplayIds_t>(QueryInterface(offset_NvAPI_GPU_GetAllDisplayIds)))
+,   NvAPI_QueryInterface(mNvapi.get<NvAPI_QueryInterface_Signature>("nvapi_QueryInterface"))
+,   NvAPI_Initialize(reinterpret_cast<NvAPI_Initialize_t>(NvAPI_QueryInterface(offset_NvAPI_Initialize)))
+,   NvAPI_Unload(reinterpret_cast<NvAPI_Unload_t>(NvAPI_QueryInterface(offset_NvAPI_Unload)))
+,   NvAPI_GetErrorMessage(reinterpret_cast<NvAPI_GetErrorMessage_t>(NvAPI_QueryInterface(offset_NvAPI_GetErrorMessage)))
+,   NvAPI_EnumPhysicalGPUs(reinterpret_cast<NvAPI_EnumPhysicalGPUs_t>(NvAPI_QueryInterface(offset_NvAPI_EnumPhysicalGPUs)))
+,   NvAPI_GPU_GetFullName(reinterpret_cast<NvAPI_GPU_GetFullName_t>(NvAPI_QueryInterface(offset_NvAPI_GPU_GetFullName)))
+,   NvAPI_GPU_GetAdapterIdFromPhysicalGpu(reinterpret_cast<NvAPI_GPU_GetAdapterIdFromPhysicalGpu_t>(NvAPI_QueryInterface(offset_NvAPI_GPU_GetAdapterIdFromPhysicalGpu)))
+,   NvAPI_GPU_GetAllDisplayIds(reinterpret_cast<NvAPI_GPU_GetAllDisplayIds_t>(NvAPI_QueryInterface(offset_NvAPI_GPU_GetAllDisplayIds)))
 {
     NvAPI_Initialize();
 }

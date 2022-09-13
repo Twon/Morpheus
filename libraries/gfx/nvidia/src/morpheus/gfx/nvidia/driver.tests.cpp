@@ -3,7 +3,7 @@
 
 #include <array>
 
-namespace morpheus::gfx::nvidia
+namespace morpheus::gfx::nvidia::nvapi
 {
 
 TEST_CASE("Create an adapter mode list", "[morpheus.core.gfx.gl.wgl.adapter_list]")
@@ -19,6 +19,21 @@ TEST_CASE("Concept checks for NVidia adapters", "[morpheus.gfx.gl.wgl.adapter.co
     //    STATIC_REQUIRE(gfx::concepts::Adapter<Adapter>);
 }
 
+TEST_CASE("Query NVidia graphic adapters with the driver", "[morpheus.gfx.nvidia.nvapi.driver]")
+{
+    Driver driver;
+
+    NvU32 gpuCount = 0;
+    std::array<NvPhysicalGpuHandle, NVAPI_MAX_PHYSICAL_GPUS> gpus;
+    REQUIRE(driver.NvAPI_Initialize);
+    REQUIRE(driver.NvAPI_EnumPhysicalGPUs);
+    REQUIRE(!driver.NvAPI_EnumPhysicalGPUs(gpus.data(), &gpuCount));
+    REQUIRE(driver.NvAPI_GPU_GetFullName);
+    using NvAPI_ShortString = std::array<char, NVAPI_SHORT_STRING_MAX>;
+    NvAPI_ShortString gpuName;
+    REQUIRE(!driver.NvAPI_GPU_GetFullName(gpus[0], gpuName.data()));
+    REQUIRE(driver.NvAPI_Unload);
+}
 
 TEST_CASE("Query NVidia graphic adapters", "[morpheus.core.gfx.adapter_list]")
 {
@@ -79,4 +94,4 @@ TEST_CASE("Query NVidia graphic adapters", "[morpheus.core.gfx.adapter_list]")
     REQUIRE(!NvAPI_Unload());
 }
 
-} // namespace morpheus::gfx::nvidia
+} // namespace morpheus::gfx::nvidia::nvapi
