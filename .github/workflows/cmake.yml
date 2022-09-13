@@ -78,10 +78,11 @@ jobs:
         uses: maxim-lobanov/setup-xcode@v1
         with:
           xcode-version: '${{matrix.settings.compiler.version}}'
-      - name: Install Linux Packages
+      - name: Install Linux System Packages
         if: matrix.settings.os == 'ubuntu-20.04'
         run: |
           sudo apt-get -y install libgl-dev
+          sudo apt-get -y install libglu1-mesa-dev
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
