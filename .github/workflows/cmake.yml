@@ -74,7 +74,7 @@ jobs:
           version: ${{ matrix.settings.compiler.version }}
           platform: x64
       - name: Install Libc++
-        if: matrix.config.compiler.type == 'CLANG' && matrix.config.lib == 'libc++'
+        if: matrix.settings.compiler.type == 'CLANG' && matrix.settings.lib == 'libc++'
         shell: bash
         run: |
           sudo apt install -y libc++-${{ matrix.config.compiler.version }}-dev libc++abi-${{ matrix.config.compiler.version }}-dev libunwind-${{ matrix.config.compiler.version }}-dev
