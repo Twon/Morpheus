@@ -34,8 +34,8 @@ TEST_CASE("Test a simple integrer based coroutine", "[morpheus.concurrency.gener
         }
     };
 
-    auto const expectedRange = std::views::iota(0, 5) | std::views::transform([](auto x) { return x*5; });
-    REQUIRE(std::ranges::equal(generateSequence(0, 25, 5), expectedRange));
+    auto const expectedRange = ranges::views::iota(0, 5) | ranges::views::transform([](auto x) { return x*5; });
+    REQUIRE(ranges::equal(generateSequence(0, 25, 5), expectedRange));
 }
 
 }
