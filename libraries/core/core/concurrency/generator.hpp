@@ -5,6 +5,7 @@
 
 #include <cassert>
 #include <iterator>
+#include <utility>
 
 namespace morpheus::concurrency
 {

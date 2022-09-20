@@ -17,15 +17,15 @@ jobs:
               lib: "libstdc++11"
             }
           - {
-              name: "Ubuntu Clang-13 + libc++",
+              name: "Ubuntu Clang-14 + libc++",
               os: ubuntu-20.04,
               compiler:
                 {
                   type: CLANG,
-                  version: 13,
+                  version: 14,
                   conan: "clang", 
-                  cc: "clang-13",
-                  cxx: "clang++-13",
+                  cc: "clang-14",
+                  cxx: "clang++-14",
                   std: 20,
                 },
               lib: "libc++",
