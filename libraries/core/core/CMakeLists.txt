@@ -21,6 +21,12 @@ target_sources(MorpheusCore
         visualisation/visualisation.cpp
 )
 
+target_link_libraries(MorpheusCore
+    PUBLIC
+        morpheus::config
+        Boost::headers
+)
+
 target_sources(MorpheusCoreTests
     PRIVATE
         cpu.test.cpp
@@ -52,11 +58,6 @@ target_compile_options(MorpheusCore
     PRIVATE
 #        -enable-hosted-libstdcxx
 	    $<$<CXX_COMPILER_ID:MSVC>:/wd4251> # class 'foo' needs to have dll-interface to be used by clients of class 'bar'
-)
-
-target_link_libraries(MorpheusCore
-    PUBLIC
-        Boost::headers
 )
 
 target_link_libraries(MorpheusCoreTests
