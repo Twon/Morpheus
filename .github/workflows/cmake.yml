@@ -33,7 +33,7 @@ jobs:
           - {
               name: "Visual Studio 2019",
               os: windows-latest,
-              compiler: { type: VISUAL, version: 16, cc: "cl", cxx: "cl" },
+              compiler: { type: VISUAL, version: 16, cc: "cl", cxx: "cl", std: 20 },
             }
           - {
               name: "MacOS Apple Clang 13",
@@ -100,6 +100,7 @@ jobs:
         shell: bash
         run: |
           conan config init
+          conan profile update settings.compiler.cppstd=${{ matrix.settings.std }} default
           if [[ "${{ matrix.settings.compiler.type }}" == "GCC" || "${{ matrix.settings.compiler.type }}" == "CLANG" ]]; then
             conan profile update settings.compiler=${{ matrix.settings.compiler.conan }} default
             conan profile update settings.compiler.version=${{ matrix.settings.compiler.version }} default
