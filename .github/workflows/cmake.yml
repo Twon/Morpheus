@@ -13,7 +13,7 @@ jobs:
           - {
               name: "Ubuntu GCC-11",
               os: ubuntu-20.04,
-              compiler: { type: GCC, version: 11, conan: "gcc", cc: "gcc-11", cxx: "g++-11", std: 20 },
+              compiler: { type: GCC, version: "11", conan: "gcc", cc: "gcc-11", cxx: "g++-11", std: "20" },
               lib: "libstdc++11"
             }
           - {
@@ -22,18 +22,18 @@ jobs:
               compiler:
                 {
                   type: CLANG,
-                  version: 14,
+                  version: "14",
                   conan: "clang", 
                   cc: "clang-14",
                   cxx: "clang++-14",
-                  std: 20,
+                  std: "20",
                 },
               lib: "libc++",
             }
           - {
               name: "Visual Studio 2019",
               os: windows-latest,
-              compiler: { type: VISUAL, version: 16, cc: "cl", cxx: "cl", std: 20 },
+              compiler: { type: VISUAL, version: "16", cc: "cl", cxx: "cl", std: "20" },
             }
           - {
               name: "MacOS Apple Clang 13",
@@ -45,7 +45,7 @@ jobs:
                   conan: "apple-clang",
                   cc: "clang",
                   cxx: "clang++",
-                  std: 20,
+                  std: "20"
                 },
             }
     steps:
