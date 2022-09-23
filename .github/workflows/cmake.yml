@@ -27,6 +27,7 @@ jobs:
                   cc: "clang-14",
                   cxx: "clang++-14",
                   std: 20,
+                  toolchain: "clang-libstdc++11.cmake"
                 },
               lib: "libc++",
             }
@@ -47,6 +48,7 @@ jobs:
                   cxx: "clang++",
                   std: 20
                 },
+              lib: "libc++",
             }
     steps:
       - uses: actions/checkout@v2
@@ -111,10 +113,17 @@ jobs:
         shell: bash
         run: |
           conan install . --build missing -if "${{github.workspace}}/build" -of "${{github.workspace}}/build"
+
+      - name: Discover Toolchain
+        if: contains( matrix.settings.compiler, toolchain )
+        shell: bash
+        run: |
+          echo "{toolchain}={-DCMAKE_TOOLCHAIN_FILE=../cmake/toolchains/${{ matrix.settings.compiler.toolchain }}}" >> $GITHUB_ENV
+
       - name: Configure CMake
         # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
         # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
-        run: cmake -B "${{github.workspace}}/build" -DCMAKE_BUILD_TYPE=${{ matrix.configuration }}
+        run: cmake -B "${{github.workspace}}/build" -DCMAKE_BUILD_TYPE=${{ matrix.configuration }} ${{ env.toolchain }}
 
       - name: Build
         # Build your program with the given configuration
