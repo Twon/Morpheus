@@ -109,6 +109,13 @@ jobs:
             conan profile update settings.compiler.libcxx=${{ matrix.settings.lib }} default
           fi
           conan profile show default
+  
+      - name: Make build directory
+        working-directory: ${{github.workspace}}
+        shell: bash
+        run: |
+          mkdir build
+
       - name: Configure Install
         working-directory: ${{github.workspace}}/build
         shell: bash
