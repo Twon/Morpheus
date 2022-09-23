@@ -109,6 +109,7 @@ jobs:
         run: |
           conan config init
           conan profile update settings.compiler.cppstd=${{ matrix.settings.compiler.std }} default
+          conan profile update settings.build_type=${{ matrix.configuration }} default
           if [[ "${{ matrix.settings.compiler.type }}" == "GCC" || "${{ matrix.settings.compiler.type }}" == "CLANG" ]]; then
             conan profile update settings.compiler=${{ matrix.settings.compiler.conan }} default
             conan profile update settings.compiler.version=${{ matrix.settings.compiler.version }} default
