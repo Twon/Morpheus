@@ -27,7 +27,7 @@ jobs:
                   cc: "clang-14",
                   cxx: "clang++-14",
                   std: 20,
-                  toolchain: "clang-libstdc++11.cmake"
+                  toolchain: "clang-libc++.cmake"
                 },
               lib: "libc++",
             }
