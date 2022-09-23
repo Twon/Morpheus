@@ -110,9 +110,10 @@ jobs:
           fi
           conan profile show default
       - name: Configure Install
+        working-directory: ${{github.workspace}}/build
         shell: bash
         run: |
-          conan install . --build missing
+          conan install ${{github.workspace}} --build missing
 
       - name: Discover Toolchain
         if: contains( "${{matrix.settings.compiler}}", "toolchain" )
