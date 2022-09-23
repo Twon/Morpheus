@@ -115,7 +115,7 @@ jobs:
           conan install . --build missing -if "${{github.workspace}}/build" -of "${{github.workspace}}/build"
 
       - name: Discover Toolchain
-        if: contains( matrix.settings.compiler, toolchain )
+        if: contains( matrix.settings.compiler, "toolchain" )
         shell: bash
         run: |
           echo "{toolchain}={-DCMAKE_TOOLCHAIN_FILE=../cmake/toolchains/${{ matrix.settings.compiler.toolchain }}}" >> $GITHUB_ENV
