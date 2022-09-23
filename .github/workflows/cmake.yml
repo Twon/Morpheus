@@ -133,10 +133,14 @@ jobs:
           conan install "${{github.workspace}}" --build missing
 
       - name: Discover Toolchain
-        if: "${{matrix.settings.compiler.toolchain}} 
         shell: bash
         run: |
-          echo "toolchain=-DCMAKE_TOOLCHAIN_FILE=${{github.workspace}}/cmake/toolchains/${{ matrix.settings.compiler.toolchain }}" >> $GITHUB_ENV
+          if [ -z "${{matrix.settings.compiler.toolchain}}" ]
+          then
+              echo "No toolchain specified"
+          else
+              echo "toolchain=-DCMAKE_TOOLCHAIN_FILE=${{github.workspace}}/cmake/toolchains/${{ matrix.settings.compiler.toolchain }}" >> $GITHUB_ENV
+          fi
 
       - name: Configure CMake
         # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
