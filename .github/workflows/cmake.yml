@@ -133,7 +133,7 @@ jobs:
           conan install "${{github.workspace}}" --build missing
 
       - name: Discover Toolchain
-        if: contains( "${{matrix.settings.compiler}}", "toolchain" )
+        if: "${{matrix.settings.compiler.toolchain}} 
         shell: bash
         run: |
           echo "toolchain=-DCMAKE_TOOLCHAIN_FILE=${{github.workspace}}/cmake/toolchains/${{ matrix.settings.compiler.toolchain }}" >> $GITHUB_ENV
