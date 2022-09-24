@@ -1,9 +1,11 @@
 target_sources(MorpheusCore
     PUBLIC
+        architecture.hpp
         assert.hpp
         compiler.hpp
         debugging.hpp
         platform.hpp
+        prerequisites.hpp
         sanitizers.hpp
         unreachable.hpp
         verify.hpp
