@@ -5,7 +5,7 @@ namespace morpheus::gfx
 
 //---------------------------------------------------------------------------------------------------------------------
 
-render_target::render_target(
+RenderTarget::RenderTarget(
     const std::uint32_t width,
     const std::uint32_t height,
     const std::uint32_t colourDepth
@@ -18,7 +18,7 @@ render_target::render_target(
 
 //---------------------------------------------------------------------------------------------------------------------
 
-render_target::~render_target()
+RenderTarget::~RenderTarget()
 {
 }
 
