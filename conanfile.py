@@ -31,7 +31,7 @@ required_conan_version = ">=1.33.0"
 class Morpheus(ConanFile):
     name = "morpheus"
     homepage = "https://github.com/Twon/Morpheus"
-    description = "Cross plafrom game engine build using C++20"
+    description = "Cross plafrom game engine build using C++23"
     topics = ("game-engine", "rendering-engine")
     license = "MIT"
     url = "https://github.com/Twon/Morpheus"
@@ -52,11 +52,17 @@ class Morpheus(ConanFile):
     exports_sources = ["CMakeLists.txt", "LICENSE", "version.txt", "cmake/*", "examples/*" "libraries/*"]
     generators = "cmake_find_package", "cmake_find_package_multi", "virtualenv"
     requires = (
-        "catch2/2.13.8", 
+        "boost/1.79.0",
+        "catch2/3.1.0", 
         "fmt/8.1.1",
-        "range-v3/0.11.0",
-        "trompeloeil/41",
-        "vulkan-headers/1.3.204.0"
+        "glbinding/3.1.0",
+        "glew/2.2.0",
+        "indirect_value/0.0.1",
+        "ms-gsl/4.0.0",
+        "range-v3/0.12.0",
+        "tl-expected/20190710",
+        "trompeloeil/42",
+        "vulkan-headers/1.3.221"
     )
 
     def set_version(self):
@@ -65,9 +71,9 @@ class Morpheus(ConanFile):
         self.version = version.strip()
 
     def build_requirements(self):
-        # Ensure the package is build against a version of CMake from 3.16 onwards.
-        if CMake.get_version() < Version("3.21"):
-            self.build_requires("cmake/3.21.0")
+        # Ensure the package is build against a version of CMake from 3.23 onwards.
+        if CMake.get_version() < Version("3.24.0"):
+            self.build_requires("cmake/3.24.0")
 
     def requirements(self):
         if self.settings.os in ["Macos", "iOS", "tvOS"] and self.settings.compiler == "apple-clang":
@@ -108,12 +114,14 @@ class Morpheus(ConanFile):
                         self.settings.compiler,
                         self.settings.compiler.version))
 
-    def generate(self):
-        tc = CMakeToolchain(self, generator=os.getenv("CONAN_CMAKE_GENERATOR"))
-        tc.variables["MORPHEUS_BUILD_DOCS"] = self.options.build_docs
-        tc.generate()
-        deps = CMakeDeps(self)
-        deps.generate()
+#    def generate(self):
+#        tc = CMakeToolchain(self, generator=os.getenv("CONAN_CMAKE_GENERATOR"))
+#        tc.variables["MORPHEUS_BUILD_DOCS"] = self.options.build_docs
+#        tc.generate()
+#        deps = CMakeDeps(self)
+        #import pdb; pdb.pm()
+#        breakpoint()
+#        deps.generate()
 
 #    def source(self):
 #        tools.get(**self.conan_data["sources"][self.version],

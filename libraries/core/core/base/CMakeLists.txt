@@ -1,13 +1,21 @@
 target_sources(MorpheusCore
     PUBLIC
+        architecture.hpp
         assert.hpp
+        compiler.hpp
+        debugging.hpp
+        platform.hpp
+        prerequisites.hpp
         sanitizers.hpp
+        unreachable.hpp
         verify.hpp
+    PRIVATE
+        assert.cpp
+        debugging.cpp
 )
 
 target_sources(MorpheusCoreTests
-    PUBLIC
-        assert.tests.hpp
-        verify.tests.hpp
+    PRIVATE
+        assert.tests.cpp
+        verify.tests.cpp
 )
-

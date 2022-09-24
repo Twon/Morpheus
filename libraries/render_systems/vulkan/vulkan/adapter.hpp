@@ -1,7 +1,8 @@
 #pragma once
 
 #include "vulkan/video_mode.hpp"
-#include "core/platform.hpp"
+#include <core/base/platform.hpp>
+#include <core/gfx/vendor.hpp>
 
 #include <vulkan/vulkan_raii.hpp>
 
@@ -20,8 +21,13 @@ public:
     Adapter(vk::raii::PhysicalDevice&& physicalDevice);
     ///@}
 
-    std::string getName() const;
+    [[nodiscard]] auto getId() const noexcept { return mPhysicalDevice.getProperties().deviceID; }
 
+    [[nodiscard]] std::string_view getName() const noexcept { return mPhysicalDevice.getProperties().deviceName; }
+
+    [[nodiscard]] Vendor getVendor() const noexcept;
+
+    [[nodiscard]] VideoModeList getVideoModes() const noexcept { return VideoModeList{}; }
     
 private:
     vk::raii::PhysicalDevice mPhysicalDevice;

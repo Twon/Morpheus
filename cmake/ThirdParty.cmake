@@ -1,8 +1,18 @@
-find_package(Catch2 REQUIRED)
+include(FetchContent)
+
+
+find_package(Boost REQUIRED)
+find_package(Catch2 3 REQUIRED)
 find_package(fmt REQUIRED)
+find_package(indirect_value REQUIRED)
+find_package(Microsoft.GSL REQUIRED)
 find_package(range-v3 REQUIRED)
 
-FetchContent_Declare(codecoverage GIT_REPOSITORY https://github.com/RWTH-HPC/CMake-codecov.git)
+FetchContent_Declare(
+    codecoverage
+    GIT_REPOSITORY https://github.com/RWTH-HPC/CMake-codecov.git
+)
+
 FetchContent_GetProperties(codecoverage)
 if(NOT codecoverage_POPULATED)
     FetchContent_Populate(codecoverage)

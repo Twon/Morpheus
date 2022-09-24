@@ -1,5 +1,7 @@
 #pragma once
 
+#include "core/conformance/ranges.hpp"
+#include <concepts>
 
 namespace morpheus::gfx::concepts
 {
@@ -7,14 +9,13 @@ namespace morpheus::gfx::concepts
 template <typename T>
 concept VideoMode = requires(T t)
 {
-    { t.width() } -> std::same_as<std::uint32_t>;
-    { t.height() } -> std::same_as<std::uint32_t>;
-    { t.colour_depth() } -> std::same_as<std::uint32_t>;
+    { t.width() } -> std::convertible_to<std::uint32_t>;
+    { t.height() } -> std::convertible_to<std::uint32_t>;
+    { t.colourDepth() } -> std::convertible_to<std::uint32_t>;
+    { t.refreshRate() } -> std::convertible_to<std::uint32_t>;
 };
 
 template <typename T>
-concept VideoModeRange = requires(T t)
-{
-};
+concept VideoModeRange = VideoMode<ranges::range_value_t<T>>;
 
 } // namespace morpheus::gfx::concepts
