@@ -32,21 +32,32 @@ jobs:
               lib: "libc++",
             }
           - {
-              name: "MacOS Apple Clang 14",
-              os: macos-latest,
-              compiler:
-                {
-                  type: APPLE_CLANG,
-                  version: "14.0",
-                  conan: "apple-clang",
-                  cc: "clang",
-                  cxx: "clang++",
-                  std: 20
-                },
-              lib: "libc++",
+              name: "Visual Studio 2019",
+              os: windows-latest,
+              compiler: { type: VISUAL, version: 16, cc: "cl", cxx: "cl", std: 20 },
             }
+#          - {
+#              name: "MacOS Apple Clang 14",
+#              os: macos-latest,
+#              compiler:
+#                {
+#                  type: APPLE_CLANG,
+#                  version: "14.0",
+#                  conan: "apple-clang",
+#                  cc: "clang",
+#                  cxx: "clang++",
+#                  std: 20
+#                },
+#              lib: "libc++",
+#            }
     steps:
       - uses: actions/checkout@v2
+#      - uses: lhotari/action-upterm@v1
+#        with:
+          ## limits ssh access and adds the ssh public key for the user which triggered the workflow
+#          limit-access-to-actor: true
+          ## limits ssh access and adds the ssh public keys of the listed GitHub users
+#          limit-access-to-users: twon
       - name: Add msbuild to PATH
         if: matrix.settings.os == 'windows-latest'
         uses: microsoft/setup-msbuild@v1.0.2
