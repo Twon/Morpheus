@@ -32,12 +32,12 @@ jobs:
               lib: "libc++",
             }
           - {
-              name: "MacOS Apple Clang 13",
+              name: "MacOS Apple Clang 14",
               os: macos-latest,
               compiler:
                 {
                   type: APPLE_CLANG,
-                  version: "13.0",
+                  version: "14.0",
                   conan: "apple-clang",
                   cc: "clang",
                   cxx: "clang++",
