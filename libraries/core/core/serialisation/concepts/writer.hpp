@@ -17,20 +17,6 @@ namespace morpheus::serialisation::concepts
     {
         { t.isTextual() } -> std::same_as<bool>;
 
-        /*
-            static constexpr bool const MAY_BE_TEXTUAL = true;
-            bool isTextual() const;
-            void beginValue(char const* name) {}
-            void endValue() {}
-            void beginComposite() {}
-            void endComposite() {}
-            void beginSequence(std::optional<std::size_t>);
-            void endSequence();
-            void writeDecimal(std::int64_t significand, std::int64_t exponent);
-
-            void beginNullable(bool isNull);
-            void endNullable();
-        */
         { t.beginComposite() } -> std::same_as<void>;
         { t.endComposite() } -> std::same_as<void>;
         { t.beginValue(std::string_view{}) } -> std::same_as<void>;

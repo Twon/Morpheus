@@ -29,7 +29,6 @@ void JsonWriter::beginValue(std::string_view const key)
 
 void JsonWriter::endValue()
 {
-    //MORPHEUS_VERIFY(mJsonWriter.EndObject());
 }
 
 void JsonWriter::beginSequence(std::optional<std::size_t>)
