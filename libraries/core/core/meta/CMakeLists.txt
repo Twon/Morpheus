@@ -9,3 +9,5 @@ target_sources(MorpheusCoreTests
         is_specialisation.tests.cpp
         is_string.tests.cpp
 )
+
+add_subdirectory(concepts)

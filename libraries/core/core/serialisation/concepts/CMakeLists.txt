@@ -1,5 +1,9 @@
 target_sources(MorpheusCore
     PUBLIC
+        read_serialisable.hpp
+        read_serialiser.hpp
         reader.hpp
+        write_serialisable.hpp
+        write_serialiser.hpp
         writer.hpp
 )

@@ -1,27 +1,54 @@
 #pragma once
 
+#include <cstddef>
 #include <cstdint>
+#include <concepts>
+#include <span>
+#include <string_view>
 #include <type_traits>
 
-namespace morpheus::serialisation
+namespace morpheus::serialisation::concepts
 {
 
-template <typename T>
-concept Writer = requires(T t)
-{
-    { t.isTextual() } -> std::same_as<bool>;
+    /// \concept Writer
+    ///     Constraint for a type capabile of writing the fundamental types to an archive source.
+    template <typename T>
+    concept Writer = requires(T t)
+    {
+        { t.isTextual() } -> std::same_as<bool>;
 
-    { t.write(true) };
-    { t.write(std::uint8_t(0)) };
-    { t.write(std::int8_t(0)) };
-    { t.write(std::uint16_t(0)) };
-    { t.write(std::int16_t(0)) };
-    { t.write(std::uint32_t(0)) };
-    { t.write(std::int32_t(0)) };
-    { t.write(std::uint64_t(0)) };
-    { t.write(std::int64_t(0)) };
-    { t.write(0.0f) };
-    { t.write(0.0) };
-};
+        /*
+            static constexpr bool const MAY_BE_TEXTUAL = true;
+            bool isTextual() const;
+            void beginValue(char const* name) {}
+            void endValue() {}
+            void beginComposite() {}
+            void endComposite() {}
+            void beginSequence(std::optional<std::size_t>);
+            void endSequence();
+            void writeDecimal(std::int64_t significand, std::int64_t exponent);
 
-}
+            void beginNullable(bool isNull);
+            void endNullable();
+        */
+        { t.beginComposite() } -> std::same_as<void>;
+        { t.endComposite() } -> std::same_as<void>;
+        { t.beginValue(std::string_view{}) } -> std::same_as<void>;
+        { t.endValue() } -> std::same_as<void>;
+
+        { t.write(bool{}) } -> std::same_as<void>;
+        { t.write(std::uint8_t{}) } ->std::same_as<void>;
+        { t.write(std::int8_t{}) } -> std::same_as<void>;
+        { t.write(std::uint16_t{}) } -> std::same_as<void>;
+        { t.write(std::int16_t{}) } -> std::same_as<void>;
+        { t.write(std::uint32_t{}) } -> std::same_as<void>;
+        { t.write(std::int32_t{}) } -> std::same_as<void>;
+        { t.write(std::uint64_t{}) } -> std::same_as<void>;
+        { t.write(std::int64_t{}) } -> std::same_as<void>;
+        { t.write(float{}) } -> std::same_as<void>;
+        { t.write(double{}) } -> std::same_as<void>;
+        { t.write(std::string_view{}) } -> std::same_as<void>;
+        { t.write(std::span<std::byte>{}) } -> std::same_as<void>;
+    };
+
+} // morpheus::serialisation::concepts
