@@ -25,6 +25,7 @@ std::string serialise(T const& value)
     return oss.str();
 }
 
+#if (__cpp_lib_to_chars >= 201611L)
 template<typename T> requires std::is_floating_point_v<T>
 T toFloatingPoint(std::string_view value)
 {
@@ -37,6 +38,7 @@ T toFloatingPoint(std::string_view value)
     }
     return result;
 }
+#endif // (__cpp_lib_to_chars >= 201611L)
 
 }
 
@@ -63,10 +65,12 @@ TEMPLATE_TEST_CASE("Json writer can write single native types to underlying text
         REQUIRE(serialise(std::numeric_limits<TestType>::signaling_NaN()) == "NaN");
         REQUIRE(serialise(-std::numeric_limits<TestType>::signaling_NaN()) == "NaN");
 
+#if (__cpp_lib_to_chars >= 201611L)
         // RapidJson ouputs "1.401298464324817e-45" vs "1e-45" for float, but SetMaxDecimalPlaces() would effect all non-scientific values so we compare 
         // against the underling value not string representation.
         REQUIRE(toFloatingPoint<TestType>(serialise(std::numeric_limits<TestType>::denorm_min())) == Approx(std::numeric_limits<TestType>::denorm_min()));
         REQUIRE(toFloatingPoint<TestType>(serialise(std::numeric_limits<TestType>::denorm_min())) == Approx(std::numeric_limits<TestType>::denorm_min()));
+#endif // (__cpp_lib_to_chars >= 201611L)
     }        
 }
 
