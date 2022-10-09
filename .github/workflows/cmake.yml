@@ -38,7 +38,7 @@ jobs:
             }
           - {
               name: "MacOS Apple Clang 14",
-              os: macos-latest,
+              os: macos-12,
               compiler:
                 {
                   type: APPLE_CLANG,
