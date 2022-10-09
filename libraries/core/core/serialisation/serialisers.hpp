@@ -11,5 +11,6 @@ namespace morpheus::serialisation
 {
 
 using JsonWriteSerialiser = WriteSerialiser<JsonWriter>;
+using JsonReaderSerialiser = ReadSerialiser<JsonReader>;
 
 }

@@ -36,6 +36,7 @@ add_subdirectory(base)
 add_subdirectory(conformance)
 add_subdirectory(concurrency)
 add_subdirectory(gfx)
+add_subdirectory(functional)
 add_subdirectory(meta)
 add_subdirectory(serialisation)
 
@@ -114,5 +115,5 @@ add_test(
     COMMAND MorpheusCoreTests
     WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 catch_discover_tests(MorpheusCoreTests)
-add_coverage(MorpheusCore)
-add_coverage(MorpheusCoreTests)
+#add_coverage(MorpheusCore)
+#add_coverage(MorpheusCoreTests)

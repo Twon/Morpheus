@@ -3,6 +3,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <concepts>
+#include <optional>
 #include <span>
 #include <string_view>
 #include <type_traits>
@@ -17,6 +18,8 @@ concept Writer = requires(T t)
 {
     { t.isTextual() } -> std::same_as<bool>;
 
+    { t.beginSequence(std::optional<std::size_t>{}) } -> std::same_as<void>;
+    { t.endSequence() } -> std::same_as<void>;
     { t.beginComposite() } -> std::same_as<void>;
     { t.endComposite() } -> std::same_as<void>;
     { t.beginValue(std::string_view{}) } -> std::same_as<void>;

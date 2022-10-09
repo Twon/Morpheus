@@ -1,4 +1,5 @@
 #include "core/conformance/format.hpp"
+#include "core/serialisation/adapters/aggregate.hpp"
 #include "core/serialisation/json_writer.hpp"
 #include "core/serialisation/serialisers.hpp"
 #include "core/serialisation/write_serialiser.hpp"
@@ -165,6 +166,54 @@ TEST_CASE("Json writer can write simple sequence types to underlying text repres
             THEN("Expect an empty composite in the json document")
             {
                 REQUIRE(strStream.str() == R"(["A","B","C"])");
+            }
+        }
+    }
+}
+
+struct Example
+{
+    int a = 0;
+    bool b = true;
+    std::string c = "Example";
+};
+
+template<>
+inline constexpr bool delegateAggregateSerialisation<Example> = true;
+
+struct Example2
+{
+    int a = 0;
+    Example b;
+    bool c = true;
+};
+
+template<>
+inline constexpr bool delegateAggregateSerialisation<Example2> = true;
+
+TEST_CASE("Json writer can write simple aggregates types to underlying text representation", "[morpheus.serialisation.json_writer.aggregate]")
+{
+    GIVEN("An aggregate that opts into serialisation")
+    {
+        STATIC_REQUIRE(SerialisableAggregate<Example>);
+
+        WHEN("Writing default intialised instance")
+        {
+            THEN("Expect the aggregate values serialised as a sequence")
+            {
+                REQUIRE(serialise(Example{}) == R"([0,true,"Example"])");
+            }
+        }
+    }
+    GIVEN("An aggregate containing aggregates that all opt into serialisation")
+    {
+        STATIC_REQUIRE(SerialisableAggregate<Example2>);
+
+        WHEN("Writing default intialised instance")
+        {
+            THEN("Expect the aggregate values serialised as a sequence embedding in a sequence")
+            {
+                REQUIRE(serialise(Example2{}) == R"([0,[0,true,"Example"],true])");
             }
         }
     }

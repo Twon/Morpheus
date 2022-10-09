@@ -1,5 +1,8 @@
 target_sources(MorpheusCore
     PUBLIC
+        dispatch.hpp
+        fundamentals.hpp
+        json_reader.hpp
         json_writer.hpp
         read_serialiser.hpp
         serialise.hpp
@@ -24,4 +27,5 @@ target_link_libraries(MorpheusCore
         RapidJSON::RapidJSON
 )
 
+add_subdirectory(adapters)
 add_subdirectory(concepts)

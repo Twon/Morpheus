@@ -10,7 +10,7 @@ namespace morpheus::serialisation::concepts
 template <typename Serialiser, typename Type>
 concept WriteSerialisableFreeStading = requires(Serialiser s, Type t)
 {
-    { serialize(s, t) } -> std::same_as<void>;
+    { serialise(s, t) } -> std::same_as<void>;
 };
 
 template <typename Serialiser, typename Type>
