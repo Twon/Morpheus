@@ -24,6 +24,15 @@ namespace morpheus::serialisation
 
 using FundamentalType = std::variant<bool, std::int64_t, std::uint64_t, float, double, std::string>;
 
+/// \class JsonReadException
+/// 
+class JsonReadException : public std::runtime_error {
+public:
+    using std::runtime_error::runtime_error;
+};
+
+/// \class JsonReader
+/// 
 class MORPHEUSCORE_EXPORT JsonReader
 {
 public:
@@ -40,42 +49,45 @@ public:
     void beginSequence(std::optional<std::size_t> = std::nullopt);
     void endSequence();
 
-    template<typename T> requires std::is_arithmetic_v<T>
-    T read() 
+    template<typename T> requires std::is_same_v<T, bool>
+    T read()
     {
         auto const next = getNext();
+        MORPHEUS_ASSERT(next->index() == 0);
+        return std::get<T>(*next);
+    }
 
-        if constexpr (std::is_same_v<bool, T>)
-        {
-            return std::get<T>(*next);
-        }
-        else if constexpr (std::integral<T>)
-        {
-            MORPHEUS_ASSERT((next->index() == 1) or (next->index() == 2));
-            return std::visit(functional::Overload{
-                [](std::integral auto const value) { return boost::numeric_cast<T>(value); },
-                [](auto const& value) -> T { throw value; } // return value; }
-            }, *next);
-        }
-        else
-        {
-            MORPHEUS_ASSERT((next->index() == 1) or (next->index() == 2) or (next->index() == 3) or (next->index() == 4));
-            return std::visit(functional::Overload {
-                [](std::integral auto const value) { return boost::numeric_cast<T>(value); },
-                [](std::floating_point auto const value) 
-                { 
-                    if (std::isinf(value)) [[unlikely]]
-                    {
-                        if (value > 0)
-                            return std::numeric_limits<T>::infinity();
-                        else
-                            return -std::numeric_limits<T>::infinity();
-                    }
-                    return boost::numeric_cast<T>(value); 
-                },
-                [](auto const& value) -> T { throw value; } // return value; }
-            }, *next);
-        }
+    template<std::integral Interger> requires (not std::is_same_v<bool, Interger>)
+    Interger read()
+    {
+        auto const next = getNext();
+        MORPHEUS_ASSERT((next->index() == 1) or (next->index() == 2));
+        return std::visit(functional::Overload{
+            [](std::integral auto const value) { return boost::numeric_cast<Interger>(value); },
+            [](auto const value) -> Interger { throw JsonReadException("Unable to convert to integral point representation"); }
+        }, *next);
+    }
+
+    template<std::floating_point Float>
+    Float read()
+    {
+        auto const next = getNext();
+        MORPHEUS_ASSERT((next->index() == 1) or (next->index() == 2) or (next->index() == 3) or (next->index() == 4));
+        return std::visit(functional::Overload {
+            [](std::integral auto const value) { return boost::numeric_cast<Float>(value); },
+            [](std::floating_point auto const value) 
+            { 
+                if (std::isinf(value)) [[unlikely]]
+                {
+                    if (value > 0)
+                        return std::numeric_limits<Float>::infinity();
+                    else
+                        return -std::numeric_limits<Float>::infinity();
+                }
+                return boost::numeric_cast<Float>(value);
+            },
+            [](auto const value) -> Float { throw JsonReadException("Unable to convert to floating point representation"); }
+        }, *next);
     }
 /*
 
@@ -93,23 +105,10 @@ public:
 
 */
 
-/*cm
-    void write(bool const value) {}
-    void write(std::uint8_t const value) {}
-    void write(std::int8_t const value) {}
-    void write(std::uint16_t const value) {}
-    void write(std::int16_t const value) {}
-    void write(std::uint32_t const value) {}
-    void write(std::int32_t const value) {}
-    void write(std::uint64_t const value) {}
-    void write(std::int64_t const value) {}
-    void write(float const value) {}
-    void write(double const value) {}
+/*
     void write(std::string_view const value) {}
     void write(std::span<std::byte> const value) {}
 */
-//private:
-//    std::istream& mStream;
 
 private:
     [[nodiscard]] std::optional<FundamentalType> getNext();
