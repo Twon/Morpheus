@@ -4,7 +4,11 @@
 #if (MORPHEUS_BUILD_PLATFORM == MORPHEUS_TARGET_PLATFORM_PC_WINDOWS)
 #define WIN32_LEAN_AND_MEAN      // Exclude rarely-used stuff from Windows headers
 #include <windows.h>
+#include <intrin.h>
 #include <debugapi.h>
+#elif (MORPHEUS_BUILD_PLATFORM == MORPHEUS_TARGET_PLATFORM_LINUX) || \
+      (MORPHEUS_BUILD_PLATFORM == MORPHEUS_TARGET_PLATFORM_APPLE)
+#include <signal.h>
 #endif
 
 #include <cstdio>
@@ -12,12 +16,42 @@
 namespace morpheus
 {
 
-    void debugPring(std::string_view const message)
-    {
-        print_ns::print(stderr, "{}", message);
+void breakpoint() noexcept
+{
+
 #if (MORPHEUS_BUILD_PLATFORM == MORPHEUS_TARGET_PLATFORM_PC_WINDOWS)
-        OutputDebugString(message.data());
+    __debugbreak(); 
+    MORPHEUS_UNREACHABLE;
+// https://github.com/scottt/debugbreak/issues/24
+#elif (MORPHEUS_COMPILER == MORPHEUS_CLANG_COMPILER) && defined(__has_builtin) && __has_builtin(__builtin_debugtrap)
+    __builtin_debugtrap(); 
+    MORPHEUS_UNREACHABLE; 
+#elif (MORPHEUS_BUILD_PLATFORM == MORPHEUS_TARGET_PLATFORM_LINUX) || \
+      (MORPHEUS_BUILD_PLATFORM == MORPHEUS_TARGET_PLATFORM_APPLE)
+    raise(SIGTRAP); 
+    MORPHEUS_UNREACHABLE;
+#else
+    // *(int*)0 = 0;
+    // MORPHEUS_UNREACHABLE;
 #endif
-    }
+
+}
+
+bool isDebuggerAttached()
+{
+#if (MORPHEUS_BUILD_PLATFORM == MORPHEUS_TARGET_PLATFORM_PC_WINDOWS)
+    return IsDebuggerPresent();
+#else
+    return false; // https://github.com/bruxisma/breakpoint/blob/master/src/macos.cxx
+#endif
+}
+
+void debugPring(std::string_view const message)
+{
+    print_ns::print(stderr, "{}", message);
+#if (MORPHEUS_BUILD_PLATFORM == MORPHEUS_TARGET_PLATFORM_PC_WINDOWS)
+    OutputDebugString(message.data());
+#endif
+}
 
 }

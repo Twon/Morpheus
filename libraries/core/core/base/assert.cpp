@@ -30,12 +30,12 @@ void assertHandler(AssertType type, sl_ns::source_location const location, std::
     if (type == AssertType::Assert)
     {
         if (getAssertHandler()(Assertion{ location, expr, std::string(message) }))
-            MORPHEUS_BREAKPOINT();
+            breakpoint();
     }
     else
     {
         getAssertHandler()(Assertion{ location, expr, std::string(message) });
-        MORPHEUS_BREAKPOINT();
+        breakpoint();
     }
 }
 
