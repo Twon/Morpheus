@@ -5,13 +5,13 @@
 #include <catch2/catch_all.hpp>
 
 using namespace Catch;
-/**/
+
 namespace morpheus::serialisation
 {
 
 namespace {
 
-template<class T>
+template<concepts::ReadSerialisable T>
 T deserialise(std::string_view const value)
 {
     std::istringstream iss(std::string{value});
@@ -60,8 +60,7 @@ struct SimpleComposite
     float third = 0.0f;
     std::string forth;
 
-//    template<concepts::ReadSerialiser Serialiser>
-    template<typename Serialiser>
+    template<concepts::ReadSerialiser Serialiser>
     void deserialise(Serialiser& s)
     {
         first = s.template deserialise<decltype(first)>("first");
@@ -76,8 +75,7 @@ struct ComplexComposite
     SimpleComposite first;
     float second = 0.0f;
 
-    //    template<concepts::ReadSerialiser Serialiser>
-    template<typename Serialiser>
+    template<concepts::ReadSerialiser Serialiser>
     void deserialise(Serialiser& s)
     {
         first = s.template deserialise<decltype(first)>("first");
@@ -89,11 +87,8 @@ TEST_CASE("Json reader can read simple composite types from underlying test repr
 {
     GIVEN("A Json reader")
     {
-//        auto const simple = deserialise<SimpleComposite>(R"({"first":"100","second":"true","third":"50","forth":"example"})");
         auto const simple = deserialise<SimpleComposite>(R"({"first":100,"second":true,"third":50,"forth":"example"})");
- //       STATIC_REQUIRE(concepts::ReadSerialisableInsrusive<JsonReaderSerialiser, SimpleComposite>);
- //       STATIC_REQUIRE(concepts::NotReadSerialiser<JsonReaderSerialiser, SimpleComposite>);
-        //STATIC_REQUIRE(concepts::ReadSerialisableInsrusive<JsonReaderSerialiser, SimpleComposite>);
+        STATIC_REQUIRE(concepts::ReadSerialisableInsrusive<SimpleComposite>);
         
         WHEN("Writing an empty composite")
         {
@@ -108,11 +103,8 @@ TEST_CASE("Json reader can read simple composite types from underlying test repr
     }
     GIVEN("A Json reader")
     {
-        //        auto const simple = deserialise<SimpleComposite>(R"({"first":"100","second":"true","third":"50","forth":"example"})");
         auto const complex = deserialise<ComplexComposite>(R"({"first":{"first":100,"second":true,"third":50,"forth":"example"},"second":3.14})");
-//        STATIC_REQUIRE(concepts::ReadSerialisableInsrusive<JsonReaderSerialiser, SimpleComposite>);
-        //       STATIC_REQUIRE(concepts::NotReadSerialiser<JsonReaderSerialiser, SimpleComposite>);
-               //STATIC_REQUIRE(concepts::ReadSerialisableInsrusive<JsonReaderSerialiser, SimpleComposite>);
+        STATIC_REQUIRE(concepts::ReadSerialisableInsrusive<ComplexComposite>);
 
         WHEN("Writing an empty composite")
         {
