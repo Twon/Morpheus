@@ -15,11 +15,14 @@ class WriteSerialiser
 {
 public:
     template<meta::concepts::DefaultConstructible T = WriterType>
-    WriteSerialiser() noexcept(std::is_nothrow_default_constructible_v<T>) {}
+    WriteSerialiser() noexcept(std::is_nothrow_default_constructible_v<T>) 
+    {}
 
     template<typename... Args>
     requires(std::is_constructible_v<WriterType, Args...>)
-    WriteSerialiser(Args&&... args) : mWriter(std::forward<Args>(args)...) {}
+    WriteSerialiser(Args&&... args) noexcept(meta::concepts::NothrowConstructible<WriterType, Args...>)
+    :   mWriter(std::forward<Args>(args)...) 
+    {}
 
 #if (__cpp_explicit_this_parameter >= 202110)
     template<typename Self>
