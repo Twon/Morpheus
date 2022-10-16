@@ -10,15 +10,17 @@
 namespace morpheus::serialisation
 {
 
-template<typename Serialiser, typename Type>
-requires concepts::WriteSerialisableInsrusive<Serialiser, Type>
+template<concepts::WriteSerialiser Serialiser, concepts::WriteSerialisableInsrusive Type>
+//template<typename Serialiser, typename Type>
 void serialise(Serialiser& serialiser, Type const& value, DispatchWeak)
 {
     value.serialise(serialiser);
 }
 
-template<typename Serialiser, typename Type>
-requires concepts::WriteSerialiser<Serialiser, Type> and concepts::WriteSerialisable<Type, Serialiser>
+template<concepts::WriteSerialiser Serialiser, concepts::WriteSerialisable Type>
+//template<typename Serialiser, typename Type>
+//template<concepts::WriteSerialiser Serialiser, typename Type>
+//template<typename Serialiser, concepts::WriteSerialisable Type>
 void serialiseDispatch(Serialiser& serialiser, Type const& value)
 {
     serialise(serialiser, value, DispatchSelect<Type>());
@@ -39,11 +41,15 @@ void serialiseDispatch(Serialiser& serialiser, Type const& value)
 }
 
 
-template<typename Serialiser, typename Type>
-requires concepts::ReadSerialisableInsrusive<Serialiser, Type>
-void deserialise(Serialiser& serialiser, DispatchWeak)
+template<typename Serialiser, concepts::ReadSerialisableInsrusive Type>
+//template<typename Serialiser, typename Type>
+auto deserialise(Serialiser& serialiser, DispatchWeak)
 {
-    return Type{}.deserialise(serialiser);
+    Type value;
+    serialiser.reader().beginComposite();
+    value.deserialise(serialiser);
+    serialiser.reader().endComposite();
+    return value;
 }
 
 template<typename Serialiser, typename Type>

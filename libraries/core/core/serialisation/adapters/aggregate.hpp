@@ -1,7 +1,7 @@
 #pragma once
 
 #include "core/serialisation/concepts/write_serialiser.hpp"
-#include "core/serialisation/concepts/write_serialisable.hpp"
+//#include "core/serialisation/concepts/write_serialisable.hpp"
 #include "core/serialisation/dispatch.hpp"
 #include "core/meta/concepts/aggregate.hpp"
 
@@ -30,7 +30,7 @@ concept SerialisableAggregate = meta::concepts::Aggregate<T> and DelegatedAggreg
 /// Opt in serialisation for aggregates.  Like pair and tuple it serialises as a sequence without the field key
 /// as fields can only be accessed by the underlying field value.  Hense if you want an aggregate with named
 /// field then this should have its one specialised serialisation method
-template<typename Serialiser, SerialisableAggregate AggregateType>
+template<concepts::WriteSerialiser Serialiser, SerialisableAggregate AggregateType>
 void serialise(Serialiser& s, AggregateType const& value, DispatchStrong)
 {
     s.writer().beginSequence(boost::pfr::tuple_size<AggregateType>::value);

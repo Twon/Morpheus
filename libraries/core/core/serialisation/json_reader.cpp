@@ -12,89 +12,93 @@ struct JsonExtracter : rapidjson::BaseReaderHandler<rapidjson::UTF8<>, JsonExtra
 {
     bool Null()
     {
-        mCurrent = std::nullopt;
+        mCurrent = { JsonReader::Event::Value, std::nullopt };
         return static_cast<Override&>(*this).Default();
     }
     
     bool Bool(bool value)
     { 
-        mCurrent = value;
+        mCurrent = { JsonReader::Event::Value, value };
         return static_cast<Override&>(*this).Default();
     }
     
     bool Int(int value)
     {
-        mCurrent = static_cast<std::int64_t>(value);
+        mCurrent = { JsonReader::Event::Value, static_cast<std::int64_t>(value) };
         return static_cast<Override&>(*this).Default();
     }
     
     bool Uint(unsigned value)
     {
-        mCurrent = static_cast<std::uint64_t>(value);
+        mCurrent = { JsonReader::Event::Value, static_cast<std::uint64_t>(value) };
         return static_cast<Override&>(*this).Default();
     }
     
     bool Int64(int64_t value)
     { 
-        mCurrent = value;
+        mCurrent = { JsonReader::Event::Value, value };
         return static_cast<Override&>(*this).Default();
     }
     
     bool Uint64(uint64_t value)
     { 
-        mCurrent = value;
+        mCurrent = { JsonReader::Event::Value, value };
         return static_cast<Override&>(*this).Default();
     }
     
     bool Double(double value)
     {
-        mCurrent = value;
+        mCurrent = { JsonReader::Event::Value, value };
         return static_cast<Override&>(*this).Default();
     }
 
     bool RawNumber(const Ch* str, rapidjson::SizeType len, bool copy) // { return static_cast<Override&>(*this).String(str, len, copy); }
     {
+        MORPHEUS_VERIFY(false);
 //        mCurrent = std::string(value, len);
         return static_cast<Override&>(*this).Default();
     }
 
     bool String(const Ch* str, rapidjson::SizeType len, bool)
     {
-        mCurrent = std::string(str, len);
+        mCurrent = { JsonReader::Event::Value, std::string(str, len) };
         return static_cast<Override&>(*this).Default();
     }
 
     bool StartObject()
     {
+        mCurrent = { JsonReader::Event::BeginComposite, std::nullopt };
         return static_cast<Override&>(*this).Default();
     }
 
     bool Key(const Ch* str, rapidjson::SizeType len, bool copy)
     {
+        mCurrent = { JsonReader::Event::BeginComposite, std::string(str, len) };
         return static_cast<Override&>(*this).Default();
     }
 
     bool EndObject(rapidjson::SizeType)
     {
+        mCurrent = { JsonReader::Event::EndComposite, std::nullopt };
         return static_cast<Override&>(*this).Default();
     }
 
     bool StartArray()
     {
+        mCurrent = { JsonReader::Event::BeginSequence, std::nullopt };
         return static_cast<Override&>(*this).Default();
     }
 
     bool EndArray(rapidjson::SizeType)
     {
+        mCurrent = { JsonReader::Event::EndSequence, std::nullopt };
         return static_cast<Override&>(*this).Default();
     }
 
-    using ExtractedType = std::optional<FundamentalType>;
-
-    ExtractedType mCurrent;
+    JsonReader::EventValue mCurrent;
 };
 
-std::optional<FundamentalType> JsonReader::getNext()
+JsonReader::EventValue JsonReader::getNext()
 {
     mJsonReader.IterativeParseNext<rapidjson::kParseCommentsFlag | rapidjson::kParseNanAndInfFlag>(mStream, *mExtractor);
     if (mJsonReader.HasParseError())
@@ -121,26 +125,41 @@ JsonReader::~JsonReader()
 
 void JsonReader::beginComposite()
 {
+    auto const [event, next] = getNext();
+    MORPHEUS_VERIFY(event == Event::BeginComposite);
 }
 
 void JsonReader::endComposite()
 {
+    auto const [event, next] = getNext();
+    MORPHEUS_VERIFY(event == Event::EndComposite);
 }
 
 void JsonReader::beginValue(std::string_view const key)
 {
+    auto const [event, next] = getNext();
+    MORPHEUS_VERIFY(event == Event::BeginComposite);
+    MORPHEUS_VERIFY(next);
+    MORPHEUS_VERIFY(next->index() == 5);
+    MORPHEUS_VERIFY(std::get<std::string>(*next) == key);
 }
 
 void JsonReader::endValue()
 {
+//    auto const [event, next] = getNext();
+//    MORPHEUS_VERIFY(event == Event::EndComposite);
 }
 
 void JsonReader::beginSequence(std::optional<std::size_t>)
 {
+    auto const [event, next] = getNext();
+    MORPHEUS_VERIFY(event == Event::BeginSequence);
 }
 
 void JsonReader::endSequence()
 {
+    auto const [event, next] = getNext();
+    MORPHEUS_VERIFY(event == Event::EndSequence);
 }
 
 }

@@ -1,33 +1,33 @@
 #pragma once
 
+#include "core/serialisation/concepts/reader_archtype.hpp"
+
 #include <type_traits>
 
 namespace morpheus::serialisation::concepts
 {
 
-template <typename Serialiser, typename Type>
-concept ReadSerialisableFreeStading = requires(Serialiser s, Type t)
+template <typename Type>
+concept ReadSerialisableFreeStading = requires(ReadSerialiserArchtype s, Type t)
 {
     { deserialise(s, t) } -> std::same_as<Type>;
 };
 
-template <typename Serialiser, typename Type>
-concept ReadSerialisableInsrusive = requires(Serialiser s, Type t)
+template <typename Type>
+concept ReadSerialisableInsrusive = requires(ReadSerialiserArchtype s, Type t)
 {
-    NotReadSerialiser<Serialiser, Type>;
-    { t.deserialise(s) } -> std::same_as<Type>;
+    { t.deserialise(s) } -> std::same_as<void>;
 };
 
-template <typename Serialiser, typename Type>
-concept ReadSerialisableNative = requires(Serialiser s, Type t)
+template <typename Type>
+concept ReadSerialisableNative = requires(ReadSerialiserArchtype s, Type t)
 {
-    ReadSerialiser<Serialiser, Type>;
     { s.reader().template read<Type>() } -> std::same_as<Type>;
 };
 
-template <typename Serialiser, typename Type>
-concept ReadSerialisable = ReadSerialisableFreeStading<Serialiser, Type> or
-                           ReadSerialisableInsrusive<Serialiser, Type> or 
-                           ReadSerialisableNative<Serialiser, Type>;
+template <typename Type>
+concept ReadSerialisable = ReadSerialisableFreeStading<Type> or
+                           ReadSerialisableInsrusive<Type> or 
+                           ReadSerialisableNative<Type>;
 
 } // morpheus::serialisation::concepts

@@ -8,13 +8,15 @@ target_sources(MorpheusCore
         serialise.hpp
         text_writer.hpp
         write_serialiser.hpp
-    PRIVATE
+        write_serialiser_decl.hpp
+ PRIVATE
         json_reader.cpp
         json_writer.cpp
 )
 
 target_sources(MorpheusCoreTests
     PUBLIC
+        concept_checks.tests.cpp
         json_reader.tests.cpp
         json_writer.tests.cpp
         write_serialiser.tests.cpp

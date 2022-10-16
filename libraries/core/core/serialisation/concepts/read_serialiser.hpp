@@ -6,14 +6,15 @@
 namespace morpheus::serialisation::concepts
 {
 
-template <typename T, typename U>
-concept ReadSerialiser = requires(T t)
+template <typename Serialiser>
+concept ReadSerialiser = requires(Serialiser s)
 {
-    { t.reader() } -> Reader;
-    { t.template deserialise<U>() } -> std::same_as<U>;
+//    true == true
+    { s.reader() } -> Reader;
+//    { s.template deserialise<Type>() } -> std::same_as<Type>;
 };
 
-template <typename Serialiser, typename Type>
-concept NotReadSerialiser = not ReadSerialiser<Serialiser, Type>;
+template <typename Serialiser>
+concept NotReadSerialiser = not ReadSerialiser<Serialiser>;
 
 } // morpheus::serialisation::concepts

@@ -8,13 +8,13 @@
 namespace morpheus::serialisation
 {
 
-template<class SerializerType, class T> requires concepts::WriteSerialisableNative<SerializerType, T>
+template<class SerializerType, concepts::WriteSerialisableNative T>
 void serialise(SerializerType& s, T const& value, DispatchStrong)
 {
     s.writer().write(value);
 }
 
-template<class SerializerType, class T> requires concepts::ReadSerialisableNative<SerializerType, T>
+template<class SerializerType, concepts::ReadSerialisableNative T>
 T deserialise(SerializerType& s, DispatchStrong)
 {
     return s.reader().template read<T>();

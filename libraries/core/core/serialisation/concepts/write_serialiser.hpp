@@ -1,19 +1,18 @@
 #pragma once
 
 #include "core/serialisation/concepts/writer.hpp"
-#include <type_traits>
 
 namespace morpheus::serialisation::concepts
 {
 
-template <typename Serialiser, typename Type>
-concept WriteSerialiser = requires(Serialiser s, Type t)
+template <typename Serialiser>
+concept WriteSerialiser = requires(Serialiser s)
 {
     { s.writer() } -> Writer;
-    { s.template serialise<Type>(t) } -> std::same_as<void>;
+//    { s.template serialise<Type>(t) } -> std::same_as<void>;
 };
 
-template <typename Serialiser, typename Type>
-concept NotWriteSerialiser = not WriteSerialiser<Serialiser, Type>;
+template <typename Serialiser>
+concept NotWriteSerialiser = not WriteSerialiser<Serialiser>;
 
 } // morpheus::serialisation::concepts

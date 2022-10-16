@@ -17,25 +17,24 @@
 #include <span>
 #include <string_view>
 #include <string>
+#include <tuple>
 #include <variant>
 
 namespace morpheus::serialisation
 {
-
-using FundamentalType = std::variant<bool, std::int64_t, std::uint64_t, float, double, std::string>;
-
-/// \class JsonReadException
-/// 
-class JsonReadException : public std::runtime_error {
-public:
-    using std::runtime_error::runtime_error;
-};
 
 /// \class JsonReader
 /// 
 class MORPHEUSCORE_EXPORT JsonReader
 {
 public:
+    /// \class Exception
+    /// 
+    class Exception : public std::runtime_error {
+    public:
+        using std::runtime_error::runtime_error;
+    };
+
     static constexpr bool canBeTextual() { return true; }
     static constexpr bool isTextual() { return true; }
 
@@ -52,7 +51,7 @@ public:
     template<typename T> requires std::is_same_v<T, bool>
     T read()
     {
-        auto const next = getNext();
+        auto const [event, next] = getNext();
         MORPHEUS_ASSERT(next->index() == 0);
         return std::get<T>(*next);
     }
@@ -60,18 +59,18 @@ public:
     template<std::integral Interger> requires (not std::is_same_v<bool, Interger>)
     Interger read()
     {
-        auto const next = getNext();
+        auto const [event, next] = getNext();
         MORPHEUS_ASSERT((next->index() == 1) or (next->index() == 2));
         return std::visit(functional::Overload{
             [](std::integral auto const value) { return boost::numeric_cast<Interger>(value); },
-            [](auto const value) -> Interger { throw JsonReadException("Unable to convert to integral point representation"); }
+            [](auto const value) -> Interger { throw Exception("Unable to convert to integral point representation"); }
         }, *next);
     }
 
     template<std::floating_point Float>
     Float read()
     {
-        auto const next = getNext();
+        auto const [event, next] = getNext();
         MORPHEUS_ASSERT((next->index() == 1) or (next->index() == 2) or (next->index() == 3) or (next->index() == 4));
         return std::visit(functional::Overload {
             [](std::integral auto const value) { return boost::numeric_cast<Float>(value); },
@@ -86,8 +85,16 @@ public:
                 }
                 return boost::numeric_cast<Float>(value);
             },
-            [](auto const value) -> Float { throw JsonReadException("Unable to convert to floating point representation"); }
+            [](auto const value) -> Float { throw Exception("Unable to convert to floating point representation"); }
         }, *next);
+    }
+
+    template<typename T> requires std::is_same_v<T, std::string>
+    T read()
+    {
+        auto const [event, next] = getNext();
+        MORPHEUS_ASSERT(next->index() == 5);
+        return std::get<T>(*next);
     }
 /*
 
@@ -111,7 +118,23 @@ public:
 */
 
 private:
-    [[nodiscard]] std::optional<FundamentalType> getNext();
+    enum class Event : std::uint32_t
+    {
+        BeginComposite,
+        EndComposite,
+        BeginValue,
+        Value,
+        EndValue,
+        BeginSequence,
+        EndSequence,
+    };
+
+    friend class JsonExtracter;
+    using FundamentalType = std::variant<bool, std::int64_t, std::uint64_t, float, double, std::string>;
+    using PossibleValue = std::optional<FundamentalType>;
+    using EventValue = std::tuple<Event, PossibleValue>;
+
+    [[nodiscard]] EventValue getNext();
 
     rapidjson::IStreamWrapper mStream;
     rapidjson::Reader mJsonReader;
