@@ -1,6 +1,8 @@
 #include <core/base/debugging.hpp>
 #include <core/conformance/print.hpp>
 
+#include <boost/test/debug.hpp>
+
 #if (MORPHEUS_BUILD_PLATFORM == MORPHEUS_TARGET_PLATFORM_PC_WINDOWS)
 #define WIN32_LEAN_AND_MEAN      // Exclude rarely-used stuff from Windows headers
 #include <windows.h>
@@ -37,13 +39,15 @@ void breakpoint() noexcept
 
 }
 
-bool isDebuggerAttached()
+void breakpoint_if_debugging() noexcept
 {
-#if (MORPHEUS_BUILD_PLATFORM == MORPHEUS_TARGET_PLATFORM_PC_WINDOWS)
-    return IsDebuggerPresent();
-#else
-    return false; // https://github.com/bruxisma/breakpoint/blob/master/src/macos.cxx
-#endif
+    if (is_debugger_present())
+        breakpoint();
+}
+
+bool is_debugger_present() noexcept
+{
+    return boost::debug::under_debugger();
 }
 
 void debugPring(std::string_view const message)

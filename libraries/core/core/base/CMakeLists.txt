@@ -14,6 +14,11 @@ target_sources(MorpheusCore
         debugging.cpp
 )
 
+target_link_libraries(MorpheusCore
+    PRIVATE
+        Boost::unit_test_framework
+)
+
 target_sources(MorpheusCoreTests
     PRIVATE
         assert.tests.cpp
