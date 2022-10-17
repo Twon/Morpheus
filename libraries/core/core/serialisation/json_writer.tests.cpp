@@ -1,5 +1,9 @@
 #include "core/conformance/format.hpp"
 #include "core/serialisation/adapters/aggregate.hpp"
+#include "core/serialisation/adapters/std/optional.hpp"
+#include "core/serialisation/adapters/std/pair.hpp"
+#include "core/serialisation/adapters/std/tuple.hpp"
+#include "core/serialisation/adapters/std/variant.hpp"
 #include "core/serialisation/json_writer.hpp"
 #include "core/serialisation/serialisers.hpp"
 #include "core/serialisation/write_serialiser.hpp"
@@ -15,7 +19,7 @@ using namespace Catch;
 namespace morpheus::serialisation
 {
 
-namespace {
+namespace test {
 
 template<class T>
 std::string serialise(T const& value)
@@ -48,29 +52,29 @@ TEMPLATE_TEST_CASE("Json writer can write single native types to underlying text
 {
     if constexpr (std::is_integral_v<TestType>)
     {
-        REQUIRE(serialise(std::numeric_limits<TestType>::min()) == fmt_ns::format("{}", std::numeric_limits<TestType>::min()));
-        REQUIRE(serialise(std::numeric_limits<TestType>::lowest()) == fmt_ns::format("{}", std::numeric_limits<TestType>::lowest()));
-        REQUIRE(serialise(std::numeric_limits<TestType>::max()) == fmt_ns::format("{}", std::numeric_limits<TestType>::max()));
-        REQUIRE(serialise(std::numeric_limits<TestType>::radix) == fmt_ns::format("{}", std::numeric_limits<TestType>::radix));
+        REQUIRE(test::serialise(std::numeric_limits<TestType>::min()) == fmt_ns::format("{}", std::numeric_limits<TestType>::min()));
+        REQUIRE(test::serialise(std::numeric_limits<TestType>::lowest()) == fmt_ns::format("{}", std::numeric_limits<TestType>::lowest()));
+        REQUIRE(test::serialise(std::numeric_limits<TestType>::max()) == fmt_ns::format("{}", std::numeric_limits<TestType>::max()));
+        REQUIRE(test::serialise(std::numeric_limits<TestType>::radix) == fmt_ns::format("{}", std::numeric_limits<TestType>::radix));
     }
     else if constexpr (std::is_floating_point_v<TestType>)
     {
-        REQUIRE(serialise(0) == "0");
-        REQUIRE(serialise(-0) == "0");
-        REQUIRE(serialise(TestType(2.75)) == "2.75");
-        REQUIRE(serialise(TestType(-2.75)) == "-2.75");
-        REQUIRE(serialise(std::numeric_limits<TestType>::infinity()) == "Infinity");
-        REQUIRE(serialise(-std::numeric_limits<TestType>::infinity()) == "-Infinity");
-        REQUIRE(serialise(std::numeric_limits<TestType>::quiet_NaN()) == "NaN");
-        REQUIRE(serialise(-std::numeric_limits<TestType>::quiet_NaN()) == "NaN");
-        REQUIRE(serialise(std::numeric_limits<TestType>::signaling_NaN()) == "NaN");
-        REQUIRE(serialise(-std::numeric_limits<TestType>::signaling_NaN()) == "NaN");
+        REQUIRE(test::serialise(0) == "0");
+        REQUIRE(test::serialise(-0) == "0");
+        REQUIRE(test::serialise(TestType(2.75)) == "2.75");
+        REQUIRE(test::serialise(TestType(-2.75)) == "-2.75");
+        REQUIRE(test::serialise(std::numeric_limits<TestType>::infinity()) == "Infinity");
+        REQUIRE(test::serialise(-std::numeric_limits<TestType>::infinity()) == "-Infinity");
+        REQUIRE(test::serialise(std::numeric_limits<TestType>::quiet_NaN()) == "NaN");
+        REQUIRE(test::serialise(-std::numeric_limits<TestType>::quiet_NaN()) == "NaN");
+        REQUIRE(test::serialise(std::numeric_limits<TestType>::signaling_NaN()) == "NaN");
+        REQUIRE(test::serialise(-std::numeric_limits<TestType>::signaling_NaN()) == "NaN");
 
 #if (__cpp_lib_to_chars >= 201611L)
         // RapidJson ouputs "1.401298464324817e-45" vs "1e-45" for float, but SetMaxDecimalPlaces() would effect all non-scientific values so we compare 
         // against the underling value not string representation.
-        REQUIRE(toFloatingPoint<TestType>(serialise(std::numeric_limits<TestType>::denorm_min())) == Approx(std::numeric_limits<TestType>::denorm_min()));
-        REQUIRE(toFloatingPoint<TestType>(serialise(std::numeric_limits<TestType>::denorm_min())) == Approx(std::numeric_limits<TestType>::denorm_min()));
+        REQUIRE(test::toFloatingPoint<TestType>(test::serialise(std::numeric_limits<TestType>::denorm_min())) == Approx(std::numeric_limits<TestType>::denorm_min()));
+        REQUIRE(test::toFloatingPoint<TestType>(test::serialise(std::numeric_limits<TestType>::denorm_min())) == Approx(std::numeric_limits<TestType>::denorm_min()));
 #endif // (__cpp_lib_to_chars >= 201611L)
     }        
 }
@@ -201,7 +205,7 @@ TEST_CASE("Json writer can write simple aggregates types to underlying text repr
         {
             THEN("Expect the aggregate values serialised as a sequence")
             {
-                REQUIRE(serialise(Example{}) == R"([0,true,"Example"])");
+                REQUIRE(test::serialise(Example{}) == R"([0,true,"Example"])");
             }
         }
     }
@@ -213,10 +217,16 @@ TEST_CASE("Json writer can write simple aggregates types to underlying text repr
         {
             THEN("Expect the aggregate values serialised as a sequence embedding in a sequence")
             {
-                REQUIRE(serialise(Example2{}) == R"([0,[0,true,"Example"],true])");
+                REQUIRE(test::serialise(Example2{}) == R"([0,[0,true,"Example"],true])");
             }
         }
     }
+}
+
+TEST_CASE("Json writer can write std types to underlying text representation", "[morpheus.serialisation.json_writer.adapters.std]")
+{
+    REQUIRE(test::serialise(std::pair<int, bool>{50, true}) == R"([50,true])");
+    REQUIRE(test::serialise(std::tuple<int, bool, std::string>{75, true, "Example"}) == R"([75,true,"Example"])");
 }
 
 } // namespace morpheus::serialisation

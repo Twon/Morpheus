@@ -9,7 +9,7 @@ using namespace Catch;
 namespace morpheus::serialisation
 {
 
-namespace {
+namespace test {
 
 template<concepts::ReadSerialisable T>
 T deserialise(std::string_view const value)
@@ -19,6 +19,12 @@ T deserialise(std::string_view const value)
     return serialiser.deserialise<T>();
 }
 
+auto toJsonReader(std::string_view const value)
+{
+    std::istringstream iss(std::string{ value });
+    return JsonReader{ iss };
+}
+
 }
 
 TEMPLATE_TEST_CASE("Json writer can write single native types to underlying text representation", "[morpheus.serialisation.json_reader.native]", 
@@ -26,22 +32,22 @@ TEMPLATE_TEST_CASE("Json writer can write single native types to underlying text
 {
     if constexpr (std::is_integral_v<TestType>)
     {
-        REQUIRE(deserialise<TestType>(fmt_ns::format("{}", std::numeric_limits<TestType>::min())) == std::numeric_limits<TestType>::min());
-        REQUIRE(deserialise<TestType>(fmt_ns::format("{}", std::numeric_limits<TestType>::lowest())) == std::numeric_limits<TestType>::lowest());
-        REQUIRE(deserialise<TestType>(fmt_ns::format("{}", std::numeric_limits<TestType>::max())) == std::numeric_limits<TestType>::max());
+        REQUIRE(test::deserialise<TestType>(fmt_ns::format("{}", std::numeric_limits<TestType>::min())) == std::numeric_limits<TestType>::min());
+        REQUIRE(test::deserialise<TestType>(fmt_ns::format("{}", std::numeric_limits<TestType>::lowest())) == std::numeric_limits<TestType>::lowest());
+        REQUIRE(test::deserialise<TestType>(fmt_ns::format("{}", std::numeric_limits<TestType>::max())) == std::numeric_limits<TestType>::max());
 
         if constexpr (not std::is_same_v<TestType, bool>)
-            REQUIRE(deserialise<TestType>(fmt_ns::format("{}", std::numeric_limits<TestType>::radix)) == std::numeric_limits<TestType>::radix);
+            REQUIRE(test::deserialise<TestType>(fmt_ns::format("{}", std::numeric_limits<TestType>::radix)) == std::numeric_limits<TestType>::radix);
     }
     else if constexpr (std::is_floating_point_v<TestType>)
     {
-        REQUIRE(deserialise<TestType>("0") == 0);
-        REQUIRE(deserialise<TestType>("-0") == 0);
-        REQUIRE(deserialise<TestType>("2.75") == TestType(2.75));
-        REQUIRE(deserialise<TestType>("-2.75") == TestType(-2.75));
-        REQUIRE(std::isinf(deserialise<TestType>("Infinity")));
-        REQUIRE(std::isinf(deserialise<TestType>("-Infinity")));
-        REQUIRE(std::isnan(deserialise<TestType>("NaN")));
+        REQUIRE(test::deserialise<TestType>("0") == 0);
+        REQUIRE(test::deserialise<TestType>("-0") == 0);
+        REQUIRE(test::deserialise<TestType>("2.75") == TestType(2.75));
+        REQUIRE(test::deserialise<TestType>("-2.75") == TestType(-2.75));
+        REQUIRE(std::isinf(test::deserialise<TestType>("Infinity")));
+        REQUIRE(std::isinf(test::deserialise<TestType>("-Infinity")));
+        REQUIRE(std::isnan(test::deserialise<TestType>("NaN")));
 
 
 #if (__cpp_lib_to_chars >= 201611L)
@@ -50,6 +56,23 @@ TEMPLATE_TEST_CASE("Json writer can write single native types to underlying text
 //        REQUIRE(toFloatingPoint<TestType>(serialise(std::numeric_limits<TestType>::denorm_min())) == Approx(std::numeric_limits<TestType>::denorm_min()));
 //        REQUIRE(toFloatingPoint<TestType>(serialise(std::numeric_limits<TestType>::denorm_min())) == Approx(std::numeric_limits<TestType>::denorm_min()));
 #endif // (__cpp_lib_to_chars >= 201611L)
+    }
+}
+
+TEST_CASE("Json reader providess basic reader functionality", "[morpheus.serialisation.json_reader.fundamental]")
+{
+    GIVEN("A Json reader")
+    {
+        JsonReader reader = test::toJsonReader(R"({})");
+
+        WHEN("Writing an empty composite")
+        {
+            THEN("Expect an empty composite in the json document")
+            {
+                reader.beginComposite();
+                reader.endComposite();
+            }
+        }
     }
 }
 
@@ -87,7 +110,7 @@ TEST_CASE("Json reader can read simple composite types from underlying test repr
 {
     GIVEN("A Json reader")
     {
-        auto const simple = deserialise<SimpleComposite>(R"({"first":100,"second":true,"third":50,"forth":"example"})");
+        auto const simple = test::deserialise<SimpleComposite>(R"({"first":100,"second":true,"third":50,"forth":"example"})");
         STATIC_REQUIRE(concepts::ReadSerialisableInsrusive<SimpleComposite>);
         
         WHEN("Writing an empty composite")
@@ -103,7 +126,7 @@ TEST_CASE("Json reader can read simple composite types from underlying test repr
     }
     GIVEN("A Json reader")
     {
-        auto const complex = deserialise<ComplexComposite>(R"({"first":{"first":100,"second":true,"third":50,"forth":"example"},"second":3.14})");
+        auto const complex = test::deserialise<ComplexComposite>(R"({"first":{"first":100,"second":true,"third":50,"forth":"example"},"second":3.14})");
         STATIC_REQUIRE(concepts::ReadSerialisableInsrusive<ComplexComposite>);
 
         WHEN("Writing an empty composite")

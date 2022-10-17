@@ -5,17 +5,16 @@
 
 #include <utility>
 
-namespace morpheus::serialisation
+namespace morpheus::serialisation::detail
 {
 
-template<typename Serialiser, typename T1, typename T2>
-requires concepts::WriteSerialiser<Serialiser, Type> and concepts::WriteSerialisable<Type, Serialiser>
+template<concepts::WriteSerialiser Serialiser, concepts::WriteSerialisable T1, concepts::WriteSerialisable T2>
 void serialise(Serialiser& serialiser, std::pair<T1, T2> const& value)
 {
-    serialiser.write().beginSequence(std::tuple_size<std::pair<T1, T2>>::value);
+    serialiser.writer().beginSequence(std::tuple_size<std::pair<T1, T2>>::value);
     serialiser.serialise(value.first);
     serialiser.serialise(value.second);
-    serialiser.write().endSequence();
+    serialiser.writer().endSequence();
 }
 
 } // morpheus::serialisation

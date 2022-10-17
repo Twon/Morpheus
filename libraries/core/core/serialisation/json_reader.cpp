@@ -2,9 +2,6 @@
 #include "core/serialisation/read_serialiser.hpp"
 #include "core/serialisation/json_reader.hpp"
 
-
-
-
 namespace morpheus::serialisation
 {
 
@@ -52,7 +49,7 @@ struct JsonExtracter : rapidjson::BaseReaderHandler<rapidjson::UTF8<>, JsonExtra
         return static_cast<Override&>(*this).Default();
     }
 
-    bool RawNumber(const Ch* str, rapidjson::SizeType len, bool copy) // { return static_cast<Override&>(*this).String(str, len, copy); }
+    bool RawNumber(const Ch* str, rapidjson::SizeType len, bool copy)
     {
         MORPHEUS_VERIFY(false);
 //        mCurrent = std::string(value, len);

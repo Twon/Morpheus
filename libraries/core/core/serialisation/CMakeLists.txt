@@ -1,21 +1,22 @@
 target_sources(MorpheusCore
     PUBLIC
-        dispatch.hpp
         fundamentals.hpp
         json_reader.hpp
         json_writer.hpp
         read_serialiser.hpp
+        read_serialiser_decl.hpp
         serialise.hpp
+        serialisers.hpp
         text_writer.hpp
         write_serialiser.hpp
         write_serialiser_decl.hpp
- PRIVATE
+     PRIVATE
         json_reader.cpp
         json_writer.cpp
 )
 
 target_sources(MorpheusCoreTests
-    PUBLIC
+    PRIVATE
         concept_checks.tests.cpp
         json_reader.tests.cpp
         json_writer.tests.cpp
