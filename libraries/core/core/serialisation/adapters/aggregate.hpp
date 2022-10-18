@@ -36,7 +36,7 @@ void serialise(Serialiser& s, AggregateType const& value)
 {
     s.writer().beginSequence(boost::pfr::tuple_size<AggregateType>::value);
     boost::pfr::for_each_field(value, [&](const auto& field) {
-        serialise(s, field);
+        s.serialise(field);
     });
     s.writer().endSequence();
 }

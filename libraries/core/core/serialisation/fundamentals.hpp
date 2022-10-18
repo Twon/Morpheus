@@ -9,14 +9,14 @@ namespace morpheus::serialisation
 
 namespace detail {
 
-template<class SerializerType, concepts::WriteSerialisableNative T>
-void serialise(SerializerType& s, T const& value)
+template<concepts::WriteSerialiser Serialiser, concepts::WriteSerialisableNative T>
+void serialise(Serialiser& s, T const& value)
 {
     s.writer().write(value);
 }
 
-template<class SerializerType, concepts::ReadSerialisableNative T>
-T deserialise(SerializerType& s)
+template<concepts::ReadSerialiser Serialiser, concepts::ReadSerialisableNative T>
+T deserialise(Serialiser& s)
 {
     return s.reader().template read<T>();
 }

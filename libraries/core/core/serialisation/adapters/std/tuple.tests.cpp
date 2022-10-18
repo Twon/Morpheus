@@ -1,5 +1,3 @@
-#pragma once
-
 #include "core/serialisation/adapters/std/tuple.hpp"
 
 #include <catch2/catch_all.hpp>

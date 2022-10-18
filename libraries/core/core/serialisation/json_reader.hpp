@@ -24,7 +24,7 @@ namespace morpheus::serialisation
 {
 
 /// \class JsonReader
-/// 
+///     Read in objects from an underlying json representation. 
 class MORPHEUSCORE_EXPORT JsonReader
 {
 public:
