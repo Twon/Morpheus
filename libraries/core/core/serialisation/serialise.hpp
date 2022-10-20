@@ -41,7 +41,7 @@ struct serialise_fn {
 };
 
 struct deserialise_fn {
-    template<concepts::ReadSerialiser Serialiser, concepts::ReadSerialisable Type>
+    template<concepts::ReadSerialiser Serialiser, typename Type>
     auto operator() (Serialiser& serialiser) const
     {
         using detail::serialise;

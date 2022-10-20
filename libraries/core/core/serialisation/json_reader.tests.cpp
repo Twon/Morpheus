@@ -1,4 +1,10 @@
 #include "core/conformance/format.hpp"
+#include "core/serialisation/adapters/aggregate.hpp"
+#include "core/serialisation/adapters/std/optional.hpp"
+#include "core/serialisation/adapters/std/pair.hpp"
+#include "core/serialisation/adapters/std/tuple.hpp"
+#include "core/serialisation/adapters/std/unique_ptr.hpp"
+#include "core/serialisation/adapters/std/variant.hpp"
 #include "core/serialisation/read_serialiser.hpp"
 #include "core/serialisation/serialisers.hpp"
 
@@ -11,18 +17,12 @@ namespace morpheus::serialisation
 
 namespace test {
 
-template<concepts::ReadSerialisable T>
+template<typename T>
 T deserialise(std::string_view const value)
 {
     std::istringstream iss(std::string{value});
     JsonReaderSerialiser serialiser{iss};
     return serialiser.deserialise<T>();
-}
-
-auto toJsonReader(std::string_view const value)
-{
-    std::istringstream iss(std::string{ value });
-    return JsonReader{ iss };
 }
 
 }
@@ -48,28 +48,72 @@ TEMPLATE_TEST_CASE("Json writer can write single native types to underlying text
         REQUIRE(std::isinf(test::deserialise<TestType>("Infinity")));
         REQUIRE(std::isinf(test::deserialise<TestType>("-Infinity")));
         REQUIRE(std::isnan(test::deserialise<TestType>("NaN")));
-
-
-#if (__cpp_lib_to_chars >= 201611L)
-        // RapidJson ouputs "1.401298464324817e-45" vs "1e-45" for float, but SetMaxDecimalPlaces() would effect all non-scientific values so we compare 
-        // against the underling value not string representation.
-//        REQUIRE(toFloatingPoint<TestType>(serialise(std::numeric_limits<TestType>::denorm_min())) == Approx(std::numeric_limits<TestType>::denorm_min()));
-//        REQUIRE(toFloatingPoint<TestType>(serialise(std::numeric_limits<TestType>::denorm_min())) == Approx(std::numeric_limits<TestType>::denorm_min()));
-#endif // (__cpp_lib_to_chars >= 201611L)
     }
 }
 
 TEST_CASE("Json reader providess basic reader functionality", "[morpheus.serialisation.json_reader.fundamental]")
 {
-    GIVEN("A Json reader")
+    GIVEN("A Json stream")
     {
-        JsonReader reader = test::toJsonReader(R"({})");
+        std::istringstream iss(R"("value")");
 
-        WHEN("Writing an empty composite")
+        WHEN("Read an single value from the stream")
         {
+            JsonReader reader{ iss };
+
+            THEN("Expect an empty composite in the json document")
+            {
+                REQUIRE("value" == reader.read<std::string>());
+            }
+        }
+    }
+    GIVEN("A Json stream")
+    {
+        std::istringstream iss(R"({})");
+
+        WHEN("Read an empty composite from the stream")
+        {
+            JsonReader reader{ iss };
+
             THEN("Expect an empty composite in the json document")
             {
                 reader.beginComposite();
+                reader.endComposite();
+            }
+        }
+    }
+    GIVEN("A Json stream")
+    {
+        std::istringstream iss(R"({"key":"value"})");
+
+        WHEN("Read a composite of key pair from the stream")
+        {
+            JsonReader reader{ iss };
+
+            THEN("Expect an empty composite in the json document")
+            {
+                reader.beginComposite();
+                reader.beginValue("key");
+                REQUIRE("value" == reader.read<std::string>());
+                reader.endValue();
+                reader.endComposite();
+            }
+        }
+    }
+    GIVEN("A Json stream")
+    {
+        std::istringstream iss(R"({"x":null})");
+
+        WHEN("Read a composite of key to null pair from the stream")
+        {
+            JsonReader reader{ iss };
+            THEN("Expect an empty composite in the json document")
+            {
+                reader.beginComposite();
+                reader.beginValue("x");
+                REQUIRE(true == reader.beginNullable());
+                reader.endNullable();
+                reader.endValue();
                 reader.endComposite();
             }
         }
@@ -141,6 +185,14 @@ TEST_CASE("Json reader can read simple composite types from underlying test repr
             }
         }
     }
+}
+
+TEST_CASE("Json reader can read std types from underlying text representation", "[morpheus.serialisation.json_reader.adapters.std]")
+{
+    REQUIRE(test::deserialise<std::pair<int, bool>>(R"([50,true])") == std::pair<int, bool>{50, true});
+    REQUIRE(test::deserialise<std::tuple<int, bool, std::string>>(R"([75,true,"Example"])") == std::tuple<int, bool, std::string>{75, true, "Example"});
+//    REQUIRE(test::deserialise<std::variant<int, bool, std::string>>(R"({"type":"bool","value":true})") == std::variant<int, bool, std::string>{true});
+//    REQUIRE(test::deserialise<std::unique_ptr<int>>(R"({50})") == std::make_unique<int>(50));
 }
 
 } // namespace morpheus::serialisation

@@ -41,6 +41,17 @@ void JsonWriter::endSequence()
     MORPHEUS_VERIFY(mJsonWriter.EndArray());
 }
 
+void JsonWriter::beginNullable(bool const null)
+{
+    if (null)
+       MORPHEUS_VERIFY(mJsonWriter.Null());
+}
+
+void JsonWriter::endNullable()
+{
+
+}
+
 void JsonWriter::write(bool const value) 
 {
     MORPHEUS_VERIFY(mJsonWriter.Bool(value));

@@ -1,38 +1,36 @@
 #pragma once
 
+#include "core/base/scoped_action.hpp"
 #include "core/meta/concepts/constructible.hpp"
 #include "core/serialisation/concepts/reader.hpp"
 
+#include <cstddef>
+#include <optional>
 #include <string_view>
 #include <type_traits>
 
 namespace morpheus::serialisation
 {
 
-template<concepts::Reader ReaderType>
-class ScopedValue
+auto makeScopedValue(concepts::Reader auto& reader, std::string_view const key)
 {
-public:
-    constexpr ScopedValue(ReaderType& reader, std::string_view const key) 
-    :   mReader(reader) 
-    {
-        mReader.beginValue(key);
-    }
+    return ScopedAction([&reader]{ reader.endValue(); }, [&reader, key]{ reader.beginValue(key); });
+}
 
-    constexpr ScopedValue(ScopedValue const&) = delete;
-    constexpr ScopedValue(ScopedValue&&) = delete;
+auto makeScopedSequence(concepts::Reader auto& reader, std::optional<std::size_t> const size = std::nullopt)
+{
+    return ScopedAction([&reader] { reader.endSequence(); }, [&reader, size] { reader.beginSequence(size); });
+}
 
-    constexpr ScopedValue operator=(ScopedValue const&) = delete;
-    constexpr ScopedValue operator=(ScopedValue&&) = delete;
+auto makeScopedComposite(concepts::Reader auto& reader)
+{
+    return ScopedAction([&reader] { reader.endComposite(); }, [&reader] { reader.beginComposite(); });
+}
 
-    constexpr ~ScopedValue()
-    {
-        mReader.endValue();
-    }
-
-private:
-    ReaderType& mReader;
-};
+auto makeScopedNullable(concepts::Reader auto& reader)
+{
+    return ScopedAction([&reader] { reader.endNullable(); }, [&reader] { return reader.beginNullable(); });
+}
 
 template<concepts::Reader ReaderType>
 class ReadSerialiser
@@ -52,7 +50,7 @@ public:
     [[nodiscard]] ReaderType const& reader() const noexcept { return mReader; }
 
     /// \name Deserialise
-    ///     Custom deserialise function specialisations should deserialise sub-members via the writes serialisers
+    ///     Custom deserialise function specialisations should deserialise sub-members via the readers deserialisers
     ///     methods.  This allows breaking of cirular dependencies in the dispatching of deserialisation calls and
     ///     delays look up of the actual deserialisation call to the second phase of the two-phase lookup. With the
     ///     dependency broken the actual underlying calls dispatch to the deserialise customisation point object which

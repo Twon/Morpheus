@@ -29,7 +29,7 @@ class MORPHEUSCORE_EXPORT JsonReader
 {
 public:
     /// \class Exception
-    /// 
+    ///     Exception type to be thrown for errors when parsing JSON.
     class Exception : public std::runtime_error {
     public:
         using std::runtime_error::runtime_error;
@@ -38,6 +38,8 @@ public:
     static constexpr bool canBeTextual() { return true; }
     static constexpr bool isTextual() { return true; }
 
+    /// Json reader take in a stream of json to extract data members from.
+    /// \param[in] stream Stream used to read in the json source.  This must outlive the reader as its held by referece.
     explicit JsonReader(std::istream& stream);
     ~JsonReader();
 
@@ -47,6 +49,8 @@ public:
     void endValue();
     void beginSequence(std::optional<std::size_t> = std::nullopt);
     void endSequence();
+    bool beginNullable();
+    void endNullable();
 
     template<typename T> requires std::is_same_v<T, bool>
     T read()

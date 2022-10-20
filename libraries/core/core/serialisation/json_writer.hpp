@@ -31,6 +31,8 @@ public:
     void endValue();
     void beginSequence(std::optional<std::size_t> = std::nullopt);
     void endSequence();
+    void beginNullable(bool const null);
+    void endNullable();
 
     void write(bool const value);
     void write(std::uint8_t const value);

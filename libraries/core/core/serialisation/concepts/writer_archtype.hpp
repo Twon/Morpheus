@@ -23,7 +23,9 @@ struct WriterArchtype
     consteval void endValue();
     consteval void beginSequence(std::optional<std::size_t> = std::nullopt);
     consteval void endSequence();
-    
+    consteval void beginNullable(bool const null);
+    consteval void endNullable();
+
     template <typename T> requires std::is_arithmetic_v<T>
     consteval void write(T const value);
 

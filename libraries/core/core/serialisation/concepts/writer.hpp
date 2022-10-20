@@ -24,6 +24,8 @@ concept Writer = requires(T t)
     { t.endComposite() } -> std::same_as<void>;
     { t.beginValue(std::string_view{}) } -> std::same_as<void>;
     { t.endValue() } -> std::same_as<void>;
+    { t.beginNullable(bool{}) } -> std::same_as<void>;
+    { t.endNullable() } -> std::same_as<void>;
 
     { t.write(bool{}) } -> std::same_as<void>;
     { t.write(std::uint8_t{}) } ->std::same_as<void>;

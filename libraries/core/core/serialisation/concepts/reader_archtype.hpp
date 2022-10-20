@@ -23,6 +23,8 @@ struct ReaderArchtype
     consteval void endValue();
     consteval void beginSequence(std::optional<std::size_t> = std::nullopt);
     consteval void endSequence();
+    consteval bool beginNullable();
+    consteval void endNullable();
 
     template <typename T> requires std::is_arithmetic_v<T>
     consteval T read();

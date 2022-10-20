@@ -7,6 +7,7 @@ target_sources(MorpheusCore
         platform.hpp
         prerequisites.hpp
         sanitizers.hpp
+        scoped_action.hpp
         unreachable.hpp
         verify.hpp
     PRIVATE

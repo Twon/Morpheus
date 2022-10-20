@@ -96,6 +96,20 @@ TEST_CASE("Json writer can write simple composite types to underlying text repre
                 REQUIRE(strStream.str() == "{}");
             }
         }
+        WHEN("Writing an empty composite")
+        {
+            writer.beginComposite();
+            writer.beginValue("x");
+            writer.beginNullable(true);
+            writer.endNullable();
+            writer.endValue();
+            writer.endComposite();
+
+            THEN("Expect an null composite in the json document")
+            {
+                REQUIRE(strStream.str() == R"({"x":null})");
+            }
+        }
         WHEN("Writing an simple composite with single value")
         {
             writer.beginComposite();
@@ -138,6 +152,15 @@ TEST_CASE("Json writer can write simple sequence types to underlying text repres
         std::ostringstream strStream;
         JsonWriter writer{ strStream };
 
+        WHEN("Writing an simple value")
+        {
+            writer.write("value");
+
+            THEN("Expect an empty composite in the json document")
+            {
+                REQUIRE(strStream.str() == R"("value")");
+            }
+        }
         WHEN("Writing an empty sequence")
         {
             writer.beginSequence();
@@ -227,6 +250,7 @@ TEST_CASE("Json writer can write std types to underlying text representation", "
 {
     REQUIRE(test::serialise(std::pair<int, bool>{50, true}) == R"([50,true])");
     REQUIRE(test::serialise(std::tuple<int, bool, std::string>{75, true, "Example"}) == R"([75,true,"Example"])");
+    REQUIRE(test::serialise(std::variant<int, bool, std::string>{true}) == R"({"type":"bool","value":true})");
 }
 
 } // namespace morpheus::serialisation

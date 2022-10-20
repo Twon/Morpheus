@@ -97,7 +97,8 @@ struct JsonExtracter : rapidjson::BaseReaderHandler<rapidjson::UTF8<>, JsonExtra
 
 JsonReader::EventValue JsonReader::getNext()
 {
-    mJsonReader.IterativeParseNext<rapidjson::kParseCommentsFlag | rapidjson::kParseNanAndInfFlag>(mStream, *mExtractor);
+    using namespace rapidjson;
+    mJsonReader.IterativeParseNext<kParseCommentsFlag | kParseNanAndInfFlag | kParseValidateEncodingFlag >(mStream, *mExtractor);
     if (mJsonReader.HasParseError())
     {
         rapidjson::ParseErrorCode const c = mJsonReader.GetParseErrorCode();
@@ -157,6 +158,20 @@ void JsonReader::endSequence()
 {
     auto const [event, next] = getNext();
     MORPHEUS_VERIFY(event == Event::EndSequence);
+}
+
+bool JsonReader::beginNullable()
+{
+    auto const [event, next] = getNext();
+    //if (null)
+    //    beginComposite();
+    MORPHEUS_VERIFY(event == Event::Value);
+    return !next;
+}
+
+void JsonReader::endNullable()
+{
+
 }
 
 }
