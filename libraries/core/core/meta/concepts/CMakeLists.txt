@@ -1,5 +1,6 @@
 target_sources(MorpheusCore
     PUBLIC
-        is_specialisation.hpp
-        is_string.hpp
+        complete.hpp
+        constructible.hpp
+        string.hpp
 )
