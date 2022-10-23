@@ -26,10 +26,10 @@ using CpuidResults = std::array<uint32_t, 4>;
  */
 using CpuidLeafs = std::vector<CpuidResults>;
 
-/*! \class cpu
-        This type stores information about the capabilities of the central processing unit of the current target
-        system.
- */
+/// \class cpu
+///     This type stores information about the capabilities of the central processing unit of the current target
+///     system.
+///
 class MORPHEUSCORE_EXPORT Cpu {
 public:
     //! Default constructor.

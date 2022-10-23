@@ -7,11 +7,17 @@ target_sources(MorpheusCore
         platform.hpp
         prerequisites.hpp
         sanitizers.hpp
+        scoped_action.hpp
         unreachable.hpp
         verify.hpp
     PRIVATE
         assert.cpp
         debugging.cpp
+)
+
+target_link_libraries(MorpheusCore
+    PRIVATE
+        Boost::unit_test_framework
 )
 
 target_sources(MorpheusCoreTests
