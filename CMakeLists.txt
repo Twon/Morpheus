@@ -19,7 +19,7 @@ include(CMakeDependentOption)
 include(CMakePackageConfigHelpers)
 
 cmake_dependent_option(MORPHEUS_CODE_COVERAGE "Enable code coverage" ON "\"${CMAKE_CXX_COMPILER_ID}\" STREQUAL \"Clang\" OR \"${CMAKE_CXX_COMPILER_ID}\" STREQUAL \"GNU\"" OFF)
-
+cmake_dependent_option(MORPHEUS_INCLUDE_NATVIS "Enable inclusion of a natvis files for debugging" ON "\"${CMAKE_CXX_COMPILER_ID}\" STREQUAL \"MSVC\"" OFF)
 
 set(BUILD_SHARED_LIBS YES)
 
@@ -27,7 +27,7 @@ set(BUILD_SHARED_LIBS YES)
 list(APPEND CMAKE_MODULE_PATH
     ${CMAKE_BINARY_DIR}
     ${PROJECT_SOURCE_DIR}/cmake
-    ${PROJECT_SOURCE_DIR}/cmake/Modules
+    ${PROJECT_SOURCE_DIR}/cmake/modules
 )
 
 #------------------------------------------------------------------------------------------------------------------------------------------

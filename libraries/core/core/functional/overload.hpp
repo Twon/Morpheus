@@ -17,7 +17,7 @@ struct Overload : Ts... {
 template<class... Ts> Overload(Ts...)->Overload<Ts...>;
 
 template <class... Ts>
-auto makeVisitor(Ts... ts)
+auto makeVisitor(Ts&&... ts)
 {
     return Overload<Ts...>(std::forward<Ts>(ts)...);
 }

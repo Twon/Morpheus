@@ -5,6 +5,21 @@
 
 namespace morpheus
 {
+/*
+template<std::invocable ExitAction, typename EntryAction>
+class [[nodiscard, maybe_unused]] ScopedAction;
+
+template<std::invocable ExitAction, typename EntryReturn, class... EntryArgTypes>
+class [[nodiscard, maybe_unused]] ScopedAction<ExitAction, EntryReturn(EntryArgTypes...)>
+{
+public:
+    constexpr ScopedAction(ExitAction onExit, std::invocable<EntryReturn(EntryArgTypes...)> auto initial)
+    :   mAction(std::move(onExit))
+    {
+        initial();
+    }
+*/
+
 template<std::invocable ExitAction>
 class [[nodiscard, maybe_unused]] ScopedAction;
 
