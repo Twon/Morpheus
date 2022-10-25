@@ -37,6 +37,7 @@ add_subdirectory(conformance)
 add_subdirectory(concurrency)
 add_subdirectory(gfx)
 add_subdirectory(functional)
+add_subdirectory(memory)
 add_subdirectory(meta)
 add_subdirectory(serialisation)
 
@@ -49,14 +50,18 @@ target_include_directories(MorpheusCoreTests
         ${CMAKE_CURRENT_LIST_DIR}/..
 )
 
-#target_compile_definitions(MorpheusCore
-#    PUBLIC
+target_compile_definitions(MorpheusCore
+    PUBLIC
 #         MORPHEUS_SHARED_BUILD=1
 #         MORPHEUS_DLL_EXPORTS=1
-#)
+#        HAS_ITERATOR_DEBUGGING=0
+#        _ITERATOR_DEBUG_LEVEL=0
+)
 
 target_compile_options(MorpheusCore
     PRIVATE
+#        $<$<CXX_COMPILER_ID:MSVC>:/fsanitize=address>
+#        $<$<CXX_COMPILER_ID:GNUC>:-fsanitize=address>
 #        -enable-hosted-libstdcxx
 	    $<$<CXX_COMPILER_ID:MSVC>:/wd4251> # class 'foo' needs to have dll-interface to be used by clients of class 'bar'
 )

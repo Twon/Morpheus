@@ -1,28 +1,27 @@
 #pragma once
 
-#include "core/meta/is_specialisation.hpp"
+#include "core/conformance/ranges.hpp"
 #include "core/serialisation/concepts/read_serialiser.hpp"
 #include "core/serialisation/concepts/read_serialisable.hpp"
 #include "core/serialisation/concepts/write_serialiser.hpp"
 #include "core/serialisation/concepts/write_serialisable.hpp"
-#include <tuple>
 
 namespace morpheus::serialisation::detail
 {
 
-template <typename T>
-concept IsStdTuple = meta::IsSpecialisationOf<std::tuple, T>;
+//template <typename T>
+//concept IsRange = meta::IsSpecialisationOf<std::tuple, T>;
 
-template<concepts::WriteSerialiser Serialiser, concepts::WriteSerialisable... T>
-void serialise(Serialiser& serialiser, std::tuple<T...> const& value)
+template<concepts::WriteSerialiser Serialiser, ranges::range T>
+void serialise(Serialiser& serialiser, auto const& range)
 {
-    serialiser.serialise(std::tuple_size<std::tuple<T...>>::value, [&]()
+    serialiser.serialise(ranges::size(range), [&]()
     {
-        std::apply([&serialiser](auto const&... ts) { (serialiser.serialise(ts), ...); }, value);
+        ranges::for_each(range, [&serialiser](auto const& element) { serialiser.serialise(element); });
     });
 }
 
-template<concepts::ReadSerialiser Serialiser, IsStdTuple T>
+template<concepts::ReadSerialiser Serialiser, ranges::range T>
 T deserialise(Serialiser& serialiser)
 {
     constexpr std::size_t size = std::tuple_size<T>::value;

@@ -46,8 +46,13 @@ public:
     :   mReader(std::forward<Args>(args)...) 
     {}
 
+#if (__cpp_explicit_this_parameter >= 202110)
+    template<typename Self>
+    [[nodiscard]] auto& reader(this Self&& self) noexcept { return self.mReader; }
+#else
     [[nodiscard]] ReaderType& reader() noexcept { return mReader; }
     [[nodiscard]] ReaderType const& reader() const noexcept { return mReader; }
+#endif // (__cpp_explicit_this_parameter >= 202110)
 
     /// \name Deserialise
     ///     Custom deserialise function specialisations should deserialise sub-members via the readers deserialisers
@@ -68,6 +73,26 @@ public:
     /// \return The deserialises value.
     template<typename T>
     [[nodiscard]] T deserialise(std::string_view const key);
+
+    /// Deserialise a sequence of values
+    /// \tparam T The underlying type of sequence to deserialise.
+    /// \param[in] size The number of entries in the sequence to serialise.
+    /// \param[in] f The command deserialising the sequence of values.
+    template<typename T>
+    [[nodiscard]] T deserialise(std::size_t size, std::invocable auto f);
+
+    /// Deserialise a related set of values in a composite.
+    /// \tparam T The underlying type of composite to deserialise.
+    /// \param[in] f The command deserialising the composite values.
+    template<typename T>
+    [[nodiscard]] T deserialise(std::invocable auto f);
+
+    /// Deserialise a nullable value
+    /// \tparam T The underlying type of nullable to deserialise.
+    /// \param[in] null If the nullable value is null or set.
+    /// \param[in] f The command deserialising the nullable values.
+    template<typename T>
+    [[nodiscard]] T deserialise(bool const null, std::invocable auto f = []{});
     ///@}
 private:
     ReaderType mReader;
