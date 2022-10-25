@@ -21,7 +21,7 @@ if(WIN32)
 #    option(WIL_BUILD_TESTS "Sets option to build the unit tests, default on" ON)
     FetchContent_Declare(
         wil
-        GIT_REPOSITORY git@github.com:microsoft/wil.git
+        GIT_REPOSITORY https://github.com/microsoft/wil.git
     )
     FetchContent_MakeAvailable(wil)
 endif()
