@@ -7,7 +7,11 @@
 namespace morpheus::serialisation
 {
 
-TEST_CASE("Verify serialisation of std::pair", "[morpheus.serialisation.pair]")
+TEST_CASE("Verify serialisation of std::pair", "[morpheus.serialisation.pair.serialise]")
+{
+}
+
+TEST_CASE("Verify deserialisation of std::pair", "[morpheus.serialisation.pair.deserialise]")
 {
 }
 

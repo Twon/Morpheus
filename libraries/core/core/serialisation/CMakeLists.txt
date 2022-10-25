@@ -18,6 +18,9 @@ target_sources(MorpheusCore
 target_sources(MorpheusCoreTests
     PRIVATE
         concept_checks.tests.cpp
+        directive.hpp
+        directive_reader.hpp
+        directive_writer.hpp
         json_reader.tests.cpp
         json_writer.tests.cpp
         read_serialiser.tests.cpp

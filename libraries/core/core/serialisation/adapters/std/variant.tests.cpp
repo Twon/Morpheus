@@ -1,4 +1,7 @@
 #include "core/serialisation/adapters/std/variant.hpp"
+#include "core/serialisation/directive.hpp"
+#include "core/serialisation/directive_readder.hpp"
+#include "core/serialisation/directive_writer.hpp"
 
 #include <catch2/catch_all.hpp>
 

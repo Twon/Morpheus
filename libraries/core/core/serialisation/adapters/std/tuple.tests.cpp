@@ -1,4 +1,7 @@
 #include "core/serialisation/adapters/std/tuple.hpp"
+#include "core/serialisation/directive.hpp"
+#include "core/serialisation/directive_reader.hpp"
+#include "core/serialisation/directive_writer.hpp"
 
 #include <catch2/catch_all.hpp>
 
