@@ -3,6 +3,7 @@ add_executable(RenderTriangle main.cpp)
 target_link_libraries(RenderTriangle
     PRIVATE
         MorpheusCore
+        MorpheusRenderSystemGL4
 )
 
 set_target_properties(RenderTriangle

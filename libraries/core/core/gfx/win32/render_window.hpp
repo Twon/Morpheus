@@ -3,21 +3,38 @@
 #include <core/base/prerequisites.hpp>
 #include <core/gfx/render_window.hpp>
 
+#include <wil/resource.h>
+#include <string>
+
 namespace morpheus::gfx::win32
 {
 
 /*! \class render_window
         A specialisation of the render window for the Windows platform based on the Win32 API.
  */
-class MORPHEUSCORE_EXPORT RenderWindow : private gfx::RenderWindow {
+class MORPHEUSCORE_EXPORT RenderWindow : protected gfx::RenderWindow {
 public:
-    using Config = gfx::Config;
+    using Config = gfx::RenderWindow::Config;
 
     RenderWindow(Config const config = Config{});
     ~RenderWindow();
 
+    //    bool isHidden() const noexcept
+    //    bool isFocus() const noexcept
+    bool isFullScreen() const noexcept { return gfx::RenderWindow::isFullScreen(); }
+    //    bool isVisible() const noexcept
+
+    //    void isHidden(bool const hidden) const noexcept
+    //    void isFocus(bool const focus) const noexcept
+    //    void isVisible(bool const visible) const noexcept
+
 private:
-    HWND mWindow; /// OS window handle
+    friend LRESULT WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+
+    void resize();
+
+    wil::unique_hwnd mWindow;/// OS window handle
+    std::string mWindowName;
 };
 
 } // namespace morpheus::gfx::win32

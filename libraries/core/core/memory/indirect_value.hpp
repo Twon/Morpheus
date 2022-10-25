@@ -33,17 +33,15 @@ struct copier_traits_deleter_base<U* (*)(V)> {
 
 // The user may specialize copier_traits<T> per [namespace.std]/2.
 template <class T>
-struct copier_traits
-    : copier_traits_deleter_base<T, void> {
-};
+struct copier_traits : copier_traits_deleter_base<T, void> {};
 
 /// \class bad_indirect_value_access
 ///     Exception type thrown upon a accessing an indirect_value with no underlying value assigned.
 class bad_indirect_value_access : public std::exception {
- public:
-  const char* what() const noexcept override {
-    return "bad_indirect_value_access";
-  }
+public:
+    const char* what() const noexcept override {
+        return "bad_indirect_value_access";
+    }
 };
 
 namespace detail
@@ -249,20 +247,20 @@ public:
                                                      std::is_nothrow_default_constructible_v<deleter_type>) 
         requires(std::is_default_constructible_v<copier_type> && not std::is_pointer_v<copier_type> &&
                  std::is_default_constructible_v<deleter_type> && not std::is_pointer_v<deleter_type>)
-    :   base_type(t) 
+    :   base_type{t}
     {}
 
     constexpr explicit indirect_value(T* t, copier_type c) noexcept(std::is_nothrow_move_constructible_v<copier_type>&&
                                                                     std::is_nothrow_default_constructible_v<deleter_type>)
         requires(std::is_move_constructible_v<copier_type> &&
                  std::is_default_constructible_v<deleter_type> && not std::is_pointer_v<deleter_type>)
-    :   base_type(t, std::move(c))
+    :   base_type{t, std::move(c)}
     {}
 
     constexpr explicit indirect_value(T* t, copier_type c, deleter_type d) noexcept(std::is_nothrow_move_constructible_v<copier_type>&&
                                                                                     std::is_nothrow_move_constructible_v<deleter_type>)
         requires(std::is_move_constructible_v<copier_type> && std::is_move_constructible_v<deleter_type>)
-    :   base_type(t, std::move(c), std::move(d))
+    : base_type{ t, std::move(c), std::move(d) }
     {}
 
     constexpr ~indirect_value() { reset(); }
