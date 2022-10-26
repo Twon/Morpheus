@@ -1,6 +1,6 @@
-#include <core/gfx/render_system_factory.hpp>
-#include <core/gfx/win32/render_window.hpp>
-#include <gl4/render_system.hpp>
+#include <morpheus/gfx/gl4/render_system.hpp>
+#include <morpheus/gfx/platform/render_system_factory.hpp>
+#include <morpheus/gfx/platform/win32/render_window.hpp>
 
 using namespace morpheus::gfx;
 

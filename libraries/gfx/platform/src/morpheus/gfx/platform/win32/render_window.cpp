@@ -1,6 +1,6 @@
-#include <core/base/assert.hpp>
-#include <core/base/verify.hpp>
-#include <core/gfx/win32/render_window.hpp>
+#include <morpheus/core/base/assert.hpp>
+#include <morpheus/core/base/verify.hpp>
+#include <morpheus/gfx/platform/win32/render_window.hpp>
 
 #include <boost/numeric/conversion/cast.hpp>
 #include <algorithm>

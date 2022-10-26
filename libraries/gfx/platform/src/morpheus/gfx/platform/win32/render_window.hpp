@@ -12,7 +12,7 @@ namespace morpheus::gfx::win32
 /*! \class render_window
         A specialisation of the render window for the Windows platform based on the Win32 API.
  */
-class MORPHEUSCORE_EXPORT RenderWindow : protected gfx::RenderWindow {
+class RenderWindow : protected gfx::RenderWindow {
 public:
     using Config = gfx::RenderWindow::Config;
 

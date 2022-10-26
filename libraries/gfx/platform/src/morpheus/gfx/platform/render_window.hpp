@@ -1,8 +1,8 @@
 #pragma once
 
-#include <core/base/platform.hpp>
-#include <core/base/prerequisites.hpp>
-#include <core/gfx/render_target.hpp>
+#include <morpheus/core/base/platform.hpp>
+#include <morpheus/core/base/prerequisites.hpp>
+#include <morpheus/gfx/platform/render_target.hpp>
 
 #include <boost/program_options/options_description.hpp>
 #include <string>
@@ -40,7 +40,7 @@ struct WindowConfig
         A render window is a specialisation of a render target within the native windowing system
         of the target platform.
  */
-class MORPHEUSCORE_EXPORT RenderWindow : protected RenderTarget  {
+class RenderWindow : protected RenderTarget  {
 public:
     using Config = WindowConfig;
 

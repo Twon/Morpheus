@@ -2,8 +2,8 @@ add_executable(RenderTriangle main.cpp)
 
 target_link_libraries(RenderTriangle
     PRIVATE
-        morpheus::core
         morpheus::gfx::platform
+        morpheus::gfx::gl4
 )
 
 set_target_properties(RenderTriangle
