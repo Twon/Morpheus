@@ -3,7 +3,6 @@ include(FetchContent)
 
 find_package(Boost REQUIRED)
 find_package(fmt REQUIRED)
-find_package(indirect_value REQUIRED)
 find_package(Microsoft.GSL REQUIRED)
 
 FetchContent_Declare(
