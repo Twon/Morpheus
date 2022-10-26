@@ -3,12 +3,10 @@
 namespace morpheus::gfx
 {
 
-//---------------------------------------------------------------------------------------------------------------------
-
 RenderTarget::RenderTarget(
-    const std::uint32_t width,
-    const std::uint32_t height,
-    const std::uint32_t colourDepth
+    std::uint16_t const width,
+    std::uint16_t const height,
+    std::uint16_t const colourDepth
 )
 :   mWidth(width),
     mHeight(height),
@@ -16,12 +14,5 @@ RenderTarget::RenderTarget(
 {
 }
 
-//---------------------------------------------------------------------------------------------------------------------
-
-RenderTarget::~RenderTarget()
-{
-}
-
-//---------------------------------------------------------------------------------------------------------------------
 
 } // namespace morpheus::gfx

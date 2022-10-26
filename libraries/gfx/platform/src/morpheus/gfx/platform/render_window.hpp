@@ -1,31 +1,48 @@
 #pragma once
 
-#include <morpheus/core/base/prerequisites.hpp>
-#include <morpheus/gfx/platform/render_target.hpp>
-#include <cstdint>
+#include <core/base/platform.hpp>
+#include <core/base/prerequisites.hpp>
+#include <core/gfx/render_target.hpp>
+
+#include <boost/program_options/options_description.hpp>
 #include <string>
 
 namespace morpheus::gfx
 {
 
-struct Config
+struct WindowConfig
 {
-    std::string windowName; /// The name of the window.
+    std::string windowName = "MorpheusWindow"; /// The name of the window.
     std::uint16_t width = 800; /// The width in pixels of the render target.
     std::uint16_t height = 600; /// The height in pixels of the render target.
     std::uint16_t colourDepth = 32; /// The colour depth of the pixels of the render target.
     std::uint16_t startX = 0; /// The starting X position in pixels of the render window.
     std::uint16_t startY = 0; /// The starting Y position in pixels of the render window.
     bool isFullScreen = false; /// Start the window in full screen mode.
+
+    void addOptions(boost::program_options::options_description& options)
+    {
+        namespace po = boost::program_options;
+        // clang-format off
+        options.add_options()
+            ("window-name", po::value(&windowName)->required(), "The title of the Window.")
+            ("width", po::value(&width)->required(), "Width in pixels of the window.")
+            ("height", po::value(&height)->required(), "Height in pixels of the window.")
+            ("colour-depth", po::value(&colourDepth)->required(), "Colour depth in bits per pixel.")
+            ("start-x", po::value(&startX)->default_value(startX), "Starting pixel in the x-dimension for the Window.")
+            ("start-y", po::value(&startY)->default_value(startY), "Starting pixel in the y-dimension for the Window.")
+            ("full-screen", po::value(&isFullScreen)->default_value(isFullScreen), "Is the window to be started in full screen modde");
+        // clang-format on
+    }
 };
 
 /*! \class render_window
         A render window is a specialisation of a render target within the native windowing system
         of the target platform.
  */
-class RenderWindow : public RenderTarget  {
+class MORPHEUSCORE_EXPORT RenderWindow : protected RenderTarget  {
 public:
-
+    using Config = WindowConfig;
 
 
    /// \name Life cycle
@@ -36,22 +53,24 @@ public:
     RenderWindow(Config const& config = Config{});
 
     //! Destructor
-    virtual ~RenderWindow() override;
+    ~RenderWindow();
     ///@}
 
 //    bool isHidden() const noexcept
 //    bool isFocus() const noexcept
-//    bool isFullScreen() const noexcept
+    bool isFullScreen() const noexcept { return mIsFullScreen; }
 //    bool isVisible() const noexcept
 
 //    void isHidden(bool const hidden) const noexcept
 //    void isFocus(bool const focus) const noexcept
 //    void isVisible(bool const visible) const noexcept
 
-private:
-    const std::uint32_t mStartX = 0;
-    const std::uint32_t mStartY = 0;
-    const std::string mWindowName;
+protected:
+
+    std::uint16_t mStartX = 0;
+    std::uint16_t mStartY = 0;
+    std::string mWindowName;
+    bool mIsFullScreen;
 };
 
 } // namespace morpheus::gfx

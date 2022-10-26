@@ -4,3 +4,8 @@ target_sources(MorpheusGfxPlatform
     PRIVATE
         render_window.cpp
 )
+
+target_link_libraries(MorpheusCore
+    PUBLIC
+        WIL::WIL
+)

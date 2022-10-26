@@ -33,17 +33,15 @@ struct copier_traits_deleter_base<U* (*)(V)> {
 
 // The user may specialize copier_traits<T> per [namespace.std]/2.
 template <class T>
-struct copier_traits
-    : copier_traits_deleter_base<T, void> {
-};
+struct copier_traits : copier_traits_deleter_base<T, void> {};
 
 /// \class bad_indirect_value_access
 ///     Exception type thrown upon a accessing an indirect_value with no underlying value assigned.
 class bad_indirect_value_access : public std::exception {
- public:
-  const char* what() const noexcept override {
-    return "bad_indirect_value_access";
-  }
+public:
+    const char* what() const noexcept override {
+        return "bad_indirect_value_access";
+    }
 };
 
 namespace detail

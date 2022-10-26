@@ -7,6 +7,7 @@
 #endif
 
 #if (__cpp_lib_ranges >= 202110L)
+#include <algorithm>
 #include <iterator>
 namespace morpheus { namespace ranges = std::ranges; }
 

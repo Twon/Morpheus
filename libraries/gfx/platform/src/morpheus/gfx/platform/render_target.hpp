@@ -22,35 +22,32 @@ public:
              The colour depth of the pixels of the render target.
      */
     RenderTarget(
-        const std::uint32_t width,
-        const std::uint32_t height,
-        const std::uint32_t colourDepth
+        std::uint16_t const width,
+        std::uint16_t const height,
+        std::uint16_t const colourDepth
     );
-
-    //! Destructor
-    virtual ~RenderTarget();
     ///@}
 
 
 
     //! The width in pixels of the render target.
-    [[nodiscard]] std::uint32_t width() const noexcept { return mWidth; }
+    [[nodiscard]] std::uint16_t width() const noexcept { return mWidth; }
 
     //! The height in pixels of the render target.
-    [[nodiscard]] std::uint32_t height() const noexcept { return mHeight; }
+    [[nodiscard]] std::uint16_t height() const noexcept { return mHeight; }
 
     //! The colour depth of the pixels of the render target.
-    [[nodiscard]] std::uint32_t colourDepth() const noexcept { return mColourDepth; }
+    [[nodiscard]] std::uint16_t colourDepth() const noexcept { return mColourDepth; }
 
-private:
+protected:
     /// \name Data Members
     ///@{
     //! The width in pixels of the render target.
-    std::uint32_t mWidth = 0;
+    std::uint16_t mWidth = 0;
     //! The height in pixels of the render target.
-    std::uint32_t mHeight = 0;
+    std::uint16_t mHeight = 0;
     //! The colour depth of the pixels of the render target.
-    std::uint32_t mColourDepth = 0;
+    std::uint16_t mColourDepth = 0;
     ///@}
 };
 
