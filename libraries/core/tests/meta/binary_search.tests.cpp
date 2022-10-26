@@ -1,4 +1,4 @@
-#include "core/meta/binary_search.hpp"
+#include "morpheus/core/meta/binary_search.hpp"
 
 #include <catch2/catch_all.hpp>
 #include <array>

@@ -1,7 +1,6 @@
 #pragma once
 
-#include <core/base/platform.hpp>
-#include <core/gfx/render_target.hpp>
+#include <morpheus/gfx/platform/render_target.hpp>
 #include <string>
 
 namespace morpheus::gfx
@@ -10,7 +9,7 @@ namespace morpheus::gfx
 /*! \enum pixel_format
         
  */
-enum class MORPHEUSCORE_EXPORT pixel_format : std::int32_t
+enum class pixel_format : std::int32_t
 {
     UNKNOWN,
 //    VK_FORMAT_R8_UNORM

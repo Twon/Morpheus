@@ -1,6 +1,3 @@
 add_subdirectory(core)
 add_subdirectory(gfx)
-add_subdirectory(render_systems/d3d12/d3d12)
-add_subdirectory(render_systems/gl4/gl4)
 add_subdirectory(render_systems/metal/metal)
-add_subdirectory(render_systems/vulkan/vulkan)

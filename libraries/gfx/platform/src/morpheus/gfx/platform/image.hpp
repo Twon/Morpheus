@@ -1,6 +1,6 @@
 #pragma once
 
-#include <core/base/platform.hpp>
+#include <cstdint>
 
 namespace morpheus::gfx
 {
@@ -8,7 +8,7 @@ namespace morpheus::gfx
 /*! \class image
         The image abstracts the loading and saving of images files in CPU space.
  */
-class MORPHEUSCORE_EXPORT image {
+class image {
 public:
     /// \name Life cycle
     ///@{
@@ -26,8 +26,6 @@ public:
         const std::uint32_t colourDepth
     );
     ///@}
-
-
 
     //! The width in pixels of the render target.
     constexpr std::uint32_t width() const noexcept { return mWidth; }

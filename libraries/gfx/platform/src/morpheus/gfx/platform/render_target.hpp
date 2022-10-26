@@ -1,6 +1,6 @@
 #pragma once
 
-#include <core/base/platform.hpp>
+#include <cstdint>
 
 namespace morpheus::gfx
 {
@@ -8,7 +8,7 @@ namespace morpheus::gfx
 /*! \class render_target
         A render target defined a canvas onto which a render system can draw to.
  */
-class MORPHEUSCORE_EXPORT RenderTarget {
+class RenderTarget {
 public:
 
     /// \name Life cycle

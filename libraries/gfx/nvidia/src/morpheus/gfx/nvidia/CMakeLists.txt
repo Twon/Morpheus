@@ -13,8 +13,3 @@ target_link_libraries(MorpheusGfxNVidia
 	PRIVATE
 		NVidia::NvapiHeaders
 )
-
-target_sources(MorpheusGfxNVidiaTests
-	PRIVATE
-		driver.tests.cpp
-)

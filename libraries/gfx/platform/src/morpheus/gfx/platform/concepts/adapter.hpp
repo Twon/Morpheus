@@ -1,9 +1,9 @@
 #pragma once
 
-#include "core/conformance/ranges.hpp"
-#include "core/gfx/concepts/video_mode.hpp"
-#include "core/gfx/vendor.hpp"
-#include "core/meta/concepts/string.hpp"
+#include "morpheus/gfx/platform/concepts/video_mode.hpp"
+#include "morpheus/gfx/platform/vendor.hpp"
+#include "morpheus/core/conformance/ranges.hpp"
+#include "morpheus/core/meta/concepts/string.hpp"
 #include <concepts>
 #include <string_view>
 

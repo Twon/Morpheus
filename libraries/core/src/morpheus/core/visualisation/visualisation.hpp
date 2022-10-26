@@ -1,6 +1,6 @@
 #pragma once
 
-#include <core/base/platform.hpp>
+#include <morpheus/core/base/platform.hpp>
 #include <memory>
 
 namespace morpheus::gfx
@@ -20,7 +20,7 @@ public:
     virtual ~visualisation();
 
 private:
-    std::unique_ptr<gfx::render_system> mRenderSystem;
+//    std::unique_ptr<gfx::render_system> mRenderSystem;
 };
 
 } // namespace morpheus::vis

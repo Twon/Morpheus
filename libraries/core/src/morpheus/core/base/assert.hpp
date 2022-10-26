@@ -1,7 +1,7 @@
 #pragma once
 
-#include <core/base/platform.hpp>
-#include <core/conformance/source_location.hpp>
+#include <morpheus/core/base/platform.hpp>
+#include <morpheus/core/conformance/source_location.hpp>
 
 #include <cstdint>
 #include <functional>

@@ -1,4 +1,4 @@
-#include "core/conformance/function_ref.hpp"
+#include "morpheus/core/functional/function_ref.hpp"
 
 #include <catch2/catch_all.hpp>
 

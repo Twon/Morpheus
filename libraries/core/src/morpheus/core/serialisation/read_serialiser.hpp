@@ -1,9 +1,9 @@
 #pragma once
 
-#include "core/meta/concepts/constructible.hpp"
-#include "core/serialisation/concepts/reader.hpp"
-#include "core/serialisation/read_serialiser_decl.hpp"
-#include "core/serialisation/serialise.hpp"
+#include "morpheus/core/meta/concepts/constructible.hpp"
+#include "morpheus/core/serialisation/concepts/reader.hpp"
+#include "morpheus/core/serialisation/read_serialiser_decl.hpp"
+#include "morpheus/core/serialisation/serialise.hpp"
 
 
 #include <string_view>

@@ -1,5 +1,5 @@
-#include <core/base/debugging.hpp>
-#include <core/conformance/print.hpp>
+#include "morpheus/core/base/debugging.hpp"
+#include "morpheus/core/conformance/print.hpp"
 
 #include <boost/test/debug.hpp>
 

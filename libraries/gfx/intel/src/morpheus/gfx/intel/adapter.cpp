@@ -1,6 +1,6 @@
+#include <morpheus/gfx/platform/vendor.hpp>
 #include <morpheus/gfx/intel/adapter.hpp>
-#include <core/base/verify.hpp>
-#include <core/gfx/vendor.hpp>
+#include <morpheus/core/base/verify.hpp>
 
 #include <igcl_api.h>
 #include <Windows.h>
@@ -21,12 +21,8 @@ concurrency::Generator<Adapter> enumerateAdapters()
     ctl_api_handle_t hAPIHandle = nullptr;
 
     std::uint32_t adapterCount = 0;
-    auto results = ctlInit(&ctlInitArgs, &hAPIHandle);
-    MORPHEUS_VERIFY(results == CTL_RESULT_SUCCESS);
-//    MORPHEUS_VERIFY(ctlInit(&ctlInitArgs, &hAPIHandle) == CTL_RESULT_SUCCESS);
-    results = ctlEnumerateDevices(hAPIHandle, &adapterCount, nullptr);
-    MORPHEUS_VERIFY(results == CTL_RESULT_SUCCESS);
-//    MORPHEUS_VERIFY(ctlEnumerateDevices(hAPIHandle, &adapterCount, nullptr) == CTL_RESULT_SUCCESS);
+    MORPHEUS_VERIFY(ctlInit(&ctlInitArgs, &hAPIHandle) == CTL_RESULT_SUCCESS);
+    MORPHEUS_VERIFY(ctlEnumerateDevices(hAPIHandle, &adapterCount, nullptr) == CTL_RESULT_SUCCESS);
 
     std::vector<ctl_device_adapter_handle_t> devices(adapterCount);
     MORPHEUS_VERIFY(ctlEnumerateDevices(hAPIHandle, &adapterCount, devices.data()) == CTL_RESULT_SUCCESS);

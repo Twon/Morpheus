@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core/serialisation/concepts/reader_archtype.hpp"
+#include "morpheus/core/serialisation/concepts/reader_archtype.hpp"
 
 #include <type_traits>
 

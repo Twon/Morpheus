@@ -1,7 +1,7 @@
 #pragma once
 
-#include "core/meta/concepts/aggregate.hpp"
-#include "core/serialisation/concepts/write_serialiser.hpp"
+#include "morpheus/core/meta/concepts/aggregate.hpp"
+#include "morpheus/core/serialisation/concepts/write_serialiser.hpp"
 
 #include <boost/pfr/ops.hpp>
 #include <boost/pfr/tuple_size.hpp>

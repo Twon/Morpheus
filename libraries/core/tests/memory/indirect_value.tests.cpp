@@ -1,4 +1,4 @@
-#include "core/memory/indirect_value.hpp"
+#include "morpheus/core/memory/indirect_value.hpp"
 
 #include <catch2/catch_all.hpp>
 

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "core/serialisation/write_serialiser_decl.hpp"
-#include "core/serialisation/serialise.hpp"
+#include "morpheus/core/serialisation/write_serialiser_decl.hpp"
+#include "morpheus/core/serialisation/serialise.hpp"
 
 namespace morpheus::serialisation
 {

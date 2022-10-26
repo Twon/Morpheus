@@ -1,6 +1,6 @@
 #pragma once
 
-#include <core/conformance/version.hpp>
+#include <morpheus/core/conformance/version.hpp>
 #include <concepts>
 
 #if (__cpp_lib_function_ref >= 202202L)

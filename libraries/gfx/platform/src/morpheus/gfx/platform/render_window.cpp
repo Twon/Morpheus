@@ -1,4 +1,4 @@
-#include <core/gfx/render_window.hpp>
+#include <morpheus/gfx/platform/render_window.hpp>
 
 namespace morpheus::gfx
 {

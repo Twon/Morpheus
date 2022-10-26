@@ -1,4 +1,4 @@
-#include <core/gfx/textures/image.hpp>
+#include <morpheus/gfx/platform/image.hpp>
 
 namespace morpheus::gfx
 {

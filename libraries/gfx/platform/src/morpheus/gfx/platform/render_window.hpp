@@ -1,8 +1,8 @@
 #pragma once
 
-#include <core/base/platform.hpp>
-#include <core/base/prerequisites.hpp>
-#include <core/gfx/render_target.hpp>
+#include <morpheus/core/base/prerequisites.hpp>
+#include <morpheus/gfx/platform/render_target.hpp>
+#include <cstdint>
 #include <string>
 
 namespace morpheus::gfx
@@ -23,7 +23,7 @@ struct Config
         A render window is a specialisation of a render target within the native windowing system
         of the target platform.
  */
-class MORPHEUSCORE_EXPORT RenderWindow : public RenderTarget  {
+class RenderWindow : public RenderTarget  {
 public:
 
 

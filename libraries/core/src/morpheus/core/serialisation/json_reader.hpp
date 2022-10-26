@@ -1,7 +1,7 @@
 #pragma once
 
-#include "core/base/assert.hpp"
-#include "core/functional/overload.hpp"
+#include "morpheus/core/base/assert.hpp"
+#include "morpheus/core/functional/overload.hpp"
 
 #include <boost/numeric/conversion/cast.hpp>
 

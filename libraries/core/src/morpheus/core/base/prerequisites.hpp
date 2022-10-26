@@ -1,6 +1,6 @@
 #pragma once
 
-#include <core/base/platform.hpp>
+#include <morpheus/core/base/platform.hpp>
 
 #if (MORPHEUS_BUILD_PLATFORM==MORPHEUS_TARGET_PLATFORM_PC_WINDOWS)
 #define NOMINMAX

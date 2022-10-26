@@ -1,4 +1,4 @@
-#include "core/gfx/vendor.hpp"
+#include "morpheus/gfx/platform/vendor.hpp"
 
 namespace morpheus::gfx
 {

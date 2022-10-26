@@ -1,7 +1,5 @@
 #pragma once
 
-#include <core/base/platform.hpp>
-
 namespace morpheus::gfx
 {
 
@@ -9,7 +7,7 @@ namespace morpheus::gfx
 ///     The render system factory manages the available render systems for a target system.
 ///     Supported render systems can be queried and specfic type can be instantiated to
 ///     render visualalisation with.
-class MORPHEUSCORE_EXPORT render_system_factory {
+class render_system_factory {
 public:
     /// \name Life cycle
     ///@{

@@ -1,8 +1,8 @@
 #pragma once
 
-#include "core/base/scoped_action.hpp"
-#include "core/meta/concepts/constructible.hpp"
-#include "core/serialisation/concepts/reader.hpp"
+#include "morpheus/core/base/scoped_action.hpp"
+#include "morpheus/core/meta/concepts/constructible.hpp"
+#include "morpheus/core/serialisation/concepts/reader.hpp"
 
 #include <cstddef>
 #include <optional>

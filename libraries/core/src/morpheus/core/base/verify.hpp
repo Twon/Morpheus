@@ -1,6 +1,6 @@
 #pragma once
 
-#include <core/base/assert.hpp>
+#include <morpheus/core/base/assert.hpp>
 
 /// \def MORPHEUS_VERIFY
 ///     Helper macro to verify an expression succeeds.

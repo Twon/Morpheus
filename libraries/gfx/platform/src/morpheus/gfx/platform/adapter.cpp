@@ -1,4 +1,4 @@
-#include <core/gfx/adapter.hpp>
+#include <morpheus/gfx/platform/adapter.hpp>
 
 namespace morpheus::gfx
 {

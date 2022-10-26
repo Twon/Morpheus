@@ -1,4 +1,4 @@
-#include <core/world/world_model.hpp>
+#include "morpheus/core/world/world_model.hpp"
 
 namespace morpheus::world
 {

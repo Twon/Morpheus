@@ -1,6 +1,6 @@
 #pragma once
 
-#include <core/base/platform.hpp>
+#include <morpheus/core/base/platform.hpp>
 
 /// \note 
 ///     #include <version> on Windows can accidentally picks up VERSION files.  Use the old <ciso646>

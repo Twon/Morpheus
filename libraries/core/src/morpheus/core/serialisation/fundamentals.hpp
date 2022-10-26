@@ -1,8 +1,8 @@
 #pragma once
 
-#include "core/meta/is_string.hpp"
-#include "core/serialisation/concepts/read_serialisable.hpp"
-#include "core/serialisation/concepts/write_serialisable.hpp"
+#include "morpheus/core/meta/is_string.hpp"
+#include "morpheus/core/serialisation/concepts/read_serialisable.hpp"
+#include "morpheus/core/serialisation/concepts/write_serialisable.hpp"
 
 namespace morpheus::serialisation
 {

@@ -1,4 +1,5 @@
-#include <core/base/platform.hpp>
+#include "morpheus/core/base/platform.hpp"
+#include <morpheus/core/cpu.hpp>
 
 #if (MORPHEUS_IS_GCC_COMPATIBLE_COMPILER)
 #include <cpuid.h>
@@ -6,7 +7,6 @@
 #include <intrin.h>
 #endif
 
-#include <core/cpu.hpp>
 #include <algorithm>
 #include <cstring>
 

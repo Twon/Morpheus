@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core/conformance/ranges.hpp"
+#include "morpheus/core/conformance/ranges.hpp"
 #include <concepts>
 
 namespace morpheus::gfx::concepts

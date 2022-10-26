@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core/serialisation/concepts/writer.hpp"
+#include "morpheus/core/serialisation/concepts/writer.hpp"
 
 namespace morpheus::serialisation::concepts
 {

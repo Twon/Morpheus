@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core/meta/is_string.hpp"
+#include "morpheus/core/meta/is_string.hpp"
 #include <string>
 #include <type_traits>
 

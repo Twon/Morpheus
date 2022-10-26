@@ -1,7 +1,7 @@
 #pragma once
 
-#include "core/meta/concepts/constructible.hpp"
-#include "core/serialisation/concepts/writer.hpp"
+#include "morpheus/core/meta/concepts/constructible.hpp"
+#include "morpheus/core/serialisation/concepts/writer.hpp"
 
 #include <string_view>
 #include <type_traits>

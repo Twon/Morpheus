@@ -1,7 +1,7 @@
 #pragma once
 
-#include "core/serialisation/concepts/write_serialiser.hpp"
-#include "core/serialisation/concepts/write_serialisable.hpp"
+#include "morpheus/core/serialisation/concepts/write_serialiser.hpp"
+#include "morpheus/core/serialisation/concepts/write_serialisable.hpp"
 
 #include <optional>
 

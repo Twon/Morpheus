@@ -1,5 +1,5 @@
 #include <morpheus/gfx/nvidia/driver.hpp>
-#include <core/base/architecture.hpp>
+#include <morpheus/core/base/architecture.hpp>
 
 namespace morpheus::gfx::nvidia
 {

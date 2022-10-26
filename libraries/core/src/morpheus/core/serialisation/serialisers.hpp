@@ -1,11 +1,11 @@
 #pragma once
 
-#include "core/base/platform.hpp"
-#include "core/serialisation/json_writer.hpp"
-#include "core/serialisation/json_reader.hpp"
-#include "core/serialisation/serialise.hpp"
-#include "core/serialisation/read_serialiser.hpp"
-#include "core/serialisation/write_serialiser.hpp"
+#include "morpheus/core/base/platform.hpp"
+#include "morpheus/core/serialisation/json_writer.hpp"
+#include "morpheus/core/serialisation/json_reader.hpp"
+#include "morpheus/core/serialisation/serialise.hpp"
+#include "morpheus/core/serialisation/read_serialiser.hpp"
+#include "morpheus/core/serialisation/write_serialiser.hpp"
 
 namespace morpheus::serialisation
 {

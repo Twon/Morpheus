@@ -1,7 +1,7 @@
 #pragma once
 
-#include "core/base/platform.hpp"
-#include "core/gfx/vendor.hpp"
+#include "morpheus/core/base/platform.hpp"
+#include "morpheus/gfx/platform/vendor.hpp"
 
 #include <compare>
 #include <concepts>

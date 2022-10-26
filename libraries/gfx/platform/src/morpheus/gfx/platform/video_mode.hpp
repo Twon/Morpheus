@@ -1,8 +1,9 @@
 #pragma once
 
-#include <core/base/platform.hpp>
+#include <morpheus/core/base/platform.hpp>
 
 #include <compare>
+#include <cstdint>
 
 namespace morpheus::gfx
 {
@@ -10,7 +11,7 @@ namespace morpheus::gfx
 /*! \class video_mode
         A video mode describes a mode of available settings for an graphics adapter.
  */
-class MORPHEUSCORE_EXPORT VideoMode {
+class VideoMode {
 public:
     /// \name Life cycle
     ///@{
@@ -23,13 +24,21 @@ public:
              The height in pixels of the video mode.
         \param[in] colourDepth
              The colour depth of the pixels of the render target.
+        \param[in] refreshRate
+             The refresh rate of the video mode.
      */
     constexpr VideoMode(
-        const std::uint16_t width,
-        const std::uint16_t height,
-        const std::uint16_t colourDepth,
-        const std::uint16_t refreshRate
-    );
+        std::uint16_t const width,
+        std::uint16_t const height,
+        std::uint16_t const colourDepth,
+        std::uint16_t const refreshRate
+    ) noexcept
+    :   mWidth(width),
+        mHeight(height),
+        mColourDepth(colourDepth),
+        mRefreshRate(refreshRate)
+    {
+    }
     ///@}
 
 

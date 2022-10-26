@@ -1,7 +1,7 @@
 #pragma once
 
-#include <core/conformance/coro.hpp>
-#include <core/conformance/ranges.hpp>
+#include <morpheus/core/conformance/coro.hpp>
+#include <morpheus/core/conformance/ranges.hpp>
 
 #include <cassert>
 #include <iterator>

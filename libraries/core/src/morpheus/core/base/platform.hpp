@@ -3,8 +3,8 @@
 
 #pragma once
 
-#include <core/morpheuscore_export.h>
-#include <core/base/compiler.hpp>
+#include <morpheus/core/morpheuscore_export.h>
+#include <morpheus/core/base/compiler.hpp>
 #include <cstdint>
 
 // clang-format off

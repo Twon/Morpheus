@@ -1,5 +1,5 @@
-#include "core/conformance/ranges.hpp"
-#include "core/concurrency/generator.hpp"
+#include "morpheus/core/conformance/ranges.hpp"
+#include "morpheus/core/concurrency/generator.hpp"
 
 #include <catch2/catch_all.hpp>
 #include <iostream>

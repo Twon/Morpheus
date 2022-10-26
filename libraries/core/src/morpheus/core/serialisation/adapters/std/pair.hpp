@@ -1,10 +1,10 @@
 #pragma once
 
-#include "core/meta/is_specialisation.hpp"
-#include "core/serialisation/concepts/read_serialiser.hpp"
-#include "core/serialisation/concepts/read_serialisable.hpp"
-#include "core/serialisation/concepts/write_serialiser.hpp"
-#include "core/serialisation/concepts/write_serialisable.hpp"
+#include "morpheus/core/meta/is_specialisation.hpp"
+#include "morpheus/core/serialisation/concepts/read_serialiser.hpp"
+#include "morpheus/core/serialisation/concepts/read_serialisable.hpp"
+#include "morpheus/core/serialisation/concepts/write_serialiser.hpp"
+#include "morpheus/core/serialisation/concepts/write_serialisable.hpp"
 
 #include <utility>
 

@@ -1,8 +1,8 @@
 #pragma once
 
-#include "core/base/compiler.hpp"
-#include "core/conformance/version.hpp"
-#include "core/meta/concepts/complete.hpp"
+#include "morpheus/core/base/compiler.hpp"
+#include "morpheus/core/conformance/version.hpp"
+#include "morpheus/core/meta/concepts/complete.hpp"
 
 #include <concepts>
 #include <exception>
@@ -249,20 +249,20 @@ public:
                                                      std::is_nothrow_default_constructible_v<deleter_type>) 
         requires(std::is_default_constructible_v<copier_type> && not std::is_pointer_v<copier_type> &&
                  std::is_default_constructible_v<deleter_type> && not std::is_pointer_v<deleter_type>)
-    :   base_type(t) 
+    :   base_type{ t }
     {}
 
     constexpr explicit indirect_value(T* t, copier_type c) noexcept(std::is_nothrow_move_constructible_v<copier_type>&&
                                                                     std::is_nothrow_default_constructible_v<deleter_type>)
         requires(std::is_move_constructible_v<copier_type> &&
                  std::is_default_constructible_v<deleter_type> && not std::is_pointer_v<deleter_type>)
-    :   base_type(t, std::move(c))
+    :   base_type{ t, std::move(c) }
     {}
 
     constexpr explicit indirect_value(T* t, copier_type c, deleter_type d) noexcept(std::is_nothrow_move_constructible_v<copier_type>&&
                                                                                     std::is_nothrow_move_constructible_v<deleter_type>)
         requires(std::is_move_constructible_v<copier_type> && std::is_move_constructible_v<deleter_type>)
-    :   base_type(t, std::move(c), std::move(d))
+    :   base_type{ t, std::move(c), std::move(d) }
     {}
 
     constexpr ~indirect_value() { reset(); }

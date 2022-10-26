@@ -1,6 +1,6 @@
 #define CATCH_CONFIG_MAIN
-#include <core/conformance/ranges.hpp>
-#include <core/cpu.hpp>
+#include "morpheus/core/conformance/ranges.hpp"
+#include "morpheus/core/cpu.hpp"
 #include <catch2/catch_all.hpp>
 #include <algorithm>
 #include <string>

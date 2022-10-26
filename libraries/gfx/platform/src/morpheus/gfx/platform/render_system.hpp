@@ -1,6 +1,6 @@
 #pragma once
 
-#include <core/base/platform.hpp>
+#include <morpheus/core/base/platform.hpp>
 #include <string>
 
 namespace morpheus::gfx
@@ -13,7 +13,7 @@ namespace morpheus::gfx
         API and supports the creation of all graphics primitives needed to access the functionality
         of the hardware.
  */
-class MORPHEUSCORE_EXPORT render_system {
+class render_system {
 public:
 
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "core/serialisation/write_serialiser_decl.hpp"
+#include "morpheus/core/serialisation/write_serialiser_decl.hpp"
 
 #include <cstddef>
 #include <cstdint>

@@ -1,4 +1,8 @@
-add_executable(MorpheusCoreTests)
+morpheus_add_tests(
+    NAME MorpheusCoreTests
+    FOLDER "Libraries/Core"
+)
+
 target_sources(MorpheusCoreTests
     PRIVATE
         cpu.test.cpp
@@ -11,30 +15,13 @@ target_sources(MorpheusCoreTests
 #
 #)
 
-
 target_link_libraries(MorpheusCoreTests
     PRIVATE
-         Catch2::Catch2
          MorpheusCore
-)
-
-set_target_properties(MorpheusCoreTests
-    PROPERTIES
-        FOLDER "Libraries/Core"
-        ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
-        LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
-        RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
 )
 
 get_target_property(TEST_SOURCES_FILES MorpheusCoreTests SOURCES)
 source_group(TREE ${CMAKE_CURRENT_LIST_DIR} FILES ${TEST_SOURCES_FILES})
-
-add_test(
-    NAME MorpheusCoreTests
-    COMMAND MorpheusCoreTests
-    WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
-catch_discover_tests(MorpheusCoreTests)
-#add_coverage(MorpheusCoreTests)
 
 add_subdirectory(base)
 add_subdirectory(functional)
