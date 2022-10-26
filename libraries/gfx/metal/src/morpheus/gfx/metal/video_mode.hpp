@@ -1,6 +1,6 @@
 #pragma once
 
-#include <core/base/platform.hpp>
+#include <morpheus/core/base/platform.hpp>
 
 namespace morpheus::gfx
 {
@@ -8,7 +8,7 @@ namespace morpheus::gfx
 /*! \class video_mode
         A video mode describes a mode of available settings for an graphics adapter.
  */
-class MORPHEUSCORE_EXPORT video_mode {
+class video_mode {
 public:
     /// \name Life cycle
     ///@{

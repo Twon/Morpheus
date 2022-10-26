@@ -1,0 +1,10 @@
+target_sources(MorpheusGfxMetal
+    PUBLIC
+        adapter.hpp
+        metal_render_system.hpp
+        video_mode.hpp
+    PRIVATE
+        adapter.cpp
+        metal_render_system.mm
+        video_mode.cpp
+)

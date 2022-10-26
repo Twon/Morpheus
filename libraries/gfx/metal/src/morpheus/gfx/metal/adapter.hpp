@@ -1,7 +1,7 @@
 #pragma once
 
-#include <core/base/platform.hpp>
-#include <indirect_value.h>
+#include <morpheus/core/base/platform.hpp>
+#include <morpheus/core/memory/indirect_value.h>
 
 namespace morpheus::gfx::metal
 {
@@ -39,7 +39,7 @@ private:
 
     /// \name Data Members
     ///@{
-    isocpp_p1950::indirect_value<Implementation> mImpl;
+    memory::indirect_value<Implementation> mImpl;
     ///@}
 };
 
