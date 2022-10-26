@@ -1,4 +1,4 @@
-#include <metal/adapter.hpp>
+#include <morpheus/gfx/metal/adapter.hpp>
 
 namespace morpheus::gfx::metal
 {
@@ -10,17 +10,17 @@ struct Adapter::Implementation
 
 Adapter::Adapter() = default;
 Adapter::Adapter(Adapter&& rhs) noexcept = default;
-Adapter::Adapter(const Adapter& rhs) = default;
+Adapter::Adapter(Adapter const& rhs) = default;
 Adapter& Adapter::operator=(Adapter&& rhs) noexcept = default;
-Adapter& Adapter::operator=(const Adapter& rhs) = default;
+Adapter& Adapter::operator=(Adapter const& rhs) = default;
 Adapter::~Adapter() = default;
 
 //---------------------------------------------------------------------------------------------------------------------
 
 Adapter::Adapter(
-    const std::uint32_t width,
-    const std::uint32_t height,
-    const std::uint32_t colourDepth
+    std::uint32_t const width,
+    std::uint32_t const height,
+    std::uint32_t const colourDepth
 )
 {
 }

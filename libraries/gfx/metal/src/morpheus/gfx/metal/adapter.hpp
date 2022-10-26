@@ -22,17 +22,17 @@ public:
              The colour depth of the pixels of the render target.
      */
     Adapter(
-        const std::uint32_t width,
-        const std::uint32_t height,
-        const std::uint32_t colourDepth
+        std::uint32_t const width,
+        std::uint32_t const height,
+        std::uint32_t const colourDepth
     );
     ///@}
 
     Adapter();
     Adapter(Adapter&& rhs) noexcept;
-    Adapter(const Adapter& rhs);
+    Adapter(Adapter const& rhs);
     Adapter& operator=(Adapter&& rhs) noexcept;
-    Adapter& operator=(const Adapter& rhs);
+    Adapter& operator=(Adapter const& rhs);
     ~Adapter();
 private:
     class Implementation;
