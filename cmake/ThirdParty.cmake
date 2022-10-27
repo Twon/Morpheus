@@ -1,6 +1,7 @@
 include(FetchContent)
 
-
+find_package(Catch2 3 REQUIRED)
+find_package(GTest REQUIRED)
 find_package(Boost REQUIRED)
 find_package(fmt REQUIRED)
 find_package(Microsoft.GSL REQUIRED)

@@ -40,7 +40,7 @@ enum class MORPHEUSCORE_EXPORT AssertType
     Verify  /// Verify behavour calls the handler and unconditionally calls halt.
 };
 
-/// Trigger thhe global assert handler. 
+/// Triggers the global assert handler. 
 /// \param[in] location The source file location where the assert orginated.
 /// \param[in] expr String representation of the condition.
 /// \param[in] message An optional message describing the assert.

@@ -2,36 +2,37 @@ include_guard()
 
 
 #[=======================================================================[.rst:
-morpheus_add_tests
+morpheus_add_testing_library
 ------------------
 
 Overview
 ^^^^^^^^
 
-Project wrapper around add execcuable for test excuables which groups commonly 
-associates patterns and allows configuration for common optional settings
+Project wrapper for creating a library containing common testing functionality to
+be shared across test suites. Testing libraries will not be installed as part of
+the installation process
 
 .. code-block:: cmake
 
-  morpheus_add_tests(
+  morpheus_add_testing_library(
       [NAME <name>]
       [ALIAS <alias>]
       [FOLDER <folder>]
   )
-   -- Generates test executable targets with default build directories and settings. 
+   -- Generates a testing library targets with default build directories and 
+   setting. 
 
   ``NAME``
     The ``NAME`` option is required to provide the internal name for the library.
 
   ``ALIAS``
-    The ``ALIAS`` parameter can be optional provided to give the external name for 
-    the test execcutable.
+    The ``ALIAS`` option is required to provide the external name for the library.
 
   ``FOLDER``
     The ``FOLDER`` option provides a folder location for the target within an IDE.
 
 #]=======================================================================]
-function(morpheus_add_tests)
+function(morpheus_add_testing_library)
     set(options)
     set(oneValueArgs NAME ALIAS FOLDER)
     set(multiValueArgs)
@@ -39,23 +40,16 @@ function(morpheus_add_tests)
     if (NOT MORPHEUS_NAME)
         message(FATAL_ERROR "NAME parameter must be supplied")
     endif()
-    
-    add_executable(${MORPHEUS_NAME})
-    if (MORPHEUS_ALIAS)
-        add_executable(${MORPHEUS_ALIAS} ALIAS ${MORPHEUS_NAME})
+    if (NOT MORPHEUS_ALIAS)
+        message(FATAL_ERROR "ALIAS parameter must be supplied")
     endif()
+    add_library(${MORPHEUS_NAME})
+    add_library(${MORPHEUS_ALIAS} ALIAS ${MORPHEUS_NAME})
 
-    #find_package(Catch2 3 REQUIRED HINTS ${Catch2_DIR})
     target_link_libraries(${MORPHEUS_NAME}
         PRIVATE
              Catch2::Catch2
-             morpheus::core::testing
-    )
-
-    configure_file(${CMAKE_CURRENT_FUNCTION_LIST_DIR}/../testing/morpheus/catch2/main.cpp.in ${CMAKE_CURRENT_BINARY_DIR}/main.cpp @ONLY)
-    target_sources(${MORPHEUS_NAME}
-        PRIVATE
-            ${CMAKE_CURRENT_BINARY_DIR}/main.cpp
+             GTest::gmock
     )
 
     set_target_properties(${MORPHEUS_NAME}
@@ -71,14 +65,5 @@ function(morpheus_add_tests)
                 FOLDER ${MORPHEUS_FOLDER}
         )
     endif()
-
-    add_test(
-        NAME ${MORPHEUS_NAME}
-        COMMAND ${MORPHEUS_NAME}
-        WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
-
-    include(Catch)
-    catch_discover_tests(${MORPHEUS_NAME})
-    #add_coverage(MorpheusCoreTests)
 
 endfunction()
