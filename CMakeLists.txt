@@ -36,7 +36,6 @@ include(Compiler)
 include(Documentation)
 include(IDESettings)
 include(ThirdParty)
-include(Catch)
 
 enable_testing()
 

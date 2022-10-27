@@ -1,0 +1,19 @@
+target_sources(MorpheusCore
+    PUBLIC
+        cpu.hpp
+        game/game.hpp
+        world/world_model.hpp
+        visualisation/visualisation.hpp
+    PRIVATE
+        cpu.cpp
+        game/game.cpp
+        world/world_model.cpp
+        visualisation/visualisation.cpp
+)
+
+add_subdirectory(base)
+add_subdirectory(conformance)
+add_subdirectory(concurrency)
+add_subdirectory(functional)
+add_subdirectory(meta)
+add_subdirectory(serialisation)
