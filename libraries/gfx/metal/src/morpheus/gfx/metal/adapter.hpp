@@ -1,7 +1,7 @@
 #pragma once
 
 #include <morpheus/core/base/platform.hpp>
-#include <morpheus/core/memory/indirect_value.h>
+#include <morpheus/core/memory/indirect_value.hpp>
 
 namespace morpheus::gfx::metal
 {
