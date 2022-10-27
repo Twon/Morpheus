@@ -1,4 +1,4 @@
-#include <metal/adapter.hpp>
+//#include <morpheus/gfx/metal/adapter.hpp>
 #include <catch2/catch_all.hpp>
 
 namespace morpheus::gfx::metal
