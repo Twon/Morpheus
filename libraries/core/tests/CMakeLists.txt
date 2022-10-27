@@ -20,9 +20,6 @@ target_link_libraries(MorpheusCoreTests
          MorpheusCore
 )
 
-get_target_property(TEST_SOURCES_FILES MorpheusCoreTests SOURCES)
-source_group(TREE ${CMAKE_CURRENT_LIST_DIR} FILES ${TEST_SOURCES_FILES})
-
 add_subdirectory(base)
 add_subdirectory(functional)
 add_subdirectory(memory)

@@ -1,4 +1,3 @@
-#define CATCH_CONFIG_MAIN
 #include "morpheus/core/conformance/ranges.hpp"
 #include "morpheus/core/cpu.hpp"
 #include <catch2/catch_all.hpp>
