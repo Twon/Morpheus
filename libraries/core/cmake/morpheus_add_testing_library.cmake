@@ -47,7 +47,7 @@ function(morpheus_add_testing_library)
     add_library(${MORPHEUS_ALIAS} ALIAS ${MORPHEUS_NAME})
 
     target_link_libraries(${MORPHEUS_NAME}
-        PRIVATE
+        PUBLIC
              Catch2::Catch2
              GTest::gmock
     )

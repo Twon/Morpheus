@@ -8,6 +8,7 @@
 #include "morpheus/core/serialisation/concepts/read_serialisable.hpp"
 #include "morpheus/core/serialisation/concepts/write_serialiser.hpp"
 #include "morpheus/core/serialisation/concepts/write_serialisable.hpp"
+
 #include <array>
 #include <stdexcept>
 #include <typeinfo>
@@ -59,7 +60,7 @@ void serialise(Serialiser& serialiser, std::variant<T...> const& value)
         else
             serialiser.serialise("index", static_cast<std::uint64_t>(value.index()));
 
-        std::visit([&serialiser](auto const& value) { return serialiser.serialise("value", value); }, value);
+        std::visit([&serialiser](auto const& value) { serialiser.serialise("value", value); }, value);
     }
     serialiser.writer().endComposite();
 }
