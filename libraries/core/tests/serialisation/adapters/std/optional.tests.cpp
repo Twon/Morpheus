@@ -1,6 +1,6 @@
 #include "morpheus/core/serialisation/adapters/std/optional.hpp"
-#include "morpheus/core/serialisation/mock_writer.hpp"
-#include "morpheus/core/serialisation/mock_serialisers.hpp"
+#include "morpheus/core/serialisation/mock/writer.hpp"
+#include "morpheus/core/serialisation/mock/serialisers.hpp"
 
 #include <catch2/catch_all.hpp>
 #include <gmock/gmock.h>
