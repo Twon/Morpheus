@@ -23,7 +23,7 @@ TEST_CASE("Verify serialisation of std::variant", "[morpheus.serialisation.varia
         THEN("Expect the following sequence of operations on the underlying writer when serialising to text")
         {
             InSequence seq;
-            MockWriteSerialiser serialiser;
+            MockedWriteSerialiser serialiser;
             EXPECT_CALL(serialiser.writer(), beginComposite()).Times(1);
             EXPECT_CALL(serialiser.writer(), isTextual()).WillOnce(Return(true));
             EXPECT_CALL(serialiser.writer(), beginValue("type"sv)).Times(1);
@@ -47,7 +47,7 @@ TEST_CASE("Verify serialisation of std::variant", "[morpheus.serialisation.varia
         THEN("Expect the following sequence of operations on the underlying writer when serialising to text")
         {
             InSequence seq;
-            MockWriteSerialiser serialiser;
+            MockedWriteSerialiser serialiser;
             EXPECT_CALL(serialiser.writer(), beginComposite()).Times(1);
             EXPECT_CALL(serialiser.writer(), isTextual()).WillOnce(Return(true));
             EXPECT_CALL(serialiser.writer(), beginValue("type"sv)).Times(1);
@@ -72,7 +72,7 @@ TEST_CASE("Verify serialisation of std::variant", "[morpheus.serialisation.varia
         THEN("Expect the following sequence of operations on the underlying writer when serialising to text")
         {
             InSequence seq;
-            MockWriteSerialiser serialiser;
+            MockedWriteSerialiser serialiser;
             EXPECT_CALL(serialiser.writer(), beginComposite()).Times(1);
             EXPECT_CALL(serialiser.writer(), isTextual()).WillOnce(Return(false));
             EXPECT_CALL(serialiser.writer(), beginValue("index"sv)).Times(1);
@@ -96,7 +96,7 @@ TEST_CASE("Verify serialisation of std::variant", "[morpheus.serialisation.varia
         THEN("Expect the following sequence of operations on the underlying writer when serialising to text")
         {
             InSequence seq;
-            MockWriteSerialiser serialiser;
+            MockedWriteSerialiser serialiser;
             EXPECT_CALL(serialiser.writer(), beginComposite()).Times(1);
             EXPECT_CALL(serialiser.writer(), isTextual()).WillOnce(Return(false));
             EXPECT_CALL(serialiser.writer(), beginValue("index"sv)).Times(1);

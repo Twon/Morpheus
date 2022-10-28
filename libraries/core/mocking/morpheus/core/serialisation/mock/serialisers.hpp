@@ -8,7 +8,7 @@
 namespace morpheus::serialisation
 {
 
-using MockWriteSerialiser = WriteSerialiser<mock::Writer>;
-//using MockReaderSerialiser = ReadSerialiser<mock::Reader>;
+using MockedWriteSerialiser = WriteSerialiser<mock::Writer>;
+using MockedReadSerialiser = ReadSerialiser<mock::Reader>;
 
 }

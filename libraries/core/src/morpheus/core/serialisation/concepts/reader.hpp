@@ -36,7 +36,7 @@ concept Reader = requires(T t)
     { t.template read<std::int64_t>() } -> std::same_as<std::int64_t>;
     { t.template read<float>() } -> std::same_as<float>;
     { t.template read<double>() } -> std::same_as<double>;
-//    { t.template read<std::string>() } -> std::same_as<std::string>;
+    //{ t.template read<std::string_view>() } -> std::same_as<std::string>;
 };
 
 } // morpheus::serialisation::concepts

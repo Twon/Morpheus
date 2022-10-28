@@ -2,9 +2,12 @@
 
 #include <gmock/gmock.h>
 #include <cstdint>
+#include <cstddef>
 #include <optional>
 #include <span>
 #include <string_view>
+#include <string>
+#include <vector>
 
 namespace morpheus::serialisation::mock
 {
@@ -24,29 +27,28 @@ public:
     MOCK_METHOD(void, endValue, (), ());
     MOCK_METHOD(void, beginSequence, (std::optional<std::size_t>), ());
     MOCK_METHOD(void, endSequence, (), ());
-    MOCK_METHOD(void, beginNullable, (bool), ());
+    MOCK_METHOD(bool, beginNullable, (), ());
     MOCK_METHOD(void, endNullable, (), ());
 
-    MOCK_METHOD(void, read, (bool), ());
-    MOCK_METHOD(void, read, (std::uint8_t), ());
-    MOCK_METHOD(void, read, (std::int8_t), ());
-    MOCK_METHOD(void, read, (std::uint16_t), ());
-    MOCK_METHOD(void, read, (std::int16_t), ());
-    MOCK_METHOD(void, read, (std::uint32_t), ());
-    MOCK_METHOD(void, read, (std::int32_t), ());
-    MOCK_METHOD(void, read, (std::uint64_t), ());
-    MOCK_METHOD(void, read, (std::int64_t), ());
-    MOCK_METHOD(void, read, (float), ());
-    MOCK_METHOD(void, read, (double), ());
-    MOCK_METHOD(void, read, (std::string_view), ());
-    MOCK_METHOD(void, read, (std::span<std::byte>), ());
+    MOCK_METHOD(bool, read, (bool), ());
+    MOCK_METHOD(std::uint8_t, read, (std::uint8_t), ());
+    MOCK_METHOD(std::int8_t, read, (std::int8_t), ());
+    MOCK_METHOD(std::uint16_t, read, (std::uint16_t), ());
+    MOCK_METHOD(std::int16_t, read, (std::int16_t), ());
+    MOCK_METHOD(std::uint32_t, read, (std::uint32_t), ());
+    MOCK_METHOD(std::int32_t, read, (std::int32_t), ());
+    MOCK_METHOD(std::uint64_t, read, (std::uint64_t), ());
+    MOCK_METHOD(std::int64_t, read, (std::int64_t), ());
+    MOCK_METHOD(float, read, (float), ());
+    MOCK_METHOD(double, read, (double), ());
+    MOCK_METHOD(std::string, read, (std::string_view), ());
+    MOCK_METHOD(std::vector<std::byte>, read, (std::span<std::byte>), ());
     ///@}
 
     template<typename T>
-    T read() requires requires { read(T{}); }
+    T read() requires requires(Reader r) { r.read(T{}); }
     {
-        read(T{});
-        return T{};
+        return read(T{});
     }
 };
 

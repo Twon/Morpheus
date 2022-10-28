@@ -22,7 +22,7 @@ TEST_CASE("Verify serialisation of std::optional", "[morpheus.serialisation.opti
 
         THEN("Expect the following sequence of operations on the underlying writer")
         {
-            MockWriteSerialiser serialiser;
+            MockedWriteSerialiser serialiser;
             EXPECT_CALL(serialiser.writer(), beginNullable(false)).Times(1);
             EXPECT_CALL(serialiser.writer(), write(Matcher<std::int64_t>(Eq(actualValue)))).Times(1);
             EXPECT_CALL(serialiser.writer(), endNullable()).Times(1);
@@ -39,7 +39,7 @@ TEST_CASE("Verify serialisation of std::optional", "[morpheus.serialisation.opti
 
         THEN("Expect the following sequence of operations on the underlying writer")
         {
-            MockWriteSerialiser serialiser;
+            MockedWriteSerialiser serialiser;
             EXPECT_CALL(serialiser.writer(), beginNullable(true)).Times(1);
             EXPECT_CALL(serialiser.writer(), endNullable()).Times(1);
 
