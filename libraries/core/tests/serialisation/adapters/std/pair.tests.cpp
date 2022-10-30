@@ -43,7 +43,6 @@ TEST_CASE("Verify deserialisation of std::pair", "[morpheus.serialisation.pair.d
     GIVEN("A serialiser which can track expected calls")
     {
         using namespace std::literals::string_view_literals;
-//        constexpr auto firstValue = "value"sv;
         constexpr auto firstValue = true;
         constexpr std::int64_t secondValue = 10;
 
@@ -51,7 +50,6 @@ TEST_CASE("Verify deserialisation of std::pair", "[morpheus.serialisation.pair.d
         {
             MockedReadSerialiser serialiser;
             EXPECT_CALL(serialiser.reader(), beginSequence(std::optional<std::size_t>(2))).Times(1);
-//            EXPECT_CALL(serialiser.reader(), read(An<decltype(firstValue)>())).WillOnce(Return(std::string(firstValue)));
             EXPECT_CALL(serialiser.reader(), read(An<bool>())).WillOnce(Return(firstValue));
             EXPECT_CALL(serialiser.reader(), read(An<std::int64_t>())).WillOnce(Return(secondValue));
             EXPECT_CALL(serialiser.reader(), endSequence()).Times(1);

@@ -14,22 +14,22 @@ namespace morpheus::serialisation
 
 auto makeScopedValue(concepts::Reader auto& reader, std::string_view const key)
 {
-    return ScopedAction([&reader]{ reader.endValue(); }, [&reader, key]{ reader.beginValue(key); });
+    return ScopedAction([&reader, key] { reader.beginValue(key); }, [&reader] { reader.endValue(); } );
 }
 
 auto makeScopedSequence(concepts::Reader auto& reader, std::optional<std::size_t> const size = std::nullopt)
 {
-    return ScopedAction([&reader] { reader.endSequence(); }, [&reader, size] { reader.beginSequence(size); });
+    return ScopedAction([&reader, size] { reader.beginSequence(size); }, [&reader] { reader.endSequence(); } );
 }
 
 auto makeScopedComposite(concepts::Reader auto& reader)
 {
-    return ScopedAction([&reader] { reader.endComposite(); }, [&reader] { reader.beginComposite(); });
+    return ScopedAction([&reader] { reader.beginComposite(); }, [&reader] { reader.endComposite(); } );
 }
 
 auto makeScopedNullable(concepts::Reader auto& reader)
 {
-    return ScopedAction([&reader] { reader.endNullable(); }, [&reader] { return reader.beginNullable(); });
+    return ScopedAction([&reader] { return reader.beginNullable(); }, [&reader] { reader.endNullable(); } );
 }
 
 template<concepts::Reader ReaderType>

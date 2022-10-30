@@ -71,7 +71,7 @@ TEST_CASE("Verify deserialisation of std::unique_ptr", "[morpheus.serialisation.
             }
         }
     }
-/*    GIVEN("Expected contents of empty std::unique_ptr")
+    GIVEN("Expected contents of empty std::unique_ptr")
     {
         THEN("Expect the following sequence of operations on the underlying writer")
         {
@@ -86,7 +86,7 @@ TEST_CASE("Verify deserialisation of std::unique_ptr", "[morpheus.serialisation.
                 REQUIRE(!ptr);
             }
         }
-    }*/
+    }
 }
 
 } // morpheus::serialisation

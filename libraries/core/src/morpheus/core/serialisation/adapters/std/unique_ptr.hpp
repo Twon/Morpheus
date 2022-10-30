@@ -26,7 +26,10 @@ template<concepts::ReadSerialiser Serialiser, IsStdUniquePtr T>
 T deserialise(Serialiser& serialiser)
 {
     auto const nullable = makeScopedNullable(serialiser.reader());
-    return std::make_unique<typename T::element_type>(serialiser.template deserialise<typename T::element_type>());
+    if (nullable.value())
+        return std::unique_ptr<typename T::element_type>();
+    else
+        return std::make_unique<typename T::element_type>(serialiser.template deserialise<typename T::element_type>());
 }
 
 } // morpheus::serialisation

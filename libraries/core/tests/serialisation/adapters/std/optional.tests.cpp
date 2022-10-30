@@ -51,4 +51,43 @@ TEST_CASE("Verify serialisation of std::optional", "[morpheus.serialisation.opti
     }
 }
 
+TEST_CASE("Verify deserialisation of std::optional", "[morpheus.serialisation.optional.deserialise]")
+{
+    GIVEN("Expected contents of a std::optional holding a value")
+    {
+        constexpr std::int64_t actualValue = 10;
+
+        THEN("Expect the following sequence of operations on the underlying writer")
+        {
+            MockedReadSerialiser serialiser;
+            EXPECT_CALL(serialiser.reader(), beginNullable()).WillOnce(Return(false));
+            EXPECT_CALL(serialiser.reader(), read(An<std::int64_t>())).WillOnce(Return(actualValue));
+            EXPECT_CALL(serialiser.reader(), endNullable()).Times(1);
+
+            WHEN("Serialising the std::unique_ptr")
+            {
+                using ExpectedType = std::optional<std::int64_t>;
+                auto const ptr = serialiser.deserialise<ExpectedType>();
+                REQUIRE(*ptr == actualValue);
+            }
+        }
+    }
+    GIVEN("Expected contents of empty std::unique_ptr")
+    {
+        THEN("Expect the following sequence of operations on the underlying writer")
+        {
+            MockedReadSerialiser serialiser;
+            EXPECT_CALL(serialiser.reader(), beginNullable()).WillOnce(Return(true));
+            EXPECT_CALL(serialiser.reader(), endNullable()).Times(1);
+
+            WHEN("Deserialising the std::unique_ptr")
+            {
+                using ExpectedType = std::optional<std::int64_t>;
+                auto const ptr = serialiser.deserialise<ExpectedType>();
+                REQUIRE(!ptr);
+            }
+        }
+    }
+}
+
 } // morpheus::serialisation
