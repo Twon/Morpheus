@@ -16,8 +16,12 @@ concept IsStdTuple = meta::IsSpecialisationOf<std::tuple, T>;
 template<concepts::WriteSerialiser Serialiser, concepts::WriteSerialisable... T>
 void serialise(Serialiser& serialiser, std::tuple<T...> const& value)
 {
-    serialiser.writer().beginSequence(std::tuple_size<std::tuple<T...>>::value);
-    std::apply([&serialiser](auto const&... ts) { (serialiser.serialise(ts), ...); }, value);
+    constexpr auto size = std::tuple_size<std::tuple<T...>>::value;
+    serialiser.writer().beginSequence(size);
+    [&] <std::size_t... Indexes>(std::index_sequence<Indexes...>)
+    { 
+        (serialiser.serialise(std::get<Indexes>(value)), ...);
+    }(std::make_index_sequence<size>());
     serialiser.writer().endSequence();
 }
 

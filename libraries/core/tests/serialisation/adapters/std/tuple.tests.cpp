@@ -5,6 +5,7 @@
 #include <catch2/catch_all.hpp>
 #include <gmock/gmock.h>
 
+#include <string>
 #include <tuple>
 
 namespace morpheus::serialisation
@@ -37,6 +38,38 @@ TEST_CASE("Verify serialisation of std::tuple", "[morpheus.serialisation.tuple.s
             WHEN("Serialising a std::tuple")
             {
                 serialiser.serialise(value);
+            }
+        }
+    }
+}
+
+TEST_CASE("Verify deserialisation of std::tuple", "[morpheus.serialisation.tuple.deserialise]")
+{
+    GIVEN("A serialiser which can track expected calls")
+    {
+        using namespace std::literals::string_literals;
+        using ExpectedTuple = std::tuple<std::string, std::int64_t,  bool, double>;
+        const ExpectedTuple expectedValues( "value"s, 10, true, 1.0 );
+
+        THEN("Expect the following sequence of operations on the underlying reader")
+        {
+            MockedReadSerialiser serialiser;
+            EXPECT_CALL(serialiser.reader(), beginSequence(std::optional<std::size_t>(std::tuple_size<ExpectedTuple>::value))).Times(1);
+
+            [&] <std::size_t... Index>(std::index_sequence<Index...>)
+            {
+                (EXPECT_CALL(serialiser.reader(), read(An< std::tuple_element_t<Index, ExpectedTuple>>())).WillOnce(Return(std::get<Index>(expectedValues))), ...);
+            }(std::make_index_sequence<std::tuple_size<ExpectedTuple>::value>());
+
+            EXPECT_CALL(serialiser.reader(), endSequence()).Times(1);
+
+            WHEN("Deserialising a std::pair")
+            {
+                auto const value = serialiser.deserialise<ExpectedTuple>();
+                REQUIRE(std::get<0>(value) == std::get<0>(expectedValues));
+                REQUIRE(std::get<1>(value) == std::get<1>(expectedValues));
+                REQUIRE(std::get<2>(value) == std::get<2>(expectedValues));
+                REQUIRE(std::get<3>(value) == std::get<3>(expectedValues));
             }
         }
     }
