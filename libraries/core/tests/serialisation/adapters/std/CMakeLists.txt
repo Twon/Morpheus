@@ -2,6 +2,7 @@ target_sources(MorpheusCoreTests
     PRIVATE
         optional.tests.cpp
         pair.tests.cpp
+        source_location.cpp
         tuple.tests.cpp
         unique_ptr.tests.cpp
         variant.tests.cpp

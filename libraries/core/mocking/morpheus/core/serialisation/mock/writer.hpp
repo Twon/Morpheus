@@ -40,6 +40,7 @@ public:
     MOCK_METHOD(void, write, (double), ());
     MOCK_METHOD(void, write, (std::string_view), ());
     MOCK_METHOD(void, write, (std::span<std::byte>), ());
+    MOCK_METHOD(void, write, (char const* const), ());
     ///@}
 };
 

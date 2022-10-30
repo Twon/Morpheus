@@ -43,6 +43,7 @@ public:
     MOCK_METHOD(double, read, (double), ());
     MOCK_METHOD(std::string, read, (std::string_view), ());
     MOCK_METHOD(std::string, read, (std::string), ());
+    MOCK_METHOD(std::string, read, (char const * const), ());
     MOCK_METHOD(std::vector<std::byte>, read, (std::span<std::byte>), ());
     ///@}
 
