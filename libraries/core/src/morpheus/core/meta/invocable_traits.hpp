@@ -6,8 +6,6 @@ namespace morpheus::meta
 {
 
 /// Traits to detect
-/// - noexcept status
-/// - constness status
 /// - volatile status
 /// - function arguments
 /// 
@@ -24,7 +22,22 @@ template<typename T>
 inline constexpr bool IsNothrowInvocableV = false;
 
 template <typename Callable, typename... Args>
-inline constexpr bool IsNothrowtInvocableV = IsNothrowInvocable<Callable, Args...>;
+inline constexpr bool IsNothrowInvocableV<Callable(Args...)> = IsNothrowInvocable<Callable, Args...>;
+
+
+/// \concept IsConstInvocable
+///     Ensures an callable is invokable as a constant.
+template <typename Callable, typename... Args>
+concept IsConstInvocable = requires(Callable const c, Args... args)
+{
+    c(args...);
+};
+
+template<typename T>
+inline constexpr bool IsConstInvocableV = false;
+
+template <typename Callable, typename... Args>
+inline constexpr bool IsConstInvocableV<Callable(Args...)> = IsConstInvocable<Callable, Args...>;
 
 
 /// \concept IsInvocableResult

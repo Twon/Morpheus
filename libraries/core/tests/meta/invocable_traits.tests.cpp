@@ -18,4 +18,28 @@ TEST_CASE("Meta is nothrow invocable the compile time detection of noexcept invo
     STATIC_REQUIRE(meta::IsNothrowInvocable<decltype(noexceptInvocableFunction)>);
 }
 
+struct TestForConstness
+{
+    void operator()() const {}
+    void operator()(int, bool) const {}
+};
+
+struct TestForMutable
+{
+    void operator()() {}
+    void operator()(int, bool) {}
+};
+
+TEST_CASE("Meta is const invocable the compile time detection of const invocable types", "[morpheus.meta.is_const_invocable]")
+{
+    auto const constInvocable = [](){};
+    auto const mutableInvocable = []() mutable {};
+    STATIC_REQUIRE(meta::IsConstInvocable<TestForConstness>);
+    STATIC_REQUIRE(meta::IsConstInvocable<TestForConstness, int, bool>);
+    STATIC_REQUIRE(!meta::IsConstInvocable<TestForMutable>);
+    STATIC_REQUIRE(!meta::IsConstInvocable<TestForMutable, int, bool>);
+    STATIC_REQUIRE(meta::IsConstInvocable<decltype(constInvocable)>);
+    STATIC_REQUIRE(meta::IsConstInvocable<decltype(mutableInvocable)>);
+}
+
 } // namespace morpheus::meta
