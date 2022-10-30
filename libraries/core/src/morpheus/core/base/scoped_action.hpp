@@ -19,18 +19,50 @@ public:
         initial();
     }
 */
+namespace detail
+{
 
-template<std::invocable ExitAction>
-class [[nodiscard, maybe_unused]] ScopedAction;
+template<typename T> 
+class HoldReturnType;
 
-template<std::invocable ExitAction>
-class [[nodiscard, maybe_unused]] ScopedAction
+template<>
+class HoldReturnType<void> {};
+
+template<typename T>
+class HoldReturnType
 {
 public:
-    constexpr ScopedAction(ExitAction onExit, std::invocable auto initial)
+
+#if (__cpp_explicit_this_parameter >= 202110)
+    template<typename Self>
+    [[nodiscard]] std::copy_cvref_t<Self, auto> value(this Self&& self) { return mEntryReturnValue; }
+#else
+    [[nodiscard]] auto& value() & { return mEntryReturnValue; }
+    [[nodiscard]] auto const& value() const & { return mEntryReturnValue; }
+    [[nodiscard]] auto&& value() && { return std::move(mEntryReturnValue); }
+    [[nodiscard]] auto const&& value() const && { return  std::move(mEntryReturnValue); }
+#endif
+
+protected:
+    T mEntryReturnValue;
+};
+
+}
+
+template<std::invocable EntryAction, std::invocable ExitAction>
+class [[nodiscard, maybe_unused]] ScopedAction;
+
+template<std::invocable EntryAction, std::invocable ExitAction>
+class [[nodiscard, maybe_unused]] ScopedAction : public detail::HoldReturnType< std::invoke_result_t<EntryAction> >
+{
+public:
+    constexpr ScopedAction(EntryAction onEntry, ExitAction onExit)
     :   mAction(std::move(onExit))
     {
-        initial();
+        if constexpr (std::is_same_v<std::invoke_result_t<EntryAction>, void>)
+            onEntry();
+        else
+            this->mEntryReturnValue = onEntry();
     }
 
     constexpr ScopedAction(ScopedAction const&) = delete;

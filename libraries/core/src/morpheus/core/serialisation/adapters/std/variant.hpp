@@ -8,6 +8,7 @@
 #include "morpheus/core/serialisation/concepts/read_serialisable.hpp"
 #include "morpheus/core/serialisation/concepts/write_serialiser.hpp"
 #include "morpheus/core/serialisation/concepts/write_serialisable.hpp"
+
 #include <array>
 #include <stdexcept>
 #include <typeinfo>
@@ -31,7 +32,7 @@ struct TypeListNames<std::variant<T...>>
         return typeNames[entry];
     }
 
-    static constexpr std::string_view findIndex(std::string_view const name)
+    static consteval std::string_view findIndex(std::string_view const name)
     {
         auto const entry = ranges::find(typeNames, name);
         if (entry == typeNames.end())
@@ -39,7 +40,7 @@ struct TypeListNames<std::variant<T...>>
         return std::distance(typeNames.begin(),entry);
     }
 
-    inline static std::array<std::string_view, sizeof...(T)> typeNames{ typeid(T).name()... };
+    inline static std::array<std::string, sizeof...(T)> typeNames{ typeid(T).name()...};
 };
 
 template<concepts::WriteSerialiser Serialiser, concepts::WriteSerialisable... T>
@@ -59,7 +60,7 @@ void serialise(Serialiser& serialiser, std::variant<T...> const& value)
         else
             serialiser.serialise("index", static_cast<std::uint64_t>(value.index()));
 
-        std::visit([&serialiser](auto const& value) { return serialiser.serialise("value", value); }, value);
+        std::visit([&serialiser](auto const& value) { serialiser.serialise("value", value); }, value);
     }
     serialiser.writer().endComposite();
 }
@@ -67,7 +68,7 @@ void serialise(Serialiser& serialiser, std::variant<T...> const& value)
 template<concepts::ReadSerialiser Serialiser, IsStdVariant T>
 T deserialise(Serialiser& serialiser)
 {
-    auto const scope = makeScopedCompositeS(serialiser.reader());
+    auto const scope = makeScopedComposite(serialiser.reader());
     auto const index = [&serialiser]
     {
         if (serialiser.reader().isTextual())

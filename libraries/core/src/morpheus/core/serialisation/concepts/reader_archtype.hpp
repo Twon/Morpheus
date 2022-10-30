@@ -27,7 +27,7 @@ struct ReaderArchtype
     consteval void endNullable();
 
     template <typename T> requires std::is_arithmetic_v<T>
-    consteval T read();
+    T read();
 
     template <typename T> requires std::is_same_v<T, std::string>
     consteval T read();

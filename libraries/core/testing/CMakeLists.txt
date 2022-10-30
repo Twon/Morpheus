@@ -19,4 +19,4 @@ set_target_properties(MorpheusCoreTesting
         WINDOWS_EXPORT_ALL_SYMBOLS TRUE
 )
 
-add_subdirectory(morpheus/catch2)
+add_subdirectory(morpheus)

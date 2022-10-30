@@ -16,17 +16,20 @@ concept IsStdUniquePtr = meta::IsSpecialisationOf<std::unique_ptr, T>;
 template<concepts::WriteSerialiser Serialiser, concepts::WriteSerialisable T>
 void serialise(Serialiser& serialiser, std::unique_ptr<T> const& value)
 {
-    serialiser.writer().beginNullable();
+    serialiser.writer().beginNullable(!value);
     if (value) [[likely]]
         serialiser.serialise(*value);
-    serialiser.writer().beginEnd();
+    serialiser.writer().endNullable();
 }
 
 template<concepts::ReadSerialiser Serialiser, IsStdUniquePtr T>
 T deserialise(Serialiser& serialiser)
 {
     auto const nullable = makeScopedNullable(serialiser.reader());
-    return std::make_unique<typename T::element_type>(serialiser.template deserialise<typename T::element_type>());
+    if (nullable.value())
+        return std::unique_ptr<typename T::element_type>();
+    else
+        return std::make_unique<typename T::element_type>(serialiser.template deserialise<typename T::element_type>());
 }
 
 } // morpheus::serialisation

@@ -1,5 +1,3 @@
-#pragma once
-
 #include <morpheus/core/base/assert.hpp>
 #include <catch2/catch_all.hpp>
 
