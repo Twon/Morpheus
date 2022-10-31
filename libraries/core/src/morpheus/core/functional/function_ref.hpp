@@ -4,6 +4,7 @@
 #include <morpheus/core/meta/invocable_traits.hpp>
 #include <concepts>
 #include <type_traits>
+#include <utility>
 
 #if (__cpp_lib_function_ref >= 202202L)
 
@@ -92,6 +93,7 @@ public:
 
 private:
     static constexpr bool isNoexcept = meta::IsNothrowInvocable<Return, Args...>;
+    static constexpr bool isConst = meta::IsConstInvocable<Return, Args...>;
 
     union Storage
     {
