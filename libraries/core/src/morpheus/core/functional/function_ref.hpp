@@ -40,11 +40,22 @@ template<typename Return, class... Args>
 class function_ref<Return(Args...)> {
 public:
     using signature_type = Return(*)(Args...);
+    static constexpr bool isNoexcept = meta::IsNothrowInvocable<Return, Args...>;
+    static constexpr bool isConst = meta::IsConstInvocable<Return, Args...>;
+
+    template<typename F>
+    static constexpr bool isInvokableWith = []()
+    {
+        if constexpr (isNoexcept)
+            return std::is_nothrow_invocable_r_v<Return, F, Args...>;
+        else
+            return std::is_invocable_r_v<Return, F, Args...>;
+    }();
 
     constexpr function_ref() = delete;
 
     template<class F>
-    function_ref(F* f) noexcept requires std::is_function_v<F> and isInvokableWith<F>
+    function_ref(F* f) noexcept requires std::is_function_v<F> and function_ref::isInvokableWith<F>
     :   mInvoke( 
             [](Storage storage, Args&&... args) noexcept(isNoexcept)
             {
@@ -92,17 +103,7 @@ public:
     }
 
 private:
-    static constexpr bool isNoexcept = meta::IsNothrowInvocable<Return, Args...>;
-    static constexpr bool isConst = meta::IsConstInvocable<Return, Args...>;
 
-    template<typename F>
-    static constexpr bool isInvokableWith = []()
-    {
-        if constexpr (isNoexcept)
-            return std::is_nothrow_invocable_r_v<Return, F, Args...>;
-        else
-            return std::is_invocable_r_v<Return, F, Args...>;
-    }();
 
     union Storage
     {
