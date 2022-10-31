@@ -44,7 +44,7 @@ public:
     constexpr function_ref() = delete;
 
     template<class F>
-    function_ref(F* f) noexcept requires std::is_function_v<F>//and is_invocable_using<F>
+    function_ref(F* f) noexcept requires std::is_function_v<F> and isInvokableWith<F>
     :   mInvoke( 
             [](Storage storage, Args&&... args) noexcept(isNoexcept)
             {
@@ -94,6 +94,15 @@ public:
 private:
     static constexpr bool isNoexcept = meta::IsNothrowInvocable<Return, Args...>;
     static constexpr bool isConst = meta::IsConstInvocable<Return, Args...>;
+
+    template<typename F>
+    static constexpr bool isInvokableWith = []()
+    {
+        if constexpr (isNoexcept)
+            return std::is_nothrow_invocable_r_v<Return, F, Args...>;
+        else
+            return std::is_invocable_r_v<Return, F, Args...>;
+    }();
 
     union Storage
     {
