@@ -1,0 +1,21 @@
+#include <morpheus/catch2/adapters/assert.hpp>
+#include <morpheus/catch2/adapters/gmock.hpp>
+#include <catch2/catch_all.hpp>
+
+int main(int argc, char** argv) 
+{
+#if __has_include(<gmock/gmock.h>)
+    morpheus::enableGmockAdapter(argv);
+#endif
+
+    morpheus::enableCatch2AssertHooks();
+
+    Catch::Session session;
+    session.configData().name = "@MORPHEUS_NAME@";
+
+    auto const returnCode = session.applyCommandLine(argc, argv);
+    if (returnCode != 0) 
+        return returnCode;
+
+    return session.run();
+}

@@ -1,8 +1,8 @@
 #pragma once
 
-#include <core/base/platform.hpp>
-#include <core/concurrency/generator.hpp>
-#include <core/gfx/adapter.hpp>
+#include <morpheus/core/base/platform.hpp>
+#include <morpheus/core/concurrency/generator.hpp>
+#include <morpheus/gfx/platform/adapter.hpp>
 
 #include <string>
 

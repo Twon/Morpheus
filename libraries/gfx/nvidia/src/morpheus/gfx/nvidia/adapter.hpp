@@ -1,7 +1,8 @@
 #pragma once
 
-#include <core/concurrency/generator.hpp>
-#include <core/gfx/adapter.hpp>
+#include <morpheus/gfx/platform/adapter.hpp>
+
+#include <morpheus/core/concurrency/generator.hpp>
 
 namespace morpheus::gfx::nvidia::nvapi
 {

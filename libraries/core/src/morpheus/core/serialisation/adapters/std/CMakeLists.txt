@@ -1,0 +1,10 @@
+target_sources(MorpheusCore
+    PUBLIC
+        optional.hpp
+        pair.hpp
+        ranges.hpp
+        source_location.hpp
+        tuple.hpp
+        unique_ptr.hpp
+        variant.hpp
+)

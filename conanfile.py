@@ -57,7 +57,7 @@ class Morpheus(ConanFile):
         "fmt/8.1.1",
         "glbinding/3.1.0",
         "glew/2.2.0",
-        "indirect_value/0.0.1",
+        "gtest/1.12.1",
         "ms-gsl/4.0.0",
         "rapidjson/cci.20220822",
         "range-v3/0.12.0",
@@ -72,7 +72,7 @@ class Morpheus(ConanFile):
         self.version = version.strip()
 
     def build_requirements(self):
-        # Ensure the package is build against a version of CMake from 3.23 onwards.
+        # Ensure the package is build against a version of CMake from 3.25 onwards.
         if CMake.get_version() < Version("3.24.0"):
             self.build_requires("cmake/3.24.0")
 

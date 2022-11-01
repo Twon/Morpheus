@@ -4,8 +4,3 @@ target_sources(MorpheusGfxIntel
     PRIVATE
         adapter.cpp
 )
-
-target_sources(MorpheusGfxIntelTests
-    PRIVATE
-        adapter.tests.cpp
-)
