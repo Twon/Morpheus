@@ -1,5 +1,6 @@
 include_guard()
 
+include(morpheus_add_target)
 
 #[=======================================================================[.rst:
 morpheus_add_library
@@ -17,6 +18,7 @@ and allows configuration for common optional settings
       [NAME <name>]
       [ALIAS <alias>]
       [FOLDER <folder>]
+      [INTERFACE]
   )
    -- Generates library targets with default build directories and install options. 
 
@@ -41,26 +43,12 @@ function(morpheus_add_library)
     if (NOT MORPHEUS_ALIAS)
         message(FATAL_ERROR "ALIAS parameter must be supplied")
     endif()
-    add_library(${MORPHEUS_NAME})
-    add_library(${MORPHEUS_ALIAS} ALIAS ${MORPHEUS_NAME})
 
-    set_target_properties(${MORPHEUS_NAME}
-        PROPERTIES
-            ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
-            LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
-            RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
+    morpheus_add_target(
+        TYPE library
+        NAME ${MORPHEUS_NAME}
+        ALIAS ${MORPHEUS_ALIAS}
+        FOLDER ${MORPHEUS_FOLDER}
     )
 
-    if (MORPHEUS_FOLDER)
-        set_target_properties(${MORPHEUS_NAME}
-            PROPERTIES
-                FOLDER ${MORPHEUS_FOLDER}
-        )
-    endif()
-
-    install(TARGETS ${MORPHEUS_NAME}
-            RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-            ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-            LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    )
 endfunction()

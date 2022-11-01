@@ -148,7 +148,7 @@ struct indirect_value_base<T, CD, CD>
     [[no_unique_address]] CD mCopierDeleterCombined;
 #endif
 
-#if (__cpp_explicit_this_parameter >= 202110)
+#if (__cpp_explicit_this_parameter >= 202110L)
     template<typename Self>
     [[nodiscard]] std::copy_cvref_t<Self, auto> getC(this Self&& self) { return mCopierDeleterCombined; }
 
@@ -186,7 +186,7 @@ struct indirect_value_base
     [[no_unique_address]] D mDeleter;
 #endif
 
-#if (__cpp_explicit_this_parameter >= 202110)
+#if (__cpp_explicit_this_parameter >= 202110L)
     template<typename Self>
     [[nodiscard]] std::copy_cvref_t<Self, auto> getC(this Self&& self) { return mCopier; }
 
@@ -299,7 +299,7 @@ public:
         return *this;
     }
 
-#if (__cpp_explicit_this_parameter >= 202110)
+#if (__cpp_explicit_this_parameter >= 202110L)
 
     template<typename Self>
     [[nodiscard]] constexpr auto* operator->(this Self&& self) noexcept { return (this->mValue); }

@@ -1,3 +1,5 @@
+include_guard()
+
 include(FetchContent)
 
 find_package(Catch2 3 REQUIRED)
