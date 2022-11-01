@@ -33,7 +33,7 @@ class HoldReturnType
 {
 public:
 
-#if (__cpp_explicit_this_parameter >= 202110)
+#if (__cpp_explicit_this_parameter >= 202110L)
     template<typename Self>
     [[nodiscard]] std::copy_cvref_t<Self, auto> value(this Self&& self) { return mEntryReturnValue; }
 #else

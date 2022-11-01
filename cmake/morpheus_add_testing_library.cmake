@@ -1,5 +1,6 @@
 include_guard()
 
+include(thirdParty)
 
 #[=======================================================================[.rst:
 morpheus_add_testing_library
@@ -18,6 +19,7 @@ the installation process
       [NAME <name>]
       [ALIAS <alias>]
       [FOLDER <folder>]
+      [INTERFACE]
   )
    -- Generates a testing library targets with default build directories and 
    setting. 

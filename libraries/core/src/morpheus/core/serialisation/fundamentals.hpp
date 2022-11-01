@@ -22,11 +22,3 @@ T deserialise(Serialiser& s)
 }
 
 }
-//template<class SerializerType, typename T> requires std::is_string_v<T> or is_string_view_v<T>
-//void serialise(SerializerType& s, T const& value, DispatchStrong)
-//{
-//    s.writer().write(value);
-//}
-
-
-}

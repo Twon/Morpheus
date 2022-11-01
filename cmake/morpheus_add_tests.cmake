@@ -1,5 +1,6 @@
 include_guard()
 
+include(thirdParty)
 
 #[=======================================================================[.rst:
 morpheus_add_tests
@@ -52,7 +53,7 @@ function(morpheus_add_tests)
              morpheus::core::testing
     )
 
-    configure_file(${CMAKE_CURRENT_FUNCTION_LIST_DIR}/../testing/morpheus/catch2/main.cpp.in ${CMAKE_CURRENT_BINARY_DIR}/main.cpp @ONLY)
+    configure_file(${PROJECT_SOURCE_DIR}/libraries/core/testing/morpheus/catch2/main.cpp.in ${CMAKE_CURRENT_BINARY_DIR}/main.cpp @ONLY)
     target_sources(${MORPHEUS_NAME}
         PRIVATE
             ${CMAKE_CURRENT_BINARY_DIR}/main.cpp
