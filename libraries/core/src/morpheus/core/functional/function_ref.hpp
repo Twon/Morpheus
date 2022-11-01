@@ -3,6 +3,7 @@
 #include <morpheus/core/conformance/version.hpp>
 #include <morpheus/core/meta/invocable_traits.hpp>
 #include <concepts>
+#include <functional>
 #include <type_traits>
 #include <utility>
 
@@ -38,44 +39,113 @@ template<class Signature> class function_ref;
 ///      [func.wrap.ref.class]
 template<typename Return, class... Args>
 class function_ref<Return(Args...)> {
-public:
-    using signature_type = Return(*)(Args...);
+
     static constexpr bool isNoexcept = meta::IsNothrowInvocable<Return, Args...>;
     static constexpr bool isConst = meta::IsConstInvocable<Return, Args...>;
 
-    template<typename F>
+    template<typename... T>
     static constexpr bool isInvokableWith = []()
     {
         if constexpr (isNoexcept)
-            return std::is_nothrow_invocable_r_v<Return, F, Args...>;
+            return std::is_nothrow_invocable_r_v<Return, T..., Args...>;
         else
-            return std::is_invocable_r_v<Return, F, Args...>;
+            return std::is_invocable_r_v<Return, T..., Args...>;
     }();
+
+    template<typename T>
+    using constness = std::conditional_t<isConst, std::add_const_t<T>, T>;
+
+    template<class F> requires isInvokableWith<F>
+    static constexpr Return invoke(F&& f, Args&& ...args) noexcept(isNoexcept)
+    {
+        if constexpr (std::is_void_v<Return>)
+            std::invoke<F, Args...>(std::forward<F>(f), std::forward<Args>(args)...);
+#if (__cpp_lib_invoke_r >= 202106L)
+        else
+            return std::invoke_r<Return, F, Args...>(std::forward<F>(f), std::forward<Args>(args)...);
+#else
+        else
+            return std::invoke<F, Args...>(std::forward<F>(f), std::forward<Args>(args)...);
+#endif
+    }
+
+    template<class F, class T> requires isInvokableWith<F, constness<T>& >
+    static constexpr Return invoke(F&& f, T&& t, Args&& ...args) noexcept(isNoexcept)
+    {
+        if constexpr (std::is_void_v<Return>)
+            std::invoke<F, T, Args...>(std::forward<F>(f), std::forward<T>(t), std::forward<Args>(args)...);
+#if (__cpp_lib_invoke_r >= 202106L)
+        else
+            return std::invoke_r<Return, F, T, Args...>(std::forward<F>(f), std::forward<T>(t), std::forward<Args>(args)...);
+#else
+        else
+            return std::invoke<F, T, Args...>(std::forward<F>(f), std::forward<T>(t), std::forward<Args>(args)...);
+#endif
+    }
+
+
+public:
+//    using signature_type = Return(*)(Args...);
 
     constexpr function_ref() = delete;
 
     template<class F>
-    function_ref(F* f) noexcept requires std::is_function_v<F> and function_ref::isInvokableWith<F>
+    function_ref(F* f) noexcept requires std::is_function_v<F> and isInvokableWith<F>
     :   mInvoke( 
-            [](Storage storage, Args&&... args) noexcept(isNoexcept)
+            [](Storage storage, Args... args) noexcept(isNoexcept)
             {
-                if constexpr (std::is_void_v<Return>)
-                    function_ref::get<F>(storage)(std::forward<Args>(args)...);
-                else
-                    return function_ref::get<F>(storage)(std::forward<Args>(args)...);
+                return invoke(function_ref::get<F>(storage), std::forward<Args>(args)...);
             })
     ,   mStorage(f)
     {}
 
-    template<auto f> constexpr function_ref(nontype_t<f>) noexcept
-    {
+    template<auto F> constexpr function_ref(nontype_t<F>) noexcept
+    :   mInvoke( 
+            [](Storage storage, Args... args) noexcept(isNoexcept)
+            {
+                return invoke(F, std::forward<Args>(args)...);
+            })
+    {}
 
-    }
+    template<auto F, class T>
+    constexpr function_ref(nontype_t<F>, T& object) noexcept requires isInvokableWith<decltype(F), T&>
+    :   mInvoke(
+            [](Storage storage, Args... args) noexcept(isNoexcept) -> Return
+            {
+                auto& object = *function_ref::get<constness<T>>(storage);
+                return invoke(F, object, std::forward<Args>(args)...);
+            })
+    ,   mStorage(std::addressof(object))
+    {}
 
+    template<auto F, class T>
+    constexpr function_ref(nontype_t<F>, constness<T> const* object) noexcept requires isInvokableWith<decltype(F), constness<T> const*>
+    :   mInvoke(
+            [](Storage storage, Args... args) noexcept(isNoexcept) -> Return
+            {
+                constness<T>& object = *function_ref::get<T>(storage);
+                return invoke(F, object, std::forward<Args>(args)...);
+            })
+    ,   mStorage(std::addressof(object))
+    {}
+
+    template<class F, class T = std::remove_reference_t<F>> 
+    constexpr function_ref(F&& f) noexcept 
+        requires (not std::is_same_v<F, function_ref> and not std::is_member_pointer_v<F> and isInvokableWith<F, constness<T>>)
+    :   mInvoke(
+            [](Storage storage, Args... args) noexcept(isNoexcept) -> Return
+            {
+                constness<T>& object = *function_ref::get<T>(storage);
+                return invoke(object, std::forward<Args>(args)...);
+            })
+    ,   mStorage(std::addressof(f))
+    {}
+/*
+    */
 //    template<auto f, class T> constexpr function_ref(nontype_t<f>, T&) noexcept;
 //    template<auto f, class T> constexpr function_ref(nontype_t<f>, cv T*) noexcept;
 
-    function_ref(function_ref const&) noexcept = default;
+//    function_ref(function_ref const&) noexcept = default;
 
    /*  
 
@@ -91,7 +161,7 @@ public:
 
     R operator()(Args...) const noexcept(see below);*/
 
-    constexpr Return operator()(Args&&... args) const noexcept(isNoexcept)
+    constexpr Return operator()(Args... args) const noexcept(isNoexcept)
     {
         return mInvoke(mStorage, std::forward<Args>(args)...);
     }
