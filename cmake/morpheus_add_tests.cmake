@@ -1,6 +1,6 @@
 include_guard()
 
-include(thirdParty)
+include(third_party)
 
 #[=======================================================================[.rst:
 morpheus_add_tests
