@@ -35,7 +35,12 @@ list(APPEND CMAKE_MODULE_PATH
 include(Compiler)
 include(Documentation)
 include(IDESettings)
-include(ThirdParty)
+include(include_what_you_use)
+include(morpheus_add_executable)
+include(morpheus_add_library)
+include(morpheus_add_testing_library)
+include(morpheus_add_tests)
+include(thirdParty)
 
 enable_testing()
 
