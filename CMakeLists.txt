@@ -39,7 +39,7 @@ include(morpheus_add_executable)
 include(morpheus_add_library)
 include(morpheus_add_testing_library)
 include(morpheus_add_tests)
-include(thirdParty)
+include(third_party)
 
 enable_testing()
 
@@ -70,3 +70,4 @@ add_subdirectory(examples)
 if (MORPHEUS_CODE_COVERAGE)
     coverage_evaluate()
 endif()
+
