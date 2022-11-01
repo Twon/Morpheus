@@ -1,5 +1,5 @@
-#include "morpheus/core/serialisation/concepts/reader_archtype.hpp"
-#include "morpheus/core/serialisation/read_serialiser.hpp"
+#include "morpheus/core/serialisation/concepts/writer_archtype.hpp"
+#include "morpheus/core/serialisation/write_serialiser.hpp"
 
 #include <catch2/catch_all.hpp>
 
@@ -8,90 +8,90 @@ using namespace Catch;
 namespace morpheus::serialisation
 {
 
-TEST_CASE("Check concepts for read serialisation", "[morpheus.serialisation.read_serialiser.concepts]")
-{
-    STATIC_REQUIRE(concepts::Reader<concepts::ReaderArchtype>);
-}
-
-TEST_CASE("Ensure read serialiser are default constructible where the underlying reader supports it", "[morpheus.serialisation.read_serialiser.default_construction]")
-{
-    GIVEN("A default constructible reader")
+    TEST_CASE("Check concepts for write serialisation", "[morpheus.serialisation.write_serialiser.concepts]")
     {
-        STATIC_REQUIRE(std::is_default_constructible_v<concepts::ReaderArchtype>);
+        STATIC_REQUIRE(concepts::Writer<concepts::WriterArchtype>);
+    }
 
-        WHEN("Ensure read serialiser of given tyoe")
+    TEST_CASE("Ensure write serialiser are default constructible where the underlying writer supports it", "[morpheus.serialisation.write_serialiser.default_construction]")
+    {
+        GIVEN("A default constructible writer")
         {
-            using ReadSerialiserArchitype = ReadSerialiser<concepts::ReaderArchtype>;
-            THEN("Is default construtible")
+            STATIC_REQUIRE(std::is_default_constructible_v<concepts::WriterArchtype>);
+
+            WHEN("Ensure write serialiser of given tyoe")
             {
-                STATIC_REQUIRE(std::is_default_constructible_v<ReadSerialiserArchitype>);
+                using WriteSerialiserArchitype = WriteSerialiser<concepts::WriterArchtype>;
+                THEN("Is default construtible")
+                {
+                    STATIC_REQUIRE(std::is_default_constructible_v<WriteSerialiserArchitype>);
+                }
+            }
+        }
+        GIVEN("A non-default constructible writer")
+        {
+            struct NonDefaultConstuctibleWriter : concepts::WriterArchtype
+            {
+                NonDefaultConstuctibleWriter() = delete;
+            };
+            STATIC_REQUIRE(!std::is_default_constructible_v<NonDefaultConstuctibleWriter>);
+
+            WHEN("Ensure write serialiser of given tyoe")
+            {
+                using NonDefaultConstuctibleWriteSerialiserArchitype = WriteSerialiser<NonDefaultConstuctibleWriter>;
+                THEN("Is default construtible")
+                {
+                    STATIC_REQUIRE(!std::is_default_constructible_v<NonDefaultConstuctibleWriteSerialiserArchitype>);
+                }
             }
         }
     }
-    GIVEN("A non-default constructible reader")
-    {
-        struct NonDefaultConstuctibleReader : concepts::ReaderArchtype
-        {
-            NonDefaultConstuctibleReader() = delete;
-        };
-        STATIC_REQUIRE(!std::is_default_constructible_v<NonDefaultConstuctibleReader>);
 
-        WHEN("Ensure read serialiser of given tyoe")
+    TEST_CASE("Ensure write serialiser are forward constructible where the underlying writer supports it", "[morpheus.serialisation.write_serialiser.forwarding_construction]")
+    {
+        GIVEN("A writer with multiple constructors")
         {
-            using NonDefaultConstuctibleReadSerialiserArchitype = ReadSerialiser<NonDefaultConstuctibleReader>;
-            THEN("Is default construtible")
+            struct MultiConstructorWriter : concepts::WriterArchtype
             {
-                STATIC_REQUIRE(!std::is_default_constructible_v<NonDefaultConstuctibleReadSerialiserArchitype>);
+                MultiConstructorWriter() = delete;
+                MultiConstructorWriter(int, bool) {}
+                MultiConstructorWriter(int, bool, int, bool);
+            };
+
+            STATIC_REQUIRE(std::is_constructible_v<MultiConstructorWriter, int, bool>);
+            STATIC_REQUIRE(std::is_constructible_v<MultiConstructorWriter, int, bool, int, bool>);
+
+            WHEN("Ensure write serialiser of given tyoe")
+            {
+                using ForwardingSerialiserArchitype = WriteSerialiser<MultiConstructorWriter>;
+                THEN("Is default construtible")
+                {
+                    STATIC_REQUIRE(!std::is_constructible_v<ForwardingSerialiserArchitype, int>);
+                    STATIC_REQUIRE(std::is_constructible_v<ForwardingSerialiserArchitype, int, bool>);
+                    STATIC_REQUIRE(!std::is_constructible_v<ForwardingSerialiserArchitype, int, bool, int>);
+                    STATIC_REQUIRE(std::is_constructible_v<ForwardingSerialiserArchitype, int, bool, int, bool>);
+                }
+            }
+        }
+        GIVEN("A non-default constructible writer")
+        {
+            STATIC_REQUIRE(!std::is_constructible_v<concepts::WriterArchtype, int>);
+            STATIC_REQUIRE(!std::is_constructible_v<concepts::WriterArchtype, int, bool>);
+            STATIC_REQUIRE(!std::is_constructible_v<concepts::WriterArchtype, int, bool, int>);
+            STATIC_REQUIRE(!std::is_constructible_v<concepts::WriterArchtype, int, bool, int, bool>);
+
+            WHEN("Ensure write serialiser of given tyoe")
+            {
+                using WriteSerialiserArchitype = WriteSerialiser<concepts::WriterArchtype>;
+                THEN("Is default construtible")
+                {
+                    STATIC_REQUIRE(!std::is_constructible_v<WriteSerialiserArchitype, int>);
+                    STATIC_REQUIRE(!std::is_constructible_v<WriteSerialiserArchitype, int, bool>);
+                    STATIC_REQUIRE(!std::is_constructible_v<WriteSerialiserArchitype, int, bool, int>);
+                    STATIC_REQUIRE(!std::is_constructible_v<WriteSerialiserArchitype, int, bool, int, bool>);
+                }
             }
         }
     }
-}
-
-TEST_CASE("Ensure read serialiser are forward constructible where the underlying reader supports it", "[morpheus.serialisation.read_serialiser.forwarding_construction]")
-{
-    GIVEN("A reader with multiple constructors")
-    {
-        struct MultiConstructorReader : concepts::ReaderArchtype
-        {
-            MultiConstructorReader() = delete;
-            MultiConstructorReader(int, bool) {}
-            MultiConstructorReader(int, bool, int, bool);
-        };
-
-        STATIC_REQUIRE(std::is_constructible_v<MultiConstructorReader, int, bool>);
-        STATIC_REQUIRE(std::is_constructible_v<MultiConstructorReader, int, bool, int, bool>);
-
-        WHEN("Ensure read serialiser of given tyoe")
-        {
-            using ForwardingSerialiserArchitype = ReadSerialiser<MultiConstructorReader>;
-            THEN("Is default construtible")
-            {
-                STATIC_REQUIRE(!std::is_constructible_v<ForwardingSerialiserArchitype, int>);
-                STATIC_REQUIRE(std::is_constructible_v<ForwardingSerialiserArchitype, int, bool>);
-                STATIC_REQUIRE(!std::is_constructible_v<ForwardingSerialiserArchitype, int, bool, int>);
-                STATIC_REQUIRE(std::is_constructible_v<ForwardingSerialiserArchitype, int, bool, int, bool>);
-            }
-        }
-    }
-    GIVEN("A non-default constructible reader")
-    {
-        STATIC_REQUIRE(!std::is_constructible_v<concepts::ReaderArchtype, int>);
-        STATIC_REQUIRE(!std::is_constructible_v<concepts::ReaderArchtype, int, bool>);
-        STATIC_REQUIRE(!std::is_constructible_v<concepts::ReaderArchtype, int, bool, int>);
-        STATIC_REQUIRE(!std::is_constructible_v<concepts::ReaderArchtype, int, bool, int, bool>);
-
-        WHEN("Ensure read serialiser of given tyoe")
-        {
-            using ReadSerialiserArchitype = ReadSerialiser<concepts::ReaderArchtype>;
-            THEN("Is default construtible")
-            {
-                STATIC_REQUIRE(!std::is_constructible_v<ReadSerialiserArchitype, int>);
-                STATIC_REQUIRE(!std::is_constructible_v<ReadSerialiserArchitype, int, bool>);
-                STATIC_REQUIRE(!std::is_constructible_v<ReadSerialiserArchitype, int, bool, int>);
-                STATIC_REQUIRE(!std::is_constructible_v<ReadSerialiserArchitype, int, bool, int, bool>);
-            }
-        }
-    }
-}
 
 } // namespace morpheus::serialisation
