@@ -21,11 +21,7 @@ endif()
 
 
 if (NOT CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-    FetchContent_Declare(
-        date
-        GIT_REPOSITORY https://github.com/HowardHinnant/date.git
-    )
-    FetchContent_MakeAvailable(date)
+    find_package(date REQUIRED)
 endif (NOT CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
 
 
