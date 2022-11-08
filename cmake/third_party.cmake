@@ -19,9 +19,18 @@ if(NOT codecoverage_POPULATED)
     list(APPEND CMAKE_MODULE_PATH ${codecoverage_SOURCE_DIR}/cmake)
 endif()
 
+
+if (NOT CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    FetchContent_Declare(
+        date
+        GIT_REPOSITORY https://github.com/HowardHinnant/date.git
+    )
+    FetchContent_MakeAvailable(date)
+endif (NOT CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+
+
 if(WIN32)
-    set(WIL_BUILD_TESTS OFF CACHE BOOL "Sets option to build the unit tests, default on" FORCE)
-#    option(WIL_BUILD_TESTS "Sets option to build the unit tests, default on" ON)
+    set(WIL_BUILD_TESTS OFF)
     FetchContent_Declare(
         wil
         GIT_REPOSITORY https://github.com/microsoft/wil.git
