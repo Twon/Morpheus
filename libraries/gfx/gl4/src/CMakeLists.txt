@@ -23,6 +23,7 @@ target_link_libraries(MorpheusGfxGL4
         morpheus::gfx::platform
         OpenGL::GL
         GLEW::GLEW
+    PRIVATE
         glbinding::glbinding
 )
 
