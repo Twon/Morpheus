@@ -52,7 +52,7 @@ class Morpheus(ConanFile):
     exports_sources = ["CMakeLists.txt", "LICENSE", "version.txt", "cmake/*", "examples/*" "libraries/*"]
     generators = "cmake_find_package", "cmake_find_package_multi", "virtualenv"
     requires = (
-        "boost/1.79.0",
+        "boost/1.80.0",
         "catch2/3.1.0", 
         "fmt/8.1.1",
         "glbinding/3.1.0",
@@ -79,6 +79,9 @@ class Morpheus(ConanFile):
     def requirements(self):
         if self.settings.os in ["Macos", "iOS", "tvOS"] and self.settings.compiler == "apple-clang":
             self.requires("moltenvk/1.1.6")
+
+        if self.settings.compiler != "Visual Studio":
+            self.requires("date/3.0.1")
 
 #    @property
 #    def _source_subfolder(self):

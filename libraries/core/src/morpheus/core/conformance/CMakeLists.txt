@@ -15,6 +15,7 @@ find_package(range-v3 REQUIRED)
 target_link_libraries(MorpheusCore
     PUBLIC
         $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:date::date> # Only Visual Studio 19.26 onwards has a complete implementation: https://en.cppreference.com/w/cpp/compiler_support
+        $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:date::date-tz>
         fmt::fmt
         range-v3::range-v3
         tl::expected
