@@ -52,12 +52,7 @@ jobs:
             }
     steps:
       - uses: actions/checkout@v2
-      - uses: lhotari/action-upterm@v1
-        with:
-          ## limits ssh access and adds the ssh public key for the user which triggered the workflow
-          limit-access-to-actor: true
-          ## limits ssh access and adds the ssh public keys of the listed GitHub users
-          limit-access-to-users: twon
+
       - name: Add msbuild to PATH
         if: matrix.settings.os == 'windows-latest'
         uses: microsoft/setup-msbuild@v1.0.2
@@ -146,6 +141,13 @@ jobs:
         # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
         # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
         run: cmake -B "${{github.workspace}}/build" -DCMAKE_BUILD_TYPE=${{ matrix.configuration }} ${{ env.toolchain }}
+
+      - uses: lhotari/action-upterm@v1
+        with:
+          ## limits ssh access and adds the ssh public key for the user which triggered the workflow
+          limit-access-to-actor: true
+          ## limits ssh access and adds the ssh public keys of the listed GitHub users
+          limit-access-to-users: twon
 
       - name: Build
         # Build your program with the given configuration
