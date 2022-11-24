@@ -36,7 +36,6 @@ jobs:
               os: windows-latest,
               compiler: { type: VISUAL, version: 16, cc: "cl", cxx: "cl", std: 20 },
             }
-<<<<<<< Updated upstream
           - {
               name: "MacOS Apple Clang 14",
               os: macos-12,
@@ -51,22 +50,6 @@ jobs:
                 },
               lib: "libc++",
             }
-=======
-#          - {
-#              name: "MacOS Apple Clang 14", # https://github.com/actions/runner-images/issues/6225
-#              os: macos-latest,
-#              compiler:
-#                {
-#                  type: APPLE_CLANG,
-#                  version: "14.0",
-#                  conan: "apple-clang",
-#                  cc: "clang",
-#                  cxx: "clang++",
-#                  std: 20
-#                },
-#              lib: "libc++",
-#            }
->>>>>>> Stashed changes
     steps:
       - uses: actions/checkout@v2
 #      - uses: lhotari/action-upterm@v1
