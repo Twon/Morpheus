@@ -47,10 +47,10 @@ struct Generator {
         auto get_return_object() {
             return Generator{ handle_type::from_promise(*this) };
         }
-        auto return_void() {
-            return coro_ns::suspend_never{};
-        }
-
+//        auto return_void() {
+//            return coro_ns::suspend_never{};
+//        }
+        void return_void() noexcept {}
         auto yield_value(const T value) {
             current_value = value;
             return coro_ns::suspend_always{};

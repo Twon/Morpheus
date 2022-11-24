@@ -56,7 +56,7 @@ public:
 
     /// Serialise a related set of values in a composite.
     /// \param[in] f The command serialising the composite values.
-    auto serialise(std::invocable auto f);
+//    auto serialise(std::invocable auto f);
 
     /// Serialise a nullable value
     /// \param[in] null If the nullable value is null or set.

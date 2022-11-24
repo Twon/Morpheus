@@ -28,6 +28,7 @@ auto WriteSerialiser<WriterType>::serialise(std::size_t size, std::invocable aut
     mWriter.endSequence();
 }
 
+/*
 template<concepts::Writer WriterType>
 auto WriteSerialiser<WriterType>::serialise(std::invocable auto f)
 {
@@ -35,6 +36,7 @@ auto WriteSerialiser<WriterType>::serialise(std::invocable auto f)
     f();
     mWriter.endComposite();
 }
+*/
 
 template<concepts::Writer WriterType>
 auto WriteSerialiser<WriterType>::serialise(bool const null, std::invocable auto f)

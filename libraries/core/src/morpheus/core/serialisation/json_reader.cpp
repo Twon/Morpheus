@@ -123,19 +123,22 @@ JsonReader::~JsonReader()
 
 void JsonReader::beginComposite()
 {
-    auto const [event, next] = getNext();
+    auto const state = currentState();
+    auto const [event, next] = state.value();
     MORPHEUS_VERIFY(event == Event::BeginComposite);
 }
 
 void JsonReader::endComposite()
 {
-    auto const [event, next] = getNext();
+    auto const state = currentState();
+    auto const [event, next] = state.value();
     MORPHEUS_VERIFY(event == Event::EndComposite);
 }
 
 void JsonReader::beginValue(std::string_view const key)
 {
-    auto const [event, next] = getNext();
+    auto const state = currentState();
+    auto const [event, next] = state.value();
     MORPHEUS_VERIFY(event == Event::BeginComposite);
     MORPHEUS_VERIFY(next);
     MORPHEUS_VERIFY(next->index() == 5);
@@ -148,21 +151,25 @@ void JsonReader::endValue()
 //    MORPHEUS_VERIFY(event == Event::EndComposite);
 }
 
-void JsonReader::beginSequence(std::optional<std::size_t>)
+std::optional<std::size_t> JsonReader::beginSequence()
 {
-    auto const [event, next] = getNext();
+    auto const state = currentState();
+    auto const [event, next] = state.value();
     MORPHEUS_VERIFY(event == Event::BeginSequence);
+    return std::nullopt;
 }
 
 void JsonReader::endSequence()
 {
-    auto const [event, next] = getNext();
+    auto const state = currentState();
+    auto const [event, next] = state.value();
     MORPHEUS_VERIFY(event == Event::EndSequence);
 }
 
 bool JsonReader::beginNullable()
 {
-    auto const [event, next] = getNext();
+    auto const state = currentState();
+    auto const [event, next] = state.value();
     //if (null)
     //    beginComposite();
     MORPHEUS_VERIFY(event == Event::Value);

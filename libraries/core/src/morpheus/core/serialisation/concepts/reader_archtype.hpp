@@ -21,7 +21,7 @@ struct ReaderArchtype
     consteval void endComposite();
     consteval void beginValue(std::string_view const key);
     consteval void endValue();
-    consteval void beginSequence(std::optional<std::size_t> = std::nullopt);
+    consteval std::optional<std::size_t> beginSequence();
     consteval void endSequence();
     consteval bool beginNullable();
     consteval void endNullable();

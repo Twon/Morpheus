@@ -5,15 +5,16 @@
 #include "morpheus/core/serialisation/concepts/read_serialisable.hpp"
 #include "morpheus/core/serialisation/concepts/write_serialiser.hpp"
 #include "morpheus/core/serialisation/concepts/write_serialisable.hpp"
+#include "morpheus/core/meta/concepts/string.hpp"
 
 namespace morpheus::serialisation::detail
 {
 
-//template <typename T>
-//concept IsRange = meta::IsSpecialisationOf<std::tuple, T>;
+template <typename T>
+concept IsRange = ranges::range<T> and not (meta::IsString<T> or meta::IsStringView<T>);
 
-template<concepts::WriteSerialiser Serialiser, ranges::range T>
-void serialise(Serialiser& serialiser, auto const& range)
+template<concepts::WriteSerialiser Serialiser>
+void serialise(Serialiser& serialiser, IsRange auto const& range)
 {
     serialiser.serialise(ranges::size(range), [&]()
     {

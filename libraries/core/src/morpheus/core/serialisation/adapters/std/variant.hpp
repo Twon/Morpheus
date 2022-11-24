@@ -46,7 +46,8 @@ struct TypeListNames<std::variant<T...>>
 template<concepts::WriteSerialiser Serialiser, concepts::WriteSerialisable... T>
 void serialise(Serialiser& serialiser, std::variant<T...> const& value)
 {
-    serialiser.serialise([&]()
+    serialiser.writer().beginComposite();
+//    serialiser.serialise([&]()
     {
         if (value.valueless_by_exception()) [[unlikely]]
         {
@@ -63,7 +64,9 @@ void serialise(Serialiser& serialiser, std::variant<T...> const& value)
 
             std::visit([&serialiser](auto const& value) { return serialiser.serialise("value", value); }, value);
         }
-    });
+    }
+    //);
+    serialiser.writer().endComposite();
 }
 
 template<concepts::ReadSerialiser Serialiser, IsStdVariant T>

@@ -3,6 +3,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <concepts>
+#include <optional>
 #include <span>
 #include <string>
 #include <string_view>
@@ -20,7 +21,7 @@ concept Reader = requires(T t)
     { t.endComposite() } -> std::same_as<void>;
     { t.beginValue(std::string_view{}) } -> std::same_as<void>;
     { t.endValue() } -> std::same_as<void>;
-    { t.beginSequence(std::size_t{}) } -> std::same_as<void>;
+    { t.beginSequence() } -> std::same_as<std::optional<std::size_t>>;
     { t.endSequence() } -> std::same_as<void>;
     { t.beginNullable() } -> std::same_as<bool>;
     { t.endNullable() } -> std::same_as<void>;

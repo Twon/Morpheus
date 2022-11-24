@@ -1,7 +1,11 @@
 #pragma once
 
 #include "morpheus/core/base/assert.hpp"
+#include "morpheus/core/base/scoped_action.hpp"
+#include "morpheus/core/concurrency/generator.hpp"
 #include "morpheus/core/functional/overload.hpp"
+#include "morpheus/core/serialisation/concepts/reader_archtype.hpp"
+#include "morpheus/core/serialisation/read_serialiser_decl.hpp"
 
 #include <boost/numeric/conversion/cast.hpp>
 
@@ -27,6 +31,13 @@ namespace morpheus::serialisation
 ///     Read in objects from an underlying json representation. 
 class MORPHEUSCORE_EXPORT JsonReader
 {
+    [[nodiscard]] auto currentState()
+    {
+        return ScopedAction(
+            [&]() { if (!mCurrent) mCurrent = getNext();  return *mCurrent; },
+            [&]() { mCurrent.reset(); }
+        );
+    }
 public:
     /// \class Exception
     ///     Exception type to be thrown for errors when parsing JSON.
@@ -47,15 +58,36 @@ public:
     void endComposite();
     void beginValue(std::string_view const key);
     void endValue();
-    void beginSequence(std::optional<std::size_t> = std::nullopt);
+    std::optional<std::size_t> beginSequence();
     void endSequence();
     bool beginNullable();
     void endNullable();
 
+    template<typename T> requires requires(concepts::ReaderArchtype& r) { { r.template read<T>() } ->std::same_as<T>; }
+    auto readSequence()//std::invocable auto serialiser)
+    {
+        return [&/*, serialiser = std::move(serialiser)*/]() -> concurrency::Generator<T>
+            {
+                beginSequence();
+                for(;;)
+                { 
+                    auto const state = currentState();
+                    auto const [event, next] = state.value();
+                    if (event == Event::EndSequence)
+                        co_return;
+
+                    MORPHEUS_ASSERT(event == Event::Value);
+                    co_yield read<T>();
+                    //co_yield serialiser();
+                }
+            };
+    }
+
     template<typename T> requires std::is_same_v<T, bool>
     T read()
     {
-        auto const [event, next] = getNext();
+        auto const state = currentState();
+        auto const [event, next] = state.value();
         MORPHEUS_ASSERT(next->index() == 0);
         return std::get<T>(*next);
     }
@@ -63,7 +95,8 @@ public:
     template<std::integral Interger> requires (not std::is_same_v<bool, Interger>)
     Interger read()
     {
-        auto const [event, next] = getNext();
+        auto const state = currentState();
+        auto const [event, next] = state.value();
         MORPHEUS_ASSERT((next->index() == 1) or (next->index() == 2));
         return std::visit(functional::Overload{
             [](std::integral auto const value) { return boost::numeric_cast<Interger>(value); },
@@ -74,7 +107,8 @@ public:
     template<std::floating_point Float>
     Float read()
     {
-        auto const [event, next] = getNext();
+        auto const state = currentState();
+        auto const [event, next] = state.value();
         MORPHEUS_ASSERT((next->index() == 1) or (next->index() == 2) or (next->index() == 3) or (next->index() == 4));
         return std::visit(functional::Overload {
             [](std::integral auto const value) { return boost::numeric_cast<Float>(value); },
@@ -96,7 +130,8 @@ public:
     template<typename T> requires std::is_same_v<T, std::string>
     T read()
     {
-        auto const [event, next] = getNext();
+        auto const state = currentState();
+        auto const [event, next] = state.value();
         MORPHEUS_ASSERT(next->index() == 5);
         return std::get<T>(*next);
     }
@@ -120,9 +155,34 @@ private:
 
     [[nodiscard]] EventValue getNext();
 
+/* [[nodiscard]] auto currentState()
+    {
+        return ScopedAction(
+//            [&]() { return getCurrent(); },
+//            [&]() { clearCurrent(); }
+            [&]() 
+            {
+                if (!mCurrent) mCurrent = getNext();
+                return *mCurrent;
+            },
+            [&]() { mCurrent.reset(); }
+        );
+    }*/
+
+/*  
+    EventValue& getCurrent()
+    {
+        if (!mCurrent)
+            mCurrent = getNext();
+        return *mCurrent;
+    }
+    void clearCurrent() { mCurrent.reset(); }
+*/
+
     rapidjson::IStreamWrapper mStream;
     rapidjson::Reader mJsonReader;
     std::unique_ptr<class JsonExtracter> mExtractor;
+    std::optional<EventValue> mCurrent;
 };
 
 
