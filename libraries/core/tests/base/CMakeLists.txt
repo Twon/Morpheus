@@ -1,5 +1,5 @@
 target_sources(MorpheusCoreTests
-    PUBLIC
+    PRIVATE
         assert.tests.cpp
         verify.tests.cpp
 )
