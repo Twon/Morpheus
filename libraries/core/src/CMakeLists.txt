@@ -17,6 +17,7 @@ target_link_libraries(MorpheusCore
     PUBLIC
         morpheus::config
         Boost::headers
+        Boost::log
 )
 
 add_subdirectory(morpheus/core)
