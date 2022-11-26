@@ -25,7 +25,7 @@ public:
     MOCK_METHOD(void, endComposite, (), ());
     MOCK_METHOD(void, beginValue, (std::string_view), ());
     MOCK_METHOD(void, endValue, (), ());
-    MOCK_METHOD(void, beginSequence, (std::optional<std::size_t>), ());
+    MOCK_METHOD(std::optional<std::size_t>, beginSequence, (), ());
     MOCK_METHOD(void, endSequence, (), ());
     MOCK_METHOD(bool, beginNullable, (), ());
     MOCK_METHOD(void, endNullable, (), ());
