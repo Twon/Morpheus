@@ -20,8 +20,6 @@ target_include_directories(MorpheusGfxMetal
 target_link_libraries(MorpheusGfxMetal
     PUBLIC
         morpheus::gfx::platform
-    PRIVATE
-        moltenvk::moltenvk
 )
 
 add_subdirectory(morpheus/gfx/metal)
