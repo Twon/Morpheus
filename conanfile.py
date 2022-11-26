@@ -54,7 +54,7 @@ class Morpheus(ConanFile):
     requires = (
         "boost/1.80.0",
         "catch2/3.1.0", 
-        "fmt/8.1.1",
+        "fmt/9.1.0",
         "glbinding/3.1.0",
         "glew/2.2.0",
         "gtest/1.12.1",
@@ -73,8 +73,8 @@ class Morpheus(ConanFile):
 
     def build_requirements(self):
         # Ensure the package is build against a version of CMake from 3.25 onwards.
-        if CMake.get_version() < Version("3.24.0"):
-            self.build_requires("cmake/3.24.0")
+        if CMake.get_version() < Version("3.25.0"):
+            self.build_requires("cmake/3.25.0")
 
     def requirements(self):
         if self.settings.os in ["Macos", "iOS", "tvOS"] and self.settings.compiler == "apple-clang":
