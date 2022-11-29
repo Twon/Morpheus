@@ -1,4 +1,4 @@
 target_sources(MorpheusApplication
-	PUBLIC
-		filesystem.hpp
+    PUBLIC
+        filesystem.hpp
 )
