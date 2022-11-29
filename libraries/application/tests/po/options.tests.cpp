@@ -6,6 +6,7 @@
 #include <boost/program_options/options_description.hpp>
 
 #include <catch2/catch_test_macros.hpp>
+#include <iostream>
 
 namespace morpheus::application::po
 {

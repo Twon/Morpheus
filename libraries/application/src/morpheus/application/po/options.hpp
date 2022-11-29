@@ -71,7 +71,12 @@ std::optional<int> parseProgramOptions(std::span<char const * const> parameters,
 
         po::notify(vm);
     }
-    catch (po::required_option& e)
+    catch (po::error_with_option_name& e)
+    {
+        BOOST_LOG_TRIVIAL(error) << e.what() << std::endl;
+        return 1;
+    }
+    catch (po::error& e)
     {
         BOOST_LOG_TRIVIAL(error) << e.what() << std::endl;
         return 1;
