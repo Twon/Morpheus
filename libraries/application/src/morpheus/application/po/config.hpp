@@ -16,8 +16,9 @@ namespace morpheus::application::po
 ///     Standard appication program options
 struct Config
 {
-    std::filesystem::path logFilePath; // Name auto generated as "timestamp".log if only a folder is given 
-
+    bool loggingEnabled = true;
+    std::filesystem::path logFilePath; // Name auto generated as "<processname>_<process_id>_<timestamp>".log if only a folder is given 
+    // Default log level = info
 //    date_ns::time_zone loggingTimeZone;
 //    std::uint32_t logFileRollOverSize; // Maximum size at which the log file roles over to a new logfile.
 

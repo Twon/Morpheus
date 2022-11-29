@@ -11,7 +11,8 @@ void Config::addOptions(boost::program_options::options_description& options)
     namespace po = boost::program_options;
     // clang-format off
     options.add_options()
-        ("logfile-path", po::value(&logFilePath)->required(), "The paths to the logfile.");
+        ("logging-enabled", po::value(&loggingEnabled)->default_value(loggingEnabled), "Logging to file is enabled.")
+        ("logfile-path", po::value(&logFilePath)->default_value(std::filesystem::current_path()), "The directory to store logfiles in.");
 //        ("logfile-timezone", po::value(&logFileTimeZone)->required(), "Width in pixels of the window.");
 //        ("height", po::value(&height)->required(), "Height in pixels of the window.")
 //        ("colour-depth", po::value(&colourDepth)->required(), "Colour depth in bits per pixel.")

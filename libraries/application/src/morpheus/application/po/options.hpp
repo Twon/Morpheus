@@ -4,6 +4,7 @@
 #include <morpheus/core/conformance/format.hpp>
 #include <morpheus/core/conformance/print.hpp>
 
+#include <boost/dll.hpp>
 #include <boost/log/trivial.hpp>
 #include <boost/program_options.hpp>
 
@@ -32,27 +33,23 @@ struct HelpDocumentation
     std::optional<Version> version;
 };
 
-//std::optional<int> parseProgramOptions(std::span<char*> parameters, HelpDocumentation msgDetails, CustomProgramOptions auto&... options)
-//{
-//    return parseProgramOptions(static_cast<int>(parameters.size()), parameters.data(), std::move(msgDetails), options...);
-//}
-
-std::optional<int> parseProgramOptions(int argc, char const* const* argv, HelpDocumentation msgDetails, CustomProgramOptions auto&... options)
+std::optional<int> parseProgramOptions(int argc, char const* const* argv, HelpDocumentation const& msgDetails, CustomProgramOptions auto&... options)
 {
-    return parseProgramOptions(std::span<char const * const>{argv, static_cast<std::size_t>(argc)}, std::move(msgDetails), options...);
+    return parseProgramOptions(std::span<char const * const>{argv, static_cast<std::size_t>(argc)}, msgDetails, options...);
 }
 
-std::optional<int> parseProgramOptions(std::span<char const * const> parameters, HelpDocumentation msgDetails, CustomProgramOptions auto&... options)
+std::optional<int> parseProgramOptions(std::span<char const * const> parameters, HelpDocumentation const& msgDetails, CustomProgramOptions auto&... options)
 {
     namespace po = boost::program_options;
     try
     {
         auto const version = (msgDetails.version) ? fmt_ns::format("version {}", *msgDetails.version) : std::string();
-        po::options_description desc(fmt_ns::format(
-            "{}\n{} \n\nUsage: ",
-            std::filesystem::path(parameters[0]).filename().string(), version));
+        po::options_description desc(fmt_ns::format("{}\n{} \n\nUsage: ", boost::dll::program_location().stem().string(), version));
 
-        desc.add_options()("help", "Display help message");
+        desc.add_options()("help,h", "Display the application help message.");
+
+        if (msgDetails.version)
+            desc.add_options()("version,v", "Display the application version.");
 
         (options.addOptions(desc), ...);
 
@@ -62,6 +59,13 @@ std::optional<int> parseProgramOptions(std::span<char const * const> parameters,
         if (vm.count("help"))
         {
             desc.print(std::cout);
+            return 1;
+        }
+
+        if (msgDetails.version && vm.count("version"))
+        {
+            auto const ouput = fmt_ns::format("{} {}", boost::dll::program_location().stem().string(), *msgDetails.version);
+            print_ns::print("{}", ouput);
             return 1;
         }
 
