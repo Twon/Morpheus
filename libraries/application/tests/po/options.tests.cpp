@@ -55,7 +55,7 @@ auto captureOutput(ranges::contiguous_range auto const& cliOptions, HelpDocument
     return findOption;
 }
 
-TEST_CASE("Ensure options parsing of native types works", "[morpheus.application.po.basic_types]")
+TEST_CASE_METHOD(LoggingFixture, "Ensure options parsing of native types works", "[morpheus.application.po.basic_types]")
 {
     GIVEN("A type supporting addOptions")
     {

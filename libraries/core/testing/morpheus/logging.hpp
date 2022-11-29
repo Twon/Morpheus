@@ -1,5 +1,7 @@
 #pragma once
 
+#include <boost/log/core.hpp>
+
 namespace morpheus
 {
 
@@ -7,7 +9,12 @@ struct LoggingFixture
 {
     LoggingFixture()
     {
-        // Redirect logging output
+        boost::log::core::get()->set_logging_enabled(false);
+    }
+
+    ~LoggingFixture()
+    {
+        boost::log::core::get()->set_logging_enabled(true);
     }
 };
 
