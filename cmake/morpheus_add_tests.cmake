@@ -80,6 +80,6 @@ function(morpheus_add_tests)
 
     include(Catch)
     catch_discover_tests(${MORPHEUS_NAME})
-    #add_coverage(MorpheusCoreTests)
+    add_coverage(${MORPHEUS_NAME})
 
 endfunction()
