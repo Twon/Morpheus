@@ -33,7 +33,7 @@ jobs:
           wget https://github.com/linux-test-project/lcov/archive/refs/tags/v1.16.tar.gz
           tar -xvf v1.16.tar.gz
           cd lcov-1.16
-          make install
+          sudo make install
 
       - name: Install Linux System Packages
         run: |
