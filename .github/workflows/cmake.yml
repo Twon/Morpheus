@@ -11,9 +11,9 @@ jobs:
         configuration: [ "Release", "Debug" ]
         settings:
           - {
-              name: "Ubuntu GCC-11",
+              name: "Ubuntu GCC-12",
               os: ubuntu-20.04,
-              compiler: { type: GCC, version: 11, conan: "gcc", cc: "gcc-11", cxx: "g++-11", std: 20 },
+              compiler: { type: GCC, version: 12, conan: "gcc", cc: "gcc-11", cxx: "g++-11", std: 20 },
               lib: "libstdc++11"
             }
           - {
@@ -73,7 +73,7 @@ jobs:
         if: matrix.settings.compiler.type == 'CLANG' && matrix.settings.lib == 'libstdc++11'
         uses: egor-tensin/setup-gcc@v1
         with:
-          version: 11
+          version: 12
           platform: x64
       - name: Install Clang
         if: matrix.settings.compiler.type == 'CLANG'
