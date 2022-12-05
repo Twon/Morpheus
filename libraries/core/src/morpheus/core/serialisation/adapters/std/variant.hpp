@@ -9,9 +9,10 @@
 #include "morpheus/core/serialisation/concepts/write_serialiser.hpp"
 #include "morpheus/core/serialisation/concepts/write_serialisable.hpp"
 
+#include <boost/type_index.hpp>
+
 #include <array>
 #include <stdexcept>
-#include <typeinfo>
 #include <variant>
 
 namespace morpheus::serialisation::detail
@@ -37,10 +38,10 @@ struct TypeListNames<std::variant<T...>>
         auto const entry = ranges::find(typeNames, name);
         if (entry == typeNames.end())
             throw std::out_of_range(fmt_ns::format("{} is not a valid type name.", name));
-        return std::distance(typeNames.begin(),entry);
+        return std::distance(typeNames.begin(), entry);
     }
 
-    inline static std::array<std::string, sizeof...(T)> typeNames{ typeid(T).name()...};
+    inline static std::array<std::string, sizeof...(T)> typeNames{ boost::typeindex::type_id<T>().pretty_name()...};
 };
 
 template<concepts::WriteSerialiser Serialiser, concepts::WriteSerialisable... T>
