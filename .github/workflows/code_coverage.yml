@@ -101,7 +101,9 @@ jobs:
         # Run LCov target to generate code coverage report
         run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}} --target lcov
 
-      - name: Upload
-        working-directory: ${{github.workspace}}/build
-        # Run LCov target to generate code coverage report
-        run: bash <(curl -s https://codecov.io/bash) -X gcov || echo "Codecov did not collect coverage reports"
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          working-directory: ${{github.workspace}}/build
+          gcov: true
+          gcov_include: ${{github.workspace}}/build
