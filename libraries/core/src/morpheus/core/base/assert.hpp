@@ -70,9 +70,9 @@ MORPHEUSCORE_EXPORT void assertHandler(AssertType type, sl_ns::source_location c
 
 
 #define MORPHEUS_ASSERT(expr) \
-    MORPHEUS_ASSERT_HANDLER(AssertType::Assert, expr, {})
+    MORPHEUS_ASSERT_HANDLER(::morpheus::AssertType::Assert, expr, {})
 
 #define MORPHEUS_ASSERT_MSG(expr, msg) \
-    MORPHEUS_ASSERT_HANDLER(AssertType::Assert, expr, (msg))
+    MORPHEUS_ASSERT_HANDLER(::morpheus::AssertType::Assert, expr, (msg))
 
 }
