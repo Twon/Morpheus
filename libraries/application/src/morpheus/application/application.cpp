@@ -11,14 +11,15 @@ namespace morpheus::application
 
 std::string getDefaultApplicationLogName()
 {
-    using namespace std::chrono;
+    using namespace date_ns;
     auto const programName = boost::dll::program_location().stem().string();
     auto const processId = boost::this_process::get_id();
-    auto const now = time_point{ system_clock::now() };
+    auto const now = std::chrono::time_point{ std::chrono::system_clock::now() };
     auto const ymd = year_month_day{ floor<days>(now) };
 //    auto const result = fmt_ns::format("{}{}{}-{}-{}", ymd.year(), ymd.month(), ymd.day(), programName, processId);
-    auto const year = fmt_ns::format("{:%Y}", ymd.year());
-    auto const month = fmt_ns::format("{:%m}", ymd.month());
+//    auto const year = fmt_ns::format("{}", ymd.year());
+//    auto const year = fmt_ns::format("{:%Y}", ymd.year());
+/*    auto const month = fmt_ns::format("{:%m}", ymd.month());
     auto const day = fmt_ns::format("{:%d}", ymd.day());
     auto const monthDay = fmt_ns::format("{:%m}{:%d}", ymd.month(), ymd.day());
     auto const yeahMonth = fmt_ns::format("{:%Y}{:%m}", ymd.year(), ymd.month());
@@ -31,7 +32,8 @@ std::string getDefaultApplicationLogName()
 //    auto const logfileName = fmt_ns::format("{}.{}.{:%Y}{:%m}{:%d}.log", programName, processId, ymd.year(), ymd.month(), ymd.day());
     auto const logfileName = fmt_ns::format("{}.{}.{}.log", programName, processId, yeahMonthDay);
 
-    return logfileName;
+    return logfileName;*/
+    return {};
 }
 
 } // namespace morpheus::application

@@ -1,3 +1,4 @@
+#include "morpheus/application/po/adapters/boost/log.hpp"
 #include "morpheus/application/po/adapters/std/filesystem.hpp"
 #include "morpheus/application/po/config.hpp"
 
@@ -12,13 +13,10 @@ void Config::addOptions(boost::program_options::options_description& options)
     // clang-format off
     options.add_options()
         ("logging-enabled", po::value(&loggingEnabled)->default_value(loggingEnabled), "Logging to file is enabled.")
+        ("log-append", po::value(&logAppend)->default_value(logAppend), "Logging is appended to an existing log file.")
+        ("log-level", po::value(&logLevel)->default_value(logLevel), "The level most permissive level of logging to allow into the log file.")
         ("logfile-path", po::value(&logFilePath)->default_value(std::filesystem::current_path()), "The directory to store logfiles in.");
 //        ("logfile-timezone", po::value(&logFileTimeZone)->required(), "Width in pixels of the window.");
-//        ("height", po::value(&height)->required(), "Height in pixels of the window.")
-//        ("colour-depth", po::value(&colourDepth)->required(), "Colour depth in bits per pixel.")
-//        ("start-x", po::value(&startX)->default_value(startX), "Starting pixel in the x-dimension for the Window.")
-//        ("start-y", po::value(&startY)->default_value(startY), "Starting pixel in the y-dimension for the Window.")
-//        ("full-screen", po::value(&isFullScreen)->default_value(isFullScreen), "Is the window to be started in full screen modde");
     // clang-format on
 
 
