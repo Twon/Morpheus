@@ -34,6 +34,12 @@ jobs:
           sudo apt update -y
           sudo apt-get install -y lcov
 
+      - name: Install Linux System Packages
+        run: |
+          sudo apt-get -y install libgl-dev
+          sudo apt-get -y install libopengl-dev
+          sudo apt-get -y install libglu1-mesa-dev
+
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
