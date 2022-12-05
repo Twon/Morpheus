@@ -30,8 +30,10 @@ jobs:
       - name: Install Lcov
         shell: bash
         run: |
-          sudo apt update -y
-          sudo apt-get install -y lcov
+          wget https://github.com/linux-test-project/lcov/archive/refs/tags/v1.16.tar.gz
+          tar -xvf v1.16.tar.gz
+          cd lcov-1.16
+          make install
 
       - name: Install Linux System Packages
         run: |
