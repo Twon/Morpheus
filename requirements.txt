@@ -1,5 +1,5 @@
 ﻿bottle==0.12.20
-certifi==2021.10.8
+certifi==2022.12.7
 charset-normalizer==2.0.12
 colorama==0.4.4
 conan==1.51.0
