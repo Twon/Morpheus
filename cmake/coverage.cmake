@@ -17,117 +17,10 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 
 include_guard(GLOBAL)
 
-include(python)
+include(targets)
+include(virtualenv)
 
 option(ENABLE_CODE_COVERAGE "Enable code coverage" OFF)
-
-
-#[=======================================================================[.rst:
-get_all_targets
-------------------
-
-Overview
-^^^^^^^^
-
-#]=======================================================================]
-function(get_all_targets)
-    set(options)
-    set(oneValueArgs RESULT DIRECTORY)
-    set(multiValueArgs)
-    cmake_parse_arguments(ALL_TARGET "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
-
-    if (NOT ALL_TARGET_RESULT)
-        message(FATAL_ERROR "RESULT parameter must be supplied")
-    endif()
-    if (NOT ALL_TARGET_DIRECTORY)
-        message(FATAL_ERROR "DIRECTORY parameter must be supplied")
-    endif()
-
-    get_property(subdirs DIRECTORY ${ALL_TARGET_DIRECTORY} PROPERTY SUBDIRECTORIES)
-    foreach(subdir IN LISTS subdirs)
-        get_all_targets(RESULT subTargets DIRECTORY ${subdir})
-    endforeach()
-
-    get_directory_property(allTargets DIRECTORY ${ALL_TARGET_DIRECTORY} BUILDSYSTEM_TARGETS)
-    set(${ALL_TARGET_RESULT} ${subTargets} ${allTargets} PARENT_SCOPE)
-endfunction()
-
-
-#[=======================================================================[.rst:
-coverage_target_filter_for_sources
-------------------
-
-Overview
-^^^^^^^^
-
-#]=======================================================================]
-function(coverage_target_filter_for_sources)
-    set(options)
-    set(oneValueArgs RESULT)
-    set(multiValueArgs TARGETS)
-    cmake_parse_arguments(COVERAGE "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
-
-    if (NOT COVERAGE_TARGETS)
-        message(FATAL_ERROR "TARGETS parameter must be supplied")
-    endif()
-    if (NOT COVERAGE_RESULT)
-        message(FATAL_ERROR "RESULT parameter must be supplied")
-    endif()
-
-    foreach(target IN LISTS COVERAGE_TARGETS)
-        get_target_property(TARGET_SOURCES ${target} SOURCES)
-        if (NOT TARGET_SOURCES)
-            continue()
-        endif()
-
-        list(APPEND targets ${target})
-    endforeach()
-    set(${COVERAGE_RESULT} ${${COVERAGE_RESULT}} ${targets} PARENT_SCOPE)
-
-endfunction()
-
-
-#[=======================================================================[.rst:
-coverage_source_relative_path
-------------------
-
-Overview
-^^^^^^^^
-
-#]=======================================================================]
-function (coverage_source_relative_path)
-    set(options)
-    set(oneValueArgs TARGET_NAME RESULT SOURCE_FILE)
-    set(multiValueArgs)
-    cmake_parse_arguments(COVERAGE "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
-
-    if (NOT COVERAGE_TARGET_NAME)
-        message(FATAL_ERROR "TARGET_NAME parameter must be supplied")
-    endif()
-    if (NOT COVERAGE_RESULT)
-        message(FATAL_ERROR "RESULT parameter must be supplied")
-    endif()
-
-    get_target_property(TARGET_SOURCE_DIR ${COVERAGE_TARGET_NAME} SOURCE_DIR)
-    get_target_property(TARGET_BINARY_DIR ${COVERAGE_TARGET_NAME} BINARY_DIR)
-
-    # Generated files should be in the subdirectories of the targets binary directory
-    string(REPLACE "${TARGET_BINARY_DIR}/" "" file "${COVERAGE_SOURCE_FILE}")
-
-	if(IS_ABSOLUTE ${file})
-		file(RELATIVE_PATH FILE ${TARGET_SOURCE_DIR} ${file})
- 	endif()
-
-	# get the right path for file
-	string(REPLACE ".." "__" PATH "${file}")
-    if (NOT PATH STREQUAL ${file})
-        message(SEND_ERROR "TARGET_BINARY_DIR is ${TARGET_BINARY_DIR}")
-        message(SEND_ERROR "PATH is ${PATH}")
-        message(SEND_ERROR "file is ${file}")
-    endif()
-
-	set(${COVERAGE_RESULT} "${PATH}" PARENT_SCOPE)
-endfunction()
 
 
 #[=======================================================================[.rst:
@@ -159,7 +52,7 @@ function(coverage_target_clean_intermediate_file)
     set(EXPECTED_FILES ${GCOV_NOTE_FILES} ${GCOV_DATA_FILES})
     foreach (file ${EXPECTED_FILES})
         #message(STATUS "Original path ${file}")
-        coverage_source_relative_path(TARGET_NAME ${COVERAGE_TARGET_NAME} RESULT file SOURCE_FILE ${file})
+        targets_relative_path_of_source(TARGET_NAME ${COVERAGE_TARGET_NAME} RESULT file SOURCE_FILE ${file})
         set(INTERMEDIATE_FILE "CMakeFiles/${COVERAGE_TARGET_NAME}.dir/${file}")
 #        if (NOT EXISTS ${TARGET_BINARY_DIR}/${INTERMEDIATE_FILE})
 #            message(SEND_ERROR "Unable to locate ${TARGET_BINARY_DIR} / ${INTERMEDIATE_FILE} from ${CMAKE_CURRENT_BINARY_DIR} with original path ${FILE}")
@@ -210,7 +103,7 @@ function(code_coverage)
     set(COVERAGE_VENV ${CMAKE_BINARY_DIR}/.venv/coverage)
     set(COVERAGE_FASTCOV_BIN ${COVERAGE_VENV}/bin/fastcov)
     set(COVERAGE_FASTCOV_TO_SONARQUBE_BIN ${COVERAGE_VENV}/bin/fastcov_to_sonarqube)
-    create_python_virtualenv(
+    virtualenv_create(
         DESTINATION ${COVERAGE_VENV}
         REQUIREMENTS ${PROJECT_SOURCE_DIR}/cmake/requirements/coverage_requirements.txt
         WORKING_DIRECTORY
@@ -229,19 +122,19 @@ function(code_coverage)
 #    string(REGEX REPLACE "([][+.*()^])" "\\\\\\1" ROOT_SEARCH_DIR "${CMAKE_BINARY_DIR}")
 #    message(STATUS "ROOT_SEARCH_DIR: ${ROOT_SEARCH_DIR}")
 
-    get_all_targets(RESULT allTargets DIRECTORY ${PROJECT_SOURCE_DIR})
+    targets_get_all(RESULT allTargets DIRECTORY ${PROJECT_SOURCE_DIR})
     if (COVERAGE_VERBOSE)
         message(STATUS "Coverage: All project targets: ${allTargets}")
     endif()
     
-    coverage_target_filter_for_sources(RESULT targetsWithSource TARGETS ${allTargets})
+    targets_filter_for_sources(RESULT targetsWithSource TARGETS ${allTargets})
     if (COVERAGE_VERBOSE)
         message(STATUS "Coverage: Targets with sources: ${targetsWithSource}}")
     endif()
     
     foreach(target IN LISTS targetsWithSource)
-        get_target_property(TARGET_TYPE ${target} TYPE)
-        message("Registering properties for target: ${target}:${TARGET_TYPE}")
+#        get_target_property(TARGET_TYPE ${target} TYPE)
+#        message("Registering properties for target: ${target}:${TARGET_TYPE}")
 #[[        target_compile_options(${target}
             PRIVATE
                 $<$<OR:$<CXX_COMPILER_ID:GNU>,$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>>:-O0;-g;-fprofile-arcs;-ftest-coverage>

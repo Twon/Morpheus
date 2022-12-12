@@ -20,7 +20,7 @@ include_guard(GLOBAL)
 find_package(Python3 REQUIRED COMPONENTS Interpreter)
 
 #[=======================================================================[.rst:
-create_python_virtualenv
+virtualenv_create
 ------------------
 
 Overview
@@ -31,7 +31,7 @@ within the build stage.
 
 .. code-block:: cmake
 
-  create_python_virtualenv(
+  virtualenv_create(
       [QUIET]
       [DESTINATION <folder>]
       [REQUIREMENTS <requirements>]
@@ -49,11 +49,11 @@ Example
 .. code-block:: cmake
 
     set(pyenv ${CMAKE_CURRENT_BINARY_DIR}/pyenv)
-    mmb_create_python_virtualenv(
+    virtualenv_create(
         DESTINATION ${pyenv}
-        EXTRA_ARGS
-            COMMAND ${pyenv}/bin/python -m pip install -r requirements.txt
-            WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+        REQUIREMENTS requirements.txt
+        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+        OUTPUT module.py
     )
     add_custom_command(
         COMMAND ${pyenv}/bin/python some/script.py
@@ -62,7 +62,7 @@ Example
     )
 
 #]=======================================================================]
-function(create_python_virtualenv)
+function(virtualenv_create)
     set(options)
     set(oneValueArgs DESTINATION REQUIREMENTS WORKING_DIRECTORY)
     set(multiValueArgs OUTPUT EXTRA_ARGS)
