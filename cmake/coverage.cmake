@@ -25,14 +25,14 @@ option(ENABLE_CODE_COVERAGE "Enable code coverage" OFF)
 
 
 set(COVERAGE_SUPPORTED_FLAGS
-	# gcc 8 onwards
-	"-fprofile-arcs -fprofile-abs-path -ftest-coverage"
+    # gcc 8 onwards
+    "-fprofile-arcs -fprofile-abs-path -ftest-coverage"
 
-	# gcc and clang
-	"-fprofile-arcs -ftest-coverage"
+    # gcc and clang
+    "-fprofile-arcs -ftest-coverage"
 
-	# gcc and clang fallback
-	"--coverage"
+    # gcc and clang fallback
+    "--coverage"
 )
 
 
@@ -61,7 +61,7 @@ function(coverage_target_clean_intermediate_file)
     #foreach (file IN LISTS EXPECTED_FILES)
     #    targets_relative_path_of_source(TARGET_NAME ${COVERAGE_TARGET_NAME} RESULT file SOURCE_FILE ${file})
     #    set(INTERMEDIATE_FILE "CMakeFiles/${COVERAGE_TARGET_NAME}.dir/${file}")
-	#	list(APPEND CLEAN_FILES INTERMEDIATE_FILE)
+    #    list(APPEND CLEAN_FILES INTERMEDIATE_FILE)
     #endforeach()
 
 #[[    foreach(file IN LISTS targetSources)
@@ -90,7 +90,7 @@ function(coverage_target_clean_intermediate_file)
 #    foreach (file IN LISTS EXPECTED_FILES)
 #        targets_relative_path_of_source(TARGET_NAME ${COVERAGE_TARGET_NAME} RESULT file SOURCE_FILE ${file})
 #        set(INTERMEDIATE_FILE "CMakeFiles/${COVERAGE_TARGET_NAME}.dir/${file}")
-#		list(APPEND CLEAN_FILES INTERMEDIATE_FILE)
+#        list(APPEND CLEAN_FILES INTERMEDIATE_FILE)
 #    endforeach()
 
     set_directory_properties(PROPERTIES ADDITIONAL_CLEAN_FILES "${gcovNoteFiles} ${gcovDataFiles}")
@@ -190,24 +190,19 @@ function(enable_code_coverage)
         add_library(CodeCoverage INTERFACE IMPORTED)
         add_library(coverage::coverage ALIAS CodeCoverage)
 
-		foreach (FLAG ${COVERAGE_SUPPORTED_FLAGS})
-			check_cxx_compiler_flag("${FLAG}" COVERAGE_FLAG_DETECTED)
+        foreach (FLAGS ${COVERAGE_SUPPORTED_FLAGS})
+            set(CMAKE_REQUIRED_FLAGS "${FLAGS}")
+            check_cxx_compiler_flag("${FLAGS}" COVERAGE_FLAGS_DETECTED)
 
-			if (COVERAGE_FLAG_DETECTED)
-                string(REPLACE " " ";" FLAG "${FLAG}")
-				set(COVERAGE_COMPILER_FLAGS "${FLAG}" CACHE STRING "${CMAKE_CXX_COMPILER_ID} flags for code coverage.")
-				mark_as_advanced(COVERAGE_COMPILER_FLAGS)
-				break()
-			else ()
-				message(WARNING "Code coverage is not available for the currently enable compiler ${CMAKE_CXX_COMPILER_ID}.")
-			endif ()
+            if (COVERAGE_FLAGS_DETECTED)
+                string(REPLACE " " ";" FLAGS "${FLAGS}")
+                set(COVERAGE_COMPILER_FLAGS "${FLAGS}" CACHE STRING "${CMAKE_CXX_COMPILER_ID} flags for code coverage.")
+                mark_as_advanced(COVERAGE_COMPILER_FLAGS)
+                break()
+            else ()
+                message(WARNING "Code coverage is not available for the currently enable compiler ${CMAKE_CXX_COMPILER_ID} via the compiler flags ${FLAGS}.")
+            endif ()
         endforeach()
-
-#        set_target_properties(CodeCoverage PROPERTIES
-#            INTERFACE_COMPILE_OPTIONS "${COVERAGE_COMPILER_FLAGS}"
-#            INTERFACE_LINK_OPTIONS "${COVERAGE_COMPILER_FLAGS}"
-#        )
-
 
         target_compile_options(CodeCoverage INTERFACE ${COVERAGE_COMPILER_FLAGS})
         target_link_options(CodeCoverage INTERFACE ${COVERAGE_COMPILER_FLAGS})
