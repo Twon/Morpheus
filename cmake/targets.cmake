@@ -88,6 +88,55 @@ endfunction()
 
 
 #[=======================================================================[.rst:
+targets_get_translation_units
+------------------
+
+Overview
+^^^^^^^^
+
+Given a target return only source files which result in translation unit
+being generated (i.e. no header files).
+
+#]=======================================================================]
+function(targets_get_translation_units)
+    set(options)
+    set(oneValueArgs TARGET RESULT)
+    set(multiValueArgs)
+    cmake_parse_arguments(ARGS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
+
+    if (NOT ARGS_TARGET)
+        message(FATAL_ERROR "TARGET parameter must be supplied")
+    endif()
+    if (NOT ARGS_RESULT)
+        message(FATAL_ERROR "RESULT parameter must be supplied")
+    endif()
+
+    get_target_property(targetSource ${ARGS_TARGET} SOURCES)
+
+    # CMAKE_CXX_SOURCE_FILE_EXTENSIONS defined in: https://github.com/Kitware/CMake/blob/master/Modules/CMakeCXXCompiler.cmake.in
+    foreach(cppExt IN LISTS CMAKE_CXX_SOURCE_FILE_EXTENSIONS)
+        # Filter on a copy of the oringal source list
+        set(filteredTargetSource "${targetSource}")
+        # Escape any file extensions with special characters.
+        string(REGEX REPLACE "([][+.*()^])" "\\\\\\1" cppExt "${cppExt}")
+        list(FILTER filteredTargetSource INCLUDE REGEX ".*\\.${cppExt}$")
+        list(APPEND targetTranslationUnits ${filteredTargetSource})
+    endforeach()
+#    set(${ARGS_RESULT} ${targetTranslationUnits} PARENT_SCOPE)
+
+    get_target_property(targetBinaryDir ${ARGS_TARGET} BINARY_DIR)
+    foreach(file IN LISTS targetTranslationUnits)
+        targets_relative_path_of_source(TARGET_NAME ${COVERAGE_TARGET_NAME} RESULT file SOURCE_FILE ${file})
+        set(translationUnitLocation "${targetBinaryDir}/CMakeFiles/${COVERAGE_TARGET_NAME}.dir/${file}")
+        list(APPEND targetTranslationUnitLocations ${translationUnitLocation})
+    endforeach()
+
+    set(${ARGS_RESULT} ${targetTranslationUnitLocations} PARENT_SCOPE)
+
+endfunction()
+
+
+#[=======================================================================[.rst:
 targets_relative_path_of_source
 ------------------
 
@@ -108,14 +157,14 @@ function (targets_relative_path_of_source)
         message(FATAL_ERROR "RESULT parameter must be supplied")
     endif()
 
-    get_target_property(TARGET_SOURCE_DIR ${ARGS_TARGET_NAME} SOURCE_DIR)
-    get_target_property(TARGET_BINARY_DIR ${ARGS_TARGET_NAME} BINARY_DIR)
+    get_target_property(targetSrcDir ${ARGS_TARGET_NAME} SOURCE_DIR)
+    get_target_property(targetBinaryDir ${ARGS_TARGET_NAME} BINARY_DIR)
 
     # Generated files should be in the subdirectories of the targets binary directory
-    string(REPLACE "${TARGET_BINARY_DIR}/" "" file "${COVERAGE_SOURCE_FILE}")
+    string(REPLACE "${targetBinaryDir}/" "" file "${ARGS_SOURCE_FILE}")
 
 	if(IS_ABSOLUTE ${file})
-		file(RELATIVE_PATH FILE ${TARGET_SOURCE_DIR} ${file})
+		file(RELATIVE_PATH file ${targetSrcDir} ${file})
  	endif()
 
 	# get the right path for file

@@ -19,8 +19,22 @@ include_guard(GLOBAL)
 
 include(targets)
 include(virtualenv)
+include(CheckCXXCompilerFlag)
 
 option(ENABLE_CODE_COVERAGE "Enable code coverage" OFF)
+
+
+set(COVERAGE_SUPPORTED_FLAGS
+	# gcc 8 onwards
+	"-fprofile-arcs -fprofile-abs-path -ftest-coverage"
+
+	# gcc and clang
+	"-fprofile-arcs -ftest-coverage"
+
+	# gcc and clang fallback
+	"--coverage"
+)
+
 
 
 #[=======================================================================[.rst:
@@ -33,7 +47,7 @@ Overview
 #]=======================================================================]
 function(coverage_target_clean_intermediate_file)
     set(options QUIET)
-    set(oneValueArgs TARGET_NAME)
+    set(oneValueArgs TARGET_NAME RETURN_NOTE_FILES RETURN_DATA_FILES)
     set(multiValueArgs)
     cmake_parse_arguments(COVERAGE "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
 
@@ -41,32 +55,82 @@ function(coverage_target_clean_intermediate_file)
         message(FATAL_ERROR "TARGET_NAME parameter must be supplied")
     endif()
 
-    get_target_property(TARGET_SOURCES ${COVERAGE_TARGET_NAME} SOURCES)
-    get_target_property(TARGET_BINARY_DIR ${COVERAGE_TARGET_NAME} BINARY_DIR)
+#    get_target_property(TARGET_SOURCES ${COVERAGE_TARGET_NAME} SOURCES)
+    targets_get_translation_units(TARGET ${COVERAGE_TARGET_NAME} RESULT targetSources)
 
-    foreach (file ${TARGET_SOURCES})
-        list(APPEND GCOV_NOTE_FILES "${file}.gcno")
-        list(APPEND GCOV_DATA_FILES "${file}.gcda")
+    #foreach (file IN LISTS EXPECTED_FILES)
+    #    targets_relative_path_of_source(TARGET_NAME ${COVERAGE_TARGET_NAME} RESULT file SOURCE_FILE ${file})
+    #    set(INTERMEDIATE_FILE "CMakeFiles/${COVERAGE_TARGET_NAME}.dir/${file}")
+	#	list(APPEND CLEAN_FILES INTERMEDIATE_FILE)
+    #endforeach()
+
+#[[    foreach(file IN LISTS targetSources)
+        targets_relative_path_of_source(TARGET_NAME ${COVERAGE_TARGET_NAME} RESULT translationFile SOURCE_FILE ${file})
+        set(translationUnitLocation "CMakeFiles/${COVERAGE_TARGET_NAME}.dir/${translationFile}")
+        message(STATUS "${file} in translation unit space is ${translationFile} and final location is ${translationUnitLocation}")
+        list(APPEND targetTranslationUnitLocations ${translationUnitLocation})
+    endforeach()
+    message(STATUS "targetTranslationUnitLocations is ${targetTranslationUnitLocations}")
+]]
+
+    foreach (file IN LISTS targetSources)
+        list(APPEND gcovNoteFiles "${file}.gcno")
+        list(APPEND gcovDataFiles "${file}.gcda")
     endforeach()
 
-    set(EXPECTED_FILES ${GCOV_NOTE_FILES} ${GCOV_DATA_FILES})
-    foreach (file ${EXPECTED_FILES})
-        #message(STATUS "Original path ${file}")
-        targets_relative_path_of_source(TARGET_NAME ${COVERAGE_TARGET_NAME} RESULT file SOURCE_FILE ${file})
-        set(INTERMEDIATE_FILE "CMakeFiles/${COVERAGE_TARGET_NAME}.dir/${file}")
-#        if (NOT EXISTS ${TARGET_BINARY_DIR}/${INTERMEDIATE_FILE})
-#            message(SEND_ERROR "Unable to locate ${TARGET_BINARY_DIR} / ${INTERMEDIATE_FILE} from ${CMAKE_CURRENT_BINARY_DIR} with original path ${FILE}")
-#        endif()
-		list(APPEND CLEAN_FILES INTERMEDIATE_FILE)
-    endforeach()
+    string(REPLACE ";" "\n" gcovNoteFilesList "${gcovNoteFiles}")
+    message(STATUS "gcovNoteFiles is ${gcovNoteFilesList}")
+#    message(STATUS "gcovNoteFiles is ${gcovNoteFiles}")
 
-    set_directory_properties(PROPERTIES ADDITIONAL_CLEAN_FILES "${INTERMEDIATE_FILE}")
+    string(REPLACE ";" "\n" gcovDataFilesList "${gcovDataFiles}")
+    message(STATUS "gcovDataFiles is ${gcovDataFilesList}")
+#    message(STATUS "gcovDataFiles is ${gcovDataFiles}")
+
+#    set(EXPECTED_FILES "${gcovNoteFiles}" "${gcovDataFiles}")
+#    foreach (file IN LISTS EXPECTED_FILES)
+#        targets_relative_path_of_source(TARGET_NAME ${COVERAGE_TARGET_NAME} RESULT file SOURCE_FILE ${file})
+#        set(INTERMEDIATE_FILE "CMakeFiles/${COVERAGE_TARGET_NAME}.dir/${file}")
+#		list(APPEND CLEAN_FILES INTERMEDIATE_FILE)
+#    endforeach()
+
+    set_directory_properties(PROPERTIES ADDITIONAL_CLEAN_FILES "${gcovNoteFiles} ${gcovDataFiles}")
+
+    if(COVERAGE_RETURN_NOTE_FILES)
+        set(${COVERAGE_RETURN_NOTE_FILES} "${gcovNoteFiles}" PARENT_SCOPE)
+    endif()
+    if(COVERAGE_RETURN_DATA_FILES)
+        set(${COVERAGE_RETURN_DATA_FILES} "${gcovDataFiles}" PARENT_SCOPE)
+
+        #[[
+        foreach(cppExt IN LISTS CMAKE_CXX_SOURCE_FILE_EXTENSIONS)
+            #message("GCov Data files for ${COVERAGE_TARGET_NAME}: ${gcovDataFiles}")
+            #string(REGEX REPLACE "([][+.*()^])" "\\\\\\1" cppExt ".*\.${cppExt}\.gcda")
+            #set(cppExt ".*\\.${cppExt}\\.gcda$")
+            #message("Regex is ${cppExt}")
+            #string(REGEX MATCH ".*\\.${cppExt}\\.gcda$" CXX_GCOV_DATA_FILES ${gcovDataFiles})
+
+            #message("Filters by string GCov Data files for ${COVERAGE_TARGET_NAME} to: ${CXX_GCOV_DATA_FILES}")
+
+            set(filteredGcovDataFiles "${gcovDataFiles}")
+            #string(REGEX REPLACE "([][+.*()^])" "\\\\\\1" cppExt "${cppExt}\.gcda")
+            string(REGEX REPLACE "([][+.*()^])" "\\\\\\1" cppExt "${cppExt}") # Escape any file extensions with special characters.
+            list(FILTER filteredGcovDataFiles INCLUDE REGEX ".*\\.${cppExt}\\.gcda$")
+            #message("Filters by list GCov Data files for ${COVERAGE_TARGET_NAME} to: ${GCOV_DATA_FILES_COPY}")
+
+            list(APPEND remainingGcovDataFiles ${filteredGcovDataFiles})
+        endforeach()
+        message("Setting GCov Data files for ${COVERAGE_TARGET_NAME} to: ${COVERAGE_RETURN_DATA_FILES} containing ${remainingGcovDataFiles}")
+
+        set(${COVERAGE_RETURN_DATA_FILES} "${remainingGcovDataFiles}" PARENT_SCOPE)
+        ]]
+        #message("GCov Data files for ${COVERAGE_TARGET_NAME}: ${${COVERAGE_RETURN_DATA_FILES}}")
+    endif()
 
 endfunction()
 
 
 
-function(code_coverage)
+function(enable_code_coverage)
     set(options QUIET VERBOSE)
     set(oneValueArgs)
     set(multiValueArgs)
@@ -121,6 +185,33 @@ function(code_coverage)
 
 #    string(REGEX REPLACE "([][+.*()^])" "\\\\\\1" ROOT_SEARCH_DIR "${CMAKE_BINARY_DIR}")
 #    message(STATUS "ROOT_SEARCH_DIR: ${ROOT_SEARCH_DIR}")
+    
+    if (NOT TARGET CodeCoverage)
+        add_library(CodeCoverage INTERFACE IMPORTED)
+        add_library(coverage::coverage ALIAS CodeCoverage)
+
+		foreach (FLAG ${COVERAGE_SUPPORTED_FLAGS})
+			check_cxx_compiler_flag("${FLAG}" COVERAGE_FLAG_DETECTED)
+
+			if (COVERAGE_FLAG_DETECTED)
+                string(REPLACE " " ";" FLAG "${FLAG}")
+				set(COVERAGE_COMPILER_FLAGS "${FLAG}" CACHE STRING "${CMAKE_CXX_COMPILER_ID} flags for code coverage.")
+				mark_as_advanced(COVERAGE_COMPILER_FLAGS)
+				break()
+			else ()
+				message(WARNING "Code coverage is not available for the currently enable compiler ${CMAKE_CXX_COMPILER_ID}.")
+			endif ()
+        endforeach()
+
+#        set_target_properties(CodeCoverage PROPERTIES
+#            INTERFACE_COMPILE_OPTIONS "${COVERAGE_COMPILER_FLAGS}"
+#            INTERFACE_LINK_OPTIONS "${COVERAGE_COMPILER_FLAGS}"
+#        )
+
+
+        target_compile_options(CodeCoverage INTERFACE ${COVERAGE_COMPILER_FLAGS})
+        target_link_options(CodeCoverage INTERFACE ${COVERAGE_COMPILER_FLAGS})
+    endif()
 
     targets_get_all(RESULT allTargets DIRECTORY ${PROJECT_SOURCE_DIR})
     if (COVERAGE_VERBOSE)
@@ -131,26 +222,17 @@ function(code_coverage)
     if (COVERAGE_VERBOSE)
         message(STATUS "Coverage: Targets with sources: ${targetsWithSource}}")
     endif()
-    
+
     foreach(target IN LISTS targetsWithSource)
-#        get_target_property(TARGET_TYPE ${target} TYPE)
-#        message("Registering properties for target: ${target}:${TARGET_TYPE}")
-#[[        target_compile_options(${target}
-            PRIVATE
-                $<$<OR:$<CXX_COMPILER_ID:GNU>,$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>>:-O0;-g;-fprofile-arcs;-ftest-coverage>
-        )
-
-        target_link_options(${target}
-            PRIVATE
-                $<$<OR:$<CXX_COMPILER_ID:GNU>,$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>>:-lgcov -coverage>
-        )]]
-
-        set_property(TARGET ${target} APPEND_STRING PROPERTY COMPILE_FLAGS "-O0 -g -fprofile-arcs -ftest-coverage")
-        set_property(TARGET ${target} APPEND_STRING PROPERTY LINK_FLAGS "-lgcov -coverage")
-
-        coverage_target_clean_intermediate_file(TARGET_NAME ${target})
+        target_link_libraries(${target} INTERFACE CodeCoverage)
+        coverage_target_clean_intermediate_file(TARGET_NAME ${target} RETURN_DATA_FILES outputGCovDataFile)
+        list(APPEND ALL_GCOV_DATA_FILES ${outputGCovDataFile})
+        message("GCov Data files for ${target}: ${outputGCovDataFile}")
     endforeach()
 
+    list(REMOVE_DUPLICATES ALL_GCOV_DATA_FILES)
+
+    message("GCov Data files: ${ALL_GCOV_DATA_FILES}")
     file(MAKE_DIRECTORY ${COVERAGE_REPORT_DIR})
 
     add_custom_target(coverage-clean
@@ -198,6 +280,7 @@ function(code_coverage)
         DEPENDS
             ${COVERAGE_FASTCOV_BIN}
             ${LCOV_BIN}
+            ${ALL_GCOV_DATA_FILES}
             # Missing source file (*.cpp and *.gcda) dependencies.
         WORKING_DIRECTORY
             ${CMAKE_BINARY_DIR}
