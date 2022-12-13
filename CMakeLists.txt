@@ -8,7 +8,9 @@ project(Morpheus
     LANGUAGES CXX
 )
 
+set(CMAKE_POLICY_DEFAULT_CMP0076 NEW)
 set(CMAKE_POLICY_DEFAULT_CMP0077 NEW)
+cmake_policy(SET CMP0076 NEW)
 cmake_policy(SET CMP0077 NEW)
 cmake_policy(SET CMP0127 NEW)
 
@@ -35,6 +37,7 @@ list(APPEND CMAKE_MODULE_PATH
 
 #------------------------------------------------------------------------------------------------------------------------------------------
 # Custom CMake Includes
+include(coverage)
 include(Compiler)
 include(Documentation)
 include(IDESettings)
@@ -71,6 +74,14 @@ add_subdirectory(libraries)
 add_subdirectory(examples)
 
 if (MORPHEUS_CODE_COVERAGE)
-    coverage_evaluate()
+
+    #get_all_targets(RESULT allTargets DIRECTORY ${PROJECT_SOURCE_DIR})
+    #coverage_target_filter_for_sources(RESULT targetsWithSource TARGETS ${allTargets})
+    #foreach(target IN LISTS targetsWithSource)
+    #    add_coverage(${target})
+    #endforeach()
+
+    #coverage_evaluate()
+    enable_code_coverage()
 endif()
 
