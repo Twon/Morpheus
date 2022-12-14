@@ -167,6 +167,7 @@ function(enable_code_coverage)
     set(COVERAGE_VENV ${CMAKE_BINARY_DIR}/.venv/coverage)
     set(COVERAGE_FASTCOV_BIN ${COVERAGE_VENV}/bin/fastcov)
     set(COVERAGE_FASTCOV_TO_SONARQUBE_BIN ${COVERAGE_VENV}/bin/fastcov_to_sonarqube)
+    set(COVERAGE_LCOV_TO_COBERTURA_BIN ${COVERAGE_VENV}/bin/lcov_cobertura)
     virtualenv_create(
         DESTINATION ${COVERAGE_VENV}
         REQUIREMENTS ${PROJECT_SOURCE_DIR}/cmake/requirements/coverage_requirements.txt
@@ -175,11 +176,13 @@ function(enable_code_coverage)
         OUTPUT
             ${COVERAGE_FASTCOV_BIN}
             ${COVERAGE_FASTCOV_TO_SONARQUBE_BIN}
+            ${COVERAGE_LCOV_TO_COBERTURA_BIN}
     )
 
     set(COVERAGE_REPORT_DIR "${CMAKE_BINARY_DIR}/coverage")
     set(COVERAGE_REPORT_PATH "${COVERAGE_REPORT_DIR}/fastcov_report.json")
     set(SONARQUBE_REPORT_PATH "${COVERAGE_REPORT_DIR}/sonarcube_coverage.xml")
+    set(COBERTURA_REPORT_PATH "${COVERAGE_REPORT_DIR}/cobertura_coverage.xml")
     set(LCOV_REPORT_PATH "${COVERAGE_REPORT_DIR}/lcov.info")
     set(LCOV_HTML_PATH "${COVERAGE_REPORT_DIR}/html")
 
@@ -320,4 +323,25 @@ function(enable_code_coverage)
     )
 
     add_dependencies(coverage-lcov coverage-lcov-info)
+
+    add_custom_command(
+        OUTPUT ${COBERTURA_REPORT_PATH}
+        COMMAND
+            ${COVERAGE_LCOV_TO_COBERTURA_BIN} ${LCOV_REPORT_PATH}#
+                --base-dir ${PROJECT_SOURCE_DIR}
+                --output ${COBERTURA_REPORT_PATH}
+                --demangle
+        DEPENDS
+            ${LCOV_REPORT_PATH}
+            ${COVERAGE_LCOV_TO_COBERTURA_BIN}
+        WORKING_DIRECTORY
+            ${CMAKE_BINARY_DIR}
+        COMMENT
+            "Generate Cobertura XML report from LCov report"
+    )
+
+    add_custom_target(coverage-cobertura
+        DEPENDS ${COBERTURA_REPORT_PATH}
+    )
+
 endfunction()

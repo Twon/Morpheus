@@ -103,9 +103,14 @@ jobs:
         # Run LCov target to generate code coverage report
         run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}} --target coverage-lcov
 
+      - name: Cobertura
+        # Run Cobertura target to generate code coverage report in XML
+        run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}} --target coverage-cobertura
+
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
         with:
           working-directory: ${{github.workspace}}/build/coverage
           gcov: true
           gcov_include: ${{github.workspace}}/build/coverage/html
+          files: ${{github.workspace}}/build/coverage/cobertura_coverage1.xml
