@@ -74,14 +74,6 @@ add_subdirectory(libraries)
 add_subdirectory(examples)
 
 if (ENABLE_CODE_COVERAGE)
-
-    #get_all_targets(RESULT allTargets DIRECTORY ${PROJECT_SOURCE_DIR})
-    #coverage_target_filter_for_sources(RESULT targetsWithSource TARGETS ${allTargets})
-    #foreach(target IN LISTS targetsWithSource)
-    #    add_coverage(${target})
-    #endforeach()
-
-    #coverage_evaluate()
     enable_code_coverage()
 endif()
 

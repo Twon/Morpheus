@@ -3,8 +3,7 @@
  [![Build](https://github.com/Twon/Morpheus/actions/workflows/cmake.yml/badge.svg)](https://github.com/Twon/Morpheus/actions)
  [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/twon/morpheus/master/LICENSE.MIT)
  [![GitHub Issues](https://img.shields.io/github/issues/twon/morpheus.svg)](http://github.com/twon/morpheus/issues)
- [![codecov](https://codecov.io/gh/twon/morpheus/branch/master/graph/badge.svg)](https://codecov.io/gh/twon/morpheus)
-
+ [![codecov](https://codecov.io/gh/Twon/Morpheus/branch/main/graph/badge.svg?token=1JmtZA8soP)](https://codecov.io/gh/Twon/Morpheus)
 
 =======
 
