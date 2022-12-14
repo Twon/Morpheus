@@ -73,7 +73,7 @@ set(CMAKE_SKIP_BUILD_RPATH  FALSE)
 add_subdirectory(libraries)
 add_subdirectory(examples)
 
-if (MORPHEUS_CODE_COVERAGE)
+if (ENABLE_CODE_COVERAGE)
 
     #get_all_targets(RESULT allTargets DIRECTORY ${PROJECT_SOURCE_DIR})
     #coverage_target_filter_for_sources(RESULT targetsWithSource TARGETS ${allTargets})
