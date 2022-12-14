@@ -106,6 +106,6 @@ jobs:
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
         with:
-          working-directory: ${{github.workspace}}/build
+          working-directory: ${{github.workspace}}/build/coverage
           gcov: true
-          gcov_include: ${{github.workspace}}/build
+          gcov_include: ${{github.workspace}}/build/coverage/html
