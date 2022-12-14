@@ -100,12 +100,16 @@ targets_get_translation_units
 Overview
 ^^^^^^^^
 
-A translation unit is the compiler representation of a source file with all
-marcos and include statements expaned in place.  As such its an abstract concept
-and not one that compiler will actively write (unless considering special
-modes offer when coerced compilers via compiler flags to dump post prerocess pr
-Given a target return only source files which result in translation unit
-being generated (i.e. no header files).
+For a given target calculate the subset of sources which will produce a translation
+unit (the compiler representation of a source file with all
+marcos and include statements expanded in place).  Output is a list of resulting
+sources in terms of the output location subsequent intermediate files from the 
+compiler are written too, i.e. a list containing the following inputs would be 
+transformed as such:
+
+    ${targetSourceDir}/sourcefile.cpp -> ${targetBinaryDir}/CMakeFiles/${targetName}.dir/${file}
+    ${targetSourceDir}/subdir/sourcefile.cpp -> ${targetBinaryDir}/CMakeFiles/subdir/${targetName}.dir/${file}
+    ${targetBinaryDir}/sourcefile.cpp -> ${targetBinaryDir}/CMakeFiles/${targetName}.dir/${file}
 
 #]=======================================================================]
 function(targets_get_translation_units)
@@ -132,7 +136,6 @@ function(targets_get_translation_units)
         list(FILTER filteredTargetSource INCLUDE REGEX ".*\\.${cppExt}$")
         list(APPEND targetTranslationUnits ${filteredTargetSource})
     endforeach()
-#    set(${ARGS_RESULT} ${targetTranslationUnits} PARENT_SCOPE)
 
     get_target_property(targetBinaryDir ${ARGS_TARGET} BINARY_DIR)
     foreach(file IN LISTS targetTranslationUnits)
@@ -179,11 +182,6 @@ function (targets_relative_path_of_source)
 
     # get the right path for file
     string(REPLACE ".." "__" PATH "${file}")
-#    if (NOT PATH STREQUAL ${file})
-#        message(SEND_ERROR "TARGET_BINARY_DIR is ${TARGET_BINARY_DIR}")
-#        message(SEND_ERROR "PATH is ${PATH}")
-#        message(SEND_ERROR "file is ${file}")
-#    endif()
 
     set(${ARGS_RESULT} "${PATH}" PARENT_SCOPE)
 endfunction()

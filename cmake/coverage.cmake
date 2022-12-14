@@ -55,43 +55,12 @@ function(coverage_target_clean_intermediate_file)
         message(FATAL_ERROR "TARGET_NAME parameter must be supplied")
     endif()
 
-#    get_target_property(TARGET_SOURCES ${COVERAGE_TARGET_NAME} SOURCES)
     targets_get_translation_units(TARGET ${COVERAGE_TARGET_NAME} RESULT targetSources)
-
-    #foreach (file IN LISTS EXPECTED_FILES)
-    #    targets_relative_path_of_source(TARGET_NAME ${COVERAGE_TARGET_NAME} RESULT file SOURCE_FILE ${file})
-    #    set(INTERMEDIATE_FILE "CMakeFiles/${COVERAGE_TARGET_NAME}.dir/${file}")
-    #    list(APPEND CLEAN_FILES INTERMEDIATE_FILE)
-    #endforeach()
-
-#[[    foreach(file IN LISTS targetSources)
-        targets_relative_path_of_source(TARGET_NAME ${COVERAGE_TARGET_NAME} RESULT translationFile SOURCE_FILE ${file})
-        set(translationUnitLocation "CMakeFiles/${COVERAGE_TARGET_NAME}.dir/${translationFile}")
-        message(STATUS "${file} in translation unit space is ${translationFile} and final location is ${translationUnitLocation}")
-        list(APPEND targetTranslationUnitLocations ${translationUnitLocation})
-    endforeach()
-    message(STATUS "targetTranslationUnitLocations is ${targetTranslationUnitLocations}")
-]]
 
     foreach (file IN LISTS targetSources)
         list(APPEND gcovNoteFiles "${file}.gcno")
         list(APPEND gcovDataFiles "${file}.gcda")
     endforeach()
-
-    string(REPLACE ";" "\n" gcovNoteFilesList "${gcovNoteFiles}")
-    message(STATUS "gcovNoteFiles is ${gcovNoteFilesList}")
-#    message(STATUS "gcovNoteFiles is ${gcovNoteFiles}")
-
-    string(REPLACE ";" "\n" gcovDataFilesList "${gcovDataFiles}")
-    message(STATUS "gcovDataFiles is ${gcovDataFilesList}")
-#    message(STATUS "gcovDataFiles is ${gcovDataFiles}")
-
-#    set(EXPECTED_FILES "${gcovNoteFiles}" "${gcovDataFiles}")
-#    foreach (file IN LISTS EXPECTED_FILES)
-#        targets_relative_path_of_source(TARGET_NAME ${COVERAGE_TARGET_NAME} RESULT file SOURCE_FILE ${file})
-#        set(INTERMEDIATE_FILE "CMakeFiles/${COVERAGE_TARGET_NAME}.dir/${file}")
-#        list(APPEND CLEAN_FILES INTERMEDIATE_FILE)
-#    endforeach()
 
     set_directory_properties(PROPERTIES ADDITIONAL_CLEAN_FILES "${gcovNoteFiles} ${gcovDataFiles}")
 
@@ -100,30 +69,6 @@ function(coverage_target_clean_intermediate_file)
     endif()
     if(COVERAGE_RETURN_DATA_FILES)
         set(${COVERAGE_RETURN_DATA_FILES} "${gcovDataFiles}" PARENT_SCOPE)
-
-        #[[
-        foreach(cppExt IN LISTS CMAKE_CXX_SOURCE_FILE_EXTENSIONS)
-            #message("GCov Data files for ${COVERAGE_TARGET_NAME}: ${gcovDataFiles}")
-            #string(REGEX REPLACE "([][+.*()^])" "\\\\\\1" cppExt ".*\.${cppExt}\.gcda")
-            #set(cppExt ".*\\.${cppExt}\\.gcda$")
-            #message("Regex is ${cppExt}")
-            #string(REGEX MATCH ".*\\.${cppExt}\\.gcda$" CXX_GCOV_DATA_FILES ${gcovDataFiles})
-
-            #message("Filters by string GCov Data files for ${COVERAGE_TARGET_NAME} to: ${CXX_GCOV_DATA_FILES}")
-
-            set(filteredGcovDataFiles "${gcovDataFiles}")
-            #string(REGEX REPLACE "([][+.*()^])" "\\\\\\1" cppExt "${cppExt}\.gcda")
-            string(REGEX REPLACE "([][+.*()^])" "\\\\\\1" cppExt "${cppExt}") # Escape any file extensions with special characters.
-            list(FILTER filteredGcovDataFiles INCLUDE REGEX ".*\\.${cppExt}\\.gcda$")
-            #message("Filters by list GCov Data files for ${COVERAGE_TARGET_NAME} to: ${GCOV_DATA_FILES_COPY}")
-
-            list(APPEND remainingGcovDataFiles ${filteredGcovDataFiles})
-        endforeach()
-        message("Setting GCov Data files for ${COVERAGE_TARGET_NAME} to: ${COVERAGE_RETURN_DATA_FILES} containing ${remainingGcovDataFiles}")
-
-        set(${COVERAGE_RETURN_DATA_FILES} "${remainingGcovDataFiles}" PARENT_SCOPE)
-        ]]
-        #message("GCov Data files for ${COVERAGE_TARGET_NAME}: ${${COVERAGE_RETURN_DATA_FILES}}")
     endif()
 
 endfunction()
@@ -185,9 +130,6 @@ function(enable_code_coverage)
     set(COBERTURA_REPORT_PATH "${COVERAGE_REPORT_DIR}/cobertura_coverage.xml")
     set(LCOV_REPORT_PATH "${COVERAGE_REPORT_DIR}/lcov.info")
     set(LCOV_HTML_PATH "${COVERAGE_REPORT_DIR}/html")
-
-#    string(REGEX REPLACE "([][+.*()^])" "\\\\\\1" ROOT_SEARCH_DIR "${CMAKE_BINARY_DIR}")
-#    message(STATUS "ROOT_SEARCH_DIR: ${ROOT_SEARCH_DIR}")
     
     if (NOT TARGET CodeCoverage)
         add_library(CodeCoverage INTERFACE)
@@ -244,12 +186,9 @@ function(enable_code_coverage)
 
         list(APPEND gcdaInitTargets ${target}-gcda-init)
         list(APPEND allGcovDataFiles ${outputGCovDataFile})
-        message("GCov Data files for ${target}: ${outputGCovDataFile}")
     endforeach()
 
     list(REMOVE_DUPLICATES allGcovDataFiles)
-
-    message("GCov Data files: ${allGcovDataFiles}")
     file(MAKE_DIRECTORY ${COVERAGE_REPORT_DIR})
 
     add_custom_target(coverage-clean
@@ -327,7 +266,7 @@ function(enable_code_coverage)
     add_custom_command(
         OUTPUT ${COBERTURA_REPORT_PATH}
         COMMAND
-            ${COVERAGE_LCOV_TO_COBERTURA_BIN} ${LCOV_REPORT_PATH}#
+            ${COVERAGE_LCOV_TO_COBERTURA_BIN} ${LCOV_REPORT_PATH}
                 --base-dir ${PROJECT_SOURCE_DIR}
                 --output ${COBERTURA_REPORT_PATH}
                 --demangle
