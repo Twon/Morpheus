@@ -187,7 +187,7 @@ function(enable_code_coverage)
 #    message(STATUS "ROOT_SEARCH_DIR: ${ROOT_SEARCH_DIR}")
     
     if (NOT TARGET CodeCoverage)
-        add_library(CodeCoverage INTERFACE IMPORTED)
+        add_library(CodeCoverage INTERFACE)
         add_library(coverage::coverage ALIAS CodeCoverage)
 
         foreach (FLAGS ${COVERAGE_SUPPORTED_FLAGS})
@@ -219,15 +219,34 @@ function(enable_code_coverage)
     endif()
 
     foreach(target IN LISTS targetsWithSource)
-        target_link_libraries(${target} INTERFACE CodeCoverage)
+        target_link_libraries(${target} PUBLIC coverage::coverage)
         coverage_target_clean_intermediate_file(TARGET_NAME ${target} RETURN_DATA_FILES outputGCovDataFile)
-        list(APPEND ALL_GCOV_DATA_FILES ${outputGCovDataFile})
+
+        foreach(gcdaFile IN LISTS outputGCovDataFile)
+            cmake_path(GET gcdaFile STEM LAST_ONLY translationUnitFile)
+            get_filename_component(translationUnitDir "${gcdaFile}" DIRECTORY)
+            set(translationUnit "${translationUnitDir}/${translationUnitFile}")
+ 
+            set(objectFile "${translationUnit}.o")
+            add_custom_command(OUTPUT "${translationUnit}.gcno"
+			    COMMAND ${CMAKE_COMMAND} -E touch "${translationUnit}.gcno"
+                DEPENDS "${objectFile}"
+		    )
+            add_custom_command(OUTPUT ${gcdaFile}
+			    COMMAND ${CMAKE_COMMAND} -E touch "${gcdaFile}"
+                DEPENDS "${translationUnit}.gcno"
+		    )
+        endforeach()
+        add_custom_target(${target}-gcda-init DEPENDS ${outputGCovDataFile})
+
+        list(APPEND gcdaInitTargets ${target}-gcda-init)
+        list(APPEND allGcovDataFiles ${outputGCovDataFile})
         message("GCov Data files for ${target}: ${outputGCovDataFile}")
     endforeach()
 
-    list(REMOVE_DUPLICATES ALL_GCOV_DATA_FILES)
+    list(REMOVE_DUPLICATES allGcovDataFiles)
 
-    message("GCov Data files: ${ALL_GCOV_DATA_FILES}")
+    message("GCov Data files: ${allGcovDataFiles}")
     file(MAKE_DIRECTORY ${COVERAGE_REPORT_DIR})
 
     add_custom_target(coverage-clean
@@ -254,6 +273,7 @@ function(enable_code_coverage)
                 -o ${COVERAGE_REPORT_PATH}
         DEPENDS
             ${COVERAGE_FASTCOV_BIN}
+            ${gcdaInitTargets}
         WORKING_DIRECTORY
             ${CMAKE_BINARY_DIR}
         COMMENT
@@ -275,7 +295,7 @@ function(enable_code_coverage)
         DEPENDS
             ${COVERAGE_FASTCOV_BIN}
             ${LCOV_BIN}
-            ${ALL_GCOV_DATA_FILES}
+            ${allGcovDataFiles}
             # Missing source file (*.cpp and *.gcda) dependencies.
         WORKING_DIRECTORY
             ${CMAKE_BINARY_DIR}

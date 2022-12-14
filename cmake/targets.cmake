@@ -75,8 +75,14 @@ function(targets_filter_for_sources)
     endif()
 
     foreach(target IN LISTS ARGS_TARGETS)
-        get_target_property(TARGET_SOURCES ${target} SOURCES)
-        if (NOT TARGET_SOURCES)
+        get_target_property(targetSource ${target} SOURCES)
+        if (NOT targetSource)
+            continue()
+        endif()
+
+        # Interface targets can propagate sources in cmake 3.19 onward but not compile directly
+        get_target_property(targetType ${target} TYPE)
+        if (targetType STREQUAL "INTERFACE_LIBRARY")
             continue()
         endif()
 
@@ -94,6 +100,10 @@ targets_get_translation_units
 Overview
 ^^^^^^^^
 
+A translation unit is the compiler representation of a source file with all
+marcos and include statements expaned in place.  As such its an abstract concept
+and not one that compiler will actively write (unless considering special
+modes offer when coerced compilers via compiler flags to dump post prerocess pr
 Given a target return only source files which result in translation unit
 being generated (i.e. no header files).
 
@@ -117,7 +127,7 @@ function(targets_get_translation_units)
     foreach(cppExt IN LISTS CMAKE_CXX_SOURCE_FILE_EXTENSIONS)
         # Filter on a copy of the oringal source list
         set(filteredTargetSource "${targetSource}")
-        # Escape any file extensions with special characters.
+        # Escape any file extensions with special characters (i.e. the '+' in "c++").
         string(REGEX REPLACE "([][+.*()^])" "\\\\\\1" cppExt "${cppExt}")
         list(FILTER filteredTargetSource INCLUDE REGEX ".*\\.${cppExt}$")
         list(APPEND targetTranslationUnits ${filteredTargetSource})
@@ -163,17 +173,17 @@ function (targets_relative_path_of_source)
     # Generated files should be in the subdirectories of the targets binary directory
     string(REPLACE "${targetBinaryDir}/" "" file "${ARGS_SOURCE_FILE}")
 
-	if(IS_ABSOLUTE ${file})
-		file(RELATIVE_PATH file ${targetSrcDir} ${file})
- 	endif()
+    if(IS_ABSOLUTE ${file})
+        file(RELATIVE_PATH file ${targetSrcDir} ${file})
+    endif()
 
-	# get the right path for file
-	string(REPLACE ".." "__" PATH "${file}")
+    # get the right path for file
+    string(REPLACE ".." "__" PATH "${file}")
 #    if (NOT PATH STREQUAL ${file})
 #        message(SEND_ERROR "TARGET_BINARY_DIR is ${TARGET_BINARY_DIR}")
 #        message(SEND_ERROR "PATH is ${PATH}")
 #        message(SEND_ERROR "file is ${file}")
 #    endif()
 
-	set(${ARGS_RESULT} "${PATH}" PARENT_SCOPE)
+    set(${ARGS_RESULT} "${PATH}" PARENT_SCOPE)
 endfunction()
