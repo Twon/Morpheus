@@ -113,4 +113,4 @@ jobs:
           working-directory: ${{github.workspace}}/build/coverage
           gcov: true
           gcov_include: ${{github.workspace}}/build/coverage/html
-          files: ${{github.workspace}}/build/coverage/cobertura_coverage1.xml
+          files: ${{github.workspace}}/build/coverage/cobertura_coverage.xml
