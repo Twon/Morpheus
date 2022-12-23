@@ -17,12 +17,13 @@ target_sources(MorpheusCoreTests
 
 target_link_libraries(MorpheusCoreTests
     PRIVATE
-         MorpheusCore
+         morpheus::core
          morpheus::core::mocking
 )
 
 add_subdirectory(base)
 add_subdirectory(conformance)
+add_subdirectory(graph)
 add_subdirectory(functional)
 add_subdirectory(memory)
 add_subdirectory(meta)
