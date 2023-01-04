@@ -28,6 +28,8 @@ if(MORPHEUS_BUILD_DOCUMENTATION)
         message(FATAL_ERROR "Doxygen is needed to build the documentation.")
     endif()
 
+    # If using Conan find modules to find an installed Doxygen then we lose doxygen_add_docs, 
+    # so include the find module directly to access this method as a work around.
     include(${CMAKE_ROOT}/Modules/FindDoxygen.cmake)
 
     doxygen_add_docs(Documentation
