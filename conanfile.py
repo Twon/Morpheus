@@ -66,6 +66,10 @@ class Morpheus(ConanFile):
         "vulkan-headers/1.3.221"
     )
 
+    build_requires = (
+        "doxygen/1.9.4"
+    )
+
     def set_version(self):
         content = load(os.path.join(os.path.dirname(__file__), "version.txt"))
         version = re.search(r'(\d+\.\d+\.\d+)', content).group(1)
