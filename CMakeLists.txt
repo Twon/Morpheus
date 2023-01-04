@@ -45,6 +45,7 @@ include(morpheus_add_executable)
 include(morpheus_add_library)
 include(morpheus_add_testing_library)
 include(morpheus_add_tests)
+include(sanitisers)
 include(third_party)
 
 enable_testing()
