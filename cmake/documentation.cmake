@@ -19,13 +19,16 @@ include_guard(GLOBAL)
 
 include(IDESettings)
 
-find_package(Doxygen)
-option(MORPHEUS_BUILD_DOCUMENTATION "Create and install the HTML based API documentation (requires Doxygen)" ${DOXYGEN_FOUND})
+option(MORPHEUS_BUILD_DOCUMENTATION "Create and install the HTML based API documentation (requires Doxygen)" OFF)
 
 if(MORPHEUS_BUILD_DOCUMENTATION)
+    find_package(Doxygen)
+
     if(NOT DOXYGEN_FOUND)
         message(FATAL_ERROR "Doxygen is needed to build the documentation.")
     endif()
+
+    include(${CMAKE_ROOT}/Modules/FindDoxygen.cmake)
 
     doxygen_add_docs(Documentation
         WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/libraries/
