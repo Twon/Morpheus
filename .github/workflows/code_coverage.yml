@@ -21,6 +21,18 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Cache Conan data
+        uses: actions/cache@v3
+        env:
+          cache-name: cache-conan-data
+        with:
+          path: ~/.conan/data
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/metadata.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+
       - name: Install Latest GCC
         uses: egor-tensin/setup-gcc@v1
         with:
