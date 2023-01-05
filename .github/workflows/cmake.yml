@@ -58,7 +58,7 @@ jobs:
           cache-name: cache-conan-data
         with:
           path: ~/.conan/data
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/metadata.json') }}
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/conaninfo.txt') }}
           restore-keys: |
             ${{ runner.os }}-build-${{ env.cache-name }}-
             ${{ runner.os }}-build-
@@ -71,7 +71,7 @@ jobs:
 #          limit-access-to-users: twon
       - name: Add msbuild to PATH
         if: matrix.settings.os == 'windows-latest'
-        uses: microsoft/setup-msbuild@v1.0.2
+        uses: microsoft/setup-msbuild@v1.3
         with:
           vs-version: "16.5"
       - name: Install Latest GCC 
