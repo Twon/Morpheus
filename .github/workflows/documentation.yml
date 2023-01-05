@@ -26,12 +26,12 @@ jobs:
           cache-name: cache-conan-data
         with:
           path: ~/.conan/data
-          key: build-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-${{ matrix.settings.compiler.version }}-${{ matrix.settings.lib }}
+          key: build-${{ runner.os }}-Debug-gcc-12-libstdc++11
           restore-keys: |
-            build-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-${{ matrix.settings.compiler.version }}-
-            build-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-
-            build-${{ matrix.settings.os }}-${{ matrix.configuration }}-
-            build-${{ matrix.settings.os }}-
+            build-${{ runner.os }}-Debug-gcc-12-
+            build-${{ runner.os }}-Debug-gcc-
+            build-${{ runner.os }}-Debug-
+            build-${{ runner.os }}-
 
       - name: Install Latest GCC
         uses: egor-tensin/setup-gcc@v1
