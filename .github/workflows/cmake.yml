@@ -34,7 +34,7 @@ jobs:
           - {
               name: "Visual Studio 2019",
               os: windows-latest,
-              compiler: { type: VISUAL, version: 16, cc: "cl", cxx: "cl", std: 20 },
+              compiler: { type: VISUAL, version: 16, conan: "mscv", cc: "cl", cxx: "cl", std: 20 },
             }
           - {
               name: "MacOS Apple Clang 14",
@@ -145,6 +145,7 @@ jobs:
         working-directory: ${{github.workspace}}/build
         shell: bash
         run: |
+          conan remove boost -f
           conan install "${{github.workspace}}" --build missing
 
       - name: Discover Toolchain
