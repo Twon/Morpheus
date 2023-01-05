@@ -107,7 +107,7 @@ jobs:
         with:
           xcode-version: '${{matrix.settings.compiler.version}}'
       - name: Install Linux System Packages
-        if: contains( ${{ matrix.settings.os }}, 'ubuntu')
+        if: contains( matrix.settings.os, 'ubuntu')
         run: |
           sudo apt-get -y install libgl-dev
           sudo apt-get -y install libopengl-dev
