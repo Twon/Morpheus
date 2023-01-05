@@ -47,7 +47,7 @@ class Morpheus(ConanFile):
         "shared": False,
         "fPIC": True,
         "tools": True,
-        "build_docs": True
+        "build_docs": False
     }
     exports_sources = ["CMakeLists.txt", "LICENSE", "version.txt", "cmake/*", "examples/*" "libraries/*"]
     generators = "cmake_find_package", "cmake_find_package_multi", "virtualenv"
