@@ -12,13 +12,13 @@ jobs:
         settings:
           - {
               name: "Ubuntu GCC-12",
-              os: ubuntu-22.04,
+              os: ubuntu-latest,
               compiler: { type: GCC, version: 12, conan: "gcc", cc: "gcc-12", cxx: "g++-12", std: 20 },
               lib: "libstdc++11"
             }
           - {
               name: "Ubuntu Clang-14 + libc++",
-              os: ubuntu-22.04,
+              os: ubuntu-latest,
               compiler:
                 {
                   type: CLANG,

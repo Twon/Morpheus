@@ -16,7 +16,10 @@ jobs:
     # well on Windows or Mac.  You can convert this to a matrix build if you need
     # cross-platform coverage.
     # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ "ubuntu-latest" ]
 
     steps:
       - uses: actions/checkout@v2
@@ -29,10 +32,10 @@ jobs:
           path: ~/.conan/data
           key: build-${{ runner.os }}-Debug-gcc-${{env.GCC_VERSION}}-libstdc++11
           restore-keys: |
-            build-${{ runner.os }}-Debug-gcc-${{env.GCC_VERSION}}-
-            build-${{ runner.os }}-Debug-gcc-
-            build-${{ runner.os }}-Debug-
-            build-${{ runner.os }}-
+            build-${{ matrix.os }}-Debug-gcc-${{env.GCC_VERSION}}-
+            build-${{ matrix.os }}-Debug-gcc-
+            build-${{ matrix.os }}-Debug-
+            build-${{ matrix.os }}-
 
       - name: Install Latest GCC
         uses: egor-tensin/setup-gcc@v1
