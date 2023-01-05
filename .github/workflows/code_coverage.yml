@@ -9,6 +9,7 @@ on:
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: Debug
+  GCC_VERSION: 12
 
 jobs:
   build:
@@ -27,9 +28,9 @@ jobs:
           cache-name: cache-conan-data
         with:
           path: ~/.conan/data
-          key: build-${{ runner.os }}-Debug-gcc-12-libstdc++11
+          key: build-${{ runner.os }}-Debug-gcc-${{env.GCC_VERSION}}-libstdc++11
           restore-keys: |
-            build-${{ runner.os }}-Debug-gcc-12-
+            build-${{ runner.os }}-Debug-gcc-${{env.GCC_VERSION}}-
             build-${{ runner.os }}-Debug-gcc-
             build-${{ runner.os }}-Debug-
             build-${{ runner.os }}-
@@ -37,7 +38,7 @@ jobs:
       - name: Install Latest GCC
         uses: egor-tensin/setup-gcc@v1
         with:
-          version: 12
+          version: ${{env.GCC_VERSION}}
           platform: x64
 
       - name: Install Lcov
@@ -71,7 +72,7 @@ jobs:
           conan profile update settings.compiler.cppstd=20 default
           conan profile update settings.build_type=${{env.BUILD_TYPE}} default
           conan profile update settings.compiler=gcc default
-          conan profile update settings.compiler.version=11 default
+          conan profile update settings.compiler.version=${{env.GCC_VERSION}} default
           conan profile update settings.compiler.libcxx=libstdc++11 default
           conan profile show default
 
