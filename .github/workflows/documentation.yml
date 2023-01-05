@@ -30,7 +30,7 @@ jobs:
           cache-name: cache-conan-data
         with:
           path: ~/.conan/data
-          key: build-${{ runner.os }}-Debug-gcc-${{env.GCC_VERSION}}-libstdc++11
+          key: build-${{ matrix.os }}-Debug-gcc-${{env.GCC_VERSION}}-libstdc++11
           restore-keys: |
             build-${{ matrix.os }}-Debug-gcc-${{env.GCC_VERSION}}-
             build-${{ matrix.os }}-Debug-gcc-
