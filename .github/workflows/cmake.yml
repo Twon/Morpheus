@@ -52,23 +52,26 @@ jobs:
             }
     steps:
       - uses: actions/checkout@v2
+
       - name: Cache Conan data
         uses: actions/cache@v3
         env:
           cache-name: cache-conan-data
         with:
           path: ~/.conan/data
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/conaninfo.txt') }}
+          key: build-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-${{ matrix.settings.compiler.version }}-${{ matrix.settings.lib }}
           restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-build-
-            ${{ runner.os }}-
-      - uses: lhotari/action-upterm@v1
-        with:
-          ## limits ssh access and adds the ssh public key for the user which triggered the workflow
-          limit-access-to-actor: true
+            build-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-${{ matrix.settings.compiler.version }}-
+            build-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-
+            build-${{ matrix.settings.os }}-${{ matrix.configuration }}-
+            build-${{ matrix.settings.os }}-
+
+#      - uses: lhotari/action-upterm@v1
+#        with:
+#          ## limits ssh access and adds the ssh public key for the user which triggered the workflow
+#          limit-access-to-actor: true
           ## limits ssh access and adds the ssh public keys of the listed GitHub users
-          limit-access-to-users: twon
+#          limit-access-to-users: twon
       - name: Add msbuild to PATH
         if: matrix.settings.os == 'windows-latest'
         uses: microsoft/setup-msbuild@v1.3
@@ -130,7 +133,7 @@ jobs:
             conan profile update settings.compiler.libcxx=${{ matrix.settings.lib }} default
           fi
           conan profile show default
-  
+
       - name: Make build directory
         working-directory: ${{github.workspace}}
         shell: bash
