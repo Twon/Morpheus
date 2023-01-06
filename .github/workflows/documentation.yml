@@ -41,7 +41,7 @@ jobs:
       - name: Install Latest GCC
         uses: egor-tensin/setup-gcc@v1
         with:
-          version: $COMPILER_VERSION
+          version: ${{ env.COMPILER_VERSION }}
           platform: x64 
 
       - name: Install Linux System Packages
