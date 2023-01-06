@@ -7,6 +7,7 @@ on:
 
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
+  OS: ubuntu-latest
   BUILD_TYPE: Debug
   COMPILER_TYPE: gcc
   COMPILER_VERSION: 12
@@ -17,11 +18,7 @@ jobs:
     # well on Windows or Mac.  You can convert this to a matrix build if you need
     # cross-platform coverage.
     # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ "ubuntu-latest" ]
-
+    runs-on: $OS
     steps:
       - uses: actions/checkout@v2
 
@@ -31,12 +28,12 @@ jobs:
           cache-name: cache-conan-data
         with:
           path: ~/.conan/data
-          key: build-${{ matrix.os }}-$BUILD_TYPE-$COMPILER_TYPE-$COMPILER_VERSION-$STDLIB
+          key: build-$OS-$BUILD_TYPE-$COMPILER_TYPE-$COMPILER_VERSION-$STDLIB
           restore-keys: |
-            build-${{ matrix.os }}-$BUILD_TYPE-$COMPILER_TYPE-$COMPILER_VERSION-
-            build-${{ matrix.os }}-$BUILD_TYPE-$COMPILER_TYPE-
-            build-${{ matrix.os }}-$BUILD_TYPE-
-            build-${{ matrix.os }}-
+            build-$OS-$BUILD_TYPE-$COMPILER_TYPE-$COMPILER_VERSION-
+            build-$OS-$BUILD_TYPE-$COMPILER_TYPE-
+            build-$OS-$BUILD_TYPE-
+            build-$OS-
 
       - name: Install Latest GCC
         uses: egor-tensin/setup-gcc@v1
