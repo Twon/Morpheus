@@ -23,6 +23,7 @@ jobs:
     strategy:
       matrix:
         os: [ "ubuntu-latest" ]
+        os: [ "ubuntu-latest" ]
 
     steps:
       - uses: actions/checkout@v2
@@ -43,7 +44,7 @@ jobs:
       - name: Install Latest GCC
         uses: egor-tensin/setup-gcc@v1
         with:
-          version: $COMPILER_TYPE
+          version: ${{env.COMPILER_TYPE}}
           platform: x64
 
       - name: Install Lcov
