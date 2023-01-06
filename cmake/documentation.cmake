@@ -18,6 +18,7 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 include_guard(GLOBAL)
 
 include(IDESettings)
+include(virtualenv)
 
 option(MORPHEUS_BUILD_DOCUMENTATION "Create and install the HTML based API documentation (requires Doxygen)" OFF)
 
@@ -32,12 +33,34 @@ if(MORPHEUS_BUILD_DOCUMENTATION)
     # so include the find module directly to access this method as a work around.
     include(${CMAKE_ROOT}/Modules/FindDoxygen.cmake)
 
-    doxygen_add_docs(Documentation
+    doxygen_add_docs(Doxygen
         WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/libraries/
         COMMENT "Generating API documentation with Doxygen"
     )
 
     install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/html DESTINATION documentation)
 
+    set_target_properties(Doxygen PROPERTIES FOLDER ${MORPHEUS_PREDEFINED_TARGETS})
+
+
+    set(documentationVenv ${CMAKE_BINARY_DIR}/.venv/documentation)
+    set(documentationSphinx ${documentationVenv}/bin/sphinx-build)
+
+    virtualenv_create(
+        DESTINATION ${documentationVenv}
+        REQUIREMENTS ${PROJECT_SOURCE_DIR}/cmake/requirements/documentation_requirements.txt
+        WORKING_DIRECTORY
+            ${CMAKE_BINARY_DIR}
+        OUTPUT
+            ${documentationSphinx}
+    )
+
+    add_custom_target(Documentation
+        COMMAND ${documentationSphinx} ${CMAKE_CURRENT_SOURCE_DIR} _html
+        DEPENDS ${documentationSphinx}
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+        COMMENT "Generating documentation with Sphinx"
+    )
     set_target_properties(Documentation PROPERTIES FOLDER ${MORPHEUS_PREDEFINED_TARGETS})
+
 endif()
