@@ -1,0 +1,17 @@
+var searchData=
+[
+  ['accelerateprimarydisplay_0',['acceleratePrimaryDisplay',['../group__vidio.html#ga2a80235fd7b0599d35b27a0f7c53d0e2',1,'_NV_MOSAIC_GRID_TOPO_V2::acceleratePrimaryDisplay()'],['../group__vidio.html#gac9b45d0ae6132fdeaf42c562dbca6946',1,'_NV_MOSAIC_GRID_TOPO_V1::acceleratePrimaryDisplay()']]],
+  ['adaptercaps_1',['adapterCaps',['../group__vidio.html#ga2c51ba6830b72be2620cfc0a0bc1d952',1,'_NVVIOCAPS']]],
+  ['adapterclass_2',['adapterClass',['../group__vidio.html#ga12808b2d9084ff27bb3bbe111b3d44dc',1,'_NVVIOCAPS']]],
+  ['adaptername_3',['adapterName',['../group__vidio.html#gac65e5539b65a2e4ba58f2f5c91f045db',1,'_NVVIOCAPS']]],
+  ['ancparitycomputation_4',['ancParityComputation',['../group__vidio.html#ga3676d377e1fe701590c81f76d63a9fe9',1,'_NVVIOOUTPUTCONFIG_V2::ancParityComputation()'],['../group__vidio.html#ga69859dfd948dbcfd28831aba223cc8bd',1,'_NVVIOOUTPUTCONFIG_V3::ancParityComputation()']]],
+  ['applywithbezelcorrect_5',['applyWithBezelCorrect',['../group__vidio.html#ga445cdedf0d66399bfce11a22d085aed1',1,'_NV_MOSAIC_GRID_TOPO_V1::applyWithBezelCorrect()'],['../group__vidio.html#gae3291dd2e05eae06476d9d4e7cddf89d',1,'_NV_MOSAIC_GRID_TOPO_V2::applyWithBezelCorrect()']]],
+  ['appname_6',['appName',['../group__vidio.html#ga3b34b6bdae4086076e9f9a45da48dbd4',1,'_NVDRS_APPLICATION_V1::appName()'],['../group__vidio.html#gaa0b91456f4b4932e1bba335df7569a51',1,'_NVDRS_APPLICATION_V2::appName()'],['../group__vidio.html#ga127a0417c00b2614cf054f0255a38818',1,'_NVDRS_APPLICATION_V3::appName()'],['../group__vidio.html#gab730e5611cccfa554306d69a258516f4',1,'_NVDRS_APPLICATION_V4::appName()']]],
+  ['architecture_7',['architecture',['../group__vidio.html#ga1c5eb5d068f4d9b150bccf6d6105a08e',1,'NV_GPU_ARCH_INFO_V2::architecture()'],['../group__vidio.html#ga6b0f514dff9cbf1b9e8b99daa9250588',1,'NV_GPU_ARCH_INFO_V2::@10::architecture()']]],
+  ['architecture_5fid_8',['architecture_id',['../group__vidio.html#ga1ed6cf987a898c254d08b14de46429e0',1,'NV_GPU_ARCH_INFO_V2::architecture_id()'],['../group__vidio.html#ga2c303c1f63130791f6e90d542e4386ad',1,'NV_GPU_ARCH_INFO_V2::@10::architecture_id()']]],
+  ['aspect_9',['aspect',['../group__vidio.html#gae809263134899b834a59e362ae7e69e2',1,'tagNV_TIMINGEXT']]],
+  ['atimems_10',['ATimems',['../group__vidio.html#gae8d7b65a4c2cd8c309b087209339f0a6',1,'_NV_GPU_CLIENT_ILLUM_ZONE_CONTROL_DATA_PIECEWISE_LINEAR']]],
+  ['attribute_11',['Attribute',['../group__vidio.html#gae85a921bdd05de83c1b192c794cb2667',1,'_NV_GPU_QUERY_ILLUMINATION_SUPPORT_PARM_V1::Attribute()'],['../group__vidio.html#ga94aa823995b8c8995b4ca6e5da5b4e5a',1,'_NV_GPU_GET_ILLUMINATION_PARM_V1::Attribute()'],['../group__vidio.html#ga17ec91644bdf9e14701ee15d89f521b5',1,'_NV_GPU_SET_ILLUMINATION_PARM_V1::Attribute()']]],
+  ['audiolatency_12',['audioLatency',['../group__vidio.html#ga5b7927becf344fb21eeed9195ae7c696',1,'_NV_MONITOR_CAPS_VSDB']]],
+  ['availablededicatedvideomemory_13',['availableDedicatedVideoMemory',['../structNV__DISPLAY__DRIVER__MEMORY__INFO__V1.html#a95099d66f55f0f6f4890df49b726b5a4',1,'NV_DISPLAY_DRIVER_MEMORY_INFO_V1::availableDedicatedVideoMemory()'],['../structNV__DISPLAY__DRIVER__MEMORY__INFO__V2.html#ae94b883a1479db994bb58088266c14e9',1,'NV_DISPLAY_DRIVER_MEMORY_INFO_V2::availableDedicatedVideoMemory()'],['../structNV__DISPLAY__DRIVER__MEMORY__INFO__V3.html#ab964e80ff3c44b1e1bfc2465dc30a6ce',1,'NV_DISPLAY_DRIVER_MEMORY_INFO_V3::availableDedicatedVideoMemory()']]]
+];
