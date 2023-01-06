@@ -65,10 +65,10 @@ jobs:
         run: |
           conan config init
           conan profile update settings.compiler.cppstd=20 default
-          conan profile update settings.build_type=${{ BUILD_TYPE }} default
-          conan profile update settings.compiler=${{ COMPILER_TYPE }} default
-          conan profile update settings.compiler.version=${{ COMPILER_VERSION }} default
-          conan profile update settings.compiler.libcxx=libstdc++11 default
+          conan profile update settings.build_type=$BUILD_TYPE default
+          conan profile update settings.compiler=$COMPILER_TYPE default
+          conan profile update settings.compiler.version=$COMPILER_VERSION default
+          conan profile update settings.compiler.libcxx=$STDLIB default
           conan profile show default
 
       - name: Make build directory
@@ -88,11 +88,11 @@ jobs:
         # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
         run: |
           source ${{github.workspace}}/build/activate.sh
-          cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{ BUILD_TYPE }} -DMORPHEUS_BUILD_DOCUMENTATION:BOOL=ON
+          cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DMORPHEUS_BUILD_DOCUMENTATION:BOOL=ON
 
       - name: Build
         # Build your program with the given configuration
-        run: cmake --build ${{github.workspace}}/build --config ${{ BUILD_TYPE }} --target Documentation
+        run: cmake --build ${{github.workspace}}/build --config $BUILD_TYPE --target Documentation
 
       - name: Deploy documentation
         if: github.ref == 'refs/heads/main'
