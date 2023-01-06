@@ -33,12 +33,30 @@ if(MORPHEUS_BUILD_DOCUMENTATION)
     # so include the find module directly to access this method as a work around.
     include(${CMAKE_ROOT}/Modules/FindDoxygen.cmake)
 
+#[[
+    list(APPEND DOXYGEN_EXCLUDE_PATTERNS
+        "${CMAKE_CURRENT_BINARY_DIR}/_deps/*"
+        "*/thirdparty/*"
+        "*/tests/*"
+    )
+
+    FetchContent_Declare(doxygen_theme URL https://github.com/jothepro/doxygen-awesome-css/archive/refs/tags/v2.0.2.zip)
+    FetchContent_MakeAvailable(doxygen_theme)
+    list(APPEND DOXYGEN_HTML_EXTRA_STYLESHEET
+        "${doxygen_theme_SOURCE_DIR}/doxygen-awesome.css"
+        "${doxygen_theme_SOURCE_DIR}/doxygen-awesome-sidebar-only.css"
+    )
+
+    set(DOXYGEN_GENERATE_TREEVIEW YES)
+]]
+    set(DOXYGEN_HTML_OUTPUT ${CMAKE_BINARY_DIR}/documentation/doxygen)
+
+    file(MAKE_DIRECTORY ${DOXYGEN_HTML_OUTPUT})
+
     doxygen_add_docs(Doxygen
         WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/libraries/
         COMMENT "Generating API documentation with Doxygen"
     )
-
-    install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/html DESTINATION documentation)
 
     set_target_properties(Doxygen PROPERTIES FOLDER ${MORPHEUS_PREDEFINED_TARGETS})
 
@@ -55,12 +73,14 @@ if(MORPHEUS_BUILD_DOCUMENTATION)
             ${documentationSphinx}
     )
 
+    set(sphinxOutput ${CMAKE_BINARY_DIR}/documentation/sphinx)
     add_custom_target(Documentation
-        COMMAND ${documentationSphinx} ${CMAKE_CURRENT_SOURCE_DIR} _html
+        COMMAND ${documentationSphinx} ${DOXYGEN_HTML_OUTPUT} ${CMAKE_BINARY_DIR}/documentation/sphinx
         DEPENDS ${documentationSphinx}
         WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
         COMMENT "Generating documentation with Sphinx"
     )
     set_target_properties(Documentation PROPERTIES FOLDER ${MORPHEUS_PREDEFINED_TARGETS})
 
+    install(DIRECTORY ${sphinxOutput} DESTINATION ${CMAKE_INSTALL_DOCDIR})
 endif()
