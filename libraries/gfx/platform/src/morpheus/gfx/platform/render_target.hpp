@@ -5,9 +5,9 @@
 namespace morpheus::gfx
 {
 
-/*! \class render_target
-        A render target defined a canvas onto which a render system can draw to.
- */
+/// \class RenderTarget
+///     A render target defined a canvas onto which a render system can draw to.
+///
 class RenderTarget {
 public:
 

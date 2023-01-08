@@ -12,9 +12,9 @@
 namespace morpheus::gfx
 {
 
-/*! \class adapter
-        Describes an available graphic adapter on the target platform.
- */
+/// \class Adapter
+///     Describes an available graphic adapter on the target platform.
+///
 template<std::regular IdType>
 class Adapter {
 public:
@@ -36,8 +36,13 @@ public:
     }
     ///@}
 
+    /// Access the adapter Id.
     [[nodiscard]] constexpr auto const& getId() const noexcept { return mAdapterId; }
+
+    /// Access the adapter name.
     [[nodiscard]] constexpr auto const& getName() const noexcept { return mName; }
+
+    /// Access the adapter vendor.
     [[nodiscard]] constexpr auto getVendor() const noexcept { return mVendor; }
     [[nodiscard]] constexpr auto operator<=>(Adapter const& rhs) const noexcept = default;
 private:

@@ -25,14 +25,19 @@ struct default_copy {
 template <class T, class = void>
 struct copier_traits_deleter_base {};
 
+/// \struct copier_traits_deleter_base<T, std::void_t<typename T::deleter_type>>
+///     Helper specialisation of copier traits which defaults the deleter type to T::deleter_type when present.
 template <class T>
 struct copier_traits_deleter_base<T, std::void_t<typename T::deleter_type>> {
-  using deleter_type = typename T::deleter_type;
+    using deleter_type = typename T::deleter_type;
 };
 
+/// \struct copier_traits_deleter_base<U* (*)(V)>
+///     Helper specialisation of copier traits which allows defaulting the deleter type with function pointer 
+///     equivalent matching signature of the function when used with function pointer copier.
 template <class U, class V>
 struct copier_traits_deleter_base<U* (*)(V)> {
-  using deleter_type = void (*)(U*);
+    using deleter_type = void (*)(U*);
 };
 
 // The user may specialize copier_traits<T> per [namespace.std]/2.
@@ -78,6 +83,8 @@ constexpr void deallocate_object(A& a, T* p)
     t_traits::deallocate(t_alloc, p, 1);
 };
 
+/// \struct allocator_delete
+///     Deleter type specialised for use with allocator types.
 template <class T, class A>
 struct allocator_delete : A
 {
@@ -89,6 +96,8 @@ struct allocator_delete : A
     }
 };
 
+/// \struct allocator_copy
+///     Copier type specialised for use with allocator types.
 template <class T, class A>
 struct allocator_copy : A 
 {

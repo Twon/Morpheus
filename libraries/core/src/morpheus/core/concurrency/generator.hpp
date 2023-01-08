@@ -61,6 +61,8 @@ struct Generator {
         T current_value;
     };
 
+    /// \class iterator
+    ///     Iterator type confroming to an input iterator concept for iterating over the generated sequence.
     class iterator
     {
     public:
