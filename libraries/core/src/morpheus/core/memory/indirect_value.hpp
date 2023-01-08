@@ -141,7 +141,7 @@ struct indirect_value_base;
 template<typename T, typename CD>
 struct indirect_value_base<T, CD, CD>
 {
-    exchange_on_move_ptr<T> mValue;
+    exchange_on_move_ptr<T> mValue; /// The indirectly owned value.
 
 #if (MORPHEUS_IS_VISUALSTUDIO_COMPATIBLE_COMPILER)
     [[msvc::no_unique_address]] CD mCopierDeleterCombined;
@@ -150,19 +150,29 @@ struct indirect_value_base<T, CD, CD>
 #endif
 
 #if (__cpp_explicit_this_parameter >= 202110L)
+    /// Access the copier.
     template<typename Self>
     [[nodiscard]] std::copy_cvref_t<Self, auto> getC(this Self&& self) { return mCopierDeleterCombined; }
 
+    /// Access the deleter.
     template<typename Self>
     [[nodiscard]] std::copy_cvref_t<Self, auto> getD(this Self&& self) { return mCopierDeleterCombined; }
 #else
+    /// Access the copier.
     [[nodiscard]] auto& getC() & { return mCopierDeleterCombined; }
+    /// Access the copier.
     [[nodiscard]] auto const& getC() const & { return mCopierDeleterCombined; }
+    /// Access the copier.
     [[nodiscard]] auto&& getC() && { return std::move(mCopierDeleterCombined); }
+    /// Access the copier.
     [[nodiscard]] auto const&& getC() const && { return  std::move(mCopierDeleterCombined); }
+    /// Access the deleter.
     [[nodiscard]] auto& getD() & { return mCopierDeleterCombined; }
+    /// Access the deleter.
     [[nodiscard]] auto const& getD() const & { return mCopierDeleterCombined; }
+    /// Access the deleter.
     [[nodiscard]] auto&& getD() && { return std::move(mCopierDeleterCombined); }
+    /// Access the deleter.
     [[nodiscard]] auto const&& getD() const && { return  std::move(mCopierDeleterCombined); }
 #endif
 
@@ -177,7 +187,7 @@ struct indirect_value_base<T, CD, CD>
 template<typename T, typename C, typename D>
 struct indirect_value_base
 {
-    exchange_on_move_ptr<T> mValue;
+    exchange_on_move_ptr<T> mValue; /// The indirectly owned value.
 
 #if (MORPHEUS_IS_VISUALSTUDIO_COMPATIBLE_COMPILER)
     [[msvc::no_unique_address]] C mCopier;
@@ -188,19 +198,29 @@ struct indirect_value_base
 #endif
 
 #if (__cpp_explicit_this_parameter >= 202110L)
+    /// Access the copier.
     template<typename Self>
     [[nodiscard]] std::copy_cvref_t<Self, auto> getC(this Self&& self) { return mCopier; }
 
+    /// Access the deleter.
     template<typename Self>
     [[nodiscard]] std::copy_cvref_t<Self, auto> getD(this Self&& self) { return mDeleter; }
 #else
+    /// Access the copier.
     [[nodiscard]] auto& getC() & { return mCopier; }
+    /// Access the copier.
     [[nodiscard]] auto const& getC() const & { return mCopier; }
+    /// Access the copier.
     [[nodiscard]] auto&& getC() && { return std::move(mCopier); }
+    /// Access the copier.
     [[nodiscard]] auto const&& getC() const && { return  std::move(mCopier); }
+    /// Access the deleter.
     [[nodiscard]] auto& getD() & { return mDeleter; }
+    /// Access the deleter.
     [[nodiscard]] auto const& getD() const & { return mDeleter; }
+    /// Access the deleter.
     [[nodiscard]] auto&& getD() && { return std::move(mDeleter); }
+    /// Access the deleter.
     [[nodiscard]] auto const&& getD() const && { return  std::move(mDeleter); }
 #endif
 

@@ -103,7 +103,7 @@
                     (MORPHEUS_COMPILER == MORPHEUS_CLANG_COMPILER) || \
                     (MORPHEUS_INTEL_COMPILER_FOR_LINUX)
 
-        /*! \def MORPHEUS_IS_VISUALSTUDIO_COMPILER
+        /*! \def MORPHEUS_IS_VISUALSTUDIO_COMPATIBLE_COMPILER
                 This is a macro which can be used to with proprocessor directives to conditionally
                 compile code paths if the current compiler is compatible with the settings of the
                 Visual Studio compiler.
