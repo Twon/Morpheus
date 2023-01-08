@@ -15,9 +15,9 @@ namespace morpheus
 ///     Minium required information to report an assetion.
 struct Assertion
 {
-    sl_ns::source_location location;
-    std::string_view expression;
-    std::string message;
+    sl_ns::source_location location; ///< The location of the assertion.
+    std::string_view expression; ///< The expression which resulted in the assertion.
+    std::string message; ///< Message with human readable decription of the assertion.
 };
     
 /// \using AssertHandler

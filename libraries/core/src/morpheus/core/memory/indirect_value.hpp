@@ -13,10 +13,13 @@
 namespace morpheus::memory
 {
 
+/// \struct default_copy
+///     Default copier uses default allocation in conjunction with copy assignment operator of \ref T.
 template <class T>
 struct default_copy {
-  using deleter_type = std::default_delete<T>;
-  constexpr T* operator()(const T& t) const { return new T(t); }
+    /// The deleter type to be used to deallocate object created by the copier.
+    using deleter_type = std::default_delete<T>;
+    constexpr T* operator()(const T& t) const { return new T(t); }
 };
 
 template <class T, class = void>
@@ -40,6 +43,7 @@ struct copier_traits : copier_traits_deleter_base<T, void> {};
 ///     Exception type thrown upon a accessing an indirect_value with no underlying value assigned.
 class bad_indirect_value_access : public std::exception {
 public:
+    /// Message decribing the error.
     const char* what() const noexcept override {
         return "bad_indirect_value_access";
     }
@@ -176,6 +180,7 @@ struct indirect_value_base<T, CD, CD>
     [[nodiscard]] auto const&& getD() const && { return  std::move(mCopierDeleterCombined); }
 #endif
 
+    /// Swaps the indirectly owned objects.
     constexpr void swap(indirect_value_base& rhs) noexcept(std::is_nothrow_swappable_v<CD>)
     {
         using std::swap;
@@ -224,6 +229,7 @@ struct indirect_value_base
     [[nodiscard]] auto const&& getD() const && { return  std::move(mDeleter); }
 #endif
 
+    /// Swaps the indirectly owned objects.
     constexpr void swap(indirect_value_base& rhs) noexcept(std::is_nothrow_swappable_v<C> && std::is_nothrow_swappable_v<D>)
     {
         using std::swap;
@@ -377,19 +383,25 @@ public:
 
     constexpr bool has_value() const noexcept { return this->mValue != nullptr; }
 
+    /// Access the copier.
     constexpr copier_type& get_copier() noexcept { return this->getC(); }
 
+    /// Access the copier.
     constexpr const copier_type& get_copier() const noexcept { return this->getC(); }
 
+    /// Access the deleter.
     constexpr deleter_type& get_deleter() noexcept { return this->getD(); }
 
+    /// Access the deleter.
     constexpr const deleter_type& get_deleter() const noexcept { return this->getD(); }
 
+    /// Swaps the indirectly owned objects.
     constexpr void swap(indirect_value& rhs) noexcept(std::is_nothrow_swappable_v<base_type>)
     {
         this->base_type::swap(static_cast<base_type&>(rhs));
     }
 
+    /// Specialises the std::swap algorithm.
     friend void swap(indirect_value& lhs, indirect_value& rhs) noexcept(noexcept(lhs.swap(rhs)))
         requires std::is_swappable_v<copier_type> && std::is_swappable_v<deleter_type>
     {

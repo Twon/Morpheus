@@ -24,8 +24,8 @@ concept CustomProgramOptions = requires(T& t, boost::program_options::options_de
 };
 // clang-format on
 
-/// \class HelpDocumentation
-///     
+/// \struct HelpDocumentation
+///     Holds commom help documentation information for applications.
 struct HelpDocumentation
 {
     std::string_view name;
