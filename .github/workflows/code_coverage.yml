@@ -33,11 +33,11 @@ jobs:
           cache-name: cache-conan-data
         with:
           path: ~/.conan/data
-          key: build-${{ matrix.os }}-$BUILD_TYPE-$COMPILER_TYPE-$COMPILER_VERSION-$STDLIB
+          key: build-${{ matrix.os }}-${{ env.BUILD_TYPE }}-${{ env.COMPILER_TYPE }}-${{ env.COMPILER_VERSION }}-${ env.STDLIB }}
           restore-keys: |
-            build-${{ matrix.os }}-$BUILD_TYPE-$COMPILER_TYPE-$COMPILER_VERSION-
-            build-${{ matrix.os }}-$BUILD_TYPE-$COMPILER_TYPE-
-            build-${{ matrix.os }}-$BUILD_TYPE-
+            build-${{ matrix.os }}-${{ env.BUILD_TYPE }}-${{ env.COMPILER_TYPE }}-${{ env.COMPILER_VERSION }}-
+            build-${{ matrix.os }}-${{ env.BUILD_TYPE }}-${{ env.COMPILER_TYPE }}-
+            build-${{ matrix.os }}-${{ env.BUILD_TYPE }}-
             build-${{ matrix.os }}-
 
       - name: Install Latest GCC
@@ -75,10 +75,10 @@ jobs:
         run: |
           conan config init
           conan profile update settings.compiler.cppstd=20 default
-          conan profile update settings.build_type=$BUILD_TYPE default
+          conan profile update settings.build_type=${{ env.BUILD_TYPE }} default
           conan profile update settings.compiler=gcc default
-          conan profile update settings.compiler.version=$COMPILER_VERSION default
-          conan profile update settings.compiler.libcxx=$STDLIB default
+          conan profile update settings.compiler.version=${{ env.COMPILER_TYPE }} default
+          conan profile update settings.compiler.libcxx=${ env.STDLIB }} default
           conan profile show default
 
       - name: Make build directory
@@ -96,11 +96,11 @@ jobs:
       - name: Configure CMake
         # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
         # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
-        run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DENABLE_CODE_COVERAGE=1
+        run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -DENABLE_CODE_COVERAGE=1
 
       - name: Build
         # Build your program with the given configuration
-        run: cmake --build ${{github.workspace}}/build --config $BUILD_TYPE
+        run: cmake --build ${{github.workspace}}/build --config ${{ env.BUILD_TYPE }}
 
 #      - uses: lhotari/action-upterm@v1
 #        with:
@@ -113,19 +113,19 @@ jobs:
         working-directory: ${{github.workspace}}/build
         # Execute tests defined by the CMake configuration.
         # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
-        run: ctest -C $BUILD_TYPE
+        run: ctest -C ${{ env.BUILD_TYPE }}
 
       - name: Fastcov
         # Run Fastcov target to collect coverage information.
-        run: cmake --build ${{github.workspace}}/build --config $BUILD_TYPE --target coverage
+        run: cmake --build ${{github.workspace}}/build --config ${{ env.BUILD_TYPE }} --target coverage
 
       - name: Lcov
         # Run LCov target to generate code coverage report
-        run: cmake --build ${{github.workspace}}/build --config $BUILD_TYPE --target coverage-lcov
+        run: cmake --build ${{github.workspace}}/build --config ${{ env.BUILD_TYPE }} --target coverage-lcov
 
       - name: Cobertura
         # Run Cobertura target to generate code coverage report in XML
-        run: cmake --build ${{github.workspace}}/build --config $BUILD_TYPE --target coverage-cobertura
+        run: cmake --build ${{github.workspace}}/build --config ${{ env.BUILD_TYPE }} --target coverage-cobertura
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
