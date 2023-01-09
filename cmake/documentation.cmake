@@ -33,13 +33,13 @@ if(MORPHEUS_BUILD_DOCUMENTATION)
     # so include the find module directly to access this method as a work around.
     include(${CMAKE_ROOT}/Modules/FindDoxygen.cmake)
 
-#[[
     list(APPEND DOXYGEN_EXCLUDE_PATTERNS
         "${CMAKE_CURRENT_BINARY_DIR}/_deps/*"
         "*/thirdparty/*"
         "*/tests/*"
     )
 
+#[[
     FetchContent_Declare(doxygen_theme URL https://github.com/jothepro/doxygen-awesome-css/archive/refs/tags/v2.0.2.zip)
     FetchContent_MakeAvailable(doxygen_theme)
     list(APPEND DOXYGEN_HTML_EXTRA_STYLESHEET
