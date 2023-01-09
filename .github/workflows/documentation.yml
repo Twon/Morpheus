@@ -11,6 +11,7 @@ env:
   COMPILER_TYPE: gcc
   COMPILER_VERSION: 12
   STDLIB: libstdc++11
+
 jobs:
   documentation:
     # The CMake configure and build commands are platform agnostic and should work equally
