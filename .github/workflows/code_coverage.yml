@@ -76,8 +76,8 @@ jobs:
           conan config init
           conan profile update settings.compiler.cppstd=20 default
           conan profile update settings.build_type=${{ env.BUILD_TYPE }} default
-          conan profile update settings.compiler=gcc default
-          conan profile update settings.compiler.version=${{ env.COMPILER_TYPE }} default
+          conan profile update settings.compiler=${{ env.COMPILER_TYPE }} default
+          conan profile update settings.compiler.version=${{ env.COMPILER_VERSION }} default
           conan profile update settings.compiler.libcxx=${ env.STDLIB }} default
           conan profile show default
 
