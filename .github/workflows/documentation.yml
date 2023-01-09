@@ -11,6 +11,7 @@ env:
   COMPILER_TYPE: gcc
   COMPILER_VERSION: 12
   STDLIB: libstdc++11
+
 jobs:
   documentation:
     # The CMake configure and build commands are platform agnostic and should work equally
@@ -31,11 +32,11 @@ jobs:
           cache-name: cache-conan-data
         with:
           path: ~/.conan/data
-          key: build-${{ matrix.os }}-$BUILD_TYPE-$COMPILER_TYPE-$COMPILER_VERSION-$STDLIB
+          key: build-${{ matrix.os }}-${{ env.BUILD_TYPE }}-${{ env.COMPILER_TYPE }}-${{ env.COMPILER_VERSION }}-${ env.STDLIB }}
           restore-keys: |
-            build-${{ matrix.os }}-$BUILD_TYPE-$COMPILER_TYPE-$COMPILER_VERSION-
-            build-${{ matrix.os }}-$BUILD_TYPE-$COMPILER_TYPE-
-            build-${{ matrix.os }}-$BUILD_TYPE-
+            build-${{ matrix.os }}-${{ env.BUILD_TYPE }}-${{ env.COMPILER_TYPE }}-${{ env.COMPILER_VERSION }}-
+            build-${{ matrix.os }}-${{ env.BUILD_TYPE }}-${{ env.COMPILER_TYPE }}-
+            build-${{ matrix.os }}-${{ env.BUILD_TYPE }}-
             build-${{ matrix.os }}-
 
       - name: Install Latest GCC
@@ -65,10 +66,10 @@ jobs:
         run: |
           conan config init
           conan profile update settings.compiler.cppstd=20 default
-          conan profile update settings.build_type=$BUILD_TYPE default
-          conan profile update settings.compiler=$COMPILER_TYPE default
-          conan profile update settings.compiler.version=$COMPILER_VERSION default
-          conan profile update settings.compiler.libcxx=$STDLIB default
+          conan profile update settings.build_type=${{ env.BUILD_TYPE }} default
+          conan profile update settings.compiler=${{ env.COMPILER_TYPE }} default
+          conan profile update settings.compiler.version=${{ env.COMPILER_VERSION }} default
+          conan profile update settings.compiler.libcxx=${{ env.STDLIB }} default
           conan profile show default
 
       - name: Make build directory
@@ -88,11 +89,11 @@ jobs:
         # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
         run: |
           source ${{github.workspace}}/build/activate.sh
-          cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DMORPHEUS_BUILD_DOCUMENTATION:BOOL=ON
+          cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -DMORPHEUS_BUILD_DOCUMENTATION:BOOL=ON
 
       - name: Build
         # Build your program with the given configuration
-        run: cmake --build ${{github.workspace}}/build --config $BUILD_TYPE --target Documentation
+        run: cmake --build ${{github.workspace}}/build --config ${{ env.BUILD_TYPE }} --target Documentation
 
       - name: Deploy documentation
         if: github.ref == 'refs/heads/main'
