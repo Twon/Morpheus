@@ -13,7 +13,7 @@ namespace morpheus::serialisation::mock
 {
 
 /// \class Reader
-///     Provides a mocks adhering to the concept \ref morpheus::serialisation::concepts::Reader.
+///     Provides a mocks adhering to the concept morpheus::serialisation::concepts::Reader.
 class Reader
 {
 public:

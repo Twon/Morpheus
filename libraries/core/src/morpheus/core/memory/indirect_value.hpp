@@ -14,7 +14,7 @@ namespace morpheus::memory
 {
 
 /// \struct default_copy
-///     Default copier uses default allocation in conjunction with copy assignment operator of \ref T.
+///     Default copier uses default allocation in conjunction with copy assignment operator of T.
 template <class T>
 struct default_copy {
     /// The deleter type to be used to deallocate object created by the copier.

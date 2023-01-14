@@ -12,7 +12,7 @@
 namespace morpheus::gfx::d3d12
 {
 
-/*! \using DXGIAdapter
+/*! \typedef DXGIAdapter
         A RAII wrapper for the IDXGIAdapter4 interface.
  */
 using DXGIAdapter = Microsoft::WRL::ComPtr<IDXGIAdapter1>;

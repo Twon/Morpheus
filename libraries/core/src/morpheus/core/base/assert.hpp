@@ -20,7 +20,7 @@ struct Assertion
     std::string message; ///< Message with human readable decription of the assertion.
 };
     
-/// \using AssertHandler
+/// \typedef AssertHandler
 ///     Callback that defines custom behaviour when an assert is hit.
 using AssertHandler = std::function<bool(Assertion)>;
 
@@ -41,6 +41,7 @@ enum class MORPHEUSCORE_EXPORT AssertType
 };
 
 /// Triggers the global assert handler. 
+/// \param[in] type The type of assert behavour.
 /// \param[in] location The source file location where the assert orginated.
 /// \param[in] expr String representation of the condition.
 /// \param[in] message An optional message describing the assert.

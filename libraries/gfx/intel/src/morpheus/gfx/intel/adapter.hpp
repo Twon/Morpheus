@@ -9,7 +9,7 @@
 namespace morpheus::gfx::intel::win32
 {
 
-/// \using Adapter
+/// \typedef Adapter
 ///  
 /// 
 using Adapter = gfx::Adapter<std::uint32_t>;

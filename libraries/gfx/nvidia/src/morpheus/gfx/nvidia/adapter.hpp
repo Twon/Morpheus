@@ -7,7 +7,7 @@
 namespace morpheus::gfx::nvidia::nvapi
 {
 
-/// \using Adapter
+/// \typedef Adapter
 ///  
 /// 
 using Adapter = gfx::Adapter<std::uint32_t>;
