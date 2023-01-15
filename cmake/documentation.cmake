@@ -22,44 +22,76 @@ include(virtualenv)
 
 option(MORPHEUS_BUILD_DOCUMENTATION "Create and install the HTML based API documentation (requires Doxygen)" OFF)
 
-if(MORPHEUS_BUILD_DOCUMENTATION)
-    find_package(Doxygen)
 
-    if(NOT DOXYGEN_FOUND)
-        message(FATAL_ERROR "Doxygen is needed to build the documentation.")
+macro(cmake_to_doxyfile_string string)
+    string (REPLACE ";" " " ${string} "${${string}}")
+endmacro()
+
+function(add_documentation)
+    set(options)
+    set(oneValueArgs PROJECT PROJECT_NUMBER OUTPUT_DIRECTORY WORKING_DIRECTORY)
+    set(multiValueArgs INPUT_DIRECTORY)
+    cmake_parse_arguments(DOCUMENTATION "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
+
+    if (DOCUMENTATION_PROJECT)
+        set(DOXYGEN_PROJECT ${DOCUMENTATION_PROJECT})
     endif()
+    if (DOCUMENTATION_PROJECT_NUMBER)
+        set(DOXYGEN_PROJECT_NUMBER ${DOCUMENTATION_PROJECT_NUMBER})
+    endif()
+    if (NOT DOCUMENTATION_INPUT_DIRECTORY)
+        set(DOXYGEN_INPUT_DIRECTORY ${PROJECT_SOURCE_DIR})
+    else()
+        foreach(input ${DOCUMENTATION_INPUT_DIRECTORY})
+            if(NOT EXISTS "${input}")
+                message(SEND_ERROR "${input} does not exist on disk.")
+            endif()
+        endforeach()
+
+        set(DOXYGEN_INPUT_DIRECTORY ${DOCUMENTATION_INPUT_DIRECTORY})
+        cmake_to_doxyfile_string(DOXYGEN_INPUT_DIRECTORY)
+    endif()
+    if (NOT DOCUMENTATION_OUTPUT_DIRECTORY)
+        set(DOCUMENTATION_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/documentation)
+    endif()
+    if (NOT DOCUMENTATION_WORKING_DIRECTORY)
+        message(FATAL_ERROR "WORKING_DIRECTORY parameter must be supplied")
+    endif()
+
+    find_package(doxygen REQUIRED)
 
     # If using Conan find modules to find an installed Doxygen then we lose doxygen_add_docs, 
     # so include the find module directly to access this method as a work around.
     include(${CMAKE_ROOT}/Modules/FindDoxygen.cmake)
 
     list(APPEND DOXYGEN_EXCLUDE_PATTERNS
-        "${CMAKE_CURRENT_BINARY_DIR}/_deps/*"
+        "*/.git/*"
+        "*/CMakeFiles/*"
+        "*/_CPack_Packages/*"
+        "${CMAKE_CURRENT_BINARY_DIR}/*"
+        "*/_deps/*"
         "*/thirdparty/*"
         "*/tests/*"
     )
+    cmake_to_doxyfile_string(DOXYGEN_EXCLUDE_PATTERNS)
 
-#[[
-    FetchContent_Declare(doxygen_theme URL https://github.com/jothepro/doxygen-awesome-css/archive/refs/tags/v2.0.2.zip)
-    FetchContent_MakeAvailable(doxygen_theme)
-    list(APPEND DOXYGEN_HTML_EXTRA_STYLESHEET
-        "${doxygen_theme_SOURCE_DIR}/doxygen-awesome.css"
-        "${doxygen_theme_SOURCE_DIR}/doxygen-awesome-sidebar-only.css"
-    )
+    set(DOXYGEN_RECURSIVE YES)
+    set(DOXYGEN_OUTPUT_DIRECTORY ${DOCUMENTATION_OUTPUT_DIRECTORY}/doxygen)
+    set(DOXYGEN_GENERATE_HTML NO)
+    set(DOXYGEN_GENERATE_LATEX NO)
+    set(DOXYGEN_GENERATE_XML YES)
+    set(DOXYGEN_XML_OUTPUT xml)
 
-    set(DOXYGEN_GENERATE_TREEVIEW YES)
-]]
-    set(DOXYGEN_HTML_OUTPUT ${CMAKE_BINARY_DIR}/documentation/doxygen)
+    configure_file(${PROJECT_SOURCE_DIR}/docs/Doxyfile.in ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile @ONLY)
 
-    file(MAKE_DIRECTORY ${DOXYGEN_HTML_OUTPUT})
-
-    doxygen_add_docs(Doxygen
-        WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/libraries/
+    add_custom_target(Doxygen
+        COMMAND ${CMAKE_COMMAND} -E make_directory ${DOXYGEN_OUTPUT_DIRECTORY}
+        COMMAND Doxygen::doxygen ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile
+        DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile
+        WORKING_DIRECTORY ${DOCUMENTATION_WORKING_DIRECTORY}
         COMMENT "Generating API documentation with Doxygen"
     )
-
     set_target_properties(Doxygen PROPERTIES FOLDER ${MORPHEUS_PREDEFINED_TARGETS})
-
 
     set(documentationVenv ${CMAKE_BINARY_DIR}/.venv/documentation)
     set(documentationSphinx ${documentationVenv}/bin/sphinx-build)
@@ -73,14 +105,31 @@ if(MORPHEUS_BUILD_DOCUMENTATION)
             ${documentationSphinx}
     )
 
+    set(doxygenXmlOutputDir ${DOXYGEN_OUTPUT_DIRECTORY}/${DOXYGEN_XML_OUTPUT})
+    set(doxygenIndex "${doxygenXmlOutputDir}/index.xml")
+
     set(sphinxOutput ${CMAKE_BINARY_DIR}/documentation/sphinx)
     add_custom_target(Documentation
-        COMMAND ${documentationSphinx} ${DOXYGEN_HTML_OUTPUT} ${CMAKE_BINARY_DIR}/documentation/sphinx
-        DEPENDS ${documentationSphinx}
-        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+        COMMAND ${documentationSphinx} "-Dbreathe_projects.morpheus=${doxygenXmlOutputDir}"
+                ${PROJECT_SOURCE_DIR}/docs ${DOCUMENTATION_OUTPUT_DIRECTORY}/sphinx 
+        DEPENDS ${documentationSphinx} ${doxygenIndex}
+        WORKING_DIRECTORY ${DOCUMENTATION_WORKING_DIRECTORY}
         COMMENT "Generating documentation with Sphinx"
     )
     set_target_properties(Documentation PROPERTIES FOLDER ${MORPHEUS_PREDEFINED_TARGETS})
 
     install(DIRECTORY ${sphinxOutput} DESTINATION ${CMAKE_INSTALL_DOCDIR})
+
+endfunction()
+
+
+if(MORPHEUS_BUILD_DOCUMENTATION)
+    add_documentation(
+        PROJECT Morpheus
+        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+        PROJECT_NUMBER ${MORPHEUS_VERSION}
+        INPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/examples
+        INPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/libraries
+        OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/documentation
+    )
 endif()
