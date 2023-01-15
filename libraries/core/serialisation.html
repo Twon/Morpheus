@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Serialisation specifications: &mdash; Morpheus 0.0.1 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Index" href="../../genindex.html" />
+    <link rel="prev" title="Welcome to Morpheus!" href="../../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> Morpheus
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Library:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Serialisation specifications:</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#serialisation-formats">Serialisation Formats</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#overview-of-serialisation-in-c">Overview of serialisation in C++</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#exisiting-c-serialisation-libraries">Exisiting	C++ Serialisation Libraries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#supported-formats">Supported formats</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#toml-sax-parsers">Toml Sax Parsers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="#target-features">Target Features</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#binary-format">Binary format</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Appendix:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../genindex.html">Index</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../CHANGELOG.html">Release notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../references.html">References</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Morpheus</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">Serialisation specifications:</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/libraries/core/serialisation.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="serialisation-specifications">
+<h1>Serialisation specifications:<a class="headerlink" href="#serialisation-specifications" title="Permalink to this headline"></a></h1>
+<ul class="simple">
+<li><p>ASN.1: https://en.wikipedia.org/wiki/ASN.1</p></li>
+</ul>
+</section>
+<section id="serialisation-formats">
+<h1>Serialisation Formats<a class="headerlink" href="#serialisation-formats" title="Permalink to this headline"></a></h1>
+<ul class="simple">
+<li><p>https://en.wikipedia.org/wiki/Comparison_of_data-serialization_formats</p></li>
+</ul>
+</section>
+<section id="overview-of-serialisation-in-c">
+<h1>Overview of serialisation in C++<a class="headerlink" href="#overview-of-serialisation-in-c" title="Permalink to this headline"></a></h1>
+<ul class="simple">
+<li><p>Killing C++ Serialization Overhead &amp; Complexity - Eyal Zedaka - CppCon 2022: https://youtu.be/G7-GQhCw8eE</p></li>
+</ul>
+</section>
+<section id="exisiting-c-serialisation-libraries">
+<h1>Exisiting	C++ Serialisation Libraries<a class="headerlink" href="#exisiting-c-serialisation-libraries" title="Permalink to this headline"></a></h1>
+<ul class="simple">
+<li><p>Alpaca: https://github.com/p-ranav/alpaca</p></li>
+<li><p>Arvo: https://avro.apache.org/</p></li>
+<li><p>Bitsery: https://github.com/fraillt/bitsery</p></li>
+<li><p>Boost Serialisation: https://github.com/boostorg/serialization</p>
+<ul>
+<li><p>Boost Portable Archive: https://github.com/daldegam/eos-portable-archive</p></li>
+<li><p>Boost Yaml Archive: https://github.com/rwols/yaml-archive</p></li>
+</ul>
+</li>
+<li><p>Cerial: https://github.com/USCiLab/cereal</p></li>
+<li><p>Cista: https://github.com/felixguendling/cista</p></li>
+<li><p>FlatBuffer: https://github.com/google/flatbuffers</p></li>
+<li><p>Thors: https://github.com/Loki-Astari/ThorsSerializer</p></li>
+<li><p>Thrift: https://thrift.apache.org/</p></li>
+<li><p>YAS: https://github.com/niXman/yas</p></li>
+<li><p>zpp::bits: https://github.com/eyalz800/zpp_bits</p></li>
+</ul>
+</section>
+<section id="supported-formats">
+<h1>Supported formats<a class="headerlink" href="#supported-formats" title="Permalink to this headline"></a></h1>
+<ul class="simple">
+<li><p>Binary</p></li>
+<li><p>Json</p></li>
+<li><p>Yaml</p></li>
+<li><p>Toml</p></li>
+<li><p>Xml</p></li>
+<li><p>MessagePack: https://msgpack.org/index.html</p></li>
+<li><p>Protobuf</p></li>
+<li><p>Cap’n Proto</p></li>
+</ul>
+</section>
+<section id="toml-sax-parsers">
+<h1>Toml Sax Parsers<a class="headerlink" href="#toml-sax-parsers" title="Permalink to this headline"></a></h1>
+<ul class="simple">
+<li><p>loltoml: https://github.com/andrusha97/loltoml</p></li>
+</ul>
+</section>
+<section id="target-features">
+<h1>Target Features<a class="headerlink" href="#target-features" title="Permalink to this headline"></a></h1>
+<ul class="simple">
+<li></li>
+</ul>
+<section id="binary-format">
+<h2>Binary format<a class="headerlink" href="#binary-format" title="Permalink to this headline"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../../index.html" class="btn btn-neutral float-left" title="Welcome to Morpheus!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../../genindex.html" class="btn btn-neutral float-right" title="Index" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023-present, Antony Peacock.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
