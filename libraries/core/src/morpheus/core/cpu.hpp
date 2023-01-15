@@ -15,18 +15,17 @@
 namespace morpheus
 {
 
-/*! \typedef cpuid_results
-        Simple type to store the results of a call to the cpuid instruction which returns 4 registers of 32-bit size
-        (to EAX, EBX, ECX and EDX registers).
- */
-using CpuidResults = std::array<uint32_t, 4>;
+/// \typedef CpuidResults
+///     Simple type to store the results of a call to the cpuid instruction which returns 4 registers of 32-bit size
+///     (to EAX, EBX, ECX and EDX registers).
+using CpuidResults = std::array<std::uint32_t, 4>;
 
-/*! \typedef cpuid_leafs
-
- */
+/// \typedef CpuidLeafs
+///
+///
 using CpuidLeafs = std::vector<CpuidResults>;
 
-/// \class cpu
+/// \class Cpu
 ///     This type stores information about the capabilities of the central processing unit of the current target
 ///     system.
 ///

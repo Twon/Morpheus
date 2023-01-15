@@ -15,12 +15,12 @@ namespace morpheus
 ///     Minium required information to report an assetion.
 struct Assertion
 {
-    sl_ns::source_location location;
-    std::string_view expression;
-    std::string message;
+    sl_ns::source_location location; ///< The location of the assertion.
+    std::string_view expression; ///< The expression which resulted in the assertion.
+    std::string message; ///< Message with human readable decription of the assertion.
 };
     
-/// \using AssertHandler
+/// \typedef AssertHandler
 ///     Callback that defines custom behaviour when an assert is hit.
 using AssertHandler = std::function<bool(Assertion)>;
 
@@ -41,6 +41,7 @@ enum class MORPHEUSCORE_EXPORT AssertType
 };
 
 /// Triggers the global assert handler. 
+/// \param[in] type The type of assert behavour.
 /// \param[in] location The source file location where the assert orginated.
 /// \param[in] expr String representation of the condition.
 /// \param[in] message An optional message describing the assert.
@@ -70,9 +71,9 @@ MORPHEUSCORE_EXPORT void assertHandler(AssertType type, sl_ns::source_location c
 
 
 #define MORPHEUS_ASSERT(expr) \
-    MORPHEUS_ASSERT_HANDLER(AssertType::Assert, expr, {})
+    MORPHEUS_ASSERT_HANDLER(::morpheus::AssertType::Assert, expr, {})
 
 #define MORPHEUS_ASSERT_MSG(expr, msg) \
-    MORPHEUS_ASSERT_HANDLER(AssertType::Assert, expr, (msg))
+    MORPHEUS_ASSERT_HANDLER(::morpheus::AssertType::Assert, expr, (msg))
 
 }

@@ -20,12 +20,13 @@ template<typename T>
 struct Generator {
 
     struct promise_type;
-    using handle_type = coro_ns::coroutine_handle<promise_type>;
-    using value_type = T;
+    using handle_type = coro_ns::coroutine_handle<promise_type>; ///< Handle to generator coroutines.
+    using value_type = T; ///< Value type from resulting generation.
     using reference = std::conditional_t<std::is_reference_v<T>, T, const value_type&>;
     using pointer = std::add_pointer_t<reference>;
 
     Generator(handle_type h) : coro(h) {}
+    /// Destroys the generator.
     ~Generator() {
         if (coro) coro.destroy();
     }
@@ -61,14 +62,16 @@ struct Generator {
         T current_value;
     };
 
+    /// \class iterator
+    ///     Iterator type confroming to an input iterator concept for iterating over the generated sequence.
     class iterator
     {
     public:
-        using value_type = Generator::value_type;
-        using reference = Generator::reference;
-        using pointer = Generator::pointer;
+        using value_type = Generator::value_type; ///< Value type pointed to by the iterator.
+        using reference = Generator::reference; ///< Reference to the underlying value type pointed to by the iterator.
+        using pointer = Generator::pointer; ///< Pointer to the underlying value type pointed to by the iterator.
         using difference_type = std::ptrdiff_t;
-        using iterator_category = std::input_iterator_tag;
+        using iterator_category = std::input_iterator_tag; 
 
         iterator() = default;
         iterator(iterator const& rhs) noexcept = default;

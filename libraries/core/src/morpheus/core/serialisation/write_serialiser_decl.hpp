@@ -11,10 +11,13 @@
 namespace morpheus::serialisation
 {
 
+/// \class WriteSerialiser
+/// \tparam WriterType The type of underlying writer for serialisation.
 template<concepts::Writer WriterType>
 class WriteSerialiser
 {
 public:
+    /// Constructs a WriteSerialiser when the underlying writer supports default construction.
     template<meta::concepts::DefaultConstructible T = WriterType>
     WriteSerialiser() noexcept(std::is_nothrow_default_constructible_v<T>) 
     {}
@@ -26,10 +29,13 @@ public:
     {}
 
 #if (__cpp_explicit_this_parameter >= 202110)
+    /// Access the underlying writer.
     template<typename Self>
     [[nodiscard]] auto& writer(this Self&& self) noexcept { return self.mWriter; }
 #else
+    /// Access the underlying writer.
     [[nodiscard]] WriterType& writer() noexcept { return mWriter; }
+    /// Access the underlying writer.
     [[nodiscard]] WriterType const& writer() const noexcept { return mWriter; }
 #endif // (__cpp_explicit_this_parameter >= 202110)
 
@@ -40,6 +46,7 @@ public:
     ///     broken the actual underlying calls dispatch to the serialise customisation point object which then finds
     ///     the correct call via ADL dispatch.
     ///@{
+
     /// Serialise a single value
     /// \param[in] value The value to serialise.
     void serialise(auto const& value);
@@ -64,7 +71,7 @@ public:
     auto serialise(bool const null, std::invocable auto f = []{});
     ///@}
 private:
-    WriterType mWriter;
+    WriterType mWriter; ///< The underlying writer for serialising fundamental types.
 };
 
 }

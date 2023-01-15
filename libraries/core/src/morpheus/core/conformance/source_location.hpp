@@ -8,7 +8,7 @@
 
 namespace morpheus { namespace sl_ns = std; }
 
-#define MORPHEUS_CURRENT_LOCATION sl_ns::source_location::current()
+#define MORPHEUS_CURRENT_LOCATION ::morpheus::sl_ns::source_location::current()
 
 #else
 

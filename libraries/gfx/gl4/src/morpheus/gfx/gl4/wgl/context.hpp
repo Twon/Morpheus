@@ -36,19 +36,19 @@ private:
         void operator()(pointer) { releaser(); }
     };
 
-    /// \using ResourceWrapper
+    /// \typedef ResourceWrapper
     ///     Defines a type for wrapping a resource an calling clean up.
     /// \note
     ///     Depending on the resource definition operator*() and operator->() may not make sense for the type and fail
-    ///     to compile. In such cases default to using the \ref get() method instead.
+    ///     to compile. In such cases default to using the get() method instead.
     template<typename T>
     using ResourceWrapper = std::unique_ptr<T, ReleaseResources<T>>;
 
-    /// \using DeviceContext
+    /// \typedef DeviceContext
     ///     Rule of zero managed device context.
     using DeviceContext = ResourceWrapper<HDC>;
 
-    /// \using DeviceContext
+    /// \typedef DeviceContext
     ///     Rule of zero managed OpenGL context.
     using GLContext = ResourceWrapper<HGLRC>;
 

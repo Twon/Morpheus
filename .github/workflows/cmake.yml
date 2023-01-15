@@ -11,14 +11,14 @@ jobs:
         configuration: [ "Release", "Debug" ]
         settings:
           - {
-              name: "Ubuntu GCC-11",
-              os: ubuntu-20.04,
-              compiler: { type: GCC, version: 11, conan: "gcc", cc: "gcc-11", cxx: "g++-11", std: 20 },
+              name: "Ubuntu GCC-12",
+              os: ubuntu-latest,
+              compiler: { type: GCC, version: 12, conan: "gcc", cc: "gcc-12", cxx: "g++-12", std: 20 },
               lib: "libstdc++11"
             }
           - {
               name: "Ubuntu Clang-14 + libc++",
-              os: ubuntu-20.04,
+              os: ubuntu-latest,
               compiler:
                 {
                   type: CLANG,
@@ -34,7 +34,7 @@ jobs:
           - {
               name: "Visual Studio 2019",
               os: windows-latest,
-              compiler: { type: VISUAL, version: 16, cc: "cl", cxx: "cl", std: 20 },
+              compiler: { type: VISUAL, version: 16, conan: "mscv", cc: "cl", cxx: "cl", std: 20 },
             }
           - {
               name: "MacOS Apple Clang 14",
@@ -52,15 +52,30 @@ jobs:
             }
     steps:
       - uses: actions/checkout@v2
+
+      - name: Cache Conan data
+        uses: actions/cache@v3
+        env:
+          cache-name: cache-conan-data
+        with:
+          path: ~/.conan/data
+          key: build-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-${{ matrix.settings.compiler.version }}-${{ matrix.settings.lib }}
+          restore-keys: |
+            build-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-${{ matrix.settings.compiler.version }}-
+            build-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-
+            build-${{ matrix.settings.os }}-${{ matrix.configuration }}-
+            build-${{ matrix.settings.os }}-
+
 #      - uses: lhotari/action-upterm@v1
 #        with:
-          ## limits ssh access and adds the ssh public key for the user which triggered the workflow
+#          ## limits ssh access and adds the ssh public key for the user which triggered the workflow
 #          limit-access-to-actor: true
           ## limits ssh access and adds the ssh public keys of the listed GitHub users
 #          limit-access-to-users: twon
+
       - name: Add msbuild to PATH
         if: matrix.settings.os == 'windows-latest'
-        uses: microsoft/setup-msbuild@v1.0.2
+        uses: microsoft/setup-msbuild@v1.3
         with:
           vs-version: "16.5"
       - name: Install Latest GCC 
@@ -73,7 +88,7 @@ jobs:
         if: matrix.settings.compiler.type == 'CLANG' && matrix.settings.lib == 'libstdc++11'
         uses: egor-tensin/setup-gcc@v1
         with:
-          version: 11
+          version: 12
           platform: x64
       - name: Install Clang
         if: matrix.settings.compiler.type == 'CLANG'
@@ -92,7 +107,7 @@ jobs:
         with:
           xcode-version: '${{matrix.settings.compiler.version}}'
       - name: Install Linux System Packages
-        if: matrix.settings.os == 'ubuntu-20.04'
+        if: contains( matrix.settings.os, 'ubuntu')
         run: |
           sudo apt-get -y install libgl-dev
           sudo apt-get -y install libopengl-dev
@@ -100,7 +115,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: '3.8'
+          python-version: '3.10'
       - name: Install Conan Package Tools
         run: |
           pip install -U conan
@@ -119,12 +134,25 @@ jobs:
             conan profile update settings.compiler.libcxx=${{ matrix.settings.lib }} default
           fi
           conan profile show default
-  
+
       - name: Make build directory
         working-directory: ${{github.workspace}}
         shell: bash
         run: |
           mkdir build
+
+      # This is an ugly workaround for a build failures when using the Conan cache on Windows.  Without clearing out and rebuilding boost every time we see the following
+      # error:
+      #     Downloading conan_sources.tgz
+      #     ERROR: Error, the file to download already exists: 'C:\Users\runneradmin\.conan\data\boost\1.81.0\_\_\dl\export\conan_sources.tgz'. [Remote: conancenter]
+      #     The 'boost/1.81.0' package has 'exports_sources' but sources not found in local cache.
+      #     Probably it was installed from a remote that is no longer available.
+      - name: Clean boost from Cache
+        if: matrix.settings.os == 'windows-latest'
+        working-directory: ${{github.workspace}}/build
+        shell: bash
+        run: |
+          conan remove boost -f
 
       - name: Configure Install
         working-directory: ${{github.workspace}}/build
@@ -145,7 +173,7 @@ jobs:
       - name: Configure CMake
         # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
         # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
-        run: cmake -B "${{github.workspace}}/build" -DCMAKE_BUILD_TYPE=${{ matrix.configuration }} ${{ env.toolchain }}
+        run: cmake -B "${{github.workspace}}/build" -DCMAKE_BUILD_TYPE=${{ matrix.configuration }} ${{ env.toolchain }} -DENABLE_ADDRESS_SANITIZER=ON -DENABLE_UNDEFINED_BEHAVIOUR_SANITIZER=ON
 
       - name: Build
         # Build your program with the given configuration

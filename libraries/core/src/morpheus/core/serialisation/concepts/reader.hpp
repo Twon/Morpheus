@@ -12,6 +12,8 @@
 namespace morpheus::serialisation::concepts
 {
 
+/// \concept Reader
+///     Constraints for a type capable of reading the fundamental serialisable types.
 template <typename T>
 concept Reader = requires(T t)
 {

@@ -8,7 +8,9 @@ project(Morpheus
     LANGUAGES CXX
 )
 
+set(CMAKE_POLICY_DEFAULT_CMP0076 NEW)
 set(CMAKE_POLICY_DEFAULT_CMP0077 NEW)
+cmake_policy(SET CMP0076 NEW)
 cmake_policy(SET CMP0077 NEW)
 cmake_policy(SET CMP0127 NEW)
 
@@ -35,13 +37,15 @@ list(APPEND CMAKE_MODULE_PATH
 
 #------------------------------------------------------------------------------------------------------------------------------------------
 # Custom CMake Includes
+include(coverage)
 include(Compiler)
-include(Documentation)
+include(documentation)
 include(IDESettings)
 include(morpheus_add_executable)
 include(morpheus_add_library)
 include(morpheus_add_testing_library)
 include(morpheus_add_tests)
+include(sanitisers)
 include(third_party)
 
 enable_testing()
@@ -70,7 +74,7 @@ set(CMAKE_SKIP_BUILD_RPATH  FALSE)
 add_subdirectory(libraries)
 add_subdirectory(examples)
 
-if (MORPHEUS_CODE_COVERAGE)
-    coverage_evaluate()
+if (ENABLE_CODE_COVERAGE)
+    enable_code_coverage()
 endif()
 

@@ -9,7 +9,7 @@
 namespace morpheus::gfx::gl4::wgl
 {
 
-/// \using Adapter
+/// \typedef Adapter
 ///  
 /// 
 using Adapter = gfx::Adapter<std::string>;

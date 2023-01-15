@@ -9,9 +9,10 @@
 #include "morpheus/core/serialisation/concepts/write_serialiser.hpp"
 #include "morpheus/core/serialisation/concepts/write_serialisable.hpp"
 
+#include <boost/type_index.hpp>
+
 #include <array>
 #include <stdexcept>
-#include <typeinfo>
 #include <variant>
 
 namespace morpheus::serialisation::detail
@@ -23,24 +24,29 @@ concept IsStdVariant = meta::IsSpecialisationOf<std::variant, T>;
 template <typename T>
 struct TypeListNames;
 
+/// \struct TypeListNames<std::variant<T...>>
+///     Specialiation of TypeListNames for std::variant.
 template <typename... T>
 struct TypeListNames<std::variant<T...>>
 {
+    /// For a given index position in a std::variant return the name of the type.
     static constexpr std::string_view name(std::size_t const entry)
     {
         MORPHEUS_ASSERT(entry < sizeof...(T));
         return typeNames[entry];
     }
 
+    /// Find the index within the types of a std::variant for a given type name. 
     static consteval std::string_view findIndex(std::string_view const name)
     {
         auto const entry = ranges::find(typeNames, name);
         if (entry == typeNames.end())
             throw std::out_of_range(fmt_ns::format("{} is not a valid type name.", name));
-        return std::distance(typeNames.begin(),entry);
+        return std::distance(typeNames.begin(), entry);
     }
 
-    inline static std::array<std::string, sizeof...(T)> typeNames{ typeid(T).name()...};
+    /// Names for the available types of a given std::variant.
+    inline static std::array<std::string, sizeof...(T)> typeNames{ boost::typeindex::type_id<T>().pretty_name()...};
 };
 
 template<concepts::WriteSerialiser Serialiser, concepts::WriteSerialisable... T>
