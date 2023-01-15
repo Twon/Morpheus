@@ -30,7 +30,7 @@ endmacro()
 function(add_documentation)
     set(options)
     set(oneValueArgs PROJECT PROJECT_NUMBER OUTPUT_DIRECTORY WORKING_DIRECTORY)
-    set(multiValueArgs INPUT_DIRECTORY)
+    set(multiValueArgs INPUT_DIRECTORY PUBLIC_HEADERS)
     cmake_parse_arguments(DOCUMENTATION "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
     if (DOCUMENTATION_PROJECT)
@@ -83,14 +83,23 @@ function(add_documentation)
     set(DOXYGEN_XML_OUTPUT xml)
 
     configure_file(${PROJECT_SOURCE_DIR}/docs/Doxyfile.in ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile @ONLY)
+    set(doxygenXmlOutputDir ${DOXYGEN_OUTPUT_DIRECTORY}/${DOXYGEN_XML_OUTPUT})
+    set(doxygenIndex "${doxygenXmlOutputDir}/index.xml")
 
-    add_custom_target(Doxygen
+    add_custom_command(
         COMMAND ${CMAKE_COMMAND} -E make_directory ${DOXYGEN_OUTPUT_DIRECTORY}
         COMMAND Doxygen::doxygen ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile
-        DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile
+        OUTPUT ${doxygenIndex}
+        DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile ${DOCUMENTATION_PUBLIC_HEADERS}
         WORKING_DIRECTORY ${DOCUMENTATION_WORKING_DIRECTORY}
         COMMENT "Generating API documentation with Doxygen"
     )
+
+    add_custom_target( Doxygen 
+        DEPENDS ${doxygenIndex}
+        COMMENT "Checking if Doxygen XML re-generation is required"
+    )
+
     set_target_properties(Doxygen PROPERTIES FOLDER ${MORPHEUS_PREDEFINED_TARGETS})
 
     set(documentationVenv ${CMAKE_BINARY_DIR}/.venv/documentation)
@@ -105,14 +114,11 @@ function(add_documentation)
             ${documentationSphinx}
     )
 
-    set(doxygenXmlOutputDir ${DOXYGEN_OUTPUT_DIRECTORY}/${DOXYGEN_XML_OUTPUT})
-    set(doxygenIndex "${doxygenXmlOutputDir}/index.xml")
-
     set(sphinxOutput ${CMAKE_BINARY_DIR}/documentation/sphinx)
     add_custom_target(Documentation
         COMMAND ${documentationSphinx} "-Dbreathe_projects.morpheus=${doxygenXmlOutputDir}"
                 ${PROJECT_SOURCE_DIR}/docs ${DOCUMENTATION_OUTPUT_DIRECTORY}/sphinx 
-        DEPENDS ${documentationSphinx} ${doxygenIndex}
+        DEPENDS ${documentationSphinx} ${doxygenIndex} Doxygen
         WORKING_DIRECTORY ${DOCUMENTATION_WORKING_DIRECTORY}
         COMMENT "Generating documentation with Sphinx"
     )
@@ -124,10 +130,12 @@ endfunction()
 
 
 if(MORPHEUS_BUILD_DOCUMENTATION)
+    file(GLOB_RECURSE publicHeaders "${PROJECT_SOURCE_DIR}/libraries/*.hpp")
     add_documentation(
         PROJECT Morpheus
-        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
         PROJECT_NUMBER ${MORPHEUS_VERSION}
+        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+        PUBLIC_HEADERS ${publicHeaders}
         INPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/examples
         INPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/libraries
         OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/documentation
