@@ -19,6 +19,7 @@ template <class T>
 struct default_copy {
     /// The deleter type to be used to deallocate object created by the copier.
     using deleter_type = std::default_delete<T>;
+    /// Create a copy of the input.
     constexpr T* operator()(const T& t) const { return new T(t); }
 };
 
@@ -29,6 +30,7 @@ struct copier_traits_deleter_base {};
 ///     Helper specialisation of copier traits which defaults the deleter type to T::deleter_type when present.
 template <class T>
 struct copier_traits_deleter_base<T, std::void_t<typename T::deleter_type>> {
+    /// The associated deleter to be used with this copier.
     using deleter_type = typename T::deleter_type;
 };
 
@@ -37,6 +39,7 @@ struct copier_traits_deleter_base<T, std::void_t<typename T::deleter_type>> {
 ///     equivalent matching signature of the function when used with function pointer copier.
 template <class U, class V>
 struct copier_traits_deleter_base<U* (*)(V)> {
+    /// The associated deleter to be used with this copier.
     using deleter_type = void (*)(U*);
 };
 
@@ -48,7 +51,7 @@ struct copier_traits : copier_traits_deleter_base<T, void> {};
 ///     Exception type thrown upon a accessing an indirect_value with no underlying value assigned.
 class bad_indirect_value_access : public std::exception {
 public:
-    /// Message decribing the error.
+    /// Message describing the error.
     const char* what() const noexcept override {
         return "bad_indirect_value_access";
     }
@@ -88,7 +91,9 @@ constexpr void deallocate_object(A& a, T* p)
 template <class T, class A>
 struct allocator_delete : A
 {
-    constexpr allocator_delete(A& a) : A(a) {} 
+    /// Construct with an allocator.
+    constexpr allocator_delete(A& a) : A(a) {}
+    /// Delete the input via the underlying allocator.
     constexpr void operator()(T* ptr) const noexcept
     { 
         static_assert(0 < sizeof(T), "can't delete an incomplete type");
@@ -101,8 +106,11 @@ struct allocator_delete : A
 template <class T, class A>
 struct allocator_copy : A 
 {
-    constexpr allocator_copy(A& a) : A(a) {} 
+    /// Construct with an allocator.
+    constexpr allocator_copy(A& a) : A(a) {}
+    /// The associated deleter to be used with this copier.
     using deleter_type = allocator_delete<T, A>;
+    /// Create a copy of the input via the underlying allocator.
     constexpr T* operator()(const T& t) const
     { 
         return detail::allocate_object<T>(*this, t);
@@ -115,29 +123,45 @@ struct allocator_copy : A
 template<typename T>
 struct exchange_on_move_ptr
 {
+    /// Constructs an empty exchange_on_move_ptr.
     constexpr exchange_on_move_ptr() noexcept = default;
+
+    /// Initialise the underlying pointer from the input.
     constexpr exchange_on_move_ptr(T* p) noexcept
     :   ptr(p)
     {
     }
+
+    /// Default copy construction of the underlying pointer.
     constexpr exchange_on_move_ptr(exchange_on_move_ptr const&) noexcept = default;
+
+    /// Move construction, exchanges the underlying pointers.
+    /// \note Resulting right hand side is null after the move.
     constexpr exchange_on_move_ptr(exchange_on_move_ptr&& rhs) noexcept
     :   ptr(std::exchange(rhs.ptr, nullptr))
     {}
 
+    /// Default copy assignment of the underlying pointer.
     constexpr exchange_on_move_ptr& operator=(exchange_on_move_ptr const&) noexcept = default;
+
+    /// Move assignment, exchanges the underlying pointers.
+    /// \note Resulting right hand side is null after the move.
     constexpr exchange_on_move_ptr& operator=(exchange_on_move_ptr&& rhs) noexcept
     {
         ptr = std::exchange(rhs.ptr, nullptr);
         return *this;
     }
 
+    /// Allows for copy-assignment from a raw pointer.
     constexpr exchange_on_move_ptr& operator=(T* p) noexcept { ptr = p; return *this; }
+
+    /// Implicit conversion to underlying raw pointer type.
     constexpr explicit(false) operator T*() const noexcept { return ptr; }
 
+    /// Alows for exchanging with any input pointer type.
     friend T* exchange(exchange_on_move_ptr& lhs, auto rhs) { return std::exchange(lhs.ptr, rhs); }
 
-    T* ptr = nullptr;
+    T* ptr = nullptr; ///< Underlying pointer to be exchanged.
 };
 
 template<typename T, typename C, typename D>
@@ -154,12 +178,12 @@ struct indirect_value_base;
 template<typename T, typename CD>
 struct indirect_value_base<T, CD, CD>
 {
-    exchange_on_move_ptr<T> mValue; /// The indirectly owned value.
+    exchange_on_move_ptr<T> mValue; ///< The indirectly owned value.
 
 #if (MORPHEUS_IS_VISUALSTUDIO_COMPATIBLE_COMPILER)
-    [[msvc::no_unique_address]] CD mCopierDeleterCombined;
+    [[msvc::no_unique_address]] CD mCopierDeleterCombined; ///< Functor customising the copying and deleting of the undelrying value.
 #else
-    [[no_unique_address]] CD mCopierDeleterCombined;
+    [[no_unique_address]] CD mCopierDeleterCombined; ///< Functor customising the copying and deleting of the undelrying value.
 #endif
 
 #if (__cpp_explicit_this_parameter >= 202110L)
@@ -201,14 +225,14 @@ struct indirect_value_base<T, CD, CD>
 template<typename T, typename C, typename D>
 struct indirect_value_base
 {
-    exchange_on_move_ptr<T> mValue; /// The indirectly owned value.
+    exchange_on_move_ptr<T> mValue; ///< The indirectly owned value.
 
 #if (MORPHEUS_IS_VISUALSTUDIO_COMPATIBLE_COMPILER)
-    [[msvc::no_unique_address]] C mCopier;
-    [[msvc::no_unique_address]] D mDeleter;
+    [[msvc::no_unique_address]] C mCopier; ///< The copier functor to customise how the underlying value is copied.
+    [[msvc::no_unique_address]] D mDeleter; ///< The deleter functor to customise how the underlying value is deleted.
 #else
-    [[no_unique_address]] C mCopier;
-    [[no_unique_address]] D mDeleter;
+    [[no_unique_address]] C mCopier; ///< The copier functor to customise how the underlying value is copied.
+    [[no_unique_address]] D mDeleter; ///< The deleter functor to customise how the underlying value is deleted.
 #endif
 
 #if (__cpp_explicit_this_parameter >= 202110L)
@@ -266,19 +290,26 @@ class indirect_value : public detail::indirect_value_base<T, Copier, Deleter>
     using base_type = detail::indirect_value_base<T, Copier, Deleter>;
 
 public:
-    using value_type = T;
-    using copier_type = Copier;
-    using deleter_type = Deleter;
+    using value_type = T; ///< Underlying value type
+    using copier_type = Copier; ///< Copier object customising copying of underlying value 
+    using deleter_type = Deleter; ///< Deleter object customising deleting of underlying value 
 
+    /// Constructs an empty indirect_value.
     constexpr indirect_value() noexcept(std::is_nothrow_default_constructible_v<copier_type> &&
                                         std::is_nothrow_default_constructible_v<deleter_type>) = default;
 
+    /// Inplace construction of the indirect value.  
+    /// \note Conditionally enabled only when the input parameters match the requires parameter of the underlying types
+    ///       constructors.
+    /// \param[in] ts Forwarded parameters to underlying types constructor.
     template <class... Ts>
     requires(std::is_constructible_v<T, Ts...>)
     constexpr explicit indirect_value(std::in_place_t, Ts&&... ts)
     :   base_type{ new T(std::forward<Ts>(ts)...) }
     {}
 
+    /// Constructs a indirect_value which owns takes ownership of the input t. The copier and deleter are default constructed.
+    /// \note If t is null, creates an empty object.
     constexpr explicit indirect_value(T* t) noexcept(std::is_nothrow_default_constructible_v<copier_type> &&
                                                      std::is_nothrow_default_constructible_v<deleter_type>) 
         requires(std::is_default_constructible_v<copier_type> && not std::is_pointer_v<copier_type> &&
@@ -286,6 +317,8 @@ public:
     :   base_type{ t }
     {}
 
+    /// Constructs a indirect_value which owns takes ownership of the input t. The copier is moved from c and deleter is default constructed.
+    /// \note If t is null, creates an empty object.
     constexpr explicit indirect_value(T* t, copier_type c) noexcept(std::is_nothrow_move_constructible_v<copier_type>&&
                                                                     std::is_nothrow_default_constructible_v<deleter_type>)
         requires(std::is_move_constructible_v<copier_type> &&
@@ -293,6 +326,8 @@ public:
     :   base_type{ t, std::move(c) }
     {}
 
+    /// Constructs a indirect_value which owns takes ownership of the input t. The copier is moved from c and deleter is moved from d.
+    /// \note If t is null, creates an empty object.
     constexpr explicit indirect_value(T* t, copier_type c, deleter_type d) noexcept(std::is_nothrow_move_constructible_v<copier_type>&&
                                                                                     std::is_nothrow_move_constructible_v<deleter_type>)
         requires(std::is_move_constructible_v<copier_type> && std::is_move_constructible_v<deleter_type>)
@@ -315,7 +350,7 @@ public:
     :   base_type(std::move(i))
     {}
 
-    /// Copy assignment.
+    /// Copy assignment, assigns contents via the underlying copier
     /// \pre IsComplete<T> is false or std::is_copy_constructible_v<T> is true
     constexpr indirect_value& operator=(const indirect_value& i) requires (!meta::concepts::IsComplete<T> or std::is_copy_constructible_v<T>)
     {
@@ -324,6 +359,7 @@ public:
         return *this;
     }
 
+    /// Move assignement, assigns contents via moving from the right hand side to the left hand side.
     constexpr indirect_value& operator=(indirect_value&& i) noexcept(std::is_nothrow_move_assignable_v<copier_type> &&
                                                                      std::is_nothrow_move_assignable_v<deleter_type>)
     {
@@ -337,12 +373,15 @@ public:
 
 #if (__cpp_explicit_this_parameter >= 202110L)
 
+    /// Accesses the contained value.
     template<typename Self>
     [[nodiscard]] constexpr auto* operator->(this Self&& self) noexcept { return (this->mValue); }
 
+    /// Dereferences pointer to the managed object.
     template<typename Self>
     [[nodiscard]] constexpr std::copy_cvref_t<Self, T>&& operator*(this Self&& self) noexcept { return *std::forward(self).mValue; }
 
+    /// If *this contains a value, returns a reference to the contained value. Otherwise, throws a bad_indirect_value_access exception.
     template<typename Self>
     [[nodiscard]] constexpr auto& value(this Self&& self) 
     {
@@ -350,37 +389,46 @@ public:
         return *(this->mValue);
     }
 #else
-
+    /// Accesses the contained value.
     [[nodiscard]] constexpr T* operator->() noexcept { return this->mValue; }
 
+    /// Accesses the contained value.
     [[nodiscard]] constexpr const T* operator->() const noexcept { return this->mValue; }
 
+    /// Dereferences pointer to the managed object.
     [[nodiscard]] constexpr T& operator*() & noexcept { return *(this->mValue); }
 
+    /// Dereferences pointer to the managed object.
     [[nodiscard]] constexpr const T& operator*() const& noexcept { return *(this->mValue); }
 
+    /// Dereferences pointer to the managed object.
     [[nodiscard]] constexpr T&& operator*() && noexcept { return std::move(*(this->mValue)); }
 
+    /// Dereferences pointer to the managed object.
     [[nodiscard]] constexpr const T&& operator*() const&& noexcept { return std::move(*(this->mValue)); }
 
+    /// If *this contains a value, returns a reference to the contained value. Otherwise, throws a bad_indirect_value_access exception.
     [[nodiscard]] constexpr T& value() & 
     {
         if (!this->mValue) throw bad_indirect_value_access();
         return *(this->mValue);
     }
 
+    /// If *this contains a value, returns a reference to the contained value. Otherwise, throws a bad_indirect_value_access exception.
     [[nodiscard]] constexpr T&& value() &&
     {
         if (!this->mValue) throw bad_indirect_value_access();
         return std::move(*(this->mValue));
     }
 
+    /// If *this contains a value, returns a reference to the contained value. Otherwise, throws a bad_indirect_value_access exception.
     [[nodiscard]] constexpr const T& value() const&
     {
         if (!this->mValue) throw bad_indirect_value_access();
         return *(this->mValue);
     }
 
+    /// If *this contains a value, returns a reference to the contained value. Otherwise, throws a bad_indirect_value_access exception.
     [[nodiscard]] constexpr const T&& value() const&&
     {
         if (!this->mValue) throw bad_indirect_value_access();
@@ -388,8 +436,10 @@ public:
     }
 #endif // (__cpp_explicit_this_parameter >= 202110)
 
+    /// Checks whether *this contains a value.
     explicit constexpr operator bool() const noexcept { return this->mValue != nullptr; }
 
+    /// Checks whether *this contains a value.
     constexpr bool has_value() const noexcept { return this->mValue != nullptr; }
 
     /// Access the copier.

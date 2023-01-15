@@ -20,7 +20,7 @@ class Adapter {
 public:
     /// \name Life cycle
     ///@{
-    /// Default construction.
+    /// Default construction an empty adapter.
     constexpr Adapter() noexcept = default;
 
     /// Constructs an adapter from name and id.
@@ -44,6 +44,8 @@ public:
 
     /// Access the adapter vendor.
     [[nodiscard]] constexpr auto getVendor() const noexcept { return mVendor; }
+
+    /// Compare two adapter objects.
     [[nodiscard]] constexpr auto operator<=>(Adapter const& rhs) const noexcept = default;
 private:
     /// \name Data Members

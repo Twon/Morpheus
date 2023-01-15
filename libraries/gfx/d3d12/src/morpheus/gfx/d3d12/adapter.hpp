@@ -25,21 +25,31 @@ class Adapter {
 public:
     /// \name Life cycle
     ///@{
-    // Constructs an adapter with the specified parameters.
-    //    \param[in] dxgiAdapter The DXGI adapter object.
+
+    /// Default construction an empty adapter.
     constexpr Adapter() noexcept = default;
+    /// Constructs an adapter with the specified parameters.
+    ///     \param[in] dxgiAdapter The DXGI adapter object.
     Adapter(DXGIAdapter dxgiAdapter);
+
     ///@}
 
-    //! The DXGI adapter interface.
+    /// The DXGI adapter interface.
     [[nodiscard]] DXGIAdapter const& dxgiAdapter() const noexcept { return mDxgiAdapter; }
 
-    //! The DXGI adapter description.
+    /// The DXGI adapter description.
     [[nodiscard]] DXGI_ADAPTER_DESC1 const& dxgDescription() const noexcept { return mDescription; }
 
+    /// \copydoc morpheus::gfx::Adapter::getId()
     [[nodiscard]] auto getId() const noexcept { return mDescription.DeviceId; }
+
+    /// \copydoc morpheus::gfx::Adapter::getName()
     [[nodiscard]] std::wstring_view getName() const noexcept { return mDescription.Description; }
+
+    /// \copydoc morpheus::gfx::Adapter::getVendor()
     [[nodiscard]] Vendor getVendor() const noexcept;
+
+    /// \copydoc morpheus::gfx::Adapter::operator<=>()
     [[nodiscard]] constexpr auto operator<=>(Adapter const& rhs) const noexcept = default;
 private:
     /// \name Data Members
