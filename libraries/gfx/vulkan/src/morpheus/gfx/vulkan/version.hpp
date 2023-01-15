@@ -1,5 +1,6 @@
 #pragma once
 
+#include <vulkan/vulkan.hpp>
 #include <cstdint>
 
 namespace morpheus::gfx::vulkan
