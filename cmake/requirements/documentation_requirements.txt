@@ -1,0 +1,6 @@
+breathe==4.34.0
+exhale==0.3.6
+myst-parser==0.18.1
+sphinxcontrib-moderncmakedomain==3.25.0
+sphinx-rtd-theme==1.1.1
+Sphinx==4.5.0

@@ -4,7 +4,7 @@
 ///		Id for the currently target architecture
 #if !defined ( MORPHEUS_PLATFORM_ARCHITECTURE )
 
-	/// @def FREEDOM_TARGET_ARCHITECTURE_X86
+	/// @def MORPHEUS_TARGET_ARCHITECTURE_X86
 	///		This token is used to signify the processor architecture is X86
 	#define MORPHEUS_TARGET_ARCHITECTURE_X86				1
 

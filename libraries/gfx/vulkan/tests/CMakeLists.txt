@@ -7,7 +7,8 @@ target_sources(MorpheusGfxVulkanTests
     PRIVATE
         adapter.tests.cpp
         error_codes.tests.cpp
-        render_system.tests.cpp
+        #render_system.tests.cpp
+        version.tests.cpp
         video_mode.tests.cpp
 )
 

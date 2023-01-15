@@ -13,7 +13,7 @@ namespace boost::program_options
 namespace morpheus::application::po
 {
 
-/// \class struct
+/// \struct Config
 ///     Standard appication program options
 struct Config
 {

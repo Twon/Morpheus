@@ -6,7 +6,7 @@
 #include <iostream>
 #include <vector>
 
-TEST_CASE("Create a video mode list", "[morpheus.core.gfx.video_mode_list]")
+TEST_CASE("Create a vulkan render system", "[morpheus.gfx.vulkan.render_system]")
 {
 /*    uint32_t version = 0;
     VkResult res = vkEnumerateInstanceVersion(&version);

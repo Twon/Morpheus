@@ -5,9 +5,9 @@
 namespace morpheus::gfx
 {
 
-/*! \class render_target
-        A render target defined a canvas onto which a render system can draw to.
- */
+/// \class RenderTarget
+///     A render target defined a canvas onto which a render system can draw to.
+///
 class RenderTarget {
 public:
 
@@ -42,12 +42,14 @@ public:
 protected:
     /// \name Data Members
     ///@{
-    //! The width in pixels of the render target.
+    
+    /// The width in pixels of the render target.
     std::uint16_t mWidth = 0;
-    //! The height in pixels of the render target.
+    /// The height in pixels of the render target.
     std::uint16_t mHeight = 0;
-    //! The colour depth of the pixels of the render target.
+    /// The colour depth of the pixels of the render target.
     std::uint16_t mColourDepth = 0;
+    
     ///@}
 };
 

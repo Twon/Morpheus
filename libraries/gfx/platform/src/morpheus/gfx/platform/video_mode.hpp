@@ -8,9 +8,9 @@
 namespace morpheus::gfx
 {
 
-/*! \class video_mode
-        A video mode describes a mode of available settings for an graphics adapter.
- */
+/// \class VideoMode
+///     A video mode describes a mode of available settings for an graphics adapter.
+///
 class VideoMode {
 public:
     /// \name Life cycle
@@ -42,30 +42,30 @@ public:
     ///@}
 
 
-    //! The width in pixels of the render target.
+    /// The width in pixels of the render target.
     [[nodiscard]] constexpr auto width() const noexcept { return mWidth; }
 
-    //! The height in pixels of the render target.
+    /// The height in pixels of the render target.
     [[nodiscard]] constexpr auto height() const noexcept { return mHeight; }
 
-    //! The colour depth of the pixels of the render target.
+    /// The colour depth of the pixels of the render target.
     [[nodiscard]] constexpr auto colourDepth() const noexcept { return mColourDepth; }
 
-    //! The colour depth of the pixels of the render target.
+    /// The colour depth of the pixels of the render target.
     [[nodiscard]] constexpr auto refreshRate() const noexcept { return mRefreshRate; }
 
-    //! The three-way operator provides strong ordering of types.
+    /// The three-way operator provides strong ordering of types.
     [[nodiscard]] constexpr auto operator<=>(VideoMode const& rhs) const noexcept = default;
 private:
     /// \name Data Members
     ///@{
-    //! The width in pixels of the video mode.
+    /// The width in pixels of the video mode.
     std::uint16_t mWidth = 0;
-    //! The height in pixels of the video mode.
+    /// The height in pixels of the video mode.
     std::uint16_t mHeight = 0;
-    //! The colour depth of the pixels of the video mode.
+    /// The colour depth of the pixels of the video mode.
     std::uint16_t mColourDepth = 0;
-    //! The refresh rate of the video mode.
+    /// The refresh rate of the video mode.
     std::uint16_t mRefreshRate = 0;
     ///@}
 };

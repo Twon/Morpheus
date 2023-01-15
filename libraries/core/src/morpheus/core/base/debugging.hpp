@@ -28,15 +28,14 @@ void breakpoint() noexcept;
 ///     - https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2022/p2546r1.html
 void breakpoint_if_debugging() noexcept;
 
-/// \function is_debugger_present
-///     Detects if a process is debugging the process.
+/// Detects if a process is debugging the process.
 /// \note
 ///     Models std::is_debugger_present as per: 
 ///     - https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2022/p2546r1.html
 bool is_debugger_present() noexcept;
 
 /// Prints debug messages to any approptiate error channels.
-/// \param[im] message 
+/// \param[in] message 
 ///     The error message to display.
 void debugPring(std::string_view const message);
 
