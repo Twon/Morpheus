@@ -12,7 +12,7 @@ namespace morpheus::serialisation::concepts
 {
 
 /// \concept Writer
-///     Constraint for a type capabile of writing the fundamental types to an archive source.
+///     Constraints for a type capable of writing the fundamental serialisable types.
 template <typename T>
 concept Writer = requires(T t)
 {

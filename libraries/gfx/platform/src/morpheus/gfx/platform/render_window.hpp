@@ -10,6 +10,8 @@
 namespace morpheus::gfx
 {
 
+/// \struct WindowConfig
+///     Configuration structure for windows, will allow for automatic registration of parameter necessary for construction.
 struct WindowConfig
 {
     std::string windowName = "MorpheusWindow"; /// The name of the window.
@@ -36,18 +38,18 @@ struct WindowConfig
     }
 };
 
-/*! \class render_window
-        A render window is a specialisation of a render target within the native windowing system
-        of the target platform.
- */
+/// \class RenderWindow
+///     A render window is a specialisation of a render target within the native windowing system
+///     of the target platform.
+///
 class RenderWindow : protected RenderTarget  {
 public:
     using Config = WindowConfig;
 
 
-   /// \name Life cycle
+    /// \name Life cycle
     ///@{
-    /// Constructs a render target with the specified parameters.
+    /// Constructs a render window with the specified parameters.
     /// \param[in] width
     ///     The configuration the Window.
     RenderWindow(Config const& config = Config{});
@@ -58,8 +60,12 @@ public:
 
 //    bool isHidden() const noexcept
 //    bool isFocus() const noexcept
+
+    /// Query if the window full screen.
     bool isFullScreen() const noexcept { return mIsFullScreen; }
-//    bool isVisible() const noexcept
+
+
+    //    bool isVisible() const noexcept
 
 //    void isHidden(bool const hidden) const noexcept
 //    void isFocus(bool const focus) const noexcept
@@ -67,10 +73,10 @@ public:
 
 protected:
 
-    std::uint16_t mStartX = 0;
-    std::uint16_t mStartY = 0;
-    std::string mWindowName;
-    bool mIsFullScreen;
+    std::uint16_t mStartX = 0; ///< The starting X position in pixels of the render window.
+    std::uint16_t mStartY = 0; ///< The starting Y position in pixels of the render window.
+    std::string mWindowName; ///< The name of the window.
+    bool mIsFullScreen; ///< Start the window in full screen mode.
 };
 
 } // namespace morpheus::gfx

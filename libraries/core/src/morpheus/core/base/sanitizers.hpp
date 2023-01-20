@@ -6,7 +6,7 @@ namespace mopheus
 {
 
     // clang-format off
-    /*! \defgroup Compiler Morpheus Supported Sanitizers
+    /*! \defgroup Sanitizers Morpheus Supported Sanitizers
             The compiler group of macros allow for compile time detection of the sanitizers
             in the build.
         \note

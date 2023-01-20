@@ -39,7 +39,7 @@ list(APPEND CMAKE_MODULE_PATH
 # Custom CMake Includes
 include(coverage)
 include(Compiler)
-include(Documentation)
+include(documentation)
 include(IDESettings)
 include(morpheus_add_executable)
 include(morpheus_add_library)

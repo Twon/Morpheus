@@ -36,6 +36,8 @@ public:
     };
 
     static constexpr bool canBeTextual() { return true; }
+
+    /// \copydoc morpheus::serialisation::concepts::ReaderArchtype::isTextual()
     static constexpr bool isTextual() { return true; }
 
     /// Json reader take in a stream of json to extract data members from.
@@ -43,15 +45,31 @@ public:
     explicit JsonReader(std::istream& stream);
     ~JsonReader();
 
+    /// \copydoc morpheus::serialisation::concepts::ReaderArchtype::beginComposite()
     void beginComposite();
+
+    /// \copydoc morpheus::serialisation::concepts::ReaderArchtype::endComposite()
     void endComposite();
+
+    /// \copydoc morpheus::serialisation::concepts::ReaderArchtype::beginValue()
     void beginValue(std::string_view const key);
+
+    /// \copydoc morpheus::serialisation::concepts::ReaderArchtype::endValue()
     void endValue();
-    void beginSequence(std::optional<std::size_t> = std::nullopt);
+
+    /// \copydoc morpheus::serialisation::concepts::ReaderArchtype::beginSequence()
+    void beginSequence(std::optional<std::size_t> size = std::nullopt);
+
+    /// \copydoc morpheus::serialisation::concepts::ReaderArchtype::endSequence()
     void endSequence();
+
+    /// \copydoc morpheus::serialisation::concepts::ReaderArchtype::beginNullable()
     bool beginNullable();
+
+    /// \copydoc morpheus::serialisation::concepts::ReaderArchtype::endNullable()
     void endNullable();
 
+    /// Read a boolean from the serialisation.
     template<typename T> requires std::is_same_v<T, bool>
     T read()
     {
@@ -60,6 +78,7 @@ public:
         return std::get<T>(*next);
     }
 
+    /// Reads a integral type from the serialisation.
     template<std::integral Interger> requires (not std::is_same_v<bool, Interger>)
     Interger read()
     {
@@ -71,6 +90,7 @@ public:
         }, *next);
     }
 
+    /// Reads a float or double type from the serialisation.
     template<std::floating_point Float>
     Float read()
     {
@@ -93,6 +113,7 @@ public:
         }, *next);
     }
 
+    /// Reads a string type from the serialisation.
     template<typename T> requires std::is_same_v<T, std::string>
     T read()
     {

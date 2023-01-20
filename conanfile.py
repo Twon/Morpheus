@@ -47,12 +47,12 @@ class Morpheus(ConanFile):
         "shared": False,
         "fPIC": True,
         "tools": True,
-        "build_docs": True
+        "build_docs": False
     }
     exports_sources = ["CMakeLists.txt", "LICENSE", "version.txt", "cmake/*", "examples/*" "libraries/*"]
     generators = "cmake_find_package", "cmake_find_package_multi", "virtualenv"
     requires = (
-        "boost/1.80.0",
+        "boost/1.81.0",
         "catch2/3.1.0", 
         "fmt/9.1.0",
         "glbinding/3.1.0",
@@ -63,7 +63,12 @@ class Morpheus(ConanFile):
         "range-v3/0.12.0",
         "tl-expected/20190710",
         "trompeloeil/42",
-        "vulkan-headers/1.3.221"
+        "vulkan-headers/1.3.221",
+        "zlib/1.2.12" # xapian-core/1.4.19' requires 'zlib/1.2.12' while 'boost/1.81.0' requires 'zlib/1.2.13'. To fix this conflict you need to override the package 'zlib' in your root package.
+    )
+
+    build_requires = (
+#        "ccache/4.6",
     )
 
     def set_version(self):
@@ -75,6 +80,9 @@ class Morpheus(ConanFile):
         # Ensure the package is build against a version of CMake from 3.25 onwards.
         if CMake.get_version() < Version("3.25.0"):
             self.build_requires("cmake/3.25.0")
+
+        if self.options.build_docs:
+            self.build_requires("doxygen/1.9.4") # doxygen/1.9.5 will update dependency on zlib/1.2.12 to zlib/1.2.13
 
     def requirements(self):
         if self.settings.os in ["Macos", "iOS", "tvOS"] and self.settings.compiler == "apple-clang":
