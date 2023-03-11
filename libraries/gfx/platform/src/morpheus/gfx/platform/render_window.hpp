@@ -58,6 +58,9 @@ public:
     ~RenderWindow();
     ///@}
 
+
+    auto const& name() const noexcept { return mWindowName; }
+
 //    bool isHidden() const noexcept
 //    bool isFocus() const noexcept
 

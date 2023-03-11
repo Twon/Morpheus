@@ -68,7 +68,7 @@ class Morpheus(ConanFile):
     )
 
     build_requires = (
-#        "ccache/4.6",
+        "ccache/4.6",
     )
 
     def set_version(self):

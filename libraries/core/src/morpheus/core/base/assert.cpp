@@ -11,7 +11,7 @@ namespace morpheus
 AssertHandler gAssertHandler = [](Assertion assertion)
 {
     auto const debugMessage = fmt_ns::format("{}({}): assertion[{}]: {}", assertion.location.file_name(), assertion.location.line(), assertion.expression, assertion.message);
-    debugPring(debugMessage);
+    debugPrint(debugMessage);
     return true;
 };
 
