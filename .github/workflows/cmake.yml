@@ -123,15 +123,15 @@ jobs:
         shell: bash
         run: |
           conan profile detect --force
-          conan profile update settings.compiler.cppstd=${{ matrix.settings.compiler.std }} default
-          conan profile update settings.build_type=${{ matrix.configuration }} default
-          conan profile update env.CONAN_PRINT_RUN_COMMANDS=1 default
-          conan profile update env.CONAN_LOGGING_LEVEL=info default
-          conan profile update env.CONAN_VERBOSE_TRACEBACK=1 default          
+          sed -i.backup '/^\[settings\]$/,/^\[/ s/^build_type=.*/build_type=${{ matrix.configuration }}/' ~/.conan2/profiles/default
+          sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.cppstd=.*/compiler.cppstd=${{ matrix.settings.compiler.std }}/' ~/.conan2/profiles/default
+#          conan profile update env.CONAN_PRINT_RUN_COMMANDS=1 default
+#          conan profile update env.CONAN_LOGGING_LEVEL=info default
+#          conan profile update env.CONAN_VERBOSE_TRACEBACK=1 default          
           if [[ "${{ matrix.settings.compiler.type }}" == "GCC" || "${{ matrix.settings.compiler.type }}" == "CLANG" ]]; then
-            conan profile update settings.compiler=${{ matrix.settings.compiler.conan }} default
-            conan profile update settings.compiler.version=${{ matrix.settings.compiler.version }} default
-            conan profile update settings.compiler.libcxx=${{ matrix.settings.lib }} default
+            sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler=.*/compiler=${{ matrix.settings.compiler.conan }}/' ~/.conan2/profiles/default
+            sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.version=.*/compiler.version=${{ matrix.settings.compiler.version }}/' ~/.conan2/profiles/default
+            sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.libcxx=.*/compiler.libcxx=${{ matrix.settings.lib }}/' ~/.conan2/profiles/default
           fi
           conan profile show default
 
