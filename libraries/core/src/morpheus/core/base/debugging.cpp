@@ -50,7 +50,7 @@ bool is_debugger_present() noexcept
     return boost::debug::under_debugger();
 }
 
-void debugPring(std::string_view const message)
+void debugPrint(std::string_view const message)
 {
     print_ns::print(stderr, "{}", message);
 #if (MORPHEUS_BUILD_PLATFORM == MORPHEUS_TARGET_PLATFORM_PC_WINDOWS)

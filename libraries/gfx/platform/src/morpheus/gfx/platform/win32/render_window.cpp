@@ -1,5 +1,7 @@
 #include <morpheus/core/base/assert.hpp>
+#include <morpheus/core/base/debugging.hpp>
 #include <morpheus/core/base/verify.hpp>
+#include <morpheus/core/conformance/format.hpp>
 #include <morpheus/gfx/platform/win32/render_window.hpp>
 
 #include <boost/numeric/conversion/cast.hpp>
@@ -52,14 +54,20 @@ bool HandlePowerBroadCast(WPARAM wParam, LPARAM lParam)
 	return true;
 }
 
+inline std::string getLastErrorMessage()
+{
+	DWORD const error = ::GetLastError();
+	return std::system_category().message(error);
+}
+
 LRESULT WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	RenderWindow* pThisWindow = nullptr;
+	RenderWindow* thisWindow = nullptr;
 
 	if (message != WM_CREATE)
 	{
 		// Get the pointer to the active window specified by hWnd
-		pThisWindow = reinterpret_cast<RenderWindow*>( static_cast<std::size_t>( GetWindowLongPtr( hWnd, 0 ) ) ) ;
+		thisWindow = reinterpret_cast<RenderWindow*>( GetWindowLongPtr( hWnd, 0 ) ) ;
 	}
 
 	// Handle possible windows messages
@@ -68,40 +76,40 @@ LRESULT WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_CREATE:
 		{
 			LPCREATESTRUCT pCreateStruct = reinterpret_cast<LPCREATESTRUCT>( lParam );
-			pThisWindow = reinterpret_cast<RenderWindow*>( pCreateStruct->lpCreateParams );
+			thisWindow = reinterpret_cast<RenderWindow*>( pCreateStruct->lpCreateParams );
 
-			MORPHEUS_ASSERT_MSG( pThisWindow != NULL, "Window32::WndProc() - Failed to create window");
+			MORPHEUS_ASSERT_MSG(thisWindow, "Window32::WndProc() - Failed to create window");
 	
 			// Store pointer in window user data area
-			::SetWindowLongPtr( hWnd, 0, static_cast<LONG>( reinterpret_cast<std::size_t>( pThisWindow ) ) );
-//			pThisWindow->SetActive( true );
+			::SetWindowLongPtr( hWnd, 0, reinterpret_cast<LONG_PTR>(thisWindow) );
+//			thisWindow->SetActive( true );
 		}
 		break;
 
 	///	Handle activation or deactivation of the window
 	case WM_ACTIVATE:
 		{
-			MORPHEUS_ASSERT_MSG( pThisWindow != NULL, "Window32::WndProc() - Failed to get active window - WM_ACTIVATE");
+			MORPHEUS_ASSERT_MSG(thisWindow, "Window32::WndProc() - Failed to get active window - WM_ACTIVATE");
 
 			// Check if the window is active
-//			pThisWindow->SetActive( WA_ACTIVE == LOWORD(wParam) );
+//			thisWindow->SetActive( WA_ACTIVE == LOWORD(wParam) );
 		}
 		break;
 
 	case WM_PAINT:
 		{
-			MORPHEUS_ASSERT_MSG( pThisWindow != NULL, "Window32::WndProc() - Failed to get active window - WM_PAINT");
+			MORPHEUS_ASSERT_MSG(thisWindow, "Window32::WndProc() - Failed to get active window - WM_PAINT");
 //			if ( pThisWindow->IsActive() )
 			{
-//					pThisWindow->PresentBackBuffer();
+//					thisWindow->PresentBackBuffer();
 			}
 		}
 		break;
 		
 	case WM_SIZE:
 		{
-			MORPHEUS_ASSERT_MSG( pThisWindow != NULL, "Window32::WndProc() - Failed to get active window - WM_SIZE");
-//			pThisWindow->ResizeWindow();
+			MORPHEUS_VERIFY_MSG(thisWindow, "morpheus::gfx::win32::WndProc() - Failed to get active window - WM_SIZE");
+			thisWindow->resize();
 		}
 		break;
 
@@ -115,7 +123,7 @@ LRESULT WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			switch (wParam) {
 				case 'T':
 				case 't':
-//					pThisWindow->ToggleFullScreen();
+//					thisWindow->ToggleFullScreen();
 				break;
 			}
 		}
@@ -128,14 +136,14 @@ LRESULT WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 	case WM_ENTERSIZEMOVE:
 		{
-			MORPHEUS_ASSERT_MSG( pThisWindow != NULL, "Window32::WndProc() - Failed to get active window - WM_ENTERSIZEMOVE");
-//			pThisWindow->SetActive( false );
+			MORPHEUS_ASSERT_MSG(thisWindow, "Window32::WndProc() - Failed to get active window - WM_ENTERSIZEMOVE");
+//			thisWindow->SetActive( false );
 		}
 		break;
 
 	case WM_EXITSIZEMOVE:
 		{
-			MORPHEUS_ASSERT_MSG( pThisWindow != NULL, "Window32::WndProc() - Failed to get active window - WM_EXITSIZEMOVE");
+			MORPHEUS_ASSERT_MSG(thisWindow, "Window32::WndProc() - Failed to get active window - WM_EXITSIZEMOVE");
 //			pThisWindow->SetActive( true );
 				
 			//! @todo	Temp measure, find a better solution
@@ -145,7 +153,7 @@ LRESULT WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		
 	case WM_CLOSE:
 		{
-			MORPHEUS_ASSERT_MSG( pThisWindow != NULL, "Window32::WndProc() - Failed to get active window - WM_CLOSE");
+			MORPHEUS_ASSERT_MSG(thisWindow, "Window32::WndProc() - Failed to get active window - WM_CLOSE");
 			// Shut down the relevant window
 //			pThisWindow->Destroy();
 		}
@@ -179,7 +187,7 @@ LRESULT WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			case SC_MAXIMIZE:
 			case SC_KEYMENU:
 			case SC_MONITORPOWER:
-				if( pThisWindow->isFullScreen() )
+				if(thisWindow->isFullScreen())
 					return 1;
 				break;
 			}
@@ -247,8 +255,8 @@ auto createWindow(RenderWindow* thisWindow, RenderWindow::Config& config)
 	// Next default values for new objects
 	::WNDCLASS const wcex{ 
 		.style = CS_OWNDC, .lpfnWndProc = WndProc, .cbClsExtra = 0, .cbWndExtra = sizeof(RenderWindow*), // Reserve space for the Window pointer returned by GetWindowLong
-		.hInstance = hInstance, .hIcon = ::LoadIcon(NULL, IDI_APPLICATION), .hCursor = ::LoadCursor(NULL, IDC_ARROW),
-		.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1), .lpszMenuName = NULL, .lpszClassName = config.windowName.c_str()
+		.hInstance = hInstance, .hIcon = ::LoadIcon(nullptr, IDI_APPLICATION), .hCursor = ::LoadCursor(nullptr, IDC_ARROW),
+		.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1), .lpszMenuName = nullptr, .lpszClassName = config.windowName.c_str()
 	};
 
 	// Register class  with the game application details
@@ -257,7 +265,7 @@ auto createWindow(RenderWindow* thisWindow, RenderWindow::Config& config)
 	// Create the window using the WS_OVERLAPPEDWINDOW style
 	auto const window = ::CreateWindow(config.windowName.c_str(), config.windowName.c_str(), windowStyle,
 							config.startX, config.startY, config.width, config.height,
-							NULL, NULL, hInstance, thisWindow);
+							nullptr, nullptr, hInstance, thisWindow);
 	MORPHEUS_VERIFY(window);
 	return window;
 }
@@ -267,7 +275,6 @@ auto createWindow(RenderWindow* thisWindow, RenderWindow::Config& config)
 RenderWindow::RenderWindow(Config config)
 :   gfx::RenderWindow(config)
 ,   mWindow(createWindow(this, config))
-,	mWindowName(config.windowName)
 {
 	//  Display the window and force an initial paint
 	::ShowWindow(mWindow.get(), SW_SHOWNORMAL);
@@ -308,5 +315,8 @@ void RenderWindow::resize()
 	// We need to save the new width and height
 	mWidth = boost::numeric_cast<std::uint16_t>(windowRect.right);
 	mHeight = boost::numeric_cast<std::uint16_t>(windowRect.bottom);
+
+	debugPrint(fmt_ns::format("Window <{}> is at start <{}, {}> with dimensions <{}, {}>\n", mWindowName, mStartX, mStartY, mWidth, mHeight));
 }
+
 } // namespace morpheus::gfx::win32

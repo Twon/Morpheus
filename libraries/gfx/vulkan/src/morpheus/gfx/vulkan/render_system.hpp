@@ -14,9 +14,8 @@
 namespace morpheus::gfx::vulkan
 {
 
-/*! \class RenderSystem
-        Rendering system abstraction based upon the Vulkan graphics API.
- */
+/// \class RenderSystem
+///     Rendering system abstraction based upon the Vulkan graphics API.
 class RenderSystem : public gfx::render_system {
 public:
     RenderSystem(std::string_view const appName, std::string_view const engineName);

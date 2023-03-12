@@ -19,14 +19,28 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-from conans import ConanFile, CMake, tools
-from conans.errors import ConanInvalidConfiguration
-from conans.model.version import Version
-from conan.tools.cmake import CMakeToolchain, CMakeDeps
-from conans.tools import load
+from conan import ConanFile
+from conan.errors import ConanException, ConanInvalidConfiguration
+from conan.tools.build import check_min_cppstd
+from conan.tools.cmake import CMake
+from conan.tools.files import copy
+from conan.tools.scm import Version
+from conan.tools.files import load
 import re, os.path
+import subprocess
+import sys
 
 required_conan_version = ">=2.00.0"
+
+def get_cmake_version():
+    try:
+        out, _ = subprocess.Popen(["cmake", "--version"], stdout=subprocess.PIPE, shell=False).communicate()
+        out = out.decode(sys.stdout.encoding)
+        version_line = out.split('\n', 1)[0]
+        version_str = version_line.rsplit(' ', 1)[-1]
+        return Version(version_str)
+    except Exception as e:
+        raise ConanException("Error retrieving CMake version: '{}'".format(e))
 
 class Morpheus(ConanFile):
     name = "morpheus"
@@ -63,8 +77,8 @@ class Morpheus(ConanFile):
         "range-v3/0.12.0",
         "tl-expected/20190710",
         "trompeloeil/42",
-        "vulkan-headers/1.3.221",
-        "zlib/1.2.12" # xapian-core/1.4.19' requires 'zlib/1.2.12' while 'boost/1.81.0' requires 'zlib/1.2.13'. To fix this conflict you need to override the package 'zlib' in your root package.
+        "vulkan-headers/1.3.221"#,
+        #"zlib/1.2.12" # xapian-core/1.4.19' requires 'zlib/1.2.12' while 'boost/1.81.0' requires 'zlib/1.2.13'. To fix this conflict you need to override the package 'zlib' in your root package.
     )
 
     build_requires = (
@@ -72,13 +86,13 @@ class Morpheus(ConanFile):
     )
 
     def set_version(self):
-        content = load(os.path.join(os.path.dirname(__file__), "version.txt"))
+        content = load(self, os.path.join(os.path.dirname(__file__), "version.txt"))
         version = re.search(r'(\d+\.\d+\.\d+)', content).group(1)
         self.version = version.strip()
 
     def build_requirements(self):
         # Ensure the package is build against a version of CMake from 3.25 onwards.
-        if CMake.get_version() < Version("3.25.0"):
+        if get_cmake_version() < Version("3.25.0"):
             self.build_requires("cmake/3.25.0")
 
         if self.options.build_docs:
@@ -88,7 +102,7 @@ class Morpheus(ConanFile):
         if self.settings.os in ["Macos", "iOS", "tvOS"] and self.settings.compiler == "apple-clang":
             self.requires("moltenvk/1.1.6")
 
-        if self.settings.compiler != "Visual Studio":
+        if self.settings.compiler != "msvc":
             self.requires("date/3.0.1")
 
 #    @property
@@ -102,7 +116,8 @@ class Morpheus(ConanFile):
     @property
     def _minimum_compilers_version(self):
         return {
-            "Visual Studio": "16",
+#            "intel-cc": "??"
+            "msvc": "16",
             "gcc": "11",
             "clang": "13",
             "apple-clang": "13"
@@ -110,7 +125,7 @@ class Morpheus(ConanFile):
 
     def configure(self):
         if self.settings.compiler.get_safe("cppstd"):
-            tools.check_min_cppstd(self, self._minimum_cpp_standard)
+            check_min_cppstd(self, self._minimum_cpp_standard)
         min_version = self._minimum_compilers_version.get(
             str(self.settings.compiler))
         if not min_version:
@@ -118,7 +133,7 @@ class Morpheus(ConanFile):
                              "compiler support.".format(
                                  self.name, self.settings.compiler))
         else:
-            if tools.Version(self.settings.compiler.version) < min_version:
+            if Version(self.settings.compiler.version) < min_version:
                 raise ConanInvalidConfiguration(
                     "{} requires C++{} support. "
                     "The current compiler {} {} does not support it.".format(
@@ -140,13 +155,13 @@ class Morpheus(ConanFile):
 #                  strip_root=True, destination=self._source_subfolder)
 
     def package(self):
-        self.copy("*LICENSE*", dst="licenses", keep_path=False)
+        copy(self, "*LICENSE*", dst="licenses", keep_path=False)
         cmake = CMake(self)
         cmake.configure()
         cmake.install()
 
-    def package_id(self):
-        self.info.header_only()
+#    def package_id(self):
+#        self.info.header_only()
 
     def package_info(self):
         pass
@@ -155,3 +170,5 @@ class Morpheus(ConanFile):
         #self.cpp_info.components["_wg21_linear_algebra"].names["cmake_find_package"] = "wg21_linear_algebra"
         #self.cpp_info.components["_wg21_linear_algebra"].names["cmake_find_package_multi"] = "wg21_linear_algebra"
         #self.cpp_info.components["_wg21_linear_algebra"].requires = ["mdspan::mdspan"]
+
+
