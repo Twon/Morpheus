@@ -15,9 +15,11 @@ AssertHandler gAssertHandler = [](Assertion assertion)
     return true;
 };
 
-void setAssertHandler(AssertHandler handler)
+AssertHandler setAssertHandler(AssertHandler handler)
 {
+    auto previousHandler = std::move(gAssertHandler);
     gAssertHandler = std::move(handler);
+    return previousHandler;
 }
 
 [[nodiscard]] AssertHandler const& getAssertHandler()
