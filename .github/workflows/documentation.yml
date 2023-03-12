@@ -59,18 +59,18 @@ jobs:
 
       - name: Install Conan Package Tools
         run: |
-          pip install -U conan
+          pip install conan==1.59.0
 
       - name: Configure Conan
         shell: bash
         run: |
           conan profile detect --force
-          conan profile update settings.compiler.cppstd=20 default
-          conan profile update settings.build_type=${{ env.BUILD_TYPE }} default
-          conan profile update settings.compiler=${{ env.COMPILER_TYPE }} default
-          conan profile update settings.compiler.version=${{ env.COMPILER_VERSION }} default
-          conan profile update settings.compiler.libcxx=${{ env.STDLIB }} default
-          conan profile show default
+          sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.cppstd=.*/compiler.cppstd=20/' ~/.conan2/profiles/default
+          sed -i.backup '/^\[settings\]$/,/^\[/ s/^build_type=.*/build_type=${{ env.BUILD_TYPE }}/' ~/.conan2/profiles/default
+          sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler=.*/compiler=${{ env.COMPILER_TYPE }}/' ~/.conan2/profiles/default
+          sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.version=.*/compiler.version=${{ env.COMPILER_VERSION }}/' ~/.conan2/profiles/default
+          sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.libcxx=.*/compiler.libcxx=${{ env.STDLIB }}/' ~/.conan2/profiles/default
+          conan profile show -pr default
 
       - name: Make build directory
         working-directory: ${{github.workspace}}
