@@ -26,7 +26,7 @@ from conan.tools.cmake import CMakeToolchain, CMakeDeps
 from conans.tools import load
 import re, os.path
 
-required_conan_version = ">=1.33.0"
+required_conan_version = ">=2.00.0"
 
 class Morpheus(ConanFile):
     name = "morpheus"
