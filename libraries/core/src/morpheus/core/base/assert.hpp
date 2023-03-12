@@ -27,7 +27,9 @@ using AssertHandler = std::function<bool(Assertion)>;
 /// Set a custom global assert handler.
 /// \param[in] handler
 ///     A custom assert handler to override existing handling behaviour with.
-MORPHEUSCORE_EXPORT void setAssertHandler(AssertHandler handler);
+/// \return
+///     The previous assert handler
+MORPHEUSCORE_EXPORT AssertHandler setAssertHandler(AssertHandler handler);
 
 /// Access the globally enable assert handler.
 [[nodiscard]] MORPHEUSCORE_EXPORT AssertHandler const& getAssertHandler();

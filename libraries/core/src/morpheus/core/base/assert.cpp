@@ -11,13 +11,15 @@ namespace morpheus
 AssertHandler gAssertHandler = [](Assertion assertion)
 {
     auto const debugMessage = fmt_ns::format("{}({}): assertion[{}]: {}", assertion.location.file_name(), assertion.location.line(), assertion.expression, assertion.message);
-    debugPring(debugMessage);
+    debugPrint(debugMessage);
     return true;
 };
 
-void setAssertHandler(AssertHandler handler)
+AssertHandler setAssertHandler(AssertHandler handler)
 {
+    auto previousHandler = std::move(gAssertHandler);
     gAssertHandler = std::move(handler);
+    return previousHandler;
 }
 
 [[nodiscard]] AssertHandler const& getAssertHandler()

@@ -5,10 +5,10 @@ namespace morpheus::gfx
 
 //---------------------------------------------------------------------------------------------------------------------
 
-image::image(
-    const std::uint32_t width,
-    const std::uint32_t height,
-    const std::uint32_t colourDepth
+Image::Image(
+    std::uint32_t const width,
+    std::uint32_t const height,
+    std::uint32_t const colourDepth
 )
 :   mWidth(width),
     mHeight(height),
