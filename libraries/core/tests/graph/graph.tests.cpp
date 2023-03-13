@@ -18,7 +18,7 @@ constexpr NodeId aiEngineId = 4;
 constexpr NodeId visualisationId = 5;
 constexpr NodeId worldModelId = 6;
 
-TEST_CASE("Verify serialisation of polymorphic_value", "[morpheus.graph.graph]")
+TEST_CASE("Verify construction of a graph", "[morpheus.graph.graph]")
 {
 	Node constexpr game(gameId);
 	Node constexpr physics(physicsId);
@@ -31,6 +31,11 @@ TEST_CASE("Verify serialisation of polymorphic_value", "[morpheus.graph.graph]")
 	STATIC_REQUIRE(UniqueNodeRange<decltype(nodes)>);
 
 	Graph constexpr gameGraph(nodes);
+}
+
+
+TEST_CASE("Verify creation of a constexpr graph", "[morpheus.graph.constexpr]")
+{
 }
 
 } // morpheus::namespace morpheus::graph

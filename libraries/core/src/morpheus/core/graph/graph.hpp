@@ -18,11 +18,17 @@ concept UniqueNodeRange = requires(T /*constinit*/ t)
 
 template <Node... > struct NodeList {};
 
+
+//template<template<typename...> typename>
+//class Graph;
+
 /// \class Graph
 /// 
 /// - A list of nodes
 /// - Adjecency list
 /// - 
+
+//template<template<typename...> typename>
 class Graph {
 public:
     consteval Graph() noexcept {}
