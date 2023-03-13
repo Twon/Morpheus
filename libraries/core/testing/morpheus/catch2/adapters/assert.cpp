@@ -1,8 +1,15 @@
-#include <morpheus/core/base/assert.hpp>
+#include <morpheus/catch2/adapters/assert.hpp>
 #include <catch2/catch_all.hpp>
 
 namespace morpheus
 {
+
+AssertHandler previousHandler;
+
+const AssertHandler& getPreviousHandler()
+{
+    return previousHandler;
+}
 
 void enableCatch2AssertHooks()
 {
@@ -15,7 +22,7 @@ void enableCatch2AssertHooks()
         handler.setCompleted();
         return false;
     };
-    setAssertHandler(std::move(catch2AssertHandler));
+    previousHandler = setAssertHandler(std::move(catch2AssertHandler));
 }
 
 } // namespace morpheus
