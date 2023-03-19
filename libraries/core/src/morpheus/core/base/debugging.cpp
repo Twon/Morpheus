@@ -4,13 +4,13 @@
 #include <boost/test/debug.hpp>
 
 #if (MORPHEUS_BUILD_PLATFORM == MORPHEUS_TARGET_PLATFORM_PC_WINDOWS)
-#define WIN32_LEAN_AND_MEAN      // Exclude rarely-used stuff from Windows headers
-#include <windows.h>
-#include <intrin.h>
-#include <debugapi.h>
-#elif (MORPHEUS_BUILD_PLATFORM == MORPHEUS_TARGET_PLATFORM_LINUX) || \
-      (MORPHEUS_BUILD_PLATFORM == MORPHEUS_TARGET_PLATFORM_APPLE)
-#include <signal.h>
+    #define WIN32_LEAN_AND_MEAN // Exclude rarely-used stuff from Windows headers
+    #include <debugapi.h>
+    #include <intrin.h>
+    #include <windows.h>
+#elif (MORPHEUS_BUILD_PLATFORM == MORPHEUS_TARGET_PLATFORM_LINUX) ||                                                   \
+    (MORPHEUS_BUILD_PLATFORM == MORPHEUS_TARGET_PLATFORM_APPLE)
+    #include <signal.h>
 #endif
 
 #include <cstdio>
@@ -22,21 +22,20 @@ void breakpoint() noexcept
 {
 
 #if (MORPHEUS_BUILD_PLATFORM == MORPHEUS_TARGET_PLATFORM_PC_WINDOWS)
-    __debugbreak(); 
+    __debugbreak();
     MORPHEUS_UNREACHABLE;
 // https://github.com/scottt/debugbreak/issues/24
 #elif (MORPHEUS_COMPILER == MORPHEUS_CLANG_COMPILER) && defined(__has_builtin) && __has_builtin(__builtin_debugtrap)
-    __builtin_debugtrap(); 
-    MORPHEUS_UNREACHABLE; 
-#elif (MORPHEUS_BUILD_PLATFORM == MORPHEUS_TARGET_PLATFORM_LINUX) || \
-      (MORPHEUS_BUILD_PLATFORM == MORPHEUS_TARGET_PLATFORM_APPLE)
-    raise(SIGTRAP); 
+    __builtin_debugtrap();
+    MORPHEUS_UNREACHABLE;
+#elif (MORPHEUS_BUILD_PLATFORM == MORPHEUS_TARGET_PLATFORM_LINUX) ||                                                   \
+    (MORPHEUS_BUILD_PLATFORM == MORPHEUS_TARGET_PLATFORM_APPLE)
+    raise(SIGTRAP);
     MORPHEUS_UNREACHABLE;
 #else
     // *(int*)0 = 0;
     // MORPHEUS_UNREACHABLE;
 #endif
-
 }
 
 void breakpoint_if_debugging() noexcept
@@ -45,10 +44,7 @@ void breakpoint_if_debugging() noexcept
         breakpoint();
 }
 
-bool is_debugger_present() noexcept
-{
-    return boost::debug::under_debugger();
-}
+bool is_debugger_present() noexcept { return boost::debug::under_debugger(); }
 
 void debugPrint(std::string_view const message)
 {
@@ -58,4 +54,4 @@ void debugPrint(std::string_view const message)
 #endif
 }
 
-}
+} // namespace morpheus
