@@ -1,13 +1,12 @@
 #include "morpheus/core/base/debugging.hpp"
+#include "morpheus/core/base/prerequisites.hpp"
 #include "morpheus/core/conformance/print.hpp"
 
 #include <boost/test/debug.hpp>
 
 #if (MORPHEUS_BUILD_PLATFORM == MORPHEUS_TARGET_PLATFORM_PC_WINDOWS)
-    #define WIN32_LEAN_AND_MEAN // Exclude rarely-used stuff from Windows headers
-    #include <debugapi.h>
+    #include <debugapi.h> // Windows.h must be included before this (current via prerequisites).
     #include <intrin.h>
-    #include <windows.h>
 #elif (MORPHEUS_BUILD_PLATFORM == MORPHEUS_TARGET_PLATFORM_LINUX) ||                                                   \
     (MORPHEUS_BUILD_PLATFORM == MORPHEUS_TARGET_PLATFORM_APPLE)
     #include <signal.h>
