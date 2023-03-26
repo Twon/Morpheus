@@ -14,4 +14,4 @@ namespace morpheus::meta::concepts
 template <typename T, std::size_t N>
 concept AggregateConstructableWithNArgs = detail::AggregateConstructibleFromIndicies<T, std::make_index_sequence<N>>::value;
 
-} // namespace morpheus::meta::conceptsD
+} // namespace morpheus::meta::concepts
