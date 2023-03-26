@@ -42,7 +42,7 @@ IndentPPDirectives: BeforeHash
 IndentRequiresClause: false
 IndentWidth: 4
 Language: Cpp
-PackConstructorInitializers: CurrentLine
+PackConstructorInitializers: Never
 PointerAlignment: Left
 SeparateDefinitionBlocks: Always
 SortIncludes: CaseSensitive

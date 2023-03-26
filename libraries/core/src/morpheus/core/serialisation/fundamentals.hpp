@@ -7,20 +7,21 @@
 namespace morpheus::serialisation
 {
 
-namespace detail {
+namespace detail
+{
 
-template<concepts::WriteSerialiser Serialiser, concepts::WriteSerialisableNative T>
+template <concepts::WriteSerialiser Serialiser, concepts::WriteSerialisableNative T>
 void serialise(Serialiser& s, T const& value)
 {
     s.writer().write(value);
 }
 
-template<concepts::ReadSerialiser Serialiser, concepts::ReadSerialisableNative T>
+template <concepts::ReadSerialiser Serialiser, concepts::ReadSerialisableNative T>
 T deserialise(Serialiser& s)
 {
     return s.reader().template read<T>();
 }
 
-}
+} // namespace detail
 
-}
+} // namespace morpheus::serialisation
