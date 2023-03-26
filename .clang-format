@@ -47,7 +47,7 @@ PointerAlignment: Left
 SeparateDefinitionBlocks: Always
 SortIncludes: CaseSensitive
 SpaceAfterLogicalNot: false
-SpaceAfterTemplateKeyword: false
+SpaceAfterTemplateKeyword: true
 SpaceBeforeAssignmentOperators: true
 SpaceBeforeInheritanceColon: true
 SpaceBeforeParens: Custom
