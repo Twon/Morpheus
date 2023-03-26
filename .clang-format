@@ -7,10 +7,17 @@ AlignConsecutiveMacros:
   AlignCompound: true
   PadOperators: true
 AlignEscapedNewlines: Right
+AlignOperands: Align
 AlignTrailingComments: true
 AllowShortCaseLabelsOnASingleLine: false
+AllowShortFunctionsOnASingleLine: All
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLoopsOnASingleLine: false
+AlwaysBreakBeforeMultilineStrings: false
 AlwaysBreakTemplateDeclarations: Yes
+BitFieldColonSpacing: Both
 BreakBeforeBraces: Custom
+BreakBeforeConceptDeclarations: Always
 BraceWrapping:
   AfterEnum: true
   AfterExternBlock: true
@@ -27,11 +34,22 @@ BraceWrapping:
   SplitEmptyFunction: false
   SplitEmptyNamespace: false
   SplitEmptyRecord: false
-ColumnLimit: 120
+BreakConstructorInitializers: BeforeComma
+ColumnLimit: 160
+ConstructorInitializerIndentWidth: 0
+IncludeBlocks: Preserve
 IndentPPDirectives: BeforeHash
+IndentRequiresClause: false
 IndentWidth: 4
+Language: Cpp
+PackConstructorInitializers: CurrentLine
 PointerAlignment: Left
 SeparateDefinitionBlocks: Always
+SortIncludes: CaseSensitive
+SpaceAfterLogicalNot: false
+SpaceAfterTemplateKeyword: false
+SpaceBeforeAssignmentOperators: true
+SpaceBeforeInheritanceColon: true
 SpaceBeforeParens: Custom
 SpaceBeforeParensOptions:
   AfterControlStatements: true
@@ -43,6 +61,7 @@ SpaceBeforeParensOptions:
   BeforeNonEmptyParentheses: false
 SpaceBeforeRangeBasedForLoopColon: true
 SpaceBeforeSquareBrackets: false
+SpaceBeforeCtorInitializerColon: true
 SpaceInEmptyBlock: false
 SpaceInEmptyParentheses: false
 Standard: c++20

@@ -14,7 +14,6 @@
 #endif
 // clang-format on
 
-
 #include <cstdio>
 
 namespace morpheus
@@ -30,8 +29,7 @@ void breakpoint() noexcept
 #elif (MORPHEUS_COMPILER == MORPHEUS_CLANG_COMPILER) && defined(__has_builtin) && __has_builtin(__builtin_debugtrap)
     __builtin_debugtrap();
     MORPHEUS_UNREACHABLE;
-#elif (MORPHEUS_BUILD_PLATFORM == MORPHEUS_TARGET_PLATFORM_LINUX) ||                                                   \
-    (MORPHEUS_BUILD_PLATFORM == MORPHEUS_TARGET_PLATFORM_APPLE)
+#elif (MORPHEUS_BUILD_PLATFORM == MORPHEUS_TARGET_PLATFORM_LINUX) || (MORPHEUS_BUILD_PLATFORM == MORPHEUS_TARGET_PLATFORM_APPLE)
     raise(SIGTRAP);
     MORPHEUS_UNREACHABLE;
 #else
@@ -42,7 +40,7 @@ void breakpoint() noexcept
 
 void breakpoint_if_debugging() noexcept
 {
-#if defined (MORPHEUS_DEBUG_ENABLED)
+#if defined(MORPHEUS_DEBUG_ENABLED)
     if (is_debugger_present())
         breakpoint();
 #else
