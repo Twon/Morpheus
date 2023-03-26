@@ -8,6 +8,16 @@
 
 namespace morpheus
 {
+/// \def MORPHEUS_DEBUG_ENABLED
+///     Test macro which is enabled by default for debug builds.  This may be define by users when
+///     it is known that debug behaviour is intended. Conversly it can be disabled by defining
+///     MORPHEUS_DISABLE_DEBUG
+/// \note
+///     This can be manually disabled by defining MORPHEUS_DISABLE_DEBUG.  This allows for removing
+///     asserts in debug builds.
+#if !defined(NDEBUG) && !defined(MORPHEUS_DEBUG_ENABLED) && !defined(MORPHEUS_DISABLE_DEBUG)
+    #define MORPHEUS_DEBUG_ENABLED
+#endif
 
 /// Inserts a breakpoint into the code.
 /// \note

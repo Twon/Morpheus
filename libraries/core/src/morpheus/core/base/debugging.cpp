@@ -4,13 +4,16 @@
 
 #include <boost/test/debug.hpp>
 
+// clang-format off
 #if (MORPHEUS_BUILD_PLATFORM == MORPHEUS_TARGET_PLATFORM_PC_WINDOWS)
     #include <debugapi.h> // Windows.h must be included before this (current via prerequisites).
     #include <intrin.h>
 #elif (MORPHEUS_BUILD_PLATFORM == MORPHEUS_TARGET_PLATFORM_LINUX) ||                                                   \
-    (MORPHEUS_BUILD_PLATFORM == MORPHEUS_TARGET_PLATFORM_APPLE)
+      (MORPHEUS_BUILD_PLATFORM == MORPHEUS_TARGET_PLATFORM_APPLE)
     #include <signal.h>
 #endif
+// clang-format on
+
 
 #include <cstdio>
 
@@ -39,8 +42,12 @@ void breakpoint() noexcept
 
 void breakpoint_if_debugging() noexcept
 {
+#if defined (MORPHEUS_DEBUG_ENABLED)
     if (is_debugger_present())
         breakpoint();
+#else
+    debugPrint("Breakpoint hit but currently disabled (See MORPHEUS_DEBUG_ENABLED for details).");
+#endif
 }
 
 bool is_debugger_present() noexcept { return boost::debug::under_debugger(); }
