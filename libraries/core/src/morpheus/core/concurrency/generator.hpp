@@ -26,7 +26,9 @@ struct Generator
     using reference = std::conditional_t<std::is_reference_v<T>, T, const value_type&>;
     using pointer = std::add_pointer_t<reference>;
 
-    Generator(handle_type h) : coro(h) {}
+    Generator(handle_type h)
+    : coro(h)
+    {}
 
     /// Destroys the generator.
     ~Generator()
@@ -38,7 +40,9 @@ struct Generator
     Generator(const Generator&) = delete;
     Generator& operator=(const Generator&) = delete;
 
-    Generator(Generator&& rhs) noexcept : coro(std::exchange(rhs.coro, {})) {}
+    Generator(Generator&& rhs) noexcept
+    : coro(std::exchange(rhs.coro, {}))
+    {}
 
     Generator& operator=(Generator&& rhs) noexcept
     {
@@ -46,21 +50,21 @@ struct Generator
         return *this;
     }
 
-    struct promise_type {
-        auto initial_suspend() {
-            return coro_ns::suspend_always{};
-        }
-        auto final_suspend() noexcept {
-            return coro_ns::suspend_always{};
-        }
-        auto get_return_object() {
-            return Generator{ handle_type::from_promise(*this) };
-        }
-//        auto return_void() {
-//            return coro_ns::suspend_never{};
-//        }
+    struct promise_type
+    {
+        auto initial_suspend() { return coro_ns::suspend_always{}; }
+
+        auto final_suspend() noexcept { return coro_ns::suspend_always{}; }
+
+        auto get_return_object() { return Generator{handle_type::from_promise(*this)}; }
+
+        //        auto return_void() {
+        //            return coro_ns::suspend_never{};
+        //        }
         void return_void() noexcept {}
-        auto yield_value(const T value) {
+
+        auto yield_value(const T value)
+        {
             current_value = value;
             return coro_ns::suspend_always{};
         }
@@ -76,8 +80,8 @@ struct Generator
     {
     public:
         using value_type = Generator::value_type; ///< Value type pointed to by the iterator.
-        using reference = Generator::reference; ///< Reference to the underlying value type pointed to by the iterator.
-        using pointer = Generator::pointer;     ///< Pointer to the underlying value type pointed to by the iterator.
+        using reference = Generator::reference;   ///< Reference to the underlying value type pointed to by the iterator.
+        using pointer = Generator::pointer;       ///< Pointer to the underlying value type pointed to by the iterator.
         using difference_type = std::ptrdiff_t;
         using iterator_category = std::input_iterator_tag;
 
@@ -85,7 +89,9 @@ struct Generator
         iterator(iterator const& rhs) noexcept = default;
         iterator& operator=(iterator const& other) noexcept = default;
 
-        iterator(iterator&& rhs) noexcept : handle(std::exchange(rhs.handle, {})) {}
+        iterator(iterator&& rhs) noexcept
+        : handle(std::exchange(rhs.handle, {}))
+        {}
 
         iterator& operator=(iterator&& other) noexcept
         {
@@ -115,7 +121,9 @@ struct Generator
     private:
         friend Generator;
 
-        explicit iterator(coro_ns::coroutine_handle<promise_type> h) noexcept : handle(h) {}
+        explicit iterator(coro_ns::coroutine_handle<promise_type> h) noexcept
+        : handle(h)
+        {}
 
         coro_ns::coroutine_handle<promise_type> handle;
     };
