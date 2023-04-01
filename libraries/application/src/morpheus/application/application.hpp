@@ -19,14 +19,12 @@ public:
     /// 
     /// \param[in] argc The number of command line arguments.
     /// \param[in] argv List of command line arguments.
-    void commandline(int argc, char* argv[])
+    auto commandline(int argc, char* argv[])
     {
         using namespace po;
 
         Config config;
-        auto const parseFailure = parseProgramOptions(argc, argv, HelpDocumentation{}, config);
-        if (parseFailure)
-            return;
+        return parseProgramOptions(argc, argv, HelpDocumentation{}, config);
     }
 
 

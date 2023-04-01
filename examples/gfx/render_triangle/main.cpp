@@ -1,35 +1,15 @@
+#include <morpheus/application/application.hpp>
+#include <morpheus/application/try_catch.hpp>
 #include <morpheus/gfx/gl4/render_system.hpp>
 #include <morpheus/gfx/platform/render_system_factory.hpp>
 #include <morpheus/gfx/platform/win32/render_window.hpp>
 
+using namespace morpheus::application;
 using namespace morpheus::gfx;
 
-class Application {
-public:
-    void Run()
-    {
-
-    }
-};
-
-class ExampleFramework 
+class RenderTriange : public Application
 {
 public:
-
-	//! Destructor.
-	virtual ~ExampleFramework() {}
-
-	/*!
-		*/
-	virtual void Create()
-	{		
-	}
-
-	/*!
-		*/
-	virtual void Destroy()
-	{
-	}
 
 	void Run()
 	{
@@ -53,15 +33,17 @@ public:
 		}
 	}
 
-	ExampleFramework() = default;
-
 protected:
 	win32::RenderWindow window;
 };
 
 int main(int argc, char *argv[])
 {
-	ExampleFramework example;
-	example.Run();
+	RenderTriange example;
+	if (auto const result = example.commandline(argc, argv); result)
+		return *result;
+
+	tryCatch([&] { example.Run(); }	);
+
 //    render_system_factory renderer_factory;
 }

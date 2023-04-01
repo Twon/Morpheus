@@ -14,7 +14,7 @@ void Config::addOptions(boost::program_options::options_description& options)
     options.add_options()
         ("logging-enabled", po::value(&loggingEnabled)->default_value(loggingEnabled), "Logging to file is enabled.")
         ("log-append", po::value(&logAppend)->default_value(logAppend), "Logging is appended to an existing log file.")
-        ("log-level", po::value(&logLevel)->default_value(logLevel), "The level most permissive level of logging to allow into the log file.")
+        ("log-level", po::value(&logLevel)->default_value(logLevel), "The most permissive level of logging to allow into the log file.")
         ("logfile-path", po::value(&logFilePath)->default_value(std::filesystem::current_path()), "The directory to store logfiles in.");
 //        ("logfile-timezone", po::value(&logFileTimeZone)->required(), "Width in pixels of the window.");
     // clang-format on

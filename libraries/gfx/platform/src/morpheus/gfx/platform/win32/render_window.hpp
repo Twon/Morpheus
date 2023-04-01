@@ -9,7 +9,7 @@
 namespace morpheus::gfx::win32
 {
 
-/*! \class render_window
+/*! \class RenderWindow
         A specialisation of the render window for the Windows platform based on the Win32 API.
  */
 class RenderWindow : protected gfx::RenderWindow {
@@ -28,13 +28,12 @@ public:
     //    void isFocus(bool const focus) const noexcept
     //    void isVisible(bool const visible) const noexcept
 
+    void resize();
+
 private:
     friend LRESULT WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
-    void resize();
-
     wil::unique_hwnd mWindow;/// OS window handle
-    std::string mWindowName;
 };
 
 } // namespace morpheus::gfx::win32

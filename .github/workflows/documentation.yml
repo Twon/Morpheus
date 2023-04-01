@@ -59,7 +59,7 @@ jobs:
 
       - name: Install Conan Package Tools
         run: |
-          pip install -U conan
+          pip install conan==1.59.0
 
       - name: Configure Conan
         shell: bash
