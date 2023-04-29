@@ -124,7 +124,12 @@ JsonReader::EventValue JsonReader::getNext()
     return mExtractor->mCurrent;
 }
 
-JsonReader::JsonReader(std::istream& stream) : mStream(stream), mExtractor(std::make_unique<JsonExtracter>()) { mJsonReader.IterativeParseInit(); }
+JsonReader::JsonReader(std::istream& stream)
+: mStream(stream)
+, mExtractor(std::make_unique<JsonExtracter>())
+{
+    mJsonReader.IterativeParseInit();
+}
 
 JsonReader::~JsonReader() { MORPHEUS_VERIFY(mJsonReader.IterativeParseComplete()); }
 
@@ -177,8 +182,8 @@ bool JsonReader::beginNullable()
 {
     auto const state = currentState();
     auto const [event, next] = state.value();
-    //if (null)
-    //    beginComposite();
+    // if (null)
+    //     beginComposite();
     MORPHEUS_VERIFY(event == Event::Value);
     return !next;
 }
