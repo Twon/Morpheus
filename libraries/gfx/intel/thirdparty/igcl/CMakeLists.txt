@@ -2,7 +2,7 @@ FetchContent_Declare(
     intelGraphicsControlLibrary
     GIT_REPOSITORY https://github.com/intel/drivers.gpu.control-library.git
 )
-FetchContent_Populate(intelGraphicsControlLibrary)
+FetchContent_MakeAvailable(intelGraphicsControlLibrary)
 
 add_library(GraphicsControlLibrary)
 add_library(intel::GraphicsControlLibrary ALIAS GraphicsControlLibrary)
