@@ -107,7 +107,7 @@ TEST_CASE("Verify deserialisation of std::expected", "[morpheus.serialisation.ex
 
             WHEN("Deserialising the std::expected")
             {
-                using ExpectedType = std::expected<std::int64_t, std::string>;
+                using ExpectedType = exp_ns::expected<std::int64_t, std::string>;
                 auto const expected = serialiser.deserialise<ExpectedType>();
                 REQUIRE(expected.error() == actualValue);
             }
