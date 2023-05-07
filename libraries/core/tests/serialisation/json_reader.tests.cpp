@@ -192,7 +192,7 @@ TEST_CASE("Json reader can read std types from underlying text representation", 
     REQUIRE(test::deserialise<std::pair<int, bool>>(R"([50,true])") == std::pair<int, bool>{50, true});
     REQUIRE(test::deserialise<std::tuple<int, bool, std::string>>(R"([75,true,"Example"])") == std::tuple<int, bool, std::string>{75, true, "Example"});
 //    REQUIRE(test::deserialise<std::variant<int, bool, std::string>>(R"({"type":"bool","value":true})") == std::variant<int, bool, std::string>{true});
-//    REQUIRE(test::deserialise<std::unique_ptr<int>>(R"({50})") == std::make_unique<int>(50));
+    REQUIRE(*test::deserialise<std::unique_ptr<int>>(R"(50)") == *std::make_unique<int>(50));
 }
 
 } // namespace morpheus::serialisation
