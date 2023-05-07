@@ -12,7 +12,7 @@ namespace morpheus::meta::detail
 /// \endcode
 struct Any
 {
-    /// Conversion operator to any type.  Only to be used in meta context to not implemented to guard against 
+    /// Conversion operator to any type.  Only to be used in meta context to not implemented to guard against
     /// inappropriate use
     template <typename T>
     constexpr operator T() const noexcept;
@@ -22,6 +22,5 @@ struct Any
 ///     Allows for use anywhere, but accepts an index value.
 template <std::size_t I>
 using IndexedAny = Any;
-
 
 } // namespace morpheus::meta::detail
