@@ -18,6 +18,7 @@ target_link_libraries(MorpheusCore
         morpheus::config
         Boost::headers
         Boost::log
+        magic_enum::magic_enum
 )
 
 add_subdirectory(morpheus/core)
