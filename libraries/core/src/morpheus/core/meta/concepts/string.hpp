@@ -11,7 +11,7 @@ template <class T>
 concept IsString = is_string_v<std::remove_cvref_t<T>>;
 
 template <class T>
-concept IsStringView = is_string_v<std::remove_cvref_t<T>>;
+concept IsStringView = is_string_view_v<std::remove_cvref_t<T>>;
 
 template <class T>
 concept ConvertableToStringView =
