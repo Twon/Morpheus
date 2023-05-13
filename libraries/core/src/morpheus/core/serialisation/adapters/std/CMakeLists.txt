@@ -1,5 +1,6 @@
 target_sources(MorpheusCore
     PUBLIC
+        expected.hpp
         optional.hpp
         pair.hpp
         ranges.hpp

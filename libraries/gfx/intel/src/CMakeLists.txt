@@ -16,4 +16,9 @@ target_link_libraries(MorpheusGfxIntel
 		intel::GraphicsControlLibrary
 )
 
+set_target_properties(MorpheusGfxIntel
+    PROPERTIES
+        WINDOWS_EXPORT_ALL_SYMBOLS TRUE
+)
+
 add_subdirectory(morpheus/gfx/intel)
