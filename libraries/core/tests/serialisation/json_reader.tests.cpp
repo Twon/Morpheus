@@ -5,6 +5,7 @@
 #include "morpheus/core/serialisation/adapters/std/tuple.hpp"
 #include "morpheus/core/serialisation/adapters/std/unique_ptr.hpp"
 #include "morpheus/core/serialisation/adapters/std/variant.hpp"
+#include "morpheus/core/serialisation/adapters/std/vector.hpp"
 #include "morpheus/core/serialisation/read_serialiser.hpp"
 #include "morpheus/core/serialisation/serialisers.hpp"
 
@@ -150,6 +151,7 @@ struct ComplexComposite
     }
 };
 
+
 TEST_CASE("Json reader can read simple composite types from underlying test representation", "[morpheus.serialisation.json_reader.composite]")
 {
     GIVEN("A Json reader")
@@ -189,10 +191,14 @@ TEST_CASE("Json reader can read simple composite types from underlying test repr
 
 TEST_CASE("Json reader can read std types from underlying text representation", "[morpheus.serialisation.json_reader.adapters.std]")
 {
+    REQUIRE(test::deserialise<std::optional<int>>(R"(100)") == std::optional<int>{100});
+    REQUIRE(test::deserialise<std::optional<int>>(R"(null)") == std::optional<int>{});
     REQUIRE(test::deserialise<std::pair<int, bool>>(R"([50,true])") == std::pair<int, bool>{50, true});
     REQUIRE(test::deserialise<std::tuple<int, bool, std::string>>(R"([75,true,"Example"])") == std::tuple<int, bool, std::string>{75, true, "Example"});
 //    REQUIRE(test::deserialise<std::variant<int, bool, std::string>>(R"({"type":"bool","value":true})") == std::variant<int, bool, std::string>{true});
-    REQUIRE(*test::deserialise<std::unique_ptr<int>>(R"(50)") == *std::make_unique<int>(50));
+    REQUIRE(*test::deserialise<std::unique_ptr<int>>(R"(50)") == 50);
 }
+
+
 
 } // namespace morpheus::serialisation
