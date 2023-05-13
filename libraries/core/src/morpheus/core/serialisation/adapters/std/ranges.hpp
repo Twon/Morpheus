@@ -13,7 +13,7 @@ namespace morpheus::serialisation::detail
 /// \var isEnabledForRangeSerialisation
 ///     To enable serialisation for any type meeting the concept of a range then enable serialisation by specialising and enabling this value.
 template <typename T>
-constexpr bool isEnabledForRangeSerialisation = false;
+inline constexpr bool isEnabledForRangeSerialisation = false;
 
 /// \concept IsRange
 ///   For the purpose of serialisation of ranges we want to know that a given type is range, but also that we explicityly want to opt in as a Range
@@ -31,7 +31,7 @@ void serialise(Serialiser& serialiser, IsRange auto const& range)
     serialiser.writer().endSequence();
 }
 
-template <concepts::ReadSerialiser Serialiser, ranges::range T>
+template <concepts::ReadSerialiser Serialiser, IsRange T>
 T deserialise(Serialiser& serialiser)
 {
 

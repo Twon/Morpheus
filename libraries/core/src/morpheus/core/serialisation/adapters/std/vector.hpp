@@ -8,6 +8,6 @@ namespace morpheus::serialisation::detail
 {
 
 template <typename T>
-constexpr bool isEnabledForRangeSerialisation<std::vector<T>> = true;
+inline constexpr bool isEnabledForRangeSerialisation<std::vector<T>> = true;
 
 } // namespace morpheus::serialisation::detail
