@@ -30,7 +30,7 @@ void serialise(Serialiser& serialiser, IsRange auto const& range)
     serialiser.writer().endSequence();
 }
 
-template<concepts::ReadSerialiser Serialiser, ranges::range T>
+template<concepts::ReadSerialiser Serialiser, IsRange T>
 T deserialise(Serialiser& serialiser)
 {
     constexpr std::size_t size = std::tuple_size<T>::value;

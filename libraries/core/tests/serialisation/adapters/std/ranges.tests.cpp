@@ -19,6 +19,9 @@
 namespace morpheus::serialisation
 {
 
+using namespace ::testing;
+using namespace std::literals::string_view_literals;
+
 TEST_CASE("Verify serialisation of ranges", "[morpheus.serialisation.ranges]")
 {
     STATIC_REQUIRE(detail::IsRange<std::vector<int>>);
@@ -26,11 +29,6 @@ TEST_CASE("Verify serialisation of ranges", "[morpheus.serialisation.ranges]")
 //    STATIC_REQUIRE(meta::IsString<std::string_view>);
     STATIC_REQUIRE(meta::IsStringView<std::string_view>);
 }
-
-} // morpheus::serialisation
-using namespace ::testing;
-using namespace std::literals::string_view_literals;
-
 
 TEMPLATE_TEST_CASE("Verify serialisation of sequence containers std::ranges", "[morpheus.serialisation.ranges.serialise.sequence_containers]", (std::array<int, 5>), std::vector<int>)
 {
