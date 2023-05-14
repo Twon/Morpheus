@@ -12,6 +12,7 @@ target_include_directories(MorpheusCoreTesting
 target_link_libraries(MorpheusCoreTesting
     PUBLIC
         morpheus::core
+        Boost::filesystem
 )
 
 set_target_properties(MorpheusCoreTesting

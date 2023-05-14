@@ -2,12 +2,16 @@
 
 #include <morpheus/core/conformance/version.hpp>
 
-// clang-format off
+
 #if __has_include(<print>)
     #include <print>
-    namespace morpheus{ namespace print_ns = std; }
+#endif // #if __has_include(<print>)
+
+// clang-format off
+#if (__cpp_lib_print >= 202207L)
+    namespace morpheus { namespace print_ns = std; }
 #else
-    #include <fmt/format.h>
+    #include <fmt/core.h>
     namespace morpheus { namespace print_ns = fmt; }
 #endif
 // clang-format on
