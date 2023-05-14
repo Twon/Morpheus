@@ -1,4 +1,5 @@
 #include "morpheus/core/conformance/ranges.hpp"
+#include "morpheus/core/serialisation/adapters/std/array.hpp"
 #include "morpheus/core/serialisation/adapters/std/ranges.hpp"
 #include "morpheus/core/serialisation/adapters/std/vector.hpp"
 #include "morpheus/core/serialisation/mock/reader.hpp"
@@ -8,6 +9,10 @@
 #include <catch2/catch_all.hpp>
 #include <gmock/gmock.h>
 
+#include <initializer_list>
+#include <array>
+#include <vector>
+
 namespace morpheus::serialisation
 {
 
@@ -15,13 +20,22 @@ using namespace ::testing;
 using namespace std::literals::string_view_literals;
 
 
-TEST_CASE("Verify serialisation of sequence containers std::ranges", "[morpheus.serialisation.ranges.serialise.sequence_containers]")
+TEMPLATE_TEST_CASE("Verify serialisation of sequence containers std::ranges", "[morpheus.serialisation.ranges.serialise.sequence_containers]", (std::array<int, 5>), std::vector<int>)
 {
-    std::initializer_list const values = {1, 2, 3, 4, 5};
-
-    GIVEN("A std::expected holding a value")
+    GIVEN("A range of values")
     {
-        std::vector container(values);
+        TestType container([]
+        {
+            std::initializer_list constexpr values = {1, 2, 3, 4, 5};
+            if constexpr (std::is_constructible_v<TestType, decltype(values)>)
+            {
+                return values; 
+            }
+            else
+            {
+                return TestType{1, 2, 3, 4, 5};
+            }
+        }());
 
         THEN("Expect the following sequence of operations on the underlying writer")
         {

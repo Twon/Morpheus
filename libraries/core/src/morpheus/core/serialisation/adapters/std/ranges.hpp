@@ -31,23 +31,4 @@ void serialise(Serialiser& serialiser, IsRange auto const& range)
     serialiser.writer().endSequence();
 }
 
-template <concepts::ReadSerialiser Serialiser, IsRange T>
-T deserialise(Serialiser& serialiser)
-{
-
-//    serialiser.reader().beginSequence(ranges::size(range));
-//    constexpr std::size_t size = std::tuple_size<T>::value;
-//    for (auto i : ranges::views::iota(0, size))
-    {
-    }
-    /* auto const scope = makeScopedSequence(serialiser.reader(), std::tuple_size<T>::value);
-    return [&serialiser]<std::size_t... Indexes>(std::index_sequence<Indexes...>)
-    {
-        // More work required to support std::tuples containing references.
-        static_assert((!std::is_reference_v<std::tuple_element_t<Indexes, T>> || ...));
-        return T{serialiser.template deserialise<std::tuple_element_t<Indexes, T>>()...};
-    }
-    (std::make_index_sequence<size>());*/
-}
-
 } // namespace morpheus::serialisation::detail
