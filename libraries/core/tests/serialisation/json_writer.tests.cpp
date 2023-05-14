@@ -5,6 +5,7 @@
 #include "morpheus/core/serialisation/adapters/std/tuple.hpp"
 #include "morpheus/core/serialisation/adapters/std/unique_ptr.hpp"
 #include "morpheus/core/serialisation/adapters/std/variant.hpp"
+#include "morpheus/core/serialisation/adapters/std/vector.hpp"
 #include "morpheus/core/serialisation/json_writer.hpp"
 #include "morpheus/core/serialisation/serialisers.hpp"
 #include "morpheus/core/serialisation/write_serialiser.hpp"
@@ -250,10 +251,12 @@ TEST_CASE("Json writer can write simple aggregates types to underlying text repr
 TEST_CASE("Json writer can write std types to underlying text representation", "[morpheus.serialisation.json_writer.adapters.std]")
 {
     REQUIRE(test::serialise(std::optional<int>{100}) == R"(100)");
+    REQUIRE(test::serialise(std::optional<int>{}) == R"(null)");
     REQUIRE(test::serialise(std::pair<int, bool>{50, true}) == R"([50,true])");
     REQUIRE(test::serialise(std::tuple<int, bool, std::string>{75, true, "Example"}) == R"([75,true,"Example"])");
     REQUIRE(test::serialise(std::make_unique<int>(123)) == R"(123)");
     REQUIRE(test::serialise(std::variant<int, bool, std::string>{true}) == R"({"type":"bool","value":true})");
+    REQUIRE(test::serialise(std::vector<int>{1,2,3,4,5}) == R"([1,2,3,4,5])");
 }
 
 } // namespace morpheus::serialisation

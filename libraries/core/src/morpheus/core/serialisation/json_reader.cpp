@@ -124,7 +124,12 @@ JsonReader::EventValue JsonReader::getNext()
     return mExtractor->mCurrent;
 }
 
-JsonReader::JsonReader(std::istream& stream) : mStream(stream), mExtractor(std::make_unique<JsonExtracter>()) { mJsonReader.IterativeParseInit(); }
+JsonReader::JsonReader(std::istream& stream)
+: mStream(stream)
+, mExtractor(std::make_unique<JsonExtracter>())
+{
+    mJsonReader.IterativeParseInit();
+}
 
 JsonReader::~JsonReader() { MORPHEUS_VERIFY(mJsonReader.IterativeParseComplete()); }
 
