@@ -1,5 +1,6 @@
 #include "morpheus/core/conformance/ranges.hpp"
 #include "morpheus/core/serialisation/adapters/std/array.hpp"
+#include "morpheus/core/serialisation/adapters/std/list.hpp"
 #include "morpheus/core/serialisation/adapters/std/ranges.hpp"
 #include "morpheus/core/serialisation/adapters/std/set.hpp"
 #include "morpheus/core/serialisation/adapters/std/vector.hpp"
@@ -23,6 +24,7 @@ using namespace std::literals::string_view_literals;
 
 TEMPLATE_TEST_CASE("Verify serialisation of sequence containers std::ranges", "[morpheus.serialisation.ranges.serialise.sequence_containers]", 
     (std::array<int, 5>), 
+    std::list<int>,
     std::set<int>,
     std::vector<int>)
 {

@@ -2,6 +2,7 @@ target_sources(MorpheusCore
     PUBLIC
         array.hpp
         expected.hpp
+        list.hpp
         optional.hpp
         pair.hpp
         set.hpp
