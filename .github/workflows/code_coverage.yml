@@ -134,3 +134,4 @@ jobs:
           gcov: true
           gcov_include: ${{github.workspace}}/build/coverage/html
           files: ${{github.workspace}}/build/coverage/cobertura_coverage.xml
+          verbose: true
