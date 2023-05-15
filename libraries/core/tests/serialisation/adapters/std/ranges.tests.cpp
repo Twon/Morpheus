@@ -1,7 +1,10 @@
 #include "morpheus/core/meta/concepts/string.hpp"
 #include "morpheus/core/conformance/ranges.hpp"
 #include "morpheus/core/serialisation/adapters/std/array.hpp"
+#include "morpheus/core/serialisation/adapters/std/deque.hpp"
+#include "morpheus/core/serialisation/adapters/std/list.hpp"
 #include "morpheus/core/serialisation/adapters/std/ranges.hpp"
+#include "morpheus/core/serialisation/adapters/std/set.hpp"
 #include "morpheus/core/serialisation/adapters/std/vector.hpp"
 #include "morpheus/core/serialisation/mock/reader.hpp"
 #include "morpheus/core/serialisation/mock/serialisers.hpp"
@@ -30,7 +33,12 @@ TEST_CASE("Verify serialisation of ranges", "[morpheus.serialisation.ranges]")
     STATIC_REQUIRE(meta::IsStringView<std::string_view>);
 }
 
-TEMPLATE_TEST_CASE("Verify serialisation of sequence containers std::ranges", "[morpheus.serialisation.ranges.serialise.sequence_containers]", (std::array<int, 5>), std::vector<int>)
+TEMPLATE_TEST_CASE("Verify serialisation of sequence containers std::ranges", "[morpheus.serialisation.ranges.serialise.sequence_containers]", 
+    (std::array<int, 5>), 
+    std::deque<int>,
+    std::list<int>,
+    std::set<int>,
+    std::vector<int>)
 {
     GIVEN("A range of values")
     {

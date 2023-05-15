@@ -2,12 +2,12 @@
 
 #include "morpheus/core/serialisation/adapters/std/ranges.hpp"
 
-#include <vector>
+#include <list>
 
 namespace morpheus::serialisation::detail
 {
 
 template <typename T, typename A>
-inline constexpr bool isEnabledForRangeSerialisation<std::vector<T, A>> = true;
+inline constexpr bool isEnabledForRangeSerialisation<std::list<T, A>> = true;
 
 } // namespace morpheus::serialisation::detail
