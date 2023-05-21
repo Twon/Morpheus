@@ -15,6 +15,6 @@
     #include <boost/stacktrace/stacktrace.hpp>
     namespace morpheus { namespace st_ns = boost::stacktrace; }
 
-    #define MORPHEUS_CURRENT_STACKTRACE ::morpheus::st_ns::stracktrace()
+    #define MORPHEUS_CURRENT_STACKTRACE ::morpheus::st_ns::stacktrace()
 #endif
 // clang-format on
