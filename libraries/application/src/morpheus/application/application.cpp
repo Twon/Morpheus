@@ -18,7 +18,7 @@ namespace
 void terminationHandler()
 {
     try{
-        debugPrint(fmt_ns::format("{}", st_ns::stacktrace())); 
+        debugPrint(fmt_ns::format("{}", MORPHEUS_CURRENT_STACKTRACE)); 
     }
     catch(...){
 
