@@ -12,7 +12,7 @@ TEST_CASE("Ensure stacktrace is supported and working", "[morpheus.conformance.s
 {
     GIVEN("a capture of the current stack trace")
     {
-        auto st = st_ns::stacktrace(); 
+        auto const st = MORPHEUS_CURRENT_STACKTRACE; 
         
         WHEN("Using std::format to write to a string")
         {

@@ -9,10 +9,12 @@
 
     namespace morpheus { namespace st_ns = std; }
 
+    #define MORPHEUS_CURRENT_STACKTRACE ::morpheus::st_ns::stacktrace::current()
 #else
 
     #include <boost/stacktrace/stacktrace.hpp>
     namespace morpheus { namespace st_ns = boost::stacktrace; }
 
+    #define MORPHEUS_CURRENT_STACKTRACE ::morpheus::st_ns::stacktrace::stracktrace()
 #endif
 // clang-format on
