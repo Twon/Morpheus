@@ -69,10 +69,10 @@ class Morpheus(ConanFile):
     requires = (
         "boost/1.81.0",
         "catch2/3.1.0", 
-        "fmt/9.1.0",
+        "fmt/10.0.0",
         "glbinding/3.1.0",
         "glew/2.2.0",
-        "gtest/1.12.1",
+        "gtest/1.13.0",
         "magic_enum/0.8.2",
         "ms-gsl/4.0.0",
         "rapidjson/cci.20220822",

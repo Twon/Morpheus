@@ -1,6 +1,7 @@
 #include <morpheus/core/base/assert.hpp>
 #include <morpheus/core/base/debugging.hpp>
 #include <morpheus/core/conformance/format.hpp>
+#include <morpheus/core/conformance/stacktrace.hpp>
 
 #include <iostream>
 #include <utility>
@@ -10,7 +11,7 @@ namespace morpheus
 
 AssertHandler gAssertHandler = [](Assertion assertion)
 {
-    auto const debugMessage = fmt_ns::format("{}({}): assertion[{}]: {}", assertion.location.file_name(), assertion.location.line(), assertion.expression, assertion.message);
+    auto const debugMessage = fmt_ns::format("{}({}): assertion[{}]: {}\nBacktrace:{}", assertion.location.file_name(), assertion.location.line(), assertion.expression, assertion.message, MORPHEUS_CURRENT_STACKTRACE);
     debugPrint(debugMessage);
     return true;
 };
