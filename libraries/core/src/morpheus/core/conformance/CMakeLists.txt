@@ -20,3 +20,8 @@ target_link_libraries(MorpheusCore
         range-v3::range-v3
         tl::expected
 )
+
+target_compile_definitions(MorpheusCore
+    PUBLIC
+        $<$<PLATFORM_ID:Darwin>:_GNU_SOURCE=1> # Boost stacktrace requires this for MacOS.
+)
