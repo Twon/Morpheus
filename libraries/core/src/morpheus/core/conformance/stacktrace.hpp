@@ -11,7 +11,7 @@
 
 #else
 
-    #include <boost/stacktrace/stacktrace.hpp
+    #include <boost/stacktrace/stacktrace.hpp>
     namespace morpheus { namespace st_ns = boost; }
 
 #endif
