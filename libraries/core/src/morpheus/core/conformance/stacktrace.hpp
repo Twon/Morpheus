@@ -12,7 +12,7 @@
 #else
 
     #include <boost/stacktrace/stacktrace.hpp>
-    namespace morpheus { namespace st_ns = boost; }
+    namespace morpheus { namespace st_ns = boost::stacktrace; }
 
 #endif
 // clang-format on
