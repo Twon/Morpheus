@@ -56,10 +56,10 @@ std::string getDefaultApplicationLogName()
     auto const logfileName = fmt_ns::format("{}.{}.{}.log", programName, processId, yeahMonthDay);
 
     return logfileName;*/
-    auto const logfileName = fmt_ns::format("{}.{}.{:%Y}{:%m}{:%d}.log", programName, processId, ymd.year(), ymd.month(), ymd.day());
+    // auto const logfileName = fmt_ns::format("{}.{}.{:%Y}{:%m}{:%d}.log", programName, processId, ymd.year(), ymd.month(), ymd.day());
     return {};
 }
 
-auto format = getDefaultApplicationLogName();
+// auto format = getDefaultApplicationLogName();
 
 } // namespace morpheus::application
