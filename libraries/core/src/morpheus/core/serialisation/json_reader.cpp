@@ -1,9 +1,24 @@
 #include "morpheus/core/serialisation/json_reader.hpp"
+#include "morpheus/core/base/exceptions.hpp"
 #include "morpheus/core/base/verify.hpp"
+#include "morpheus/core/conformance/format.hpp"
 #include "morpheus/core/serialisation/read_serialiser.hpp"
+
+// #include <magic_enum_format.hpp>
 
 namespace morpheus::serialisation
 {
+
+namespace
+{
+
+void checkExpectedEvent(auto const event, auto const expected)
+{
+    if (event != expected)
+        throwRuntimeException(fmt_ns::format("{} expected, but {} encounteded", magic_enum::enum_name(expected), magic_enum::enum_name(event)));
+}
+
+} // namespace
 
 /// \struct JsonExtracter
 ///     Specialisation of rapidjson::BaseReaderHandler to extract values from a Json stream.
@@ -111,6 +126,8 @@ struct JsonExtracter : rapidjson::BaseReaderHandler<rapidjson::UTF8<>, JsonExtra
     JsonReader::EventValue mCurrent; ///< Current json event.
 };
 
+
+
 JsonReader::EventValue JsonReader::getNext()
 {
     using namespace rapidjson;
@@ -136,22 +153,31 @@ JsonReader::~JsonReader() { MORPHEUS_VERIFY(mJsonReader.IterativeParseComplete()
 void JsonReader::beginComposite()
 {
     auto const [event, next] = getNext();
-    MORPHEUS_VERIFY(event == Event::BeginComposite);
+    checkExpectedEvent(event, Event::BeginComposite);
 }
 
 void JsonReader::endComposite()
 {
     auto const [event, next] = getNext();
-    MORPHEUS_VERIFY(event == Event::EndComposite);
+    checkExpectedEvent(event, Event::EndComposite);
 }
 
 void JsonReader::beginValue(std::string_view const key)
 {
     auto const [event, next] = getNext();
-    MORPHEUS_VERIFY(event == Event::BeginComposite);
-    MORPHEUS_VERIFY(next);
-    MORPHEUS_VERIFY(next->index() == 5);
-    MORPHEUS_VERIFY(std::get<std::string>(*next) == key);
+    checkExpectedEvent(event, Event::EndComposite);
+
+    if (!next)
+        throwRuntimeException(fmt_ns::format("Unexpected empty composite"));
+
+    if (next->index() != magic_enum::enum_integer(FundamentalType::String)) {
+        auto const type = magic_enum::enum_cast<FundamentalType>(next->index());
+        MORPHEUS_ASSERT(type);
+        throwRuntimeException(fmt_ns::format("Expect compose value, expected was String actual was {}", magic_enum::enum_name(*type)));
+    }
+
+    if (std::get<std::string>(*next) != key)
+        throwRuntimeException(fmt_ns::format("Next for key {} not expected key {}", std::get<std::string>(*next), key));
 }
 
 void JsonReader::endValue()

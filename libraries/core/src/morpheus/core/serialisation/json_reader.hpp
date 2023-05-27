@@ -8,6 +8,8 @@
 #include <rapidjson/istreamwrapper.h>
 #include <rapidjson/reader.h>
 
+#include <magic_enum.hpp>
+
 #include <concepts>
 #include <cstddef>
 #include <cstdint>
@@ -15,8 +17,8 @@
 #include <memory>
 #include <optional>
 #include <span>
-#include <string_view>
 #include <string>
+#include <string_view>
 #include <tuple>
 #include <variant>
 
@@ -24,9 +26,19 @@ namespace morpheus::serialisation
 {
 
 /// \class JsonReader
-///     Read in objects from an underlying json representation. 
+///     Read in objects from an underlying json representation.
 class MORPHEUSCORE_EXPORT JsonReader
 {
+    enum class FundamentalType : std::uint32_t
+    {
+        Boolean,
+        Int64,
+        Uint64,
+        Float,
+        Double,
+        String
+    };
+
 public:
     /// \class Exception
     ///     Exception type to be thrown for errors when parsing JSON.
@@ -70,8 +82,10 @@ public:
     /// \copydoc morpheus::serialisation::concepts::ReaderArchtype::endNullable()
     void endNullable();
 
+    // clang-format off
     /// Read a boolean from the serialisation.
-    template<typename T> requires std::is_same_v<T, bool>
+    template <typename T>
+    requires std::is_same_v<T, bool>
     T read()
     {
         auto const [event, next] = getNext();
@@ -80,11 +94,12 @@ public:
     }
 
     /// Reads a integral type from the serialisation.
-    template<std::integral Interger> requires (not std::is_same_v<bool, Interger>)
+    template <std::integral Interger>
+    requires(not std::is_same_v<bool, Interger>)
     Interger read()
     {
         auto const [event, next] = getNext();
-        MORPHEUS_ASSERT((next->index() == 1) or (next->index() == 2));
+        MORPHEUS_ASSERT((next->index() == magic_enum::enum_integer(FundamentalType::Int64) or (next->index() == magic_enum::enum_integer(FundamentalType::Uint64))));
         return std::visit(functional::Overload{
             [](std::integral auto const value) { return boost::numeric_cast<Interger>(value); },
             [](auto const value) -> Interger { throw Exception("Unable to convert to integral point representation"); }
@@ -92,11 +107,12 @@ public:
     }
 
     /// Reads a float or double type from the serialisation.
-    template<std::floating_point Float>
+    template <std::floating_point Float>
     Float read()
     {
         auto const [event, next] = getNext();
-        MORPHEUS_ASSERT((next->index() == 1) or (next->index() == 2) or (next->index() == 3) or (next->index() == 4));
+        MORPHEUS_ASSERT((next->index() == magic_enum::enum_integer(FundamentalType::Int64)) or (next->index() == magic_enum::enum_integer(FundamentalType::Uint64)) or 
+                        (next->index() == magic_enum::enum_integer(FundamentalType::Float)) or (next->index() == magic_enum::enum_integer(FundamentalType::Double)));
         return std::visit(functional::Overload {
             [](std::integral auto const value) { return boost::numeric_cast<Float>(value); },
             [](std::floating_point auto const value) 
@@ -115,13 +131,16 @@ public:
     }
 
     /// Reads a string type from the serialisation.
-    template<typename T> requires std::is_same_v<T, std::string>
+    template <typename T>
+    requires std::is_same_v<T, std::string>
     T read()
     {
         auto const [event, next] = getNext();
-        MORPHEUS_ASSERT(next->index() == 5);
+        MORPHEUS_ASSERT(next->index() == magic_enum::enum_integer(FundamentalType::String));
         return std::get<T>(*next);
     }
+
+    // clang-format on
 
 private:
     enum class Event : std::uint32_t
@@ -136,8 +155,8 @@ private:
     };
 
     friend class JsonExtracter;
-    using FundamentalType = std::variant<bool, std::int64_t, std::uint64_t, float, double, std::string>;
-    using PossibleValue = std::optional<FundamentalType>;
+    using FundamentalValue = std::variant<bool, std::int64_t, std::uint64_t, float, double, std::string>;
+    using PossibleValue = std::optional<FundamentalValue>;
     using EventValue = std::tuple<Event, PossibleValue>;
 
     [[nodiscard]] EventValue getNext();
@@ -147,5 +166,4 @@ private:
     std::unique_ptr<class JsonExtracter> mExtractor;
 };
 
-
-}
+} // namespace morpheus::serialisation
