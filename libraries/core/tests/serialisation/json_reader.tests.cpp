@@ -10,11 +10,18 @@
 #include "morpheus/core/serialisation/serialisers.hpp"
 
 #include <catch2/catch_all.hpp>
+#include <catch2/matchers/catch_matchers_all.hpp>
 
 using namespace Catch;
 
 namespace morpheus::serialisation
 {
+
+/// \todo This is a work around for the fact that the stream must out live the json reader else we get UB
+///     Longer term we should move or copy the stream into the Json reader and store in a std::polymorphic_value
+using MoveableReader = std::unique_ptr<JsonReader>;
+using FixedLocationStringStream = std::unique_ptr<std::istringstream>;
+using ReaderPair = std::pair<MoveableReader, FixedLocationStringStream>;
 
 namespace test {
 
@@ -26,19 +33,27 @@ T deserialise(std::string_view const value)
     return serialiser.deserialise<T>();
 }
 
+ReaderPair readerFromString(std::string_view const value)
+{
+    auto fixedStringStream = std::make_unique<std::istringstream>(std::string{value});
+    auto reader = std::make_unique<JsonReader>(*fixedStringStream, false);
+    return ReaderPair(std::move(reader), std::move(fixedStringStream));
 }
+
+} // namespace test
 
 TEMPLATE_TEST_CASE("Json writer can write single native types to underlying text representation", "[morpheus.serialisation.json_reader.native]", 
     bool, std::int8_t, std::uint8_t, std::int16_t, std::uint16_t, std::int32_t, std::uint32_t, std::int64_t, std::uint64_t, float, double)
 {
     if constexpr (std::is_integral_v<TestType>)
     {
-        REQUIRE(test::deserialise<TestType>(fmt_ns::format("{}", std::numeric_limits<TestType>::min())) == std::numeric_limits<TestType>::min());
-        REQUIRE(test::deserialise<TestType>(fmt_ns::format("{}", std::numeric_limits<TestType>::lowest())) == std::numeric_limits<TestType>::lowest());
-        REQUIRE(test::deserialise<TestType>(fmt_ns::format("{}", std::numeric_limits<TestType>::max())) == std::numeric_limits<TestType>::max());
+        using Limits = std::numeric_limits<TestType>;
+        REQUIRE(test::deserialise<TestType>(fmt_ns::format("{}", Limits::min())) == Limits::min());
+        REQUIRE(test::deserialise<TestType>(fmt_ns::format("{}", Limits::lowest())) == Limits::lowest());
+        REQUIRE(test::deserialise<TestType>(fmt_ns::format("{}", Limits::max())) == Limits::max());
 
         if constexpr (not std::is_same_v<TestType, bool>)
-            REQUIRE(test::deserialise<TestType>(fmt_ns::format("{}", std::numeric_limits<TestType>::radix)) == std::numeric_limits<TestType>::radix);
+            REQUIRE(test::deserialise<TestType>(fmt_ns::format("{}", Limits::radix)) == Limits::radix);
     }
     else if constexpr (std::is_floating_point_v<TestType>)
     {
@@ -199,6 +214,31 @@ TEST_CASE("Json reader can read std types from underlying text representation", 
     REQUIRE(*test::deserialise<std::unique_ptr<int>>(R"(50)") == 50);
 }
 
+TEST_CASE("Error handling test cases for unexpected errors in the input Json stream", "[morpheus.serialisation.json_reader.error_handling]")
+{
 
+    using Catch::Matchers::ContainsSubstring;
+    REQUIRE_THROWS_WITH(test::readerFromString("50").first->beginValue("expected_key"),
+                        ContainsSubstring("BeginComposite expected") && ContainsSubstring("Value encountered"));
+    REQUIRE_THROWS_WITH(test::readerFromString("[1,2,3]").first->beginValue("expected_key"),
+                        ContainsSubstring("BeginComposite expected") && ContainsSubstring("BeginSequence encountered"));
+    REQUIRE_THROWS_WITH(test::readerFromString("{}").first->beginValue("expected_key"), ContainsSubstring("empty composite"));
+
+    auto reader = test::readerFromString(R"({"incorrect_key":1})");
+    reader.first->beginComposite();
+    REQUIRE_THROWS_WITH(reader.first->beginValue("expected_key"),
+                        ContainsSubstring("Expected key expected_key") && ContainsSubstring("actual key incorrect_key"));
+    auto const value = reader.first->read<int>();
+    reader.first->endValue();
+    reader.first->endComposite();
+    // GIVEN("A json reader")
+    // {
+    //     WHEN("")
+    //     {
+
+    //         THEN("") {}
+    //     }
+    // }
+}
 
 } // namespace morpheus::serialisation

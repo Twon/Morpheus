@@ -55,7 +55,7 @@ public:
 
     /// Json reader take in a stream of json to extract data members from.
     /// \param[in] stream Stream used to read in the json source.  This must outlive the reader as its held by referece.
-    explicit JsonReader(std::istream& stream);
+    explicit JsonReader(std::istream& stream, bool validate = true);
     ~JsonReader();
 
     /// \copydoc morpheus::serialisation::concepts::ReaderArchtype::beginComposite()
@@ -164,6 +164,7 @@ private:
     rapidjson::IStreamWrapper mStream;
     rapidjson::Reader mJsonReader;
     std::unique_ptr<class JsonExtracter> mExtractor;
+    bool mValidate = true;
 };
 
 } // namespace morpheus::serialisation
