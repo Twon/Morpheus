@@ -14,8 +14,8 @@ TEST_CASE("Ensure assert functionality works and is hooked into by the test fram
 {
 #ifdef MORPHEUS_ASSERT_ENABLEDa
     bool fired = false;
-    AssertHandler const currentHandler = getAssetHandler();
- 
+    AssertHandler const currentHandler = getAssertHandler();
+
     auto const onEntry = [&]
     {
         setAssertHandler(
