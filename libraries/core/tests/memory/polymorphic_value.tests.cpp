@@ -46,12 +46,54 @@ size_t DerivedType::object_count = 0;
 
 } // namespace
 
-TEST_CASE("Support for incomplete types", "[morpheus.memory.polymorphic_value.class]")
+TEST_CASE("Support for incomplete types", "[morpheus.memory.polymorphic_value.incomplete]")
 {
     class Incomplete;
     polymorphic_value<Incomplete> p;
 
     REQUIRE_FALSE(bool(p));
 }
+
+TEST_CASE("Default constructor", "[morpheus.memory.polymorphic_value.constructor.default]")
+{
+    GIVEN("A default constructed polymorphic_value to BaseType")
+    {
+        polymorphic_value<BaseType> cptr;
+
+        THEN("operator bool returns false") { REQUIRE((bool)cptr == false); }
+    }
+
+    GIVEN("A default constructed const polymorphic_value to BaseType")
+    {
+        const polymorphic_value<BaseType> ccptr;
+
+        THEN("operator bool returns false") { REQUIRE((bool)ccptr == false); }
+    }
+}
+
+// TEST_CASE("Value constructor", "[morpheus.memory.polymorphic_value.constructors]")
+// {
+//     DerivedType d(7);
+
+//     polymorphic_value<BaseType> i(std::in_place_type<DerivedType>, d);
+
+//     REQUIRE(i->value() == 7);
+// }
+
+// TEST_CASE("Value constructor rvalue", "[morpheus.memory.polymorphic_value.constructors]")
+// {
+//     polymorphic_value<BaseType> i(std::in_place_type<DerivedType>, 7);
+
+//     REQUIRE(i->value() == 7);
+// }
+
+// TEST_CASE("Value move-constructor", "[morpheus.memory.polymorphic_value.constructors]")
+// {
+//     DerivedType d(7);
+
+//     polymorphic_value<BaseType> i(std::in_place_type<DerivedType>, std::move(d));
+
+//     REQUIRE(i->value() == 7);
+// }
 
 } // morpheus::memory
