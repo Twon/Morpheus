@@ -12,10 +12,10 @@ namespace morpheus
 
 TEST_CASE("Ensure assert functionality works and is hooked into by the test framework", "[morpheus.base.assert]")
 {
-#ifdef MORPHEUS_ASSERT_ENABLEDa
+#ifdef MORPHEUS_ASSERT_ENABLED
     bool fired = false;
-    AssertHandler const currentHandler = getAssetHandler();
- 
+    AssertHandler const currentHandler = getAssertHandler();
+
     auto const onEntry = [&]
     {
         setAssertHandler(
