@@ -128,6 +128,7 @@ TEST_CASE("Pointer constructor", "[polymorphic_value.constructors]")
         const polymorphic_value<BaseType> ccptr(nullptr);
 
         THEN("operator bool returns true") { REQUIRE((bool)ccptr == false); }
+        THEN("operator bool returns true") { REQUIRE(ccptr.has_value() == false); }
     }
 }
 

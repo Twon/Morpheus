@@ -4,16 +4,18 @@
 #include <concepts>
 #include <memory>
 
-namespace morpheus::memory
+namespace morpheus::memory::concepts
 {
 
-/// \concept Copier
-///     A copier object allows for a given input type a return copy of the input object.
-template <typename T>
-concept Copier = requires(T t) {
+/// \concept Deleter
+///     A deleter specified the destruction policity of a given type.
+/// \tparam Callable The callable destruction policy.
+/// \tparam Arg The argument to ne destroyed.
+template <typename Callable, typename Arg>
+concept Deleter = requires(Callable&& c, Arg* a) {
     {
-        t();
-    } -> std::same_as<>;
+        std::forward<Callable>(c)(a)
+    } -> std::same_as<void>;
 };
 
 /// \struct default_copy
@@ -28,4 +30,4 @@ concept Copier = requires(T t) {
 //     constexpr T* operator()(T const& t) const { return new T(t); }
 // };
 
-} // namespace morpheus::memory
+} // namespace morpheus::memory::concepts

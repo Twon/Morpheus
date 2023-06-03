@@ -3,7 +3,7 @@
 #include <concepts>
 #include <memory>
 
-namespace morpheus::memory
+namespace morpheus::memory::concepts
 {
 
 /// \concept Copier
@@ -12,7 +12,7 @@ template <typename T, typename C>
 concept Copier = requires(T t, C c) {
     typename T::deleter_type;
     {
-        t(c);
+        t(c)
     } -> std::same_as<C*>;
 };
 
@@ -28,4 +28,4 @@ concept Copier = requires(T t, C c) {
 //     constexpr T* operator()(T const& t) const { return new T(t); }
 // };
 
-} // namespace morpheus::memory
+} // namespace morpheus::memory::concepts
