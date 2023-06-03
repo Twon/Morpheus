@@ -96,4 +96,39 @@ TEST_CASE("Default constructor", "[morpheus.memory.polymorphic_value.constructor
 //     REQUIRE(i->value() == 7);
 // }
 
+TEST_CASE("Pointer constructor", "[polymorphic_value.constructors]")
+{
+    GIVEN("A pointer-constructed polymorphic_value")
+    {
+        int v = 7;
+        polymorphic_value<BaseType> cptr(new DerivedType(v));
+
+        THEN("Operator-> calls the pointee method") { REQUIRE(cptr->value() == v); }
+
+        THEN("operator bool returns true") { REQUIRE((bool)cptr == true); }
+    }
+    GIVEN("A pointer-constructed const polymorphic_value")
+    {
+        int v = 7;
+        const polymorphic_value<BaseType> ccptr(new DerivedType(v));
+
+        THEN("Operator-> calls the pointee method") { REQUIRE(ccptr->value() == v); }
+
+        THEN("operator bool returns true") { REQUIRE((bool)ccptr == true); }
+    }
+    GIVEN("Ensure nullptr pointer-constructed const polymorphic_value construct to be default initialised")
+    {
+        DerivedType* null_derived_ptr = nullptr;
+        const polymorphic_value<BaseType> ccptr(null_derived_ptr);
+
+        THEN("operator bool returns true") { REQUIRE((bool)ccptr == false); }
+    }
+    GIVEN("Ensure polymorphic supports construction from nullptr")
+    {
+        const polymorphic_value<BaseType> ccptr(nullptr);
+
+        THEN("operator bool returns true") { REQUIRE((bool)ccptr == false); }
+    }
+}
+
 } // morpheus::memory

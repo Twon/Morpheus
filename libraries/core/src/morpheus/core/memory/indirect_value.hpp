@@ -82,11 +82,11 @@ struct allocator_copy : A
     using deleter_type = allocator_delete<T, A>;
 
     /// Create a copy of the input via the underlying allocator.
-    constexpr T* operator()(const T& t) const { return detail::allocate_object<T>(*this, t); }
+    constexpr T* operator()(T const& t) const { return detail::allocate_object<T>(*this, t); }
 };
 
 /// \struct exchange_on_move_ptr
-///     Thin wrapper for a pointer to ensure moving of pointers resutls in a exchange with nullptr.  Use ensures
+///     Thin wrapper for a pointer to ensure moving of pointers results in a exchange with nullptr.  Use ensures
 ///     containing classes can rely on the rule of zero for special memmber functions.
 template <typename T>
 struct exchange_on_move_ptr

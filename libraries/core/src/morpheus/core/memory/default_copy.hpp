@@ -10,11 +10,11 @@ namespace morpheus::memory
 template <class T>
 struct default_copy
 {
-    /// The deleter type to be used to deallocate object created by the copier.
+    /// The deleter type to be used to deallocate objects created by the copier.
     using deleter_type = std::default_delete<T>;
 
     /// Create a copy of the input.
-    constexpr T* operator()(const T& t) const { return new T(t); }
+    constexpr T* operator()(T const& t) const { return new T(t); }
 };
 
 } // namespace morpheus::memory
