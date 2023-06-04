@@ -8,18 +8,7 @@ find_package(Boost REQUIRED)
 find_package(fmt REQUIRED)
 find_package(magic_enum REQUIRED)
 find_package(Microsoft.GSL REQUIRED)
-
-FetchContent_Declare(
-    codecoverage
-    GIT_REPOSITORY https://github.com/RWTH-HPC/CMake-codecov.git
-)
-
-#FetchContent_GetProperties(codecoverage)
-#if(NOT codecoverage_POPULATED)
-#    FetchContent_Populate(codecoverage)
-#    list(APPEND CMAKE_MODULE_PATH ${codecoverage_SOURCE_DIR}/cmake)
-#endif()
-
+find_package(polymorphic_value REQUIRED)
 
 if (NOT CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     find_package(date REQUIRED)

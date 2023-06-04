@@ -75,6 +75,7 @@ class Morpheus(ConanFile):
         "gtest/1.13.0",
         "magic_enum/0.8.2",
         "ms-gsl/4.0.0",
+        "polymorphic_value/1.3.0",
         "rapidjson/cci.20220822",
         "range-v3/0.12.0",
         "tl-expected/20190710",
