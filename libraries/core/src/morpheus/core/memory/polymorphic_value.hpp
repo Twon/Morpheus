@@ -166,15 +166,6 @@ public:
         return *std::forward(self).mValue;
     }
 
-    /// If *this contains a value, returns a reference to the contained value. Otherwise, throws a
-    /// bad_indirect_value_access exception.
-    template <typename Self>
-    [[nodiscard]] constexpr auto& value(this Self&& self)
-    {
-        if (!this->mValue)
-            throw bad_indirect_value_access();
-        return *(this->mValue);
-    }
 #else
     /// Accesses the contained value.
     [[nodiscard]] constexpr T* operator->() noexcept { return this->mValue; }
@@ -194,41 +185,6 @@ public:
     /// Dereferences pointer to the managed object.
     [[nodiscard]] constexpr const T&& operator*() const&& noexcept { return std::move(*(this->mValue)); }
 
-    /// If *this contains a value, returns a reference to the contained value. Otherwise, throws a
-    /// bad_indirect_value_access exception.
-    [[nodiscard]] constexpr T& value() &
-    {
-        if (!this->mValue)
-            throw bad_indirect_value_access();
-        return *(this->mValue);
-    }
-
-    /// If *this contains a value, returns a reference to the contained value. Otherwise, throws a
-    /// bad_indirect_value_access exception.
-    [[nodiscard]] constexpr T&& value() &&
-    {
-        if (!this->mValue)
-            throw bad_indirect_value_access();
-        return std::move(*(this->mValue));
-    }
-
-    /// If *this contains a value, returns a reference to the contained value. Otherwise, throws a
-    /// bad_indirect_value_access exception.
-    [[nodiscard]] constexpr const T& value() const&
-    {
-        if (!this->mValue)
-            throw bad_indirect_value_access();
-        return *(this->mValue);
-    }
-
-    /// If *this contains a value, returns a reference to the contained value. Otherwise, throws a
-    /// bad_indirect_value_access exception.
-    [[nodiscard]] constexpr const T&& value() const&&
-    {
-        if (!this->mValue)
-            throw bad_indirect_value_access();
-        return std::move(*(this->mValue));
-    }
 #endif // (__cpp_explicit_this_parameter >= 202110)
 
     /// Checks whether *this contains a value.
