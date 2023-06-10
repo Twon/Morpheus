@@ -17,27 +17,41 @@ using namespace Catch;
 namespace morpheus::serialisation
 {
 
-/// \todo This is a work around for the fact that the stream must out live the json reader else we get UB
-///     Longer term we should move or copy the stream into the Json reader and store in a std::polymorphic_value
-using MoveableReader = std::unique_ptr<JsonReader>;
-using FixedLocationStringStream = std::unique_ptr<std::istringstream>;
-using ReaderPair = std::pair<MoveableReader, FixedLocationStringStream>;
-
 namespace test {
+
+struct ISteamCopier
+{
+    using deleter_type = std::default_delete<std::istream>;
+
+    std::istream* operator()(std::istream const& rhs) const
+    {
+        auto ss = std::make_unique<std::istream>(rhs.rdbuf());
+        return ss.release();
+    }
+
+    std::istringstream* operator()(std::istringstream const& rhs) const
+    {
+        auto ss = std::make_unique<std::istringstream>(rhs.str());
+        return ss.release();
+    }
+};
 
 template<typename T>
 T deserialise(std::string_view const value)
 {
-    std::istringstream iss(std::string{value});
-    JsonReaderSerialiser serialiser{iss};
+    using namespace memory;
+    auto strstream = std::make_unique<std::istringstream>(std::string{value});
+    auto iss = polymorphic_value<std::istream>(strstream.release(), ISteamCopier{});
+    JsonReaderSerialiser serialiser(std::move(iss));
     return serialiser.deserialise<T>();
 }
 
-ReaderPair readerFromString(std::string_view const value)
+auto readerFromString(std::string_view const value)
 {
-    auto fixedStringStream = std::make_unique<std::istringstream>(std::string{value});
-    auto reader = std::make_unique<JsonReader>(*fixedStringStream, false);
-    return ReaderPair(std::move(reader), std::move(fixedStringStream));
+    using namespace memory;
+    auto strstream = std::make_unique<std::istringstream>(std::string{value});
+    auto iss = polymorphic_value<std::istream>(strstream.release(), ISteamCopier{});
+    return JsonReader(std::move(iss));
 }
 
 } // namespace test
@@ -71,11 +85,11 @@ TEST_CASE("Json reader providess basic reader functionality", "[morpheus.seriali
 {
     GIVEN("A Json stream")
     {
-        std::istringstream iss(R"("value")");
+        std::string_view str(R"("value")");
 
         WHEN("Read an single value from the stream")
         {
-            JsonReader reader{ iss };
+            JsonReader reader =  test::readerFromString(str);
 
             THEN("Expect an empty composite in the json document")
             {
@@ -85,11 +99,11 @@ TEST_CASE("Json reader providess basic reader functionality", "[morpheus.seriali
     }
     GIVEN("A Json stream")
     {
-        std::istringstream iss(R"({})");
+        std::string_view str(R"({})");
 
         WHEN("Read an empty composite from the stream")
         {
-            JsonReader reader{ iss };
+            JsonReader reader =  test::readerFromString(str);
 
             THEN("Expect an empty composite in the json document")
             {
@@ -100,11 +114,11 @@ TEST_CASE("Json reader providess basic reader functionality", "[morpheus.seriali
     }
     GIVEN("A Json stream")
     {
-        std::istringstream iss(R"({"key":"value"})");
+        std::string_view str(R"({"key":"value"})");
 
         WHEN("Read a composite of key pair from the stream")
         {
-            JsonReader reader{ iss };
+            JsonReader reader =  test::readerFromString(str);
 
             THEN("Expect an empty composite in the json document")
             {
@@ -118,11 +132,12 @@ TEST_CASE("Json reader providess basic reader functionality", "[morpheus.seriali
     }
     GIVEN("A Json stream")
     {
-        std::istringstream iss(R"({"x":null})");
+        std::string_view str(R"({"x":null})");
 
         WHEN("Read a composite of key to null pair from the stream")
         {
-            JsonReader reader{ iss };
+            JsonReader reader =  test::readerFromString(str);
+
             THEN("Expect an empty composite in the json document")
             {
                 reader.beginComposite();
@@ -218,19 +233,19 @@ TEST_CASE("Error handling test cases for unexpected errors in the input Json str
 {
 
     using Catch::Matchers::ContainsSubstring;
-    REQUIRE_THROWS_WITH(test::readerFromString("50").first->beginValue("expected_key"),
+    REQUIRE_THROWS_WITH(test::readerFromString("50").beginValue("expected_key"),
                         ContainsSubstring("BeginComposite expected") && ContainsSubstring("Value encountered"));
-    REQUIRE_THROWS_WITH(test::readerFromString("[1,2,3]").first->beginValue("expected_key"),
+    REQUIRE_THROWS_WITH(test::readerFromString("[1,2,3]").beginValue("expected_key"),
                         ContainsSubstring("BeginComposite expected") && ContainsSubstring("BeginSequence encountered"));
-    REQUIRE_THROWS_WITH(test::readerFromString("{}").first->beginValue("expected_key"), ContainsSubstring("empty composite"));
+    REQUIRE_THROWS_WITH(test::readerFromString("{}").beginValue("expected_key"), ContainsSubstring("empty composite"));
 
     auto reader = test::readerFromString(R"({"incorrect_key":1})");
-    reader.first->beginComposite();
-    REQUIRE_THROWS_WITH(reader.first->beginValue("expected_key"),
+    reader.beginComposite();
+    REQUIRE_THROWS_WITH(reader.beginValue("expected_key"),
                         ContainsSubstring("Expected key expected_key") && ContainsSubstring("actual key incorrect_key"));
-    auto const value = reader.first->read<int>();
-    reader.first->endValue();
-    reader.first->endComposite();
+    auto const value = reader.read<int>();
+    reader.endValue();
+    reader.endComposite();
     // GIVEN("A json reader")
     // {
     //     WHEN("")
