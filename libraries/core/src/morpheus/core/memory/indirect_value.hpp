@@ -339,8 +339,8 @@ public:
 
     /// Copy assignment, assigns contents via the underlying copier
     /// \pre IsComplete<T> is false or std::is_copy_constructible_v<T> is true
-    constexpr indirect_value& operator=(const indirect_value& i)
-    requires(!meta::concepts::IsComplete<T> or std::is_copy_constructible_v<T>)
+    constexpr indirect_value& operator=(indirect_value const& i)
+        requires(!meta::concepts::IsComplete<T> or std::is_copy_constructible_v<T>)
     {
         indirect_value temp(i);
         swap(temp);
