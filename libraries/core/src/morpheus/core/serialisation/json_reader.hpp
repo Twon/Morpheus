@@ -2,6 +2,7 @@
 
 #include "morpheus/core/base/assert.hpp"
 #include "morpheus/core/functional/overload.hpp"
+#include "morpheus/core/memory/polymorphic_value.hpp"
 
 #include <boost/numeric/conversion/cast.hpp>
 
@@ -40,6 +41,8 @@ class MORPHEUSCORE_EXPORT JsonReader
     };
 
 public:
+    using OwnedStream = memory::polymorphic_value<std::istream>;
+
     /// \class Exception
     ///     Exception type to be thrown for errors when parsing JSON.
     class Exception : public std::runtime_error
@@ -55,7 +58,7 @@ public:
 
     /// Json reader take in a stream of json to extract data members from.
     /// \param[in] stream Stream used to read in the json source.  This must outlive the reader as its held by referece.
-    explicit JsonReader(std::istream& stream, bool validate = true);
+    explicit JsonReader(OwnedStream stream, bool validate = true);
     ~JsonReader();
 
     /// \copydoc morpheus::serialisation::concepts::ReaderArchtype::beginComposite()
@@ -161,7 +164,8 @@ private:
 
     [[nodiscard]] EventValue getNext();
 
-    rapidjson::IStreamWrapper mStream;
+    memory::polymorphic_value<std::istream> mSourceStream; /// Owned input stream containing the Json source.
+    rapidjson::IStreamWrapper mStream; 
     rapidjson::Reader mJsonReader;
     std::unique_ptr<class JsonExtracter> mExtractor;
     bool mValidate = true;

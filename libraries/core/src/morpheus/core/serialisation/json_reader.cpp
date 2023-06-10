@@ -141,8 +141,9 @@ JsonReader::EventValue JsonReader::getNext()
     return mExtractor->mCurrent;
 }
 
-JsonReader::JsonReader(std::istream& stream, bool validate)
-: mStream(stream)
+JsonReader::JsonReader(OwnedStream stream, bool validate)
+: mSourceStream(std::move(stream))
+, mStream(*mSourceStream)
 , mExtractor(std::make_unique<JsonExtracter>())
 , mValidate(validate)
 {
