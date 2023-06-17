@@ -272,8 +272,9 @@ struct indirect_value_base
 /// \tparam T The underlying value type.
 /// \tparam Copier The copier functor to customise how the underlying value is copied.
 /// \tparam Deleter The deleter functor to customise how the underlying value is deleted.
-template <typename T, std::invocable<T const&> Copier = default_copy<T>, std::invocable<T*> Deleter = typename copier_traits<Copier>::deleter_type>
-requires std::same_as<std::invoke_result_t<Copier, T const&>, T*>
+// template <typename T, std::invocable<T const&> Copier = default_copy<T>, std::invocable<T*> Deleter = typename copier_traits<Copier>::deleter_type>
+// requires std::same_as<std::invoke_result_t<Copier, T const&>, T*>
+template <typename T, typename Copier = default_copy<T>, typename Deleter = typename copier_traits<Copier>::deleter_type>
 class indirect_value : public detail::indirect_value_base<T, Copier, Deleter>
 {
     using base_type = detail::indirect_value_base<T, Copier, Deleter>;

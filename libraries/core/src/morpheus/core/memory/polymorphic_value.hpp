@@ -6,6 +6,8 @@
 
 #include <exception>
 #include <memory>
+#include <type_traits>
+#include <typeinfo>
 #include <utility>
 
 namespace morpheus::memory
@@ -21,7 +23,7 @@ public:
 
     /// Ruturns an explanatory string.
     /// \return Return an implementation defined null terminated byte string.
-    const char* what() const noexcept override;
+    constexpr const char* what() const noexcept override { return "Dynamic and static type mismatch in polymorphic_value construction"; }
 };
 
 namespace detail
@@ -64,21 +66,23 @@ struct control_block_copier
 template <class T>
 struct control_block
 {
-    // using ControlBlockValue =
-    //     indirect_value<detail::control_block<T>, detail::control_block_copier, detail::control_block_deleter>;
+    using ControlBlockValue = indirect_value<detail::control_block<T>, detail::control_block_copier, detail::control_block_deleter>;
 
     constexpr virtual ~control_block() = default;
 
-    // constexpr virtual ControlBlockValue clone() const = 0;
+    [[nodiscard]] constexpr virtual control_block* clone() const = 0;
 
-    constexpr virtual T* ptr() = 0;
+    [[nodiscard]] constexpr virtual T* ptr() noexcept = 0;
+
+    [[nodiscard]] constexpr virtual T const* ptr() const noexcept = 0;
 
     constexpr virtual void destroy() noexcept { delete this; }
 };
 
 /// \class  direct_control_block
-/// \tparam T The underlying polymorphic type.
-template <typename T>
+/// \tparam T The underlying base polymorphic type.
+/// \tparam U The underlying derived polymorphic type.
+template <typename T, typename U>
 class direct_control_block : public control_block<T>
 {
 public:
@@ -89,13 +93,34 @@ public:
     : mStorage(std::forward<Ts>(ts)...)
     {}
 
-    // constexpr ControlBlockValue clone() const override
-    // {
-    //     return make_indirect_value<direct_control_block<T>>(mStorage);
-    // }
+    [[nodiscard]] constexpr direct_control_block* clone() const override { return new direct_control_block<T, U>(mStorage); }
+
+    [[nodiscard]] constexpr U* ptr() noexcept override { return &mStorage; };
+
+    [[nodiscard]] constexpr U const* ptr() const noexcept override { return &mStorage; }
 
 private:
-    T mStorage;
+    U mStorage;
+};
+
+template <typename T, typename U, typename C, typename D>
+class pointer_control_block : public control_block<T>
+{
+public:
+    using ControlBlockValue = typename control_block<T>::ControlBlockValue;
+
+    constexpr explicit pointer_control_block(U* u, C c, D d)
+    : mIndirect(u, std::move(c), std::move(d))
+    {}
+
+    [[nodiscard]] constexpr pointer_control_block* clone() const override { return new pointer_control_block(*this); }
+
+    [[nodiscard]] constexpr T* ptr() noexcept override { return mIndirect.operator->(); }
+
+    [[nodiscard]] constexpr T const* ptr() const noexcept override { return mIndirect.operator->(); }
+
+private:
+    indirect_value<U, C, D> mIndirect;
 };
 
 } // namespace detail
@@ -103,7 +128,7 @@ private:
 /// \class polymorphic_value
 ///     Implements P0201r6, a polymorphic value type for C++.
 /// \tparam T The underlying polymorphic type.
-template<typename T>
+template <typename T>
 class polymorphic_value
 {
 public:
@@ -129,21 +154,39 @@ public:
     {}
 
     template <class U, class C = default_copy<U>, class D = typename copier_traits<C>::deleter_type>
-    constexpr explicit polymorphic_value(U* p, C c = C(), D d = D()) noexcept(
-        std::is_nothrow_move_constructible_v<C>&& std::is_nothrow_move_constructible_v<D>)
+    constexpr explicit polymorphic_value(U* u, C c = C(), D d = D())
+
+        requires std::is_convertible_v<U*, T*>
+    {
+        if (!u) {
+            return;
+        }
+
+        if (std::is_same_v<D, std::default_delete<U>> and std::is_same_v<C, default_copy<U>> and typeid(*u) != typeid(U)) {
+            throw bad_polymorphic_value_construction();
+        }
+
+        mValue = u;
+        // mControlBlock = indirect_value<detail::control_block<element_type>, detail::control_block_copier, detail::control_block_deleter>(
+        //     new detail::pointer_control_block<T, U, C, D>(u, std::move(c), std::move(d)));
+    }
+
+    template <class U>
+    constexpr explicit polymorphic_value(const polymorphic_value<U>& p)
     {}
 
     template <class U>
-    constexpr explicit polymorphic_value(const polymorphic_value<U>& p);
-
-    template <class U>
-    constexpr explicit polymorphic_value(polymorphic_value<U>&& p);
+    constexpr explicit polymorphic_value(polymorphic_value<U>&& p)
+    {}
 
     template <class U,
               //   class V = std::enable_if_t<std::is_convertible<std::decay_t<U>*, T*>::value &&
               //                              !is_polymorphic_value<std::decay_t<U>>::value>,
               class... Ts>
-    constexpr explicit polymorphic_value(std::in_place_type_t<U>, Ts&&... ts);
+    constexpr explicit polymorphic_value(std::in_place_type_t<U>, Ts&&... ts)
+    : mControlBlock(new detail::direct_control_block<T, U>(std::forward<Ts>(ts)...))
+    , mValue(mControlBlock->ptr())
+    {}
 
     ///@}
 
@@ -151,8 +194,16 @@ public:
     constexpr ~polymorphic_value() = default;
 
     // Assignment
-    constexpr polymorphic_value& operator=(const polymorphic_value& p);
-    constexpr polymorphic_value& operator=(polymorphic_value&& p) noexcept;
+    constexpr polymorphic_value& operator=(const polymorphic_value& p)
+    {
+        // if (this != &p) {
+        //     mControlBlock = p.mControlBlock;
+        //     mValue = (mControlBlock) ? mValue = mControlBlock->ptr() : nullptr;
+        // }
+        return *this;
+    }
+
+    constexpr polymorphic_value& operator=(polymorphic_value&& p) noexcept = default;
 
     // Observers
 #if (__cpp_explicit_this_parameter >= 202110L)
@@ -205,8 +256,49 @@ private:
     using ControlBlock = indirect_value<detail::control_block<element_type>, detail::control_block_copier,
                                         detail::control_block_deleter>;
 
-    T* mValue = nullptr;
     ControlBlock mControlBlock;
+    T* mValue = nullptr;
 };
+
+//
+// polymorphic_value creation
+//
+template <class T, class U = T, class... Ts>
+constexpr polymorphic_value<T> make_polymorphic_value(Ts&&... ts)
+{
+    polymorphic_value<T> p;
+    //   p.cb_ = std::unique_ptr<detail::direct_control_block<T, U>,
+    //                           detail::control_block_deleter>(
+    //       new detail::direct_control_block<T, U>(std::forward<Ts>(ts)...));
+    //   p.ptr_ = p.cb_->ptr();
+    return p;
+}
+
+template <class T, class U = T, class A = std::allocator<U>, class... Ts>
+constexpr polymorphic_value<T> allocate_polymorphic_value(std::allocator_arg_t, A& a, Ts&&... ts)
+{
+    polymorphic_value<T> p;
+    //   auto* u = detail::allocate_object<U>(a, std::forward<Ts>(ts)...);
+    //   try {
+    //     p.cb_ = std::unique_ptr<detail::allocated_pointer_control_block<T, U, A>,
+    //                             detail::control_block_deleter>(
+    //         detail::allocate_object<
+    //             detail::allocated_pointer_control_block<T, U, A>>(a, u, a));
+    //   } catch (...) {
+    //     detail::deallocate_object(a, u);
+    //     throw;
+    //   }
+    //   p.ptr_ = p.cb_->ptr();
+    return p;
+}
+
+//
+// non-member swap
+//
+template <class T>
+constexpr void swap(polymorphic_value<T>& t, polymorphic_value<T>& u) noexcept
+{
+    t.swap(u);
+}
 
 } // namespace morpheus::memory
