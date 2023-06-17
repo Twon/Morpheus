@@ -9,12 +9,12 @@ https://codecov.io/gh/Twon/Morpheus/branch/main/graphs/sunburst.svg?token=1JmtZA
 
 ## Build Instructions
 
-Linux or MacOS.
+Linux or MacOS.  See [here](https://github.com/profitviews/heisenberg/blob/main/windows.md) for Windows.
 
 1. Clone project
    ```
    git clone https://github.com/Twon/Morpheus.git
-   cd heisenberg
+   cd morpheus 
    ```
 
 2. Install Conan
@@ -28,9 +28,9 @@ Linux or MacOS.
    ```
    mkdir build
    cd build
-   # Possibly create/modify a profile file in ~/.conan/profiles. See example_conan_profile_linux
+
+   # Possibly create/modify a profile file in ~/.conan/profiles. See https://docs.conan.io/1/reference/profiles.html
    conan install ../ --build missing
-   source ./activate.sh
    cmake -DCMAKE_BUILD_TYPE=Debug ..
    ```
    
@@ -39,4 +39,30 @@ Linux or MacOS.
    cmake --build .
    ```
 
-This will create (with debugging symbols)
+This will create (with debugging symbols):
+
+
+
+```bash
+cd <project root>
+mkdir build
+cd build
+
+conan install ../
+
+cmake -G <generator> <configuration options> ../
+```
+
+Or if using a multi configuration environment like Visual Studio or XCode (which contain debug and release builds in a single CMake generated build file) then
+generate multi configuration CMake settings
+
+```bash
+cd <project root>
+mkdir build
+cd build
+
+conan install ../ -g cmake_multi -s build_type=Release
+conan install ../ -g cmake_multi -s build_type=Debug
+
+cmake -G <generator> <configuration options> ../ 
+```
