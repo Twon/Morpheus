@@ -39,30 +39,4 @@ Linux or MacOS.  See [here](https://github.com/profitviews/heisenberg/blob/main/
    cmake --build .
    ```
 
-This will create (with debugging symbols):
-
-
-
-```bash
-cd <project root>
-mkdir build
-cd build
-
-conan install ../
-
-cmake -G <generator> <configuration options> ../
-```
-
-Or if using a multi configuration environment like Visual Studio or XCode (which contain debug and release builds in a single CMake generated build file) then
-generate multi configuration CMake settings
-
-```bash
-cd <project root>
-mkdir build
-cd build
-
-conan install ../ -g cmake_multi -s build_type=Release
-conan install ../ -g cmake_multi -s build_type=Debug
-
-cmake -G <generator> <configuration options> ../ 
-```
+This will create (with debugging symbols)
