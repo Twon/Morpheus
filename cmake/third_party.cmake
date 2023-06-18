@@ -8,12 +8,16 @@ find_package(Boost REQUIRED)
 find_package(fmt REQUIRED)
 find_package(magic_enum REQUIRED)
 find_package(Microsoft.GSL REQUIRED)
-find_package(polymorphic_value REQUIRED)
 
 if (NOT CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     find_package(date REQUIRED)
 endif (NOT CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
 
+FetchContent_Declare(polymorphic_value
+    GIT_REPOSITORY https://github.com/jbcoe/polymorphic_value.git
+    GIT_TAG main
+)
+FetchContent_MakeAvailable(polymorphic_value)
 
 if(WIN32)
     set(WIL_BUILD_TESTS OFF)
