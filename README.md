@@ -23,6 +23,11 @@ Linux or MacOS.  See [here](https://github.com/profitviews/heisenberg/blob/main/
    source ./.venv/bin/activate   # Activate the virtual env
    pip install conan==1.60       # Install conan 1.60 (untill conan 2.0 is stable)
    ```
+   If using GCC to build the library be sure to activate the C++11 ABI. Add the following line
+   in section `[settings]` of the Conan profile file in directory ~/.conan/profiles:
+   ```
+   compiler.libcxx=libstdc++11
+   ```
 
 3. Install Conan Package & Configure CMake 
    ```
