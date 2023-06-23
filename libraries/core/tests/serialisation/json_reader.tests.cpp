@@ -51,7 +51,7 @@ auto readerFromString(std::string_view const value)
     using namespace memory;
     auto strstream = std::make_unique<std::istringstream>(std::string{value});
     auto iss = polymorphic_value<std::istream>(strstream.release(), ISteamCopier{});
-    return JsonReader(std::move(iss));
+    return JsonReader(std::move(iss), false);
 }
 
 } // namespace test
