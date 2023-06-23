@@ -1,3 +1,23 @@
+# Serialisation
+
+Serialisation is the process of writing objects to and output format and reading them back in. The serialisation framework is designed to be extensible and support a wide range of format, including both binary and text based serialisation.  
+
+Within the framework their are concepts defining interfaces for readers and writers. Reader and writers support a basic set of fundamental operation which must be support for the framework to convert the data of supported types to the serialisation format. Currently supported formats include:
+ - Json
+
+Longer term there is intend to be support for the following formats
+- Binary
+- Json
+- Yaml
+- Toml
+- Xml
+- HDF5
+- MessagePack: https://msgpack.org/index.html
+- Protobuf
+- Cap'n Proto
+
+
+
 # Serialisation specifications:
 - ASN.1: https://en.wikipedia.org/wiki/ASN.1
 
@@ -21,16 +41,6 @@
 - Thrift: https://thrift.apache.org/
 - YAS: https://github.com/niXman/yas
 - zpp::bits: https://github.com/eyalz800/zpp_bits
-
-# Supported formats
-- Binary
-- Json
-- Yaml
-- Toml
-- Xml
-- MessagePack: https://msgpack.org/index.html
-- Protobuf
-- Cap'n Proto
 
 
 
