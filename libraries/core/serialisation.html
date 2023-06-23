@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Serialisation specifications: &mdash; Morpheus 0.0.1 documentation</title>
+  <title>Serialisation &mdash; Morpheus 0.0.1 documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
@@ -40,16 +40,16 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Library:</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Serialisation specifications:</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Serialisation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#entry-points">Entry Points</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#reader-and-writers">Reader and Writers</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#serialisation-specifications">Serialisation specifications:</a></li>
 <li class="toctree-l1"><a class="reference internal" href="#serialisation-formats">Serialisation Formats</a></li>
 <li class="toctree-l1"><a class="reference internal" href="#overview-of-serialisation-in-c">Overview of serialisation in C++</a></li>
 <li class="toctree-l1"><a class="reference internal" href="#exisiting-c-serialisation-libraries">Exisiting	C++ Serialisation Libraries</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#supported-formats">Supported formats</a></li>
 <li class="toctree-l1"><a class="reference internal" href="#toml-sax-parsers">Toml Sax Parsers</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#target-features">Target Features</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#binary-format">Binary format</a></li>
-</ul>
-</li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Appendix:</span></p>
 <ul>
@@ -72,7 +72,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../../index.html" class="icon icon-home"></a></li>
-      <li class="breadcrumb-item active">Serialisation specifications:</li>
+      <li class="breadcrumb-item active">Serialisation</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../_sources/libraries/core/serialisation.md.txt" rel="nofollow"> View page source</a>
       </li>
@@ -82,7 +82,39 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="serialisation-specifications">
+  <section id="serialisation">
+<h1>Serialisation<a class="headerlink" href="#serialisation" title="Permalink to this headline"></a></h1>
+<p>Serialisation is the process of writing objects to and output format and reading them back in. The serialisation framework is designed to be extensible and support a wide range of format, including both binary and text based serialisation.</p>
+<p>Within the framework their are concepts defining interfaces for readers and writers. Reader and writers support a basic set of fundamental operation which must be support for the framework to convert the data of supported types to the serialisation format. Currently supported formats include:</p>
+<ul class="simple">
+<li><p>Json</p></li>
+</ul>
+<p>Longer term there is intend to be support for the following formats</p>
+<ul class="simple">
+<li><p>Binary</p></li>
+<li><p>Json</p></li>
+<li><p>Yaml</p></li>
+<li><p>Toml</p></li>
+<li><p>Xml</p></li>
+<li><p>HDF5</p></li>
+<li><p>MessagePack: https://msgpack.org/index.html</p></li>
+<li><p>Protobuf</p></li>
+<li><p>Cap’n Proto</p></li>
+</ul>
+<section id="entry-points">
+<h2>Entry Points<a class="headerlink" href="#entry-points" title="Permalink to this headline"></a></h2>
+<p>The serialisation framework is based on 2 entry points, <code class="docutils literal notranslate"><span class="pre">serialise</span></code> and <code class="docutils literal notranslate"><span class="pre">deserialise</span></code> which are <a class="reference external" href="https://quuxplusone.github.io/blog/2018/03/19/customization-points-for-functions/">customisation point object (CPOs)</a>.  These CPOs do the work of then dispatching to an appropriate overload for the actual type being serialised.</p>
+</section>
+<section id="reader-and-writers">
+<h2>Reader and Writers<a class="headerlink" href="#reader-and-writers" title="Permalink to this headline"></a></h2>
+<p>The serialisation framework provides concepts for readers and writers, which are interfaces specifying how read and write the fundmental primitive types supported by the C++ language.  All serialisation is build upon these basic building blocks.</p>
+<p>.. doxygenconcept:: morpheus::serialisation::concepts::Reader
+:project: morpheus_core</p>
+<p>.. doxygenconcept:: morpheus::serialisation::concepts::Writer
+:project: morpheus_core</p>
+</section>
+</section>
+<section id="serialisation-specifications">
 <h1>Serialisation specifications:<a class="headerlink" href="#serialisation-specifications" title="Permalink to this headline"></a></h1>
 <ul class="simple">
 <li><p>ASN.1: https://en.wikipedia.org/wiki/ASN.1</p></li>
@@ -121,33 +153,11 @@
 <li><p>zpp::bits: https://github.com/eyalz800/zpp_bits</p></li>
 </ul>
 </section>
-<section id="supported-formats">
-<h1>Supported formats<a class="headerlink" href="#supported-formats" title="Permalink to this headline"></a></h1>
-<ul class="simple">
-<li><p>Binary</p></li>
-<li><p>Json</p></li>
-<li><p>Yaml</p></li>
-<li><p>Toml</p></li>
-<li><p>Xml</p></li>
-<li><p>MessagePack: https://msgpack.org/index.html</p></li>
-<li><p>Protobuf</p></li>
-<li><p>Cap’n Proto</p></li>
-</ul>
-</section>
 <section id="toml-sax-parsers">
 <h1>Toml Sax Parsers<a class="headerlink" href="#toml-sax-parsers" title="Permalink to this headline"></a></h1>
 <ul class="simple">
 <li><p>loltoml: https://github.com/andrusha97/loltoml</p></li>
 </ul>
-</section>
-<section id="target-features">
-<h1>Target Features<a class="headerlink" href="#target-features" title="Permalink to this headline"></a></h1>
-<ul class="simple">
-<li></li>
-</ul>
-<section id="binary-format">
-<h2>Binary format<a class="headerlink" href="#binary-format" title="Permalink to this headline"></a></h2>
-</section>
 </section>
 
 
