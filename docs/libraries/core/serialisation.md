@@ -16,6 +16,19 @@ Longer term there is intend to be support for the following formats
 - Protobuf
 - Cap'n Proto
 
+## Entry Points
+
+The serialisation framework is based on 2 entry points, `serialise` and `deserialise` which are [customisation point object (CPOs)](https://quuxplusone.github.io/blog/2018/03/19/customization-points-for-functions/).  These CPOs do the work of then dispatching to an appropriate overload for the actual type being serialised.
+
+## Reader and Writers
+
+The serialisation framework provides concepts for readers and writers, which are interfaces specifying how read and write the fundmental primitive types supported by the C++ language.  All serialisation is build upon these basic building blocks.
+
+.. doxygenconcept:: morpheus::serialisation::concepts::Reader
+   :project: morpheus_core
+
+.. doxygenconcept:: morpheus::serialisation::concepts::Writer
+   :project: morpheus_core
 
 
 # Serialisation specifications:
@@ -46,9 +59,3 @@ Longer term there is intend to be support for the following formats
 
 # Toml Sax Parsers
 - loltoml: https://github.com/andrusha97/loltoml
-
-
-
-# Target Features
-- Binary format
-	- 
