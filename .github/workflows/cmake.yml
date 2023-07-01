@@ -2,6 +2,12 @@ name: CMake
 
 on: [push]
 
+env:
+  # This is required to ensure Conan does not split the cache across multiple folders when path names become too long.
+  # This particular affected boost on Windows.  When this happen then the backing up and restoring of the cache fails
+  # because partially backing up the cache corrupts it the next time Conan accesses it.
+  CONAN_USER_HOME_SHORT: None
+
 jobs:
   build:
     name: ${{ matrix.settings.name }} ${{ matrix.configuration }}
@@ -151,19 +157,6 @@ jobs:
         shell: bash
         run: |
           mkdir build
-
-      # This is an ugly workaround for a build failures when using the Conan cache on Windows.  Without clearing out and rebuilding boost every time we see the following
-      # error:
-      #     Downloading conan_sources.tgz
-      #     ERROR: Error, the file to download already exists: 'C:\Users\runneradmin\.conan\data\boost\1.81.0\_\_\dl\export\conan_sources.tgz'. [Remote: conancenter]
-      #     The 'boost/1.81.0' package has 'exports_sources' but sources not found in local cache.
-      #     Probably it was installed from a remote that is no longer available.
-      - name: Clean boost from Cache
-        if: matrix.settings.os == 'windows-latest'
-        working-directory: ${{github.workspace}}/build
-        shell: bash
-        run: |
-          conan remove boost -f
 
       - name: Configure Install
         working-directory: ${{github.workspace}}/build
