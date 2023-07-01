@@ -152,19 +152,6 @@ jobs:
         run: |
           mkdir build
 
-      # This is an ugly workaround for a build failures when using the Conan cache on Windows.  Without clearing out and rebuilding boost every time we see the following
-      # error:
-      #     Downloading conan_sources.tgz
-      #     ERROR: Error, the file to download already exists: 'C:\Users\runneradmin\.conan\data\boost\1.81.0\_\_\dl\export\conan_sources.tgz'. [Remote: conancenter]
-      #     The 'boost/1.81.0' package has 'exports_sources' but sources not found in local cache.
-      #     Probably it was installed from a remote that is no longer available.
-      - name: Clean boost from Cache
-        if: matrix.settings.os == 'windows-latest'
-        working-directory: ${{github.workspace}}/build
-        shell: bash
-        run: |
-          conan remove boost -f
-
       - name: Configure Install
         working-directory: ${{github.workspace}}/build
         shell: bash
