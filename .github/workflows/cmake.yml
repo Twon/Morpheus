@@ -3,7 +3,7 @@ name: CMake
 on: [push]
 
 env:
-  CONANCONAN_USER_HOME_SHORT="None"
+  CONAN_USER_HOME_SHORT: None
 
 jobs:
   build:
