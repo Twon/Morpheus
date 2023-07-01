@@ -104,6 +104,9 @@ class Morpheus(ConanFile):
         if self.settings.os in ["Macos", "iOS", "tvOS"] and self.settings.compiler == "apple-clang":
             self.requires("moltenvk/1.1.6")
 
+        if self.settings.os in ["Windows"]:
+            self.requires("wil/1.0.230411.1")
+
         if self.settings.compiler != "msvc":
             self.requires("date/3.0.1")
 
