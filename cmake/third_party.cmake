@@ -8,7 +8,10 @@ find_package(Boost REQUIRED)
 find_package(fmt REQUIRED)
 find_package(magic_enum REQUIRED)
 find_package(Microsoft.GSL REQUIRED)
-find_package(wil REQUIRED)
+
+if(WIN32)
+    find_package(wil REQUIRED)
+endif(WIN32)
 
 FetchContent_Declare(
     codecoverage
