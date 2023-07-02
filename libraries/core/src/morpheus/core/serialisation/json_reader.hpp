@@ -59,6 +59,7 @@ public:
     /// Json reader take in a stream of json to extract data members from.
     /// \param[in] stream Stream used to read in the json source.  This must outlive the reader as its held by referece.
     explicit JsonReader(OwnedStream stream, bool validate = true);
+    explicit JsonReader(JsonReader const& rhs);
     ~JsonReader();
 
     /// \copydoc morpheus::serialisation::concepts::ReaderArchtype::beginComposite()

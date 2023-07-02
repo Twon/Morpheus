@@ -81,6 +81,22 @@ TEMPLATE_TEST_CASE("Json writer can write single native types to underlying text
     }
 }
 
+TEST_CASE("Create and then copy a reader and read from the copied stream", "[morpheus.serialisation.json_reader.copy")
+{
+    GIVEN("A Json stream")
+    {
+        std::string_view str(R"("value")");
+
+        WHEN("Read an single value from the stream")
+        {
+            JsonReader reader = test::readerFromString(str);
+            JsonReader copiedReader(reader);
+
+            THEN("Expect an empty composite in the json document") { REQUIRE("value" == copiedReader.read<std::string>()); }
+        }
+    }
+}
+
 TEST_CASE("Json reader providess basic reader functionality", "[morpheus.serialisation.json_reader.fundamental]")
 {
     GIVEN("A Json stream")
