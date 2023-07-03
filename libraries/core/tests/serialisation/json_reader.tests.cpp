@@ -37,12 +37,12 @@ struct ISteamCopier
 };
 
 template<typename T>
-T deserialise(std::string_view const value)
+T deserialise(std::string_view const value, bool const validate = true)
 {
     using namespace memory;
     auto strstream = std::make_unique<std::istringstream>(std::string{value});
     auto iss = polymorphic_value<std::istream>(strstream.release(), ISteamCopier{});
-    JsonReaderSerialiser serialiser(std::move(iss));
+    JsonReaderSerialiser serialiser(std::move(iss), validate);
     return serialiser.deserialise<T>();
 }
 
@@ -233,6 +233,12 @@ TEST_CASE("Json reader can read simple composite types from underlying test repr
             }
         }
     }
+}
+
+TEST_CASE("Json reader raise an error on reading incorrect types", "[morpheus.serialisation.json_reader.invalid_values]")
+{
+    using Catch::Matchers::ContainsSubstring;
+    REQUIRE_THROWS_WITH(test::deserialise<SimpleComposite>(R"({"first":"InvalidValue","second":"InvalidValue","third":"InvalidValue","forth":50})", false), ContainsSubstring("Unable to convert to integral"));
 }
 
 TEST_CASE("Json reader can read std types from underlying text representation", "[morpheus.serialisation.json_reader.adapters.std]")

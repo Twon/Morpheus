@@ -135,8 +135,7 @@ JsonReader::EventValue JsonReader::getNext()
     if (mJsonReader.HasParseError()) {
         rapidjson::ParseErrorCode const c = mJsonReader.GetParseErrorCode();
         size_t const o = mJsonReader.GetErrorOffset();
-        // std::cout << "PARSE ERROR " << c << " " << o << std::endl;
-        // break;
+        throwRuntimeException(fmt_ns::format("Parse error at offset {}, error {}", o,  magic_enum::enum_name(c)));
     }
     return mExtractor->mCurrent;
 }
