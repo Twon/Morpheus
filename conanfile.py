@@ -79,7 +79,7 @@ class Morpheus(ConanFile):
         "range-v3/0.12.0",
         "tl-expected/20190710",
         "trompeloeil/42",
-        "vulkan-headers/1.3.221"#,
+        "vulkan-headers/1.3.239"#,
         #"zlib/1.2.12" # xapian-core/1.4.19' requires 'zlib/1.2.12' while 'boost/1.81.0' requires 'zlib/1.2.13'. To fix this conflict you need to override the package 'zlib' in your root package.
     )
 
@@ -102,7 +102,7 @@ class Morpheus(ConanFile):
 
     def requirements(self):
         if self.settings.os in ["Macos", "iOS", "tvOS"] and self.settings.compiler == "apple-clang":
-            self.requires("moltenvk/1.2.2")
+            self.requires("moltenvk/1.21.6")
 
         if self.settings.os in ["Windows"]:
             self.requires("wil/1.0.230411.1")
