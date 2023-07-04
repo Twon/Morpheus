@@ -3,4 +3,5 @@
 .vscode
 [Bb]uild*
 cmake-build-debug
+env/*
 [Oo]ut
