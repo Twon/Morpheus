@@ -6,7 +6,12 @@ find_package(Catch2 3 REQUIRED)
 find_package(GTest REQUIRED)
 find_package(Boost REQUIRED)
 find_package(fmt REQUIRED)
+find_package(magic_enum REQUIRED)
 find_package(Microsoft.GSL REQUIRED)
+
+if(WIN32)
+    find_package(wil REQUIRED)
+endif(WIN32)
 
 FetchContent_Declare(
     codecoverage
@@ -24,15 +29,6 @@ if (NOT CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     find_package(date REQUIRED)
 endif (NOT CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
 
-
-if(WIN32)
-    set(WIL_BUILD_TESTS OFF)
-    FetchContent_Declare(
-        wil
-        GIT_REPOSITORY https://github.com/microsoft/wil.git
-    )
-    FetchContent_MakeAvailable(wil)
-endif()
 
 #[[FetchContent_Declare(
     libunifex

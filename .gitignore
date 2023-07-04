@@ -1,6 +1,7 @@
 .idea
 .vs
 .vscode
+.venv
 [Bb]uild*
 cmake-build-debug
 env/*

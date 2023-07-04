@@ -16,6 +16,9 @@ namespace morpheus::application
 class Application {
 public:
 
+    ///
+    Application();
+
     /// 
     /// \param[in] argc The number of command line arguments.
     /// \param[in] argv List of command line arguments.
