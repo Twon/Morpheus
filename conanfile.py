@@ -65,7 +65,7 @@ class Morpheus(ConanFile):
         "build_docs": False
     }
     exports_sources = ["CMakeLists.txt", "LICENSE", "version.txt", "cmake/*", "examples/*" "libraries/*"]
-    generators = "cmake"
+    generators = "CMakeDeps"
     requires = (
         "boost/1.82.0",
         "catch2/3.1.0", 
