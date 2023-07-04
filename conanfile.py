@@ -107,9 +107,6 @@ class Morpheus(ConanFile):
         if self.settings.os in ["Windows"]:
             self.requires("wil/1.0.230411.1")
 
-        if self.settings.os in ["Windows"]:
-            self.requires("wil/1.0.230411.1")
-
         if self.settings.compiler != "msvc":
             self.requires("date/3.0.1")
 
