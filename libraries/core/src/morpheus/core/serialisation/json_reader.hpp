@@ -103,7 +103,6 @@ public:
     Interger read()
     {
         auto const [event, next] = getNext();
-        // MORPHEUS_ASSERT((next->index() == magic_enum::enum_integer(FundamentalType::Int64) or (next->index() == magic_enum::enum_integer(FundamentalType::Uint64))));
         return std::visit(functional::Overload{
             [](std::integral auto const value) { return boost::numeric_cast<Interger>(value); },
             [](auto const value) -> Interger { throw Exception("Unable to convert to integral point representation"); }
@@ -115,8 +114,6 @@ public:
     Float read()
     {
         auto const [event, next] = getNext();
-        // MORPHEUS_ASSERT((next->index() == magic_enum::enum_integer(FundamentalType::Int64)) or (next->index() == magic_enum::enum_integer(FundamentalType::Uint64)) or 
-        //                 (next->index() == magic_enum::enum_integer(FundamentalType::Float)) or (next->index() == magic_enum::enum_integer(FundamentalType::Double)));
         return std::visit(functional::Overload {
             [](std::integral auto const value) { return boost::numeric_cast<Float>(value); },
             [](std::floating_point auto const value) 
@@ -143,7 +140,6 @@ public:
         MORPHEUS_ASSERT(next->index() == magic_enum::enum_integer(FundamentalType::String));
         return std::get<T>(*next);
     }
-
     // clang-format on
 
 private:
