@@ -279,6 +279,24 @@ TEST_CASE("Json reader raise an error on reading incorrect types", "[morpheus.se
     }
 }
 
+TEST_CASE("Json reader thows an error on invalid json input", "[morpheus.serialisation.json_reader.invalid_json]")
+{
+    GIVEN("A type serialising a integer")
+    {
+        using IntegralType = ContainsType<std::int32_t>;
+        IntegralType value;
+        WHEN("Deserialising from invalid Json")
+        {
+            auto const jsonText = R"({"value" @ "AtSymbolIsNotAValidSeperator"})";
+            THEN("Expect an exception to be thrown on error to convert a string to a integer")
+            {
+                using Catch::Matchers::ContainsSubstring;
+                REQUIRE_THROWS_WITH(test::deserialise<IntegralType>(jsonText, false), ContainsSubstring("Parse error at offset"));
+            }
+        }
+    }
+}
+
 TEST_CASE("Json reader can read std types from underlying text representation", "[morpheus.serialisation.json_reader.adapters.std]")
 {
     REQUIRE(test::deserialise<std::optional<int>>(R"(100)") == std::optional<int>{100});
