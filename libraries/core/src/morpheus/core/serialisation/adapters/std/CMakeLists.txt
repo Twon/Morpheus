@@ -5,6 +5,7 @@ target_sources(MorpheusCore
         expected.hpp
         list.hpp
         optional.hpp
+        monostate.hpp
         pair.hpp
         set.hpp
         source_location.hpp

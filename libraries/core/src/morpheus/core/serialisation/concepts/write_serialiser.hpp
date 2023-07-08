@@ -6,10 +6,10 @@ namespace morpheus::serialisation::concepts
 {
 
 template <typename Serialiser>
-concept WriteSerialiser = requires(Serialiser s)
-{
+concept WriteSerialiser = requires(Serialiser s) {
+    // clang-format off
     { s.writer() } -> Writer;
-//    { s.template serialise<Type>(t) } -> std::same_as<void>;
+    // clang-format on
 };
 
 template <typename Serialiser>
