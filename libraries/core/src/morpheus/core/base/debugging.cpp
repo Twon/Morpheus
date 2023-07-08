@@ -24,17 +24,17 @@ void breakpoint() noexcept
 
 #if (MORPHEUS_BUILD_PLATFORM == MORPHEUS_TARGET_PLATFORM_PC_WINDOWS)
     __debugbreak();
-    MORPHEUS_UNREACHABLE;
+    unreachable();
 // https://github.com/scottt/debugbreak/issues/24
 #elif (MORPHEUS_COMPILER == MORPHEUS_CLANG_COMPILER) && defined(__has_builtin) && __has_builtin(__builtin_debugtrap)
     __builtin_debugtrap();
-    MORPHEUS_UNREACHABLE;
+    unreachable();
 #elif (MORPHEUS_BUILD_PLATFORM == MORPHEUS_TARGET_PLATFORM_LINUX) || (MORPHEUS_BUILD_PLATFORM == MORPHEUS_TARGET_PLATFORM_APPLE)
     raise(SIGTRAP);
-    MORPHEUS_UNREACHABLE;
+    unreachable();
 #else
     // *(int*)0 = 0;
-    // MORPHEUS_UNREACHABLE;
+    // unreachable();
 #endif
 }
 
