@@ -184,12 +184,6 @@ void JsonReader::beginValue(std::string_view const key)
     if (!next)
         throwRuntimeException("Unexpected empty composite");
 
-    if (next->index() != magic_enum::enum_integer(FundamentalType::String)) {
-        auto const type = magic_enum::enum_cast<FundamentalType>(next->index());
-        MORPHEUS_ASSERT(type);
-        throwRuntimeException(fmt_ns::format("Expect composite value, expected was type String actual was {}", magic_enum::enum_name(*type)));
-    }
-
     if (std::get<std::string>(*next) != key)
         throwRuntimeException(fmt_ns::format("Expected key {} does not match actual key {}", key, std::get<std::string>(*next)));
 }

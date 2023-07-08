@@ -323,7 +323,6 @@ TEST_CASE("Json reader can read std types from underlying text representation", 
 
 TEST_CASE("Error handling test cases for unexpected errors in the input Json stream", "[morpheus.serialisation.json_reader.error_handling]")
 {
-
     using Catch::Matchers::ContainsSubstring;
     REQUIRE_THROWS_WITH(test::readerFromString("50").beginValue("expected_key"),
                         ContainsSubstring("BeginComposite expected") && ContainsSubstring("Value encountered"));
@@ -331,21 +330,35 @@ TEST_CASE("Error handling test cases for unexpected errors in the input Json str
                         ContainsSubstring("BeginComposite expected") && ContainsSubstring("BeginSequence encountered"));
     REQUIRE_THROWS_WITH(test::readerFromString("{}").beginValue("expected_key"), ContainsSubstring("empty composite"));
 
-    auto reader = test::readerFromString(R"({"incorrect_key":1})");
-    reader.beginComposite();
-    REQUIRE_THROWS_WITH(reader.beginValue("expected_key"),
-                        ContainsSubstring("Expected key expected_key") && ContainsSubstring("actual key incorrect_key"));
-    auto const value = reader.read<int>();
-    reader.endValue();
-    reader.endComposite();
-    // GIVEN("A json reader")
-    // {
-    //     WHEN("")
-    //     {
-
-    //         THEN("") {}
-    //     }
-    // }
+    GIVEN("A type which parses a key value pair")
+    {
+        using IntegralType = ContainsType<std::int32_t>;
+        IntegralType value;
+        WHEN("Deserialising from Json with an invalid type for the key (i.e. an integer not a string)")
+        {
+            auto const jsonText = R"({100:100})";
+            THEN("Ensure serialisation captures the error in key type")
+            {
+                using Catch::Matchers::ContainsSubstring;
+                REQUIRE_THROWS_WITH(test::deserialise<IntegralType>(jsonText, false), ContainsSubstring("error kParseErrorObjectMissName"));
+            }
+        }
+    }
+    GIVEN("A type which parses a key value pair")
+    {
+        using IntegralType = ContainsType<std::int32_t>;
+        IntegralType value;
+        WHEN("Deserialising from Json with an invalid key")
+        {
+            auto const jsonText = R"({"incorrect_key":100})";
+            THEN("Ensure serialisation captures the error in key type")
+            {
+                using Catch::Matchers::ContainsSubstring;
+                REQUIRE_THROWS_WITH(test::deserialise<IntegralType>(jsonText, false),
+                                    ContainsSubstring("Expected key value") && ContainsSubstring("actual key incorrect_key"));
+            }
+        }
+    }
 }
 
 } // namespace morpheus::serialisation
