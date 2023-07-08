@@ -10,7 +10,7 @@
 ///      Conformance wrapper for https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2021/p0627r6.pdf
 // clang-format off
 #if (__cpp_lib_unreachable >= 202202L)
-[[noreturn]] inline void unreachable() { std::unreachable(); }
+    [[noreturn]] inline void unreachable() { std::unreachable(); }
 #else
     #if (MORPHEUS_IS_VISUALSTUDIO_COMPATIBLE_COMPILER)
         [[noreturn]] inline void unreachable() { __assume(false); }
