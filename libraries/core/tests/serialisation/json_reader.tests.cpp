@@ -249,6 +249,20 @@ struct ContainsType
 
 TEST_CASE("Json reader raise an error on reading incorrect types", "[morpheus.serialisation.json_reader.invalid_values]")
 {
+    GIVEN("A test type for validating serialition of specific types")
+    {
+        using IntegralType = ContainsType<std::int32_t>;
+        IntegralType value;
+        WHEN("Deserialising from Json with a string where a integer is expected")
+        {
+            auto const jsonText = R"({"value":100})";
+            THEN("Ensure serialisation works with valid input")
+            {
+                using Catch::Matchers::ContainsSubstring;
+                REQUIRE(test::deserialise<IntegralType>(jsonText, false).value == 100);
+            }
+        }
+    }
     GIVEN("A type serialising a integer")
     {
         using IntegralType = ContainsType<std::int32_t>;
