@@ -2,7 +2,9 @@
 
 #include <morpheus/core/base/unreachable.hpp>
 
+#include <boost/hana/first.hpp>
 #include <boost/hana/pair.hpp>
+#include <boost/hana/second.hpp>
 #include <boost/mp11.hpp>
 #include <boost/preprocessor/repetition.hpp>
 #include <concepts>
@@ -19,7 +21,7 @@ struct CaseList
 { 
 };
 
-constexpr auto switchCaseElement(auto case_, auto f) {return f(case_); }
+constexpr auto switchCaseElement(auto case_, auto f) { return f(case_); }
 constexpr auto switchCondition(auto case_) { return switchCaseElement(case_, boost::hana::first); }
 constexpr auto switchTag(auto case_) { return switchCaseElement(case_, boost::hana::second); }
 
@@ -32,11 +34,10 @@ inline constexpr auto defaultCase = [](auto unhandledValue){};
 template<class CT, CT C, class T = std::integral_constant<CT, C>>
 using SwitchCase = boost::hana::pair<std::integral_constant<CT, C>, T>;
 
-namespace detail { 
+namespace detail {
 
-
-#define MORPHEUS_SWITCH_CASE(Z,N,_)                                                                                              \
-    case decltype(switchCondition(boost::mp11::mp_at_c<CaseList, N>{}))::value:                                         \
+#define MORPHEUS_SWITCH_CASE(Z, N, _)                                                                                                                          \
+    case decltype(switchCondition(boost::mp11::mp_at_c<CaseList, N>{}))::value:                                                                                \
         return std::forward<CaseHandler>(caseHander)(decltype(switchTag(boost::mp11::mp_at_c<CaseList, N>{})){});
 
 template<class Result, class Condition, class DefaultHandler>
