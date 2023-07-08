@@ -127,7 +127,7 @@ public:
                 }
                 return boost::numeric_cast<Float>(value);
             },
-            [](auto const& value) -> Float { throw Exception("Unable to convert to floating point representation"); }
+            [](auto const value) -> Float { throw Exception("Unable to convert to floating point representation"); }
         }, *next);
     }
 
