@@ -235,9 +235,10 @@ TEST_CASE("Json reader can read simple composite types from underlying test repr
     }
 }
 
-struct FloatType
+template <typename T>
+struct ContainsType
 {
-    float value = 0.0f;
+    T value = T();
 
     template <concepts::ReadSerialiser Serialiser>
     void deserialise(Serialiser& s)
@@ -248,8 +249,23 @@ struct FloatType
 
 TEST_CASE("Json reader raise an error on reading incorrect types", "[morpheus.serialisation.json_reader.invalid_values]")
 {
+    GIVEN("A type serialising a integer")
+    {
+        using IntegralType = ContainsType<std::int32_t>;
+        IntegralType value;
+        WHEN("Deserialising from Json with a string where a integer is expected")
+        {
+            auto const jsonText = R"({"value":"InvalidValue"})";
+            THEN("Expect an exception to be thrown on error to convert a string to a integer")
+            {
+                using Catch::Matchers::ContainsSubstring;
+                REQUIRE_THROWS_WITH(test::deserialise<IntegralType>(jsonText, false), ContainsSubstring("Unable to convert to integral"));
+            }
+        }
+    }
     GIVEN("A type serialising a float")
     {
+        using FloatType = ContainsType<float>;
         FloatType value;
         WHEN("Deserialising from Json with a string where a float is expected")
         {
@@ -257,7 +273,7 @@ TEST_CASE("Json reader raise an error on reading incorrect types", "[morpheus.se
             THEN("Expect an exception to be thrown on error to convert a string to a float")
             {
                 using Catch::Matchers::ContainsSubstring;
-                REQUIRE_THROWS_WITH(test::deserialise<SimpleComposite>(jsonText, false), ContainsSubstring("Unable to convert to integral"));
+                REQUIRE_THROWS_WITH(test::deserialise<FloatType>(jsonText, false), ContainsSubstring("Unable to convert to floating point"));
             }
         }
     }
