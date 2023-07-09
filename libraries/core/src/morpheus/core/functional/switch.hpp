@@ -64,8 +64,8 @@ Result invokeDefaultHandler(Condition condition, DefaultHandler defaultHandler)
     }
 
 BOOST_PP_REPEAT(MORPHEUS_SWITCH_MAX, MORPHEUS_SWITCH_OVERLOAD, ~)
-#undef SWITCH_CASE
-#undef SWITCH_OVERLOAD
+#undef MORPHEUS_SWITCH_CASE
+#undef MORPHEUS_SWITCH_OVERLOAD
 
 template<class... T> struct SwitchCommonReference {
     using type = std::conditional_t<(std::is_rvalue_reference_v<T> && ...), std::add_rvalue_reference_t<std::common_type_t<T...>>,
