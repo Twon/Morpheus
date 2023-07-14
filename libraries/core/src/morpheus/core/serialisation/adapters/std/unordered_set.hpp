@@ -2,12 +2,12 @@
 
 #include "morpheus/core/serialisation/adapters/std/ranges.hpp"
 
-#include <map>
+#include <unordered_set>
 
 namespace morpheus::serialisation::detail
 {
 
-template <typename K, typename V, class C, class A>
-inline constexpr bool isEnabledForRangeSerialisation<std::map<K, V, C, A>> = true;
+template <typename T, class H, class C, class A>
+inline constexpr bool isEnabledForRangeSerialisation<std::unordered_set<T, H, C, A>> = true;
 
 } // namespace morpheus::serialisation::detail
