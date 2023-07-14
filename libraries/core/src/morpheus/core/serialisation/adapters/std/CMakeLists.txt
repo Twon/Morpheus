@@ -4,13 +4,16 @@ target_sources(MorpheusCore
         deque.hpp
         expected.hpp
         list.hpp
-        optional.hpp
+        map.hpp
         monostate.hpp
+        optional.hpp
         pair.hpp
         set.hpp
         source_location.hpp
         tuple.hpp
         unique_ptr.hpp
+        unordered_set.hpp
+        unordered_map.hpp
         variant.hpp
         vector.hpp
 )
