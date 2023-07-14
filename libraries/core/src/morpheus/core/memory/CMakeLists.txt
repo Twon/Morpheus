@@ -4,8 +4,7 @@ target_sources(MorpheusCore
         polymorphic_value.hpp
 )
 
-target_sources(MorpheusCoreTests
+target_link_libraries(MorpheusCore
     PUBLIC
-        indirect_value.tests.cpp
-        polymorphic_value.tests.cpp
+        polymorphic_value::polymorphic_value
 )

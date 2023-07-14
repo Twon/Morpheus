@@ -39,4 +39,4 @@ T deserialise(Serialiser& serialiser)
     }(std::make_index_sequence<size>());
 }
 
-} // morpheus::serialisation
+} // morpheus::serialisation::detail

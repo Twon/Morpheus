@@ -1,11 +1,12 @@
+# Currently configured for clang-format-15.  Disabled options require a newer version.
 ---
 AccessModifierOffset: -4
-AlignConsecutiveMacros:
-  Enabled: true
-  AcrossEmptyLines: true
-  AcrossComments: true
-  AlignCompound: true
-  PadOperators: true
+#AlignConsecutiveMacros:
+#  Enabled: true
+#  AcrossEmptyLines: true
+#  AcrossComments: true
+#  AlignCompound: true
+#  PadOperators: true
 AlignEscapedNewlines: Right
 AlignOperands: Align
 AlignTrailingComments: true
@@ -17,7 +18,7 @@ AlwaysBreakBeforeMultilineStrings: false
 AlwaysBreakTemplateDeclarations: Yes
 BitFieldColonSpacing: Both
 BreakBeforeBraces: Custom
-BreakBeforeConceptDeclarations: Always
+BreakBeforeConceptDeclarations: true
 BraceWrapping:
   AfterEnum: true
   AfterExternBlock: true
@@ -37,13 +38,15 @@ BraceWrapping:
 BreakConstructorInitializers: BeforeComma
 ColumnLimit: 160
 ConstructorInitializerIndentWidth: 0
+FixNamespaceComments: true
 IncludeBlocks: Preserve
 IndentPPDirectives: BeforeHash
-IndentRequiresClause: false
+#IndentRequiresClause: false
 IndentWidth: 4
 Language: Cpp
 PackConstructorInitializers: Never
 PointerAlignment: Left
+#RequiresClausePosition: OwnLine
 SeparateDefinitionBlocks: Always
 SortIncludes: CaseSensitive
 SpaceAfterLogicalNot: false
@@ -56,8 +59,8 @@ SpaceBeforeParensOptions:
   AfterFunctionDeclarationName: false
   AfterFunctionDefinitionName: false
   AfterOverloadedOperator: false
-  AfterRequiresInClause: false
-  AfterRequiresInExpression: false
+#  AfterRequiresInClause: false
+#  AfterRequiresInExpression: false
   BeforeNonEmptyParentheses: false
 SpaceBeforeRangeBasedForLoopColon: true
 SpaceBeforeSquareBrackets: false
