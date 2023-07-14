@@ -1,6 +1,7 @@
 target_sources(MorpheusCoreTests
     PRIVATE
         expected.tests.cpp
+        monostate.tests.cpp
         optional.tests.cpp
         pair.tests.cpp
         ranges.tests.cpp
