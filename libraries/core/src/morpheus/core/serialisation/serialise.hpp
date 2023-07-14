@@ -54,7 +54,6 @@ struct deserialise_fn {
 namespace defaults = detail::defaults;
 
 // global customisation point objects serialisation::serialise() and serialisation::deserialise()
-inline detail::serialise_fn const serialise{};
-inline detail::deserialise_fn const deserialise{};
-
+inline detail::serialise_fn constexpr serialise{};
+inline detail::deserialise_fn constexpr deserialise{};
 }
