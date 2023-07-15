@@ -240,10 +240,17 @@ TEST_CASE("Json reader can read simple composite types from underlying test repr
 TEST_CASE("Json reader can read std types from underlying text representation", "[morpheus.serialisation.json_reader.read_sequence]")
 {
     using namespace std::string_literals;
-    JsonReader reader = test::readerFromString("[0,1,2,3,4,5]");
-    std::vector<int> expectedValues{ 0,1,2,3,4,5 };
-    auto sequenceGenerator = reader.readSequence<int>();
-    REQUIRE(ranges::equal(sequenceGenerator(), expectedValues));
+    std::vector<int> const expectedValues{ 0,1,2,3,4,5 };
+    std::vector<int> const actualValues = test::deserialise<std::vector<int>>("[0,1,2,3,4,5]");
+    REQUIRE(actualValues == expectedValues);
+    // auto sequenceGenerator = reader.readSequence<int>();
+    //JsonReader reader = test::readerFromString("[0,1,2,3,4,5]");
+    //REQUIRE(ranges::equal(sequenceGenerator(), expectedValues));
+
+//    GIVEN("A multi-dimensional sequence of sequence")
+//    {
+//        JsonReader reader = test::readerFromString("[0,1,2,3,4,5]");
+//    }
 }
 
 template <typename T>

@@ -112,7 +112,6 @@ public:
     {
         return [&/*, serialiser = std::move(serialiser)*/]() -> concurrency::Generator<T>
         {
-            beginSequence();
             for (;;) {
                 auto const state = currentState();
                 auto const [event, next] = state.value();
@@ -121,7 +120,6 @@ public:
 
                 MORPHEUS_ASSERT(event == Event::Value);
                 co_yield read<T>();
-                // co_yield serialiser();
             }
         };
     }
