@@ -1,6 +1,7 @@
 #include "morpheus/core/conformance/format.hpp"
 #include "morpheus/core/conformance/ranges.hpp"
 #include "morpheus/core/serialisation/adapters/aggregate.hpp"
+#include "morpheus/core/serialisation/adapters/std/list.hpp"
 #include "morpheus/core/serialisation/adapters/std/monostate.hpp"
 #include "morpheus/core/serialisation/adapters/std/optional.hpp"
 #include "morpheus/core/serialisation/adapters/std/pair.hpp"
@@ -99,7 +100,7 @@ TEST_CASE("Create and then copy a reader and read from the copied stream", "[mor
     }
 }
 
-TEST_CASE("Json reader providess basic reader functionality", "[morpheus.serialisation.json_reader.fundamental]")
+TEST_CASE("Json reader provides basic reader functionality", "[morpheus.serialisation.json_reader.fundamental]")
 {
     GIVEN("A Json stream")
     {
@@ -237,7 +238,7 @@ TEST_CASE("Json reader can read simple composite types from underlying test repr
     }
 }
 
-TEST_CASE("Json reader can read std types from underlying text representation", "[morpheus.serialisation.json_reader.read_sequence]")
+TEST_CASE("Json reader can read sequence types from underlying text representation", "[morpheus.serialisation.json_reader.read_sequence]")
 {
     using namespace std::string_literals;
     std::vector<int> const expectedValues{ 0,1,2,3,4,5 };
@@ -323,6 +324,7 @@ TEST_CASE("Json reader thows an error on invalid json input", "[morpheus.seriali
 
 TEST_CASE("Json reader can read std types from underlying text representation", "[morpheus.serialisation.json_reader.adapters.std]")
 {
+    REQUIRE(test::deserialise<std::list<int>>(R"([1, 2, 3, 4, 5])") == std::list<int>{1, 2, 3, 4, 5});
     REQUIRE(test::deserialise<std::monostate>(R"({})") == std::monostate{});
     REQUIRE(test::deserialise<std::optional<int>>(R"(100)") == std::optional<int>{100});
     REQUIRE(test::deserialise<std::optional<int>>(R"(null)") == std::optional<int>{});
@@ -330,6 +332,7 @@ TEST_CASE("Json reader can read std types from underlying text representation", 
     REQUIRE(test::deserialise<std::tuple<int, bool, std::string>>(R"([75,true,"Example"])") == std::tuple<int, bool, std::string>{75, true, "Example"});
 //    REQUIRE(test::deserialise<std::variant<int, bool, std::string>>(R"({"type":"bool","value":true})") == std::variant<int, bool, std::string>{true});
     REQUIRE(*test::deserialise<std::unique_ptr<int>>(R"(50)") == 50);
+    REQUIRE(test::deserialise<std::vector<int>>(R"([1, 2, 3, 4, 5])") == std::vector<int>{1, 2, 3, 4, 5});
 }
 
 TEST_CASE("Error handling test cases for unexpected errors in the input Json stream", "[morpheus.serialisation.json_reader.error_handling]")

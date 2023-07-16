@@ -126,10 +126,19 @@ struct JsonExtracter : rapidjson::BaseReaderHandler<rapidjson::UTF8<>, JsonExtra
     JsonReader::EventValue mCurrent; ///< Current json event.
 };
 
-
+void JsonReader::repeatCurrent()
+{
+    MORPHEUS_ASSERT(!mRepeat);
+    mRepeat = true;
+}
 
 JsonReader::EventValue JsonReader::getNext()
 {
+    if (mRepeat) {
+        mRepeat = false;
+        return mExtractor->mCurrent;
+    }
+
     using namespace rapidjson;
     mJsonReader.IterativeParseNext<kParseCommentsFlag | kParseNanAndInfFlag | kParseValidateEncodingFlag>(mStream, *mExtractor);
     if (mJsonReader.HasParseError()) {
@@ -166,22 +175,19 @@ JsonReader::~JsonReader()
 
 void JsonReader::beginComposite()
 {
-    auto const state = currentState();
-    auto const [event, next] = state.value();
+    auto const [event, next] = getNext();
     checkExpectedEvent(event, Event::BeginComposite);
 }
 
 void JsonReader::endComposite()
 {
-    auto const state = currentState();
-    auto const [event, next] = state.value();
+    auto const [event, next] = getNext();
     checkExpectedEvent(event, Event::EndComposite);
 }
 
 void JsonReader::beginValue(std::string_view const key)
 {
-    auto const state = currentState();
-    auto const [event, next] = state.value();
+    auto const [event, next] = getNext();
     checkExpectedEvent(event, Event::BeginComposite);
 
     if (!next)
@@ -199,23 +205,20 @@ void JsonReader::endValue()
 
 std::optional<std::size_t> JsonReader::beginSequence()
 {
-    auto const state = currentState();
-    auto const [event, next] = state.value();
+    auto const [event, next] = getNext();
     MORPHEUS_VERIFY(event == Event::BeginSequence);
     return std::nullopt;
 }
 
 void JsonReader::endSequence()
 {
-    auto const state = currentState();
-    auto const [event, next] = state.value();
+    auto const [event, next] = getNext();
     MORPHEUS_VERIFY(event == Event::EndSequence);
 }
 
 bool JsonReader::beginNullable()
 {
-    auto const state = currentState();
-    auto const [event, next] = state.value();
+    auto const [event, next] = getNext();
     // if (null)
     //     beginComposite();
     MORPHEUS_VERIFY(event == Event::Value);

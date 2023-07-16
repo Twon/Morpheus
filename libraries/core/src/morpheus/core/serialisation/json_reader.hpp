@@ -34,17 +34,6 @@ namespace morpheus::serialisation
 ///     Read in objects from an underlying json representation.
 class MORPHEUSCORE_EXPORT JsonReader
 {
-    [[nodiscard]] auto currentState()
-    {
-        return ScopedAction(
-            [&]()
-            {
-                if (!mCurrent)
-                    mCurrent = getNext();
-                return *mCurrent;
-            },
-            [&]() { mCurrent.reset(); });
-    }
 
     enum class FundamentalType : std::uint32_t
     {
@@ -108,20 +97,19 @@ public:
                 r.template read<T>()
             } -> std::same_as<T>;
         }
-    auto readSequence() // std::invocable auto serialiser)
+    concurrency::Generator<T> readSequence()
     {
-        return [&/*, serialiser = std::move(serialiser)*/]() -> concurrency::Generator<T>
-        {
-            for (;;) {
-                auto const state = currentState();
-                auto const [event, next] = state.value();
-                if (event == Event::EndSequence)
-                    co_return;
+        for (;;) {
+            auto const [event, next] = getNext();
+            repeatCurrent();
 
-                MORPHEUS_ASSERT(event == Event::Value);
-                co_yield read<T>();
+            if (event == Event::EndSequence) {
+                co_return;
             }
-        };
+
+            MORPHEUS_ASSERT(event == Event::Value);
+            co_yield read<T>();
+        }
     }
 
     // clang-format off
@@ -130,8 +118,7 @@ public:
     requires std::is_same_v<T, bool>
     T read()
     {
-        auto const state = currentState();
-        auto const [event, next] = state.value();
+        auto const [event, next] = getNext();
         MORPHEUS_ASSERT(next->index() == 0);
         return std::get<T>(*next);
     }
@@ -141,8 +128,7 @@ public:
     requires(not std::is_same_v<bool, Interger>)
     Interger read()
     {
-        auto const state = currentState();
-        auto const [event, next] = state.value();
+        auto const [event, next] = getNext();
         return std::visit(functional::Overload{
             [](std::integral auto const value) { return boost::numeric_cast<Interger>(value); },
             [](auto const value) -> Interger { throw Exception("Unable to convert to integral representation"); }
@@ -153,8 +139,7 @@ public:
     template <std::floating_point Float>
     Float read()
     {
-        auto const state = currentState();
-        auto const [event, next] = state.value();
+        auto const [event, next] = getNext();
         return std::visit(functional::Overload {
             [](std::integral auto const value) { return boost::numeric_cast<Float>(value); },
             [](std::floating_point auto const value) 
@@ -177,8 +162,7 @@ public:
     requires std::is_same_v<T, std::string>
     T read()
     {
-        auto const state = currentState();
-        auto const [event, next] = state.value();
+        auto const [event, next] = getNext();
         MORPHEUS_ASSERT(next->index() == magic_enum::enum_integer(FundamentalType::String));
         return std::get<T>(*next);
     }
@@ -203,37 +187,14 @@ private:
     using EventValue = std::tuple<Event, PossibleValue>;
 
     [[nodiscard]] EventValue getNext();
-
-    /* [[nodiscard]] auto currentState()
-        {
-            return ScopedAction(
-    //            [&]() { return getCurrent(); },
-    //            [&]() { clearCurrent(); }
-                [&]()
-                {
-                    if (!mCurrent) mCurrent = getNext();
-                    return *mCurrent;
-                },
-                [&]() { mCurrent.reset(); }
-            );
-        }*/
-
-    /*
-        EventValue& getCurrent()
-        {
-            if (!mCurrent)
-                mCurrent = getNext();
-            return *mCurrent;
-        }
-        void clearCurrent() { mCurrent.reset(); }
-    */
+    void repeatCurrent();
 
     memory::polymorphic_value<std::istream> mSourceStream; /// Owned input stream containing the Json source.
     rapidjson::IStreamWrapper mStream;
     rapidjson::Reader mJsonReader;
     std::unique_ptr<class JsonExtracter> mExtractor;
     bool mValidate = true;
-    std::optional<EventValue> mCurrent;
+    bool mRepeat = false;
 };
 
 } // namespace morpheus::serialisation
