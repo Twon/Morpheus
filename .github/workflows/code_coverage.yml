@@ -32,7 +32,7 @@ jobs:
         env:
           cache-name: cache-conan-data
         with:
-          path: ~/.conan/data
+          path: ~/.conan2/data
           key: build-${{ matrix.os }}-${{ env.BUILD_TYPE }}-${{ env.COMPILER_TYPE }}-${{ env.COMPILER_VERSION }}-${{ env.STDLIB }}
           restore-keys: |
             build-${{ matrix.os }}-${{ env.BUILD_TYPE }}-${{ env.COMPILER_TYPE }}-${{ env.COMPILER_VERSION }}-
@@ -68,7 +68,7 @@ jobs:
 
       - name: Install Conan Package Tools
         run: |
-          # pip install conan==1.59.0
+          # pip install conan
           pip install -U conan
 
       - name: Configure Conan
@@ -91,7 +91,7 @@ jobs:
         working-directory: ${{github.workspace}}/build
         shell: bash
         run: |
-          conan install "${{github.workspace}}" --build missing
+          conan install "${{github.workspace}}" --build missing --output-folder ${{github.workspace}}/build
 
       - name: Configure CMake
         # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.

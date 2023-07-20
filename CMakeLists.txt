@@ -35,6 +35,9 @@ list(APPEND CMAKE_MODULE_PATH
     ${PROJECT_SOURCE_DIR}/cmake/modules
 )
 
+set(CMAKE_FIND_PACKAGE_PREFER_CONFIG ON)
+list(APPEND CMAKE_PREFIX_PATH "${CMAKE_BINARY_DIR}")
+
 #------------------------------------------------------------------------------------------------------------------------------------------
 # Custom CMake Includes
 include(coverage)
