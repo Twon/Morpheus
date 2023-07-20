@@ -22,7 +22,7 @@
 from conan import ConanFile
 from conan.errors import ConanException, ConanInvalidConfiguration
 from conan.tools.build import check_min_cppstd
-from conan.tools.cmake import CMake
+from conan.tools.cmake import CMake, CMakeDeps
 from conan.tools.files import copy
 from conan.tools.scm import Version
 from conan.tools.files import load
@@ -68,7 +68,7 @@ class Morpheus(ConanFile):
     generators = "CMakeDeps", "CMakeToolchain"
     requires = (
         "boost/1.82.0",
-        "catch2/3.3.2", 
+#        "catch2/3.3.0", 
         "fmt/10.0.0",
         "glbinding/3.1.0",
         "glew/2.2.0",
@@ -93,6 +93,8 @@ class Morpheus(ConanFile):
         self.version = version.strip()
 
     def build_requirements(self):
+        self.test_requires("catch2/3.3.2")
+
         # Ensure the package is build against a version of CMake from 3.25 onwards.
         if get_cmake_version() < Version("3.25.0"):
             self.build_requires("cmake/3.25.0")
