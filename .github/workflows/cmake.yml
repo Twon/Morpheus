@@ -145,7 +145,7 @@ jobs:
         working-directory: ${{github.workspace}}/build
         shell: bash
         run: |
-          conan install "${{github.workspace}}" --build missing 
+          conan install "${{github.workspace}}" --build missing --output-folder "${{github.workspace}}/build"
 
       - name: Discover Toolchain
         shell: bash
