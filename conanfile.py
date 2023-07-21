@@ -22,7 +22,7 @@
 from conan import ConanFile
 from conan.errors import ConanException, ConanInvalidConfiguration
 from conan.tools.build import check_min_cppstd
-from conan.tools.cmake import CMake, CMakeDeps
+from conan.tools.cmake import cmake_layout, CMake, CMakeDeps
 from conan.tools.files import copy
 from conan.tools.scm import Version
 from conan.tools.files import load
@@ -68,8 +68,8 @@ class Morpheus(ConanFile):
     generators = "CMakeDeps", "CMakeToolchain"
     requires = (
         "boost/1.82.0",
-#        "catch2/3.3.0", 
-        "fmt/10.0.0",
+#        "catch2/3.3.2", 
+        "fmt/[^10]",
         "glbinding/3.1.0",
         "glew/2.2.0",
         "gtest/1.13.0",
@@ -147,6 +147,20 @@ class Morpheus(ConanFile):
                         self.name, self._minimum_cpp_standard,
                         self.settings.compiler,
                         self.settings.compiler.version))
+    
+    #def generate(self):
+    #    deps = CMakeDeps(self)
+    #    deps.set_property("catch2", "cmake_find_mode", "both")
+    #    deps.set_property("date", "cmake_find_mode", "both")
+    #    deps.set_property("fmt", "cmake_find_mode", "both")
+    #    deps.set_property("glu", "cmake_find_mode", "both")
+    #    deps.set_property("magic_enum", "cmake_find_mode", "both")
+    #    deps.set_property("ms-gsl", "cmake_find_mode", "both")
+    #    deps.set_property("opengl_system", "cmake_find_mode", "both")
+    #    deps.set_property("rapidjson", "cmake_find_mode", "both")
+    #    deps.set_property("range-v3", "cmake_find_mode", "both")
+    #    deps.set_property("tl-expected", "cmake_find_mode", "both")
+    #    deps.generate()
 
 #    def generate(self):
 #        tc = CMakeToolchain(self, generator=os.getenv("CONAN_CMAKE_GENERATOR"))
@@ -160,6 +174,9 @@ class Morpheus(ConanFile):
 #    def source(self):
 #        tools.get(**self.conan_data["sources"][self.version],
 #                  strip_root=True, destination=self._source_subfolder)
+
+    def layout(self):
+        cmake_layout(self)
 
     def package(self):
         copy(self, "*LICENSE*", dst="licenses", keep_path=False)
