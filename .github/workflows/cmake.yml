@@ -141,6 +141,12 @@ jobs:
         run: |
           mkdir build
 
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
+        timeout-minutes: 15
+        with:
+          detached: true
+
       - name: Configure Install
         working-directory: ${{github.workspace}}/build
         shell: bash
@@ -156,12 +162,6 @@ jobs:
           else
               echo "toolchain=-DCMAKE_TOOLCHAIN_FILE=${{github.workspace}}/cmake/toolchains/${{ matrix.settings.compiler.toolchain }}" >> $GITHUB_ENV
           fi
-
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
-        timeout-minutes: 15
-        with:
-          detached: true
  
       - name: Configure CMake
         # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
