@@ -141,17 +141,17 @@ jobs:
         run: |
           mkdir build
 
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
-        timeout-minutes: 15
-        with:
-          detached: true
+#      - name: Setup tmate session
+#        uses: mxschmitt/action-tmate@v3
+#        timeout-minutes: 15
+#        with:
+#          detached: true
 
       - name: Configure Install
         working-directory: ${{github.workspace}}/build
         shell: bash
         run: |
-          conan install "${{github.workspace}}" --build missing --output-folder "${{github.workspace}}/build" -pr:b default --build catch2/3.3.2
+          conan install "${{github.workspace}}" --build missing -pr:b default --build catch2/3.3.2
 
       - name: Discover Toolchain
         shell: bash
@@ -166,8 +166,8 @@ jobs:
       - name: Configure CMake
         # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
         # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
-        run: cmake -B "${{github.workspace}}/build" -DCMAKE_BUILD_TYPE=${{ matrix.configuration }} ${{ env.toolchain }} -DENABLE_ADDRESS_SANITIZER=ON -DENABLE_UNDEFINED_BEHAVIOUR_SANITIZER=ON
+        run: cmake -B "${{github.workspace}}/build/${{ matrix.configuration }}/generators" -DCMAKE_BUILD_TYPE=${{ matrix.configuration }} ${{ env.toolchain }} -DENABLE_ADDRESS_SANITIZER=ON -DENABLE_UNDEFINED_BEHAVIOUR_SANITIZER=ON
 
       - name: Build
         # Build your program with the given configuration
-        run: cmake --build "${{github.workspace}}/build" --config ${{ matrix.configuration }}
+        run: cmake --build "${{github.workspace}}/build/${{ matrix.configuration }}/generators" --config ${{ matrix.configuration }}
