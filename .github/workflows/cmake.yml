@@ -122,36 +122,41 @@ jobs:
       - name: Configure Conan
         shell: bash
         run: |
-          conan profile detect --force
-          sed -i.backup '/^\[settings\]$/,/^\[/ s/^build_type=.*/build_type=${{ matrix.configuration }}/' ~/.conan2/profiles/default
-          sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.cppstd=.*/compiler.cppstd=${{ matrix.settings.compiler.std }}/' ~/.conan2/profiles/default
-          #conan profile update env.CONAN_PRINT_RUN_COMMANDS=1 default
-          #conan profile update env.CONAN_LOGGING_LEVEL=info default
-          #conan profile update env.CONAN_VERBOSE_TRACEBACK=1 default          
-          if [[ "${{ matrix.settings.compiler.type }}" == "GCC" || "${{ matrix.settings.compiler.type }}" == "CLANG" ]]; then
-            sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler=.*/compiler=${{ matrix.settings.compiler.conan }}/' ~/.conan2/profiles/default
-            sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.version=.*/compiler.version=${{ matrix.settings.compiler.version }}/' ~/.conan2/profiles/default
-            sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.libcxx=.*/compiler.libcxx=${{ matrix.settings.lib }}/' ~/.conan2/profiles/default
-          fi
+          conan profile detect
+          conan config install ..\.conan\
           conan profile show -pr default
 
-      - name: Make build directory
+#      - name: Make build directory
+#        working-directory: ${{github.workspace}}
+#        shell: bash
+#        run: |
+#          mkdir build
+
+#      - name: Setup tmate session
+#        uses: mxschmitt/action-tmate@v3
+#        timeout-minutes: 15
+#        with:
+#          detached: true
+      - name: Configure Install
         working-directory: ${{github.workspace}}
         shell: bash
         run: |
-          mkdir build
+          conan install "${{github.workspace}}" --build missing -pr:b default -c tools.cmake.cmaketoolchain:generator="Ninja Multi-Config"
 
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
-        timeout-minutes: 15
-        with:
-          detached: true
-
-      - name: Configure Install
-        working-directory: ${{github.workspace}}/build
-        shell: bash
+      - name: Configure Conan Build
+        if: matrix.setting.os == 'windows-latest'
+        shell: cmd
+        working-directory: ${{github.workspace}}
         run: |
-          conan install "${{github.workspace}}" --build missing -pr:b default --build catch2/3.3.2
+           call build\generators\conanvcvars.bat
+           call build\generators\conanbuild.bat
+
+      - name: Configure Conan Build
+        if: matrix.setting.os != 'windows-latest'
+        shell: bash
+        working-directory: ${{github.workspace}}
+        run: |
+           source build\generators\conanbuild.sh
 
       - name: Discover Toolchain
         shell: bash
@@ -164,10 +169,8 @@ jobs:
           fi
  
       - name: Configure CMake
-        # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
-        # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
-        run: cmake -B "${{github.workspace}}/build/${{ matrix.configuration }}/generators" -DCMAKE_BUILD_TYPE=${{ matrix.configuration }} ${{ env.toolchain }} -DENABLE_ADDRESS_SANITIZER=ON -DENABLE_UNDEFINED_BEHAVIOUR_SANITIZER=ON
+        run: cmake --preset conan-${{matrix.configuration}} -DENABLE_ADDRESS_SANITIZER=ON -DENABLE_UNDEFINED_BEHAVIOUR_SANITIZER=ON
 
       - name: Build
         # Build your program with the given configuration
-        run: cmake --build "${{github.workspace}}/build/${{ matrix.configuration }}/generators" --config ${{ matrix.configuration }}
+        run: cmake --build --preset conan-${{matrix.configuration}}

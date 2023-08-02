@@ -84,6 +84,7 @@ class Morpheus(ConanFile):
     )
 
     build_requires = (
+        "ninja/1.11.1"
 #        "ccache/4.6",
     )
 
@@ -95,7 +96,6 @@ class Morpheus(ConanFile):
     def build_requirements(self):
         self.test_requires("catch2/3.3.2")
 
-        # Ensure the package is build against a version of CMake from 3.25 onwards.
         if get_cmake_version() < Version("3.27.0"):
             self.build_requires("cmake/3.27.0")
 
