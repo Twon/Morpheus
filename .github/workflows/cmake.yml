@@ -155,22 +155,22 @@ jobs:
         working-directory: ${{github.workspace}}
         shell: bash
         run: |
-          conan install "${{github.workspace}}" --build missing -pr:b default -c tools.cmake.cmaketoolchain:generator="Ninja Multi-Config"
+          conan install "${{github.workspace}}" --build missing -pr:b default -c tools.cmake.cmaketoolchain:generator=Ninja
 
       - name: Configure Conan Build
         if: matrix.setting.os == 'windows-latest'
         shell: cmd
         working-directory: ${{github.workspace}}
         run: |
-           call build\generators\conanvcvars.bat
-           call build\generators\conanbuild.bat
+           call build\${{matrix.configuration}}\generators\conanvcvars.bat
+           call build\${{matrix.configuration}}\generators\conanbuild.bat
 
       - name: Configure Conan Build
         if: matrix.setting.os != 'windows-latest'
         shell: bash
         working-directory: ${{github.workspace}}
         run: |
-           source build\generators\conanbuild.sh
+           source build\${{matrix.configuration}}\generators\conanbuild.sh
 
       - name: Discover Toolchain
         shell: bash
