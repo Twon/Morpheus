@@ -1,3 +1,4 @@
+.conan2
 .idea
 .vs
 .vscode
@@ -6,3 +7,5 @@
 cmake-build-debug
 env/*
 [Oo]ut
+
+CMakeUserPresets.json
