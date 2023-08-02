@@ -84,7 +84,6 @@ class Morpheus(ConanFile):
     )
 
     build_requires = (
-        "ninja/1.11.1"
 #        "ccache/4.6",
     )
 
@@ -94,10 +93,11 @@ class Morpheus(ConanFile):
         self.version = version.strip()
 
     def build_requirements(self):
+        self.tool_requires("ninja/1.11.1")
         self.test_requires("catch2/3.3.2")
 
         if get_cmake_version() < Version("3.27.0"):
-            self.build_requires("cmake/3.27.0")
+            self.tool_requires("cmake/3.27.0")
 
         if self.options.build_docs:
             self.build_requires("doxygen/1.9.4") # doxygen/1.9.5 will update dependency on zlib/1.2.12 to zlib/1.2.13
