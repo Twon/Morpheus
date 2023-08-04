@@ -198,7 +198,7 @@ jobs:
       - name: Configure CMake
         shell: bash
         # Build your program with the given configuration
-        run: cmake --preset ${{ env.CONAN_PRESET }} -DCMAKE_C_COMPILER=${{ matrix.settings.compiler.cc }} -DCMAKE_CXX_COMPILER=${{ matrix.settings.compiler.cxx }} -DENABLE_ADDRESS_SANITIZER=ON -DENABLE_UNDEFINED_BEHAVIOUR_SANITIZER=ON
+        run: cmake --preset ${{ env.CONAN_PRESET }} -DENABLE_ADDRESS_SANITIZER=ON -DENABLE_UNDEFINED_BEHAVIOUR_SANITIZER=ON
 
       - name: Build
         shell: bash
