@@ -60,7 +60,7 @@ jobs:
         env:
           cache-name: cache-conan-data
         with:
-          path: ~/.conan2/data
+          path: ${{github.workspace}}/.conan2/data
           key: build-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-${{ matrix.settings.compiler.version }}-${{ matrix.settings.lib }}
           restore-keys: |
             build-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-${{ matrix.settings.compiler.version }}-
@@ -198,7 +198,11 @@ jobs:
       - name: Configure CMake
         shell: bash
         # Build your program with the given configuration
-        run: cmake --preset ${{ env.CONAN_PRESET }} -DENABLE_ADDRESS_SANITIZER=ON -DENABLE_UNDEFINED_BEHAVIOUR_SANITIZER=ON
+        run: cmake --preset ${{ env.CONAN_PRESET }} \
+                   -DCMAKE_C_COMPILER=${{ matrix.settings.compiler.cc }} \
+                   -DCMAKE_CXX_COMPILER=${{ matrix.settings.compiler.cxx }} \
+                   -DENABLE_ADDRESS_SANITIZER=ON \
+                   -DENABLE_UNDEFINED_BEHAVIOUR_SANITIZER=ON
 
       - name: Build
         shell: bash
