@@ -126,6 +126,7 @@ jobs:
         shell: bash
         run: |
           CONAN_PROFILE=${{matrix.setting.compiler.conan}}/
+
       - name: Configure Conan
         shell: bash
         run: |
@@ -189,13 +190,17 @@ jobs:
           else
               echo "toolchain=-DCMAKE_TOOLCHAIN_FILE=${{github.workspace}}/cmake/toolchains/${{ matrix.settings.compiler.toolchain }}" >> $GITHUB_ENV
           fi
- 
+
+      - name: Conan Preset
+        shell: bash
+        run: echo CONAN_PRESET=$(echo ${{matrix.configuration}} | tr '[:upper:]' '[:lower:]')
+
       - name: Configure CMake
         shell: bash
         # Build your program with the given configuration
-        run: cmake --preset conan-(echo ${{matrix.configuration}} | tr '[:upper:]' '[:lower:]') -DENABLE_ADDRESS_SANITIZER=ON -DENABLE_UNDEFINED_BEHAVIOUR_SANITIZER=ON
+        run: cmake --preset ${{ env.CONAN_PRESET }} -DENABLE_ADDRESS_SANITIZER=ON -DENABLE_UNDEFINED_BEHAVIOUR_SANITIZER=ON
 
       - name: Build
         shell: bash
         # Build your program with the given configuration
-        run: cmake --build --preset conan-(echo ${{matrix.configuration}} | tr '[:upper:]' '[:lower:]')
+        run: cmake --build --preset ${{ env.CONAN_PRESET }} 
