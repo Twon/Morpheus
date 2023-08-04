@@ -178,7 +178,7 @@ jobs:
         shell: bash
         working-directory: ${{github.workspace}}
         run: |
-           source build\${{matrix.configuration}}\generators\conanbuild.sh
+           source build/${{matrix.configuration}}/generators/conanbuild.sh
 
       - name: Discover Toolchain
         shell: bash
