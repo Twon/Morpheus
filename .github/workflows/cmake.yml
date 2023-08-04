@@ -191,8 +191,11 @@ jobs:
           fi
  
       - name: Configure CMake
-        run: cmake --preset conan-${{matrix.configuration}} -DENABLE_ADDRESS_SANITIZER=ON -DENABLE_UNDEFINED_BEHAVIOUR_SANITIZER=ON
+        shell: bash
+        # Build your program with the given configuration
+        run: cmake --preset conan-(echo ${{matrix.configuration}} | tr '[:upper:]' '[:lower:]') -DENABLE_ADDRESS_SANITIZER=ON -DENABLE_UNDEFINED_BEHAVIOUR_SANITIZER=ON
 
       - name: Build
+        shell: bash
         # Build your program with the given configuration
-        run: cmake --build --preset conan-${{matrix.configuration}}
+        run: cmake --build --preset conan-(echo ${{matrix.configuration}} | tr '[:upper:]' '[:lower:]')
