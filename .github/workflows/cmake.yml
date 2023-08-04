@@ -166,7 +166,7 @@ jobs:
           conan install "${{github.workspace}}" --build missing -pr:b default -c tools.cmake.cmaketoolchain:generator=Ninja
 
       - name: Configure Conan Build
-        if: matrix.setting.os == 'windows-latest'
+        if: matrix.settings.os == 'windows-latest'
         shell: cmd
         working-directory: ${{github.workspace}}
         run: |
@@ -174,7 +174,7 @@ jobs:
            call build\${{matrix.configuration}}\generators\conanbuild.bat
 
       - name: Configure Conan Build
-        if: matrix.setting.os != 'windows-latest'
+        if: matrix.settings.os != 'windows-latest'
         shell: bash
         working-directory: ${{github.workspace}}
         run: |
