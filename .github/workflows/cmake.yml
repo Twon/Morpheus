@@ -137,7 +137,7 @@ jobs:
           fi
  
           echo "[buildenv]\n" >> .conan2/profiles/default
-          echo "CONAN_CMAKE_GENERATOR=Ninja\n\n" >> .conan2/profiles/default
+          echo "CMAKE_MAKE_PROGRAM=Ninja\n" >> .conan2/profiles/default
           echo "[conf]\n" >> .conan2/profiles/default
           echo "tools.cmake.cmaketoolchain:generator=Ninja" >> .conan2/profiles/default
 
