@@ -193,7 +193,7 @@ jobs:
 
       - name: Conan Preset
         shell: bash
-        run: echo CONAN_PRESET=$(echo ${{matrix.configuration}} | tr '[:upper:]' '[:lower:]')
+        run: CONAN_PRESET=$(echo ${{matrix.configuration}} | tr '[:upper:]' '[:lower:]')
 
       - name: Configure CMake
         shell: bash
