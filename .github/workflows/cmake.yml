@@ -147,12 +147,14 @@ jobs:
             sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.libcxx=.*/compiler.libcxx=${{ matrix.settings.lib }}/' .conan2/profiles/default
           fi
  
+          conan profile show -pr default
+
 #          echo "[buildenv]\n" >> .conan2/profiles/default
 #          echo "CMAKE_MAKE_PROGRAM=Ninja\n" >> .conan2/profiles/default
 #          echo "[conf]\n" >> .conan2/profiles/default
 #          echo "tools.cmake.cmaketoolchain:generator=Ninja" >> .conan2/profiles/default
-
-          conan profile show -pr default
+#
+#          conan profile show -pr default
 #          conan profile detect
 #          conan config install ..\.conan\
 #          conan profile show -pr default
