@@ -74,11 +74,11 @@ jobs:
         shell: bash
         run: |
           conan profile detect --force
-          sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.cppstd=.*/compiler.cppstd=20/' ~/.conan2/profiles/default
-          sed -i.backup '/^\[settings\]$/,/^\[/ s/^build_type=.*/build_type=${{ env.BUILD_TYPE }}/' ~/.conan2/profiles/default
-          sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler=.*/compiler=${{ env.COMPILER_TYPE }}/' ~/.conan2/profiles/default
-          sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.version=.*/compiler.version=${{ env.COMPILER_VERSION }}/' ~/.conan2/profiles/default
-          sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.libcxx=.*/compiler.libcxx=${{ env.STDLIB }}/' ~/.conan2/profiles/default
+          sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.cppstd=.*/compiler.cppstd=20/' .conan2/profiles/default
+          sed -i.backup '/^\[settings\]$/,/^\[/ s/^build_type=.*/build_type=${{ env.BUILD_TYPE }}/' .conan2/profiles/default
+          sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler=.*/compiler=${{ env.COMPILER_TYPE }}/' .conan2/profiles/default
+          sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.version=.*/compiler.version=${{ env.COMPILER_VERSION }}/' .conan2/profiles/default
+          sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.libcxx=.*/compiler.libcxx=${{ env.STDLIB }}/' .conan2/profiles/default
           conan profile show -pr default
 
       - name: Configure Install
