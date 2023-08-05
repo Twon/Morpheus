@@ -202,8 +202,18 @@ jobs:
           detached: true
 
       - name: Configure CMake
+        if: matrix.settings.os == 'windows-latest'
+        shell: cmd
         # Build your program with the given configuration
         run: cmake --preset ${{ env.CONAN_PRESET }} -DENABLE_ADDRESS_SANITIZER=ON -DENABLE_UNDEFINED_BEHAVIOUR_SANITIZER=ON
+
+      - name: Configure CMake
+        if: matrix.settings.os != 'windows-latest'
+        shell: bash
+        # Build your program with the given configuration
+        run: cmake --preset ${{ env.CONAN_PRESET }} -DENABLE_ADDRESS_SANITIZER=ON -DENABLE_UNDEFINED_BEHAVIOUR_SANITIZER=ON
+
+
 
       - name: Build
         # Build your program with the given configuration
