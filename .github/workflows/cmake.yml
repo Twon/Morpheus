@@ -202,11 +202,9 @@ jobs:
           detached: true
 
       - name: Configure CMake
-        shell: bash
         # Build your program with the given configuration
         run: cmake --preset ${{ env.CONAN_PRESET }} -DENABLE_ADDRESS_SANITIZER=ON -DENABLE_UNDEFINED_BEHAVIOUR_SANITIZER=ON
 
       - name: Build
-        shell: bash
         # Build your program with the given configuration
         run: cmake --build --preset ${{ env.CONAN_PRESET }} 
