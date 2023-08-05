@@ -212,16 +212,20 @@ jobs:
         # Build your program with the given configuration
         run: cmake --preset conan-default -DENABLE_ADDRESS_SANITIZER=ON -DENABLE_UNDEFINED_BEHAVIOUR_SANITIZER=ON
 
+      - name: Conan Preset
+        shell: bash
+        run: echo "CONAN_PRESET=conan-$(echo ${{matrix.configuration}} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+  
       - name: Build
         if: matrix.settings.os == 'windows-latest'
         shell: cmd
         # Build your program with the given configuration
         run: |
           call build\generators\conanbuild.bat
-          cmake --build --preset conan-default
+          cmake --build --preset ${{ env.CONAN_PRESET }}
   
       - name: Build
         if: matrix.settings.os != 'windows-latest'
         shell: bash
         run: |
-          cmake --build --preset conan-default
+          cmake --build --preset ${{ env.CONAN_PRESET }}
