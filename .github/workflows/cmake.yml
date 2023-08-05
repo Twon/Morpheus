@@ -216,8 +216,16 @@ jobs:
         # Build your program with the given configuration
         run: cmake --preset ${{ env.CONAN_PRESET }} -DENABLE_ADDRESS_SANITIZER=ON -DENABLE_UNDEFINED_BEHAVIOUR_SANITIZER=ON
 
-
-
       - name: Build
+        if: matrix.settings.os == 'windows-latest'
+        shell: cmd
         # Build your program with the given configuration
-        run: cmake --build --preset ${{ env.CONAN_PRESET }} 
+        run: |
+          call build\${{matrix.configuration}}\generators\conanbuild.bat
+          cmake --build --preset ${{ env.CONAN_PRESET }} 
+  
+      - name: Build
+        if: matrix.settings.os != 'windows-latest'
+        shell: bash
+        run: |
+          cmake --build --preset ${{ env.CONAN_PRESET }} 
