@@ -15,8 +15,6 @@ target_sources(MorpheusCore
         json_writer.cpp
 )
 
-find_package(RapidJSON REQUIRED)
-
 target_link_libraries(MorpheusCore
     PUBLIC
         rapidjson
