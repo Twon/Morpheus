@@ -215,7 +215,13 @@ jobs:
       - name: Conan Preset
         shell: bash
         run: echo "CONAN_PRESET=conan-$(echo ${{matrix.configuration}} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
-  
+
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
+        timeout-minutes: 15
+        with:
+          detached: true
+
       - name: Build
         if: matrix.settings.os == 'windows-latest'
         shell: cmd
