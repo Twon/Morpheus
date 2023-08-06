@@ -72,6 +72,21 @@ set(CMAKE_INSTALL_RPATH ${MORPHEUS_RPATH})
 set(CMAKE_MACOSX_RPATH 1)
 set(CMAKE_BUILD_WITH_INSTALL_RPATH ON)
 set(CMAKE_SKIP_BUILD_RPATH  FALSE)
+
+get_property(IS_MULTI_CONFIG GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
+if(IS_MULTI_CONFIG)
+    set(RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin/$<CONFIG>)
+    set(LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib/$<CONFIG>)
+    file(RELATIVE_PATH MORPHEUS_RELATIVE_BUILD_RPATH ${RUNTIME_OUTPUT_DIRECTORY} ${LIBRARY_OUTPUT_DIRECTORY})
+    if (APPLE)
+        set(MORPHEUS_BUILD_RPATH "@executable_path/${MORPHEUS_RELATIVE_BUILD_RPATH}")
+    else()
+        set(MORPHEUS_BUILD_RPATH "$ORIGIN/${MORPHEUS_RELATIVE_BUILD_RPATH}")
+    endif()
+
+    set(CMAKE_BUILD_RPATH ${MORPHEUS_BUILD_RPATH})
+    set(CMAKE_BUILD_WITH_INSTALL_RPATH OFF)
+endif()
 #------------------------------------------------------------------------------------------------------------------------------------------
 
 add_subdirectory(libraries)
