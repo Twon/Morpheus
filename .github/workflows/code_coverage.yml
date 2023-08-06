@@ -34,7 +34,7 @@ jobs:
         env:
           cache-name: cache-conan-data
         with:
-          path: ~/.conan2/data
+          path: ${{github.workspace}}/.conan2/p
           key: build-${{ matrix.os }}-${{ env.BUILD_TYPE }}-${{ env.COMPILER_TYPE }}-${{ env.COMPILER_VERSION }}-${{ env.STDLIB }}
           restore-keys: |
             build-${{ matrix.os }}-${{ env.BUILD_TYPE }}-${{ env.COMPILER_TYPE }}-${{ env.COMPILER_VERSION }}-
@@ -66,7 +66,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: '3.10'
+          python-version: '3.11'
 
       - name: Install Conan Package Tools
         run: |

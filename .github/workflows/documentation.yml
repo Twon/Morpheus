@@ -31,7 +31,7 @@ jobs:
         env:
           cache-name: cache-conan-data
         with:
-          path: ~/.conan2/data
+          path: ${{github.workspace}}/.conan2/p
           key: build-${{ matrix.os }}-${{ env.BUILD_TYPE }}-${{ env.COMPILER_TYPE }}-${{ env.COMPILER_VERSION }}-${{ env.STDLIB }}
           restore-keys: |
             build-${{ matrix.os }}-${{ env.BUILD_TYPE }}-${{ env.COMPILER_TYPE }}-${{ env.COMPILER_VERSION }}-
@@ -55,11 +55,11 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: '3.10'
+          python-version: '3.11'
 
       - name: Install Conan Package Tools
         run: |
-          pip install -U conan
+          pip install conan
 
       - name: Configure Conan
         shell: bash
@@ -71,11 +71,6 @@ jobs:
           sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.version=.*/compiler.version=${{ env.COMPILER_VERSION }}/' .conan2/profiles/default
           sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.libcxx=.*/compiler.libcxx=${{ env.STDLIB }}/' .conan2/profiles/default
           conan profile show -pr default
-      - name: Make build directory
-        working-directory: ${{github.workspace}}
-        shell: bash
-        run: |
-          mkdir build
 
       - name: Configure Install
         working-directory: ${{github.workspace}}

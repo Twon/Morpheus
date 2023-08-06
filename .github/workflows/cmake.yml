@@ -124,17 +124,12 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: '3.10'
+          python-version: '3.11'
 
       - name: Install Conan Package Tools
         run: |
           pip install -U conan
       
-      - name: Select Profile
-        shell: bash
-        run: |
-          CONAN_PROFILE=${{matrix.setting.compiler.conan}}/
-
       - name: Configure Conan
         shell: bash
         run: |
@@ -159,11 +154,6 @@ jobs:
 #          conan config install ..\.conan\
 #          conan profile show -pr default
 
-#      - name: Make build directory
-#        working-directory: ${{github.workspace}}
-#        shell: bash
-#        run: |
-#          mkdir build
 
 #      - name: Setup tmate session
 #        uses: mxschmitt/action-tmate@v3
@@ -200,7 +190,6 @@ jobs:
       - name: Configure CMake
         if: matrix.settings.os == 'windows-latest'
         shell: cmd
-        # Build your program with the given configuration
         run: |
           cmake --version 
           call build\generators\conanbuild.bat
@@ -209,7 +198,6 @@ jobs:
       - name: Configure CMake
         if: matrix.settings.os != 'windows-latest'
         shell: bash
-        # Build your program with the given configuration
         run: cmake --preset conan-default -DENABLE_ADDRESS_SANITIZER=ON -DENABLE_UNDEFINED_BEHAVIOUR_SANITIZER=ON
 
       - name: Conan Preset
@@ -219,7 +207,6 @@ jobs:
       - name: Build
         if: matrix.settings.os == 'windows-latest'
         shell: cmd
-        # Build your program with the given configuration
         run: |
           call build\generators\conanbuild.bat
           cmake --build --preset ${{ env.CONAN_PRESET }}
