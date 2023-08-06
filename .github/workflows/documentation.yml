@@ -59,18 +59,17 @@ jobs:
 
       - name: Install Conan Package Tools
         run: |
-          # pip install conan==1.59.0
           pip install -U conan
 
       - name: Configure Conan
         shell: bash
         run: |
           conan profile detect --force
-          sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.cppstd=.*/compiler.cppstd=20/' ~/.conan2/profiles/default
-          sed -i.backup '/^\[settings\]$/,/^\[/ s/^build_type=.*/build_type=${{ env.BUILD_TYPE }}/' ~/.conan2/profiles/default
-          sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler=.*/compiler=${{ env.COMPILER_TYPE }}/' ~/.conan2/profiles/default
-          sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.version=.*/compiler.version=${{ env.COMPILER_VERSION }}/' ~/.conan2/profiles/default
-          sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.libcxx=.*/compiler.libcxx=${{ env.STDLIB }}/' ~/.conan2/profiles/default
+          sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.cppstd=.*/compiler.cppstd=20/' .conan2/profiles/default
+          sed -i.backup '/^\[settings\]$/,/^\[/ s/^build_type=.*/build_type=${{ env.BUILD_TYPE }}/' .conan2/profiles/default
+          sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler=.*/compiler=${{ env.COMPILER_TYPE }}/' .conan2/profiles/default
+          sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.version=.*/compiler.version=${{ env.COMPILER_VERSION }}/' .conan2/profiles/default
+          sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.libcxx=.*/compiler.libcxx=${{ env.STDLIB }}/' .conan2/profiles/default
           conan profile show -pr default
       - name: Make build directory
         working-directory: ${{github.workspace}}
@@ -79,21 +78,30 @@ jobs:
           mkdir build
 
       - name: Configure Install
-        working-directory: ${{github.workspace}}/build
+        working-directory: ${{github.workspace}}
         shell: bash
         run: |
-          conan install "${{github.workspace}}" --build missing -o build_docs=True 
+          conan install "${{github.workspace}}" --build missing -c tools.cmake.cmaketoolchain:generator="Ninja Multi-Config" --build catch2/3.3.2 -o build_docs=True 
 
+      - name: Configure Conan Build
+        shell: bash
+        working-directory: ${{github.workspace}}
+        run: |
+          source build/generators/conanbuild.sh
+  
       - name: Configure CMake
         # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
         # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
         run: |
-          source ${{github.workspace}}/build/activate.sh
-          cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -DMORPHEUS_BUILD_DOCUMENTATION:BOOL=ON
+          cmake --preset conan-default -DMORPHEUS_BUILD_DOCUMENTATION:BOOL=ON
+
+      - name: Conan Preset
+        shell: bash
+        run: echo "CONAN_PRESET=conan-$(echo ${{env.BUILD_TYPE}} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
 
       - name: Build
         # Build your program with the given configuration
-        run: cmake --build ${{github.workspace}}/build --config ${{ env.BUILD_TYPE }} --target Documentation
+        run: cmake --build --preset ${{ env.CONAN_PRESET }} --target Documentation
 
       - name: Deploy documentation
         if: github.ref == 'refs/heads/main'
