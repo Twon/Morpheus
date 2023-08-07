@@ -10,7 +10,7 @@ env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: Debug
   COMPILER_TYPE: gcc
-  COMPILER_VERSION: 12
+  COMPILER_VERSION: 11
   STDLIB: libstdc++11
 
 jobs:
@@ -117,12 +117,6 @@ jobs:
       - name: Fastcov
         # Run Fastcov target to collect coverage information.
         run: cmake --build --preset ${{ env.CONAN_PRESET }} --target coverage
-
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
-        timeout-minutes: 45
-        with:
-          detached: true
 
       - name: Lcov
         # Run LCov target to generate code coverage report
