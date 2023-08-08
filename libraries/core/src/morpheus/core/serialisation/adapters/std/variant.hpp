@@ -77,13 +77,12 @@ T deserialise(Serialiser& serialiser)
     auto const scope = makeScopedComposite(serialiser.reader());
     auto const index = [&serialiser]
     {
-        if (serialiser.reader().isTextual())
-            return serialiser.template deserialise<std::uint64_t>("index");
-        else
-        {
+        if (serialiser.reader().isTextual()) {
             auto const type = serialiser.template deserialise<std::string>("type");
             return TypeListNames<T>::findIndex(type);
         }
+        else
+            return serialiser.template deserialise<std::uint64_t>("index");
     }();
     [&serialiser]<std::size_t... Indexes>(std::index_sequence<Indexes...>)
     {
