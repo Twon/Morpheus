@@ -41,7 +41,7 @@ list(APPEND CMAKE_PREFIX_PATH "${CMAKE_BINARY_DIR}")
 #------------------------------------------------------------------------------------------------------------------------------------------
 # Custom CMake Includes
 include(coverage)
-include(Compiler)
+include(compiler)
 include(documentation)
 include(IDESettings)
 include(morpheus_add_executable)
