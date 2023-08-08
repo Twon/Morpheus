@@ -1,8 +1,11 @@
+.conan2
 .idea
 .vs
 .vscode
 .venv
 [Bb]uild*
 cmake-build-debug
-[Oo]ut
 env/*
+[Oo]ut
+
+CMakeUserPresets.json

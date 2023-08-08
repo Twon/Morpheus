@@ -58,7 +58,7 @@ function(add_documentation)
         message(FATAL_ERROR "WORKING_DIRECTORY parameter must be supplied")
     endif()
 
-    find_package(doxygen REQUIRED)
+    find_package(Doxygen REQUIRED)
 
     # If using Conan find modules to find an installed Doxygen then we lose doxygen_add_docs, 
     # so include the find module directly to access this method as a work around.
