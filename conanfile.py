@@ -68,7 +68,6 @@ class Morpheus(ConanFile):
     generators = "CMakeDeps", "CMakeToolchain"
     requires = (
         "boost/1.82.0",
-#        "catch2/3.3.2", 
         "fmt/[^10]",
         "glbinding/3.1.0",
         "glew/2.2.0",
@@ -78,7 +77,6 @@ class Morpheus(ConanFile):
         "rapidjson/cci.20220822",
         "range-v3/0.12.0",
         "tl-expected/20190710",
-        #"trompeloeil/42",
         "vulkan-headers/1.3.239.0"#,
         #"zlib/1.2.12" # xapian-core/1.4.19' requires 'zlib/1.2.12' while 'boost/1.81.0' requires 'zlib/1.2.13'. To fix this conflict you need to override the package 'zlib' in your root package.
     )
@@ -148,20 +146,6 @@ class Morpheus(ConanFile):
                         self.settings.compiler,
                         self.settings.compiler.version))
     
-    #def generate(self):
-    #    deps = CMakeDeps(self)
-    #    deps.set_property("catch2", "cmake_find_mode", "both")
-    #    deps.set_property("date", "cmake_find_mode", "both")
-    #    deps.set_property("fmt", "cmake_find_mode", "both")
-    #    deps.set_property("glu", "cmake_find_mode", "both")
-    #    deps.set_property("magic_enum", "cmake_find_mode", "both")
-    #    deps.set_property("ms-gsl", "cmake_find_mode", "both")
-    #    deps.set_property("opengl_system", "cmake_find_mode", "both")
-    #    deps.set_property("rapidjson", "cmake_find_mode", "both")
-    #    deps.set_property("range-v3", "cmake_find_mode", "both")
-    #    deps.set_property("tl-expected", "cmake_find_mode", "both")
-    #    deps.generate()
-
 #    def generate(self):
 #        tc = CMakeToolchain(self, generator=os.getenv("CONAN_CMAKE_GENERATOR"))
 #        tc.variables["MORPHEUS_BUILD_DOCS"] = self.options.build_docs
