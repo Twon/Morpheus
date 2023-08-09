@@ -59,13 +59,15 @@ MORPHEUSCORE_EXPORT void assertHandler(AssertType type, sl_ns::source_location c
     #define MORPHEUS_ASSERT_ENABLED
 #endif
 
-#if defined(MORPHEUS_ASSERT_ENABLED)
-    #define MORPHEUS_ASSERT_HANDLER(type, expr, msg)                                                                   \
-        do                                                                                                             \
-            if ((!static_cast<bool>(expr))) [[unlikely]]                                                               \
-                assertHandler(type, MORPHEUS_CURRENT_LOCATION, #expr, msg);                                            \
-        while (0)
+#define MORPHEUS_FIRE_ASSERT_HANDLER(type, expr, msg)                                                              \
+    do                                                                                                             \
+        if ((!static_cast<bool>(expr))) [[unlikely]]                                                               \
+            assertHandler(type, MORPHEUS_CURRENT_LOCATION, #expr, msg);                                            \
+    while (0)
 
+
+#if defined(MORPHEUS_ASSERT_ENABLED) 
+    #define MORPHEUS_ASSERT_HANDLER(type, expr, msg)  MORPHEUS_FIRE_ASSERT_HANDLER(type, expr, msg)
 #else
     #define MORPHEUS_ASSERT_HANDLER(type, expr, msg)
 #endif

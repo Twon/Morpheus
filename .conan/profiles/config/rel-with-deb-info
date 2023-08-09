@@ -1,2 +1,2 @@
 [settings]
-build_type=Release
+build_type=RelWithDebInfo
