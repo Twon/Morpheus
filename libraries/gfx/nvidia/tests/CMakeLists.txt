@@ -1,6 +1,7 @@
 morpheus_add_tests(
     NAME MorpheusGfxNVidiaTests
     FOLDER "Libraries/Gfx/NVidia"
+    LABELS GPU
 )
 target_sources(MorpheusGfxNVidiaTests
 	PRIVATE
