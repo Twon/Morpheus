@@ -35,7 +35,7 @@ git clone https://github.com/Twon/Morpheus.git
 
 ### Configuring Conan
 
-To set up Conan for the repository create a repository local virtual environment for Python and [activate the environment (not this step differs for different shells)](https://docs.python.org/3/library/venv.html#how-venvs-work)
+To set up Conan for the repository create a repository local virtual environment for Python and [activate the environment (note this step differs for different shells)](https://docs.python.org/3/library/venv.html#how-venvs-work)
 
 ```bash
 cd <project root>

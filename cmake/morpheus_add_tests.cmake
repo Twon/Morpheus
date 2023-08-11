@@ -35,6 +35,7 @@ associates patterns and allows configuration for common optional settings
       [NAME <name>]
       [ALIAS <alias>]
       [FOLDER <folder>]
+      [LABELS <labels...>]
   )
    -- Generates test executable targets with default build directories and settings. 
 
@@ -48,11 +49,14 @@ associates patterns and allows configuration for common optional settings
   ``FOLDER``
     The ``FOLDER`` option provides a folder location for the target within an IDE.
 
+  ``LABELS``
+    The ``LABELS`` option provides a list of labels to apply to the the test suite.
+
 #]=======================================================================]
 function(morpheus_add_tests)
     set(options)
     set(oneValueArgs NAME ALIAS FOLDER)
-    set(multiValueArgs)
+    set(multiValueArgs LABELS)
     cmake_parse_arguments(MORPHEUS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
     if (NOT MORPHEUS_NAME)
         message(FATAL_ERROR "NAME parameter must be supplied")
@@ -83,6 +87,11 @@ function(morpheus_add_tests)
             RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
     )
 
+    add_test(
+        NAME ${MORPHEUS_NAME}
+        COMMAND ${MORPHEUS_NAME}
+        WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+
     if (MORPHEUS_FOLDER)
         set_target_properties(${MORPHEUS_NAME}
             PROPERTIES
@@ -90,12 +99,11 @@ function(morpheus_add_tests)
         )
     endif()
 
-    add_test(
-        NAME ${MORPHEUS_NAME}
-        COMMAND ${MORPHEUS_NAME}
-        WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+    if (MORPHEUS_LABELS)
+        set_property(TEST ${MORPHEUS_NAME} PROPERTY LABELS ${MORPHEUS_LABELS})
+    endif()
 
     include(Catch)
-    catch_discover_tests(${MORPHEUS_NAME})
+    catch_discover_tests(${MORPHEUS_NAME} PROPERTIES LABELS ${MORPHEUS_LABELS})
 
 endfunction()
