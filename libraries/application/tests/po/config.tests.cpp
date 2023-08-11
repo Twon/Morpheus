@@ -8,8 +8,7 @@
 namespace morpheus::application::po
 {
 
-
-TEST_CASE("Ensure options parsing of stndard application config", "[morpheus.application.po.config]")
+TEST_CASE("Ensure options parsing of standard application config", "[morpheus.application.po.config]")
 {
     GIVEN("A type supporting addOptions")
     {

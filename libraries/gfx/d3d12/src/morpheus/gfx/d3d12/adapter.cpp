@@ -1,3 +1,4 @@
+#include "morpheus/core/base/assert.hpp"
 #include "morpheus/core/conformance/format.hpp"
 #include "morpheus/gfx/d3d12/adapter.hpp"
 #include "morpheus/gfx/d3d12/verify.hpp"

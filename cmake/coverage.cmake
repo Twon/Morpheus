@@ -233,6 +233,7 @@ function(enable_code_coverage)
                 #--exclude ${CMAKE_CURRENT_BINARY_DIR}
                 --include ${PROJECT_SOURCE_DIR}
                 --lcov
+                --verbose
                 -o ${LCOV_REPORT_PATH}
         DEPENDS
             ${COVERAGE_FASTCOV_BIN}
