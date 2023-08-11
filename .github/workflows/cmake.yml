@@ -217,22 +217,7 @@ jobs:
         run: |
           cmake --build --preset ${{ env.CONAN_PRESET }}
           
-<<<<<<< HEAD
       - name: Test
         # Execute tests defined by the CMake configuration.
         # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
         run: ctest --preset ${{ env.CONAN_PRESET }} -LE GPU # Exclude GPU tests as Github actions do not have the supported hardware/drivers
-=======
-       - uses: lhotari/action-upterm@v1
-        with:
-          ## limits ssh access and adds the ssh public key for the user which triggered the workflow
-          limit-access-to-actor: true
-          ## limits ssh access and adds the ssh public keys of the listed GitHub users
-          limit-access-to-users: twon
-
-      - name: Test
-        working-directory: ${{github.workspace}}/build
-        # Execute tests defined by the CMake configuration.
-        # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
-        run: ctest -C ${{ matrix.configuration }}
->>>>>>> c13ad2772ed11db14f4c0e6f92c2aa9d42514aa2
