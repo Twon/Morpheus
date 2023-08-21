@@ -21,8 +21,11 @@ include(CTest)
 include(FetchContent)
 include(GNUInstallDirs)
 include(CMakeDependentOption)
+
 include(CMakePackageConfigHelpers)
 
+option(MORPHEUS_ENABLE_TESTS "Build Morpheus tests" OFF)
+option(MORPHEUS_ENABLE_EXAMPLES "Build Morpheus examples" OFF)
 cmake_dependent_option(MORPHEUS_CODE_COVERAGE "Enable code coverage" ON "\"${CMAKE_CXX_COMPILER_ID}\" STREQUAL \"Clang\" OR \"${CMAKE_CXX_COMPILER_ID}\" STREQUAL \"GNU\"" OFF)
 cmake_dependent_option(MORPHEUS_INCLUDE_NATVIS "Enable inclusion of a natvis files for debugging" ON "\"${CMAKE_CXX_COMPILER_ID}\" STREQUAL \"MSVC\"" OFF)
 
