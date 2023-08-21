@@ -2,8 +2,11 @@ target_sources(MorpheusCore
     PUBLIC
         architecture.hpp
         assert.hpp
+        assert_handler.hpp
+        cold.hpp
         compiler.hpp
         debugging.hpp
+        exceptions.hpp
         platform.hpp
         prerequisites.hpp
         sanitizers.hpp
@@ -11,8 +14,9 @@ target_sources(MorpheusCore
         unreachable.hpp
         verify.hpp
     PRIVATE
-        assert.cpp
+        assert_handler.cpp
         debugging.cpp
+        exceptions.cpp
 )
 
 target_link_libraries(MorpheusCore

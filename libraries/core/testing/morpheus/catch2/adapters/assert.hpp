@@ -1,6 +1,6 @@
 #pragma once
 
-#include <morpheus/core/base/assert.hpp>
+#include <morpheus/core/base/assert_handler.hpp>
 
 namespace morpheus
 {

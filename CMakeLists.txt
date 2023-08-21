@@ -26,7 +26,7 @@ include(CMakePackageConfigHelpers)
 cmake_dependent_option(MORPHEUS_CODE_COVERAGE "Enable code coverage" ON "\"${CMAKE_CXX_COMPILER_ID}\" STREQUAL \"Clang\" OR \"${CMAKE_CXX_COMPILER_ID}\" STREQUAL \"GNU\"" OFF)
 cmake_dependent_option(MORPHEUS_INCLUDE_NATVIS "Enable inclusion of a natvis files for debugging" ON "\"${CMAKE_CXX_COMPILER_ID}\" STREQUAL \"MSVC\"" OFF)
 
-set(BUILD_SHARED_LIBS YES)
+set(BUILD_SHARED_LIBS NO)
 
 # Include necessary submodules
 list(APPEND CMAKE_MODULE_PATH
@@ -35,10 +35,13 @@ list(APPEND CMAKE_MODULE_PATH
     ${PROJECT_SOURCE_DIR}/cmake/modules
 )
 
+set(CMAKE_FIND_PACKAGE_PREFER_CONFIG ON)
+list(APPEND CMAKE_PREFIX_PATH "${CMAKE_BINARY_DIR}")
+
 #------------------------------------------------------------------------------------------------------------------------------------------
 # Custom CMake Includes
 include(coverage)
-include(Compiler)
+include(compiler)
 include(documentation)
 include(IDESettings)
 include(morpheus_add_executable)
@@ -57,18 +60,33 @@ set(INSTALL_BINDIR ${CMAKE_INSTALL_BINDIR} CACHE PATH "Installation directory fo
 set(INSTALL_INCLUDEDIR ${CMAKE_INSTALL_INCLUDEDIR} CACHE PATH "Installation directory for header files")
 
 # Build the RPath relative to the executable locations (i.e. from the bin directory, up back to the install root and in to the lib folder.
-file(RELATIVE_PATH MORPHEUS_RPATH ${CMAKE_INSTALL_PREFIX}/${INSTALL_BINDIR} ${CMAKE_INSTALL_PREFIX})
+file(RELATIVE_PATH MORPHEUS_INSTALL_RPATH ${CMAKE_INSTALL_PREFIX}/${INSTALL_BINDIR} ${CMAKE_INSTALL_PREFIX})
 if (APPLE)
-    set(MORPHEUS_RPATH "@executable_path/${MORPHEUS_RPATH}")
+    set(MORPHEUS_INSTALL_RPATH "@executable_path/${MORPHEUS_INSTALL_RPATH}")
 else()
-    set(MORPHEUS_RPATH "$ORIGIN/${MORPHEUS_RPATH}")
+    set(MORPHEUS_INSTALL_RPATH "$ORIGIN/${MORPHEUS_INSTALL_RPATH}")
 endif()
-file(TO_NATIVE_PATH "${MORPHEUS_RPATH}/${INSTALL_LIBDIR}" MORPHEUS_RPATH )
+file(TO_NATIVE_PATH "${MORPHEUS_INSTALL_RPATH}/${INSTALL_LIBDIR}" MORPHEUS_INSTALL_RPATH )
 
-set(CMAKE_INSTALL_RPATH ${MORPHEUS_RPATH})
+set(CMAKE_INSTALL_RPATH ${MORPHEUS_INSTALL_RPATH})
 set(CMAKE_MACOSX_RPATH 1)
 set(CMAKE_BUILD_WITH_INSTALL_RPATH ON)
 set(CMAKE_SKIP_BUILD_RPATH  FALSE)
+
+get_property(IS_MULTI_CONFIG GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
+if(IS_MULTI_CONFIG)
+    set(RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin/$<CONFIG>)
+    set(LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib/$<CONFIG>)
+    file(RELATIVE_PATH MORPHEUS_RELATIVE_BUILD_RPATH ${RUNTIME_OUTPUT_DIRECTORY} ${LIBRARY_OUTPUT_DIRECTORY})
+    if (APPLE)
+        set(MORPHEUS_BUILD_RPATH "@executable_path/${MORPHEUS_RELATIVE_BUILD_RPATH}")
+    else()
+        set(MORPHEUS_BUILD_RPATH "$ORIGIN/${MORPHEUS_RELATIVE_BUILD_RPATH}")
+    endif()
+
+    set(CMAKE_BUILD_RPATH ${MORPHEUS_BUILD_RPATH})
+    set(CMAKE_BUILD_WITH_INSTALL_RPATH OFF)
+endif()
 #------------------------------------------------------------------------------------------------------------------------------------------
 
 add_subdirectory(libraries)

@@ -4,8 +4,6 @@ morpheus_add_library(
     FOLDER "Libraries/Core"
 )
 
-#add_coverage(MorpheusCore)
-
 target_include_directories(MorpheusCore
     PUBLIC
         $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>

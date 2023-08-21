@@ -1,4 +1,4 @@
-#include <morpheus/core/base/assert.hpp>
+#include <morpheus/core/base/assert_handler.hpp>
 #include <morpheus/core/base/debugging.hpp>
 #include <morpheus/core/conformance/format.hpp>
 #include <morpheus/core/conformance/stacktrace.hpp>
@@ -8,7 +8,7 @@
 
 namespace morpheus
 {
-
+ 
 AssertHandler gAssertHandler = [](Assertion assertion)
 {
     auto const debugMessage = fmt_ns::format("{}({}): assertion[{}]: {}\nBacktrace:{}\n", assertion.location.file_name(), assertion.location.line(),
@@ -29,17 +29,31 @@ AssertHandler setAssertHandler(AssertHandler handler)
     return gAssertHandler;
 }
 
+AssertHaltHandler gAssertHaltHandler = []()
+{
+    breakpoint();
+};
+
+AssertHaltHandler setAssertHaltHandler(AssertHaltHandler handler)
+{
+    auto previousHaltHandler = std::move(gAssertHaltHandler);
+    gAssertHaltHandler = std::move(handler);
+    return previousHaltHandler;
+}
+
+[[nodiscard]] AssertHaltHandler const& getAssertHaltHandler() { return gAssertHaltHandler; }
+
 void assertHandler(AssertType type, sl_ns::source_location const location, std::string_view const expr, std::string_view message)
 {
     if (type == AssertType::Assert)
     {
-        if (getAssertHandler()(Assertion{ location, expr, std::string(message) }))
-            breakpoint();
+        if (getAssertHandler()(Assertion{location, expr, message}))
+            getAssertHaltHandler()();
     }
     else
     {
-        getAssertHandler()(Assertion{ location, expr, std::string(message) });
-        breakpoint();
+        getAssertHandler()(Assertion{ location, expr, message });
+        getAssertHaltHandler()();
     }
 }
 

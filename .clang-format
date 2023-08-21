@@ -1,3 +1,4 @@
+# Currently configured for clang-format-15.  Disabled options require a newer version.
 ---
 AccessModifierOffset: -4
 #AlignConsecutiveMacros:
