@@ -77,6 +77,14 @@ public:
     {
         return read(T{});
     }
+
+    /*    template <typename T>
+        T readSequence()
+            requires requires(Reader r) { r.read(T{}); }
+        {
+            return read(T{});
+        }
+    */
 };
 
 } // namespace morpheus::serialisation::mock
