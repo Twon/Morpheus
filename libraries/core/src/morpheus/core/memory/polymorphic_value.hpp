@@ -404,7 +404,7 @@ constexpr polymorphic_value<T> allocate_polymorphic_value(std::allocator_arg_t, 
     polymorphic_value<T> p;
     auto* u = detail::allocate_object<U>(a, std::forward<Ts>(ts)...);
     try {
-        p.mControlBlock = polymorphic_value<T>::ControlBlock(
+        p.mControlBlock = typename polymorphic_value<T>::ControlBlock(
              detail::allocate_object<
                  detail::allocated_pointer_control_block<T, U, A>>(a, u, a));
        } catch (...) {
