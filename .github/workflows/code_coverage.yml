@@ -126,6 +126,12 @@ jobs:
         # Run Cobertura target to generate code coverage report in XML
         run: cmake --build --preset ${{ env.CONAN_PRESET }} --target coverage-cobertura
 
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
+        timeout-minutes: 15
+        with:
+          detached: true
+
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
         with:
