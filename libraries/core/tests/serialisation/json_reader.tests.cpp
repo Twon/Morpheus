@@ -1,5 +1,6 @@
 #include "morpheus/core/conformance/format.hpp"
 #include "morpheus/core/serialisation/adapters/aggregate.hpp"
+#include "morpheus/core/serialisation/adapters/std/monostate.hpp"
 #include "morpheus/core/serialisation/adapters/std/optional.hpp"
 #include "morpheus/core/serialisation/adapters/std/pair.hpp"
 #include "morpheus/core/serialisation/adapters/std/tuple.hpp"
@@ -56,7 +57,7 @@ auto readerFromString(std::string_view const value)
 
 } // namespace test
 
-TEMPLATE_TEST_CASE("Json writer can write single native types to underlying text representation", "[morpheus.serialisation.json_reader.native]", 
+TEMPLATE_TEST_CASE("Json writer can write single native types to underlying text representation", "[morpheus.serialisation.json_reader.native]",
     bool, std::int8_t, std::uint8_t, std::int16_t, std::uint16_t, std::int32_t, std::uint32_t, std::int64_t, std::uint64_t, float, double)
 {
     if constexpr (std::is_integral_v<TestType>)
@@ -204,7 +205,7 @@ TEST_CASE("Json reader can read simple composite types from underlying test repr
     {
         auto const simple = test::deserialise<SimpleComposite>(R"({"first":100,"second":true,"third":50,"forth":"example"})");
         STATIC_REQUIRE(concepts::ReadSerialisableInsrusive<SimpleComposite>);
-        
+
         WHEN("Writing an empty composite")
         {
             THEN("Expect an empty composite in the json document")
@@ -313,6 +314,7 @@ TEST_CASE("Json reader thows an error on invalid json input", "[morpheus.seriali
 
 TEST_CASE("Json reader can read std types from underlying text representation", "[morpheus.serialisation.json_reader.adapters.std]")
 {
+    REQUIRE(test::deserialise<std::monostate>(R"({})") == std::monostate{});
     REQUIRE(test::deserialise<std::optional<int>>(R"(100)") == std::optional<int>{100});
     REQUIRE(test::deserialise<std::optional<int>>(R"(null)") == std::optional<int>{});
     REQUIRE(test::deserialise<std::pair<int, bool>>(R"([50,true])") == std::pair<int, bool>{50, true});

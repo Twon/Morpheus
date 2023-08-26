@@ -1,6 +1,7 @@
 morpheus_add_tests(
     NAME MorpheusGfxGL4Tests
     FOLDER "Libraries/Gfx/GL4"
+    LABELS GPU
 )
 
 target_link_libraries(MorpheusGfxGL4Tests

@@ -1,12 +1,13 @@
+#include "morpheus/core/serialisation/json_writer.hpp"
 #include "morpheus/core/conformance/format.hpp"
 #include "morpheus/core/serialisation/adapters/aggregate.hpp"
+#include "morpheus/core/serialisation/adapters/std/monostate.hpp"
 #include "morpheus/core/serialisation/adapters/std/optional.hpp"
 #include "morpheus/core/serialisation/adapters/std/pair.hpp"
 #include "morpheus/core/serialisation/adapters/std/tuple.hpp"
 #include "morpheus/core/serialisation/adapters/std/unique_ptr.hpp"
 #include "morpheus/core/serialisation/adapters/std/variant.hpp"
 #include "morpheus/core/serialisation/adapters/std/vector.hpp"
-#include "morpheus/core/serialisation/json_writer.hpp"
 #include "morpheus/core/serialisation/serialisers.hpp"
 #include "morpheus/core/serialisation/write_serialiser.hpp"
 
@@ -250,6 +251,7 @@ TEST_CASE("Json writer can write simple aggregates types to underlying text repr
 
 TEST_CASE("Json writer can write std types to underlying text representation", "[morpheus.serialisation.json_writer.adapters.std]")
 {
+    REQUIRE(test::serialise(std::monostate{}) == R"({})");
     REQUIRE(test::serialise(std::optional<int>{100}) == R"(100)");
     REQUIRE(test::serialise(std::optional<int>{}) == R"(null)");
     REQUIRE(test::serialise(std::pair<int, bool>{50, true}) == R"([50,true])");

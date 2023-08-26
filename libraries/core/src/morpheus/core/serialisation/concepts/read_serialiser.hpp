@@ -7,11 +7,10 @@ namespace morpheus::serialisation::concepts
 {
 
 template <typename Serialiser>
-concept ReadSerialiser = requires(Serialiser s)
-{
-//    true == true
+concept ReadSerialiser = requires(Serialiser s) {
+    // clang-format off
     { s.reader() } -> Reader;
-//    { s.template deserialise<Type>() } -> std::same_as<Type>;
+    // clang-format on
 };
 
 template <typename Serialiser>
