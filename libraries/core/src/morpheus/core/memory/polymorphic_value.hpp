@@ -1,5 +1,6 @@
 #pragma once
 
+#include "morpheus/core/base/assert.hpp"
 #include "morpheus/core/memory/copier_traits.hpp"
 #include "morpheus/core/memory/default_copy.hpp"
 #include "morpheus/core/memory/indirect_value.hpp"
@@ -150,6 +151,50 @@ private:
     DelegatedControlBlockValue mDelegate;
 };
 
+template <typename A>
+struct allocator_wrapper : A
+{
+    constexpr allocator_wrapper(A& a)
+    : A(a)
+    {}
+
+    constexpr const A& get_allocator() const { return static_cast<const A&>(*this); }
+};
+
+template <class T, class U, class A>
+class allocated_pointer_control_block : public control_block<T>, allocator_wrapper<A>
+{
+    U* mValue;
+
+public:
+    constexpr explicit allocated_pointer_control_block(U* u, A a)
+    : allocator_wrapper<A>(a)
+    , mValue(u)
+    {}
+
+    constexpr ~allocated_pointer_control_block() { detail::deallocate_object(this->get_allocator(), mValue); }
+
+    constexpr allocated_pointer_control_block* clone() const override
+    {
+        MORPHEUS_ASSERT(mValue);
+
+        auto* cloned_ptr = detail::allocate_object<U>(this->get_allocator(), *mValue);
+        try {
+            return detail::allocate_object<allocated_pointer_control_block>(this->get_allocator(), cloned_ptr, this->get_allocator());
+        }
+        catch (...) {
+            detail::deallocate_object(this->get_allocator(), cloned_ptr);
+            throw;
+        }
+    }
+
+    [[nodiscard]] constexpr T* ptr() noexcept override { return mValue; }
+
+    [[nodiscard]] constexpr T const* ptr() const noexcept override { return mValue; }
+
+    constexpr void destroy() noexcept override { detail::deallocate_object(this->get_allocator(), this); }
+};
+
 } // namespace detail
 
 template <class T>
@@ -215,8 +260,22 @@ public:
             throw bad_polymorphic_value_construction();
         }
 
-        mControlBlock = indirect_value<detail::control_block<element_type>, detail::control_block_copier, detail::control_block_deleter>(
-            new detail::pointer_control_block<T, U, C, D>(u, std::move(c), std::move(d)));
+        mControlBlock = ControlBlock(new detail::pointer_control_block<T, U, C, D>(u, std::move(c), std::move(d)));
+        mValue = u;
+    }
+
+    template <class U, class A>
+    constexpr polymorphic_value(U* u, std::allocator_arg_t, const A& alloc)
+        requires std::is_convertible_v<U*, T*>
+    {
+        if (!u) {
+            return;
+        }
+
+        if (typeid(*u) != typeid(U))
+            throw bad_polymorphic_value_construction();
+
+        mControlBlock = ControlBlock(detail::allocate_object<detail::allocated_pointer_control_block<T, U, A>>(alloc, u, alloc));
         mValue = u;
     }
 
@@ -318,8 +377,12 @@ public:
     }
 
 private:
-    //    using ControlBlock = indirect_value<detail::control_block<element_type>, detail::control_block_copier,
-    //                                        detail::control_block_deleter>;
+    template <class T_, class U, class... Ts>
+    friend constexpr polymorphic_value<T_> make_polymorphic_value(Ts&&... ts);
+
+    template <class T_, class U, class A, class... Ts>
+    friend constexpr polymorphic_value<T_> allocate_polymorphic_value(std::allocator_arg_t, A& a, Ts&&... ts);
+
     using ControlBlock = typename detail::control_block<element_type>::ControlBlockValue;
 
     ControlBlock mControlBlock;
@@ -339,17 +402,16 @@ template <class T, class U = T, class A = std::allocator<U>, class... Ts>
 constexpr polymorphic_value<T> allocate_polymorphic_value(std::allocator_arg_t, A& a, Ts&&... ts)
 {
     polymorphic_value<T> p;
-    //   auto* u = detail::allocate_object<U>(a, std::forward<Ts>(ts)...);
-    //   try {
-    //     p.cb_ = std::unique_ptr<detail::allocated_pointer_control_block<T, U, A>,
-    //                             detail::control_block_deleter>(
-    //         detail::allocate_object<
-    //             detail::allocated_pointer_control_block<T, U, A>>(a, u, a));
-    //   } catch (...) {
-    //     detail::deallocate_object(a, u);
-    //     throw;
-    //   }
-    //   p.ptr_ = p.cb_->ptr();
+    auto* u = detail::allocate_object<U>(a, std::forward<Ts>(ts)...);
+    try {
+        p.mControlBlock = polymorphic_value<T>::ControlBlock(
+             detail::allocate_object<
+                 detail::allocated_pointer_control_block<T, U, A>>(a, u, a));
+       } catch (...) {
+       detail::deallocate_object(a, u);
+       throw;
+    }
+    p.mValue = p.mControlBlock->ptr();
     return p;
 }
 
