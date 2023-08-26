@@ -129,7 +129,7 @@ jobs:
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
         with:
-          working-directory: ${{github.workspace}}/build/${{env.BUILD_TYPE}}/generators/coverage
+          working-directory: ${{github.workspace}}/build/${{env.BUILD_TYPE}}/coverage
           gcov: true
-          gcov_include: ${{github.workspace}}/build/${{env.BUILD_TYPE}}/generators/coverage/html
-          files: ${{github.workspace}}/build/${{env.BUILD_TYPE}}/generators/coverage/cobertura_coverage.xml
+          gcov_include: ${{github.workspace}}/build/${{env.BUILD_TYPE}}/coverage/html
+          files: ${{github.workspace}}/build/${{env.BUILD_TYPE}}/coverage/cobertura_coverage.xml
