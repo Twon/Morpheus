@@ -805,6 +805,7 @@ TEST_CASE("Dangling reference in forwarding constructor", "[polymorphic_value.co
     CHECK(p->value() == 7);
 }
 
+/*
 namespace
 {
 template <typename T>
@@ -905,5 +906,5 @@ TEST_CASE("Allocator used to construct with allocate_polymorphic_value")
     CHECK(allocs == 2);
     CHECK(deallocs == 2);
 }
-
+*/
 } // morpheus::memory

@@ -80,6 +80,8 @@ struct control_block
 };
 
 /// \class  direct_control_block
+///     Direct control blocks contain the underlying type for the contiaining polymorpic embbeded withn
+///     the control block.
 /// \tparam T The underlying base polymorphic type.
 /// \tparam U The underlying derived polymorphic type.
 template <typename T, typename U>
@@ -123,7 +125,46 @@ private:
     indirect_value<U, C, D> mIndirect;
 };
 
+template <typename T, typename U>
+class delegating_control_block : public control_block<T>
+{
+public:
+    using ControlBlockValue = typename control_block<T>::ControlBlockValue;
+    using DelegatedControlBlockValue = indirect_value<detail::control_block<U>, detail::control_block_copier, detail::control_block_deleter>;
+
+    constexpr explicit delegating_control_block(DelegatedControlBlockValue cb)
+    : mDelegate(std::move(cb))
+    {}
+
+    [[nodiscard]] constexpr delegating_control_block* clone() const override
+    {
+        DelegatedControlBlockValue cloned(mDelegate->clone());
+        return new delegating_control_block<T, U>(std::move(cloned));
+    }
+
+    [[nodiscard]] constexpr T* ptr() noexcept override { return mDelegate->ptr(); }
+
+    [[nodiscard]] constexpr T const* ptr() const noexcept override { return mDelegate->ptr(); }
+
+private:
+    DelegatedControlBlockValue mDelegate;
+};
+
 } // namespace detail
+
+template <class T>
+class polymorphic_value;
+
+template <class T>
+struct is_polymorphic_value : std::false_type
+{};
+
+template <class T>
+struct is_polymorphic_value<polymorphic_value<T>> : std::true_type
+{};
+
+template <class T>
+constexpr bool is_polymorphic_value_v = is_polymorphic_value<T>::value;
 
 /// \class polymorphic_value
 ///     Implements P0201r6, a polymorphic value type for C++.
@@ -135,6 +176,9 @@ public:
     /// The base type of the underlying polymorphic hierarchy suported as an element in polymorpic value.
     using element_type = T;
 
+    template <class U>
+    friend class polymorphic_value;
+
     /// \defgroup Constructors
     ///@{
     /// Constructs an empty polymorphic value.
@@ -144,18 +188,23 @@ public:
     constexpr polymorphic_value(nullptr_t) noexcept {}
 
     /// Copy constuction.
-    constexpr polymorphic_value(const polymorphic_value& p) {}
+    constexpr polymorphic_value(const polymorphic_value& p)
+    : mControlBlock(p.mControlBlock)
+    , mValue((mControlBlock) ? mControlBlock->ptr() : nullptr)
+    {}
 
     /// Move construction.
-    constexpr polymorphic_value(polymorphic_value&& p) noexcept {}
-
-    template <class U>
-    constexpr explicit polymorphic_value(U&& u)
+    constexpr explicit polymorphic_value(polymorphic_value&& p)
+    : mControlBlock(std::move(p.mControlBlock))
+    , mValue(std::move(p.mValue))
     {}
+
+    //    template <class U>
+    //    constexpr explicit polymorphic_value(U&& u)
+    //    {}
 
     template <class U, class C = default_copy<U>, class D = typename copier_traits<C>::deleter_type>
     constexpr explicit polymorphic_value(U* u, C c = C(), D d = D())
-
         requires std::is_convertible_v<U*, T*>
     {
         if (!u) {
@@ -166,24 +215,28 @@ public:
             throw bad_polymorphic_value_construction();
         }
 
+        mControlBlock = indirect_value<detail::control_block<element_type>, detail::control_block_copier, detail::control_block_deleter>(
+            new detail::pointer_control_block<T, U, C, D>(u, std::move(c), std::move(d)));
         mValue = u;
-        // mControlBlock = indirect_value<detail::control_block<element_type>, detail::control_block_copier, detail::control_block_deleter>(
-        //     new detail::pointer_control_block<T, U, C, D>(u, std::move(c), std::move(d)));
     }
 
     template <class U>
-    constexpr explicit polymorphic_value(const polymorphic_value<U>& p)
+    constexpr explicit polymorphic_value(const polymorphic_value<U>& rhs)
+        requires(!std::is_same_v<T, U> and std::is_convertible_v<U*, T*>)
+    : mControlBlock(new detail::delegating_control_block<T, U>(rhs.mControlBlock))
+    , mValue(mControlBlock->ptr())
     {}
 
     template <class U>
-    constexpr explicit polymorphic_value(polymorphic_value<U>&& p)
+    constexpr explicit polymorphic_value(const polymorphic_value<U>&& rhs)
+        requires(!std::is_same_v<T, U> and std::is_convertible_v<U*, T*>)
+    : mControlBlock(new detail::delegating_control_block<T, U>(std::move(rhs.mControlBlock)))
+    , mValue(std::move(rhs.mValue))
     {}
 
-    template <class U,
-              //   class V = std::enable_if_t<std::is_convertible<std::decay_t<U>*, T*>::value &&
-              //                              !is_polymorphic_value<std::decay_t<U>>::value>,
-              class... Ts>
+    template <class U, class... Ts>
     constexpr explicit polymorphic_value(std::in_place_type_t<U>, Ts&&... ts)
+        requires(std::is_convertible_v<std::decay_t<U>*, T*> and !is_polymorphic_value_v<std::decay_t<U>>)
     : mControlBlock(new detail::direct_control_block<T, U>(std::forward<Ts>(ts)...))
     , mValue(mControlBlock->ptr())
     {}
@@ -193,17 +246,29 @@ public:
     // Destructor
     constexpr ~polymorphic_value() = default;
 
-    // Assignment
-    constexpr polymorphic_value& operator=(const polymorphic_value& p)
+    // constexpr polymorphic_value& operator=(polymorphic_value const& p) = default;
+    constexpr polymorphic_value& operator=(polymorphic_value const& p)
     {
-        // if (this != &p) {
-        //     mControlBlock = p.mControlBlock;
-        //     mValue = (mControlBlock) ? mValue = mControlBlock->ptr() : nullptr;
-        // }
+        if (std::addressof(p) == this) {
+            return *this;
+        }
+
+        mControlBlock = p.mControlBlock;
+        mValue = (mControlBlock) ? mControlBlock->ptr() : nullptr;
         return *this;
     }
 
-    constexpr polymorphic_value& operator=(polymorphic_value&& p) noexcept = default;
+    // constexpr polymorphic_value& operator=(polymorphic_value&& p) noexcept = default;
+    constexpr polymorphic_value& operator=(polymorphic_value&& p) noexcept
+    {
+        if (std::addressof(p) == this) {
+            return *this;
+        }
+
+        mControlBlock = std::move(p.mControlBlock);
+        mValue = std::move(p.mValue);
+        return *this;
+    }
 
     // Observers
 #if (__cpp_explicit_this_parameter >= 202110L)
@@ -253,11 +318,12 @@ public:
     }
 
 private:
-    using ControlBlock = indirect_value<detail::control_block<element_type>, detail::control_block_copier,
-                                        detail::control_block_deleter>;
+    //    using ControlBlock = indirect_value<detail::control_block<element_type>, detail::control_block_copier,
+    //                                        detail::control_block_deleter>;
+    using ControlBlock = typename detail::control_block<element_type>::ControlBlockValue;
 
     ControlBlock mControlBlock;
-    T* mValue = nullptr;
+    detail::exchange_on_move_ptr<T> mValue;
 };
 
 //
@@ -266,12 +332,7 @@ private:
 template <class T, class U = T, class... Ts>
 constexpr polymorphic_value<T> make_polymorphic_value(Ts&&... ts)
 {
-    polymorphic_value<T> p;
-    //   p.cb_ = std::unique_ptr<detail::direct_control_block<T, U>,
-    //                           detail::control_block_deleter>(
-    //       new detail::direct_control_block<T, U>(std::forward<Ts>(ts)...));
-    //   p.ptr_ = p.cb_->ptr();
-    return p;
+    return polymorphic_value<T>(std::in_place_type<U>, std::forward<Ts>(ts)...);
 }
 
 template <class T, class U = T, class A = std::allocator<U>, class... Ts>
