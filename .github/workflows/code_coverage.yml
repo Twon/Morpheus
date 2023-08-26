@@ -126,16 +126,10 @@ jobs:
         # Run Cobertura target to generate code coverage report in XML
         run: cmake --build --preset ${{ env.CONAN_PRESET }} --target coverage-cobertura
 
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
-        timeout-minutes: 15
-        with:
-          detached: true
-
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
         with:
-          working-directory: ${{github.workspace}}/build/${{env.BUILD_TYPE}}/generators/coverage
+          working-directory: ${{github.workspace}}/build/${{env.BUILD_TYPE}}/coverage
           gcov: true
-          gcov_include: ${{github.workspace}}/build/${{env.BUILD_TYPE}}/generators/coverage/html
-          files: ${{github.workspace}}/build/${{env.BUILD_TYPE}}/generators/coverage/cobertura_coverage.xml
+          gcov_include: ${{github.workspace}}/build/${{env.BUILD_TYPE}}/coverage/html
+          files: ${{github.workspace}}/build/${{env.BUILD_TYPE}}/coverage/cobertura_coverage.xml
