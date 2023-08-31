@@ -45,7 +45,11 @@ TEST_CASE_METHOD(BoostLogFixture, "Test parsing of boost asio address as program
             return address.ipAddress;
         };
 
-        REQUIRE(getAddress("127.0. 0.1") == boost::asio::ip::address_v4({127, 0, 0, 1}));
+        REQUIRE(getAddress("127.0.0.1") == boost::asio::ip::address_v4::loopback());
+        REQUIRE(getAddress("192.168.1.218") == boost::asio::ip::address_v4({192, 168, 1, 218}));
+        REQUIRE(getAddress("0:0:0:0:0:0:0:1") == boost::asio::ip::address_v6::loopback());
+        REQUIRE(getAddress("fd00::f06b:9ee5:8bfa:666c") ==
+                boost::asio::ip::address_v6({0xfd, 0, 0, 0, 0, 0, 0, 0, 0xf0, 0x6b, 0x9e, 0xe5, 0x8b, 0xfa, 0x66, 0x6c}));
     }
     SECTION("Ensure invalid value parse correctly")
     {
