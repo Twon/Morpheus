@@ -184,7 +184,7 @@ namespace morpheus::conversion
 template <typename Rep, typename Period>
 struct StringConverter<std::chrono::duration<Rep, Period>>
 {
-    static constexpr std::string toString(std::chrono::duration<Rep, Period> const value)
+    static std::string toString(std::chrono::duration<Rep, Period> const value)
     {
         if constexpr (std::is_same_v<Period, std::micro>)
         {
@@ -223,7 +223,7 @@ struct StringConverter<std::chrono::duration<Rep, Period>>
                 return std::chrono::duration<Rep, Period>(std::stoi(std::string(m.template get<1>().to_view())));
             }
             else {
-                return exp_ns::unexpected("Unable to parse std::chrono::duration");
+                return exp_ns::unexpected(std::string_view{"Unable to parse std::chrono::duration"});
             }
         };
 
