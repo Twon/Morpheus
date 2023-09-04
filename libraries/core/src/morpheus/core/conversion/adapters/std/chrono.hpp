@@ -2,6 +2,7 @@
 
 #include "morpheus/core/conformance/date.hpp"
 #include "morpheus/core/conformance/format.hpp"
+#include "morpheus/core/conversion/string.hpp"
 
 #include <array>
 #include <string_view>
@@ -171,5 +172,50 @@ struct morpheus::fmt_ns::formatter<morpheus::date_ns::year_month_weekday_last> :
     }
 };
 
-
 #endif
+
+
+namespace morpheus::conversion
+{
+
+template <typename Rep, typename Period>
+struct StringConverter<std::chrono::duration<Rep, Period>>
+{
+    static constexpr std::string toString(std::chrono::duration<Rep, Period> const value)
+    {
+        if constexpr (std::is_same_v<Period, std::micro>)
+        {
+            return fmt_ns::format("{}ms", value.count());
+        }
+        else if constexpr (std::is_same_v<Period, std::chrono::minutes::period>)
+        {
+            return fmt_ns::format("{}min", value.count());
+        }
+        else if constexpr (std::is_same_v<Period, std::chrono::days::period>)
+        {
+            return fmt_ns::format("{}d", value.count());
+        }
+        else if constexpr (std::is_same_v<Period, std::chrono::weeks::period>)
+        {
+            return fmt_ns::format("{}w", value.count());
+        }
+        else if constexpr (std::is_same_v<Period, std::chrono::years::period>)
+        {
+            return fmt_ns::format("{}y", value.count());
+        }
+        else if constexpr (std::is_same_v<Period, std::chrono::months::period>)
+        {
+            return fmt_ns::format("{}m", value.count());
+        }
+        else {
+            return fmt_ns::format("{}", value);
+        }
+    }
+
+    static constexpr std::chrono::duration<Rep, Period> fromString(std::string_view const value)
+    {
+        return {};
+    }
+};
+
+}

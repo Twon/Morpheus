@@ -1,5 +1,7 @@
 #pragma once
 
+#include "morpheus/core/conformance/date.hpp"
+#include "morpheus/core/conversion/adapters/std/chrono.hpp"
 #include "morpheus/core/meta/is_specialisation.hpp"
 #include "morpheus/core/serialisation/concepts/read_serialisable.hpp"
 #include "morpheus/core/serialisation/concepts/read_serialiser.hpp"
@@ -14,32 +16,28 @@ namespace morpheus::serialisation::detail
 template <typename Rep, typename Period>
 concept IsStdChronoDuration = meta::IsSpecialisationOf<std::chrono::duration, Rep, Period>;
 
-template <concepts::WriteSerialiser Serialiser, concepts::WriteSerialisable Rep, concepts::WriteSerialisable Period>
+template <concepts::WriteSerialiser Serialiser, typename Rep, typename Period>
 void serialise(Serialiser& serialiser, std::chrono::duration<Rep, Period> const& value)
 {
-    if (serialiser.isTextual())
+    if (serialiser.writer().isTextual())
     {
-
+        serialiser.serialise(conversion::toString(value));
     }
     else
     {
-
+        serialiser.serialise(value.count());
     }
 }
 
 template <concepts::ReadSerialiser Serialiser, IsStdChronoDuration T>
 T deserialise(Serialiser& serialiser)
 {
-    if (serialiser.isTextual()) {
+    if (serialiser.writer().isTextual()) {
+        return conversion::fromString(serialiser.template read<std::string>());
     }
     else {
+        return T{serialiser.template read<typename T::rep>()};
     }
-
-    auto const nullable = makeScopedNullable(serialiser.reader());
-    if (nullable.value())
-        return std::optional<typename T::value_type>();
-    else
-        return std::optional<typename T::value_type>(serialiser.template deserialise<typename T::value_type>());
 }
 
 } // namespace morpheus::serialisation::detail

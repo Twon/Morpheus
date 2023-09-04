@@ -19,7 +19,7 @@ using namespace std::literals::string_view_literals;
 
 TEST_CASE("Verify serialisation of std::chrono::duration", "[morpheus.serialisation.chrono.duration.serialise]")
 {
-    GIVEN("A std::expected holding a value")
+    GIVEN("A std::chrono::duration when outputting to text")
     {
         /*
         constexpr std::int64_t actualValue = 10;
@@ -42,7 +42,7 @@ TEST_CASE("Verify serialisation of std::chrono::duration", "[morpheus.serialisat
         }
         */
     }
-    GIVEN("An std::expected holding an error")
+    GIVEN("An std::chrono::duration when outputting not outputting to text")
     {
         /*
         std::string const actualValue = "This string is an error";
