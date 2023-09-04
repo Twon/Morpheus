@@ -4,6 +4,9 @@
 #include "morpheus/core/conformance/format.hpp"
 #include "morpheus/core/conversion/string.hpp"
 
+#include <ctll.hpp>
+#include <ctre.hpp>
+
 #include <array>
 #include <string_view>
 
@@ -185,7 +188,7 @@ struct StringConverter<std::chrono::duration<Rep, Period>>
     {
         if constexpr (std::is_same_v<Period, std::micro>)
         {
-            return fmt_ns::format("{}ms", value.count());
+            return fmt_ns::format("{}us", value.count());
         }
         else if constexpr (std::is_same_v<Period, std::chrono::minutes::period>)
         {
@@ -212,9 +215,69 @@ struct StringConverter<std::chrono::duration<Rep, Period>>
         }
     }
 
-    static constexpr std::chrono::duration<Rep, Period> fromString(std::string_view const value)
+    static constexpr exp_ns::expected<std::chrono::duration<Rep, Period>, std::string_view> fromString(std::string_view const value)
     {
-        return {};
+        /*
+        constexpr auto regex = []<typename T>
+        {
+            if constexpr (std::is_same_v<Period, std::micro>)
+            {
+                return ctll::fixed_string(R"((\\d*)ms)");
+            }
+            return ctll::fixed_string(R"((\\d*))");
+        }.template operator()<std::chrono::duration<Rep, Period>>();
+        */
+        constexpr auto matchString = []<ctll::fixed_string T>(auto const value) -> exp_ns::expected<std::chrono::duration<Rep, Period>, std::string_view>
+        {
+            if (auto m = ctre::match<T>(value)) {
+                return std::chrono::duration<Rep, Period>(std::stoi(std::string(m.get<1>().to_view())));
+            }
+            else {
+                return exp_ns::unexpected("Unable to parse std::chrono::duration");
+            }
+        };
+
+        if constexpr (std::is_same_v<Period, std::nano>)
+        {
+            return matchString.template operator()<ctll::fixed_string("(\\d+)ns")>(value);
+        }
+        else if constexpr (std::is_same_v<Period, std::micro>)
+        {
+            return matchString.template operator()<ctll::fixed_string("(\\d+)us")>(value);
+        }
+        else if constexpr (std::is_same_v<Period, std::milli>)
+        {
+            return matchString.template operator()<ctll::fixed_string("(\\d+)ms")>(value);
+        }
+        else if constexpr (std::is_same_v<Period, std::chrono::seconds::period>)
+        {
+            return matchString.template operator()<ctll::fixed_string("(\\d+)s")>(value);
+        }
+        else if constexpr (std::is_same_v<Period, std::chrono::minutes::period>)
+        {
+            return matchString.template operator()<ctll::fixed_string("(\\d+)min")>(value);
+        }
+        else if constexpr (std::is_same_v<Period, std::chrono::hours::period>)
+        {
+            return matchString.template operator()<ctll::fixed_string("(\\d+)h")>(value);
+        }
+        else if constexpr (std::is_same_v<Period, std::chrono::days::period>)
+        {
+            return matchString.template operator()<ctll::fixed_string("(\\d+)d")>(value);
+        }
+        else if constexpr (std::is_same_v<Period, std::chrono::weeks::period>)
+        {
+            return matchString.template operator()<ctll::fixed_string("(\\d+)w")>(value);
+        }
+        else if constexpr (std::is_same_v<Period, std::chrono::months::period>)
+        {
+            return matchString.template operator()<ctll::fixed_string("(\\d+)m")>(value);
+        }
+        else if constexpr (std::is_same_v<Period, std::chrono::years::period>)
+        {
+            return matchString.template operator()<ctll::fixed_string("(\\d+)y")>(value);
+        }
+        return matchString.template operator()<ctll::fixed_string("(\\d+)")>(value);
     }
 };
 

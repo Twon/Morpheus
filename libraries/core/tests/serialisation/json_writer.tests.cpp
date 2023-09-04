@@ -255,7 +255,7 @@ TEST_CASE("Json writer can write std types to underlying text representation", "
     SECTION("Chrono types")
     {
        REQUIRE(test::serialise(std::chrono::nanoseconds{123}) == R"("123ns")");
-       REQUIRE(test::serialise(std::chrono::microseconds{456}) == R"("456ms")");
+       REQUIRE(test::serialise(std::chrono::microseconds{456}) == R"("456us")");
        REQUIRE(test::serialise(std::chrono::milliseconds{789}) == R"("789ms")");
        REQUIRE(test::serialise(std::chrono::seconds{123}) == R"("123s")");
        REQUIRE(test::serialise(std::chrono::minutes{58}) == R"("58min")");

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "morpheus/core/conformance/expected.hpp"
+
 #include <string>
 #include <string_view>
 #include <type_traits>
@@ -24,7 +26,7 @@ std::string toString(T const& value)
 }
 
 template <StringConvertionEnabled T>
-T fromString(std::string_view const value)
+auto fromString(std::string_view const value)
 {
     return StringConverter<T>::fromString(value);
 }

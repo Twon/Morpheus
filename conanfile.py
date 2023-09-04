@@ -68,6 +68,7 @@ class Morpheus(ConanFile):
     generators = "CMakeDeps", "CMakeToolchain"
     requires = (
         "boost/1.82.0",
+        "ctre/3.8",
         "fmt/[^10]",
         "glbinding/3.1.0",
         "glew/2.2.0",

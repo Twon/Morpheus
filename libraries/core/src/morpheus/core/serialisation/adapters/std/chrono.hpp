@@ -13,8 +13,8 @@
 namespace morpheus::serialisation::detail
 {
 
-template <typename Rep, typename Period>
-concept IsStdChronoDuration = meta::IsSpecialisationOf<std::chrono::duration, Rep, Period>;
+template <typename T>
+concept IsStdChronoDuration = meta::IsSpecialisationOf<std::chrono::duration, T>;
 
 template <concepts::WriteSerialiser Serialiser, typename Rep, typename Period>
 void serialise(Serialiser& serialiser, std::chrono::duration<Rep, Period> const& value)
@@ -32,11 +32,11 @@ void serialise(Serialiser& serialiser, std::chrono::duration<Rep, Period> const&
 template <concepts::ReadSerialiser Serialiser, IsStdChronoDuration T>
 T deserialise(Serialiser& serialiser)
 {
-    if (serialiser.writer().isTextual()) {
-        return conversion::fromString(serialiser.template read<std::string>());
+    if (serialiser.reader().isTextual()) {
+        return conversion::fromString<T>(serialiser.template deserialise<std::string>()).value();
     }
     else {
-        return T{serialiser.template read<typename T::rep>()};
+        return T{serialiser.template deserialise<typename T::rep>()};
     }
 }
 
