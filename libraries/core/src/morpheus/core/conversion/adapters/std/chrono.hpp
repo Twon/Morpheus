@@ -217,16 +217,6 @@ struct StringConverter<std::chrono::duration<Rep, Period>>
 
     static constexpr exp_ns::expected<std::chrono::duration<Rep, Period>, std::string_view> fromString(std::string_view const value)
     {
-        /*
-        constexpr auto regex = []<typename T>
-        {
-            if constexpr (std::is_same_v<Period, std::micro>)
-            {
-                return ctll::fixed_string(R"((\\d*)ms)");
-            }
-            return ctll::fixed_string(R"((\\d*))");
-        }.template operator()<std::chrono::duration<Rep, Period>>();
-        */
         constexpr auto matchString = []<ctll::fixed_string T>(auto const value) -> exp_ns::expected<std::chrono::duration<Rep, Period>, std::string_view>
         {
             if (auto m = ctre::match<T>(value)) {
@@ -277,7 +267,9 @@ struct StringConverter<std::chrono::duration<Rep, Period>>
         {
             return matchString.template operator()<ctll::fixed_string("(\\d+)y")>(value);
         }
-        return matchString.template operator()<ctll::fixed_string("(\\d+)")>(value);
+        else {
+            return matchString.template operator()<ctll::fixed_string("(\\d+)")>(value);
+        }
     }
 };
 
