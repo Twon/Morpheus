@@ -25,7 +25,7 @@ void serialise(Serialiser& serialiser, std::chrono::duration<Rep, Period> const&
     }
     else
     {
-        serialiser.serialise(value.count());
+        serialiser.serialise(static_cast<std::int64_t>(value.count()));
     }
 }
 
