@@ -42,7 +42,12 @@ TEST_CASE("Verify serialisation of std::chrono::duration", "[morpheus.serialisat
             InSequence seq;
             MockedWriteSerialiser serialiser;
             EXPECT_CALL(serialiser.writer(), isTextual()).WillOnce(Return(false));
+#if (MORPHEUS_COMPILER == MORPHEUS_CLANG_COMPILER)
+            // See morpheus/core/serialisation/adapters/std/chrono.hpp to see why its std::int64_t here
+            EXPECT_CALL(serialiser.writer(), write(Matcher<std::int64_t>(Eq(value.count())))).Times(1);
+#else
             EXPECT_CALL(serialiser.writer(), write(Matcher<std::chrono::days::rep>(Eq(value.count())))).Times(1);
+#endif // (MORPHEUS_COMPILER == MORPHEUS_CLANG_COMPILER)
 
             WHEN("Serialising the std::expected") { serialiser.serialise(value); }
         }
