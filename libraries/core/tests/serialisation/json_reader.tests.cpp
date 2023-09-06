@@ -12,7 +12,6 @@
 #include "morpheus/core/serialisation/serialisers.hpp"
 
 #include <catch2/catch_all.hpp>
-#include <catch2/matchers/catch_matchers_all.hpp>
 
 using namespace Catch;
 
@@ -83,7 +82,7 @@ TEMPLATE_TEST_CASE("Json writer can write single native types to underlying text
     }
 }
 
-TEST_CASE("Create and then copy a reader and read from the copied stream", "[morpheus.serialisation.json_reader.copy")
+TEST_CASE("Create and then copy a reader and read from the copied stream", "[morpheus.serialisation.json_reader.copy]")
 {
     GIVEN("A Json stream")
     {
