@@ -1,6 +1,7 @@
 #include "morpheus/core/serialisation/json_writer.hpp"
 #include "morpheus/core/conformance/format.hpp"
 #include "morpheus/core/serialisation/adapters/aggregate.hpp"
+#include "morpheus/core/serialisation/adapters/std/chrono.hpp"
 #include "morpheus/core/serialisation/adapters/std/monostate.hpp"
 #include "morpheus/core/serialisation/adapters/std/optional.hpp"
 #include "morpheus/core/serialisation/adapters/std/pair.hpp"
@@ -252,6 +253,19 @@ TEST_CASE("Json writer can write simple aggregates types to underlying text repr
 
 TEST_CASE("Json writer can write std types to underlying text representation", "[morpheus.serialisation.json_writer.adapters.std]")
 {
+    SECTION("Chrono types")
+    {
+       REQUIRE(test::serialise(std::chrono::nanoseconds{123}) == R"("123ns")");
+       REQUIRE(test::serialise(std::chrono::microseconds{456}) == R"("456us")");
+       REQUIRE(test::serialise(std::chrono::milliseconds{789}) == R"("789ms")");
+       REQUIRE(test::serialise(std::chrono::seconds{123}) == R"("123s")");
+       REQUIRE(test::serialise(std::chrono::minutes{58}) == R"("58min")");
+       REQUIRE(test::serialise(std::chrono::hours{24}) == R"("24h")");
+       REQUIRE(test::serialise(std::chrono::days{8}) == R"("8d")");
+       REQUIRE(test::serialise(std::chrono::weeks{12}) == R"("12w")");
+       REQUIRE(test::serialise(std::chrono::years{100}) == R"("100y")");
+       REQUIRE(test::serialise(std::chrono::months{12}) == R"("12m")");
+    }
     REQUIRE(test::serialise(std::monostate{}) == R"({})");
     REQUIRE(test::serialise(std::optional<int>{100}) == R"(100)");
     REQUIRE(test::serialise(std::optional<int>{}) == R"(null)");

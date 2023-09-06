@@ -19,7 +19,7 @@ void enableCatch2AssertHooks()
             assertion.expression.empty() ? assertion.expression.data() : "", ::Catch::ResultDisposition::Normal);
 
         handler.handleMessage(::Catch::ResultWas::ExplicitFailure, Catch::StringRef{assertion.message.data(), assertion.message.size()});
-        handler.setCompleted();
+        handler.complete();
         return false;
     };
     previousHandler = setAssertHandler(std::move(catch2AssertHandler));

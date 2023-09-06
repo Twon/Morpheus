@@ -1,8 +1,9 @@
 #include "morpheus/application/application.hpp"
-#include <morpheus/core/base/debugging.hpp>
-#include <morpheus/core/conformance/date.hpp>
-#include <morpheus/core/conformance/format.hpp>
-#include <morpheus/core/conformance/stacktrace.hpp>
+#include "morpheus/core/base/debugging.hpp"
+#include "morpheus/core/conformance/date.hpp"
+#include "morpheus/core/conformance/format.hpp"
+#include "morpheus/core/conformance/stacktrace.hpp"
+#include "morpheus/core/conversion/adapters/std/stacktrace.hpp"
 
 #include <boost/process/environment.hpp>
 #include <boost/dll.hpp>

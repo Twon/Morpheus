@@ -70,6 +70,7 @@ class Morpheus(ConanFile):
     #generators = "CMakeDeps", "CMakeToolchain"
     requires = (
         "boost/1.82.0",
+        "ctre/3.8",
         "fmt/[^10]",
         "glbinding/3.1.0",
         "glew/2.2.0",
@@ -98,7 +99,7 @@ class Morpheus(ConanFile):
             self.test_requires("gtest/1.13.0")
             #self.test_requires("rapidcheck/cci.20220514", options={'enable_catch':'True'})
             #self.requires("catch2/3.3.2", override=True, test=True) # Should be 'test_requires' but that does not allow override which we need for catch2.
-            self.test_requires("catch2/3.3.2")
+            self.test_requires("catch2/3.4.0")
 
         if get_cmake_version() < Version("3.27.0"):
             self.tool_requires("cmake/3.27.0")

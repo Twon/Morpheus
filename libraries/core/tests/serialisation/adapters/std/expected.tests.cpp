@@ -80,7 +80,7 @@ TEST_CASE("Verify deserialisation of std::expected", "[morpheus.serialisation.ex
             EXPECT_CALL(serialiser.reader(), read(An<std::int64_t>())).WillOnce(Return(actualValue));
             EXPECT_CALL(serialiser.reader(), endValue()).Times(1);
             EXPECT_CALL(serialiser.reader(), endComposite()).Times(1);
-            WHEN("Serialising the std::expected")
+            WHEN("Deserialising the std::expected")
             {
                 using ExpectedType = exp_ns::expected<std::int64_t, std::string>;
                 auto const expected = serialiser.deserialise<ExpectedType>();
