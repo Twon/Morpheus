@@ -47,6 +47,13 @@ TEST_CASE("Test parsing of ", "[morpheus.application.po.adapters.std.chrono.dura
         REQUIRE(getDuration.template operator()<std::chrono::years>("50y") == std::chrono::years{50});
         REQUIRE(getDuration.template operator()<std::chrono::months>("1m") == std::chrono::months{1});
     }
+    SECTION("Ensure invalid value parse correctly")
+    {
+        std::array cliOptions = {"dummyProgram.exe", "--duration", "invalid"};
+        ChronoDuration<std::chrono::nanoseconds> durationOptions{};
+        auto const result = parseProgramOptions(cliOptions.size(), cliOptions.data(), HelpDocumentation{}, durationOptions);
+        REQUIRE(result);
+    }
 }
 
 } // namespace morpheus::application::po
