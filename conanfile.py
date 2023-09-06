@@ -68,6 +68,7 @@ class Morpheus(ConanFile):
     generators = "CMakeDeps", "CMakeToolchain"
     requires = (
         "boost/1.82.0",
+        "ctre/3.8",
         "fmt/[^10]",
         "glbinding/3.1.0",
         "glew/2.2.0",
@@ -92,7 +93,7 @@ class Morpheus(ConanFile):
 
     def build_requirements(self):
         self.tool_requires("ninja/1.11.1")
-        self.test_requires("catch2/3.3.2")
+        self.test_requires("catch2/3.4.0")
 
         if get_cmake_version() < Version("3.27.0"):
             self.tool_requires("cmake/3.27.0")
