@@ -43,7 +43,7 @@ T deserialise(std::string_view const value, bool const validate = true)
     using namespace memory;
     auto strstream = std::make_unique<std::istringstream>(std::string{value});
     auto iss = polymorphic_value<std::istream>(strstream.release(), ISteamCopier{});
-    JsonReaderSerialiser serialiser(std::move(iss), validate);
+    JsonReadSerialiser serialiser(std::move(iss), validate);
     return serialiser.deserialise<T>();
 }
 
