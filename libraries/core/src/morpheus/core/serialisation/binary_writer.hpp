@@ -14,14 +14,19 @@
 namespace morpheus::serialisation
 {
 
-
+/// \class BinaryWriter
+///     A serialisation writer that serialises to a binary stream but support all underlying 
+///     out stream types which allows output to many sources including:
+///         - Binary to block of memory.
+///         - Binary to a file.
+///         - Binary to memory mapped file.
+///         - Binary to pipe.
 class BinaryWriter
 {
 public:
     BinaryWriter(std::ostream& outStream)
     : mOutStream(outStream)
     {
-
     }
 
     /// \copydoc morpheus::serialisation::concepts::ReaderArchtype::isTextual()
@@ -40,7 +45,13 @@ public:
     void endValue() {}
 
     /// \copydoc morpheus::serialisation::concepts::WriterArchtype::beginSequence()
-    void beginSequence(std::optional<std::size_t> size = std::nullopt) {}
+    void beginSequence(std::optional<std::size_t> size = std::nullopt)
+    { 
+        if (size)
+            write(size.value());
+        else
+            throwBinaryException("Sequence does not provide size.  This must be proided for binary serialisation.");
+    }
 
     /// \copydoc morpheus::serialisation::concepts::WriterArchtype::endSequence()
     void endSequence() {}

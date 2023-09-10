@@ -40,9 +40,9 @@ TEST_CASE("Binary serialisation can roundtrip standard library types to binary a
     REQUIRE(roundtrip(std::optional<int>{}) == std::optional<int>{});
     REQUIRE(roundtrip(std::pair<int, bool>{50, true}) == std::pair<int, bool>{50, true});
     REQUIRE(*roundtrip(std::make_unique<int>(123)) == 123);
-
+    //REQUIRE(roundtrip(std::vector<int>{1, 2, 3, 4, 5}) == std::vector<int>{1, 2, 3, 4, 5});
+    
     /*  REQUIRE(test::serialise(std::variant<int, bool, std::string>{true}) == R"({"type":"bool","value":true})");
-        REQUIRE(test::serialise(std::vector<int>{1, 2, 3, 4, 5}) == R"([1,2,3,4,5])");
     */
 }
 

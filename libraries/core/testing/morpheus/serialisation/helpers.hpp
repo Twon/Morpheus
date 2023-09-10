@@ -8,30 +8,63 @@
 namespace morpheus::serialisation::testing
 {
 
+/// Serialiser a value to a binary buffer.
+/// \param[in] value The value to be serialised.
+/// \return The binary blob containing the serialised form of the input value.
 std::vector<char> serialise(auto const& value)
 {
+    using namespace boost::iostreams;
     std::vector<char> storage;
-    boost::iostreams::back_insert_device sink{storage};
-    boost::iostreams::stream os{sink};
+    back_insert_device sink{storage};
+    stream os{sink};
     BinaryWriteSerialiser serialiser{os};
     serialiser.serialise(value);
     return storage;
 }
 
+/// Serialise a value to a binary buffer with limited space.  This is useful for testing or error cases such as testing
+/// condition where storage is exhuasted.
+/// 
+/// \tparam Size The size of the static buffer.
+/// \param[in] value The value to be serialised.
+/// \return The binary blob containing the serialised form of the input value.
+template<std::size_t Size>
+std::array<char, Size> serialiseWithLimitedSpace(auto const& value)
+{
+    using namespace boost::iostreams;
+    std::array<char, Size> storage = {};
+    array_sink sink{storage.data(), storage.size()};
+    stream os{sink};
+    os.clear();
+    BinaryWriteSerialiser serialiser{os};
+    serialiser.serialise(value);
+    return storage;
+}
+
+/// Deserialised a value from a binary blob of data.
+/// 
+/// \tparam T The type of value to be deserialised.
+/// \param[in] The binary blob represending the serialised form of the type.
+/// \returns The deserialised value.
 template <typename T>
 T deserialise(std::vector<char> const& value)
 {
-    boost::iostreams::array_source source{value.data(), value.size()};
-    boost::iostreams::stream is{source};
+    using namespace boost::iostreams;
+    array_source source{value.data(), value.size()};
+    stream is{source};
     BinaryReadSerialiser serialiser{is};
     return serialiser.deserialise<T>();
 }
 
+/// Serialises an object to a binary blob and then deserialise back into the orginal form.
+/// 
+/// \tparam T The type of value to be serialised/deserialised.
+/// \param[in] value The value to be serialised then deserialised.
+/// \returns The resulting deserialised value.
 template <typename T>
 T roundtrip(T const& value)
 {
-    std::vector<char> binary = serialise(value);
-    return deserialise<T>(binary);
+    return deserialise<T>(serialise(value));
 }
 
 } // namespace morpheus::serialisation::testing
