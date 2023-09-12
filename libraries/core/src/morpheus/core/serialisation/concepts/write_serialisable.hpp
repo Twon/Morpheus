@@ -21,7 +21,7 @@ concept WriteSerialisableInsrusive = requires(WriteSerialiserArchtype& s, Type c
 };
 
 template <typename Type>
-concept WriteSerialisableNative = requires(WriteSerialiserArchtype& s, Type const& t)
+concept WriteSerialisableNative = requires(WriteSerialiserArchtype& s, Type const t)
 {
     { s.writer().write(t) } -> std::same_as<void>;
 };

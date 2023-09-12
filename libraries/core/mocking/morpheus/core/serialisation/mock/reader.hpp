@@ -69,7 +69,7 @@ public:
     /// Reads a string literal type from the serialisation.
     MOCK_METHOD(std::string, read, (char const * const), ());
     /// Reads a blob of bytes from the serialisation.
-    MOCK_METHOD(std::vector<std::byte>, read, (std::span<std::byte>), ());
+    MOCK_METHOD(std::vector<std::byte>, read, (std::vector<std::byte>), ());
     ///@}
 
     template<typename T>
