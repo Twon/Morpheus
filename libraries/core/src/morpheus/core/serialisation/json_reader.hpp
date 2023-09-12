@@ -71,7 +71,7 @@ public:
     void endValue();
 
     /// \copydoc morpheus::serialisation::concepts::ReaderArchtype::beginSequence()
-    void beginSequence(std::optional<std::size_t> size = std::nullopt);
+    std::optional<std::size_t> beginSequence();
 
     /// \copydoc morpheus::serialisation::concepts::ReaderArchtype::endSequence()
     void endSequence();

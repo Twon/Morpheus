@@ -10,7 +10,7 @@ env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: Debug
   COMPILER_TYPE: gcc
-  COMPILER_VERSION: 11 # This must match Gcov version which is 11 by default, and not installed by egor-tensin/setup-gcc@v1
+  COMPILER_VERSION: 13
   STDLIB: libstdc++11
 
 jobs:
@@ -42,11 +42,15 @@ jobs:
             build-${{ matrix.os }}-${{ env.BUILD_TYPE }}-
             build-${{ matrix.os }}-
 
+      # Previously GCC was installed via egor-tensin/setup-gcc@v1 but this does not install gcov with the compiler.
+      # By default Ubuntu has Gcov 11 installed. This worked so long as the compiler was gcc 11, but if a later gcc was 
+      # installed then gcov could fail as it must be the same version as the compiler.  By installing the compiler 
+      # package we ensure that gcc and gcov are installed at the same time and the versions match. For more details
+      # see here: https://github.com/Twon/Morpheus/issues/184
       - name: Install Latest GCC
-        uses: egor-tensin/setup-gcc@v1
-        with:
-          version: ${{ env.COMPILER_VERSION }}
-          platform: x64
+        shell: bash
+        run: |
+          sudo apt install -y g++-${{ env.COMPILER_VERSION }}
 
       - name: Install Lcov
         shell: bash
