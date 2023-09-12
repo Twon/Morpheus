@@ -55,9 +55,9 @@ jobs:
       - name: Install Lcov
         shell: bash
         run: |
-          wget https://github.com/linux-test-project/lcov/archive/refs/tags/v1.16.tar.gz
-          tar -xvf v1.16.tar.gz
-          cd lcov-1.16
+          wget https://github.com/linux-test-project/lcov/archive/refs/tags/v2.0.tar.gz
+          tar -xvf v2.0.tar.gz
+          cd lcov-2.0
           sudo make install
 
       - name: Install Linux System Packages
