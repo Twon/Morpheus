@@ -10,7 +10,7 @@ env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: Debug
   COMPILER_TYPE: gcc
-  COMPILER_VERSION: 13
+  COMPILER_VERSION: 12
   STDLIB: libstdc++11
 
 jobs:
@@ -55,9 +55,9 @@ jobs:
       - name: Install Lcov
         shell: bash
         run: |
-          wget https://github.com/linux-test-project/lcov/archive/refs/tags/v2.0.tar.gz
-          tar -xvf v2.0.tar.gz
-          cd lcov-2.0
+          wget https://github.com/linux-test-project/lcov/archive/refs/tags/v1.16.tar.gz
+          tar -xvf v1.16.tar.gz
+          cd lcov-1.16
           sudo make install
 
       - name: Install Linux System Packages
