@@ -21,28 +21,16 @@ using namespace Catch;
 namespace morpheus::serialisation
 {
 
-template <typename... Ts>
-constexpr std::array<std::byte, sizeof...(Ts)> make_bytes(Ts&&... args) noexcept
-{
-    return {std::byte(std::forward<Ts>(args))...};
-}
-
-template <typename... Ts>
-constexpr std::array<char, sizeof...(Ts)> make_char_array(Ts&&... args) noexcept
-{
-    return {char(std::forward<Ts>(args))...};
-}
-
 TEST_CASE("Binary writer handles error cases gracefully", "[morpheus.serialisation.binary_writer.error_handling]")
 {
-    auto constexpr bytes = make_bytes(0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00);
+    auto constexpr bytes = testing::makeBytes(0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00);
     auto constexpr string = std::string_view{"String longer than 4-bytes"};
 
 #if (__cpp_lib_spanstream >= 202106L)
     SECTION("Serialise via spanstream to test failure condition when the the underling stream runs out of memory while writing but does not throw an exception")
     {
         REQUIRE(ranges::equal(testing::serialiseWithSpanStream<sizeof(std::int64_t)>(std::int64_t{100}),
-                              make_char_array(0x64, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00)));
+                              testing::makeCharArray(0x64, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00)));
         REQUIRE(ranges::equal(testing::serialiseWithSpanStream<sizeof(std::size_t) + string.size()>(string), testing::serialise(string)));
         REQUIRE(ranges::equal(testing::serialiseWithSpanStream<sizeof(std::size_t) + bytes.size()>(std::span{bytes}), testing::serialise(std::span{bytes})));
 
@@ -53,7 +41,8 @@ TEST_CASE("Binary writer handles error cases gracefully", "[morpheus.serialisati
 #endif // (__cpp_lib_spanstream >= 202106L)
     SECTION("Serialise via boost::iostream to test failure condition when the the underling stream runs out of memory while writing resulting in an exception")
     {
-        REQUIRE(ranges::equal(testing::serialiseWithLimitedSpace<sizeof(std::int64_t)>(std::int64_t{100}), make_char_array(0x64, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00)));
+        REQUIRE(ranges::equal(testing::serialiseWithLimitedSpace<sizeof(std::int64_t)>(std::int64_t{100}),
+                              testing::makeCharArray(0x64, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00)));
         REQUIRE(ranges::equal(testing::serialiseWithLimitedSpace<sizeof(std::size_t) + string.size()>(string), testing::serialise(string)));
         REQUIRE(ranges::equal(testing::serialiseWithLimitedSpace<sizeof(std::size_t) + bytes.size()>(std::span{bytes}), testing::serialise(std::span{bytes})));
 

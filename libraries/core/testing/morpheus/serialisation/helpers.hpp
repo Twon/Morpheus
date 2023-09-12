@@ -14,6 +14,18 @@
 namespace morpheus::serialisation::testing
 {
 
+template <typename... Ts>
+constexpr std::array<std::byte, sizeof...(Ts)> makeBytes(Ts&&... args) noexcept
+{
+    return {std::byte(std::forward<Ts>(args))...};
+}
+
+template <typename... Ts>
+constexpr std::array<char, sizeof...(Ts)> makeCharArray(Ts&&... args) noexcept
+{
+    return {char(std::forward<Ts>(args))...};
+}
+
 /// Serialiser a value to a binary buffer.
 /// \param[in] value The value to be serialised.
 /// \return The binary blob containing the serialised form of the input value.
@@ -64,12 +76,27 @@ std::array<char, Size> serialiseWithSpanStream(auto const& value)
     serialiser.serialise(value);
     return storage;
 }
+
+/// Deserialise a value to a binary buffer with limited space.  This is useful for testing or error cases such as
+/// testing condition where storage is exhuasted.
+///
+/// \tparam T The type of value to be deserialised.
+/// \param[in] storage The binary blob represending the serialised form of the type.
+/// \returns The deserialised value.
+template <typename T>
+T deserialiseWithSpanStream(auto const& storage)
+{
+    std::span view{storage};
+    std::ispanstream stream{view};
+    BinaryReadSerialiser serialiser{stream};
+    return serialiser.deserialise<T>();
+}
 #endif
 
 /// Deserialised a value from a binary blob of data.
 /// 
 /// \tparam T The type of value to be deserialised.
-/// \param[in] The binary blob represending the serialised form of the type.
+/// \param[in] value The binary blob represending the serialised form of the type.
 /// \returns The deserialised value.
 template <typename T>
 T deserialise(std::vector<char> const& value)
