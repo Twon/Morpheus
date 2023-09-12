@@ -8,6 +8,7 @@
 #include "morpheus/core/serialisation/adapters/std/variant.hpp"
 #include "morpheus/core/serialisation/adapters/std/vector.hpp"
 #include "morpheus/core/serialisation/write_serialiser.hpp"
+#include "morpheus/core/serialisation/exceptions.hpp"
 #include "morpheus/core/serialisation/serialisers.hpp"
 
 #include "morpheus/serialisation/helpers.hpp"
@@ -18,6 +19,13 @@ using namespace Catch;
 
 namespace morpheus::serialisation
 {
+
+
+
+TEST_CASE("Binary writer handles error cases gracefully", "[morpheus.serialisation.binary_writer.error_handling]")
+{
+    REQUIRE_THROWS_AS(testing::serialiseWithSpanStream<sizeof(std::int32_t)>(std::int64_t{100}), std::ios_base::failure);
+}
 
 TEST_CASE("Binary writer can write std types to underlying text representation", "[morpheus.serialisation.binary_writer.adapters.std]")
 {

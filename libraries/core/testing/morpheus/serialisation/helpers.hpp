@@ -5,6 +5,12 @@
 #include <boost/iostreams/device/back_inserter.hpp>
 #include <boost/iostreams/stream.hpp>
 
+#include <cstddef>
+#if __has_include(<spanstream>)
+    #include <spanstream>
+#endif
+#include <vector>
+
 namespace morpheus::serialisation::testing
 {
 
@@ -35,11 +41,30 @@ std::array<char, Size> serialiseWithLimitedSpace(auto const& value)
     std::array<char, Size> storage = {};
     array_sink sink{storage.data(), storage.size()};
     stream os{sink};
-    os.clear();
     BinaryWriteSerialiser serialiser{os};
     serialiser.serialise(value);
     return storage;
 }
+
+
+/// Serialise a value to a binary buffer with limited space.  This is useful for testing or error cases such as testing
+/// condition where storage is exhuasted.
+///
+/// \tparam Size The size of the static buffer.
+/// \param[in] value The value to be serialised.
+/// \return The binary blob containing the serialised form of the input value.
+#if (__cpp_lib_spanstream >= 202106L)
+template <std::size_t Size>
+std::array<char, Size> serialiseWithSpanStream(auto const& value)
+{
+    std::array<char, Size> storage;
+    std::span view{storage};
+    std::ospanstream stream{view};
+    BinaryWriteSerialiser serialiser{stream};
+    serialiser.serialise(value);
+    return storage;
+}
+#endif
 
 /// Deserialised a value from a binary blob of data.
 /// 
