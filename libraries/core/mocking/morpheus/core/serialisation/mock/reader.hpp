@@ -32,7 +32,7 @@ public:
     /// \copydoc morpheus::serialisation::concepts::ReaderArchtype::endValue()
     MOCK_METHOD(void, endValue, (), ());
     /// Begin reading a sequence of values.
-    MOCK_METHOD(void, beginSequence, (std::optional<std::size_t>), ());
+    MOCK_METHOD(std::optional<std::size_t>, beginSequence, (), ());
     /// \copydoc morpheus::serialisation::concepts::ReaderArchtype::endSequence()
     MOCK_METHOD(void, endSequence, (), ());
     /// Begin reading a nullable value.
