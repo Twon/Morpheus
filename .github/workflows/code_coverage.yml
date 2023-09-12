@@ -85,6 +85,11 @@ jobs:
           sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler=.*/compiler=${{ env.COMPILER_TYPE }}/' .conan2/profiles/default
           sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.version=.*/compiler.version=${{ env.COMPILER_VERSION }}/' .conan2/profiles/default
           sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.libcxx=.*/compiler.libcxx=${{ env.STDLIB }}/' .conan2/profiles/default
+
+          echo "[buildenv]\n" >> .conan2/profiles/default
+          echo "CC=/usr/bin/gcc-${{ env.COMPILER_VERSION }}\n" >> .conan2/profiles/default
+          echo "CXX=/usr/bin/gcc-${{ env.COMPILER_VERSION }}\n" >> .conan2/profiles/default
+
           conan profile show -pr default
 
       - name: Configure Install
