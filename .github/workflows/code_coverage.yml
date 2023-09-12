@@ -107,7 +107,7 @@ jobs:
       - name: Configure CMake
         # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
         # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
-        run: CC=/usr/bin/gcc-${{ env.COMPILER_VERSION }} CXX=/usr/bin/gcc-${{ env.COMPILER_VERSION }} cmake --preset ${{ env.CONAN_PRESET }} -DENABLE_CODE_COVERAGE=1
+        run: CC=/usr/bin/gcc-${{ env.COMPILER_VERSION }} CXX=/usr/bin/g++-${{ env.COMPILER_VERSION }} cmake --preset ${{ env.CONAN_PRESET }} -DENABLE_CODE_COVERAGE=1
 
       - name: Build
         # Build your program with the given configuration
