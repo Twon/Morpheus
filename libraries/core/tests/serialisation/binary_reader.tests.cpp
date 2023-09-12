@@ -47,16 +47,15 @@ TEST_CASE("Binary reader handles error cases gracefully", "[morpheus.serialisati
 #endif // (__cpp_lib_spanstream >= 202106L)
     SECTION("Serialise via boost::iostream to test failure condition when the the underling stream runs out of memory while writing resulting in an exception")
     {
-        /*
-        REQUIRE(ranges::equal(testing::serialiseWithLimitedSpace<sizeof(std::int64_t)>(std::int64_t{100}),
-                              make_char_array(0x64, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00)));
-        REQUIRE(ranges::equal(testing::serialiseWithLimitedSpace<sizeof(std::size_t) + string.size()>(string), testing::serialise(string)));
-        REQUIRE(ranges::equal(testing::serialiseWithLimitedSpace<sizeof(std::size_t) + bytes.size()>(std::span{bytes}), testing::serialise(std::span{bytes})));
+        REQUIRE(testing::deserialiseWithIoStream<std::int64_t>(testing::makeCharArray(0x64, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00)) == std::int64_t{100});
+        REQUIRE(testing::deserialiseWithIoStream<std::string>(testing::serialise(string)) == string);
+        REQUIRE(ranges::equal(testing::deserialiseWithIoStream<std::vector<std::byte>>(testing::serialise(std::span{bytes})), std::span{bytes}));
 
-        REQUIRE_THROWS_AS(testing::serialiseWithLimitedSpace<sizeof(std::int32_t)>(std::int64_t{100}), std::ios_base::failure);
-        REQUIRE_THROWS_AS(testing::serialiseWithLimitedSpace<sizeof(std::int32_t)>(string), std::ios_base::failure);
-        REQUIRE_THROWS_AS(testing::serialiseWithLimitedSpace<sizeof(std::int32_t)>(std::span{bytes}), std::ios_base::failure);
-        */
+        REQUIRE_THROWS_AS(testing::deserialiseWithIoStream<std::int64_t>(testing::makeCharArray(0x64, 0x00, 0x00, 0x00)), BinaryException);
+        REQUIRE_THROWS_AS(testing::deserialiseWithIoStream<std::string>(testing::makeCharArray(0x64, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00)),
+                          BinaryException);
+        REQUIRE_THROWS_AS(testing::deserialiseWithIoStream<std::vector<std::byte>>(testing::makeCharArray(0x64, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00)),
+                          BinaryException);
     }
 }
 

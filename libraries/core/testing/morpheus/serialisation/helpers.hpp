@@ -58,6 +58,21 @@ std::array<char, Size> serialiseWithLimitedSpace(auto const& value)
     return storage;
 }
 
+/// Deserialise a value to a binary buffer with limited space.  This is useful for testing or error cases such as
+/// testing condition where storage is exhuasted.
+///
+/// \tparam T The type of value to be deserialised.
+/// \param[in] storage The binary blob represending the serialised form of the type.
+/// \returns The deserialised value.
+template <typename T>
+T deserialiseWithIoStream(auto const& storage)
+{
+    using namespace boost::iostreams;
+    array_source source{storage.data(), storage.size()};
+    stream is{source};
+    BinaryReadSerialiser serialiser{is};
+    return serialiser.deserialise<T>();
+}
 
 /// Serialise a value to a binary buffer with limited space.  This is useful for testing or error cases such as testing
 /// condition where storage is exhuasted.
