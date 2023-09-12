@@ -41,6 +41,11 @@ TEST_CASE("Binary writer handles error cases gracefully", "[morpheus.serialisati
 #if (__cpp_lib_spanstream >= 202106L)
     SECTION("Serialise via spanstream to test failure condition when the the underling stream runs out of memory while writing but does not throw an exception")
     {
+        REQUIRE(ranges::equal(testing::serialiseWithSpanStream<sizeof(std::int64_t)>(std::int64_t{100}),
+                              make_char_array(0x64, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00)));
+        REQUIRE(ranges::equal(testing::serialiseWithSpanStream<sizeof(std::size_t) + string.size()>(string), testing::serialise(string)));
+        REQUIRE(ranges::equal(testing::serialiseWithSpanStream<sizeof(std::size_t) + bytes.size()>(std::span{bytes}), testing::serialise(std::span{bytes})));
+
         REQUIRE_THROWS_AS(testing::serialiseWithSpanStream<sizeof(std::int32_t)>(std::int64_t{100}), BinaryException);
         REQUIRE_THROWS_AS(testing::serialiseWithSpanStream<sizeof(std::int64_t)>(string), BinaryException);
         REQUIRE_THROWS_AS(testing::serialiseWithSpanStream<sizeof(std::int64_t)>(std::span{bytes}), BinaryException);
