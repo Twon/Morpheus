@@ -11,7 +11,7 @@ namespace detail
 {
 
 template <concepts::WriteSerialiser Serialiser, concepts::WriteSerialisableNative T>
-void serialise(Serialiser& s, T const& value)
+void serialise(Serialiser& s, T const value)
 {
     s.writer().write(value);
 }

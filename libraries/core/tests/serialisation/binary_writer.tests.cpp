@@ -24,7 +24,22 @@ namespace morpheus::serialisation
 
 TEST_CASE("Binary writer handles error cases gracefully", "[morpheus.serialisation.binary_writer.error_handling]")
 {
-    REQUIRE_THROWS_AS(testing::serialiseWithSpanStream<sizeof(std::int32_t)>(std::int64_t{100}), std::ios_base::failure);
+     std::vector<std::byte> const bytes = {std::byte{0x00}, std::byte{0x00}, std::byte{0x00}, std::byte{0x00}, std::byte{0x00}, std::byte{0x00}, std::byte{0x00}, std::byte{0x00}};
+
+#if (__cpp_lib_spanstream >= 202106L)
+    SECTION("Serialise via spanstream to test failure condition when the the underling stream runs out of memory while writing but does not throw an exception")
+    {
+        REQUIRE_THROWS_AS(testing::serialiseWithSpanStream<sizeof(std::int32_t)>(std::int64_t{100}), BinaryException);
+        REQUIRE_THROWS_AS(testing::serialiseWithSpanStream<sizeof(std::int32_t)>(std::string_view{"String longer than 4-bytes"}), BinaryException);
+        REQUIRE_THROWS_AS(testing::serialiseWithSpanStream<sizeof(std::int32_t)>(std::span{bytes}), BinaryException);
+    }
+#endif // (__cpp_lib_spanstream >= 202106L)
+    SECTION("Serialise via spanstream to test failure condition when the the underling stream runs out of memory while writing but does not throw an exception")
+    {
+        REQUIRE_THROWS_AS(testing::serialiseWithLimitedSpace<sizeof(std::int32_t)>(std::int64_t{100}), std::ios_base::failure);
+        REQUIRE_THROWS_AS(testing::serialiseWithLimitedSpace<sizeof(std::int32_t)>(std::string_view{"String longer than 4-bytes"}), std::ios_base::failure);
+        REQUIRE_THROWS_AS(testing::serialiseWithLimitedSpace<sizeof(std::int32_t)>(std::span{bytes}), std::ios_base::failure);
+    }
 }
 
 TEST_CASE("Binary writer can write std types to underlying text representation", "[morpheus.serialisation.binary_writer.adapters.std]")

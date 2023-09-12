@@ -88,7 +88,7 @@ public:
     }
   
     /// \copydoc morpheus::serialisation::concepts::WriterArchtype::write(std::span<std::byte> const)
-    void write(std::span<std::byte> const value)
+    void write(std::span<std::byte const> const value)
     {
         auto const writtenSize = mOutStream.rdbuf()->sputn(reinterpret_cast<const char*>(value.data()), value.size());
         if (writtenSize != sizeof(value))
