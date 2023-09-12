@@ -1,3 +1,4 @@
+#include "morpheus/core/conformance/ranges.hpp"
 #include "morpheus/core/serialisation/adapters/aggregate.hpp"
 #include "morpheus/core/serialisation/adapters/std/chrono.hpp"
 #include "morpheus/core/serialisation/adapters/std/monostate.hpp"
@@ -32,16 +33,6 @@ constexpr std::array<char, sizeof...(Ts)> make_char_array(Ts&&... args) noexcept
     return {char(std::forward<Ts>(args))...};
 }
 
-
-template <typename T>
-consteval auto to_char_array(T input) noexcept
-{
-    std::array<char, std::size(input)> constexpr result;
-    std::copy(input.begin(), input.end(), result.begin());
-    return result;
-}
-
-
 TEST_CASE("Binary writer handles error cases gracefully", "[morpheus.serialisation.binary_writer.error_handling]")
 {
     auto constexpr bytes = make_bytes(0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00);
@@ -57,7 +48,9 @@ TEST_CASE("Binary writer handles error cases gracefully", "[morpheus.serialisati
 #endif // (__cpp_lib_spanstream >= 202106L)
     SECTION("Serialise via boost::iostream to test failure condition when the the underling stream runs out of memory while writing resulting in an exception")
     {
-        REQUIRE(testing::serialiseWithLimitedSpace<sizeof(std::int64_t)>(std::int64_t{100}) == make_char_array(0x64, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00));
+        REQUIRE(ranges::equal(testing::serialiseWithLimitedSpace<sizeof(std::int64_t)>(std::int64_t{100}), make_char_array(0x64, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00)));
+        REQUIRE(ranges::equal(testing::serialiseWithLimitedSpace<sizeof(std::size_t) + string.size()>(string), testing::serialise(string)));
+        REQUIRE(ranges::equal(testing::serialiseWithLimitedSpace<sizeof(std::size_t) + bytes.size()>(std::span{bytes}), testing::serialise(std::span{bytes})));
 
         REQUIRE_THROWS_AS(testing::serialiseWithLimitedSpace<sizeof(std::int32_t)>(std::int64_t{100}), std::ios_base::failure);
         REQUIRE_THROWS_AS(testing::serialiseWithLimitedSpace<sizeof(std::int32_t)>(string), std::ios_base::failure);

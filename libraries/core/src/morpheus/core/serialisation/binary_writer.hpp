@@ -90,6 +90,9 @@ public:
     /// \copydoc morpheus::serialisation::concepts::WriterArchtype::write(std::span<std::byte> const)
     void write(std::span<std::byte const> const value)
     {
+        auto length = value.size();
+        write(length);
+
         auto const writtenSize = mOutStream.rdbuf()->sputn(reinterpret_cast<const char*>(value.data()), value.size());
         if (writtenSize != value.size())
             throwBinaryException(fmt_ns::format("Error writing data to stream.  Attempted to write {} bytes, but only {} bytes were written.", value.size(),

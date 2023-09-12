@@ -60,10 +60,10 @@ public:
     T read()
     {
         T value = {};
-        auto const writtenSize = mInStream.rdbuf()->sgetn(reinterpret_cast<char*>(&value), sizeof(value));
-        if (writtenSize != sizeof(value))
+        auto const readSize = mInStream.rdbuf()->sgetn(reinterpret_cast<char*>(&value), sizeof(value));
+        if (readSize != sizeof(value))
             throwBinaryException(
-                fmt_ns::format("Error reading data from stream.  Attempted to read {} bytes, but only {} bytes were read.", sizeof(value), writtenSize));
+                fmt_ns::format("Error reading data from stream.  Attempted to read {} bytes, but only {} bytes were read.", sizeof(value), readSize));
         return value;
     }
 
@@ -74,14 +74,27 @@ public:
     {
         std::size_t length = read<std::size_t>();
         T value(length, '\0');
-        auto const writtenSize = mInStream.rdbuf()->sgetn(value.data(), value.size());
-        if (writtenSize != value.size())
+        auto const readSize = mInStream.rdbuf()->sgetn(value.data(), value.size());
+        if (readSize != value.size())
             throwBinaryException(
-                fmt_ns::format("Error reading data from stream.  Attempted to read {} bytes, but only {} bytes were read.", value.size(), writtenSize));
+                fmt_ns::format("Error reading data from stream.  Attempted to read {} bytes, but only {} bytes were read.", value.size(), readSize));
         return value;
     }
-
+ 
+    template <typename T>
+    requires std::is_same_v<T, std::vector<std::byte>>
+    T read()
+    {
+        std::size_t length = read<std::size_t>();
+        T value(length);
+        auto const readSize = mInStream.rdbuf()->sgetn(value.data(), value.size());
+        if (readSize != value.size())
+            throwBinaryException(
+                fmt_ns::format("Error reading data from stream.  Attempted to read {} bytes, but only {} bytes were read.", value.size(), readSize));
+        return value;
+    }
     // clang-format on
+
 
 private:
     std::istream& mInStream;
