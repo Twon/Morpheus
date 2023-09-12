@@ -75,7 +75,7 @@ public:
         std::size_t length = read<std::size_t>();
         T value(length, '\0');
         auto const writtenSize = mInStream.rdbuf()->sgetn(value.data(), value.size());
-        if (writtenSize != sizeof(value))
+        if (writtenSize != value.size())
             throwBinaryException(
                 fmt_ns::format("Error reading data from stream.  Attempted to read {} bytes, but only {} bytes were read.", value.size(), writtenSize));
         return value;
