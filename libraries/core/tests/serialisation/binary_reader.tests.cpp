@@ -1,3 +1,4 @@
+#include "morpheus/core/conformance/ranges.hpp"
 #include "morpheus/core/serialisation/adapters/aggregate.hpp"
 #include "morpheus/core/serialisation/adapters/std/chrono.hpp"
 #include "morpheus/core/serialisation/adapters/std/monostate.hpp"
@@ -36,12 +37,12 @@ TEST_CASE("Binary reader handles error cases gracefully", "[morpheus.serialisati
     {
         REQUIRE(testing::deserialiseWithSpanStream<std::int64_t>(testing::makeCharArray(0x64, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00)) == std::int64_t{100});
         REQUIRE(testing::deserialiseWithSpanStream<std::string>(testing::serialise(string)) == string);
-        //REQUIRE(testing::deserialiseWithSpanStream<std::vector<>string>(testing::serialise(std::span{bytes})) == string);
+        REQUIRE(ranges::equal(testing::deserialiseWithSpanStream<std::vector<std::byte>>(testing::serialise(std::span{bytes})), std::span{bytes}));
         
         REQUIRE_THROWS_AS(testing::deserialiseWithSpanStream<std::int64_t>(testing::makeCharArray(0x64, 0x00, 0x00, 0x00)), BinaryException);
         REQUIRE_THROWS_AS(testing::deserialiseWithSpanStream<std::string>(testing::makeCharArray(0x64, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00)), BinaryException);
-        //REQUIRE_THROWS_AS(testing::deserialiseWithSpanStream<std::vector<std::byte>>(testing::makeCharArray(0x64, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00)),
-        //                  BinaryException);
+        REQUIRE_THROWS_AS(testing::deserialiseWithSpanStream<std::vector<std::byte>>(testing::makeCharArray(0x64, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00)),
+                          BinaryException);
     }
 #endif // (__cpp_lib_spanstream >= 202106L)
     SECTION("Serialise via boost::iostream to test failure condition when the the underling stream runs out of memory while writing resulting in an exception")

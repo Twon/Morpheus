@@ -24,6 +24,7 @@
 #include <string_view>
 #include <tuple>
 #include <variant>
+#include <vector>
 
 namespace morpheus::serialisation
 {
@@ -135,6 +136,13 @@ public:
         auto const [event, next] = getNext();
         MORPHEUS_ASSERT(next->index() == magic_enum::enum_integer(FundamentalType::String));
         return std::get<T>(*next);
+    }
+
+    template <typename T>
+    requires std::is_same_v<T, std::vector<std::byte>>
+    T read()
+    {
+        return {};
     }
     // clang-format on
 
