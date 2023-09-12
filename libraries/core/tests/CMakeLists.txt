@@ -23,6 +23,7 @@ target_link_libraries(MorpheusCoreTests
 
 add_subdirectory(base)
 add_subdirectory(conformance)
+add_subdirectory(conversion)
 add_subdirectory(functional)
 add_subdirectory(memory)
 add_subdirectory(meta)

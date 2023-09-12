@@ -22,7 +22,7 @@ struct Listener : public testing::EmptyTestEventListener
         auto const resultType = result.failed() ? ::Catch::ResultWas::ExplicitFailure : ::Catch::ResultWas::Ok;
         if (not result.skipped())
             assertion.handleMessage(resultType, result.message());
-        assertion.setCompleted();
+        assertion.complete();
     }
 };
 

@@ -1,6 +1,7 @@
 #include "morpheus/core/conformance/format.hpp"
 #include "morpheus/core/conformance/ranges.hpp"
 #include "morpheus/core/serialisation/adapters/aggregate.hpp"
+#include "morpheus/core/serialisation/adapters/std/chrono.hpp"
 #include "morpheus/core/serialisation/adapters/std/list.hpp"
 #include "morpheus/core/serialisation/adapters/std/monostate.hpp"
 #include "morpheus/core/serialisation/adapters/std/optional.hpp"
@@ -13,7 +14,6 @@
 #include "morpheus/core/serialisation/serialisers.hpp"
 
 #include <catch2/catch_all.hpp>
-#include <catch2/matchers/catch_matchers_all.hpp>
 
 using namespace Catch;
 
@@ -84,7 +84,7 @@ TEMPLATE_TEST_CASE("Json writer can write single native types to underlying text
     }
 }
 
-TEST_CASE("Create and then copy a reader and read from the copied stream", "[morpheus.serialisation.json_reader.copy")
+TEST_CASE("Create and then copy a reader and read from the copied stream", "[morpheus.serialisation.json_reader.copy]")
 {
     GIVEN("A Json stream")
     {
@@ -324,8 +324,21 @@ TEST_CASE("Json reader thows an error on invalid json input", "[morpheus.seriali
 
 TEST_CASE("Json reader can read std types from underlying text representation", "[morpheus.serialisation.json_reader.adapters.std]")
 {
-    REQUIRE(test::deserialise<std::list<int>>(R"([1, 2, 3, 4, 5])") == std::list<int>{1, 2, 3, 4, 5});
+    SECTION("Chrono types")
+    {
+        REQUIRE(test::deserialise<std::chrono::nanoseconds>(R"("123ns")") == std::chrono::nanoseconds{123});
+        REQUIRE(test::deserialise<std::chrono::microseconds>(R"("456us")") == std::chrono::microseconds{456});
+        REQUIRE(test::deserialise<std::chrono::milliseconds>(R"("789ms")") == std::chrono::milliseconds{789});
+        REQUIRE(test::deserialise<std::chrono::seconds>(R"("123s")") == std::chrono::seconds{123});
+        REQUIRE(test::deserialise<std::chrono::minutes>(R"("58min")") == std::chrono::minutes{58});
+        REQUIRE(test::deserialise<std::chrono::hours>(R"("24h")") == std::chrono::hours{24});
+        REQUIRE(test::deserialise<std::chrono::days>(R"("8d")") == std::chrono::days{8});
+        REQUIRE(test::deserialise<std::chrono::weeks>(R"("12w")") == std::chrono::weeks{12});
+        REQUIRE(test::deserialise<std::chrono::years>(R"("100y")") == std::chrono::years{100});
+        REQUIRE(test::deserialise<std::chrono::months>(R"("12m")") == std::chrono::months{12});
+    }
     REQUIRE(test::deserialise<std::monostate>(R"({})") == std::monostate{});
+    REQUIRE(test::deserialise<std::list<int>>(R"([1, 2, 3, 4, 5])") == std::list<int>{1, 2, 3, 4, 5});
     REQUIRE(test::deserialise<std::optional<int>>(R"(100)") == std::optional<int>{100});
     REQUIRE(test::deserialise<std::optional<int>>(R"(null)") == std::optional<int>{});
     REQUIRE(test::deserialise<std::pair<int, bool>>(R"([50,true])") == std::pair<int, bool>{50, true});

@@ -14,48 +14,52 @@ namespace morpheus::serialisation
 
 auto makeScopedValue(concepts::Reader auto& reader, std::string_view const key)
 {
-    return ScopedAction([&reader, key] { reader.beginValue(key); }, [&reader] { reader.endValue(); } );
+    return ScopedAction([&reader, key] { reader.beginValue(key); }, [&reader] { reader.endValue(); });
 }
 
 auto makeScopedSequence(concepts::Reader auto& reader, std::optional<std::size_t> const size = std::nullopt)
 {
-    return ScopedAction([&reader, size] { reader.beginSequence(); }, [&reader] { reader.endSequence(); } );
+    return ScopedAction([&reader] { return reader.beginSequence(); }, [&reader] { reader.endSequence(); });
 }
 
 auto makeScopedComposite(concepts::Reader auto& reader)
 {
-    return ScopedAction([&reader] { reader.beginComposite(); }, [&reader] { reader.endComposite(); } );
+    return ScopedAction([&reader] { reader.beginComposite(); }, [&reader] { reader.endComposite(); });
 }
 
 auto makeScopedNullable(concepts::Reader auto& reader)
 {
-    return ScopedAction([&reader] { return reader.beginNullable(); }, [&reader] { reader.endNullable(); } );
+    return ScopedAction([&reader] { return reader.beginNullable(); }, [&reader] { reader.endNullable(); });
 }
 
 /// \class ReadSerialiser
 /// \tparam ReaderType The type of underlying reader for serialisation.
-template<concepts::Reader ReaderType>
+template <concepts::Reader ReaderType>
 class ReadSerialiser
 {
 public:
     /// Constructs a ReadSerialiser when the underlying reader supports default construction.
-    template<meta::concepts::DefaultConstructible T = ReaderType>
-    ReadSerialiser() noexcept(meta::concepts::DefaultNothrowConstructible<T>) 
+    template <meta::concepts::DefaultConstructible T = ReaderType>
+    ReadSerialiser() noexcept(meta::concepts::DefaultNothrowConstructible<T>)
     {}
 
-    template<typename... Args>
-    requires(std::is_constructible_v<ReaderType, Args...>)
+    template <typename... Args>
+        requires(std::is_constructible_v<ReaderType, Args...>)
     ReadSerialiser(Args&&... args) noexcept(meta::concepts::NothrowConstructible<ReaderType, Args...>)
-    :   mReader(std::forward<Args>(args)...) 
+    : mReader(std::forward<Args>(args)...)
     {}
 
 #if (__cpp_explicit_this_parameter >= 202110)
     /// Access the underlying reader.
-    template<typename Self>
-    [[nodiscard]] auto& reader(this Self&& self) noexcept { return self.mReader; }
+    template <typename Self>
+    [[nodiscard]] auto& reader(this Self&& self) noexcept
+    {
+        return self.mReader;
+    }
 #else
     /// Access the underlying reader.
     [[nodiscard]] ReaderType& reader() noexcept { return mReader; }
+
     /// Access the underlying reader.
     [[nodiscard]] ReaderType const& reader() const noexcept { return mReader; }
 #endif // (__cpp_explicit_this_parameter >= 202110)
@@ -71,38 +75,39 @@ public:
     /// Deserialise a single value
     /// \tparam T The underlying type of value to deserialise.
     /// \return The deserialises value.
-    template<typename T>
+    template <typename T>
     [[nodiscard]] T deserialise();
 
     /// Deserialise a key value pair
     /// \tparam T The underlying type of value to deserialise.
     /// \param[in] key The key to serialise.
     /// \return The deserialises value.
-    template<typename T>
+    template <typename T>
     [[nodiscard]] T deserialise(std::string_view const key);
 
     /// Deserialise a sequence of values
     /// \tparam T The underlying type of sequence to deserialise.
     /// \param[in] size The number of entries in the sequence to serialise.
     /// \param[in] f The command deserialising the sequence of values.
-    template<typename T>
+    template <typename T>
     [[nodiscard]] T deserialise(std::size_t size, std::invocable auto f);
 
     /// Deserialise a related set of values in a composite.
     /// \tparam T The underlying type of composite to deserialise.
     /// \param[in] f The command deserialising the composite values.
-    template<typename T>
+    template <typename T>
     [[nodiscard]] T deserialise(std::invocable auto f);
 
     /// Deserialise a nullable value
     /// \tparam T The underlying type of nullable to deserialise.
     /// \param[in] null If the nullable value is null or set.
     /// \param[in] f The command deserialising the nullable values.
-    template<typename T>
-    [[nodiscard]] T deserialise(bool const null, std::invocable auto f = []{});
+    template <typename T>
+    [[nodiscard]] T deserialise(
+        bool const null, std::invocable auto f = [] {});
     ///@}
 private:
     ReaderType mReader; ///< The underlying reading for serialising fundamental types.
 };
 
-}
+} // namespace morpheus::serialisation
