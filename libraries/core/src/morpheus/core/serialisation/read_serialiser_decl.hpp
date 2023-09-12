@@ -19,7 +19,7 @@ auto makeScopedValue(concepts::Reader auto& reader, std::string_view const key)
 
 auto makeScopedSequence(concepts::Reader auto& reader, std::optional<std::size_t> const size = std::nullopt)
 {
-    return ScopedAction([&reader, size] { reader.beginSequence(size); }, [&reader] { reader.endSequence(); } );
+    return ScopedAction([&reader] { return reader.beginSequence(); }, [&reader] { reader.endSequence(); } );
 }
 
 auto makeScopedComposite(concepts::Reader auto& reader)

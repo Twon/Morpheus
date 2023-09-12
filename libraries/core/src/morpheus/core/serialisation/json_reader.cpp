@@ -194,10 +194,11 @@ void JsonReader::endValue()
     //    MORPHEUS_VERIFY(event == Event::EndComposite);
 }
 
-void JsonReader::beginSequence(std::optional<std::size_t>)
+std::optional<std::size_t> JsonReader::beginSequence()
 {
     auto const [event, next] = getNext();
     MORPHEUS_VERIFY(event == Event::BeginSequence);
+    return std::nullopt;
 }
 
 void JsonReader::endSequence()

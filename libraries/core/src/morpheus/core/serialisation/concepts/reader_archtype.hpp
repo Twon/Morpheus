@@ -33,8 +33,8 @@ struct ReaderArchtype
     consteval void endValue();
 
     /// Begin reading a sequence of values.
-    /// \param[in] size Optionally provide the size of the sequence to be written.
-    consteval void beginSequence(std::optional<std::size_t> size = std::nullopt);
+    /// \return Optionally provide the size of the sequence to be written.
+    consteval std::optional<std::size_t> beginSequence();
 
     /// End reading a sequence of values.
     consteval void endSequence();
