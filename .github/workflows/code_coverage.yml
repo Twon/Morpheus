@@ -123,6 +123,12 @@ jobs:
         # Run Fastcov target to collect coverage information.
         run: cmake --build --preset ${{ env.CONAN_PRESET }} --target coverage
 
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
+        timeout-minutes: 15
+        with:
+          detached: true
+
       - name: Lcov
         # Run LCov target to generate code coverage report
         run: cmake --build --preset ${{ env.CONAN_PRESET }} --target coverage-lcov
