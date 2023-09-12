@@ -40,11 +40,7 @@ public:
     /// \copydoc morpheus::serialisation::concepts::ReaderArchtype::beginSequence()
     std::optional<std::size_t> beginSequence()
     {
-//        if (size)
-//            write(size.value());
-//        else
-//            throwBinaryException("Sequence does not provide size.  This must be proided for binary serialisation.");
-        return std::nullopt;
+        return read<std::size_t>();
     }
 
     /// \copydoc morpheus::serialisation::concepts::ReaderArchtype::endSequence()
