@@ -270,6 +270,7 @@ TEST_CASE("Json writer can write std types to underlying text representation", "
     REQUIRE(test::serialise(std::optional<int>{100}) == R"(100)");
     REQUIRE(test::serialise(std::optional<int>{}) == R"(null)");
     REQUIRE(test::serialise(std::pair<int, bool>{50, true}) == R"([50,true])");
+    REQUIRE(test::serialise(std::string("Hello")) == R"("Hello")");
     REQUIRE(test::serialise(std::tuple<int, bool, std::string>{75, true, "Example"}) == R"([75,true,"Example"])");
     REQUIRE(test::serialise(std::make_unique<int>(123)) == R"(123)");
     REQUIRE(test::serialise(std::variant<int, bool, std::string>{true}) == R"({"type":"bool","value":true})");

@@ -76,7 +76,7 @@ public:
     /// \copydoc morpheus::serialisation::concepts::WriterArchtype::write(std::string_view const)
     void write(std::string_view const value);
     /// \copydoc morpheus::serialisation::concepts::WriterArchtype::write(std::span<std::byte> const)
-    void write(std::span<std::byte> const value);
+    void write(std::span<std::byte const> const value);
     /// Write a string literal to the serialisation.
     template <std::size_t N> void write(const char(&str)[N]) { write(std::string_view(str, N-1)); }
 

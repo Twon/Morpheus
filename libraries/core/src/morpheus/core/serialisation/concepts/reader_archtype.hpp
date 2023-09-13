@@ -54,8 +54,9 @@ struct ReaderArchtype
     template <typename T> requires std::is_same_v<T, std::string>
     consteval T read();
 
-//    template <typename T> requires std::is_same_v<T, std::vector<std::bytes>>
-//    constinit T read();
+    /// Read a blob of binary from the serialisation.
+    template <typename T> requires std::is_same_v<T, std::vector<std::byte>>
+    consteval T read();
 };
 
 using ReadSerialiserArchtype = serialisation::ReadSerialiser<ReaderArchtype>;
