@@ -25,8 +25,9 @@ void serialise(Serialiser& serialiser, std::chrono::duration<Rep, Period> const&
     }
     else
     {
+// Actually this is a libc++ issue and not exclusivly Clang.
 #if (MORPHEUS_COMPILER == MORPHEUS_CLANG_COMPILER)
-        // Clang stores std::choron::duration::rep as a "long long",
+        // Clang stores std::chrono::duration::rep as a "long long",
         // but std::int64_t is defined as "long" on 64-bit architectures.
         // so if we don't cast it we don't find the appropriat writer handler.
         serialiser.serialise(static_cast<std::int64_t>(value.count()));
