@@ -63,11 +63,14 @@ jobs:
 
       - name: Install Lcov
         shell: bash
+        # Lcov 2.0 is missing a dependency on DateTime so manually install for now.
         run: |
           wget https://github.com/linux-test-project/lcov/archive/refs/tags/v2.0.tar.gz
           tar -xvf v2.0.tar.gz
           cd lcov-2.0
           sudo make install
+
+          sudo apt-get install libdatetime-perl
 
       - name: Install Linux System Packages
         shell: bash
