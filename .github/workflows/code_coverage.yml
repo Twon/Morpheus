@@ -75,7 +75,7 @@ jobs:
       - name: Install Missing Lcov Dependencies
         shell: bash
         run: |
-          perl -MCPAN -e 'install Capture::Tiny'
+          sudo perl -MCPAN -e 'install Capture::Tiny'
 
           sudo apt-get install libdatetime-perl
 
