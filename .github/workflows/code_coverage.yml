@@ -69,6 +69,13 @@ jobs:
           tar -xvf v2.0.tar.gz
           cd lcov-2.0
           sudo make install
+        
+      # Lcov 2.0 is missing a number of dependencies (DateTime and Capture::Tiny) so manually install for now.
+      # When this is addressed in Lcov then this should be removed.
+      - name: Install Missing Lcov Dependencies
+        shell: bash
+        run: |
+          perl -MCPAN -e 'install Capture::Tiny'
 
           sudo apt-get install libdatetime-perl
 
