@@ -5,6 +5,7 @@
 #include "morpheus/core/memory/copier_traits.hpp"
 #include "morpheus/core/memory/default_copy.hpp"
 #include "morpheus/core/meta/concepts/complete.hpp"
+#include "morpheus/core/meta/concepts/hashable.hpp"
 
 #include <concepts>
 #include <exception>
@@ -498,11 +499,8 @@ constexpr auto allocate_indirect_value(std::allocator_arg_t, A& a, Ts&&... ts)
 
 } // namespace morpheus::memory
 
-template <class T>
-concept IsHashable = requires(T t) { std::hash<T>{}(t); };
-
 template <class T, class C, class D>
-requires IsHashable<T>
+requires morpheus::meta::concepts::IsHashable<T>
 struct std::hash<::morpheus::memory::indirect_value<T, C, D>> 
 {
     constexpr std::size_t operator()(const ::morpheus::memory::indirect_value<T, C, D>& key) const

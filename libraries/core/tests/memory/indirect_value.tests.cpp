@@ -24,7 +24,7 @@ struct ProvidesThrowingHash
 } // namespace
 
 template <>
-struct ::std::hash<ProvidesThrowingHash>
+struct std::hash<ProvidesThrowingHash>
 {
     size_t operator()(const ProvidesThrowingHash&) const { return 0; }
 };
