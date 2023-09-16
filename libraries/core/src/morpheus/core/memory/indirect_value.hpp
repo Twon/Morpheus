@@ -158,14 +158,14 @@ struct indirect_value_base<T, CD, CD>
     template <typename Self>
     [[nodiscard]] std::copy_cvref_t<Self, auto> getC(this Self&& self)
     {
-        return mCopierDeleterCombined;
+        return std::forward_like<Self>(mCopierDeleterCombined);
     }
 
     /// Access the deleter.
     template <typename Self>
     [[nodiscard]] std::copy_cvref_t<Self, auto> getD(this Self&& self)
     {
-        return mCopierDeleterCombined;
+        return std::forward_like<Self>(mCopierDeleterCombined);
     }
 #else
     /// Access the copier.
@@ -220,14 +220,14 @@ struct indirect_value_base
     template <typename Self>
     [[nodiscard]] std::copy_cvref_t<Self, auto> getC(this Self&& self)
     {
-        return mCopier;
+        return std::forward_like<Self>(mCopier);
     }
 
     /// Access the deleter.
     template <typename Self>
     [[nodiscard]] std::copy_cvref_t<Self, auto> getD(this Self&& self)
     {
-        return mDeleter;
+        return std::forward_like<Self>(mDeleter);
     }
 #else
     /// Access the copier.
@@ -497,3 +497,13 @@ constexpr auto allocate_indirect_value(std::allocator_arg_t, A& a, Ts&&... ts)
 }
 
 } // namespace morpheus::memory
+
+template <class T, class C, class D>
+struct std::hash<::morpheus::memory::indirect_value<T, C, D>>
+{
+    constexpr std::size_t operator()(const ::morpheus::memory::indirect_value<T, C, D>& key) const
+        noexcept(noexcept(std::hash<typename ::morpheus::memory::indirect_value<T, C, D>::value_type>{}(*key)))
+    {
+        return key ? std::hash<typename ::morpheus::memory::indirect_value<T, C, D>::value_type>{}(*key) : 0;
+    }
+};

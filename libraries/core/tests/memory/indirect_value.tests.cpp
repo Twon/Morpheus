@@ -1,9 +1,7 @@
 #include "morpheus/core/memory/indirect_value.hpp"
 
 #include <catch2/catch_all.hpp>
-
-namespace morpheus::memory
-{
+#include <functional>
 
 namespace
 {
@@ -17,7 +15,24 @@ void SelfAssign(T& t, U&& u)
     t = std::forward<U>(u);
 }
 
-}
+struct ProvidesNoHash
+{};
+
+struct ProvidesThrowingHash
+{};
+
+} // namespace
+
+template <>
+struct ::std::hash<ProvidesThrowingHash>
+{
+    size_t operator()(const ProvidesThrowingHash&) const { return 0; }
+};
+
+namespace morpheus::memory
+{
+
+
 
 TEST_CASE("Ensure that indirect_value uses the minimum space requirements", "[morpheus.memory.indirect_value.sizeof]")
 {
@@ -1121,4 +1136,57 @@ TEST_CASE("Allocator used to construct with allocate_indirect_value ")
         }
     }
 }
+
+template <class T, class = void>
+struct IsHashable : std::false_type
+{};
+
+template <class T>
+struct IsHashable<T, std::void_t<decltype(std::hash<T>{}(std::declval<const T&>()))>> : std::true_type
+{
+    static constexpr bool IsNoexcept = noexcept(std::hash<T>{}(std::declval<const T&>()));
+};
+
+
+
+TEST_CASE("std::hash customisation for indirect_value", "[morpheus.memory.indirect_value.std_hash]")
+{
+    GIVEN("An empty indirect")
+    {
+        const indirect_value<int> empty;
+
+        THEN("The hash should be zero")
+        {
+            REQUIRE(std::hash<indirect_value<int>>{}(empty) == 0);
+            STATIC_REQUIRE(IsHashable<indirect_value<int>>::IsNoexcept);
+        }
+    }
+
+    GIVEN("A non-empty indirect")
+    {
+        const indirect_value<int> nonEmpty(std::in_place, 55);
+
+        THEN("The hash values should be equal")
+        {
+            const std::size_t intHash = std::hash<int>{}(*nonEmpty);
+            const std::size_t indirectValueHash = std::hash<indirect_value<int>>{}(nonEmpty);
+            REQUIRE(intHash == indirectValueHash);
+        }
+    }
+
+    GIVEN("A type which is not hashable")
+    {
+        STATIC_REQUIRE(!IsHashable<ProvidesNoHash>::value);
+        STATIC_REQUIRE(!IsHashable<indirect_value<ProvidesNoHash>>::value);
+    }
+
+    GIVEN("A type which is hashable and std::hash throws")
+    {
+        STATIC_REQUIRE(IsHashable<ProvidesThrowingHash>::value);
+        STATIC_REQUIRE(IsHashable<indirect_value<ProvidesThrowingHash>>::value);
+        STATIC_REQUIRE(!IsHashable<ProvidesThrowingHash>::IsNoexcept);
+        STATIC_REQUIRE(!IsHashable<indirect_value<ProvidesThrowingHash>>::IsNoexcept);
+    }
+}
+
 } // morpheus::memory
