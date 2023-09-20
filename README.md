@@ -42,6 +42,7 @@ cd <project root>
 python3 -m venv .venv         # Create a Python virtual env
 source ./.venv/bin/activate   # Activate the virtual env for bash by source.
 pip install conan             # Install latest conan (conan=>2.0)
+conan profile detect --force  # Generate a default configuration with the local machine settings
 conan config install ./.conan # Install supported build profiles
 ```
 
