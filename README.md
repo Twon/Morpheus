@@ -23,7 +23,7 @@ In general you can use your own [Conan profile](https://docs.conan.io/2/referenc
 compiler.libcxx=libstdc++11
 ```
 
-However, preferably use one of the pre-installed configurations in `<project root>/.conan/profiles` (which are installed via the `conan config install ./` command) as these are tested and known to work.
+However, preferably use one of the pre-installed configurations in `<project root>/.conan/profiles` (which are installed via the `conan config install ./.conan` command) as these are tested and known to work.
 
 ### Cloning the Repo
 

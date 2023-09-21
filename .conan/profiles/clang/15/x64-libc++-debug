@@ -1,4 +1,4 @@
-include(../../default)
+include(../../../../.conan2/profiles/default)
 include(../../arch/x64)
 include(../../cpp/23)
 include(../../config/debug)
