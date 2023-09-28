@@ -1,2 +1,4 @@
 [settings]
 build_type=RelWithDebInfo
+mold*:build_type=Release
+onetbb*:build_type=Release 

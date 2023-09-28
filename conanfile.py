@@ -75,6 +75,7 @@ class Morpheus(ConanFile):
         "gtest/1.13.0",
         "magic_enum/0.8.2",
         "ms-gsl/4.0.0",
+        "openssl/3.1.2", # to solve mold linker dependency conflict without force or override
         "rapidjson/cci.20220822",
         "range-v3/0.12.0",
         "tl-expected/20190710",
@@ -100,6 +101,9 @@ class Morpheus(ConanFile):
 
         if self.options.build_docs:
             self.build_requires("doxygen/1.9.4") # doxygen/1.9.5 will update dependency on zlib/1.2.12 to zlib/1.2.13
+
+        if self.settings.compiler in ["gcc", "clang"]:
+            self.build_requires("mold/1.11.0")      
 
     def requirements(self):
         if self.settings.os in ["Macos", "iOS", "tvOS"] and self.settings.compiler == "apple-clang":
