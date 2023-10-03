@@ -1,3 +1,4 @@
 [settings]
 build_type=Release
 mold*:build_type=Release
+mold*:compiler.libcxx=libstdc++11

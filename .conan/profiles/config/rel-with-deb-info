@@ -1,4 +1,5 @@
 [settings]
 build_type=RelWithDebInfo
 mold*:build_type=Release
+mold*:compiler.libcxx=libstdc++11
 onetbb*:build_type=Release 
