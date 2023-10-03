@@ -389,4 +389,25 @@ TEST_CASE("Error handling test cases for unexpected errors in the input Json str
     }
 }
 
+struct SimplePair
+{
+    int first = 0;
+    bool second = false;
+
+    template<concepts::ReadSerialiser Serialiser>
+    void deserialise(Serialiser& s)
+    {
+        first = s.template deserialise<decltype(first)>("first");
+        second = s.template deserialise<decltype(second)>("second");
+    }
+};
+
+
+TEST_CASE("Json reader can read ranges of composites", "[morpheus.serialisation.range.deserialise.composites]")
+{
+    REQUIRE(test::deserialise<std::vector<SimplePair>>(R"([{"first":1,"second":true},{"first":2,"second":true},{"first":3,"second":true}])") ==
+            std::vector<SimplePair>{{1, true}, {2, true}, {3, true}});
+}
+
+
 } // namespace morpheus::serialisation
