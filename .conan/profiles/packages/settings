@@ -1,0 +1,7 @@
+{% set compiler, version = detect_api.detect_compiler() %}
+{% if compiler == "gcc" or compiler == "clang" -%}
+[settings]
+mold*:build_type=Release
+onetbb*:build_type=Release
+mold*:compiler.libcxx=libstdc++11
+{% endif %}
