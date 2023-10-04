@@ -101,7 +101,7 @@ class Morpheus(ConanFile):
         if self.options.build_docs:
             self.build_requires("doxygen/1.9.4") # doxygen/1.9.5 will update dependency on zlib/1.2.12 to zlib/1.2.13
 
-        if self.settings.compiler in ["gcc", "clang"]:
+        if self.settings.os == "Linux" and self.settings.compiler in ["gcc", "clang"]:
             self.build_requires("mold/1.11.0")
             self.build_requires("openssl/3.1.2", override=True)
 
