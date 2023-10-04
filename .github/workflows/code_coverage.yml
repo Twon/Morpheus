@@ -113,24 +113,15 @@ jobs:
         run: |
           conan install "${{github.workspace}}" --build missing -c tools.cmake.cmaketoolchain:generator=Ninja --build catch2/3.4.0
 
-      - name: Configure Conan Build
-        working-directory: ${{github.workspace}}
-        run: |
-           source build/${{env.BUILD_TYPE}}/generators/conanbuild.sh
-
       - name: Conan Preset
         run: echo "CONAN_PRESET=conan-$(echo ${{env.BUILD_TYPE}} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
-
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
-        timeout-minutes: 15
-        with:
-          detached: true
 
       - name: Configure CMake
         # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
         # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
-        run: cmake --preset ${{ env.CONAN_PRESET }} -DENABLE_CODE_COVERAGE=1
+        run: |
+           source build/${{env.BUILD_TYPE}}/generators/conanbuild.sh
+           cmake --preset ${{ env.CONAN_PRESET }} -DENABLE_CODE_COVERAGE=1
 
       - name: Build
         # Build your program with the given configuration
