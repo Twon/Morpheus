@@ -128,6 +128,12 @@ jobs:
         # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
         run: cmake --preset ${{ env.CONAN_PRESET }} -DENABLE_CODE_COVERAGE=1
 
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
+        timeout-minutes: 15
+        with:
+          detached: true
+
       - name: Build
         # Build your program with the given configuration
         run: cmake --build --preset ${{ env.CONAN_PRESET }}
