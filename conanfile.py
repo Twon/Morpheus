@@ -56,13 +56,15 @@ class Morpheus(ConanFile):
         "shared": [True, False],
         "fPIC": [True, False],
         "tools": [True, False],
-        "build_docs": [True, False]
+        "build_docs": [True, False],
+        "use_mold": [True, False]
     }
     default_options = {
         "shared": False,
         "fPIC": True,
         "tools": True,
-        "build_docs": False
+        "build_docs": False,
+        "use_mold": True
     }
     exports_sources = ["CMakeLists.txt", "LICENSE", "version.txt", "cmake/*", "examples/*" "libraries/*"]
     generators = "CMakeDeps", "CMakeToolchain"
@@ -101,7 +103,7 @@ class Morpheus(ConanFile):
         if self.options.build_docs:
             self.build_requires("doxygen/1.9.4") # doxygen/1.9.5 will update dependency on zlib/1.2.12 to zlib/1.2.13
 
-        if self.settings.os == "Linux" and self.settings.compiler in ["gcc", "clang"]:
+        if self.settings.os == "Linux" and self.settings.compiler in ["gcc", "clang"] and self.options.use_mold:
             self.build_requires("mold/1.11.0")
             self.build_requires("openssl/3.1.2", override=True)
 
