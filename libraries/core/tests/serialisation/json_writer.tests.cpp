@@ -5,6 +5,7 @@
 #include "morpheus/core/serialisation/adapters/std/monostate.hpp"
 #include "morpheus/core/serialisation/adapters/std/optional.hpp"
 #include "morpheus/core/serialisation/adapters/std/pair.hpp"
+#include "morpheus/core/serialisation/adapters/std/ranges.hpp"
 #include "morpheus/core/serialisation/adapters/std/tuple.hpp"
 #include "morpheus/core/serialisation/adapters/std/unique_ptr.hpp"
 #include "morpheus/core/serialisation/adapters/std/variant.hpp"
@@ -30,7 +31,7 @@ std::string serialise(T const& value)
 {
     std::ostringstream oss;
     JsonWriteSerialiser serialiser{oss};
-    serialiser.serialise(value);
+    serialiser.serialise<T>(value);
     return oss.str();
 }
 
@@ -273,7 +274,8 @@ TEST_CASE("Json writer can write std types to underlying text representation", "
     REQUIRE(test::serialise(std::tuple<int, bool, std::string>{75, true, "Example"}) == R"([75,true,"Example"])");
     REQUIRE(test::serialise(std::make_unique<int>(123)) == R"(123)");
     REQUIRE(test::serialise(std::variant<int, bool, std::string>{true}) == R"({"type":"bool","value":true})");
-    REQUIRE(test::serialise(std::vector<int>{1,2,3,4,5}) == R"([1,2,3,4,5])");
+    REQUIRE(test::serialise(std::vector<int>{0,1,2,3,4,5}) == R"([0,1,2,3,4,5])");
+    static_assert(ranges::range<std::vector<int>>);
 }
 
 } // namespace morpheus::serialisation

@@ -1,6 +1,5 @@
 #include "morpheus/core/meta/concepts/string.hpp"
 #include "morpheus/core/meta/is_string.hpp"
-
 #include <catch2/catch_all.hpp>
 
 namespace morpheus::meta

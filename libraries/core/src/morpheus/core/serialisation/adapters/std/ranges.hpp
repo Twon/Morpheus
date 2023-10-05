@@ -1,7 +1,6 @@
 #pragma once
 
 #include "morpheus/core/conformance/ranges.hpp"
-#include "morpheus/core/meta/concepts/string.hpp"
 #include "morpheus/core/serialisation/concepts/read_serialisable.hpp"
 #include "morpheus/core/serialisation/concepts/read_serialiser.hpp"
 #include "morpheus/core/serialisation/concepts/write_serialisable.hpp"
@@ -29,6 +28,20 @@ void serialise(Serialiser& serialiser, IsRange auto const& range)
     serialiser.writer().beginSequence(ranges::size(range));
     ranges::for_each(range, [&serialiser](auto const& element) { serialiser.serialise(element); });
     serialiser.writer().endSequence();
+}
+
+template<concepts::ReadSerialiser Serialiser, IsRange T>
+T deserialise(Serialiser& serialiser)
+{
+    auto const scope = makeScopedSequence(serialiser.reader());
+    auto sequenceGenerator = serialiser.reader().template readSequence<int>();
+    // We should be using the for_range_t constructor create the container but there is no support for this in Gcc 12 and Clang 15.
+    // T sequence(std::from_range_t, sequenceGenerator);
+    T sequence;
+    for (auto& entry : sequenceGenerator) {
+        sequence.push_back(entry);
+    }
+    return sequence;
 }
 
 } // namespace morpheus::serialisation::detail

@@ -25,4 +25,26 @@ template<typename T>
     return serialisation::deserialise.template operator()<ReadSerialiser<ReaderType>, T>(*this);
 }
 
+template<concepts::Reader ReaderType>
+template<typename T>
+[[nodiscard]] T ReadSerialiser<ReaderType>::deserialise(std::size_t size, std::invocable auto f)
+{
+    auto const sequence = makeScopedSequence(*this, size);
+
+}
+
+template<concepts::Reader ReaderType>
+template<typename T>
+[[nodiscard]] T ReadSerialiser<ReaderType>::deserialise(std::invocable auto f)
+{
+
+}
+
+template<concepts::Reader ReaderType>
+template<typename T>
+[[nodiscard]] T ReadSerialiser<ReaderType>::deserialise(bool const null, std::invocable auto f)
+{
+
+}
+
 }

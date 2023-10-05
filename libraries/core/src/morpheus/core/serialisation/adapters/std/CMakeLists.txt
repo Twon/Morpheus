@@ -1,6 +1,7 @@
 target_sources(MorpheusCore
     PUBLIC
         array.hpp
+        chrono.hpp
         deque.hpp
         expected.hpp
         forward_list.hpp
@@ -9,8 +10,10 @@ target_sources(MorpheusCore
         monostate.hpp
         optional.hpp
         pair.hpp
+        ranges.hpp
         set.hpp
         source_location.hpp
+        span.hpp
         tuple.hpp
         unique_ptr.hpp
         unordered_set.hpp

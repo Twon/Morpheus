@@ -22,7 +22,7 @@
 from conan import ConanFile
 from conan.errors import ConanException, ConanInvalidConfiguration
 from conan.tools.build import check_min_cppstd
-from conan.tools.cmake import cmake_layout, CMake, CMakeDeps
+from conan.tools.cmake import cmake_layout, CMake, CMakeDeps, CMakeToolchain
 from conan.tools.files import copy
 from conan.tools.scm import Version
 from conan.tools.files import load
@@ -56,23 +56,24 @@ class Morpheus(ConanFile):
         "shared": [True, False],
         "fPIC": [True, False],
         "tools": [True, False],
-        "build_docs": [True, False]
+        "build_docs": [True, False],
+        "build_tests": [True, False]
     }
     default_options = {
         "shared": False,
         "fPIC": True,
         "tools": True,
-        "build_docs": False
+        "build_docs": False,
+        "build_tests": True
     }
     exports_sources = ["CMakeLists.txt", "LICENSE", "version.txt", "cmake/*", "examples/*" "libraries/*"]
-    generators = "CMakeDeps", "CMakeToolchain"
+    #generators = "CMakeDeps", "CMakeToolchain"
     requires = (
         "boost/1.82.0",
         "ctre/3.8",
         "fmt/[^10]",
         "glbinding/3.1.0",
         "glew/2.2.0",
-        "gtest/1.13.0",
         "magic_enum/0.8.2",
         "ms-gsl/4.0.0",
         "rapidjson/cci.20220822",
@@ -93,7 +94,12 @@ class Morpheus(ConanFile):
 
     def build_requirements(self):
         self.tool_requires("ninja/1.11.1")
-        self.test_requires("catch2/3.4.0")
+
+        if self.options.build_tests:
+            self.test_requires("gtest/1.13.0")
+            #self.test_requires("rapidcheck/cci.20220514", options={'enable_catch':'True'})
+            #self.requires("catch2/3.3.2", override=True, test=True) # Should be 'test_requires' but that does not allow override which we need for catch2.
+            self.test_requires("catch2/3.4.0")
 
         if get_cmake_version() < Version("3.27.0"):
             self.tool_requires("cmake/3.27.0")
@@ -129,7 +135,7 @@ class Morpheus(ConanFile):
             "apple-clang": "13"
         }
 
-    def configure(self):
+    def validate(self):
         if self.settings.compiler.get_safe("cppstd"):
             check_min_cppstd(self, self._minimum_cpp_standard)
         min_version = self._minimum_compilers_version.get(
@@ -146,6 +152,15 @@ class Morpheus(ConanFile):
                         self.name, self._minimum_cpp_standard,
                         self.settings.compiler,
                         self.settings.compiler.version))
+
+    def generate(self):
+        tc = CMakeToolchain(self)
+        tc.variables["MORPHEUS_ENABLE_TESTS"] = self.options.build_tests
+        tc.variables["MORPHEUS_BUILD_DOCUMENTATION"] = self.options.build_docs
+        tc.generate()
+
+        tc = CMakeDeps(self)
+        tc.generate()
     
 #    def generate(self):
 #        tc = CMakeToolchain(self, generator=os.getenv("CONAN_CMAKE_GENERATOR"))

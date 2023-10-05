@@ -2,9 +2,13 @@
 
 #include "morpheus/core/base/assert.hpp"
 #include "morpheus/core/base/cold.hpp"
+#include "morpheus/core/base/scoped_action.hpp"
+#include "morpheus/core/concurrency/generator.hpp"
 #include "morpheus/core/functional/overload.hpp"
 #include "morpheus/core/memory/polymorphic_value.hpp"
 #include "morpheus/core/serialisation/exceptions.hpp"
+#include "morpheus/core/serialisation/concepts/reader_archtype.hpp"
+#include "morpheus/core/serialisation/read_serialiser_decl.hpp"
 
 #include <boost/numeric/conversion/cast.hpp>
 
@@ -33,6 +37,7 @@ namespace morpheus::serialisation
 ///     Read in objects from an underlying json representation.
 class MORPHEUSCORE_EXPORT JsonReader
 {
+
     enum class FundamentalType : std::uint32_t
     {
         Boolean,
@@ -82,6 +87,27 @@ public:
 
     /// \copydoc morpheus::serialisation::concepts::ReaderArchtype::endNullable()
     void endNullable();
+
+    template <typename T>
+        requires requires(concepts::ReaderArchtype& r) {
+            {
+                r.template read<T>()
+            } -> std::same_as<T>;
+        }
+    concurrency::Generator<T> readSequence()
+    {
+        for (;;) {
+            auto const [event, next] = getNext();
+            repeatCurrent();
+
+            if (event == Event::EndSequence) {
+                co_return;
+            }
+
+            MORPHEUS_ASSERT(event == Event::Value);
+            co_yield read<T>();
+        }
+    }
 
     // clang-format off
     /// Read a boolean from the serialisation.
@@ -164,12 +190,14 @@ private:
     using EventValue = std::tuple<Event, PossibleValue>;
 
     [[nodiscard]] EventValue getNext();
+    void repeatCurrent();
 
     memory::polymorphic_value<std::istream> mSourceStream; /// Owned input stream containing the Json source.
-    rapidjson::IStreamWrapper mStream; 
+    rapidjson::IStreamWrapper mStream;
     rapidjson::Reader mJsonReader;
     std::unique_ptr<class JsonExtracter> mExtractor;
     bool mValidate = true;
+    bool mRepeat = false;
 };
 
 } // namespace morpheus::serialisation

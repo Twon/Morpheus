@@ -53,21 +53,25 @@ template<concepts::WriteSerialiser Serialiser, concepts::WriteSerialisable... T>
 void serialise(Serialiser& serialiser, std::variant<T...> const& value)
 {
     serialiser.writer().beginComposite();
-    if (value.valueless_by_exception()) [[unlikely]]
+//    serialiser.serialise([&]()
     {
-        serialiser.serialise("index", static_cast<std::uint64_t>(std::variant_npos));
-    }
-    else 
-    {
-        if (serialiser.writer().isTextual())
+        if (value.valueless_by_exception()) [[unlikely]]
         {
-            serialiser.serialise("type", TypeListNames<std::variant<T...>>::name(value.index()));
+            serialiser.serialise("index", static_cast<std::uint64_t>(std::variant_npos));
         }
         else
-            serialiser.serialise("index", static_cast<std::uint64_t>(value.index()));
+        {
+            if (serialiser.writer().isTextual())
+            {
+                serialiser.serialise("type", TypeListNames<std::variant<T...>>::name(value.index()));
+            }
+            else
+                serialiser.serialise("index", static_cast<std::uint64_t>(value.index()));
 
-        std::visit([&serialiser](auto const& value) { serialiser.serialise("value", value); }, value);
+            std::visit([&serialiser](auto const& value) { return serialiser.serialise("value", value); }, value);
+        }
     }
+    //);
     serialiser.writer().endComposite();
 }
 

@@ -3,6 +3,7 @@
 #include "morpheus/core/meta/concepts/constructible.hpp"
 #include "morpheus/core/serialisation/concepts/writer.hpp"
 
+#include <concepts>
 #include <string_view>
 #include <type_traits>
 #include <utility>
@@ -51,17 +52,27 @@ public:
     ///@{
 
     /// Serialise a single value
-    /// \tparam T The underlying type of value to serialise.
     /// \param[in] value The value to serialise.
-    template <typename T>
-    void serialise(T const& value);
+    void serialise(auto const& value);
 
     /// Serialise a key value pair
-    /// \tparam T The underlying type of value to serialise.
     /// \param[in] key The key to serialise.
     /// \param[in] value The value to serialise.
-    template <typename T>
-    void serialise(std::string_view const key, T const& value);
+    void serialise(std::string_view const key, auto const& value);
+
+    /// Serialise a sequence of values
+    /// \param[in] size The number of entries in the sequence to serialise.
+    /// \param[in] f The command serialising the sequence of values.
+    auto serialise(std::size_t size, std::invocable auto f);
+
+    /// Serialise a related set of values in a composite.
+    /// \param[in] f The command serialising the composite values.
+//    auto serialise(std::invocable auto f);
+
+    /// Serialise a nullable value
+    /// \param[in] null If the nullable value is null or set.
+    /// \param[in] f The command serialising the nullable values.
+    auto serialise(bool const null, std::invocable auto f = []{});
     ///@}
 private:
     WriterType mWriter; ///< The underlying writer for serialising fundamental types.

@@ -17,12 +17,12 @@ template<concepts::WriteSerialiser Serialiser, concepts::WriteSerialisable... T>
 void serialise(Serialiser& serialiser, std::tuple<T...> const& value)
 {
     constexpr auto size = std::tuple_size<std::tuple<T...>>::value;
-    serialiser.writer().beginSequence(size);
-    [&] <std::size_t... Indexes>(std::index_sequence<Indexes...>)
-    { 
-        (serialiser.serialise(std::get<Indexes>(value)), ...);
-    }(std::make_index_sequence<size>());
-    serialiser.writer().endSequence();
+    serialiser.serialise(size,
+        [&] <std::size_t... Indexes>(std::index_sequence<Indexes...>)
+        {
+            return [&] { (serialiser.serialise(std::get<Indexes>(value)), ...); };
+        }(std::make_index_sequence<size>())
+    );
 }
 
 template<concepts::ReadSerialiser Serialiser, IsStdTuple T>

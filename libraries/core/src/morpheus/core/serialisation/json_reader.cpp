@@ -123,10 +123,19 @@ struct JsonExtracter : rapidjson::BaseReaderHandler<rapidjson::UTF8<>, JsonExtra
     JsonReader::EventValue mCurrent; ///< Current json event.
 };
 
-
+void JsonReader::repeatCurrent()
+{
+    MORPHEUS_ASSERT(!mRepeat);
+    mRepeat = true;
+}
 
 JsonReader::EventValue JsonReader::getNext()
 {
+    if (mRepeat) {
+        mRepeat = false;
+        return mExtractor->mCurrent;
+    }
+
     using namespace rapidjson;
     mJsonReader.IterativeParseNext<kParseCommentsFlag | kParseNanAndInfFlag | kParseValidateEncodingFlag>(mStream, *mExtractor);
     if (mJsonReader.HasParseError()) {
