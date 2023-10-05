@@ -96,7 +96,7 @@ class Morpheus(ConanFile):
         """ Mold is only tested on Linux with gcc and clang. In future support for icc may be added. """
         return self.settings.os == "Linux" and (self.settings.compiler == "clang" or self.settings.compiler == "gcc")
     
-    def configure(self):
+    def config_options(self):
         if not self.checkMoldIsSupported():
             self.options.rm_safe("link_with_mold")
 

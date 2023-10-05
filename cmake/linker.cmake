@@ -19,7 +19,7 @@ include_guard(GLOBAL)
 
 if (${MORPHEUS_ENABLE_MOLD})
     find_program(MOLD_BIN mold REQUIRED)
-    if(MOLD_BIN))
+    if(MOLD_BIN)
         message(STATUS "Morpheus: Mold linker found: ${MOLD_BIN}.  Enabling mold as active linker.")
         target_link_options(MorpheusConfig
             INTERFACE
