@@ -17,10 +17,16 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 
 include_guard(GLOBAL)
 
-find_program(MOLD_BIN mold)
-if(MOLD_BIN AND CMAKE_SYSTEM_NAME STREQUAL "Linux" AND (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID STREQUAL "Clang"))
-    target_link_options(MorpheusConfig
-        INTERFACE
-            "-fuse-ld=mold"
-    )
+if (${MORPHEUS_ENABLE_MOLD})
+    find_program(MOLD_BIN mold REQUIRED)
+    if(MOLD_BIN))
+        message(STATUS "Morpheus: Mold linker found: ${MOLD_BIN}.  Enabling mold as active linker.")
+        target_link_options(MorpheusConfig
+            INTERFACE
+                "-fuse-ld=mold"
+        )
+    else()
+        message(STATUS "Morpheus: Mold linker not found.  Reverting to default linker.")
+        message(DEBUG "Morpheus: If Mold linker is desired then ensure this is a supported platform and ensure the Conan buildenv is active")
+    endif()
 endif()

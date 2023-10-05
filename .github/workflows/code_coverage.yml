@@ -92,7 +92,6 @@ jobs:
           python-version: '3.11'
 
       - name: Install Conan Package Tools
-        shell: bash
         run: |
           pip install conan
 
