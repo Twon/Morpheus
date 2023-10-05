@@ -20,9 +20,6 @@ jobs:
     # cross-platform coverage.
     # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
     runs-on: ${{ matrix.os }}
-    defaults:
-      run:
-        shell: bash
     strategy:
       matrix:
         os: [ "ubuntu-latest" ]
@@ -51,6 +48,7 @@ jobs:
       # package we ensure that gcc and gcov are installed at the same time and the versions match. For more details
       # see here: https://github.com/Twon/Morpheus/issues/184
       - name: Install Latest GCC
+        shell: bash
         run: |
           sudo apt install -y g++-${{ env.COMPILER_VERSION }}
 
@@ -64,6 +62,7 @@ jobs:
           sudo ln -s /usr/bin/g++-${{ env.COMPILER_VERSION }} /usr/bin/g++
 
       - name: Install Lcov
+        shell: bash
         # Lcov 2.0 is missing a dependency on DateTime so manually install for now.
         run: |
           wget https://github.com/linux-test-project/lcov/archive/refs/tags/v2.0.tar.gz
@@ -74,12 +73,14 @@ jobs:
       # Lcov 2.0 is missing a number of dependencies (DateTime and Capture::Tiny) so manually install for now.
       # When this is addressed in Lcov then this should be removed.
       - name: Install Missing Lcov Dependencies
+        shell: bash
         run: |
           sudo perl -MCPAN -e 'install Capture::Tiny'
 
           sudo apt-get install libdatetime-perl
 
       - name: Install Linux System Packages
+        shell: bash
         run: |
           sudo apt-get -y install libgl-dev
           sudo apt-get -y install libopengl-dev
@@ -91,10 +92,12 @@ jobs:
           python-version: '3.11'
 
       - name: Install Conan Package Tools
+        shell: bash
         run: |
           pip install conan
 
       - name: Configure Conan
+        shell: bash
         run: |
           conan profile detect --force
           sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.cppstd=.*/compiler.cppstd=20/' .conan2/profiles/default
@@ -110,23 +113,30 @@ jobs:
 
       - name: Configure Install
         working-directory: ${{github.workspace}}
+        shell: bash
         run: |
           conan install "${{github.workspace}}" --build missing -c tools.cmake.cmaketoolchain:generator=Ninja --build catch2/3.4.0
 
+      - name: Configure Conan Build
+        shell: bash
+        working-directory: ${{github.workspace}}
+        run: |
+           source build/${{env.BUILD_TYPE}}/generators/conanbuild.sh
+           echo "PATH=$PATH" >> $GITHUB_ENV
+
       - name: Conan Preset
+        shell: bash
         run: echo "CONAN_PRESET=conan-$(echo ${{env.BUILD_TYPE}} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
 
-      - name: Configure CMake
+      - name: Configure CMake`
         # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
         # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
         run: |
-           source build/${{env.BUILD_TYPE}}/generators/conanbuild.sh
            cmake --preset ${{ env.CONAN_PRESET }} -DENABLE_CODE_COVERAGE=1
 
       - name: Build
         # Build your program with the given configuration
         run: |
-           source build/${{env.BUILD_TYPE}}/generators/conanbuild.sh
            cmake --build --preset ${{ env.CONAN_PRESET }}
 
       - name: Test
