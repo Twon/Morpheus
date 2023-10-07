@@ -18,7 +18,7 @@ TEST_CASE("Create a WGL Context", "[morpheus.core.gfx.gl.wgl.context]")
 */
 }
 
-/*  
+/*
 TEST_CASE("Iterates over the adapters in the list", "[morpheus.core.gfx.gl.wgl.adapter_list]")
 {
     GIVEN("An adapter list")

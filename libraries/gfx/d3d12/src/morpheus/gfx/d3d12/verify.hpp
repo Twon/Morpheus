@@ -7,7 +7,7 @@ namespace morpheus::gfx::d3d12
 {
 
 /// Get the message containing the error string for GetLastError().
-/// \note 
+/// \note
 ///     https://stackoverflow.com/a/62070624/4764531
 inline std::string getLastErrorMessage()
 {
@@ -17,7 +17,7 @@ inline std::string getLastErrorMessage()
 
 /// \def MORPHEUS_D3D12_VERIFY
 ///
-/// 
+///
 #define MORPHEUS_D3D12_VERIFY(expr) \
 do { \
     HRESULT const hr = expr; \

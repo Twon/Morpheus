@@ -501,7 +501,7 @@ constexpr auto allocate_indirect_value(std::allocator_arg_t, A& a, Ts&&... ts)
 
 template <class T, class C, class D>
 requires morpheus::meta::concepts::IsHashable<T>
-struct std::hash<::morpheus::memory::indirect_value<T, C, D>> 
+struct std::hash<::morpheus::memory::indirect_value<T, C, D>>
 {
     constexpr std::size_t operator()(const ::morpheus::memory::indirect_value<T, C, D>& key) const
         noexcept(noexcept(std::hash<typename ::morpheus::memory::indirect_value<T, C, D>::value_type>{}(*key)))

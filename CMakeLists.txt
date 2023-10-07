@@ -95,4 +95,3 @@ add_subdirectory(examples)
 if (ENABLE_CODE_COVERAGE)
     enable_code_coverage()
 endif()
-

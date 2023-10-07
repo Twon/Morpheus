@@ -13,14 +13,14 @@ public:
 
 	void Run()
 	{
-		while ( true ) 
+		while ( true )
 		{
 //			#pragma FREEDOM_TODO( "Hide message pump behind Freedom operating system abstraction")
 
 			::MSG msg;
 			::ZeroMemory( &msg, sizeof(msg) );
 
-			// While there is messages in the queue pump them 
+			// While there is messages in the queue pump them
 			// till the message queue until it is empty
 			while (::PeekMessage( &msg, NULL, 0, 0, PM_NOREMOVE ) )
 			{

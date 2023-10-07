@@ -113,8 +113,8 @@ public:
         auto const [event, next] = getNext();
         return std::visit(functional::Overload {
             [](std::integral auto const value) { return boost::numeric_cast<Float>(value); },
-            [](std::floating_point auto const value) 
-            { 
+            [](std::floating_point auto const value)
+            {
                 if (std::isinf(value)) [[unlikely]]
                 {
                     if (value > 0)
@@ -166,7 +166,7 @@ private:
     [[nodiscard]] EventValue getNext();
 
     memory::polymorphic_value<std::istream> mSourceStream; /// Owned input stream containing the Json source.
-    rapidjson::IStreamWrapper mStream; 
+    rapidjson::IStreamWrapper mStream;
     rapidjson::Reader mJsonReader;
     std::unique_ptr<class JsonExtracter> mExtractor;
     bool mValidate = true;
