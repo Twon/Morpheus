@@ -1,17 +1,17 @@
 #[[
 Copyright 2022 Antony Peacock
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
-documentation files (the "Software"), to deal in the Software without restriction, including without limitation the 
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
+documentation files (the "Software"), to deal in the Software without restriction, including without limitation the
 rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit
 persons to whom the Software is furnished to do so, subject to the following conditions:
 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the
 Software.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE 
-WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR 
-COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR 
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ]]
 
@@ -130,7 +130,7 @@ function(enable_code_coverage)
     set(COBERTURA_REPORT_PATH "${COVERAGE_REPORT_DIR}/cobertura_coverage.xml")
     set(LCOV_REPORT_PATH "${COVERAGE_REPORT_DIR}/lcov.info")
     set(LCOV_HTML_PATH "${COVERAGE_REPORT_DIR}/html")
-    
+
     if (NOT TARGET CodeCoverage)
         add_library(CodeCoverage INTERFACE)
         add_library(coverage::coverage ALIAS CodeCoverage)
@@ -157,7 +157,7 @@ function(enable_code_coverage)
     if (COVERAGE_VERBOSE)
         message(STATUS "Coverage: All project targets: ${allTargets}")
     endif()
-    
+
     targets_filter_for_sources(RESULT targetsWithSource TARGETS ${allTargets})
     if (COVERAGE_VERBOSE)
         message(STATUS "Coverage: Targets with sources: ${targetsWithSource}}")
@@ -171,7 +171,7 @@ function(enable_code_coverage)
             cmake_path(GET gcdaFile STEM LAST_ONLY translationUnitFile)
             get_filename_component(translationUnitDir "${gcdaFile}" DIRECTORY)
             set(translationUnit "${translationUnitDir}/${translationUnitFile}")
- 
+
             set(objectFile "${translationUnit}.o")
             add_custom_command(OUTPUT "${translationUnit}.gcno"
 			    COMMAND ${CMAKE_COMMAND} -E touch "${translationUnit}.gcno"

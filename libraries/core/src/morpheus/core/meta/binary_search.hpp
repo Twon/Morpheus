@@ -28,7 +28,7 @@ struct BinarySearch : std::conditional_t<
         BinarySearch<Predicate, Begin, (Begin + End) / 2>
     >
 >{};
-    
+
 template<template<std::size_t> typename Predicate, std::size_t Begin, std::size_t End>
 constexpr std::size_t BinarySearch_v = BinarySearch<Predicate, Begin, End>::value;
 
@@ -40,7 +40,7 @@ template <template<std::size_t> typename Predicate,
 struct binary_search;
 template <template<std::size_t> typename Predicate,
     std::size_t Beg, std::size_t End>
-using binary_search_base = 
+using binary_search_base =
     std::conditional_t<(End - Beg <= 1),
     std::integral_constant<std::size_t, Beg>,
     std::conditional_t<Predicate<(Beg + End) / 2>::value,

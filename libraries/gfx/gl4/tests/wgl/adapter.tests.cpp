@@ -168,7 +168,7 @@ TEST_CASE("Create an adapter mode list", "[morpheus.core.gfx.gl.wgl.adapter_list
             break; // success!
         }
     }
-    //Note: pSource is pointing to the source relevant to the relevant source now! 
+    //Note: pSource is pointing to the source relevant to the relevant source now!
     //You just need to copy off whatever you need.
 }
 

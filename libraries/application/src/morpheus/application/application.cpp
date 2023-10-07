@@ -12,14 +12,14 @@
 namespace morpheus::application
 {
 
-namespace 
+namespace
 {
 
 /// \brief Override the default termination handler to print the call stack before exiting the program to aid debugging.
 void terminationHandler()
 {
     try{
-        debugPrint(fmt_ns::format("{}", MORPHEUS_CURRENT_STACKTRACE)); 
+        debugPrint(fmt_ns::format("{}", MORPHEUS_CURRENT_STACKTRACE));
     }
     catch(...){
 

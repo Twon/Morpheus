@@ -1,5 +1,5 @@
 morpheus_add_library(
-    NAME MorpheusGfxNVidia 
+    NAME MorpheusGfxNVidia
     ALIAS morpheus::gfx::nvidia
     FOLDER "Libraries/Gfx/NVidia"
 )
