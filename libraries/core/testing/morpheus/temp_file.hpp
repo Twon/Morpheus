@@ -16,7 +16,7 @@ public:
     : mFile(std::tmpfile())
     {
     }
-    
+
     ~TempFile()
     {
         // tempfile automatically deletes the file on close.
@@ -27,12 +27,12 @@ public:
 
     auto contents()
     {
-        std::fseek(mFile, 0, SEEK_END); 
+        std::fseek(mFile, 0, SEEK_END);
         std::size_t const filesize = std::ftell(mFile);
         std::string contents(filesize, 0);
         std::fseek(mFile, 0, SEEK_SET); // seek to start
         std::fread(contents.data(), sizeof(char), contents.size(), mFile);
-        std::fseek(mFile, 0, SEEK_END); 
+        std::fseek(mFile, 0, SEEK_END);
         return contents;
     }
 private:

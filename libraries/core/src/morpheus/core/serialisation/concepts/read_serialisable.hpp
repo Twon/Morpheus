@@ -27,7 +27,7 @@ concept ReadSerialisableNative = requires(ReadSerialiserArchtype s, Type t)
 
 template <typename Type>
 concept ReadSerialisable = ReadSerialisableFreeStading<Type> or
-                           ReadSerialisableInsrusive<Type> or 
+                           ReadSerialisableInsrusive<Type> or
                            ReadSerialisableNative<Type>;
 
 } // morpheus::serialisation::concepts

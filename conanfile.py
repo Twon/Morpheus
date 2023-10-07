@@ -146,7 +146,7 @@ class Morpheus(ConanFile):
                         self.name, self._minimum_cpp_standard,
                         self.settings.compiler,
                         self.settings.compiler.version))
-    
+
 #    def generate(self):
 #        tc = CMakeToolchain(self, generator=os.getenv("CONAN_CMAKE_GENERATOR"))
 #        tc.variables["MORPHEUS_BUILD_DOCS"] = self.options.build_docs
@@ -179,5 +179,3 @@ class Morpheus(ConanFile):
         #self.cpp_info.components["_wg21_linear_algebra"].names["cmake_find_package"] = "wg21_linear_algebra"
         #self.cpp_info.components["_wg21_linear_algebra"].names["cmake_find_package_multi"] = "wg21_linear_algebra"
         #self.cpp_info.components["_wg21_linear_algebra"].requires = ["mdspan::mdspan"]
-
-

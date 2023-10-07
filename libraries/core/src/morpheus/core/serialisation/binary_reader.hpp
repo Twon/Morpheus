@@ -20,7 +20,7 @@ class BinaryReader
 public:
     BinaryReader(std::istream& inStream)
     : mInStream(inStream)
-    {} 
+    {}
 
     /// \copydoc morpheus::serialisation::concepts::ReaderArchtype::isTextual()
     static constexpr bool isTextual() { return false; }
@@ -80,7 +80,7 @@ public:
                 fmt_ns::format("Error reading data from stream.  Attempted to read {} bytes, but only {} bytes were read.", value.size(), readSize));
         return value;
     }
- 
+
     template <typename T>
     requires std::is_same_v<T, std::vector<std::byte>>
     T read()

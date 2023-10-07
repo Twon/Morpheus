@@ -10,7 +10,7 @@ namespace morpheus::conversion
 {
 
 template<typename T>
-struct StringConverter 
+struct StringConverter
 {
     /// A deleted constructor indicates a disabled string converter
     StringConverter() = delete;

@@ -11,14 +11,14 @@ Adapter::Adapter(vk::raii::PhysicalDevice&& physicalDevice)
 }
 
 [[nodiscard]] Vendor Adapter::getVendor() const noexcept
-{ 
+{
     auto const vendor = vendorFromPciId(mPhysicalDevice.getProperties().vendorID);
     MORPHEUS_ASSERT(vendor);
     return *vendor;
 }
 
 AdapterList enumerateAdapters(vk::raii::Instance const& instance)
-{    
+{
     AdapterList adapters;
     ranges::move(instance.enumeratePhysicalDevices(), ranges::back_inserter(adapters));
     return adapters;

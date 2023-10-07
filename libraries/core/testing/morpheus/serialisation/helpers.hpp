@@ -42,7 +42,7 @@ std::vector<char> serialise(auto const& value)
 
 /// Serialise a value to a binary buffer with limited space.  This is useful for testing or error cases such as testing
 /// condition where storage is exhuasted.
-/// 
+///
 /// \tparam Size The size of the static buffer.
 /// \param[in] value The value to be serialised.
 /// \return The binary blob containing the serialised form of the input value.
@@ -109,7 +109,7 @@ T deserialiseWithSpanStream(auto const& storage)
 #endif
 
 /// Deserialised a value from a binary blob of data.
-/// 
+///
 /// \tparam T The type of value to be deserialised.
 /// \param[in] value The binary blob represending the serialised form of the type.
 /// \returns The deserialised value.
@@ -124,7 +124,7 @@ T deserialise(std::vector<char> const& value)
 }
 
 /// Serialises an object to a binary blob and then deserialise back into the orginal form.
-/// 
+///
 /// \tparam T The type of value to be serialised/deserialised.
 /// \param[in] value The value to be serialised then deserialised.
 /// \returns The resulting deserialised value.

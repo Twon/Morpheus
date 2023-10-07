@@ -34,7 +34,7 @@ TEMPLATE_TEST_CASE("Verify serialisation of sequence containers std::ranges", "[
             std::initializer_list<int> const values = {1, 2, 3, 4, 5};
             if constexpr (std::is_constructible_v<TestType, decltype(values)>)
             {
-                return values; 
+                return values;
             }
             else
             {
