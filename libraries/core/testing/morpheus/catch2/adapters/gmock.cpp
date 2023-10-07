@@ -6,7 +6,7 @@ namespace morpheus
 
 namespace {
 
-struct Listener : public testing::EmptyTestEventListener 
+struct Listener : public testing::EmptyTestEventListener
 {
     void OnTestPartResult(const testing::TestPartResult& result) override
     {
@@ -14,7 +14,7 @@ struct Listener : public testing::EmptyTestEventListener
             result.file_name() ? result.file_name() : "unknown",
             (result.line_number() == -1) ? 0 : static_cast<std::size_t>(result.line_number()));
 
-        auto const dispositionType = result.nonfatally_failed() ? 
+        auto const dispositionType = result.nonfatally_failed() ?
             ::Catch::ResultDisposition::ContinueOnFailure :
             ::Catch::ResultDisposition::Normal;
 

@@ -11,7 +11,7 @@ namespace morpheus::gfx::gl4::wgl
 
 /// \class Context
 ///     The Context type stores all of the required Windows resources for the OpenGL context via rule of zero types.
-class Context 
+class Context
 {
 public:
     explicit Context(HWND const window, PIXELFORMATDESCRIPTOR const& pfd);
@@ -24,9 +24,9 @@ public:
 private:
     /// Context initialised from the global default.
     Context();
-    
+
     /// \struct ReleaseResources
-    ///     Allows std::unique_ptr handles to override the expect pointer type and to define a lambda to execute 
+    ///     Allows std::unique_ptr handles to override the expect pointer type and to define a lambda to execute
     ///     clean-up.
     template<typename T>
     struct ReleaseResources

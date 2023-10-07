@@ -60,7 +60,7 @@ public:
 template <typename T>
 class delete_counter {
 public:
-    void operator()(T* rhs) const 
+    void operator()(T* rhs) const
     {
         ++call_count;
         return std::default_delete<T>().operator()(rhs);
@@ -112,7 +112,7 @@ TEST_CASE("Default construction for indirect_value", "[morpheus.memory.indirect_
                 REQUIRE(delete_counter<int>::call_count == 0);
             }
         }
-        WHEN("The value is destroyed") 
+        WHEN("The value is destroyed")
         {
             THEN("Ensure a delete operation occurs")
             {
@@ -194,7 +194,7 @@ TEST_CASE("Copy assignment for indirect_value of a primitive type", "[morpheus.m
             indirect_value<int> b{};
             REQUIRE(b.operator->() == nullptr);
 
-            THEN("The assigned to object makes a deep copy of the orginal value") 
+            THEN("The assigned to object makes a deep copy of the orginal value")
             {
                 b = a;
                 REQUIRE(*b == a_value);
@@ -243,7 +243,7 @@ TEST_CASE("Move construction for indirect_value of a primitive type","[morpheus.
         constexpr int a_value = 5;
         auto a = make_indirect_value<int>(a_value);
 
-        WHEN("Constucting a new object via moving the orignal value") 
+        WHEN("Constucting a new object via moving the orignal value")
         {
             int const* const location_of_a = a.operator->();
             indirect_value<int> b{ std::move(a) };
@@ -374,7 +374,7 @@ TEST_CASE("Swap overload for indirect_value", "[morpheus.memory.indirect_value.s
     }
 }
 
-TEMPLATE_TEST_CASE("Noexcept of observers", "[morpheus.memory.indirect_value.noexcept]", indirect_value<int>&, const indirect_value<int>&, 
+TEMPLATE_TEST_CASE("Noexcept of observers", "[morpheus.memory.indirect_value.noexcept]", indirect_value<int>&, const indirect_value<int>&,
                                                                                          indirect_value<int>&&, const indirect_value<int>&&)
 {
     using T = TestType;
@@ -456,10 +456,10 @@ TEMPLATE_TEST_CASE("Calling value on an enganged indirect_value will not throw",
     indirect_value<int>&, const indirect_value<int>&,
     indirect_value<int>&&, const indirect_value<int>&&)
 {
-    GIVEN("An enganged indirect_value") 
+    GIVEN("An enganged indirect_value")
     {
         std::remove_reference_t<TestType> iv(std::in_place, 44);
-        THEN("Calling value will not throw") 
+        THEN("Calling value will not throw")
         {
             REQUIRE(std::forward<TestType>(iv).has_value());
             REQUIRE(std::forward<TestType>(iv).value() == 44);
@@ -824,7 +824,7 @@ void TestCopyAndDeleteStats() {
     REQUIRE(stats::delete_operator_count == 1);
 }
 
-TEST_CASE("Stats of copy and delete type", "[morpheus.memory.indirect_value.copy_and_delete_stats]") 
+TEST_CASE("Stats of copy and delete type", "[morpheus.memory.indirect_value.copy_and_delete_stats]")
 {
     TestCopyAndDeleteStats<EmptyNo_FinalNo, EmptyNo_FinalNo>();
     TestCopyAndDeleteStats<EmptyNo_FinalNo, EmptyNo_FinalYes>();

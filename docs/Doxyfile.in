@@ -71,9 +71,9 @@ EXCLUDE_PATTERNS       = @DOXYGEN_EXCLUDE_PATTERNS@
 # Configuration options related to the HTML output
 #---------------------------------------------------------------------------
 
-# If the GENERATE_HTML tag is set to YES, doxygen will generate HTML output. 
+# If the GENERATE_HTML tag is set to YES, doxygen will generate HTML output.
 # The default value is: YES.
-GENERATE_HTML         = @DOXYGEN_GENERATE_HTML@ 
+GENERATE_HTML         = @DOXYGEN_GENERATE_HTML@
 
 #---------------------------------------------------------------------------
 # Configuration options related to the LaTeX output

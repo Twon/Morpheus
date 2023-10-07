@@ -32,7 +32,7 @@ public:
 
     /// Get the video modes allowed on the adapter.
     [[nodiscard]] VideoModeList getVideoModes() const noexcept { return VideoModeList{}; }
-    
+
 private:
     vk::raii::PhysicalDevice mPhysicalDevice;
 };
