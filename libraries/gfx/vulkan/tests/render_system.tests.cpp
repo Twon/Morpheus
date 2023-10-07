@@ -11,10 +11,10 @@ TEST_CASE("Create a vulkan render system", "[morpheus.gfx.vulkan.render_system]"
 /*    uint32_t version = 0;
     VkResult res = vkEnumerateInstanceVersion(&version);
     INFO("The Vulkan version is " << VK_VERSION_MAJOR(version) <<"."<< VK_VERSION_MINOR(version) <<"."<< VK_VERSION_PATCH(version));
-
+    
     uint32_t instance_layer_count = 0;
     res = vkEnumerateInstanceLayerProperties(&instance_layer_count, nullptr);
-
+    
     INFO("Found " << instance_layer_count << " layers in Vulkan instance.");
     std::vector<VkLayerProperties> layers(instance_layer_count);
     res = vkEnumerateInstanceLayerProperties(&instance_layer_count, layers.data());
@@ -54,8 +54,8 @@ TEST_CASE("Create a vulkan render system", "[morpheus.gfx.vulkan.render_system]"
 //    std::vector<VkPhysicalDeviceProperties> devices_properties(gpu_count);
 //    res = vkEnumeratePhysicalDevices(instance, &gpu_count, devices.data());
 //    vkGetPhysicalDeviceProperties(devices[0], &devices_properties[0]);
-
-
+    
+    
 //    INFO("The result is " << res)
 //    CHECK(!res);
 //    CHECK(gpu_count > 0);

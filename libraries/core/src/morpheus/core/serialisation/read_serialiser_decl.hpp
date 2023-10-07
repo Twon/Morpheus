@@ -40,13 +40,13 @@ class ReadSerialiser
 public:
     /// Constructs a ReadSerialiser when the underlying reader supports default construction.
     template<meta::concepts::DefaultConstructible T = ReaderType>
-    ReadSerialiser() noexcept(meta::concepts::DefaultNothrowConstructible<T>)
+    ReadSerialiser() noexcept(meta::concepts::DefaultNothrowConstructible<T>) 
     {}
 
     template<typename... Args>
     requires(std::is_constructible_v<ReaderType, Args...>)
     ReadSerialiser(Args&&... args) noexcept(meta::concepts::NothrowConstructible<ReaderType, Args...>)
-    :   mReader(std::forward<Args>(args)...)
+    :   mReader(std::forward<Args>(args)...) 
     {}
 
 #if (__cpp_explicit_this_parameter >= 202110)

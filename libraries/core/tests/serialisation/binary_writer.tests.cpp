@@ -81,3 +81,4 @@ TEST_CASE("Binary writer can write std types to underlying text representation",
 }
 
 } // namespace morpheus::serialisation
+ 

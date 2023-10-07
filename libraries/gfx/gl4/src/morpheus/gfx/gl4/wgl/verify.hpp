@@ -11,7 +11,7 @@ namespace morpheus::gfx::gl4::wgl
 {
 
 /// Get the message containing the error string for GetLastError().
-/// \note
+/// \note 
 ///     https://stackoverflow.com/a/62070624/4764531
 inline std::string getLastErrorMessage()
 {
@@ -21,7 +21,7 @@ inline std::string getLastErrorMessage()
 
 /// \def MORPHEUS_WGL_VERIFY
 ///
-///
+/// 
 #define MORPHEUS_WGL_VERIFY(expr) MORPHEUS_VERIFY_MSG(expr, getLastErrorMessage())
 
 } // namespace morpheus::gfx::gl4::wgl

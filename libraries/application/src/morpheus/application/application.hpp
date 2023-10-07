@@ -8,10 +8,10 @@ namespace morpheus::application
 
 /// \class Application
 ///     The application class acts as a manager for a system of application components.  It is responsible for walking
-///     the application graph to collect commandline parameters
-///
-///
-///
+///     the application graph to collect commandline parameters  
+/// 
+/// 
+/// 
 //template<typename T>
 class Application {
 public:
@@ -19,7 +19,7 @@ public:
     ///
     Application();
 
-    ///
+    /// 
     /// \param[in] argc The number of command line arguments.
     /// \param[in] argv List of command line arguments.
     auto commandline(int argc, char* argv[])

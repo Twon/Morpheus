@@ -82,7 +82,7 @@ public:
         case VK_ERROR_FRAGMENTATION_EXT:
             return "A descriptor pool creation has failed due to fragmentation.";
         case VK_ERROR_NOT_PERMITTED_EXT:
-            return "the driver implementation may deny requests to acquire a priority above the default priority (VK_QUEUE_GLOBAL_PRIORITY_MEDIUM_EXT) if the caller does not have sufficient privileges. In this scenario VK_ERROR_NOT_PERMITTED_EXT is returned.";
+            return "the driver implementation may deny requests to acquire a priority above the default priority (VK_QUEUE_GLOBAL_PRIORITY_MEDIUM_EXT) if the caller does not have sufficient privileges. In this scenario VK_ERROR_NOT_PERMITTED_EXT is returned.";                
         case VK_ERROR_INVALID_DEVICE_ADDRESS_EXT:
             return "A buffer creation failed because the requested address is not available.";
         case VK_ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT:
@@ -91,7 +91,7 @@ public:
             return "unknown";
       }
     }
-
+    
     static const vulkan_error_category& getSingleInstance() noexcept { return mSingleInstance; }
 private:
     static vulkan_error_category mSingleInstance;

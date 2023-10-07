@@ -23,7 +23,7 @@ namespace morpheus
 #endif
 
 
-#if defined(MORPHEUS_ASSERT_ENABLED)
+#if defined(MORPHEUS_ASSERT_ENABLED) 
     #define MORPHEUS_ASSERT_HANDLER(type, expr, msg)  MORPHEUS_VERIFY_HANDLER(type, expr, msg)
 #else
     #define MORPHEUS_ASSERT_HANDLER(type, expr, msg)

@@ -1,6 +1,6 @@
 morpheus_add_library(
-    NAME MorpheusCore
-    ALIAS morpheus::core
+    NAME MorpheusCore 
+    ALIAS morpheus::core 
     FOLDER "Libraries/Core"
 )
 

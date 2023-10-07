@@ -16,7 +16,7 @@ template<typename T>
 inline constexpr bool delegateAggregateSerialisation = false;
 
 /// \concept DelegatedAggregateSerialisation
-///
+/// 
 template<typename T>
 concept DelegatedAggregateSerialisation = delegateAggregateSerialisation<T>;
 
@@ -25,7 +25,7 @@ concept DelegatedAggregateSerialisation = delegateAggregateSerialisation<T>;
 template<typename T>
 concept SerialisableAggregate = meta::concepts::Aggregate<T> and DelegatedAggregateSerialisation<T>;
 
-namespace detail
+namespace detail 
 {
 
 /// Opt in serialisation for aggregates.  Like pair and tuple it serialises as a sequence without the field key

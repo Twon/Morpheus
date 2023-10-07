@@ -15,7 +15,7 @@ namespace morpheus::serialisation
 {
 
 /// \class BinaryWriter
-///     A serialisation writer that serialises to a binary stream but support all underlying
+///     A serialisation writer that serialises to a binary stream but support all underlying 
 ///     out stream types which allows output to many sources including:
 ///         - Binary to block of memory.
 ///         - Binary to a file.
@@ -46,7 +46,7 @@ public:
 
     /// \copydoc morpheus::serialisation::concepts::WriterArchtype::beginSequence()
     void beginSequence(std::optional<std::size_t> size = std::nullopt)
-    {
+    { 
         if (size)
             write(size.value());
         else
@@ -58,7 +58,7 @@ public:
 
     /// \copydoc morpheus::serialisation::concepts::WriterArchtype::beginNullable()
     void beginNullable(bool const null)
-    {
+    { 
         write(null);
     }
 
@@ -68,7 +68,7 @@ public:
     template <typename T>
     requires std::integral<T> or std::floating_point<T>
     void write(T const value)
-    {
+    { 
         auto const writtenSize = mOutStream.rdbuf()->sputn(reinterpret_cast<const char*>(&value), sizeof(value));
         if (writtenSize != sizeof(value))
             throwBinaryException(fmt_ns::format("Error writing data to stream.  Attempted to write {} bytes, but only {} bytes were written.", sizeof(value),
@@ -86,7 +86,7 @@ public:
             throwBinaryException(
                 fmt_ns::format("Error writing data to stream.  Attempted to write {} bytes, but only {} bytes were written.", value.size(), writtenSize));
     }
-
+  
     /// \copydoc morpheus::serialisation::concepts::WriterArchtype::write(std::span<std::byte> const)
     void write(std::span<std::byte const> const value)
     {

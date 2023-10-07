@@ -13,7 +13,7 @@ class Image {
 public:
     /// \name Life cycle
     ///@{
-
+ 
     /// Constructs a render target with the specified parameters.
     /// \param[in] width
     ///      The width in pixels of the render target.

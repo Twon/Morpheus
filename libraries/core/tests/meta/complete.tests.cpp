@@ -10,7 +10,7 @@ class IncompleteType;
 
 class CompleteEmptyType {};
 
-class CompleteType
+class CompleteType 
 {
     int member = 0;
 };

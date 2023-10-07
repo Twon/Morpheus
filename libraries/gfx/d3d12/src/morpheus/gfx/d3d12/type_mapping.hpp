@@ -11,19 +11,19 @@ namespace morpheus::gfx::d3d12
  */
 class types {
 public:
-    /*! Maps between the native pixel format type to the underlying
+    /*! Maps between the native pixel format type to the underlying 
         <a href="https://docs.microsoft.com/en-us/windows/desktop/api/dxgiformat/ne-dxgiformat-dxgi_format">Direct X format type</a>.
         \param[in] format
             The native API repesentation of pixel format to map to the underlying hardware API.
         \return
-            The underlying hardware pixel format which represents the user requested type in the hardware API.
+            The underlying hardware pixel format which represents the user requested type in the hardware API.        
      */
     static DXGI_FORMAT map(
         const pixel_format format
     );
 
     static pixel_format map(
-        const DXGI_FORMAT format
+        const DXGI_FORMAT format 
     );
 
 private:

@@ -41,16 +41,16 @@ auto captureOutput(ranges::contiguous_range auto const& cliOptions, HelpDocument
     auto const output = captureStream.getOutput();
 
     auto const findOption = [stdOut = std::move(output)](std::string const optionText)
-    {
+    { 
         auto linesView = stdOut | ranges::views::split('\n') | ranges::views::transform([](auto&& rng) {
             return std::string_view(&*rng.begin(), ranges::distance(rng));
         });
 
-        return ranges::find_if(linesView,
-            [optionText](auto const line)
-            {
+        return ranges::find_if(linesView, 
+            [optionText](auto const line) 
+            { 
                 return line.contains(optionText);
-            }
+            } 
         ) != linesView.end();
     };
     return findOption;

@@ -29,7 +29,7 @@ TEST_CASE("Verify serialisation of std::chrono::duration", "[morpheus.serialisat
             MockedWriteSerialiser serialiser;
             EXPECT_CALL(serialiser.writer(), isTextual()).WillOnce(Return(true));
             EXPECT_CALL(serialiser.writer(), write(Matcher<std::string_view>(Eq("7d")))).Times(1);
-
+            
             WHEN("Serialising the std::expected") { serialiser.serialise(value); }
         }
     }

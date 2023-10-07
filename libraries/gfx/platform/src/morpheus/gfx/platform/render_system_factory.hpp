@@ -11,8 +11,8 @@ class render_system_factory {
 public:
     /// \name Life cycle
     ///@{
-    /*!
-
+    /*! 
+        
      */
     render_system_factory();
 

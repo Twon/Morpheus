@@ -56,7 +56,7 @@ auto getOutputModes(const DXGIAdapter& adapter)
             displayModes.end(),
             std::make_move_iterator(outputDisplayModes.begin()),
             std::make_move_iterator(outputDisplayModes.end())
-        );
+        );            
     }
 
     return displayModes;
@@ -79,7 +79,7 @@ Adapter::Adapter(
     return *vendor;
 }
 
-concurrency::Generator<Adapter> enumerateAdapters()
+concurrency::Generator<Adapter> enumerateAdapters() 
 {
     auto const dxgiFactory = createDXGIFactory();
     DXGIAdapter pDXGIAdapter;

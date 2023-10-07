@@ -36,7 +36,7 @@ struct TypeListNames<std::variant<T...>>
         return typeNames[entry];
     }
 
-    /// Find the index within the types of a std::variant for a given type name.
+    /// Find the index within the types of a std::variant for a given type name. 
     static consteval std::string_view findIndex(std::string_view const name)
     {
         auto const entry = ranges::find(typeNames, name);
@@ -57,7 +57,7 @@ void serialise(Serialiser& serialiser, std::variant<T...> const& value)
     {
         serialiser.serialise("index", static_cast<std::uint64_t>(std::variant_npos));
     }
-    else
+    else 
     {
         if (serialiser.writer().isTextual())
         {

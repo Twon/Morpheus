@@ -7,8 +7,8 @@ namespace morpheus::gfx::gl4::wgl
 {
 
 /// \class Window
-///
-class Window
+///     
+class Window 
 {
 public:
     Window(HWND const window);

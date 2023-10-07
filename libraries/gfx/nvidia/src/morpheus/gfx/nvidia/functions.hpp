@@ -93,7 +93,7 @@ namespace morpheus::gfx::nvidia::nvapi
     using NvAPI_GPU_ClientIllumZonesSetControl_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NV_GPU_CLIENT_ILLUM_ZONE_CONTROL_PARAMS*);
 
 /*
-
+    
     NVAPI_INTERFACE NvAPI_Event_RegisterCallback(PNV_EVENT_REGISTER_CALLBACK eventCallback,
         NvEventHandle* phClient);
     NVAPI_INTERFACE NvAPI_Event_UnregisterCallback(NvEventHandle hClient);
@@ -426,7 +426,7 @@ namespace morpheus::gfx::nvidia::nvapi
 #endif //defined(__cplusplus) && defined(__d3d11_h__) && (!defined(CINTERFACE))
 
 
-#if defined (__cplusplus) && defined(__d3d11_h__) && (!defined(CINTERFACE) )
+#if defined (__cplusplus) && defined(__d3d11_h__) && (!defined(CINTERFACE) ) 
     NVAPI_INTERFACE NvAPI_D3D11_CreateVertexShaderEx(__in ID3D11Device* pDevice, __in const void* pShaderBytecode,
         __in SIZE_T BytecodeLength, __in_opt ID3D11ClassLinkage* pClassLinkage,
         __in const NvAPI_D3D11_CREATE_VERTEX_SHADER_EX* pCreateVertexShaderExArgs,

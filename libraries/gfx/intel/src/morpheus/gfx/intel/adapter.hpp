@@ -10,8 +10,8 @@ namespace morpheus::gfx::intel::win32
 {
 
 /// \typedef Adapter
-///
-///
+///  
+/// 
 using Adapter = gfx::Adapter<std::uint32_t>;
 
 concurrency::Generator<Adapter> enumerateAdapters();

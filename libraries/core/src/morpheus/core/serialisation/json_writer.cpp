@@ -53,7 +53,7 @@ void JsonWriter::endNullable()
 
 }
 
-void JsonWriter::write(bool const value)
+void JsonWriter::write(bool const value) 
 {
     MORPHEUS_VERIFY(mJsonWriter.Bool(value));
 }

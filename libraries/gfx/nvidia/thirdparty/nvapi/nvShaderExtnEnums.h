@@ -75,7 +75,7 @@
 
 #define NV_EXTN_OP_UINT64_ATOMIC                           20
 
-#define NV_EXTN_OP_MATCH_ANY                               21
+#define NV_EXTN_OP_MATCH_ANY                               21 
 
 // FOOTPRINT - For Sample and SampleBias
 #define NV_EXTN_OP_FOOTPRINT                               28

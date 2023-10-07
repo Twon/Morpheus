@@ -47,7 +47,7 @@ Context Context::enable()
 }
 
 void Context::disable()
-{
+{   
     MORPHEUS_WGL_VERIFY(wglMakeCurrent(nullptr, nullptr));
 }
 

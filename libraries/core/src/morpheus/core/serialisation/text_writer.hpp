@@ -6,7 +6,7 @@
 namespace morpheus::serialisation
 {
 
-class TextWriter
+class TextWriter 
 {
 public:
     static constexpr bool canBeTextual() { return true; }

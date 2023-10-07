@@ -8,8 +8,8 @@ namespace morpheus::gfx::nvidia::nvapi
 {
 
 /// \typedef Adapter
-///
-///
+///  
+/// 
 using Adapter = gfx::Adapter<std::uint32_t>;
 
 concurrency::Generator<Adapter> enumerateAdapters();

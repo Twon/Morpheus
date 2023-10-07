@@ -7,7 +7,7 @@ namespace morpheus::gfx
 {
 
 /*! \enum pixel_format
-
+        
  */
 enum class pixel_format : std::int32_t
 {
@@ -48,7 +48,7 @@ enum class pixel_format : std::int32_t
     A8L8,
 
     /// 8-bit pixel using 2 bits red, 3 bits green, 3 bits blue
-    R3G3B2,
+    R3G3B2, 
 
     /// 16-bit pixel using 5 bits red, 6 bits green, 5 bits blue
     R5G6B5,

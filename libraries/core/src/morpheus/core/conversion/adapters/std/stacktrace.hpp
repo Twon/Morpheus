@@ -13,11 +13,11 @@ struct morpheus::fmt_ns::formatter<morpheus::st_ns::basic_stacktrace<Allocator>>
     constexpr auto parse(morpheus::fmt_ns::format_parse_context& ctx)
     {
         auto pos = ctx.begin();
-        return pos;  // expect `}` at this position, otherwise,
+        return pos;  // expect `}` at this position, otherwise, 
                       // it's error! exception!
     }
 
-    auto format(const morpheus::st_ns::basic_stacktrace<Allocator>& st, morpheus::fmt_ns::format_context& ctx)
+    auto format(const morpheus::st_ns::basic_stacktrace<Allocator>& st, morpheus::fmt_ns::format_context& ctx) 
     {
         return morpheus::fmt_ns::format_to(ctx.out(), "{}", to_string(st));
     }

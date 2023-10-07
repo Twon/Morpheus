@@ -1,5 +1,5 @@
 morpheus_add_library(
-    NAME MorpheusGfxPlatform
+    NAME MorpheusGfxPlatform 
     ALIAS morpheus::gfx::platform
     FOLDER "Libraries/Gfx/Platform"
 )
