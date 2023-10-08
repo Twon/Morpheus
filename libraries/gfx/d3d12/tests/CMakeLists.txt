@@ -1,6 +1,7 @@
 morpheus_add_tests(
     NAME MorpheusGfxD3D12Tests
     FOLDER "Libraries/Gfx/D3D12"
+    LABELS GPU
 )
 
 target_link_libraries(MorpheusGfxD3D12Tests

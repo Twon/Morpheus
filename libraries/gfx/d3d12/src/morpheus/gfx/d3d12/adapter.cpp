@@ -1,3 +1,4 @@
+#include "morpheus/core/base/assert.hpp"
 #include "morpheus/core/conformance/format.hpp"
 #include "morpheus/gfx/d3d12/adapter.hpp"
 #include "morpheus/gfx/d3d12/verify.hpp"
@@ -55,7 +56,7 @@ auto getOutputModes(const DXGIAdapter& adapter)
             displayModes.end(),
             std::make_move_iterator(outputDisplayModes.begin()),
             std::make_move_iterator(outputDisplayModes.end())
-        );            
+        );
     }
 
     return displayModes;
@@ -78,7 +79,7 @@ Adapter::Adapter(
     return *vendor;
 }
 
-concurrency::Generator<Adapter> enumerateAdapters() 
+concurrency::Generator<Adapter> enumerateAdapters()
 {
     auto const dxgiFactory = createDXGIFactory();
     DXGIAdapter pDXGIAdapter;

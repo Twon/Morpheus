@@ -33,8 +33,8 @@ struct ReaderArchtype
     consteval void endValue();
 
     /// Begin reading a sequence of values.
-    /// \param[in] size Optionally provide the size of the sequence to be written.
-    consteval void beginSequence(std::optional<std::size_t> size = std::nullopt);
+    /// \return Optionally provide the size of the sequence to be written.
+    consteval std::optional<std::size_t> beginSequence();
 
     /// End reading a sequence of values.
     consteval void endSequence();
@@ -54,8 +54,9 @@ struct ReaderArchtype
     template <typename T> requires std::is_same_v<T, std::string>
     consteval T read();
 
-//    template <typename T> requires std::is_same_v<T, std::vector<std::bytes>>
-//    constinit T read();
+    /// Read a blob of binary from the serialisation.
+    template <typename T> requires std::is_same_v<T, std::vector<std::byte>>
+    consteval T read();
 };
 
 using ReadSerialiserArchtype = serialisation::ReadSerialiser<ReaderArchtype>;

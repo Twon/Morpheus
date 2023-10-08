@@ -3,10 +3,12 @@
 #include <cstddef>
 #include <cstdint>
 #include <concepts>
+#include <optional>
 #include <span>
 #include <string>
 #include <string_view>
 #include <type_traits>
+#include <vector>
 
 namespace morpheus::serialisation::concepts
 {
@@ -22,7 +24,7 @@ concept Reader = requires(T t)
     { t.endComposite() } -> std::same_as<void>;
     { t.beginValue(std::string_view{}) } -> std::same_as<void>;
     { t.endValue() } -> std::same_as<void>;
-    { t.beginSequence(std::size_t{}) } -> std::same_as<void>;
+    { t.beginSequence() } -> std::same_as<std::optional<std::size_t>>;
     { t.endSequence() } -> std::same_as<void>;
     { t.beginNullable() } -> std::same_as<bool>;
     { t.endNullable() } -> std::same_as<void>;
@@ -38,7 +40,8 @@ concept Reader = requires(T t)
     { t.template read<std::int64_t>() } -> std::same_as<std::int64_t>;
     { t.template read<float>() } -> std::same_as<float>;
     { t.template read<double>() } -> std::same_as<double>;
-    //{ t.template read<std::string_view>() } -> std::same_as<std::string>;
+    { t.template read<std::string>() } -> std::same_as<std::string>;
+    { t.template read<std::vector<std::byte>>() } -> std::same_as<std::vector<std::byte>>;
 };
 
 } // morpheus::serialisation::concepts

@@ -26,7 +26,7 @@ TEST_CASE("Ensure assert functionality works and is hooked into by the test fram
                 return false;
             });
     };
-    
+
     auto const onExit = [&](){ setAssertHandler(currentHandler); };
     ScopedAction const restoreAssertHandler(onEntry, onExit);
 
@@ -36,6 +36,17 @@ TEST_CASE("Ensure assert functionality works and is hooked into by the test fram
     MORPHEUS_ASSERT(false);
     REQUIRE(fired);
 #endif // MORPHEUS_ASSERT_ENABLED
+}
+
+TEST_CASE("Ensure assert functionality responds to appropriate defines", "[morpheus.base.assert.disabled_conditions]")
+{
+#if defined(NDEBUG)
+    MORPHEUS_ASSERT(false);
+#endif
+
+#define MORPHEUS_DISABLE_ASSERT
+    MORPHEUS_ASSERT(true);
+#undef MORPHEUS_DISABLE_ASSERT
 }
 
 } // namespace morpheus

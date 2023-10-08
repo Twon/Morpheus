@@ -2,7 +2,10 @@
 
 #include "morpheus/core/base/compiler.hpp"
 #include "morpheus/core/conformance/version.hpp"
+#include "morpheus/core/memory/copier_traits.hpp"
+#include "morpheus/core/memory/default_copy.hpp"
 #include "morpheus/core/meta/concepts/complete.hpp"
+#include "morpheus/core/meta/concepts/hashable.hpp"
 
 #include <concepts>
 #include <exception>
@@ -12,46 +15,6 @@
 
 namespace morpheus::memory
 {
-
-/// \struct default_copy
-///     Default copier uses default allocation in conjunction with copy assignment operator of T.
-template <class T>
-struct default_copy
-{
-    /// The deleter type to be used to deallocate object created by the copier.
-    using deleter_type = std::default_delete<T>;
-
-    /// Create a copy of the input.
-    constexpr T* operator()(const T& t) const { return new T(t); }
-};
-
-template <class T, class = void>
-struct copier_traits_deleter_base
-{};
-
-/// \struct copier_traits_deleter_base<T, std::void_t<typename T::deleter_type>>
-///     Helper specialisation of copier traits which defaults the deleter type to T::deleter_type when present.
-template <class T>
-struct copier_traits_deleter_base<T, std::void_t<typename T::deleter_type>>
-{
-    /// The associated deleter to be used with this copier.
-    using deleter_type = typename T::deleter_type;
-};
-
-/// \struct copier_traits_deleter_base<U* (*)(V)>
-///     Helper specialisation of copier traits which allows defaulting the deleter type with function pointer
-///     equivalent matching signature of the function when used with function pointer copier.
-template <class U, class V>
-struct copier_traits_deleter_base<U* (*)(V)>
-{
-    /// The associated deleter to be used with this copier.
-    using deleter_type = void (*)(U*);
-};
-
-// The user may specialize copier_traits<T> per [namespace.std]/2.
-template <class T>
-struct copier_traits : copier_traits_deleter_base<T, void>
-{};
 
 /// \class bad_indirect_value_access
 ///     Exception type thrown upon a accessing an indirect_value with no underlying value assigned.
@@ -120,11 +83,11 @@ struct allocator_copy : A
     using deleter_type = allocator_delete<T, A>;
 
     /// Create a copy of the input via the underlying allocator.
-    constexpr T* operator()(const T& t) const { return detail::allocate_object<T>(*this, t); }
+    constexpr T* operator()(T const& t) const { return detail::allocate_object<T>(*this, t); }
 };
 
 /// \struct exchange_on_move_ptr
-///     Thin wrapper for a pointer to ensure moving of pointers resutls in a exchange with nullptr.  Use ensures
+///     Thin wrapper for a pointer to ensure moving of pointers results in a exchange with nullptr.  Use ensures
 ///     containing classes can rely on the rule of zero for special memmber functions.
 template <typename T>
 struct exchange_on_move_ptr
@@ -196,14 +159,14 @@ struct indirect_value_base<T, CD, CD>
     template <typename Self>
     [[nodiscard]] std::copy_cvref_t<Self, auto> getC(this Self&& self)
     {
-        return mCopierDeleterCombined;
+        return std::forward_like<Self>(mCopierDeleterCombined);
     }
 
     /// Access the deleter.
     template <typename Self>
     [[nodiscard]] std::copy_cvref_t<Self, auto> getD(this Self&& self)
     {
-        return mCopierDeleterCombined;
+        return std::forward_like<Self>(mCopierDeleterCombined);
     }
 #else
     /// Access the copier.
@@ -258,14 +221,14 @@ struct indirect_value_base
     template <typename Self>
     [[nodiscard]] std::copy_cvref_t<Self, auto> getC(this Self&& self)
     {
-        return mCopier;
+        return std::forward_like<Self>(mCopier);
     }
 
     /// Access the deleter.
     template <typename Self>
     [[nodiscard]] std::copy_cvref_t<Self, auto> getD(this Self&& self)
     {
-        return mDeleter;
+        return std::forward_like<Self>(mDeleter);
     }
 #else
     /// Access the copier.
@@ -310,8 +273,9 @@ struct indirect_value_base
 /// \tparam T The underlying value type.
 /// \tparam Copier The copier functor to customise how the underlying value is copied.
 /// \tparam Deleter The deleter functor to customise how the underlying value is deleted.
-template <typename T, std::invocable<T const&> Copier = default_copy<T>, std::invocable<T*> Deleter = typename copier_traits<Copier>::deleter_type>
-requires std::same_as<std::invoke_result_t<Copier, T const&>, T*>
+// template <typename T, std::invocable<T const&> Copier = default_copy<T>, std::invocable<T*> Deleter = typename copier_traits<Copier>::deleter_type>
+// requires std::same_as<std::invoke_result_t<Copier, T const&>, T*>
+template <typename T, typename Copier = default_copy<T>, typename Deleter = typename copier_traits<Copier>::deleter_type>
 class indirect_value : public detail::indirect_value_base<T, Copier, Deleter>
 {
     using base_type = detail::indirect_value_base<T, Copier, Deleter>;
@@ -363,7 +327,7 @@ public:
     /// Copy constructor.
     /// \pre IsComplete<T> is false or std::is_copy_constructible_v<T> is true
     constexpr indirect_value(indirect_value const& i)
-    requires(!meta::concepts::IsComplete<T> or std::is_copy_constructible_v<T>)
+    // requires(!meta::concepts::IsComplete<T> or std::is_copy_constructible_v<T>)
     : base_type(i)
     {
         this->mValue = i.make_raw_copy();
@@ -377,8 +341,8 @@ public:
 
     /// Copy assignment, assigns contents via the underlying copier
     /// \pre IsComplete<T> is false or std::is_copy_constructible_v<T> is true
-    constexpr indirect_value& operator=(const indirect_value& i)
-    requires(!meta::concepts::IsComplete<T> or std::is_copy_constructible_v<T>)
+    constexpr indirect_value& operator=(indirect_value const& i)
+    //    requires(!meta::concepts::IsComplete<T> or std::is_copy_constructible_v<T>)
     {
         indirect_value temp(i);
         swap(temp);
@@ -534,3 +498,14 @@ constexpr auto allocate_indirect_value(std::allocator_arg_t, A& a, Ts&&... ts)
 }
 
 } // namespace morpheus::memory
+
+template <class T, class C, class D>
+requires morpheus::meta::concepts::IsHashable<T>
+struct std::hash<::morpheus::memory::indirect_value<T, C, D>>
+{
+    constexpr std::size_t operator()(const ::morpheus::memory::indirect_value<T, C, D>& key) const
+        noexcept(noexcept(std::hash<typename ::morpheus::memory::indirect_value<T, C, D>::value_type>{}(*key)))
+    {
+        return key ? std::hash<typename ::morpheus::memory::indirect_value<T, C, D>::value_type>{}(*key) : 0;
+    }
+};

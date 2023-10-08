@@ -18,8 +18,8 @@ void enableCatch2AssertHooks()
         ::Catch::AssertionHandler handler("MORPHEUS_ASSERT",::Catch::SourceLineInfo(assertion.location.file_name(), assertion.location.line()),
             assertion.expression.empty() ? assertion.expression.data() : "", ::Catch::ResultDisposition::Normal);
 
-        handler.handleMessage(::Catch::ResultWas::ExplicitFailure, assertion.message);
-        handler.setCompleted();
+        handler.handleMessage(::Catch::ResultWas::ExplicitFailure, Catch::StringRef{assertion.message.data(), assertion.message.size()});
+        handler.complete();
         return false;
     };
     previousHandler = setAssertHandler(std::move(catch2AssertHandler));

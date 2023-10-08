@@ -1,10 +1,8 @@
 morpheus_add_library(
-    NAME MorpheusCore 
-    ALIAS morpheus::core 
+    NAME MorpheusCore
+    ALIAS morpheus::core
     FOLDER "Libraries/Core"
 )
-
-#add_coverage(MorpheusCore)
 
 target_include_directories(MorpheusCore
     PUBLIC
@@ -18,6 +16,7 @@ target_link_libraries(MorpheusCore
         morpheus::config
         Boost::headers
         Boost::log
+        ctre::ctre
         magic_enum::magic_enum
 )
 

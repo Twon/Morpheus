@@ -1,3 +1,20 @@
+#
+# Copyright 2023 Antony Peacock
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
+# documentation files (the "Software"), to deal in the Software without restriction, including without limitation the
+# rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit
+# persons to whom the Software is furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all copies or substantial portions of the
+# Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+# WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+# COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+# OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+#
+
 name: Code Coverage
 
 on:
@@ -10,7 +27,7 @@ env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: Debug
   COMPILER_TYPE: gcc
-  COMPILER_VERSION: 11
+  COMPILER_VERSION: 12
   STDLIB: libstdc++11
 
 jobs:
@@ -27,12 +44,14 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - uses: seanmiddleditch/gha-setup-ninja@master
+
       - name: Cache Conan data
         uses: actions/cache@v3
         env:
           cache-name: cache-conan-data
         with:
-          path: ~/.conan/data
+          path: ${{github.workspace}}/.conan2/p
           key: ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-${{ matrix.settings.compiler.version }}-${{ matrix.settings.lib }}
           restore-keys: |
             ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-${{ matrix.settings.compiler.version }}-
@@ -40,19 +59,42 @@ jobs:
             ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.settings.os }}-${{ matrix.configuration }}-
             ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.settings.os }}-
 
+      # Previously GCC was installed via egor-tensin/setup-gcc@v1 but this does not install gcov with the compiler.
+      # By default Ubuntu has Gcov 11 installed. This worked so long as the compiler was gcc 11, but if a later gcc was
+      # installed then gcov could fail as it must be the same version as the compiler.  By installing the compiler
+      # package we ensure that gcc and gcov are installed at the same time and the versions match. For more details
+      # see here: https://github.com/Twon/Morpheus/issues/184
       - name: Install Latest GCC
-        uses: egor-tensin/setup-gcc@v1
-        with:
-          version: ${{ env.COMPILER_VERSION }}
-          platform: x64
+        shell: bash
+        run: |
+          sudo apt install -y g++-${{ env.COMPILER_VERSION }}
+
+          # We need to update symlink otherwise we end up with miss matched gcc/g++ and gcov versions.
+          sudo rm /usr/bin/gcc
+          sudo rm /usr/bin/g++
+          sudo rm /usr/bin/gcov
+
+          sudo ln -s /usr/bin/gcov-${{ env.COMPILER_VERSION }} /usr/bin/gcov
+          sudo ln -s /usr/bin/gcc-${{ env.COMPILER_VERSION }} /usr/bin/gcc
+          sudo ln -s /usr/bin/g++-${{ env.COMPILER_VERSION }} /usr/bin/g++
 
       - name: Install Lcov
         shell: bash
+        # Lcov 2.0 is missing a dependency on DateTime so manually install for now.
         run: |
-          wget https://github.com/linux-test-project/lcov/archive/refs/tags/v1.16.tar.gz
-          tar -xvf v1.16.tar.gz
-          cd lcov-1.16
+          wget https://github.com/linux-test-project/lcov/archive/refs/tags/v2.0.tar.gz
+          tar -xvf v2.0.tar.gz
+          cd lcov-2.0
           sudo make install
+
+      # Lcov 2.0 is missing a number of dependencies (DateTime and Capture::Tiny) so manually install for now.
+      # When this is addressed in Lcov then this should be removed.
+      - name: Install Missing Lcov Dependencies
+        shell: bash
+        run: |
+          sudo perl -MCPAN -e 'install Capture::Tiny'
+
+          sudo apt-get install libdatetime-perl
 
       - name: Install Linux System Packages
         shell: bash
@@ -64,73 +106,72 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: '3.10'
+          python-version: '3.11'
 
       - name: Install Conan Package Tools
         run: |
-          pip install conan==1.59.0
+          pip install conan
 
       - name: Configure Conan
         shell: bash
         run: |
-          conan config init
-          conan profile update settings.compiler.cppstd=20 default
-          conan profile update settings.build_type=${{ env.BUILD_TYPE }} default
-          conan profile update settings.compiler=${{ env.COMPILER_TYPE }} default
-          conan profile update settings.compiler.version=${{ env.COMPILER_VERSION }} default
-          conan profile update settings.compiler.libcxx=${{ env.STDLIB }} default
-          conan profile show default
+          conan profile detect --force
+          sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.cppstd=.*/compiler.cppstd=20/' .conan2/profiles/default
+          sed -i.backup '/^\[settings\]$/,/^\[/ s/^build_type=.*/build_type=${{ env.BUILD_TYPE }}/' .conan2/profiles/default
+          sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler=.*/compiler=${{ env.COMPILER_TYPE }}/' .conan2/profiles/default
+          sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.version=.*/compiler.version=${{ env.COMPILER_VERSION }}/' .conan2/profiles/default
+          sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.libcxx=.*/compiler.libcxx=${{ env.STDLIB }}/' .conan2/profiles/default
+          sed -i.backup '1a mold*:build_type=Release' .conan2/profiles/default
+          sed -i.backup '1a onetbb*:build_type=Release' .conan2/profiles/default
+          sed -i.backup '1a mold*:compiler.libcxx=libstdc++11' .conan2/profiles/default
 
-      - name: Make build directory
+          conan profile show -pr default
+
+      - name: Configure Install
         working-directory: ${{github.workspace}}
         shell: bash
         run: |
-          mkdir build
+          conan install "${{github.workspace}}" --build missing -c tools.cmake.cmaketoolchain:generator=Ninja --build catch2/3.4.0
 
-      - name: Configure Install
-        working-directory: ${{github.workspace}}/build
+      - name: Conan Preset
         shell: bash
-        run: |
-          conan install "${{github.workspace}}" --build missing
+        run: echo "CONAN_PRESET=conan-$(echo ${{env.BUILD_TYPE}} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
 
       - name: Configure CMake
         # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
         # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
-        run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{ env.BUILD_TYPE }} -DENABLE_CODE_COVERAGE=1
+        run: |
+           source build/${{env.BUILD_TYPE}}/generators/conanbuild.sh
+           cmake --preset ${{ env.CONAN_PRESET }} -DENABLE_CODE_COVERAGE=1
 
       - name: Build
         # Build your program with the given configuration
-        run: cmake --build ${{github.workspace}}/build --config ${{ env.BUILD_TYPE }}
-
-#      - uses: lhotari/action-upterm@v1
-#        with:
-          ## limits ssh access and adds the ssh public key for the user which triggered the workflow
-#          limit-access-to-actor: true
-          ## limits ssh access and adds the ssh public keys of the listed GitHub users
-#          limit-access-to-users: twon
+        run: |
+           source build/${{env.BUILD_TYPE}}/generators/conanbuild.sh
+           cmake --build --preset ${{ env.CONAN_PRESET }}
 
       - name: Test
-        working-directory: ${{github.workspace}}/build
+        working-directory: ${{github.workspace}}
         # Execute tests defined by the CMake configuration.
         # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
-        run: ctest -C ${{ env.BUILD_TYPE }}
+        run: ctest --preset ${{ env.CONAN_PRESET }} --rerun-failed --output-on-failure
 
       - name: Fastcov
         # Run Fastcov target to collect coverage information.
-        run: cmake --build ${{github.workspace}}/build --config ${{ env.BUILD_TYPE }} --target coverage
+        run: cmake --build --preset ${{ env.CONAN_PRESET }} --target coverage
 
       - name: Lcov
         # Run LCov target to generate code coverage report
-        run: cmake --build ${{github.workspace}}/build --config ${{ env.BUILD_TYPE }} --target coverage-lcov
+        run: cmake --build --preset ${{ env.CONAN_PRESET }} --target coverage-lcov
 
       - name: Cobertura
         # Run Cobertura target to generate code coverage report in XML
-        run: cmake --build ${{github.workspace}}/build --config ${{ env.BUILD_TYPE }} --target coverage-cobertura
+        run: cmake --build --preset ${{ env.CONAN_PRESET }} --target coverage-cobertura
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
         with:
-          working-directory: ${{github.workspace}}/build/coverage
+          working-directory: ${{github.workspace}}/build/${{env.BUILD_TYPE}}/coverage
           gcov: true
-          gcov_include: ${{github.workspace}}/build/coverage/html
-          files: ${{github.workspace}}/build/coverage/cobertura_coverage.xml
+          gcov_include: ${{github.workspace}}/build/${{env.BUILD_TYPE}}/coverage/html
+          files: ${{github.workspace}}/build/${{env.BUILD_TYPE}}/coverage/cobertura_coverage.xml
