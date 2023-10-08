@@ -168,10 +168,6 @@ class Morpheus(ConanFile):
         deps = CMakeDeps(self)
         deps.generate()
 
-#    def source(self):
-#        tools.get(**self.conan_data["sources"][self.version],
-#                  strip_root=True, destination=self._source_subfolder)
-
     def layout(self):
         cmake_layout(self)
 
