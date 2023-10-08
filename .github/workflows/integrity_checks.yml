@@ -17,9 +17,7 @@
 
 name: Integrity Checks
 
-on:
-  push:
-    branches: [main]
+on: [push]
 
 defaults:
   run:
