@@ -121,6 +121,9 @@ jobs:
           sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler=.*/compiler=${{ env.COMPILER_TYPE }}/' .conan2/profiles/default
           sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.version=.*/compiler.version=${{ env.COMPILER_VERSION }}/' .conan2/profiles/default
           sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.libcxx=.*/compiler.libcxx=${{ env.STDLIB }}/' .conan2/profiles/default
+          sed -i.backup '1a mold*:build_type=Release' .conan2/profiles/default
+          sed -i.backup '1a onetbb*:build_type=Release' .conan2/profiles/default
+          sed -i.backup '1a mold*:compiler.libcxx=libstdc++11' .conan2/profiles/default
 
           conan profile show -pr default
 
@@ -130,12 +133,6 @@ jobs:
         run: |
           conan install "${{github.workspace}}" --build missing -c tools.cmake.cmaketoolchain:generator=Ninja --build catch2/3.4.0
 
-      - name: Configure Conan Build
-        shell: bash
-        working-directory: ${{github.workspace}}
-        run: |
-           source build/${{env.BUILD_TYPE}}/generators/conanbuild.sh
-
       - name: Conan Preset
         shell: bash
         run: echo "CONAN_PRESET=conan-$(echo ${{env.BUILD_TYPE}} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
@@ -143,11 +140,15 @@ jobs:
       - name: Configure CMake
         # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
         # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
-        run: cmake --preset ${{ env.CONAN_PRESET }} -DENABLE_CODE_COVERAGE=1
+        run: |
+           source build/${{env.BUILD_TYPE}}/generators/conanbuild.sh
+           cmake --preset ${{ env.CONAN_PRESET }} -DENABLE_CODE_COVERAGE=1
 
       - name: Build
         # Build your program with the given configuration
-        run: cmake --build --preset ${{ env.CONAN_PRESET }}
+        run: |
+           source build/${{env.BUILD_TYPE}}/generators/conanbuild.sh
+           cmake --build --preset ${{ env.CONAN_PRESET }}
 
       - name: Test
         working-directory: ${{github.workspace}}

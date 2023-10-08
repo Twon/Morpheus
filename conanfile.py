@@ -22,7 +22,7 @@
 from conan import ConanFile
 from conan.errors import ConanException, ConanInvalidConfiguration
 from conan.tools.build import check_min_cppstd
-from conan.tools.cmake import cmake_layout, CMake, CMakeDeps
+from conan.tools.cmake import cmake_layout, CMake, CMakeDeps, CMakeToolchain
 from conan.tools.files import copy
 from conan.tools.scm import Version
 from conan.tools.files import load
@@ -56,16 +56,17 @@ class Morpheus(ConanFile):
         "shared": [True, False],
         "fPIC": [True, False],
         "tools": [True, False],
-        "build_docs": [True, False]
+        "build_docs": [True, False],
+        "link_with_mold": [True, False]
     }
     default_options = {
         "shared": False,
         "fPIC": True,
         "tools": True,
-        "build_docs": False
+        "build_docs": False,
+        "link_with_mold": True
     }
     exports_sources = ["CMakeLists.txt", "LICENSE", "version.txt", "cmake/*", "examples/*" "libraries/*"]
-    generators = "CMakeDeps", "CMakeToolchain"
     requires = (
         "boost/1.82.0",
         "ctre/3.8",
@@ -91,6 +92,14 @@ class Morpheus(ConanFile):
         version = re.search(r'(\d+\.\d+\.\d+)', content).group(1)
         self.version = version.strip()
 
+    def checkMoldIsSupported(self):
+        """ Mold is only tested on Linux with gcc and clang. In future support for icc may be added. """
+        return self.settings.os == "Linux" and (self.settings.compiler == "clang" or self.settings.compiler == "gcc")
+
+    def config_options(self):
+        if not self.checkMoldIsSupported():
+            self.options.rm_safe("link_with_mold")
+
     def build_requirements(self):
         self.tool_requires("ninja/1.11.1")
         self.test_requires("catch2/3.4.0")
@@ -100,6 +109,10 @@ class Morpheus(ConanFile):
 
         if self.options.build_docs:
             self.build_requires("doxygen/1.9.4") # doxygen/1.9.5 will update dependency on zlib/1.2.12 to zlib/1.2.13
+
+        if self.options.get_safe("link_with_mold", False):
+            self.build_requires("mold/1.11.0")
+            self.build_requires("openssl/3.1.2", override=True)
 
     def requirements(self):
         if self.settings.os in ["Macos", "iOS", "tvOS"] and self.settings.compiler == "apple-clang":
@@ -147,18 +160,13 @@ class Morpheus(ConanFile):
                         self.settings.compiler,
                         self.settings.compiler.version))
 
-#    def generate(self):
-#        tc = CMakeToolchain(self, generator=os.getenv("CONAN_CMAKE_GENERATOR"))
-#        tc.variables["MORPHEUS_BUILD_DOCS"] = self.options.build_docs
-#        tc.generate()
-#        deps = CMakeDeps(self)
-        #import pdb; pdb.pm()
-#        breakpoint()
-#        deps.generate()
-
-#    def source(self):
-#        tools.get(**self.conan_data["sources"][self.version],
-#                  strip_root=True, destination=self._source_subfolder)
+    def generate(self):
+        tc = CMakeToolchain(self)
+        tc.variables["MORPHEUS_BUILD_DOCS"] = self.options.build_docs
+        tc.variables["MORPHEUS_LINK_WITH_MOLD"] = self.options.get_safe("link_with_mold", False)
+        tc.generate()
+        deps = CMakeDeps(self)
+        deps.generate()
 
     def layout(self):
         cmake_layout(self)
