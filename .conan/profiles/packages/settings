@@ -1,6 +1,5 @@
-{% set compiler, version = detect_api.detect_compiler() %}
 {% set os = detect_api.detect_os() %}
-{% if ((compiler == "gcc" or compiler == "clang") and os == "Linux") -%}
+{% if os == "Linux" -%}
 [settings]
 mold*:build_type=Release
 onetbb*:build_type=Release

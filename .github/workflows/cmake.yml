@@ -218,7 +218,9 @@ jobs:
       - name: Configure CMake
         if: matrix.settings.os != 'windows-latest'
         shell: bash
-        run: cmake --preset conan-default -DENABLE_ADDRESS_SANITIZER=ON -DENABLE_UNDEFINED_BEHAVIOUR_SANITIZER=ON
+        run: |
+          source build/generators/conanbuild.sh
+          cmake --preset conan-default -DENABLE_ADDRESS_SANITIZER=ON -DENABLE_UNDEFINED_BEHAVIOUR_SANITIZER=ON
 
       - name: Conan Preset
         shell: bash
@@ -235,6 +237,7 @@ jobs:
         if: matrix.settings.os != 'windows-latest'
         shell: bash
         run: |
+          source build/generators/conanbuild.sh
           cmake --build --preset ${{ env.CONAN_PRESET }}
 
       - name: Test

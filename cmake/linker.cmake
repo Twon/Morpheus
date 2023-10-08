@@ -17,7 +17,7 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 
 include_guard(GLOBAL)
 
-if (${MORPHEUS_ENABLE_MOLD})
+if (${MORPHEUS_LINK_WITH_MOLD})
     find_program(MOLD_BIN mold REQUIRED)
     if(MOLD_BIN)
         message(STATUS "Morpheus: Mold linker found: ${MOLD_BIN}.  Enabling mold as active linker.")
