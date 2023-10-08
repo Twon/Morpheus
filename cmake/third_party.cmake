@@ -26,6 +26,6 @@ endif (NOT CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
 #[[FetchContent_Declare(
     libunifex
     GIT_REPOSITORY git@github.com:facebookexperimental/libunifex.git
-    GIT_TAG main 
+    GIT_TAG main
 )
 FetchContent_MakeAvailable(libunifex)]]#

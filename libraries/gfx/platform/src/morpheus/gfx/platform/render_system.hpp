@@ -19,7 +19,7 @@ public:
 
     /// \name Life cycle
     ///@{
-    /*! 
+    /*!
 
      */
     render_system() {};

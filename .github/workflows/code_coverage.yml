@@ -1,3 +1,20 @@
+#
+# Copyright 2023 Antony Peacock
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
+# documentation files (the "Software"), to deal in the Software without restriction, including without limitation the
+# rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit
+# persons to whom the Software is furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all copies or substantial portions of the
+# Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+# WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+# COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+# OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+#
+
 name: Code Coverage
 
 on:
@@ -43,8 +60,8 @@ jobs:
             build-${{ matrix.os }}-
 
       # Previously GCC was installed via egor-tensin/setup-gcc@v1 but this does not install gcov with the compiler.
-      # By default Ubuntu has Gcov 11 installed. This worked so long as the compiler was gcc 11, but if a later gcc was 
-      # installed then gcov could fail as it must be the same version as the compiler.  By installing the compiler 
+      # By default Ubuntu has Gcov 11 installed. This worked so long as the compiler was gcc 11, but if a later gcc was
+      # installed then gcov could fail as it must be the same version as the compiler.  By installing the compiler
       # package we ensure that gcc and gcov are installed at the same time and the versions match. For more details
       # see here: https://github.com/Twon/Morpheus/issues/184
       - name: Install Latest GCC
@@ -69,7 +86,7 @@ jobs:
           tar -xvf v2.0.tar.gz
           cd lcov-2.0
           sudo make install
-        
+
       # Lcov 2.0 is missing a number of dependencies (DateTime and Capture::Tiny) so manually install for now.
       # When this is addressed in Lcov then this should be removed.
       - name: Install Missing Lcov Dependencies
@@ -107,7 +124,7 @@ jobs:
           sed -i.backup '1a mold*:build_type=Release' .conan2/profiles/default
           sed -i.backup '1a onetbb*:build_type=Release' .conan2/profiles/default
           sed -i.backup '1a mold*:compiler.libcxx=libstdc++11' .conan2/profiles/default
-          
+
           conan profile show -pr default
 
       - name: Configure Install

@@ -95,7 +95,7 @@ class Morpheus(ConanFile):
     def checkMoldIsSupported(self):
         """ Mold is only tested on Linux with gcc and clang. In future support for icc may be added. """
         return self.settings.os == "Linux" and (self.settings.compiler == "clang" or self.settings.compiler == "gcc")
-    
+
     def config_options(self):
         if not self.checkMoldIsSupported():
             self.options.rm_safe("link_with_mold")
@@ -191,5 +191,3 @@ class Morpheus(ConanFile):
         #self.cpp_info.components["_wg21_linear_algebra"].names["cmake_find_package"] = "wg21_linear_algebra"
         #self.cpp_info.components["_wg21_linear_algebra"].names["cmake_find_package_multi"] = "wg21_linear_algebra"
         #self.cpp_info.components["_wg21_linear_algebra"].requires = ["mdspan::mdspan"]
-
-

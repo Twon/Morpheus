@@ -9,7 +9,7 @@
 
 namespace morpheus
 {
- 
+
 AssertHandler gAssertHandler = [](Assertion assertion)
 {
     auto const debugMessage = fmt_ns::format("{}({}): assertion[{}]: {}\nBacktrace:{}\n", assertion.location.file_name(), assertion.location.line(),

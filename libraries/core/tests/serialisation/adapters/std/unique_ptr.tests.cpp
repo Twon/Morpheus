@@ -56,7 +56,7 @@ TEST_CASE("Verify deserialisation of std::unique_ptr", "[morpheus.serialisation.
     GIVEN("Expected contents of a std::unique_ptr holding a value")
     {
         constexpr std::int64_t actualValue = 10;
- 
+
         THEN("Expect the following sequence of operations on the underlying writer")
         {
             MockedReadSerialiser serialiser;
