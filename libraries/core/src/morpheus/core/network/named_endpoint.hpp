@@ -36,7 +36,7 @@ private:
 template <>
 struct std::hash<morpheus::network::NamedEndpoint>
 {
-    std::size_t operator()(morpheus::network::NamedEndpoint const& n)
+    std::size_t operator()(morpheus::network::NamedEndpoint const& n) const
     {
         std::size_t seed = 0;
         boost::hash_combine(seed, n.name());
