@@ -44,20 +44,20 @@
 //------------------------- Warp Shuffle Functions ---------------------------//
 //----------------------------------------------------------------------------//
 
-// all functions have variants with width parameter which permits sub-division 
-// of the warp into segments - for example to exchange data between 4 groups of 
-// 8 lanes in a SIMD manner. If width is less than warpSize then each subsection 
-// of the warp behaves as a separate entity with a starting logical lane ID of 0. 
-// A thread may only exchange data with others in its own subsection. Width must 
-// have a value which is a power of 2 so that the warp can be subdivided equally; 
-// results are undefined if width is not a power of 2, or is a number greater 
+// all functions have variants with width parameter which permits sub-division
+// of the warp into segments - for example to exchange data between 4 groups of
+// 8 lanes in a SIMD manner. If width is less than warpSize then each subsection
+// of the warp behaves as a separate entity with a starting logical lane ID of 0.
+// A thread may only exchange data with others in its own subsection. Width must
+// have a value which is a power of 2 so that the warp can be subdivided equally;
+// results are undefined if width is not a power of 2, or is a number greater
 // than warpSize.
 
 //
 // simple variant of SHFL instruction
 // returns val from the specified lane
 // optional width parameter must be a power of two and width <= 32
-// 
+//
 int NvShfl(int val, uint srcLane, int width = NV_WARP_SIZE)
 {
     uint index = g_NvidiaExt.IncrementCounter();
@@ -65,7 +65,7 @@ int NvShfl(int val, uint srcLane, int width = NV_WARP_SIZE)
     g_NvidiaExt[index].src0u.y  =  srcLane;                         // source lane
     g_NvidiaExt[index].src0u.z  =  __NvGetShflMaskFromWidth(width);
     g_NvidiaExt[index].opcode   =  NV_EXTN_OP_SHFL;
-    
+
     // result is returned as the return value of IncrementCounter on fake UAV slot
     return g_NvidiaExt.IncrementCounter();
 }
@@ -120,7 +120,7 @@ int NvShflXor(int val, uint laneMask, int width = NV_WARP_SIZE)
     uint index = g_NvidiaExt.IncrementCounter();
     g_NvidiaExt[index].src0u.x  =  val;           // variable to be shuffled
     g_NvidiaExt[index].src0u.y  =  laneMask;      // laneMask to be XOR'ed with current laneId to get the source lane id
-    g_NvidiaExt[index].src0u.z  =  __NvGetShflMaskFromWidth(width); 
+    g_NvidiaExt[index].src0u.z  =  __NvGetShflMaskFromWidth(width);
     g_NvidiaExt[index].opcode   =  NV_EXTN_OP_SHFL_XOR;
     return g_NvidiaExt.IncrementCounter();
 }
@@ -180,8 +180,8 @@ uint NvGetSpecial(uint subOpCode)
 //----------------------------- FP16 Atmoic Functions-------------------------//
 //----------------------------------------------------------------------------//
 
-// The functions below performs atomic operations on two consecutive fp16 
-// values in the given raw UAV. 
+// The functions below performs atomic operations on two consecutive fp16
+// values in the given raw UAV.
 // The uint paramater 'fp16x2Val' is treated as two fp16 values byteAddress must be multiple of 4
 // The returned value are the two fp16 values packed into a single uint
 
@@ -223,7 +223,7 @@ uint NvInterlockedMaxFp16x2(RWByteAddressBuffer uav, uint byteAddress, float2 va
 // The functions below perform atomic operation on a R16G16_FLOAT UAV at the given address
 // the uint paramater 'fp16x2Val' is treated as two fp16 values
 // the returned value are the two fp16 values (.x and .y components) packed into a single uint
-// Warning: Behaviour of these set of functions is undefined if the UAV is not 
+// Warning: Behaviour of these set of functions is undefined if the UAV is not
 // of R16G16_FLOAT format (might result in app crash or TDR)
 
 uint NvInterlockedAddFp16x2(RWTexture1D<float2> uav, uint address, uint fp16x2Val)
@@ -322,10 +322,10 @@ uint NvInterlockedMaxFp16x2(RWTexture3D<float2> uav, uint3 address, float2 val)
 //----------------------------------------------------------------------------//
 
 // The functions below perform Atomic operation on a R16G16B16A16_FLOAT UAV at the given address
-// the uint2 paramater 'fp16x2Val' is treated as four fp16 values 
+// the uint2 paramater 'fp16x2Val' is treated as four fp16 values
 // i.e, fp16x2Val.x = uav.xy and fp16x2Val.y = uav.yz
 // The returned value are the four fp16 values (.xyzw components) packed into uint2
-// Warning: Behaviour of these set of functions is undefined if the UAV is not 
+// Warning: Behaviour of these set of functions is undefined if the UAV is not
 // of R16G16B16A16_FLOAT format (might result in app crash or TDR)
 
 uint2 NvInterlockedAddFp16x4(RWTexture1D<float4> uav, uint address, uint2 fp16x2Val)
@@ -437,7 +437,7 @@ float NvInterlockedAddFp32(RWByteAddressBuffer uav, uint byteAddress, float val)
 
 // The functions below perform atomic add on a R32_FLOAT UAV at the given address
 // the returned value is the value before performing the atomic add
-// Warning: Behaviour of these set of functions is undefined if the UAV is not 
+// Warning: Behaviour of these set of functions is undefined if the UAV is not
 // of R32_FLOAT format (might result in app crash or TDR)
 
 float NvInterlockedAddFp32(RWTexture1D<float> uav, uint address, float val)
@@ -986,7 +986,7 @@ uint4 NvEvaluateAttributeSnappedForVPRS(uint4 attrib, uint2 offset)
     return value;
 }
 
-// MATCH instruction variants 
+// MATCH instruction variants
 uint NvWaveMatch(uint value)
 {
     uint index = g_NvidiaExt.IncrementCounter();
@@ -1153,7 +1153,7 @@ uint2 NvFootprintExtractBitmask(uint4 blob)
 }
 
 
-// Variant of Footprint extensions which returns isSingleLod (out parameter) 
+// Variant of Footprint extensions which returns isSingleLod (out parameter)
 // isSingleLod = true -> This footprint request touched the texels from only single LOD.
 uint4 NvFootprintFine(uint texSpace, uint texIndex, uint smpSpace, uint smpIndex, uint texType, float3 location, uint gran, out uint isSingleLod, int3 offset = int3(0, 0, 0))
 {
@@ -1228,20 +1228,20 @@ uint NvActiveThreads()
 //------------------------------ WaveMultiPrefix functions -------------------//
 //----------------------------------------------------------------------------//
 
-// Following are the WaveMultiPrefix functions for different operations (Add, Bitand, BitOr, BitXOr) for different datatypes (uint, uint2, uint4) 
-// This is a set of functions which implement multi-prefix operations among the set of active lanes in the current wave (WARP). 
-// A multi-prefix operation comprises a set of prefix operations, executed in parallel within subsets of lanes identified with the provided bitmasks. 
-// These bitmasks represent partitioning of the set of active lanes in the current wave into N groups (where N is the number of unique masks across all lanes in the wave). 
-// N prefix operations are then performed each within its corresponding group. 
-// The groups are assumed to be non-intersecting (that is, a given lane can be a member of one and only one group), 
+// Following are the WaveMultiPrefix functions for different operations (Add, Bitand, BitOr, BitXOr) for different datatypes (uint, uint2, uint4)
+// This is a set of functions which implement multi-prefix operations among the set of active lanes in the current wave (WARP).
+// A multi-prefix operation comprises a set of prefix operations, executed in parallel within subsets of lanes identified with the provided bitmasks.
+// These bitmasks represent partitioning of the set of active lanes in the current wave into N groups (where N is the number of unique masks across all lanes in the wave).
+// N prefix operations are then performed each within its corresponding group.
+// The groups are assumed to be non-intersecting (that is, a given lane can be a member of one and only one group),
 // and bitmasks in all lanes belonging to the same group are required to be the same.
 // There are 2 type of functions - Exclusive and Inclusive prefix operations.
-// e.g. For NvWaveMultiPrefixInclusiveAdd(val, mask) operation - For each of the groups (for which mask input is same) following is the expected output : 
+// e.g. For NvWaveMultiPrefixInclusiveAdd(val, mask) operation - For each of the groups (for which mask input is same) following is the expected output :
 // i^th thread in a group has value = sum(values of threads 0 to i)
-// For Exclusive version of same opeartion - 
-// i^th thread in a group has value = sum(values of threads 0 to i-1)  and 0th thread in a the Group has value 0 
+// For Exclusive version of same opeartion -
+// i^th thread in a group has value = sum(values of threads 0 to i-1)  and 0th thread in a the Group has value 0
 
-// Extensions for Add 
+// Extensions for Add
 uint NvWaveMultiPrefixInclusiveAdd(uint val, uint mask)
 {
     uint temp;

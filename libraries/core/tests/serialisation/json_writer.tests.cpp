@@ -1,6 +1,7 @@
 #include "morpheus/core/serialisation/json_writer.hpp"
 #include "morpheus/core/conformance/format.hpp"
 #include "morpheus/core/serialisation/adapters/aggregate.hpp"
+#include "morpheus/core/serialisation/adapters/std/chrono.hpp"
 #include "morpheus/core/serialisation/adapters/std/monostate.hpp"
 #include "morpheus/core/serialisation/adapters/std/optional.hpp"
 #include "morpheus/core/serialisation/adapters/std/pair.hpp"
@@ -50,7 +51,7 @@ T toFloatingPoint(std::string_view value)
 
 }
 
-TEMPLATE_TEST_CASE("Json writer can write single native types to underlying text representation", "[morpheus.serialisation.json_writer.native]", 
+TEMPLATE_TEST_CASE("Json writer can write single native types to underlying text representation", "[morpheus.serialisation.json_writer.native]",
     bool, std::int8_t, std::uint8_t, std::int16_t, std::uint16_t, std::int32_t, std::uint32_t, std::int64_t, std::uint64_t, float, double)
 {
     if constexpr (std::is_integral_v<TestType>)
@@ -74,12 +75,12 @@ TEMPLATE_TEST_CASE("Json writer can write single native types to underlying text
         REQUIRE(test::serialise(-std::numeric_limits<TestType>::signaling_NaN()) == "NaN");
 
 #if (__cpp_lib_to_chars >= 201611L)
-        // RapidJson ouputs "1.401298464324817e-45" vs "1e-45" for float, but SetMaxDecimalPlaces() would effect all non-scientific values so we compare 
+        // RapidJson ouputs "1.401298464324817e-45" vs "1e-45" for float, but SetMaxDecimalPlaces() would effect all non-scientific values so we compare
         // against the underling value not string representation.
 //        REQUIRE(test::toFloatingPoint<TestType>(test::serialise(std::numeric_limits<TestType>::denorm_min())) == Approx(std::numeric_limits<TestType>::denorm_min()));
 //        REQUIRE(test::toFloatingPoint<TestType>(test::serialise(std::numeric_limits<TestType>::denorm_min())) == Approx(std::numeric_limits<TestType>::denorm_min()));
 #endif // (__cpp_lib_to_chars >= 201611L)
-    }        
+    }
 }
 
 TEST_CASE("Json writer can write simple composite types to underlying text representation", "[morpheus.serialisation.json_writer.composite]")
@@ -251,10 +252,24 @@ TEST_CASE("Json writer can write simple aggregates types to underlying text repr
 
 TEST_CASE("Json writer can write std types to underlying text representation", "[morpheus.serialisation.json_writer.adapters.std]")
 {
+    SECTION("Chrono types")
+    {
+       REQUIRE(test::serialise(std::chrono::nanoseconds{123}) == R"("123ns")");
+       REQUIRE(test::serialise(std::chrono::microseconds{456}) == R"("456us")");
+       REQUIRE(test::serialise(std::chrono::milliseconds{789}) == R"("789ms")");
+       REQUIRE(test::serialise(std::chrono::seconds{123}) == R"("123s")");
+       REQUIRE(test::serialise(std::chrono::minutes{58}) == R"("58min")");
+       REQUIRE(test::serialise(std::chrono::hours{24}) == R"("24h")");
+       REQUIRE(test::serialise(std::chrono::days{8}) == R"("8d")");
+       REQUIRE(test::serialise(std::chrono::weeks{12}) == R"("12w")");
+       REQUIRE(test::serialise(std::chrono::years{100}) == R"("100y")");
+       REQUIRE(test::serialise(std::chrono::months{12}) == R"("12m")");
+    }
     REQUIRE(test::serialise(std::monostate{}) == R"({})");
     REQUIRE(test::serialise(std::optional<int>{100}) == R"(100)");
     REQUIRE(test::serialise(std::optional<int>{}) == R"(null)");
     REQUIRE(test::serialise(std::pair<int, bool>{50, true}) == R"([50,true])");
+    REQUIRE(test::serialise(std::string("Hello")) == R"("Hello")");
     REQUIRE(test::serialise(std::tuple<int, bool, std::string>{75, true, "Example"}) == R"([75,true,"Example"])");
     REQUIRE(test::serialise(std::make_unique<int>(123)) == R"(123)");
     REQUIRE(test::serialise(std::variant<int, bool, std::string>{true}) == R"({"type":"bool","value":true})");

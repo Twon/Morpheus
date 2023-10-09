@@ -11,9 +11,9 @@ namespace morpheus::gfx::intel::win32
 
 concurrency::Generator<Adapter> enumerateAdapters()
 {
-    ctl_init_args_t ctlInitArgs{ 
+    ctl_init_args_t ctlInitArgs{
         .Size = sizeof(ctl_init_args_t),
-        .Version = 0, 
+        .Version = 0,
         .AppVersion = CTL_MAKE_VERSION(CTL_IMPL_MAJOR_VERSION, CTL_IMPL_MINOR_VERSION),
         .flags = CTL_INIT_FLAG_USE_LEVEL_ZERO
     };
@@ -31,9 +31,9 @@ concurrency::Generator<Adapter> enumerateAdapters()
     {
         LUID adapterID{};
         ctl_device_adapter_properties_t properties{
-            .Size=sizeof(properties), 
-            .Version=0, 
-            .pDeviceID=&adapterID, 
+            .Size=sizeof(properties),
+            .Version=0,
+            .pDeviceID=&adapterID,
             .device_id_size = sizeof(LUID)
         };
         MORPHEUS_VERIFY(ctlGetDeviceProperties(device, &properties) == CTL_RESULT_SUCCESS);

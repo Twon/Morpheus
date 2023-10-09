@@ -2,7 +2,7 @@
 #include <morpheus/catch2/adapters/gmock.hpp>
 #include <catch2/catch_all.hpp>
 
-int main(int argc, char** argv) 
+int main(int argc, char** argv)
 {
 #if __has_include(<gmock/gmock.h>)
     morpheus::enableGmockAdapter(argv);
@@ -14,7 +14,7 @@ int main(int argc, char** argv)
     session.configData().name = "@MORPHEUS_NAME@";
 
     auto const returnCode = session.applyCommandLine(argc, argv);
-    if (returnCode != 0) 
+    if (returnCode != 0)
         return returnCode;
 
     return session.run();
