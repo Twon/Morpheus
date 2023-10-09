@@ -57,14 +57,16 @@ class Morpheus(ConanFile):
         "fPIC": [True, False],
         "tools": [True, False],
         "build_docs": [True, False],
-        "link_with_mold": [True, False]
+        "link_with_mold": [True, False],
+        "build_with_ccache": [True, False]
     }
     default_options = {
         "shared": False,
         "fPIC": True,
         "tools": True,
         "build_docs": False,
-        "link_with_mold": True
+        "link_with_mold": True,
+        "build_with_ccache": True
     }
     exports_sources = ["CMakeLists.txt", "LICENSE", "version.txt", "cmake/*", "examples/*" "libraries/*"]
     requires = (
@@ -95,10 +97,18 @@ class Morpheus(ConanFile):
     def checkMoldIsSupported(self):
         """ Mold is only tested on Linux with gcc and clang. In future support for icc may be added. """
         return self.settings.os == "Linux" and (self.settings.compiler == "clang" or self.settings.compiler == "gcc")
+    
+    def checkCCacheIsSupported(self):
+        """ CCache is fully supported on Linux and macOS with gcc and clang. """
+        return (self.settings.os == "Macos" or self.settings.os == "Linux") and \
+               (self.settings.compiler == "clang" or self.settings.compiler == "gcc")    
 
     def config_options(self):
         if not self.checkMoldIsSupported():
             self.options.rm_safe("link_with_mold")
+        
+        if not self.checkCCacheIsSupported():
+            self.options.rm_safe("build_with_ccache")
 
     def build_requirements(self):
         self.tool_requires("ninja/1.11.1")
@@ -113,6 +123,9 @@ class Morpheus(ConanFile):
         if self.options.get_safe("link_with_mold", False):
             self.build_requires("mold/1.11.0")
             self.build_requires("openssl/3.1.2", override=True)
+        
+        if self.options.get_safe("build_with_ccache", False):
+            self.build_requires("ccache/4.8.3")
 
     def requirements(self):
         if self.settings.os in ["Macos", "iOS", "tvOS"] and self.settings.compiler == "apple-clang":
@@ -164,6 +177,7 @@ class Morpheus(ConanFile):
         tc = CMakeToolchain(self)
         tc.variables["MORPHEUS_BUILD_DOCS"] = self.options.build_docs
         tc.variables["MORPHEUS_LINK_WITH_MOLD"] = self.options.get_safe("link_with_mold", False)
+        tc.variables["MORPHEUS_BUILD_WITH_CCACHE"] = self.options.get_safe("build_with_ccache", False)
         tc.generate()
         deps = CMakeDeps(self)
         deps.generate()

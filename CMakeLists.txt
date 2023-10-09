@@ -41,6 +41,7 @@ list(APPEND CMAKE_PREFIX_PATH "${CMAKE_BINARY_DIR}")
 
 #------------------------------------------------------------------------------------------------------------------------------------------
 # Custom CMake Includes
+include(ccache)
 include(coverage)
 include(compiler)
 include(documentation)
