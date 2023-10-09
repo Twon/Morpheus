@@ -42,6 +42,7 @@ cd <project root>
 python3 -m venv .venv         # Create a Python virtual env
 source ./.venv/bin/activate   # Activate the virtual env for bash by source.
 pip install conan             # Install latest conan (conan=>2.0)
+pip install ninja             # Install ninja for multi-config build
 conan profile detect --force  # Generate a default configuration with the local machine settings
 conan config install ./.conan # Install supported build profiles from ./.conan to ./conan2
 ```
@@ -77,6 +78,7 @@ cmake --build --preset conan-debug
 Multi-config builds allow you to create a build folder containing sub-folders for different build configurations and build them side-by-side. Once again starting with the repository clone and Conan configured run the install stage, but this time we specity the Conan cmake tools use Ninja multi-config to generate `Release, Debug, RelWithDebInfo` configurations.  To generate all 3 configuration we run the `conan-default` preset which configures CMake for these configurations.
 ```bash
 conan install ./ -pr:h .conan2/profiles/msvc/193/x64-release -pr:b .conan2/profiles/msvc/193/x64-release --build missing -c tools.cmake.cmaketoolchain:generator="Ninja Multi-Config"
+source build/generators/conanbuild.sh # Access the environment variables needed to use the Mold linker with gcc and clang
 cmake --preset conan-default  # The configure stage for multi-config builds is conan-default
 ```
 
