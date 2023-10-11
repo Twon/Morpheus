@@ -39,12 +39,11 @@ To set up Conan for the repository create a repository local virtual environment
 
 ```bash
 cd <project root>
-python3 -m venv .venv         # Create a Python virtual env
-source ./.venv/bin/activate   # Activate the virtual env for bash by source.
-pip install conan             # Install latest conan (conan=>2.0)
-pip install ninja             # Install ninja for multi-config build
-conan profile detect --force  # Generate a default configuration with the local machine settings
-conan config install ./.conan # Install supported build profiles from ./.conan to ./conan2
+python3 -m venv .venv               # Create a Python virtual env
+source ./.venv/bin/activate         # Activate the virtual env for bash by source.
+pip install -r ./requirements.txt   # Install all Python dependecies
+conan profile detect --force        # Generate a default configuration with the local machine settings
+conan config install ./.conan       # Install supported build profiles from ./.conan to ./conan2
 ```
 
 ### Standard build
