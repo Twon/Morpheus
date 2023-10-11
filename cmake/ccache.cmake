@@ -17,13 +17,40 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 
 include_guard(GLOBAL)
 
-if (${MORPHEUS_BUILD_WITH_CCACHE})
+
+#[=======================================================================[.rst:
+enable_ccacche
+------------------
+
+Overview
+^^^^^^^^
+
+Enable use of Ccache for compiler caching during the build process.
+
+.. code-block:: cmake
+
+  enable_ccacche(
+      [QUIET]
+  )
+   -- Searches for the ccache executable, and if found enables it for supported
+   language with specified options.
+
+  ``QUIET`` Silent output from this method.
+
+#]=======================================================================]
+function(enable_ccache)
+    set(options QUIET)
+    set(oneValueArgs)
+    set(multiValueArgs)
+    cmake_parse_arguments(CCACHE "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
+
     find_program(CCACHE_BIN ccache REQUIRED)
-    if(CCACHE_BIN)
-        message(STATUS "Morpheus: CCache found: ${CCACHE_BIN}. Enabling ccache as compiler cache tool.")
-        set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${CCACHE_BIN}")
-    else()
+    if(NOT CCACHE_BIN)
         message(STATUS "Morpheus: CCache not found. Rebuilding all the source files.")
         message(DEBUG "Morpheus: If CCache compiler cache is desired then ensure this is a supported platform and ensure the Conan buildenv is active")
+        return()
     endif()
-endif()
+
+    message(STATUS "Morpheus: CCache found: ${CCACHE_BIN}. Enabling ccache as compiler cache tool.")
+    set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${CCACHE_BIN}")
+endfunction()
