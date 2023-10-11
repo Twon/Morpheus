@@ -52,5 +52,7 @@ function(enable_ccache)
     endif()
 
     message(STATUS "Morpheus: CCache found: ${CCACHE_BIN}. Enabling ccache as compiler cache tool.")
-    set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${CCACHE_BIN}")
+    foreach(lang IN ITEMS ${MORPHEUS_LANGUAGES})
+        set(CMAKE_${lang}_COMPILER_LAUNCHER ${CCACHE_BIN})
+    endforeach()
 endfunction()

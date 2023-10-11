@@ -97,6 +97,7 @@ add_subdirectory(libraries)
 add_subdirectory(examples)
 
 if (MORPHEUS_BUILD_WITH_CCACHE)
+    set(MORPHEUS_LANGUAGES CXX)
     enable_ccache()
 endif()
 
