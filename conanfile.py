@@ -53,20 +53,20 @@ class Morpheus(ConanFile):
     settings = "os", "compiler", "build_type", "arch"
     no_copy_source = True
     options = {
-        "shared": [True, False],
-        "fPIC": [True, False],
-        "tools": [True, False],
         "build_docs": [True, False],
+        "build_with_ccache": [True, False],
+        "fPIC": [True, False],
         "link_with_mold": [True, False],
-        "build_with_ccache": [True, False]
+        "shared": [True, False],
+        "tools": [True, False]
     }
     default_options = {
-        "shared": False,
-        "fPIC": True,
-        "tools": True,
         "build_docs": False,
+        "build_with_ccache": True,
+        "fPIC": True,
         "link_with_mold": True,
-        "build_with_ccache": True
+        "shared": False,
+        "tools": True
     }
     exports_sources = ["CMakeLists.txt", "LICENSE", "version.txt", "cmake/*", "examples/*" "libraries/*"]
     requires = (
