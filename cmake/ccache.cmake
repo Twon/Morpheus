@@ -51,8 +51,43 @@ function(enable_ccache)
         return()
     endif()
 
+    message(STATUS "Morpheus Generator: ${CMAKE_GENERATOR}") #debug
     message(STATUS "Morpheus: CCache found: ${CCACHE_BIN}. Enabling ccache as compiler cache tool.")
-    foreach(lang IN ITEMS ${MORPHEUS_LANGUAGES})
-        set(CMAKE_${lang}_COMPILER_LAUNCHER ${CCACHE_BIN})
-    endforeach()
+    if(${CMAKE_GENERATOR} MATCHES "Ninja|Makefiles")
+        message(STATUS "found generator Ninja|Makefiles") #debug
+        foreach(lang IN ITEMS ${MORPHEUS_LANGUAGES})
+            set(CMAKE_${lang}_COMPILER_LAUNCHER ${CCACHE_BIN})
+        endforeach()
+    elseif(${CMAKE_GENERATOR} STREQUAL "Xcode")
+        message(STATUS "found generator Xcode") #debug
+        foreach(lang IN ITEMS ${MORPHEUS_LANGUAGES})
+            set(launch${lang} ${CMAKE_BINARY_DIR}/launch-${lang})
+            file(WRITE ${launch${lang}}
+                "#!/bin/bash\n\n"
+                "exec \"${CCACHE_BIN}\" \"${CMAKE_${lang}_COMPILER}\" \"$@\"\n"
+            )
+            execute_process(COMMAND chmod a+rx ${launch${lang}})
+            set(${CMAKE_XCODE_ATTRIBUTE_${lang}} ${launch${lang}})
+            if(lang STREQUAL "C")
+                set(CMAKE_XCODE_ATTRIBUTE_LD ${launchC}) 
+            elseif(lang STREQUAL "CXX")
+                set(CMAKE_XCODE_ATTRIBUTE_LDPLUSPLUS ${launchCXX})
+            endif()
+        endforeach()
+    elseif(${CMAKE_GENERATOR} MATCHES "Visual Studio")
+        message(STATUS "found generator Visual Studio") #debug
+        cmake_path(NATIVE_PATH CCACHE_BIN ccache_exe)
+        file(WRITE ${CMAKE_BINARY_DIR}/launch-cl.cmd
+        "@echo off\n"
+        "\"${ccache_exe}\" \"${CMAKE_C_COMPILER}\" %*\n"
+        )
+        list(FILTER CMAKE_VS_GLOBALS EXCLUDE
+            REGEX "^(CLTool(Path|Exe)|TrackFileAccess)=.*$"
+        )
+        list(APPEND CMAKE_VS_GLOBALS
+            CLToolPath=${CMAKE_BINARY_DIR}
+            CLToolExe=launch-cl.cmd
+            TrackFileAccess=false
+        )
+    endif()
 endfunction()
