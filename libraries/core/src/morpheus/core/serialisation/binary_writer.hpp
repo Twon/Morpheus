@@ -69,7 +69,8 @@ public:
     requires std::integral<T> or std::floating_point<T>
     void write(T const value)
     {
-        auto const writtenSize = mOutStream.rdbuf()->sputn(reinterpret_cast<const char*>(&value), sizeof(value));
+        // https://stackoverflow.com/questions/24482028/why-is-stdstreamsize-defined-as-signed-rather-than-unsigned
+        auto const writtenSize = static_cast<std::size_t>(mOutStream.rdbuf()->sputn(reinterpret_cast<const char*>(&value), sizeof(value)));
         if (writtenSize != sizeof(value))
             throwBinaryException(fmt_ns::format("Error writing data to stream.  Attempted to write {} bytes, but only {} bytes were written.", sizeof(value),
                                  writtenSize));
@@ -81,7 +82,7 @@ public:
         auto length = value.size();
         write(length);
 
-        auto const writtenSize = mOutStream.rdbuf()->sputn(value.data(), value.size());
+        auto const writtenSize = static_cast<std::size_t>(mOutStream.rdbuf()->sputn(value.data(), value.size()));
         if (writtenSize != value.size())
             throwBinaryException(
                 fmt_ns::format("Error writing data to stream.  Attempted to write {} bytes, but only {} bytes were written.", value.size(), writtenSize));
@@ -93,7 +94,7 @@ public:
         auto length = value.size();
         write(length);
 
-        auto const writtenSize = mOutStream.rdbuf()->sputn(reinterpret_cast<const char*>(value.data()), value.size());
+        auto const writtenSize = static_cast<std::size_t>(mOutStream.rdbuf()->sputn(reinterpret_cast<const char*>(value.data()), value.size()));
         if (writtenSize != value.size())
             throwBinaryException(fmt_ns::format("Error writing data to stream.  Attempted to write {} bytes, but only {} bytes were written.", value.size(),
                                  writtenSize));
