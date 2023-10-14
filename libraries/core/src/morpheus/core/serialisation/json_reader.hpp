@@ -158,7 +158,7 @@ private:
         EndSequence,
     };
 
-    friend class JsonExtracter;
+    friend struct JsonExtracter;
     using FundamentalValue = std::variant<bool, std::int64_t, std::uint64_t, float, double, std::string>;
     using PossibleValue = std::optional<FundamentalValue>;
     using EventValue = std::tuple<Event, PossibleValue>;
@@ -168,7 +168,7 @@ private:
     memory::polymorphic_value<std::istream> mSourceStream; /// Owned input stream containing the Json source.
     rapidjson::IStreamWrapper mStream;
     rapidjson::Reader mJsonReader;
-    std::unique_ptr<class JsonExtracter> mExtractor;
+    std::unique_ptr<struct JsonExtracter> mExtractor;
     bool mValidate = true;
 };
 

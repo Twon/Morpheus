@@ -40,7 +40,7 @@ TEST_CASE("Verify deserialisation of std::monostate", "[morpheus.serialisation.m
             EXPECT_CALL(serialiser.reader(), beginComposite()).Times(1);
             EXPECT_CALL(serialiser.reader(), endComposite()).Times(1);
 
-            WHEN("Deserialising a std::monostate") { auto const value = serialiser.deserialise<std::monostate>(); }
+            WHEN("Deserialising a std::monostate") { [[maybe_unused]] auto const value = serialiser.deserialise<std::monostate>(); }
         }
     }
 }
