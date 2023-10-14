@@ -120,12 +120,6 @@
 
     #endif
 
-
-//    #define STRING2(x) #x
-//    #define STRING(x) STRING2(x)
-//    #pragma message "MORPHEUS_COMPILER = " STRING(MORPHEUS_COMPILER)
-
-
     /*! \def MORPHEUS_IS_GCC_COMPATIBLE_COMPILER
             This is a macro which can be used to with proprocessor directives to conditionally
             compile code paths if the current compiler is compatible with the settings of the
