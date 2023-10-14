@@ -53,6 +53,21 @@ jobs:
               lib: "libc++",
             }
           - {
+              name: "Ubuntu Clang-15 + libc++",
+              os: ubuntu-latest,
+              compiler:
+                {
+                  type: CLANG,
+                  version: 15,
+                  conan: "clang",
+                  cc: "clang-15",
+                  cxx: "clang++-15",
+                  std: 20,
+                  toolchain: "clang-libc++.cmake"
+                },
+              lib: "libc++",
+            }
+          - {
               name: "Visual Studio 2019",
               os: windows-latest,
               compiler: { type: VISUAL, version: 16, conan: "mscv", cc: "cl", cxx: "cl", std: 20 },
