@@ -1,0 +1,7 @@
+{% set os = detect_api.detect_os() %}
+{% if os == "Linux" -%}
+[settings]
+mold*:build_type=Release
+onetbb*:build_type=Release
+mold*:compiler.libcxx=libstdc++11
+{% endif %}

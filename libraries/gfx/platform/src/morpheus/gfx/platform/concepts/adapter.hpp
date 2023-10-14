@@ -11,7 +11,7 @@ namespace morpheus::gfx::concepts
 {
 
 /// \concept Adapter
-///     Adapters define the underlying graphics API abstraction of the underlying graphic hardware device. 
+///     Adapters define the underlying graphics API abstraction of the underlying graphic hardware device.
 template <typename T>
 concept Adapter = requires(T t)
 {

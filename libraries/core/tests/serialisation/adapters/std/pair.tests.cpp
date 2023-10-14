@@ -49,7 +49,7 @@ TEST_CASE("Verify deserialisation of std::pair", "[morpheus.serialisation.pair.d
         THEN("Expect the following sequence of operations on the underlying reader")
         {
             MockedReadSerialiser serialiser;
-            EXPECT_CALL(serialiser.reader(), beginSequence(std::optional<std::size_t>(2))).Times(1);
+            EXPECT_CALL(serialiser.reader(), beginSequence()).WillOnce(Return(std::optional<std::size_t>(2)));
             EXPECT_CALL(serialiser.reader(), read(An<bool>())).WillOnce(Return(firstValue));
             EXPECT_CALL(serialiser.reader(), read(An<std::int64_t>())).WillOnce(Return(secondValue));
             EXPECT_CALL(serialiser.reader(), endSequence()).Times(1);

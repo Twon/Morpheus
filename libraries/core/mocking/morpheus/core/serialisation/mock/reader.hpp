@@ -32,7 +32,7 @@ public:
     /// \copydoc morpheus::serialisation::concepts::ReaderArchtype::endValue()
     MOCK_METHOD(void, endValue, (), ());
     /// Begin reading a sequence of values.
-    MOCK_METHOD(void, beginSequence, (std::optional<std::size_t>), ());
+    MOCK_METHOD(std::optional<std::size_t>, beginSequence, (), ());
     /// \copydoc morpheus::serialisation::concepts::ReaderArchtype::endSequence()
     MOCK_METHOD(void, endSequence, (), ());
     /// Begin reading a nullable value.
@@ -69,7 +69,7 @@ public:
     /// Reads a string literal type from the serialisation.
     MOCK_METHOD(std::string, read, (char const * const), ());
     /// Reads a blob of bytes from the serialisation.
-    MOCK_METHOD(std::vector<std::byte>, read, (std::span<std::byte>), ());
+    MOCK_METHOD(std::vector<std::byte>, read, (std::vector<std::byte>), ());
     ///@}
 
     template<typename T>

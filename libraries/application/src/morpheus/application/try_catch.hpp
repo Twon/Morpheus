@@ -9,7 +9,7 @@ namespace morpheus::application
 {
 
 ///
-/// \param[in] f 
+/// \param[in] f
 void tryCatch(std::invocable auto f)
 {
     try

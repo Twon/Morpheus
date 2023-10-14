@@ -26,7 +26,7 @@ TEST_CASE("Ensure assert functionality works and is hooked into by the test fram
                 return false;
             });
     };
-    
+
     auto const onExit = [&](){ setAssertHandler(currentHandler); };
     ScopedAction const restoreAssertHandler(onEntry, onExit);
 
@@ -46,7 +46,7 @@ TEST_CASE("Ensure assert functionality responds to appropriate defines", "[morph
 
 #define MORPHEUS_DISABLE_ASSERT
     MORPHEUS_ASSERT(true);
-#undef MORPHEUS_DISABLE_ASSERT 
+#undef MORPHEUS_DISABLE_ASSERT
 }
 
 } // namespace morpheus
