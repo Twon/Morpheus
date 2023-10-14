@@ -18,22 +18,32 @@
      */
     #define MORPHEUS_GNUC_COMPILER                                2
 
-    /*! \def MORPHEUS_ICL_COMPILER
-            This token is used to signify the use of the Intel C++ compiler.
+    /*! \def MORPHEUS_ICC_COMPILER
+            This token is used to signify the use of the Intel C++ Compiler Classic.
      */
-    #define MORPHEUS_ICL_COMPILER                                 3
+    #define MORPHEUS_ICC_COMPILER                                 3
+
+    /*! \def MORPHEUS_ICL_COMPILER
+            This token is used to signify the use of the Intel LLVM based C++ compiler.
+     */
+    #define MORPHEUS_ICL_COMPILER                                 4
+
+    /*! \def MORPHEUS_INTEL_DPC_COMPILER
+            This token is used to signify the use of the Intel Data Parallel C++ compiler.
+     */
+    #define MORPHEUS_INTEL_DPC_COMPILER                           5
 
     /*! \def MORPHEUS_VISUALSTUDIO_COMPILER
             This token is used to signify the use of the Microsoft's C++ compiler. Only version
             including and beyond Visual Studio 2017 are supported.
      */
-    #define MORPHEUS_VISUALSTUDIO_COMPILER                        4
+    #define MORPHEUS_VISUALSTUDIO_COMPILER                        6
 
     /*! \def MORPHEUS_UNKNOWN_COMPILER
             This token is used to signify the use of the current compiler is unknown and as
             such is not supported.
      */
-    #define MORPHEUS_UNKNOWN_COMPILER                             5
+    #define MORPHEUS_UNKNOWN_COMPILER                             7
 
     /*! \def MORPHEUS_COMPILER_VERSION_NUMBER
             This is a macro which can be used to generate a compiler number composed of the
@@ -49,20 +59,9 @@
             This token is used to numerate the version of the current current complier
             (denoted by MORPHEUS_COMPILER)
      */
-    #if defined(__clang__)
+    #if defined(__INTEL_COMPILER)
 
-        #define MORPHEUS_COMPILER MORPHEUS_CLANG_COMPILER
-        #define MORPHEUS_COMP_VER                                                                                      \
-            MORPHEUS_COMPILER_VERSION_NUMBER(__clang_major__, __clang_minor__, __clang_patchlevel__)
-
-    #elif defined(__GNUC__)
-
-        #define MORPHEUS_COMPILER MORPHEUS_GNUC_COMPILER
-        #define MORPHEUS_COMP_VER MORPHEUS_COMPILER_VERSION_NUMBER(__GNUC__, __GNUC_MINOR__, __GNUC_PATCHLEVEL__)
-
-    #elif defined(__INTEL_COMPILER)
-
-        #define MORPHEUS_COMPILER MORPHEUS_ICL_COMPILER
+        #define MORPHEUS_COMPILER MORPHEUS_ICC_COMPILER
         #define MORPHEUS_COMP_VER __ICL
 
         #if defined(_MSC_VER)
@@ -72,6 +71,42 @@
             #define MORPHEUS_INTEL_COMPILER_FOR_WINDOWS 0
             #define MORPHEUS_INTEL_COMPILER_FOR_LINUX   1
         #endif
+
+    #elif defined(__INTEL_LLVM_COMPILER) && !defined(SYCL_LANGUAGE_VERSION)
+
+        #define MORPHEUS_COMPILER MORPHEUS_ICL_COMPILER
+        #define MORPHEUS_COMP_VER __INTEL_LLVM_COMPILER
+
+        #if defined(_MSC_VER)
+            #define MORPHEUS_INTEL_COMPILER_FOR_WINDOWS 1
+            #define MORPHEUS_INTEL_COMPILER_FOR_LINUX 0
+        #else
+            #define MORPHEUS_INTEL_COMPILER_FOR_WINDOWS 0
+            #define MORPHEUS_INTEL_COMPILER_FOR_LINUX 1
+        #endif
+
+    #elif defined(__INTEL_LLVM_COMPILER) && defined(SYCL_LANGUAGE_VERSION)
+
+        #define MORPHEUS_COMPILER MORPHEUS_INTEL_DPC_COMPILER
+        #define MORPHEUS_COMP_VER __INTEL_LLVM_COMPILER
+
+        #if defined(_MSC_VER)
+            #define MORPHEUS_INTEL_COMPILER_FOR_WINDOWS 1
+            #define MORPHEUS_INTEL_COMPILER_FOR_LINUX 0
+        #else
+            #define MORPHEUS_INTEL_COMPILER_FOR_WINDOWS 0
+            #define MORPHEUS_INTEL_COMPILER_FOR_LINUX 1
+        #endif
+
+    #elif defined(__clang__)
+
+        #define MORPHEUS_COMPILER MORPHEUS_CLANG_COMPILER
+        #define MORPHEUS_COMP_VER MORPHEUS_COMPILER_VERSION_NUMBER(__clang_major__, __clang_minor__, __clang_patchlevel__)
+
+    #elif defined(__GNUC__)
+
+        #define MORPHEUS_COMPILER MORPHEUS_GNUC_COMPILER
+        #define MORPHEUS_COMP_VER MORPHEUS_COMPILER_VERSION_NUMBER(__GNUC__, __GNUC_MINOR__, __GNUC_PATCHLEVEL__)
 
     #elif defined(_MSC_VER)
 
@@ -84,6 +119,12 @@
         #define MORPHEUS_COMP_VER 0
 
     #endif
+
+
+//    #define STRING2(x) #x
+//    #define STRING(x) STRING2(x)
+//    #pragma message "MORPHEUS_COMPILER = " STRING(MORPHEUS_COMPILER)
+
 
     /*! \def MORPHEUS_IS_GCC_COMPATIBLE_COMPILER
             This is a macro which can be used to with proprocessor directives to conditionally
