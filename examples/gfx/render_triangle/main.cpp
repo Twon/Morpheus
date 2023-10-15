@@ -40,11 +40,13 @@ protected:
 
 int main(int argc, char *argv[])
 {
-    RenderTriange example(argc, argv);
-    if (auto const result = example.commandline(argc, argv); result)
-		return *result;
 
-	tryCatch([&] { example.Run(); }	);
+    tryCatch(
+        [&]
+        {
+            RenderTriange example(argc, argv);
+            example.Run();
+        });
 
-//    render_system_factory renderer_factory;
+    //    render_system_factory renderer_factory;
 }
