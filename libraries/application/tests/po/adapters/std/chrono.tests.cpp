@@ -32,7 +32,7 @@ TEST_CASE("Test parsing of ", "[morpheus.application.po.adapters.std.chrono.dura
         {
             ChronoDuration<Duration> durationOptions{};
             std::array cliOptions = {"dummyProgram.exe", "--duration", param.data()};
-            auto const result = parseProgramOptions(cliOptions.size(), cliOptions.data(), HelpDocumentation{}, durationOptions);
+            auto const result = parseProgramOptions(static_cast<int>(cliOptions.size()), cliOptions.data(), HelpDocumentation{}, durationOptions);
             REQUIRE(!result);
             return durationOptions.duration;
         };
@@ -51,7 +51,7 @@ TEST_CASE("Test parsing of ", "[morpheus.application.po.adapters.std.chrono.dura
     {
         std::array cliOptions = {"dummyProgram.exe", "--duration", "invalid"};
         ChronoDuration<std::chrono::nanoseconds> durationOptions{};
-        auto const result = parseProgramOptions(cliOptions.size(), cliOptions.data(), HelpDocumentation{}, durationOptions);
+        auto const result = parseProgramOptions(static_cast<int>(cliOptions.size()), cliOptions.data(), HelpDocumentation{}, durationOptions);
         REQUIRE(result);
     }
 }
