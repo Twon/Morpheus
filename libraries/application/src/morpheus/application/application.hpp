@@ -21,10 +21,13 @@ public:
     ///
     /// \param[in] argc The number of command line arguments.
     /// \param[in] argv List of command line arguments.
-    Application(int argc, char* argv[]);
+    Application(int argc, char const* const* argv);
 
-    ///
-    // auto commandline() { return }
+    /// Application command line configuration.
+    po::Config const& getConfig() const noexcept { return mConfig; }
+
+    /// Path to application log file.
+    std::filesystem::path getLogPath() const noexcept { return mLogPath; }
 
     void run()
     {
@@ -33,7 +36,7 @@ public:
 
 private:
     po::Config mConfig; /// Common application configuration
-    std::filesystem::path mLogPath;
+    std::filesystem::path mLogPath; /// Path to application log file.
 };
 
 } // namespace morpheus::application

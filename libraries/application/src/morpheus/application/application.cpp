@@ -43,12 +43,17 @@ void terminationHandler()
 
 } // namespace
 
-Application::Application(int argc, char* argv[])
+Application::Application(int argc, char const* const* argv)
+: mConfig(
+      [&]
+      {
+          po::Config config;
+          if (auto invalid = parseProgramOptions(argc, argv, po::HelpDocumentation{}, config)) {
+          }
+          return config;
+      }())
 //`: mLogName(getDefaultApplicationLogName())
 {
-    if (auto invalid = parseProgramOptions(argc, argv, po::HelpDocumentation{}, mConfig)) {
-    }
-
     std::set_terminate(terminationHandler);
 }
 
