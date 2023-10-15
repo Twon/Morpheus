@@ -55,7 +55,7 @@ TEST_CASE("Ensure read serialiser are forward constructible where the underlying
         {
             MultiConstructorReader() = delete;
             MultiConstructorReader(int, bool) {}
-            MultiConstructorReader(int, bool, int, bool);
+            MultiConstructorReader(int, bool, int, bool){}
         };
 
         STATIC_REQUIRE(std::is_constructible_v<MultiConstructorReader, int, bool>);
