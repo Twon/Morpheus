@@ -22,7 +22,7 @@ public:
           {
 #if MORPHEUS_IS_VISUALSTUDIO_COMPATIBLE_COMPILER
               std::FILE* file = nullptr;
-              MORPEHUSE_VERIFY(tmpfile_s(&file) == 0);
+              MORPHEUS_VERIFY(tmpfile_s(&file) == 0);
               return file;
 #else
               return std::tmpfile();
