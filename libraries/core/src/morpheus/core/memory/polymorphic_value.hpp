@@ -98,7 +98,7 @@ public:
 
     [[nodiscard]] constexpr direct_control_block* clone() const override { return new direct_control_block<T, U>(mStorage); }
 
-    [[nodiscard]] constexpr U* ptr() noexcept override { return &mStorage; };
+    [[nodiscard]] constexpr U* ptr() noexcept override { return &mStorage; }
 
     [[nodiscard]] constexpr U const* ptr() const noexcept override { return &mStorage; }
 

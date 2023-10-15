@@ -53,7 +53,7 @@ constexpr void deallocate_object(A& a, T* p)
     t_allocator t_alloc(a);
     t_traits::destroy(t_alloc, p);
     t_traits::deallocate(t_alloc, p, 1);
-};
+}
 
 /// \struct allocator_delete
 ///     Deleter type specialised for use with allocator types.

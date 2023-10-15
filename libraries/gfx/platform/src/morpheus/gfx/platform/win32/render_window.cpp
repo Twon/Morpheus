@@ -21,7 +21,7 @@ auto getModuleHandle()
 	return hinst;
 }
 
-bool HandlePowerBroadCast(WPARAM wParam, LPARAM lParam)
+bool HandlePowerBroadCast(WPARAM wParam, LPARAM /*lParam*/)
 {
 	switch (wParam) {
 
