@@ -386,13 +386,13 @@ TEST_CASE("polymorphic_value assignment", "[polymorphic_value.assignment]")
 #if (MORPHEUS_COMPILER == MORPHEUS_CLANG_COMPILER)
     #pragma clang diagnostic push
     #pragma clang diagnostic ignored "-Wself-assign-overloaded"
-#endif(MORPHEUS_COMPILER == MORPHEUS_CLANG_COMPILER)
+#endif // (MORPHEUS_COMPILER == MORPHEUS_CLANG_COMPILER)
 
         cptr1 = cptr1;
 
 #if (MORPHEUS_COMPILER == MORPHEUS_CLANG_COMPILER)
     #pragma clang diagnostic pop
-#endif(MORPHEUS_COMPILER == MORPHEUS_CLANG_COMPILER)
+#endif // (MORPHEUS_COMPILER == MORPHEUS_CLANG_COMPILER)
 
         REQUIRE(DerivedType::object_count == 1);
 
