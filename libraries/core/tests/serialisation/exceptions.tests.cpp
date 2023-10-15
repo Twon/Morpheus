@@ -9,11 +9,17 @@ namespace morpheus::serialisation
 
 TEST_CASE("Serialisatoin exception helpers", "[morpheus.serialisation.exception.helpers]")
 {
-#pragma warning(push)
-#pragma warning(disable : 4702) // unreachable code
+#if (MORPHEUS_COMPILER == MORPHEUS_VISUALSTUDIO_COMPILER)
+    #pragma warning(push)
+    #pragma warning(disable : 4702) // unreachable code
+#endif(MORPHEUS_COMPILER == MORPHEUS_VISUALSTUDIO_COMPILER)
+
     REQUIRE_THROWS_AS(throwBinaryException("Test binary exception"), BinaryException);
     REQUIRE_THROWS_AS(throwJsonException("Tesst Json exception"), JsonException);
-#pragma warning(pop)
+
+#if (MORPHEUS_COMPILER == MORPHEUS_VISUALSTUDIO_COMPILER)
+    #pragma warning(pop)
+#endif(MORPHEUS_COMPILER == MORPHEUS_VISUALSTUDIO_COMPILER)
 }
 
 
