@@ -26,7 +26,6 @@ set(GCC_CLANG_COMPATIBLE_WARNINGS
     -Wall
     -Wextra
     -Wextra-semi # Warn on extra semi-colon ourside of a function
-    -Wextra-semi-stmt # warn about empty expression statements, for example extra ; like this: puts("string");;
     -Wpedantic # Standard conformance.
 )
 
@@ -36,4 +35,5 @@ set(GCC_WARNINGS
 
 set(CLANG_WARNINGS
    ${GCC_CLANG_COMPATIBLE_WARNINGS}
+    -Wextra-semi-stmt # warn about empty expression statements, for example extra ; like this: puts("string");;
 )
