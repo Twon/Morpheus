@@ -18,11 +18,16 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 include_guard(GLOBAL)
 
 set(MSVC_WARNINGS
-    /W4 # Level 1, 2, 3 and 4 warnings
+    /permissive- # standards conformance.
+    /W4 # Level 1, 2, 3 and 4 warnings.
 )
 
 set(GCC_CLANG_COMPATIBLE_WARNINGS
     -Wall
+    -Wextra
+    -Wextra-semi # Warn on extra semi-colon ourside of a function
+    -Wextra-semi-stmt # warn about empty expression statements, for example extra ; like this: puts("string");;
+    -Wpedantic # Standard conformance.
 )
 
 set(GCC_WARNINGS
