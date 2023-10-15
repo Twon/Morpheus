@@ -102,7 +102,7 @@ public:
         auto const [event, next] = getNext();
         return std::visit(functional::Overload{
             [](std::integral auto const value) { return boost::numeric_cast<Interger>(value); },
-            [](auto const value) -> Interger { throwJsonException("Unable to convert to integral representation"); }
+            [](auto const) -> Interger { throwJsonException("Unable to convert to integral representation"); }
         }, *next);
     }
 
@@ -124,7 +124,7 @@ public:
                 }
                 return boost::numeric_cast<Float>(value);
             },
-            [](auto const value) -> Float { throwJsonException("Unable to convert to floating point representation"); }
+            [](auto const) -> Float { throwJsonException("Unable to convert to floating point representation"); }
         }, *next);
     }
 
