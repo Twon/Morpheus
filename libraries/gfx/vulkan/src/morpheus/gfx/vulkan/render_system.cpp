@@ -9,12 +9,11 @@ namespace morpheus::gfx::vulkan
 namespace
 {
 
-const auto get_physical_devices()
+/*auto get_physical_devices()
 {
 //    uint32_t deviceCount = 0;
 //    vkEnumeratePhysicalDevices(instance, &deviceCount, nullptr);
-}
-
+}*/
 }
 
 //---------------------------------------------------------------------------------------------------------------------
