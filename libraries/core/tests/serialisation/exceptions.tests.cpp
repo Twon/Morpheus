@@ -9,8 +9,11 @@ namespace morpheus::serialisation
 
 TEST_CASE("Serialisatoin exception helpers", "[morpheus.serialisation.exception.helpers]")
 {
-    REQUIRE_THROWS_AS(throwBinaryException("Tesst binary exception"), BinaryException);
+#pragma warning(push)
+#pragma warning(disable : 4702) // unreachable code
+    REQUIRE_THROWS_AS(throwBinaryException("Test binary exception"), BinaryException);
     REQUIRE_THROWS_AS(throwJsonException("Tesst Json exception"), JsonException);
+#pragma warning(pop)
 }
 
 
