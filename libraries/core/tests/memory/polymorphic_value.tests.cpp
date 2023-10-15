@@ -383,7 +383,12 @@ TEST_CASE("polymorphic_value assignment", "[polymorphic_value.assignment]")
 
         REQUIRE(DerivedType::object_count == 1);
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wself-assign-overloaded"
+
         cptr1 = cptr1;
+
+#pragma clang diagnostic pop
 
         REQUIRE(DerivedType::object_count == 1);
 

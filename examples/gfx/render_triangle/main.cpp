@@ -10,8 +10,9 @@ using namespace morpheus::gfx;
 class RenderTriange : public Application
 {
 public:
+    using Application::Application;
 
-	void Run()
+    void Run()
 	{
 		while ( true )
 		{
@@ -39,8 +40,8 @@ protected:
 
 int main(int argc, char *argv[])
 {
-	RenderTriange example;
-	if (auto const result = example.commandline(argc, argv); result)
+    RenderTriange example(argc, argv);
+    if (auto const result = example.commandline(argc, argv); result)
 		return *result;
 
 	tryCatch([&] { example.Run(); }	);
