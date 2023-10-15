@@ -12,11 +12,10 @@ class CompleteEmptyType {};
 
 class CompleteType
 {
+    CompleteType() = default;
+
     int member = 0;
 };
-
-template <std::size_t Size>
-struct show_size;
 
 TEST_CASE("Meta is complete allows the compile time detection of complete types", "[morpheus.meta.is_complete]")
 {
