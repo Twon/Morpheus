@@ -32,7 +32,7 @@ public:
     void endComposite(){}
 
     /// \copydoc morpheus::serialisation::concepts::ReaderArchtype::beginValue()
-    void beginValue(std::string_view const key){}
+    void beginValue(std::string_view const) {}
 
     /// \copydoc morpheus::serialisation::concepts::ReaderArchtype::endValue()
     void endValue(){}

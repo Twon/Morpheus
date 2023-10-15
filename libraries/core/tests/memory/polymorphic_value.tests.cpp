@@ -777,7 +777,7 @@ TEST_CASE("polymorphic_value dynamic and static type mismatch", "[polymorphic_va
 struct fake_copy
 {
     template <class T>
-    DerivedType* operator()(const T& b) const
+    DerivedType* operator()(const T&) const
     {
         return nullptr;
     }
