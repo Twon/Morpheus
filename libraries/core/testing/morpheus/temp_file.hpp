@@ -1,7 +1,11 @@
 
 #pragma once
 
+#include "morpheus/core/base/compiler.hpp"
+#include "morpheus/core/base/verify.hpp"
+
 #include <cstdio>
+#include <stdio.h>
 #include <string>
 
 namespace morpheus
@@ -13,7 +17,17 @@ class TempFile
 {
 public:
     TempFile()
-    : mFile(std::tmpfile())
+    : mFile(
+          []
+          {
+#if MORPHEUS_IS_VISUALSTUDIO_COMPATIBLE_COMPILER
+              std::FILE* file = nullptr;
+              MORPEHUSE_VERIFY(tmpfile_s(&file) == 0);
+              return file;
+#else
+              return std::tmpfile();
+#endif
+          }())
     {
     }
 
