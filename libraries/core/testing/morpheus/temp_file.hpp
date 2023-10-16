@@ -45,7 +45,7 @@ public:
         std::size_t const filesize = std::ftell(mFile);
         std::string contents(filesize, 0);
         std::fseek(mFile, 0, SEEK_SET); // seek to start
-        std::fread(contents.data(), sizeof(char), contents.size(), mFile);
+        MORPHEUS_VERIFY(std::fread(contents.data(), sizeof(char), contents.size(), mFile) == contents.size());
         std::fseek(mFile, 0, SEEK_END);
         return contents;
     }
