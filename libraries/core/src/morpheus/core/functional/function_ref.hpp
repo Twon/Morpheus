@@ -109,36 +109,36 @@ public:
 
     template <auto F, class T>
     constexpr function_ref(nontype_t<F>, T& object) noexcept
-    requires isInvokableWith<decltype(F), T&>
+        requires isInvokableWith<decltype(F), T&>
     : mInvoke(
           [](Storage storage, Args... args) noexcept(isNoexcept) -> Return
           {
-              auto& object = *function_ref::get<constness<T>>(storage);
-              return invoke(F, object, std::forward<Args>(args)...);
+              auto& objectStorage = *function_ref::get<constness<T>>(storage);
+              return invoke(F, objectStorage, std::forward<Args>(args)...);
           })
     , mStorage(std::addressof(object))
     {}
 
     template <auto F, class T>
     constexpr function_ref(nontype_t<F>, constness<T> const* object) noexcept
-    requires isInvokableWith<decltype(F), constness<T> const*>
+        requires isInvokableWith<decltype(F), constness<T> const*>
     : mInvoke(
           [](Storage storage, Args... args) noexcept(isNoexcept) -> Return
           {
-              constness<T>& object = *function_ref::get<T>(storage);
-              return invoke(F, object, std::forward<Args>(args)...);
+              constness<T>& objectStorage = *function_ref::get<T>(storage);
+              return invoke(F, objectStorage, std::forward<Args>(args)...);
           })
     , mStorage(std::addressof(object))
     {}
 
     template <class F, class T = std::remove_reference_t<F>>
     constexpr function_ref(F&& f) noexcept
-    requires(not std::is_same_v<F, function_ref> and not std::is_member_pointer_v<F> and isInvokableWith<F, constness<T>>)
+        requires(not std::is_same_v<F, function_ref> and not std::is_member_pointer_v<F> and isInvokableWith<F, constness<T>>)
     : mInvoke(
           [](Storage storage, Args... args) noexcept(isNoexcept) -> Return
           {
-              constness<T>& object = *function_ref::get<T>(storage);
-              return invoke(object, std::forward<Args>(args)...);
+              constness<T>& objectStorage = *function_ref::get<T>(storage);
+              return invoke(objectStorage, std::forward<Args>(args)...);
           })
     , mStorage(std::addressof(f))
     {}
