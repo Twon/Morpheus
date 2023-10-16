@@ -26,7 +26,11 @@ set(GCC_CLANG_COMPATIBLE_WARNINGS
     -Wall
     -Wextra
     -Wextra-semi # Warn on extra semi-colon ourside of a function
+    -Wimplicit-fallthrough # Warn on statement fallthrough without explicit annotation.
+    -Wmisleading-indentation
+    -Wnull-dereference # Warn on null pointer dereference.
     -Wpedantic # Standard conformance.
+    -Wshadow # Warning of a variabled shadows the declation of one from the parent context.
 )
 
 set(GCC_WARNINGS

@@ -217,9 +217,9 @@ struct StringConverter<std::chrono::duration<Rep, Period>>
 
     static constexpr exp_ns::expected<std::chrono::duration<Rep, Period>, std::string_view> fromString(std::string_view const value)
     {
-        constexpr auto matchString = []<ctll::fixed_string T>(auto const value) -> exp_ns::expected<std::chrono::duration<Rep, Period>, std::string_view>
+        constexpr auto matchString = []<ctll::fixed_string T>(auto const searchStr) -> exp_ns::expected<std::chrono::duration<Rep, Period>, std::string_view>
         {
-            if (auto m = ctre::match<T>(value)) {
+            if (auto m = ctre::match<T>(searchStr)) {
                 return std::chrono::duration<Rep, Period>(std::stoi(std::string(m.template get<1>().to_view())));
             }
             else {
