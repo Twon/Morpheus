@@ -4,8 +4,9 @@
 
 #if (MORPHEUS_COMPILER == MORPHEUS_VISUALSTUDIO_COMPILER)
     #pragma warning(push)
-    #pragma warning(disable : 4702) // unreachable code
-#endif(MORPHEUS_COMPILER == MORPHEUS_VISUALSTUDIO_COMPILER)
+    // unreachable code
+    #pragma warning(disable : 4702)
+#endif // (MORPHEUS_COMPILER == MORPHEUS_VISUALSTUDIO_COMPILER)
 
 using namespace Catch;
 
@@ -23,4 +24,4 @@ TEST_CASE("Serialisatoin exception helpers", "[morpheus.serialisation.exception.
 
 #if (MORPHEUS_COMPILER == MORPHEUS_VISUALSTUDIO_COMPILER)
     #pragma warning(pop)
-#endif(MORPHEUS_COMPILER == MORPHEUS_VISUALSTUDIO_COMPILER)
+#endif // (MORPHEUS_COMPILER == MORPHEUS_VISUALSTUDIO_COMPILER)
