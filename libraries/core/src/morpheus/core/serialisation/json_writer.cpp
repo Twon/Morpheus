@@ -25,7 +25,7 @@ void JsonWriter::endComposite()
 void JsonWriter::beginValue(std::string_view const key)
 {
     MORPHEUS_ASSERT(!key.empty());
-    MORPHEUS_VERIFY(mJsonWriter.Key(key.data(), key.size()));
+    MORPHEUS_VERIFY(mJsonWriter.Key(key.data(), static_cast<rapidjson::SizeType>(key.size())));
 }
 
 void JsonWriter::endValue()
@@ -111,11 +111,8 @@ void JsonWriter::write(double const value)
 void JsonWriter::write(std::string_view const value)
 {
     MORPHEUS_ASSERT(!value.empty());
-    MORPHEUS_VERIFY(mJsonWriter.String(value.data(), value.size()));
+    MORPHEUS_VERIFY(mJsonWriter.String(value.data(), static_cast<rapidjson::SizeType>(value.size())));
 }
 
-void JsonWriter::write(std::span<std::byte const> const value)
-{
-}
-
+void JsonWriter::write(std::span<std::byte const> const) {}
 }

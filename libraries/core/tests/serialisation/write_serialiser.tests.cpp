@@ -55,7 +55,7 @@ namespace morpheus::serialisation
             {
                 MultiConstructorWriter() = delete;
                 MultiConstructorWriter(int, bool) {}
-                MultiConstructorWriter(int, bool, int, bool);
+                MultiConstructorWriter(int, bool, int, bool){}
             };
 
             STATIC_REQUIRE(std::is_constructible_v<MultiConstructorWriter, int, bool>);

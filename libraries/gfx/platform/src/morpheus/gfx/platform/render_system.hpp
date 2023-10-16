@@ -22,7 +22,7 @@ public:
     /*!
 
      */
-    render_system() {};
+    render_system() {}
 
     //! Destructor
     virtual ~render_system() = 0;

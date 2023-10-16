@@ -29,8 +29,8 @@ TEST_CASE("Query NVidia graphic adapters with the driver", "[morpheus.gfx.nvidia
     REQUIRE(driver.NvAPI_EnumPhysicalGPUs);
     REQUIRE(!driver.NvAPI_EnumPhysicalGPUs(gpus.data(), &gpuCount));
     REQUIRE(driver.NvAPI_GPU_GetFullName);
-    using NvAPI_ShortString = std::array<char, NVAPI_SHORT_STRING_MAX>;
-    NvAPI_ShortString gpuName;
+    using NvAPIShortString = std::array<char, NVAPI_SHORT_STRING_MAX>;
+    NvAPIShortString gpuName;
     REQUIRE(!driver.NvAPI_GPU_GetFullName(gpus[0], gpuName.data()));
     REQUIRE(driver.NvAPI_Unload);
 }
@@ -38,15 +38,6 @@ TEST_CASE("Query NVidia graphic adapters with the driver", "[morpheus.gfx.nvidia
 TEST_CASE("Query NVidia graphic adapters", "[morpheus.core.gfx.adapter_list]")
 {
     boost::dll::shared_library nvapi("nvapi64.dll", boost::dll::load_mode::search_system_folders);
-
-    using NvAPI_QueryInterface_t = void* (__cdecl)(unsigned int offset);
-    using NvAPI_Initialize_t = std::int32_t(__cdecl*)();
-    using NvAPI_Unload_t = std::int32_t(__cdecl*)();
-    using NvAPI_Unload_t = std::int32_t(__cdecl*)();
-
-//    constexpr std::size_t NVAPI_MAX_PHYSICAL_GPUS = 64;
-    using NvAPI_EnumPhysicalGPUs_t = std::int32_t(__cdecl*)(void* nvGPUHandle[NVAPI_MAX_PHYSICAL_GPUS], std::uint32_t* pGpuCount);
-    using NvAPI_GPU_GetFullName_t = std::int32_t(__cdecl*)(void* nvGPUHandle, char* const pGpuName);
 
     constexpr std::uint32_t offset_NvAPI_Initialize = 0x0150E828UL;
     constexpr std::uint32_t offset_NvAPI_Unload = 0xD22BDD7EUL;
@@ -74,8 +65,8 @@ TEST_CASE("Query NVidia graphic adapters", "[morpheus.core.gfx.adapter_list]")
         std::array<void*, NVAPI_MAX_PHYSICAL_GPUS> gpus;
         REQUIRE(!NvAPI_EnumPhysicalGPUs(gpus.data(), &gpuCount));
     */
-    std::uint32_t gpuCount = 0;
-    std::array<void*, NVAPI_MAX_PHYSICAL_GPUS> gpus;
+    NvU32 gpuCount = 0;
+    std::array<NvPhysicalGpuHandle, NVAPI_MAX_PHYSICAL_GPUS> gpus;
     auto const NvAPI_Initialize = reinterpret_cast<NvAPI_Initialize_t>(nvapi_QueryInterface(offset_NvAPI_Initialize));
     REQUIRE(NvAPI_Initialize);
     REQUIRE(!NvAPI_Initialize());
@@ -85,8 +76,8 @@ TEST_CASE("Query NVidia graphic adapters", "[morpheus.core.gfx.adapter_list]")
 
     auto const NvAPI_GPU_GetFullName = reinterpret_cast<NvAPI_GPU_GetFullName_t>(nvapi_QueryInterface(offset_NvAPI_GPU_GetFullName));
     REQUIRE(NvAPI_GPU_GetFullName);
-    using NvAPI_ShortString = std::array<char, NVAPI_SHORT_STRING_MAX>;
-    NvAPI_ShortString gpuName;
+    using NvAPIShortString = std::array<char, NVAPI_SHORT_STRING_MAX>;
+    NvAPIShortString gpuName;
     REQUIRE(!NvAPI_GPU_GetFullName(gpus[0], gpuName.data()));
 
     auto const NvAPI_Unload = reinterpret_cast<NvAPI_Initialize_t>(nvapi_QueryInterface(offset_NvAPI_Unload));

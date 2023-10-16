@@ -24,9 +24,9 @@ namespace morpheus
 
 
 #if defined(MORPHEUS_ASSERT_ENABLED)
-    #define MORPHEUS_ASSERT_HANDLER(type, expr, msg)  MORPHEUS_VERIFY_HANDLER(type, expr, msg)
+    #define MORPHEUS_ASSERT_HANDLER(type, expr, msg) MORPHEUS_VERIFY_HANDLER(type, expr, msg)
 #else
-    #define MORPHEUS_ASSERT_HANDLER(type, expr, msg)
+    #define MORPHEUS_ASSERT_HANDLER(type, expr, msg) ((void)0)
 #endif
 
 #define MORPHEUS_ASSERT(expr) MORPHEUS_ASSERT_HANDLER(::morpheus::AssertType::Assert, expr, {})

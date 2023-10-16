@@ -3,6 +3,11 @@ morpheus_add_tests(
     FOLDER "Libraries/Application"
 )
 
+target_sources(MorpheusApplicationTests
+    PRIVATE
+        application.tests.cpp
+)
+
 target_link_libraries(MorpheusApplicationTests
     PRIVATE
          MorpheusCore

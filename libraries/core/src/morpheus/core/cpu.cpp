@@ -92,7 +92,7 @@ auto query_vendor_id(CpuidLeafs const& cached_leafs)
 
 //---------------------------------------------------------------------------------------------------------------------
 
-const auto query_brand_id(CpuidLeafs const& cached_leafs)
+auto query_brand_id(CpuidLeafs const& cached_leafs)
 {
     std::array<char, 64> string_buffer;
     std::memset(&string_buffer[0], 0, sizeof(string_buffer));

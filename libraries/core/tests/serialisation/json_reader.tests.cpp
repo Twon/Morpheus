@@ -253,7 +253,6 @@ TEST_CASE("Json reader raise an error on reading incorrect types", "[morpheus.se
     GIVEN("A test type for validating serialition of specific types")
     {
         using IntegralType = ContainsType<std::int32_t>;
-        IntegralType value;
         WHEN("Deserialising from Json with a string where a integer is expected")
         {
             auto const jsonText = R"({"value":100})";
@@ -267,7 +266,6 @@ TEST_CASE("Json reader raise an error on reading incorrect types", "[morpheus.se
     GIVEN("A type serialising a integer")
     {
         using IntegralType = ContainsType<std::int32_t>;
-        IntegralType value;
         WHEN("Deserialising from Json with a string where a integer is expected")
         {
             auto const jsonText = R"({"value":"InvalidValue"})";
@@ -281,7 +279,6 @@ TEST_CASE("Json reader raise an error on reading incorrect types", "[morpheus.se
     GIVEN("A type serialising a float")
     {
         using FloatType = ContainsType<float>;
-        FloatType value;
         WHEN("Deserialising from Json with a string where a float is expected")
         {
             auto const jsonText = R"({"value":"InvalidValue"})";
@@ -299,7 +296,6 @@ TEST_CASE("Json reader thows an error on invalid json input", "[morpheus.seriali
     GIVEN("A type serialising a integer")
     {
         using IntegralType = ContainsType<std::int32_t>;
-        IntegralType value;
         WHEN("Deserialising from invalid Json")
         {
             auto const jsonText = R"({"value" @ "AtSymbolIsNotAValidSeperator"})";
@@ -349,7 +345,6 @@ TEST_CASE("Error handling test cases for unexpected errors in the input Json str
     GIVEN("A type which parses a key value pair")
     {
         using IntegralType = ContainsType<std::int32_t>;
-        IntegralType value;
         WHEN("Deserialising from Json with an invalid type for the key (i.e. an integer not a string)")
         {
             auto const jsonText = R"({100:100})";
@@ -363,7 +358,6 @@ TEST_CASE("Error handling test cases for unexpected errors in the input Json str
     GIVEN("A type which parses a key value pair")
     {
         using IntegralType = ContainsType<std::int32_t>;
-        IntegralType value;
         WHEN("Deserialising from Json with an invalid key")
         {
             auto const jsonText = R"({"incorrect_key":100})";
