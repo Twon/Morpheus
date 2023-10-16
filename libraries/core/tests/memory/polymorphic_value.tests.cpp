@@ -662,7 +662,8 @@ struct ThrowsOnCopy : Tracked
     ThrowsOnCopy() = default;
 
     explicit ThrowsOnCopy(const int v)
-    : value_(v)
+    : Tracked()
+    , value_(v)
     {}
 
     ThrowsOnCopy(const ThrowsOnCopy&) { throw std::runtime_error("something went wrong during copy"); }
@@ -713,7 +714,8 @@ struct TrackedValue : Tracked
     int value_ = 0;
 
     explicit TrackedValue(const int v)
-    : value_(v)
+    : Tracked()
+    , value_(v)
     {}
 };
 
