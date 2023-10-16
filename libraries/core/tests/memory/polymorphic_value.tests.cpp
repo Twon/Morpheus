@@ -666,7 +666,11 @@ struct ThrowsOnCopy : Tracked
     , value_(v)
     {}
 
-    ThrowsOnCopy(const ThrowsOnCopy&) { throw std::runtime_error("something went wrong during copy"); }
+    ThrowsOnCopy(const ThrowsOnCopy& rhs)
+    : Tracked(rhs)
+    {
+        throw std::runtime_error("something went wrong during copy");
+    }
 
     ThrowsOnCopy& operator=(const ThrowsOnCopy& rhs) = default;
 };
