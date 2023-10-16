@@ -41,31 +41,53 @@ Enable use of Ccache for compiler caching during the build process.
 function(enable_ccache)
     set(options QUIET)
     set(oneValueArgs)
-    set(multiValueArgs)
+    set(multiValueArgs LANGUAGES OPTIONS)
     cmake_parse_arguments(CCACHE "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
 
-    find_program(CCACHE_BIN ccache REQUIRED)
-    if(NOT CCACHE_BIN)
+    if (CCACHE_UNPARSED_ARGUMENTS)
+        message(FATAL_ERROR "Morpheus: enable_ccache invalid arguments ${CCACHE_UNPARSED_ARGUMENTS}")
+    endif()
+    
+    find_program(CCACHE_BIN ccache)
+    if (NOT CCACHE_BIN)
         message(STATUS "Morpheus: CCache not found. Rebuilding all the source files.")
         message(DEBUG "Morpheus: If CCache compiler cache is desired then ensure this is a supported platform and ensure the Conan buildenv is active")
         return()
     endif()
-
-    message(STATUS "Morpheus Generator: ${CMAKE_GENERATOR}") #debug
     message(STATUS "Morpheus: CCache found: ${CCACHE_BIN}. Enabling ccache as compiler cache tool.")
-    if(${CMAKE_GENERATOR} MATCHES "Ninja|Makefiles")
-        message(STATUS "found generator Ninja|Makefiles") #debug
-        foreach(lang IN ITEMS ${MORPHEUS_LANGUAGES})
-            set(CMAKE_${lang}_COMPILER_LAUNCHER ${CCACHE_BIN})
+
+    if (CCACHE_DEBUG)
+        message(STATUS "Morpheus: Create CCache debug files")
+        list(APPEND ccacheEnv "CCACHE_DEBUG=1")
+    endif()
+    if (CCACHE_ICECC)
+        find_program(ICECC_BIN icecc)
+        if (ICECC_BIN)
+            message(STATUS "Morpheus: build with Icecream ${ICECC_BIN}")
+            list(APPEND ccacheEnv "CCACHE_PREFIX=icecc")
+        endif()
+    endif()
+    if (CCACHE_SLOPPINESS)
+        message(STATUS "Morpheus: Enable CCache sloppiness")
+        list(APPEND ccacheEnv "CCACHE_SLOPPINESS=pch_defines,time_macros")
+    endif()
+    string(REPLACE ";" " " ccacheEnvString "${ccacheEnv}")
+
+    if (${CMAKE_GENERATOR} MATCHES "Ninja|Makefiles")
+        message(STATUS "Morpheus: found generator Ninja|Makefiles")
+        foreach(lang IN ITEMS ${LANGUAGES})
+            set(CMAKE_${lang}_COMPILER_LAUNCHER
+                ${CMAKE_COMMAND} -E env ${ccacheEnvString} ${CCACHE_BIN})
         endforeach()
-    elseif(${CMAKE_GENERATOR} STREQUAL "Xcode")
-        message(STATUS "found generator Xcode") #debug
-        foreach(lang IN ITEMS ${MORPHEUS_LANGUAGES})
+    elseif (${CMAKE_GENERATOR} STREQUAL "Xcode")
+        message(STATUS "Morpheus: found generator Xcode")
+        foreach(lang IN ITEMS ${LANGUAGES})
             set(launch${lang} ${CMAKE_BINARY_DIR}/launch-${lang})
-            file(WRITE ${launch${lang}}
-                "#!/bin/bash\n\n"
-                "exec \"${CCACHE_BIN}\" \"${CMAKE_${lang}_COMPILER}\" \"$@\"\n"
-            )
+            file(WRITE ${launch${lang}} "#!/bin/bash\n\n")
+            foreach(envVal IN ITEMS ${ccacheEnv})
+                file(APPEND ${launch${lang}} "export ${envVal}\n")
+            endforeach() 
+            file(APPEND ${launch${lang}} "exec \"${CCACHE_BIN}\" \"${CMAKE_${lang}_COMPILER}\" \"$@\"\n")     
             execute_process(COMMAND chmod a+rx ${launch${lang}})
             set(${CMAKE_XCODE_ATTRIBUTE_${lang}} ${launch${lang}})
             if(lang STREQUAL "C")
@@ -74,13 +96,17 @@ function(enable_ccache)
                 set(CMAKE_XCODE_ATTRIBUTE_LDPLUSPLUS ${launchCXX})
             endif()
         endforeach()
-    elseif(${CMAKE_GENERATOR} MATCHES "Visual Studio")
-        message(STATUS "found generator Visual Studio") #debug
+    elseif (${CMAKE_GENERATOR} MATCHES "Visual Studio" and 
+           (${LANGUAGES} STREQUAL "C" or 
+            ${LANGUAGES} STREQUAL "CXX" or
+            ${LANGUAGES} STREQUAL "CUDA"))
+        message(STATUS "Morpheus: found generator Visual Studio")
         cmake_path(NATIVE_PATH CCACHE_BIN ccache_exe)
-        file(WRITE ${CMAKE_BINARY_DIR}/launch-cl.cmd
-        "@echo off\n"
-        "\"${ccache_exe}\" \"${CMAKE_C_COMPILER}\" %*\n"
-        )
+        file(WRITE ${CMAKE_BINARY_DIR}/launch-cl.cmd "@echo off\n")
+        foreach(envVal IN ITEMS ${ccacheEnv})
+            file(APPEND ${CMAKE_BINARY_DIR}/launch-cl.cmd "set ${envVal}\n")
+        endforeach()
+        file(APPEND ${CMAKE_BINARY_DIR}/launch-cl.cmd "\"${ccache_exe}\" \"${CMAKE_C_COMPILER}\" %*\n")
         list(FILTER CMAKE_VS_GLOBALS EXCLUDE
             REGEX "^(CLTool(Path|Exe)|TrackFileAccess)=.*$"
         )

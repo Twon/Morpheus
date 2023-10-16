@@ -25,6 +25,8 @@ include(CMakePackageConfigHelpers)
 
 option(MORPHEUS_BUILD_WITH_CCACHE "Enable the the CCache compiler caching" ON)
 option(MORPHEUS_LINK_WITH_MOLD "Enable the mold linker" ON)
+# Icecream will be used only with CCache
+cmake_dependent_option(MORPHEUS_BUILD_WITH_ICECC "Enable build with Icecream" ON "MORPHEUS_BUILD_WITH_CCACHE" OFF)
 cmake_dependent_option(MORPHEUS_CODE_COVERAGE "Enable code coverage" ON "\"${CMAKE_CXX_COMPILER_ID}\" STREQUAL \"Clang\" OR \"${CMAKE_CXX_COMPILER_ID}\" STREQUAL \"GNU\"" OFF)
 cmake_dependent_option(MORPHEUS_INCLUDE_NATVIS "Enable inclusion of a natvis files for debugging" ON "\"${CMAKE_CXX_COMPILER_ID}\" STREQUAL \"MSVC\"" OFF)
 
@@ -78,7 +80,7 @@ set(CMAKE_BUILD_WITH_INSTALL_RPATH ON)
 set(CMAKE_SKIP_BUILD_RPATH  FALSE)
 
 get_property(IS_MULTI_CONFIG GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
-if(IS_MULTI_CONFIG)
+if (IS_MULTI_CONFIG)
     set(RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin/$<CONFIG>)
     set(LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib/$<CONFIG>)
     file(RELATIVE_PATH MORPHEUS_RELATIVE_BUILD_RPATH ${RUNTIME_OUTPUT_DIRECTORY} ${LIBRARY_OUTPUT_DIRECTORY})
@@ -96,9 +98,26 @@ endif()
 add_subdirectory(libraries)
 add_subdirectory(examples)
 
+# CCache / Icecream options management
+set(LANGUAGES CXX)
 if (MORPHEUS_BUILD_WITH_CCACHE)
-    set(MORPHEUS_LANGUAGES CXX)
-    enable_ccache()
+    option(CCACHE_DEBUG "CCache debug enabled" ON)
+    if (MORPHEUS_BUILD_WITH_ICECC)
+        option(CCACHE_ICECC "CCache build with Icecream" ON)
+    endif()
+    option(CCACHE_SLOPPINESS "CCache sloppiness enabled" ON)
+
+    if (CCACHE_DEBUG)
+        list(APPEND OPTIONS DEBUG)
+    endif()
+    if (CCACHE_ICECC)
+        list(APPEND OPTIONS ICECC)
+    endif()
+    if (CCACHE_SLOPPINESS)
+        list(APPEND OPTIONS SLOPPINESS)
+    endif()
+
+    enable_ccache(LANGUAGES OPTIONS)
 endif()
 
 if (ENABLE_CODE_COVERAGE)
