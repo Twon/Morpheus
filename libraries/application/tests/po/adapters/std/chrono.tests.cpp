@@ -24,7 +24,7 @@ struct ChronoDuration
     }
 };
 
-TEST_CASE("Test parsing of ", "[morpheus.application.po.adapters.std.chrono.duration]")
+TEST_CASE("Test parsing of std chrono duration", "[morpheus.application.po.adapters.std.chrono.duration]")
 {
     SECTION("Ensure valid value parse correctly")
     {

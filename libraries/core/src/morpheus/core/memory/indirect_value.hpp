@@ -158,7 +158,7 @@ struct indirect_value_base<T, CD, CD>
 
     constexpr explicit indirect_value_base(T* t, CD cd = CD())
     : mValue(t)
-    , mCopierDeleterCombined(cd)
+    , mCopierDeleterCombined(std::move(cd))
     {}
 
 #if (__cpp_explicit_this_parameter >= 202110L)
@@ -226,8 +226,8 @@ struct indirect_value_base
 
     constexpr explicit indirect_value_base(T* t, C c = C(), D d = D())
     : mValue(t)
-    , mCopier(c)
-    , mDeleter(d)
+    , mCopier(std::move(c))
+    , mDeleter(std::move(d))
     {}
 
 #if (__cpp_explicit_this_parameter >= 202110L)

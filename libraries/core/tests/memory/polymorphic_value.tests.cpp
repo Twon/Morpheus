@@ -586,8 +586,10 @@ struct IntermediateBaseB : virtual Base
 struct MultiplyDerived : IntermediateBaseA, IntermediateBaseB
 {
     int value_ = 0;
+
     MultiplyDerived(int value)
-    : value_(value){};
+    : value_(value)
+    {}
 };
 
 TEST_CASE("Gustafsson's dilemma: multiple (virtual) base classes", "[polymorphic_value.constructors]")
