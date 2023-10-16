@@ -104,7 +104,7 @@ public:
 
     template <auto F>
     constexpr function_ref(nontype_t<F>) noexcept
-    : mInvoke([](Storage storage, Args... args) noexcept(isNoexcept) { return invoke(F, std::forward<Args>(args)...); })
+    : mInvoke([](Storage, Args... args) noexcept(isNoexcept) { return invoke(F, std::forward<Args>(args)...); })
     {}
 
     template <auto F, class T>

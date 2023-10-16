@@ -10,10 +10,8 @@ class IncompleteType;
 
 class CompleteEmptyType {};
 
-class CompleteType
+struct CompleteType
 {
-    CompleteType() = default;
-
     int member = 0;
 };
 
