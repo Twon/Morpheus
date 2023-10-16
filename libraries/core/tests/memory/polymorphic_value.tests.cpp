@@ -383,7 +383,16 @@ TEST_CASE("polymorphic_value assignment", "[polymorphic_value.assignment]")
 
         REQUIRE(DerivedType::object_count == 1);
 
+#if (MORPHEUS_COMPILER == MORPHEUS_CLANG_COMPILER)
+    #pragma clang diagnostic push
+    #pragma clang diagnostic ignored "-Wself-assign-overloaded"
+#endif // (MORPHEUS_COMPILER == MORPHEUS_CLANG_COMPILER)
+
         cptr1 = cptr1;
+
+#if (MORPHEUS_COMPILER == MORPHEUS_CLANG_COMPILER)
+    #pragma clang diagnostic pop
+#endif // (MORPHEUS_COMPILER == MORPHEUS_CLANG_COMPILER)
 
         REQUIRE(DerivedType::object_count == 1);
 
@@ -577,8 +586,10 @@ struct IntermediateBaseB : virtual Base
 struct MultiplyDerived : IntermediateBaseA, IntermediateBaseB
 {
     int value_ = 0;
+
     MultiplyDerived(int value)
-    : value_(value){};
+    : value_(value)
+    {}
 };
 
 TEST_CASE("Gustafsson's dilemma: multiple (virtual) base classes", "[polymorphic_value.constructors]")
@@ -651,10 +662,15 @@ struct ThrowsOnCopy : Tracked
     ThrowsOnCopy() = default;
 
     explicit ThrowsOnCopy(const int v)
-    : value_(v)
+    : Tracked()
+    , value_(v)
     {}
 
-    ThrowsOnCopy(const ThrowsOnCopy&) { throw std::runtime_error("something went wrong during copy"); }
+    ThrowsOnCopy(const ThrowsOnCopy& rhs)
+    : Tracked(rhs)
+    {
+        throw std::runtime_error("something went wrong during copy");
+    }
 
     ThrowsOnCopy& operator=(const ThrowsOnCopy& rhs) = default;
 };
@@ -694,7 +710,7 @@ struct throwing_copier
 {
     using deleter_type = std::default_delete<T>;
 
-    T* operator()(const T& t) const { throw std::bad_alloc{}; }
+    T* operator()(const T&) const { throw std::bad_alloc{}; }
 };
 
 struct TrackedValue : Tracked
@@ -702,7 +718,8 @@ struct TrackedValue : Tracked
     int value_ = 0;
 
     explicit TrackedValue(const int v)
-    : value_(v)
+    : Tracked()
+    , value_(v)
     {}
 };
 
@@ -772,7 +789,7 @@ TEST_CASE("polymorphic_value dynamic and static type mismatch", "[polymorphic_va
 struct fake_copy
 {
     template <class T>
-    DerivedType* operator()(const T& b) const
+    DerivedType* operator()(const T&) const
     {
         return nullptr;
     }

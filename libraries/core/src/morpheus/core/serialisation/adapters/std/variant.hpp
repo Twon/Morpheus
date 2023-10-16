@@ -66,7 +66,7 @@ void serialise(Serialiser& serialiser, std::variant<T...> const& value)
         else
             serialiser.serialise("index", static_cast<std::uint64_t>(value.index()));
 
-        std::visit([&serialiser](auto const& value) { serialiser.serialise("value", value); }, value);
+        std::visit([&serialiser](auto const& innerValue) { serialiser.serialise("value", innerValue); }, value);
     }
     serialiser.writer().endComposite();
 }

@@ -71,10 +71,11 @@ struct JsonExtracter : rapidjson::BaseReaderHandler<rapidjson::UTF8<>, JsonExtra
     }
 
     /// Raw number value encountered.
-    bool RawNumber(const Ch* str, rapidjson::SizeType len, bool copy)
+    bool RawNumber(const Ch*, rapidjson::SizeType, bool /*copy*/)
     {
+        // Method enabled via kParseNumbersAsStringsFlag.
         MORPHEUS_VERIFY(false);
-        //        mCurrent = std::string(value, len);
+        //        mCurrent = std::string(str, len);
         return static_cast<Override&>(*this).Default();
     }
 
@@ -93,7 +94,7 @@ struct JsonExtracter : rapidjson::BaseReaderHandler<rapidjson::UTF8<>, JsonExtra
     }
 
     /// Key value mapping type encountered.
-    bool Key(const Ch* str, rapidjson::SizeType len, bool copy)
+    bool Key(const Ch* str, rapidjson::SizeType len, bool /*copy*/)
     {
         mCurrent = {JsonReader::Event::BeginComposite, std::string(str, len)};
         return static_cast<Override&>(*this).Default();
