@@ -1,4 +1,3 @@
-cmakelang
 conan
 ninja
 pre-commit
