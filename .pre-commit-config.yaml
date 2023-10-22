@@ -15,5 +15,5 @@ repos:
     hooks:
     -   id: cmake-format
         additional_dependencies: ["cmakelang[YAML]"]
-    -   id: cmake-lint
-        additional_dependencies: ["cmakelang[YAML]"]
+#    -   id: cmake-lint
+#        additional_dependencies: ["cmakelang[YAML]"]

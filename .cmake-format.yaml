@@ -3,6 +3,14 @@ parse:
   _help_additional_commands:
   - Specify structure for custom cmake functions
   additional_commands:
+    add_documentation:
+      kwargs:
+        PROJECT: 1
+        PROJECT_NUMBER: 1
+        OUTPUT_DIRECTORY: 1
+        WORKING_DIRECTORY: 1
+        INPUT_DIRECTORY: '*'
+        PUBLIC_HEADERS: '*'
     morpheus_add_library:
       flags:
       - INTERFACE
@@ -22,7 +30,13 @@ parse:
         ALIAS: 1
         NAME: 1
         FOLDER: 1
-
+    virtualenv_create:
+      kwargs:
+        DESTINATION: 1
+        REQUIREMENTS: 1
+        WORKING_DIRECTORY: 1
+        OUTPUT: '*'
+        EXTRA_ARGS: '*'
   _help_override_spec:
   - Override configurations per-command where available
   override_spec: {}
@@ -46,15 +60,15 @@ format:
 #  - '`round-up` fractional indentation is replaced with a single'
 #  - tab character (utf-8 0x09) effectively shifting the column
 #  - to the next tabstop
-#  fractional_tab_policy: use-space
+  fractional_tab_policy: use-space
 #  _help_max_subgroups_hwrap:
 #  - If an argument group contains more than this many sub-groups
 #  - (parg or kwarg groups) then force it to a vertical layout.
-  max_subgroups_hwrap: 2
+#  max_subgroups_hwrap: 2
 #  _help_max_pargs_hwrap:
 #  - If a positional argument group contains more than this many
 #  - arguments, then force it to a vertical layout.
-  max_pargs_hwrap: 2
+#  max_pargs_hwrap: 6
 #  _help_max_rows_cmdline:
 #  - If a cmdline positional group consumes more than this many
 #  - lines without nesting, then invalidate the layout (and nest)
