@@ -1,5 +1,1 @@
-target_sources(MorpheusApplication
-    PUBLIC
-        chrono.hpp
-        filesystem.hpp
-)
+target_sources(MorpheusApplication PUBLIC chrono.hpp filesystem.hpp)

@@ -58,31 +58,23 @@ format:
   line_width: 120
   tab_size: 4
   use_tabchars: false
-#  _help_fractional_tab_policy:
-#  - If <use_tabchars> is True, then the value of this variable
-#  - indicates how fractional indentions are handled during
-#  - whitespace replacement. If set to 'use-space', fractional
-#  - indentation is left as spaces (utf-8 0x20). If set to
-#  - '`round-up` fractional indentation is replaced with a single'
-#  - tab character (utf-8 0x09) effectively shifting the column
-#  - to the next tabstop
   fractional_tab_policy: use-space
 #  _help_max_subgroups_hwrap:
 #  - If an argument group contains more than this many sub-groups
 #  - (parg or kwarg groups) then force it to a vertical layout.
-#  max_subgroups_hwrap: 2
+#  max_subgroups_hwrap: 1
 #  _help_max_pargs_hwrap:
 #  - If a positional argument group contains more than this many
 #  - arguments, then force it to a vertical layout.
-#  max_pargs_hwrap: 6
+#  max_pargs_hwrap: 1
 #  _help_max_rows_cmdline:
 #  - If a cmdline positional group consumes more than this many
 #  - lines without nesting, then invalidate the layout (and nest)
-#  max_rows_cmdline: 2
+  max_rows_cmdline: 2
 #  _help_separate_ctrl_name_with_space:
 #  - If true, separate flow control names from their parentheses
 #  - with a space
-#  separate_ctrl_name_with_space: false
+  separate_ctrl_name_with_space: false
 #  _help_separate_fn_name_with_space:
 #  - If true, separate function names from parentheses with a
 #  - space
@@ -122,11 +114,11 @@ format:
 #  _help_enable_sort:
 #  - If true, the argument lists which are known to be sortable
 #  - will be sorted lexicographicall
-#  enable_sort: true
+  enable_sort: true
 #  _help_autosort:
 #  - If true, the parsers may infer whether or not an argument
 #  - list is sortable (without annotation).
-#  autosort: false
+  autosort: true
 #  _help_require_valid_layout:
 #  - By default, if cmake-format cannot successfully fit
 #  - everything into the desired linewidth it will apply the

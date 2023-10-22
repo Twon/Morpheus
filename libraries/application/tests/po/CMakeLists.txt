@@ -1,7 +1,3 @@
-target_sources(MorpheusApplicationTests
-    PRIVATE
-        config.tests.cpp
-        options.tests.cpp
-)
+target_sources(MorpheusApplicationTests PRIVATE config.tests.cpp options.tests.cpp)
 
 add_subdirectory(adapters)

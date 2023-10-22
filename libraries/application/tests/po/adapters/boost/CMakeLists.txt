@@ -1,4 +1,1 @@
-target_sources(MorpheusApplicationTests
-    PRIVATE
-        log.tests.cpp
-)
+target_sources(MorpheusApplicationTests PRIVATE log.tests.cpp)
