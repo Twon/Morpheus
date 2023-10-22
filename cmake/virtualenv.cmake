@@ -67,21 +67,21 @@ function(virtualenv_create)
     set(oneValueArgs DESTINATION REQUIREMENTS WORKING_DIRECTORY)
     set(multiValueArgs OUTPUT EXTRA_ARGS)
 
-    cmake_parse_arguments(PYTHON_VENV "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
+    cmake_parse_arguments(PYTHON_VENV "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
-    if (NOT PYTHON_VENV_DESTINATION)
+    if(NOT PYTHON_VENV_DESTINATION)
         message(FATAL_ERROR "DESTINATION parameter must be supplied")
     endif()
 
-    if (NOT PYTHON_VENV_REQUIREMENTS)
+    if(NOT PYTHON_VENV_REQUIREMENTS)
         message(FATAL_ERROR "REQUIREMENTS parameter must be supplied")
     endif()
 
-    if (NOT PYTHON_VENV_WORKING_DIRECTORY)
+    if(NOT PYTHON_VENV_WORKING_DIRECTORY)
         message(FATAL_ERROR "WORKING_DIRECTORY parameter must be supplied")
     endif()
 
-    if (NOT EXISTS ${PYTHON_VENV_REQUIREMENTS})
+    if(NOT EXISTS ${PYTHON_VENV_REQUIREMENTS})
         message(FATAL_ERROR "REQUIREMENTS must exist, invalid path: ${PYTHON_VENV_REQUIREMENTS}")
     endif()
 
@@ -91,10 +91,9 @@ function(virtualenv_create)
         OUTPUT ${PYTHON_VENV_INTERPRETER}
         COMMAND ${Python3_EXECUTABLE} -m venv ${PYTHON_VENV_DESTINATION}
         COMMAND ${PYTHON_VENV_INTERPRETER} -m pip install --upgrade pip
-        COMMAND  ${PYTHON_VENV_INTERPRETER} -m pip install -r ${PYTHON_VENV_REQUIREMENTS}
+        COMMAND ${PYTHON_VENV_INTERPRETER} -m pip install -r ${PYTHON_VENV_REQUIREMENTS}
         WORKING_DIRECTORY ${PYTHON_VENV_WORKING_DIRECTORY}
-        OUTPUT ${PYTHON_VENV_OUTPUT}
-        ${PYTHON_VENV_EXTRA_ARGS}
+        OUTPUT ${PYTHON_VENV_OUTPUT} ${PYTHON_VENV_EXTRA_ARGS}
     )
 
 endfunction()

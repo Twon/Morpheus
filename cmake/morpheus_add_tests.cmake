@@ -58,48 +58,42 @@ function(morpheus_add_tests)
     set(oneValueArgs NAME ALIAS FOLDER)
     set(multiValueArgs LABELS)
     cmake_parse_arguments(MORPHEUS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
-    if (NOT MORPHEUS_NAME)
+    if(NOT MORPHEUS_NAME)
         message(FATAL_ERROR "NAME parameter must be supplied")
     endif()
 
     add_executable(${MORPHEUS_NAME})
-    if (MORPHEUS_ALIAS)
+    if(MORPHEUS_ALIAS)
         add_executable(${MORPHEUS_ALIAS} ALIAS ${MORPHEUS_NAME})
     endif()
 
-    #find_package(Catch2 3 REQUIRED HINTS ${Catch2_DIR})
-    target_link_libraries(${MORPHEUS_NAME}
-        PRIVATE
-             Catch2::Catch2
-             morpheus::core::testing
-    )
+    # find_package(Catch2 3 REQUIRED HINTS ${Catch2_DIR})
+    target_link_libraries(${MORPHEUS_NAME} PRIVATE Catch2::Catch2 morpheus::core::testing)
 
-    configure_file(${PROJECT_SOURCE_DIR}/libraries/core/testing/morpheus/catch2/main.cpp.in ${CMAKE_CURRENT_BINARY_DIR}/main.cpp @ONLY)
-    target_sources(${MORPHEUS_NAME}
-        PRIVATE
-            ${CMAKE_CURRENT_BINARY_DIR}/main.cpp
+    configure_file(
+        ${PROJECT_SOURCE_DIR}/libraries/core/testing/morpheus/catch2/main.cpp.in ${CMAKE_CURRENT_BINARY_DIR}/main.cpp
+        @ONLY
     )
+    target_sources(${MORPHEUS_NAME} PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/main.cpp)
 
-    set_target_properties(${MORPHEUS_NAME}
-        PROPERTIES
-            ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
-            LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
-            RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
+    set_target_properties(
+        ${MORPHEUS_NAME}
+        PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
+                   LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
+                   RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
     )
 
     add_test(
         NAME ${MORPHEUS_NAME}
         COMMAND ${MORPHEUS_NAME}
-        WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+        WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
+    )
 
-    if (MORPHEUS_FOLDER)
-        set_target_properties(${MORPHEUS_NAME}
-            PROPERTIES
-                FOLDER ${MORPHEUS_FOLDER}
-        )
+    if(MORPHEUS_FOLDER)
+        set_target_properties(${MORPHEUS_NAME} PROPERTIES FOLDER ${MORPHEUS_FOLDER})
     endif()
 
-    if (MORPHEUS_LABELS)
+    if(MORPHEUS_LABELS)
         set_property(TEST ${MORPHEUS_NAME} PROPERTY LABELS ${MORPHEUS_LABELS})
     endif()
 

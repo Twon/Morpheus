@@ -30,6 +30,12 @@ parse:
         ALIAS: 1
         NAME: 1
         FOLDER: 1
+    morpheus_add_target:
+      kwargs:
+        TYPE: 1
+        ALIAS: 1
+        NAME: 1
+        FOLDER: 1
     virtualenv_create:
       kwargs:
         DESTINATION: 1

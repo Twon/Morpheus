@@ -23,19 +23,14 @@ include(CheckCXXCompilerFlag)
 
 option(ENABLE_CODE_COVERAGE "Enable code coverage" OFF)
 
-
 set(COVERAGE_SUPPORTED_FLAGS
     # gcc 8 onwards
     "-fprofile-arcs -fprofile-abs-path -ftest-coverage"
-
     # gcc and clang
     "-fprofile-arcs -ftest-coverage"
-
     # gcc and clang fallback
     "--coverage"
 )
-
-
 
 #[=======================================================================[.rst:
 coverage_target_clean_intermediate_file
@@ -49,15 +44,15 @@ function(coverage_target_clean_intermediate_file)
     set(options QUIET)
     set(oneValueArgs TARGET_NAME RETURN_NOTE_FILES RETURN_DATA_FILES)
     set(multiValueArgs)
-    cmake_parse_arguments(COVERAGE "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
+    cmake_parse_arguments(COVERAGE "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
-    if (NOT COVERAGE_TARGET_NAME)
+    if(NOT COVERAGE_TARGET_NAME)
         message(FATAL_ERROR "TARGET_NAME parameter must be supplied")
     endif()
 
     targets_get_translation_units(TARGET ${COVERAGE_TARGET_NAME} RESULT targetSources)
 
-    foreach (file IN LISTS targetSources)
+    foreach(file IN LISTS targetSources)
         list(APPEND gcovNoteFiles "${file}.gcno")
         list(APPEND gcovDataFiles "${file}.gcda")
     endforeach()
@@ -65,22 +60,26 @@ function(coverage_target_clean_intermediate_file)
     set_directory_properties(PROPERTIES ADDITIONAL_CLEAN_FILES "${gcovNoteFiles} ${gcovDataFiles}")
 
     if(COVERAGE_RETURN_NOTE_FILES)
-        set(${COVERAGE_RETURN_NOTE_FILES} "${gcovNoteFiles}" PARENT_SCOPE)
+        set(${COVERAGE_RETURN_NOTE_FILES}
+            "${gcovNoteFiles}"
+            PARENT_SCOPE
+        )
     endif()
     if(COVERAGE_RETURN_DATA_FILES)
-        set(${COVERAGE_RETURN_DATA_FILES} "${gcovDataFiles}" PARENT_SCOPE)
+        set(${COVERAGE_RETURN_DATA_FILES}
+            "${gcovDataFiles}"
+            PARENT_SCOPE
+        )
     endif()
 
 endfunction()
-
-
 
 function(enable_code_coverage)
     set(options QUIET VERBOSE)
     set(oneValueArgs)
     set(multiValueArgs)
 
-    cmake_parse_arguments(COVERAGE "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
+    cmake_parse_arguments(COVERAGE "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
     get_filename_component(COMPILER_PATH "${CMAKE_CXX_COMPILER}" PATH)
     find_program(GCOV_BIN gcov HINTS ${COMPILER_PATH})
@@ -103,7 +102,7 @@ function(enable_code_coverage)
         message(SEND_ERROR "Unable to find c++filt, disable code coverage to continue")
     endif()
 
-    if (NOT COVERAGE_QUIET)
+    if(NOT COVERAGE_QUIET)
         message(STATUS "Found gcov: ${GCOV_BIN}")
         message(STATUS "Found lcov: ${LCOV_BIN}")
         message(STATUS "Found genhtml: ${GENHTML_BIN}")
@@ -116,12 +115,8 @@ function(enable_code_coverage)
     virtualenv_create(
         DESTINATION ${COVERAGE_VENV}
         REQUIREMENTS ${PROJECT_SOURCE_DIR}/cmake/requirements/coverage_requirements.txt
-        WORKING_DIRECTORY
-            ${CMAKE_BINARY_DIR}
-        OUTPUT
-            ${COVERAGE_FASTCOV_BIN}
-            ${COVERAGE_FASTCOV_TO_SONARQUBE_BIN}
-            ${COVERAGE_LCOV_TO_COBERTURA_BIN}
+        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+        OUTPUT ${COVERAGE_FASTCOV_BIN} ${COVERAGE_FASTCOV_TO_SONARQUBE_BIN} ${COVERAGE_LCOV_TO_COBERTURA_BIN}
     )
 
     set(COVERAGE_REPORT_DIR "${CMAKE_BINARY_DIR}/coverage")
@@ -131,22 +126,28 @@ function(enable_code_coverage)
     set(LCOV_REPORT_PATH "${COVERAGE_REPORT_DIR}/lcov.info")
     set(LCOV_HTML_PATH "${COVERAGE_REPORT_DIR}/html")
 
-    if (NOT TARGET CodeCoverage)
+    if(NOT TARGET CodeCoverage)
         add_library(CodeCoverage INTERFACE)
         add_library(coverage::coverage ALIAS CodeCoverage)
 
-        foreach (FLAGS ${COVERAGE_SUPPORTED_FLAGS})
+        foreach(FLAGS ${COVERAGE_SUPPORTED_FLAGS})
             set(CMAKE_REQUIRED_FLAGS "${FLAGS}")
             check_cxx_compiler_flag("${FLAGS}" COVERAGE_FLAGS_DETECTED)
 
-            if (COVERAGE_FLAGS_DETECTED)
+            if(COVERAGE_FLAGS_DETECTED)
                 string(REPLACE " " ";" FLAGS "${FLAGS}")
-                set(COVERAGE_COMPILER_FLAGS "${FLAGS}" CACHE STRING "${CMAKE_CXX_COMPILER_ID} flags for code coverage.")
+                set(COVERAGE_COMPILER_FLAGS
+                    "${FLAGS}"
+                    CACHE STRING "${CMAKE_CXX_COMPILER_ID} flags for code coverage."
+                )
                 mark_as_advanced(COVERAGE_COMPILER_FLAGS)
                 break()
-            else ()
-                message(WARNING "Code coverage is not available for the currently enable compiler ${CMAKE_CXX_COMPILER_ID} via the compiler flags ${FLAGS}.")
-            endif ()
+            else()
+                message(
+                    WARNING
+                        "Code coverage is not available for the currently enable compiler ${CMAKE_CXX_COMPILER_ID} via the compiler flags ${FLAGS}."
+                )
+            endif()
         endforeach()
 
         target_compile_options(CodeCoverage INTERFACE ${COVERAGE_COMPILER_FLAGS})
@@ -154,12 +155,12 @@ function(enable_code_coverage)
     endif()
 
     targets_get_all(RESULT allTargets DIRECTORY ${PROJECT_SOURCE_DIR})
-    if (COVERAGE_VERBOSE)
+    if(COVERAGE_VERBOSE)
         message(STATUS "Coverage: All project targets: ${allTargets}")
     endif()
 
     targets_filter_for_sources(RESULT targetsWithSource TARGETS ${allTargets})
-    if (COVERAGE_VERBOSE)
+    if(COVERAGE_VERBOSE)
         message(STATUS "Coverage: Targets with sources: ${targetsWithSource}}")
     endif()
 
@@ -173,14 +174,16 @@ function(enable_code_coverage)
             set(translationUnit "${translationUnitDir}/${translationUnitFile}")
 
             set(objectFile "${translationUnit}.o")
-            add_custom_command(OUTPUT "${translationUnit}.gcno"
-			    COMMAND ${CMAKE_COMMAND} -E touch "${translationUnit}.gcno"
+            add_custom_command(
+                OUTPUT "${translationUnit}.gcno"
+                COMMAND ${CMAKE_COMMAND} -E touch "${translationUnit}.gcno"
                 DEPENDS "${objectFile}"
-		    )
-            add_custom_command(OUTPUT ${gcdaFile}
-			    COMMAND ${CMAKE_COMMAND} -E touch "${gcdaFile}"
+            )
+            add_custom_command(
+                OUTPUT ${gcdaFile}
+                COMMAND ${CMAKE_COMMAND} -E touch "${gcdaFile}"
                 DEPENDS "${translationUnit}.gcno"
-		    )
+            )
         endforeach()
         add_custom_target(${target}-gcda-init DEPENDS ${outputGCovDataFile})
 
@@ -191,35 +194,26 @@ function(enable_code_coverage)
     list(REMOVE_DUPLICATES allGcovDataFiles)
     file(MAKE_DIRECTORY ${COVERAGE_REPORT_DIR})
 
-    add_custom_target(coverage-clean
+    add_custom_target(
+        coverage-clean
         COMMAND
-            ${COVERAGE_FASTCOV_BIN}
-                --gcov ${GCOV_BIN}
-                #--exclude ${CMAKE_CURRENT_BINARY_DIR}
-                --include ${PROJECT_SOURCE_DIR}
-                --zerocounters
-        DEPENDS
-            ${COVERAGE_FASTCOV_BIN}
-        WORKING_DIRECTORY
-            ${CMAKE_BINARY_DIR}
-        COMMENT
-            "Recursively delete all gcda files"
+            ${COVERAGE_FASTCOV_BIN} --gcov ${GCOV_BIN}
+            # --exclude ${CMAKE_CURRENT_BINARY_DIR}
+            --include ${PROJECT_SOURCE_DIR} --zerocounters
+        DEPENDS ${COVERAGE_FASTCOV_BIN}
+        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+        COMMENT "Recursively delete all gcda files"
     )
 
-    add_custom_target(coverage-fastcov
+    add_custom_target(
+        coverage-fastcov
         COMMAND
-            ${COVERAGE_FASTCOV_BIN}
-                --gcov ${GCOV_BIN}
-                #--exclude ${CMAKE_CURRENT_BINARY_DIR}
-                --include ${PROJECT_SOURCE_DIR}
-                -o ${COVERAGE_REPORT_PATH}
-        DEPENDS
-            ${COVERAGE_FASTCOV_BIN}
-            ${gcdaInitTargets}
-        WORKING_DIRECTORY
-            ${CMAKE_BINARY_DIR}
-        COMMENT
-            "Distributed proccessing of coverage data collection and report generation"
+            ${COVERAGE_FASTCOV_BIN} --gcov ${GCOV_BIN}
+            # --exclude ${CMAKE_CURRENT_BINARY_DIR}
+            --include ${PROJECT_SOURCE_DIR} -o ${COVERAGE_REPORT_PATH}
+        DEPENDS ${COVERAGE_FASTCOV_BIN} ${gcdaInitTargets}
+        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+        COMMENT "Distributed proccessing of coverage data collection and report generation"
     )
 
     add_custom_target(coverage)
@@ -228,27 +222,16 @@ function(enable_code_coverage)
     add_custom_command(
         OUTPUT ${LCOV_REPORT_PATH}
         COMMAND
-            ${COVERAGE_FASTCOV_BIN}
-                --gcov ${GCOV_BIN}
-                #--exclude ${CMAKE_CURRENT_BINARY_DIR}
-                --include ${PROJECT_SOURCE_DIR}
-                --lcov
-                --verbose
-                -o ${LCOV_REPORT_PATH}
-        DEPENDS
-            ${COVERAGE_FASTCOV_BIN}
-            ${LCOV_BIN}
-            ${allGcovDataFiles}
-            # Missing source file (*.cpp and *.gcda) dependencies.
-        WORKING_DIRECTORY
-            ${CMAKE_BINARY_DIR}
-        COMMENT
-            "Distributed proccessing of coverage data collection and lcov report generation"
+            ${COVERAGE_FASTCOV_BIN} --gcov ${GCOV_BIN}
+            # --exclude ${CMAKE_CURRENT_BINARY_DIR}
+            --include ${PROJECT_SOURCE_DIR} --lcov --verbose -o ${LCOV_REPORT_PATH}
+        DEPENDS ${COVERAGE_FASTCOV_BIN} ${LCOV_BIN} ${allGcovDataFiles}
+                # Missing source file (*.cpp and *.gcda) dependencies.
+        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+        COMMENT "Distributed proccessing of coverage data collection and lcov report generation"
     )
 
-    add_custom_target(coverage-lcov-info
-        DEPENDS ${LCOV_REPORT_PATH}
-    )
+    add_custom_target(coverage-lcov-info DEPENDS ${LCOV_REPORT_PATH})
 
     add_custom_command(
         OUTPUT ${LCOV_HTML_PATH}/index.html
@@ -258,30 +241,19 @@ function(enable_code_coverage)
         COMMENT "Generating lcov html report"
     )
 
-    add_custom_target(coverage-lcov
-        DEPENDS ${LCOV_HTML_PATH}/index.html
-    )
+    add_custom_target(coverage-lcov DEPENDS ${LCOV_HTML_PATH}/index.html)
 
     add_dependencies(coverage-lcov coverage-lcov-info)
 
     add_custom_command(
         OUTPUT ${COBERTURA_REPORT_PATH}
-        COMMAND
-            ${COVERAGE_LCOV_TO_COBERTURA_BIN} ${LCOV_REPORT_PATH}
-                --base-dir ${PROJECT_SOURCE_DIR}
-                --output ${COBERTURA_REPORT_PATH}
-                --demangle
-        DEPENDS
-            ${LCOV_REPORT_PATH}
-            ${COVERAGE_LCOV_TO_COBERTURA_BIN}
-        WORKING_DIRECTORY
-            ${CMAKE_BINARY_DIR}
-        COMMENT
-            "Generate Cobertura XML report from LCov report"
+        COMMAND ${COVERAGE_LCOV_TO_COBERTURA_BIN} ${LCOV_REPORT_PATH} --base-dir ${PROJECT_SOURCE_DIR} --output
+                ${COBERTURA_REPORT_PATH} --demangle
+        DEPENDS ${LCOV_REPORT_PATH} ${COVERAGE_LCOV_TO_COBERTURA_BIN}
+        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+        COMMENT "Generate Cobertura XML report from LCov report"
     )
 
-    add_custom_target(coverage-cobertura
-        DEPENDS ${COBERTURA_REPORT_PATH}
-    )
+    add_custom_target(coverage-cobertura DEPENDS ${COBERTURA_REPORT_PATH})
 
 endfunction()

@@ -51,31 +51,29 @@ function(morpheus_add_executable)
     set(oneValueArgs NAME ALIAS FOLDER)
     set(multiValueArgs)
     cmake_parse_arguments(MORPHEUS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
-    if (NOT MORPHEUS_NAME)
+    if(NOT MORPHEUS_NAME)
         message(FATAL_ERROR "NAME parameter must be supplied")
     endif()
     add_executable(${MORPHEUS_NAME})
-    if (MORPHEUS_ALIAS)
+    if(MORPHEUS_ALIAS)
         add_executable(${MORPHEUS_ALIAS} ALIAS ${MORPHEUS_NAME})
     endif()
 
-    set_target_properties(${MORPHEUS_NAME}
-        PROPERTIES
-            ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
-            LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
-            RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
+    set_target_properties(
+        ${MORPHEUS_NAME}
+        PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
+                   LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
+                   RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
     )
 
-    if (MORPHEUS_FOLDER)
-        set_target_properties(${MORPHEUS_NAME}
-            PROPERTIES
-                FOLDER ${MORPHEUS_FOLDER}
-        )
+    if(MORPHEUS_FOLDER)
+        set_target_properties(${MORPHEUS_NAME} PROPERTIES FOLDER ${MORPHEUS_FOLDER})
     endif()
 
-    install(TARGETS ${MORPHEUS_NAME}
-            RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-            ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-            LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    install(
+        TARGETS ${MORPHEUS_NAME}
+        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     )
 endfunction()
