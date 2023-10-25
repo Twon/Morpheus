@@ -789,7 +789,7 @@ TEST_CASE("polymorphic_value dynamic and static type mismatch", "[polymorphic_va
 struct fake_copy
 {
     template <class T>
-    DerivedType* operator()(const T&) const
+    DerivedType* operator()(const T&) const // LCOV_EXCL_LINE
     {
         return nullptr;
     }
