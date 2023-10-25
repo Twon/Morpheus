@@ -114,5 +114,5 @@ void JsonWriter::write(std::string_view const value)
     MORPHEUS_VERIFY(mJsonWriter.String(value.data(), static_cast<rapidjson::SizeType>(value.size())));
 }
 
-void JsonWriter::write(std::span<std::byte const> const) {}
+void JsonWriter::write(std::span<std::byte const> const) {} // LCOV_EXCL_LINE
 }
