@@ -56,43 +56,32 @@ function(morpheus_add_testing_library)
     set(oneValueArgs NAME ALIAS FOLDER)
     set(multiValueArgs)
     cmake_parse_arguments(MORPHEUS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
-    if (NOT MORPHEUS_NAME)
+    if(NOT MORPHEUS_NAME)
         message(FATAL_ERROR "NAME parameter must be supplied")
     endif()
-    if (NOT MORPHEUS_ALIAS)
+    if(NOT MORPHEUS_ALIAS)
         message(FATAL_ERROR "ALIAS parameter must be supplied")
     endif()
 
-    if (NOT MORPHEUS_INFERFACE)
+    if(NOT MORPHEUS_INFERFACE)
         add_library(${MORPHEUS_NAME})
-        target_link_libraries(${MORPHEUS_NAME}
-            PUBLIC
-                 Catch2::Catch2
-                 GTest::gmock
-        )
+        target_link_libraries(${MORPHEUS_NAME} PUBLIC Catch2::Catch2 GTest::gmock)
     else()
         add_library(${MORPHEUS_NAME} INTERFACE)
-        target_link_libraries(${MORPHEUS_NAME}
-            INTERFACE
-                 Catch2::Catch2
-                 GTest::gmock
-        )
+        target_link_libraries(${MORPHEUS_NAME} INTERFACE Catch2::Catch2 GTest::gmock)
     endif()
 
     add_library(${MORPHEUS_ALIAS} ALIAS ${MORPHEUS_NAME})
 
-    set_target_properties(${MORPHEUS_NAME}
-        PROPERTIES
-            ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
-            LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
-            RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
+    set_target_properties(
+        ${MORPHEUS_NAME}
+        PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
+                   LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
+                   RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
     )
 
-    if (MORPHEUS_FOLDER)
-        set_target_properties(${MORPHEUS_NAME}
-            PROPERTIES
-                FOLDER ${MORPHEUS_FOLDER}
-        )
+    if(MORPHEUS_FOLDER)
+        set_target_properties(${MORPHEUS_NAME} PROPERTIES FOLDER ${MORPHEUS_FOLDER})
     endif()
 
 endfunction()

@@ -22,24 +22,75 @@ include(virtualenv)
 
 option(MORPHEUS_BUILD_DOCUMENTATION "Create and install the HTML based API documentation (requires Doxygen)" OFF)
 
+#[=======================================================================[.rst:
+cmake_to_doxyfile_string
+------------------
 
+Overview
+^^^^^^^^
+
+Preps CMake strings for use with Doxyfile format.
+
+#]=======================================================================]
 macro(cmake_to_doxyfile_string string)
-    string (REPLACE ";" " " ${string} "${${string}}")
+    string(REPLACE ";" " " ${string} "${${string}}")
 endmacro()
 
+#[=======================================================================[.rst:
+add_documentation
+------------------
+
+Overview
+^^^^^^^^
+
+Add documentation will generate doxygen documenation from markup in the source code
+before sending this to breath to generate Sphinx documenation from the markup
+
+.. code-block:: cmake
+
+  add_documentation(
+      [PROJECT] <project name>
+      [PROJECT_NUMBER <version number>]
+      [OUTPUT_DIRECTORY <output directory>]
+      [WORKING_DIRECTORY <directory>]
+      [INPUT_DIRECTORY <input directory>]
+      [PUBLIC_HEADERS <public header files>]
+  )
+
+A virtual environment is created for hosting the python dependencies required in order to
+install breath, and sphinx dependencies in isolation.  There is a sperate docuemtentation
+requirements file storing dependencies for this virtual environment.
+
+Example
+^^^^^^^
+
+.. code-block:: cmake
+
+    add_documentation(
+        PROJECT Morpheus
+        PROJECT_NUMBER ${MORPHEUS_VERSION}
+        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+        PUBLIC_HEADERS ${publicHeaders}
+        INPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/examples
+        INPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/libraries
+        OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/documentation
+    )
+
+#]=======================================================================]
 function(add_documentation)
     set(options)
     set(oneValueArgs PROJECT PROJECT_NUMBER OUTPUT_DIRECTORY WORKING_DIRECTORY)
     set(multiValueArgs INPUT_DIRECTORY PUBLIC_HEADERS)
     cmake_parse_arguments(DOCUMENTATION "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
-    if (DOCUMENTATION_PROJECT)
+    # cmake-lint: disable=C0103
+    if(DOCUMENTATION_PROJECT)
         set(DOXYGEN_PROJECT ${DOCUMENTATION_PROJECT})
     endif()
-    if (DOCUMENTATION_PROJECT_NUMBER)
+    if(DOCUMENTATION_PROJECT_NUMBER)
         set(DOXYGEN_PROJECT_NUMBER ${DOCUMENTATION_PROJECT_NUMBER})
     endif()
-    if (NOT DOCUMENTATION_INPUT_DIRECTORY)
+    if(NOT DOCUMENTATION_INPUT_DIRECTORY)
         set(DOXYGEN_INPUT_DIRECTORY ${PROJECT_SOURCE_DIR})
     else()
         foreach(input ${DOCUMENTATION_INPUT_DIRECTORY})
@@ -51,20 +102,22 @@ function(add_documentation)
         set(DOXYGEN_INPUT_DIRECTORY ${DOCUMENTATION_INPUT_DIRECTORY})
         cmake_to_doxyfile_string(DOXYGEN_INPUT_DIRECTORY)
     endif()
-    if (NOT DOCUMENTATION_OUTPUT_DIRECTORY)
+    if(NOT DOCUMENTATION_OUTPUT_DIRECTORY)
         set(DOCUMENTATION_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/documentation)
     endif()
-    if (NOT DOCUMENTATION_WORKING_DIRECTORY)
+    if(NOT DOCUMENTATION_WORKING_DIRECTORY)
         message(FATAL_ERROR "WORKING_DIRECTORY parameter must be supplied")
     endif()
 
     find_package(Doxygen REQUIRED)
 
-    # If using Conan find modules to find an installed Doxygen then we lose doxygen_add_docs,
-    # so include the find module directly to access this method as a work around.
+    # If using Conan find modules to find an installed Doxygen then we lose doxygen_add_docs, so include the find module
+    # directly to access this method as a work around.
     include(${CMAKE_ROOT}/Modules/FindDoxygen.cmake)
 
-    list(APPEND DOXYGEN_EXCLUDE_PATTERNS
+    list(
+        APPEND
+        DOXYGEN_EXCLUDE_PATTERNS
         "*/.git/*"
         "*/CMakeFiles/*"
         "*/_CPack_Packages/*"
@@ -95,7 +148,8 @@ function(add_documentation)
         COMMENT "Generating API documentation with Doxygen"
     )
 
-    add_custom_target( Doxygen
+    add_custom_target(
+        Doxygen
         DEPENDS ${doxygenIndex}
         COMMENT "Checking if Doxygen XML re-generation is required"
     )
@@ -108,16 +162,15 @@ function(add_documentation)
     virtualenv_create(
         DESTINATION ${documentationVenv}
         REQUIREMENTS ${PROJECT_SOURCE_DIR}/cmake/requirements/documentation_requirements.txt
-        WORKING_DIRECTORY
-            ${CMAKE_BINARY_DIR}
-        OUTPUT
-            ${documentationSphinx}
+        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+        OUTPUT ${documentationSphinx}
     )
 
     set(sphinxOutput ${CMAKE_BINARY_DIR}/documentation/sphinx)
-    add_custom_target(Documentation
-        COMMAND ${documentationSphinx} "-Dbreathe_projects.morpheus=${doxygenXmlOutputDir}"
-                ${PROJECT_SOURCE_DIR}/docs ${DOCUMENTATION_OUTPUT_DIRECTORY}/sphinx
+    add_custom_target(
+        Documentation
+        COMMAND ${documentationSphinx} "-Dbreathe_projects.morpheus=${doxygenXmlOutputDir}" ${PROJECT_SOURCE_DIR}/docs
+                ${DOCUMENTATION_OUTPUT_DIRECTORY}/sphinx
         DEPENDS ${documentationSphinx} ${doxygenIndex} Doxygen
         WORKING_DIRECTORY ${DOCUMENTATION_WORKING_DIRECTORY}
         COMMENT "Generating documentation with Sphinx"
@@ -128,7 +181,6 @@ function(add_documentation)
 
 endfunction()
 
-
 if(MORPHEUS_BUILD_DOCUMENTATION)
     file(GLOB_RECURSE publicHeaders "${PROJECT_SOURCE_DIR}/libraries/*.hpp")
     add_documentation(
@@ -136,8 +188,7 @@ if(MORPHEUS_BUILD_DOCUMENTATION)
         PROJECT_NUMBER ${MORPHEUS_VERSION}
         WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
         PUBLIC_HEADERS ${publicHeaders}
-        INPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/examples
-        INPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/libraries
+        INPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/examples ${PROJECT_SOURCE_DIR}/libraries
         OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/documentation
     )
 endif()

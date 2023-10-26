@@ -32,22 +32,29 @@ function(targets_get_all)
     set(options)
     set(oneValueArgs RESULT DIRECTORY)
     set(multiValueArgs)
-    cmake_parse_arguments(ARGS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
+    cmake_parse_arguments(ARGS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
-    if (NOT ARGS_RESULT)
+    if(NOT ARGS_RESULT)
         message(FATAL_ERROR "RESULT parameter must be supplied")
     endif()
-    if (NOT ARGS_DIRECTORY)
+    if(NOT ARGS_DIRECTORY)
         message(FATAL_ERROR "DIRECTORY parameter must be supplied")
     endif()
 
-    get_property(subdirs DIRECTORY ${ARGS_DIRECTORY} PROPERTY SUBDIRECTORIES)
+    get_property(
+        subdirs
+        DIRECTORY ${ARGS_DIRECTORY}
+        PROPERTY SUBDIRECTORIES
+    )
     foreach(subdir IN LISTS subdirs)
         targets_get_all(RESULT subTargets DIRECTORY ${subdir})
     endforeach()
 
     get_directory_property(allTargets DIRECTORY ${ARGS_DIRECTORY} BUILDSYSTEM_TARGETS)
-    set(${ARGS_RESULT} ${subTargets} ${allTargets} PARENT_SCOPE)
+    set(${ARGS_RESULT}
+        ${subTargets} ${allTargets}
+        PARENT_SCOPE
+    )
 endfunction()
 
 #[=======================================================================[.rst:
@@ -65,33 +72,35 @@ function(targets_filter_for_sources)
     set(options)
     set(oneValueArgs RESULT)
     set(multiValueArgs TARGETS)
-    cmake_parse_arguments(ARGS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
+    cmake_parse_arguments(ARGS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
-    if (NOT ARGS_TARGETS)
+    if(NOT ARGS_TARGETS)
         message(FATAL_ERROR "TARGETS parameter must be supplied")
     endif()
-    if (NOT ARGS_RESULT)
+    if(NOT ARGS_RESULT)
         message(FATAL_ERROR "RESULT parameter must be supplied")
     endif()
 
     foreach(target IN LISTS ARGS_TARGETS)
         get_target_property(targetSource ${target} SOURCES)
-        if (NOT targetSource)
+        if(NOT targetSource)
             continue()
         endif()
 
         # Interface targets can propagate sources in cmake 3.19 onward but not compile directly
         get_target_property(targetType ${target} TYPE)
-        if (targetType STREQUAL "INTERFACE_LIBRARY")
+        if(targetType STREQUAL "INTERFACE_LIBRARY")
             continue()
         endif()
 
         list(APPEND targets ${target})
     endforeach()
-    set(${ARGS_RESULT} ${${ARGS_RESULT}} ${targets} PARENT_SCOPE)
+    set(${ARGS_RESULT}
+        ${${ARGS_RESULT}} ${targets}
+        PARENT_SCOPE
+    )
 
 endfunction()
-
 
 #[=======================================================================[.rst:
 targets_get_translation_units
@@ -116,18 +125,19 @@ function(targets_get_translation_units)
     set(options)
     set(oneValueArgs TARGET RESULT)
     set(multiValueArgs)
-    cmake_parse_arguments(ARGS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
+    cmake_parse_arguments(ARGS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
-    if (NOT ARGS_TARGET)
+    if(NOT ARGS_TARGET)
         message(FATAL_ERROR "TARGET parameter must be supplied")
     endif()
-    if (NOT ARGS_RESULT)
+    if(NOT ARGS_RESULT)
         message(FATAL_ERROR "RESULT parameter must be supplied")
     endif()
 
     get_target_property(targetSource ${ARGS_TARGET} SOURCES)
 
-    # CMAKE_CXX_SOURCE_FILE_EXTENSIONS defined in: https://github.com/Kitware/CMake/blob/master/Modules/CMakeCXXCompiler.cmake.in
+    # CMAKE_CXX_SOURCE_FILE_EXTENSIONS defined in:
+    # https://github.com/Kitware/CMake/blob/master/Modules/CMakeCXXCompiler.cmake.in
     foreach(cppExt IN LISTS CMAKE_CXX_SOURCE_FILE_EXTENSIONS)
         # Filter on a copy of the oringal source list
         set(filteredTargetSource "${targetSource}")
@@ -144,10 +154,12 @@ function(targets_get_translation_units)
         list(APPEND targetTranslationUnitLocations ${translationUnitLocation})
     endforeach()
 
-    set(${ARGS_RESULT} ${targetTranslationUnitLocations} PARENT_SCOPE)
+    set(${ARGS_RESULT}
+        ${targetTranslationUnitLocations}
+        PARENT_SCOPE
+    )
 
 endfunction()
-
 
 #[=======================================================================[.rst:
 targets_relative_path_of_source
@@ -157,16 +169,16 @@ Overview
 ^^^^^^^^
 
 #]=======================================================================]
-function (targets_relative_path_of_source)
+function(targets_relative_path_of_source)
     set(options)
     set(oneValueArgs TARGET_NAME RESULT SOURCE_FILE)
     set(multiValueArgs)
-    cmake_parse_arguments(ARGS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
+    cmake_parse_arguments(ARGS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
-    if (NOT ARGS_TARGET_NAME)
+    if(NOT ARGS_TARGET_NAME)
         message(FATAL_ERROR "TARGET_NAME parameter must be supplied")
     endif()
-    if (NOT ARGS_RESULT)
+    if(NOT ARGS_RESULT)
         message(FATAL_ERROR "RESULT parameter must be supplied")
     endif()
 
@@ -183,5 +195,8 @@ function (targets_relative_path_of_source)
     # get the right path for file
     string(REPLACE ".." "__" PATH "${file}")
 
-    set(${ARGS_RESULT} "${PATH}" PARENT_SCOPE)
+    set(${ARGS_RESULT}
+        "${PATH}"
+        PARENT_SCOPE
+    )
 endfunction()

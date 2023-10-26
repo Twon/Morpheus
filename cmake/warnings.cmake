@@ -17,9 +17,8 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 
 include_guard(GLOBAL)
 
-set(MSVC_WARNINGS
-    /permissive- # standards conformance.
-    /W4 # Level 1, 2, 3 and 4 warnings.
+set(MSVC_WARNINGS /permissive- # standards conformance.
+                  /W4 # Level 1, 2, 3 and 4 warnings.
 )
 
 set(GCC_CLANG_COMPATIBLE_WARNINGS
@@ -34,11 +33,8 @@ set(GCC_CLANG_COMPATIBLE_WARNINGS
     -Wshadow # Warning of a variabled shadows the declation of one from the parent context.
 )
 
-set(GCC_WARNINGS
-   ${GCC_CLANG_COMPATIBLE_WARNINGS}
-)
+set(GCC_WARNINGS ${GCC_CLANG_COMPATIBLE_WARNINGS})
 
-set(CLANG_WARNINGS
-   ${GCC_CLANG_COMPATIBLE_WARNINGS}
-    -Wextra-semi-stmt # warn about empty expression statements, for example extra ; like this: puts("string");;
+set(CLANG_WARNINGS ${GCC_CLANG_COMPATIBLE_WARNINGS} -Wextra-semi-stmt # warn about empty expression statements, for
+                                                                      # example extra ; like this: puts("string");;
 )

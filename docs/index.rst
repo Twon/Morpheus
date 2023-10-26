@@ -17,6 +17,12 @@ Morpheus is a modern C++23 based game engine.
 * :ref:`modindex`
 * :ref:`search`
 
+.. toctree::
+    :maxdepth: 3
+    :caption: Development:
+    :name: librarytoc
+
+    development/developers-guide
 
 .. toctree::
     :maxdepth: 3

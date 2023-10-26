@@ -17,7 +17,6 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 
 include_guard(GLOBAL)
 
-
 #[=======================================================================[.rst:
 morpheus_add_target
 ------------------
@@ -62,7 +61,7 @@ function(morpheus_add_target)
     set(multiValueArgs)
     cmake_parse_arguments(MORPHEUS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
-    if (NOT MORPHEUS_TYPE)
+    if(NOT MORPHEUS_TYPE)
         message(FATAL_ERROR "TYPE parameter must be supplied")
     else()
         set(VALID_TARGET_TYPES library executable)
@@ -71,23 +70,23 @@ function(morpheus_add_target)
             message(FATAL_ERROR "TYPE must be one of <${VALID_TARGET_TYPES}>")
         endif()
     endif()
-    if (NOT MORPHEUS_NAME)
+    if(NOT MORPHEUS_NAME)
         message(FATAL_ERROR "NAME parameter must be supplied")
     endif()
-    if (NOT MORPHEUS_ALIAS AND MORPHEUS_TYPE STREQUAL library)
+    if(NOT MORPHEUS_ALIAS AND MORPHEUS_TYPE STREQUAL library)
         message(FATAL_ERROR "ALIAS parameter must be supplied for library targets")
     endif()
-    if (NOT MORPHEUS_INFERFACE AND NOT MORPHEUS_TYPE STREQUAL library)
+    if(NOT MORPHEUS_INFERFACE AND NOT MORPHEUS_TYPE STREQUAL library)
         message(FATAL_ERROR "INFERFACE parameter can only be used with library targets")
     endif()
 
-    if (MORPHEUS_TYPE STREQUAL executable)
+    if(MORPHEUS_TYPE STREQUAL executable)
         add_executable(${MORPHEUS_NAME})
-        if (MORPHEUS_ALIAS)
+        if(MORPHEUS_ALIAS)
             add_executable(${MORPHEUS_ALIAS} ALIAS ${MORPHEUS_NAME})
         endif()
     else()
-        if (NOT MORPHEUS_INFERFACE)
+        if(NOT MORPHEUS_INFERFACE)
             add_library(${MORPHEUS_NAME})
         else()
             add_library(${MORPHEUS_NAME} INTERFACE)
@@ -95,10 +94,7 @@ function(morpheus_add_target)
         add_library(${MORPHEUS_ALIAS} ALIAS ${MORPHEUS_NAME})
     endif()
 
-    morpheus_add_target_properties(
-        NAME ${MORPHEUS_NAME}
-        FOLDER ${MORPHEUS_FOLDER}
-    )
+    morpheus_add_target_properties(NAME ${MORPHEUS_NAME} FOLDER ${MORPHEUS_FOLDER})
 endfunction()
 
 #[=======================================================================[.rst:
@@ -132,23 +128,21 @@ function(morpheus_add_target_properties)
     set(multiValueArgs)
     cmake_parse_arguments(MORPHEUS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
-    set_target_properties(${MORPHEUS_NAME}
-        PROPERTIES
-            ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
-            LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
-            RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
+    set_target_properties(
+        ${MORPHEUS_NAME}
+        PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
+                   LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
+                   RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
     )
 
-    if (MORPHEUS_FOLDER)
-        set_target_properties(${MORPHEUS_NAME}
-            PROPERTIES
-                FOLDER ${MORPHEUS_FOLDER}
-        )
+    if(MORPHEUS_FOLDER)
+        set_target_properties(${MORPHEUS_NAME} PROPERTIES FOLDER ${MORPHEUS_FOLDER})
     endif()
 
-    install(TARGETS ${MORPHEUS_NAME}
-            RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-            ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-            LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    install(
+        TARGETS ${MORPHEUS_NAME}
+        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     )
 endfunction()
