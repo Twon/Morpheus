@@ -73,14 +73,15 @@ function(enable_ccache)
     endif()
     string(REPLACE ";" " " ccacheEnvString "${ccacheEnv}")
 
-    if (${CMAKE_GENERATOR} MATCHES "Ninja|Makefiles")
-        message(STATUS "Morpheus: found generator Ninja|Makefiles")
+    if (${CMAKE_GENERATOR} MATCHES "Ninja|Makefiles" AND
+        ${CMAKE_HOST_SYSTEM_NAME} MATCHES "Linux")
+        message(STATUS "Morpheus: found generator ${CMAKE_GENERATOR} and OS ${CMAKE_HOST_SYSTEM_NAME}")
         foreach(lang IN ITEMS ${LANGUAGES})
             set(CMAKE_${lang}_COMPILER_LAUNCHER
                 ${CMAKE_COMMAND} -E env ${ccacheEnvString} ${CCACHE_BIN})
         endforeach()
     elseif (${CMAKE_GENERATOR} STREQUAL "Xcode")
-        message(STATUS "Morpheus: found generator Xcode")
+        message(STATUS "Morpheus: found generator ${CMAKE_GENERATOR}")
         foreach(lang IN ITEMS ${LANGUAGES})
             set(launch${lang} ${CMAKE_BINARY_DIR}/launch-${lang})
             file(WRITE ${launch${lang}} "#!/bin/bash\n\n")
@@ -96,11 +97,14 @@ function(enable_ccache)
                 set(CMAKE_XCODE_ATTRIBUTE_LDPLUSPLUS ${launchCXX})
             endif()
         endforeach()
-    elseif (${CMAKE_GENERATOR} MATCHES "Visual Studio" and 
-           (${LANGUAGES} STREQUAL "C" or 
-            ${LANGUAGES} STREQUAL "CXX" or
+    elseif (${CMAKE_GENERATOR} MATCHES "Visual Studio|Ninja" AND
+            ${CMAKE_HOST_SYSTEM_NAME} MATCHES "Windows" AND
+           (${LANGUAGES} STREQUAL "C" OR 
+            ${LANGUAGES} STREQUAL "CXX" OR
             ${LANGUAGES} STREQUAL "CUDA"))
-        message(STATUS "Morpheus: found generator Visual Studio")
+        message(STATUS "Morpheus: found generator ${CMAKE_GENERATOR} and OS ${CMAKE_HOST_SYSTEM_NAME}")
+
+        #[[
         cmake_path(NATIVE_PATH CCACHE_BIN ccache_exe)
         file(WRITE ${CMAKE_BINARY_DIR}/launch-cl.cmd "@echo off\n")
         foreach(envVal IN ITEMS ${ccacheEnv})
@@ -108,12 +112,44 @@ function(enable_ccache)
         endforeach()
         file(APPEND ${CMAKE_BINARY_DIR}/launch-cl.cmd "\"${ccache_exe}\" \"${CMAKE_C_COMPILER}\" %*\n")
         list(FILTER CMAKE_VS_GLOBALS EXCLUDE
-            REGEX "^(CLTool(Path|Exe)|TrackFileAccess)=.*$"
+            REGEX "^(CLTool(Path|Exe)|TrackFileAccess|UseMultiToolTask|DebugInformationFormat)=.*$"
         )
         list(APPEND CMAKE_VS_GLOBALS
             CLToolPath=${CMAKE_BINARY_DIR}
             CLToolExe=launch-cl.cmd
             TrackFileAccess=false
+            UseMultiToolTask=true
+            DebugInformationFormat=OldStyle
         )
+        ]]
+
+        #[[
+         file(COPY_FILE
+           ${CCACHE_BIN} ${CMAKE_BINARY_DIR}/cl.exe
+           ONLY_IF_DIFFERENT)
+        # By default Visual Studio generators will use /Zi which is not compatible
+        # with ccache, so tell Visual Studio to use /Z7 instead.
+        message(STATUS "Morpheus: Setting MSVC debug information format to 'Embedded'")
+        set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<$<CONFIG:Debug,RelWithDebInfo>:Embedded>")
+        set(CMAKE_VS_GLOBALS
+          "CLToolExe=cl.exe"
+          "CLToolPath=${CMAKE_BINARY_DIR}"
+          "TrackFileAccess=false"
+          "UseMultiToolTask=true"
+          "DebugInformationFormat=OldStyle")
+        ]]
+
+        # this works with the Visual Studio Open Folder functionality
+        foreach(lang IN ITEMS ${LANGUAGES})
+            set(CMAKE_${lang}_COMPILER_LAUNCHER ${CCACHE_BIN} CACHE STRING "${lang} Morpheus compiler launcher" FORCE)
+        endforeach()
+        foreach(config DEBUG RELWITHDEBINFO)
+            foreach(lang IN ITEMS ${LANGUAGES})
+                set(flags_var "CMAKE_${lang}_FLAGS_${config}")
+                string(REPLACE "/Zi" "/Z7" ${flags_var} "${${flags_var}}")
+                set(${flags_var} "${${flags_var}}" PARENT_SCOPE)
+            endforeach()
+        endforeach()                
+
     endif()
 endfunction()
