@@ -266,7 +266,7 @@ jobs:
             ccache --show-stats --verbose --zero-stats
       
       - name: Clear CCache stats
-        if: matrix.settings.os != 'windows-latest'
+        if: matrix.settings.os != 'windows-latest' && matrix.settings.os != 'macos-12'
         shell: bash
         run: |
             source build/generators/conanbuild.sh
@@ -294,7 +294,7 @@ jobs:
             ccache --show-stats --verbose
       
       - name: Show CCache stats
-        if: matrix.settings.os != 'windows-latest'
+        if: matrix.settings.os != 'windows-latest' && matrix.settings.os != 'macos-12'
         shell: bash
         run: |
             source build/generators/conanbuild.sh
