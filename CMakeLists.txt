@@ -23,7 +23,7 @@ include(GNUInstallDirs)
 include(CMakeDependentOption)
 include(CMakePackageConfigHelpers)
 
-option(MORPHEUS_BUILD_WITH_CCACHE "Enable the the CCache compiler caching" ON)
+option(MORPHEUS_BUILD_WITH_CCACHE "Enable the CCache compiler caching" ON)
 option(MORPHEUS_LINK_WITH_MOLD "Enable the mold linker" ON)
 # Icecream will be used only with CCache
 cmake_dependent_option(MORPHEUS_BUILD_WITH_ICECC "Enable build with Icecream" ON "MORPHEUS_BUILD_WITH_CCACHE" OFF)
@@ -106,6 +106,7 @@ if (MORPHEUS_BUILD_WITH_CCACHE)
         option(CCACHE_ICECC "CCache build with Icecream" ON)
     endif()
     option(CCACHE_SLOPPINESS "CCache sloppiness enabled" ON)
+    option(CCACHE_LOGFILE "CCache logfile enabled" ON)
 
     if (CCACHE_DEBUG)
         list(APPEND OPTIONS DEBUG)

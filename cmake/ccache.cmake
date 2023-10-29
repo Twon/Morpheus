@@ -71,17 +71,49 @@ function(enable_ccache)
         message(STATUS "Morpheus: Enable CCache sloppiness")
         list(APPEND ccacheEnv "CCACHE_SLOPPINESS=pch_defines,time_macros")
     endif()
-    string(REPLACE ";" " " ccacheEnvString "${ccacheEnv}")
+    if (CCACHE_LOGFILE)
+        message(STATUS "Morpheus: Enable CCache logfile")
+        list(APPEND ccacheEnv "CCACHE_LOGFILE=CCache_log.txt")
+    endif()
 
-    if (${CMAKE_GENERATOR} MATCHES "Ninja|Makefiles" AND
-        ${CMAKE_HOST_SYSTEM_NAME} MATCHES "Linux")
+    foreach(lang IN ITEMS C CXX OBJC OBJCXX)
+        if (CMAKE_${lang}_COMPILER_ID MATCHES "Clang")
+            add_compile_options("$<$<COMPILE_LANGUAGE:${lang}>:SHELL:-Xclang -fno-pch-timestamp>")
+        endif()  
+    endforeach()
+
+    if (MSVC)
+        message(STATUS "Morpheus: found generator ${CMAKE_GENERATOR} and OS ${CMAKE_HOST_SYSTEM_NAME} and MSVC ${MSVC}")
+        foreach(lang IN ITEMS C CXX)
+            foreach(config IN LISTS CMAKE_BUILD_TYPE CMAKE_CONFIGURATION_TYPES)
+                set(var CMAKE_${lang}_FLAGS)
+                if (NOT config STREQUAL "")
+                    string(TOUPPER "${config}" config)
+                    string(APPEND var "_${config}")
+                endif()
+                string(REGEX REPLACE "[-/]Z[iI]" "-Z7" ${var} "${${var}}")
+                #set(${var} "${${var}}" PARENT_SCOPE)
+                set(${var} "${${var}}" CACHE STRING "Compile flags for MSVC" FORCE)
+            endforeach()
+        endforeach()
+        if (DEFINED CMAKE_MSVC_DEBUG_INFORMATION_FORMAT)
+            string(REGEX REPLACE "ProgramDatabase|EditAndContinue" "Embedded" replaced "${CMAKE_MSVC_DEBUG_INFORMATION_FORMAT}")
+            #set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "${replaced}" PARENT_SCOPE)
+            set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "${replaced}" CACHE STRING "Compile flags for MSVC" FORCE)
+        else()
+            #set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<$<CONFIG:Debug,RelWithDebInfo>:Embedded>" PARENT_SCOPE)
+            set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<$<CONFIG:Debug,RelWithDebInfo>:Embedded>" CACHE STRING "Compile flags for MSVC XXX" FORCE)
+        endif()
+    endif()
+
+    if (${CMAKE_GENERATOR} MATCHES "Ninja|Ninja Multi-Config|Makefiles")
         message(STATUS "Morpheus: found generator ${CMAKE_GENERATOR} and OS ${CMAKE_HOST_SYSTEM_NAME}")
         foreach(lang IN ITEMS ${LANGUAGES})
-            set(CMAKE_${lang}_COMPILER_LAUNCHER
-                ${CMAKE_COMMAND} -E env ${ccacheEnvString} ${CCACHE_BIN})
+            #set(CMAKE_${lang}_COMPILER_LAUNCHER ${CMAKE_COMMAND} -E env ${ccacheEnv} ${CCACHE_BIN})
+            set(CMAKE_${lang}_COMPILER_LAUNCHER ${CMAKE_COMMAND} -E env ${ccacheEnv} ${CCACHE_BIN} CACHE STRING "Morpheus compiler launcher" FORCE)
         endforeach()
     elseif (${CMAKE_GENERATOR} STREQUAL "Xcode")
-        message(STATUS "Morpheus: found generator ${CMAKE_GENERATOR}")
+        message(STATUS "Morpheus: found generator ${CMAKE_GENERATOR} and OS ${CMAKE_HOST_SYSTEM_NAME}")
         foreach(lang IN ITEMS ${LANGUAGES})
             set(launch${lang} ${CMAKE_BINARY_DIR}/launch-${lang})
             file(WRITE ${launch${lang}} "#!/bin/bash\n\n")
@@ -97,59 +129,27 @@ function(enable_ccache)
                 set(CMAKE_XCODE_ATTRIBUTE_LDPLUSPLUS ${launchCXX})
             endif()
         endforeach()
-    elseif (${CMAKE_GENERATOR} MATCHES "Visual Studio|Ninja" AND
-            ${CMAKE_HOST_SYSTEM_NAME} MATCHES "Windows" AND
-           (${LANGUAGES} STREQUAL "C" OR 
-            ${LANGUAGES} STREQUAL "CXX" OR
-            ${LANGUAGES} STREQUAL "CUDA"))
-        message(STATUS "Morpheus: found generator ${CMAKE_GENERATOR} and OS ${CMAKE_HOST_SYSTEM_NAME}")
-
-        #[[
+    elseif (${CMAKE_GENERATOR} MATCHES "Visual Studio")
+        message(STATUS "Morpheus: found generator ${CMAKE_GENERATOR} and OS ${CMAKE_HOST_SYSTEM_NAME}")              
         cmake_path(NATIVE_PATH CCACHE_BIN ccache_exe)
         file(WRITE ${CMAKE_BINARY_DIR}/launch-cl.cmd "@echo off\n")
         foreach(envVal IN ITEMS ${ccacheEnv})
             file(APPEND ${CMAKE_BINARY_DIR}/launch-cl.cmd "set ${envVal}\n")
         endforeach()
-        file(APPEND ${CMAKE_BINARY_DIR}/launch-cl.cmd "\"${ccache_exe}\" \"${CMAKE_C_COMPILER}\" %*\n")
-        list(FILTER CMAKE_VS_GLOBALS EXCLUDE
-            REGEX "^(CLTool(Path|Exe)|TrackFileAccess|UseMultiToolTask|DebugInformationFormat)=.*$"
+        foreach(lang IN ITEMS ${LANGUAGES})
+            file(APPEND ${CMAKE_BINARY_DIR}/launch-cl.cmd "\"${ccache_exe}\" \"${CMAKE_${lang}_COMPILER}\" %*\n")
+        endforeach()
+        list(FILTER CMAKE_VS_GLOBALS EXCLUDE REGEX "^(CLTool(Path|Exe)|TrackFileAccess|UseMultiToolTask|DebugInformationFormat|EnforceProcessCountAcrossBuilds)=.*$"
         )
         list(APPEND CMAKE_VS_GLOBALS
             CLToolPath=${CMAKE_BINARY_DIR}
             CLToolExe=launch-cl.cmd
+            DebugInformationFormat=OldStyle
+            EnforceProcessCountAcrossBuilds=true
             TrackFileAccess=false
             UseMultiToolTask=true
-            DebugInformationFormat=OldStyle
         )
-        ]]
-
-        #[[
-         file(COPY_FILE
-           ${CCACHE_BIN} ${CMAKE_BINARY_DIR}/cl.exe
-           ONLY_IF_DIFFERENT)
-        # By default Visual Studio generators will use /Zi which is not compatible
-        # with ccache, so tell Visual Studio to use /Z7 instead.
-        message(STATUS "Morpheus: Setting MSVC debug information format to 'Embedded'")
-        set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<$<CONFIG:Debug,RelWithDebInfo>:Embedded>")
-        set(CMAKE_VS_GLOBALS
-          "CLToolExe=cl.exe"
-          "CLToolPath=${CMAKE_BINARY_DIR}"
-          "TrackFileAccess=false"
-          "UseMultiToolTask=true"
-          "DebugInformationFormat=OldStyle")
-        ]]
-
-        # this works with the Visual Studio Open Folder functionality
-        foreach(lang IN ITEMS ${LANGUAGES})
-            set(CMAKE_${lang}_COMPILER_LAUNCHER ${CCACHE_BIN} CACHE STRING "${lang} Morpheus compiler launcher" FORCE)
-        endforeach()
-        foreach(config DEBUG RELWITHDEBINFO)
-            foreach(lang IN ITEMS ${LANGUAGES})
-                set(flags_var "CMAKE_${lang}_FLAGS_${config}")
-                string(REPLACE "/Zi" "/Z7" ${flags_var} "${${flags_var}}")
-                set(${flags_var} "${${flags_var}}" PARENT_SCOPE)
-            endforeach()
-        endforeach()                
-
+        #set(CMAKE_VS_GLOBALS "${CMAKE_VS_GLOBALS}" PARENT_SCOPE)
+        set(CMAKE_VS_GLOBALS "${CMAKE_VS_GLOBALS}" CACHE STRING "Variables for Visual Studio XXX" FORCE)
     endif()
 endfunction()
