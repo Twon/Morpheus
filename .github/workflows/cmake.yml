@@ -109,7 +109,7 @@ jobs:
         env:
           cache-name: cache-ccache-data
         with:
-          path: ${{ github.workspace }}/.ccache
+          path: ~/.cache/ccache
           key: ccache-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-${{ matrix.settings.compiler.version }}-${{ matrix.settings.lib }}
           restore-keys: |
             ccache-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-${{ matrix.settings.compiler.version }}-
