@@ -107,6 +107,7 @@ if (MORPHEUS_BUILD_WITH_CCACHE)
     endif()
     option(CCACHE_SLOPPINESS "CCache sloppiness enabled" ON)
     option(CCACHE_LOGFILE "CCache logfile enabled" ON)
+    option(CCACHE_RECACHE "CCache forced recache" OFF)
 
     if (CCACHE_DEBUG)
         list(APPEND OPTIONS DEBUG)
