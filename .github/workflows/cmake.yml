@@ -259,7 +259,18 @@ jobs:
         run: echo "CONAN_PRESET=conan-$(echo ${{matrix.configuration}} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
 
       - name: Clear CCache stats
-        run: ccache --zero-stats
+        if: matrix.settings.os == 'windows-latest'
+        shell: cmd
+        run: |
+            call build\generators\conanbuild.bat
+            ccache --show-stats --verbose --zero-stats
+      
+      - name: Clear CCache stats
+        if: matrix.settings.os != 'windows-latest'
+        shell: bash
+        run: |
+            source build/generators/conanbuild.sh
+            ccache --show-stats --verbose --zero-stats
 
       - name: Build
         if: matrix.settings.os == 'windows-latest'
@@ -276,7 +287,18 @@ jobs:
           cmake --build --preset ${{ env.CONAN_PRESET }}
       
       - name: Show CCache stats
-        run: ccache --show-stats --verbose
+        if: matrix.settings.os == 'windows-latest'
+        shell: cmd
+        run: |
+            call build\generators\conanbuild.bat
+            ccache --show-stats --verbose
+      
+      - name: Show CCache stats
+        if: matrix.settings.os != 'windows-latest'
+        shell: bash
+        run: |
+            source build/generators/conanbuild.sh
+            ccache --show-stats --verbose
 
       - name: Test
         # Execute tests defined by the CMake configuration.
