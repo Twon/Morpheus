@@ -104,6 +104,19 @@ jobs:
             ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.settings.os }}-${{ matrix.configuration }}-
             ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.settings.os }}-
 
+      - name: Cache CCache data
+        uses: actions/cache@v3
+        env:
+          cache-name: cache-ccache-data
+        with:
+          path: ${{ github.workspace }}/.ccache/**
+          key: ccache-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-${{ matrix.settings.compiler.version }}-${{ matrix.settings.lib }}
+          restore-keys: |
+            ccache-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-${{ matrix.settings.compiler.version }}-
+            ccache-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-
+            ccache-${{ matrix.settings.os }}-${{ matrix.configuration }}-
+            ccache-${{ matrix.settings.os }}-
+
 #      - uses: lhotari/action-upterm@v1
 #        with:
 #          ## limits ssh access and adds the ssh public key for the user which triggered the workflow
@@ -245,6 +258,9 @@ jobs:
         shell: bash
         run: echo "CONAN_PRESET=conan-$(echo ${{matrix.configuration}} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
 
+      - name: Clear CCache stats
+        run: ccache --zero-stats
+
       - name: Build
         if: matrix.settings.os == 'windows-latest'
         shell: cmd
@@ -258,6 +274,9 @@ jobs:
         run: |
           source build/generators/conanbuild.sh
           cmake --build --preset ${{ env.CONAN_PRESET }}
+      
+      - name: Show CCache stats
+        run: ccache --show-stats --verbose
 
       - name: Test
         # Execute tests defined by the CMake configuration.
