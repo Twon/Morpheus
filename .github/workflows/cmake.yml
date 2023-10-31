@@ -265,8 +265,8 @@ jobs:
         shell: cmd
         run: |
             call build\generators\conanbuild.bat
-            cachePath = $(ccache --get-config cache_dir)
-            echo "CachePath=$cachePath" >> $GITHUB_OUTPUT
+            for /f %x in ('ccache --get-config cache_dir') do set "cachePath=%x"
+            echo "CachePath=%cachePath%" >> $ENV:GITHUB_OUTPUT
 
       - name: CCache get configuration Linux
         if: matrix.settings.os != 'windows-latest' && matrix.settings.os != 'macos-12'
@@ -274,7 +274,7 @@ jobs:
         shell: bash
         run: |
             source build/generators/conanbuild.sh
-            cachePath = $(ccache --get-config cache_dir)
+            cachePath=$(ccache --get-config cache_dir)
             echo "CachePath=$cachePath" >> $GITHUB_OUTPUT
 
       - name: Cache CCache data Windows
