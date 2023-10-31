@@ -104,19 +104,6 @@ jobs:
             ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.settings.os }}-${{ matrix.configuration }}-
             ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.settings.os }}-
 
-      - name: Cache CCache data
-        uses: actions/cache@v3
-        env:
-          cache-name: cache-ccache-data
-        with:
-          path: ~/.cache/ccache
-          key: ccache-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-${{ matrix.settings.compiler.version }}-${{ matrix.settings.lib }}
-          restore-keys: |
-            ccache-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-${{ matrix.settings.compiler.version }}-
-            ccache-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-
-            ccache-${{ matrix.settings.os }}-${{ matrix.configuration }}-
-            ccache-${{ matrix.settings.os }}-
-
 #      - uses: lhotari/action-upterm@v1
 #        with:
 #          ## limits ssh access and adds the ssh public key for the user which triggered the workflow
@@ -271,6 +258,37 @@ jobs:
         run: |
             source build/generators/conanbuild.sh
             ccache --show-stats --verbose --zero-stats
+
+      - name: CCache get configuration
+        id: ccache-get-configuration
+        if: matrix.settings.os == 'windows-latest'
+        shell: cmd
+        run: |
+            call build\generators\conanbuild.bat
+            cachePath = $(ccache --get-config cache_dir)
+            echo "CachePath=$cachePath" >> $GITHUB_OUTPUT
+
+      - name: CCache get configuration
+        id: ccache-get-configuration
+        if: matrix.settings.os != 'windows-latest' && matrix.settings.os != 'macos-12'
+        shell: bash
+        run: |
+            source build/generators/conanbuild.sh
+            cachePath = $(ccache --get-config cache_dir)
+            echo "CachePath=$cachePath" >> $GITHUB_OUTPUT
+
+      - name: Cache CCache data
+        uses: actions/cache@v3
+        env:
+          cache_path: ${{ steps.ccache-get-configuration.outputs.CachePath }}
+        with:
+          path: ${{ env.cache_path}}
+          key: ccache-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-${{ matrix.settings.compiler.version }}-${{ matrix.settings.lib }}
+          restore-keys: |
+            ccache-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-${{ matrix.settings.compiler.version }}-
+            ccache-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-
+            ccache-${{ matrix.settings.os }}-${{ matrix.configuration }}-
+            ccache-${{ matrix.settings.os }}-
 
       - name: Build
         if: matrix.settings.os == 'windows-latest'
