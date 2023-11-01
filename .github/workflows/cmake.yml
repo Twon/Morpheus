@@ -253,8 +253,8 @@ jobs:
         run: |
           call build\generators\conanbuild.bat
           mkdir %%HOMEPATH%%\.ccache
-          #set CCACHE_DIR=%%HOMEPATH%%\.ccache
-          #echo "CCACHE_HOME=%%HOMEPATH%%\.ccache" >> $GITHUB_ENV
+#          set CCACHE_DIR=%%HOMEPATH%%\.ccache
+#          echo "CCACHE_HOME=%%HOMEPATH%%\.ccache" >> $GITHUB_ENV
 
       - name: CCache Configure
         if: matrix.settings.os != 'windows-latest'
