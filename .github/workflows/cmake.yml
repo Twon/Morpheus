@@ -240,7 +240,7 @@ jobs:
         shell: bash
         run: |
           source build/generators/conanbuild.sh
-          cmake --preset conan-default -DENABLE_ADDRESS_SANITIZER=ON -DENABLE_UNDEFINED_BEHAVIOUR_SANITIZER=ON
+          cmake --preset conan-default -DENABLE_ADDRESS_SANITIZER=ON -DENABLE_UNDEFINED_BEHAVIOUR_SANITIZER=ON -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
 
       - name: Conan Preset
         shell: bash
