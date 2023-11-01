@@ -101,6 +101,17 @@ jobs:
         run: |
           conan install "${{github.workspace}}" --build missing -c tools.cmake.cmaketoolchain:generator="Ninja Multi-Config" --build catch2/3.3.2 -o build_docs=True
 
+      - name: Cache CCache data
+        uses: hendrikmuhs/ccache-action@v1.2.10
+        with:
+          key: ccache-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-${{ matrix.settings.compiler.version }}-${{ matrix.settings.lib }}
+          restore-keys: |
+            ccache-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-${{ matrix.settings.compiler.version }}-
+            ccache-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-
+            ccache-${{ matrix.settings.os }}-${{ matrix.configuration }}-
+            ccache-${{ matrix.settings.os }}-
+          verbose: 2
+
       - name: Configure Conan Build
         shell: bash
         working-directory: ${{github.workspace}}

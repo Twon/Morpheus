@@ -144,6 +144,17 @@ jobs:
            source build/${{env.BUILD_TYPE}}/generators/conanbuild.sh
            cmake --preset ${{ env.CONAN_PRESET }} -DENABLE_CODE_COVERAGE=1
 
+      - name: Cache CCache data
+        uses: hendrikmuhs/ccache-action@v1.2.10
+        with:
+          key: ccache-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-${{ matrix.settings.compiler.version }}-${{ matrix.settings.lib }}
+          restore-keys: |
+            ccache-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-${{ matrix.settings.compiler.version }}-
+            ccache-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-
+            ccache-${{ matrix.settings.os }}-${{ matrix.configuration }}-
+            ccache-${{ matrix.settings.os }}-
+          verbose: 2
+
       - name: Build
         # Build your program with the given configuration
         run: |
