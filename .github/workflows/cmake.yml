@@ -199,6 +199,7 @@ jobs:
 #        timeout-minutes: 15
 #        with:
 #          detached: true
+
       - name: Configure Install
         working-directory: ${{github.workspace}}
         shell: bash
@@ -253,57 +254,68 @@ jobs:
             ccache --show-stats --verbose --zero-stats
       
       - name: Clear CCache stats Linux
-        if: matrix.settings.os != 'windows-latest' && matrix.settings.os != 'macos-12'
+        if: matrix.settings.os != 'windows-latest'
         shell: bash
         run: |
             source build/generators/conanbuild.sh
             ccache --show-stats --verbose --zero-stats
 
-      - name: CCache get configuration Windows
-        if: matrix.settings.os == 'windows-latest'
-        id: ccache-get-configuration-windows
-        shell: cmd
-        run: |
-            call build\generators\conanbuild.bat
-            for /f %%x in ('ccache --get-config cache_dir') do set "cachePath=%%x"
-            echo "CachePath=%%cachePath%%" >> $ENV:GITHUB_OUTPUT
+#      - name: CCache get configuration Windows
+#        if: matrix.settings.os == 'windows-latest'
+#        id: ccache-get-configuration-windows
+#        shell: cmd
+#        run: |
+#            call build\generators\conanbuild.bat
+#            for /f %%x in ('ccache --get-config cache_dir') do set "cachePath=%%x"
+#            echo "CachePath=%%cachePath%%" >> $ENV:GITHUB_OUTPUT
+#
+#      - name: CCache get configuration Linux
+#        if: matrix.settings.os != 'windows-latest' && matrix.settings.os != 'macos-12'
+#        id: ccache-get-configuration-linux
+#        shell: bash
+#        run: |
+#            source build/generators/conanbuild.sh
+#            cachePath=$(ccache --get-config cache_dir)
+#            echo "CachePath=$cachePath" >> $GITHUB_OUTPUT
+#
+#      - name: Cache CCache data Windows
+#        if: matrix.settings.os == 'windows-latest'
+#        uses: actions/cache@v3
+#        env:
+#          cache_path: ${{ steps.ccache-get-configuration-windows.outputs.CachePath }}
+#        with:
+#          path: ${{ env.cache_path}}
+#          key: ccache-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-#${{ matrix.settings.compiler.version }}-${{ matrix.settings.lib }}
+#          restore-keys: |
+#            ccache-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-#${{ matrix.settings.compiler.version }}-
+#            ccache-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-
+#            ccache-${{ matrix.settings.os }}-${{ matrix.configuration }}-
+#            ccache-${{ matrix.settings.os }}-
+#
+#      - name: Cache CCache data Linux
+#        if: matrix.settings.os != 'windows-latest' && matrix.settings.os != 'macos-12'
+#        uses: actions/cache@v3
+#        env:
+#          cache_path: ${{ steps.ccache-get-configuration-linux.outputs.CachePath }}
+#        with:
+#          path: ${{ env.cache_path}}
+#          key: ccache-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-#${{ matrix.settings.compiler.version }}-${{ matrix.settings.lib }}
+#          restore-keys: |
+#            ccache-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-#${{ matrix.settings.compiler.version }}-
+#            ccache-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-
+#            ccache-${{ matrix.settings.os }}-${{ matrix.configuration }}-
+#            ccache-${{ matrix.settings.os }}-
 
-      - name: CCache get configuration Linux
-        if: matrix.settings.os != 'windows-latest' && matrix.settings.os != 'macos-12'
-        id: ccache-get-configuration-linux
-        shell: bash
-        run: |
-            source build/generators/conanbuild.sh
-            cachePath=$(ccache --get-config cache_dir)
-            echo "CachePath=$cachePath" >> $GITHUB_OUTPUT
-
-      - name: Cache CCache data Windows
-        if: matrix.settings.os == 'windows-latest'
-        uses: actions/cache@v3
-        env:
-          cache_path: ${{ steps.ccache-get-configuration-windows.outputs.CachePath }}
+      - name: Cache CCache data
+        uses: hendrikmuhs/ccache-action@v1.2.10
         with:
-          path: ${{ env.cache_path}}
           key: ccache-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-${{ matrix.settings.compiler.version }}-${{ matrix.settings.lib }}
           restore-keys: |
             ccache-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-${{ matrix.settings.compiler.version }}-
             ccache-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-
             ccache-${{ matrix.settings.os }}-${{ matrix.configuration }}-
             ccache-${{ matrix.settings.os }}-
-
-      - name: Cache CCache data Linux
-        if: matrix.settings.os != 'windows-latest' && matrix.settings.os != 'macos-12'
-        uses: actions/cache@v3
-        env:
-          cache_path: ${{ steps.ccache-get-configuration-linux.outputs.CachePath }}
-        with:
-          path: ${{ env.cache_path}}
-          key: ccache-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-${{ matrix.settings.compiler.version }}-${{ matrix.settings.lib }}
-          restore-keys: |
-            ccache-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-${{ matrix.settings.compiler.version }}-
-            ccache-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-
-            ccache-${{ matrix.settings.os }}-${{ matrix.configuration }}-
-            ccache-${{ matrix.settings.os }}-
+          verbose: 2
 
       - name: Build
         if: matrix.settings.os == 'windows-latest'
@@ -327,7 +339,7 @@ jobs:
             ccache --show-stats --verbose
       
       - name: Show CCache stats Linux
-        if: matrix.settings.os != 'windows-latest' && matrix.settings.os != 'macos-12'
+        if: matrix.settings.os != 'windows-latest'
         shell: bash
         run: |
             source build/generators/conanbuild.sh
