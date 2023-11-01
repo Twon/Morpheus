@@ -101,7 +101,7 @@ class Morpheus(ConanFile):
     def checkCCacheIsSupported(self):
         """ CCache is fully supported on Linux and macOS with gcc and clang and on Windows msvc. """
         return (self.settings.os == "Macos" or self.settings.os == "Linux" or self.settings.os == "Windows") and \
-               (self.settings.compiler == "clang" or self.settings.compiler == "gcc" or self.settings.compiler == "msvc")    
+               (self.settings.compiler == "clang" or self.settings.compiler == "gcc" or self.settings.compiler == "msvc" or self.settings.compiler == "apple-clang")    
 
     def config_options(self):
         if not self.checkMoldIsSupported():
