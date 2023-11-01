@@ -245,17 +245,36 @@ jobs:
       - name: Conan Preset
         shell: bash
         run: echo "CONAN_PRESET=conan-$(echo ${{matrix.configuration}} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+      
+      - name: CCache Configure
+        if: matrix.settings.os == 'windows-latest'
+        id: ccache-config-windows
+        shell: cmd
+        run: |
+          call build\generators\conanbuild.bat
+          mkdir %%HOMEPATH%%\.ccache
+          set GITHUB_ENV=%%GITHUB_ENV%%;CCACHE_HOME=%%HOMEPATH%%\.ccache
+
+      - name: CCache Configure
+        if: matrix.settings.os != 'windows-latest'
+        id: ccache-config-linux
+        shell: bash
+        run: |
+          source build/generators/conanbuild.sh
+          mkdir $HOME/.ccache
+          CCACHE_DIR=$HOME/.ccache
+          echo "CCACHE_HOME=$HOME/.ccache" >> $GITHUB_ENV
 
       - name: Cache CCache data
-        uses: hendrikmuhs/ccache-action@v1.2.10
+        uses: actions/cache@v3.3.2
         with:
+          path: ${{ env.CCACHE_HOME }}
           key: ccache-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-${{ matrix.settings.compiler.version }}-${{ matrix.settings.lib }}
           restore-keys: |
             ccache-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-${{ matrix.settings.compiler.version }}-
             ccache-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-
             ccache-${{ matrix.settings.os }}-${{ matrix.configuration }}-
             ccache-${{ matrix.settings.os }}-
-          verbose: 2
 
       - name: Build
         if: matrix.settings.os == 'windows-latest'
@@ -270,6 +289,20 @@ jobs:
         run: |
           source build/generators/conanbuild.sh
           cmake --build --preset ${{ env.CONAN_PRESET }}
+
+      - name: CCache Stats
+        if: matrix.settings.os == 'windows-latest'
+        shell: cmd
+        run: |
+            call build\generators\conanbuild.bat
+            ccache -d %%HOMEPATH%%\.ccache -svvz
+      
+      - name: CCache Stats
+        if: matrix.settings.os != 'windows-latest'
+        shell: bash
+        run: |
+            source build/generators/conanbuild.sh
+            ccache -d $HOME/.ccache -svvz
       
       - name: Test
         # Execute tests defined by the CMake configuration.
