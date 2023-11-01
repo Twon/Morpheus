@@ -288,7 +288,6 @@ jobs:
             ccache-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-${{ matrix.settings.compiler.version }}-
             ccache-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-
             ccache-${{ matrix.settings.os }}-${{ matrix.configuration }}-
-            ccache-${{ matrix.settings.os }}-
 
       - name: Build
         if: matrix.settings.os == 'windows-latest'
