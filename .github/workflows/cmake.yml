@@ -253,7 +253,8 @@ jobs:
         run: |
           call build\generators\conanbuild.bat
           mkdir %%HOMEPATH%%\.ccache
-          set GITHUB_ENV=%%GITHUB_ENV%%;CCACHE_HOME=%%HOMEPATH%%\.ccache
+          set CCACHE_DIR=%%HOMEPATH%%\.ccache
+          echo "CCACHE_HOME=%%HOMEPATH%%\.ccache" >> $GITHUB_ENV
 
       - name: CCache Configure
         if: matrix.settings.os != 'windows-latest'
@@ -269,8 +270,9 @@ jobs:
         uses: actions/cache@v3.3.2
         with:
           path: ${{ env.CCACHE_HOME }}
-          key: ccache-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-${{ matrix.settings.compiler.version }}-${{ matrix.settings.lib }}
+          key: ccache-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-${{ matrix.settings.compiler.version }}-${{ matrix.settings.lib }}-${{ github.sha }}
           restore-keys: |
+            ccache-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-${{ matrix.settings.compiler.version }}-${{ matrix.settings.lib }}-
             ccache-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-${{ matrix.settings.compiler.version }}-
             ccache-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-
             ccache-${{ matrix.settings.os }}-${{ matrix.configuration }}-
