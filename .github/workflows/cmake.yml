@@ -253,8 +253,8 @@ jobs:
         run: |
           call build\generators\conanbuild.bat
           mkdir %%HOMEPATH%%\.ccache
-          set CCACHE_DIR=%%HOMEPATH%%\.ccache
-          echo "CCACHE_HOME=%%HOMEPATH%%\.ccache" >> $GITHUB_ENV
+          #set CCACHE_DIR=%%HOMEPATH%%\.ccache
+          #echo "CCACHE_HOME=%%HOMEPATH%%\.ccache" >> $GITHUB_ENV
 
       - name: CCache Configure
         if: matrix.settings.os != 'windows-latest'
@@ -267,9 +267,23 @@ jobs:
           echo "CCACHE_HOME=$HOME/.ccache" >> $GITHUB_ENV
 
       - name: Cache CCache data
+        if: matrix.settings.os != 'windows-latest'
         uses: actions/cache@v3.3.2
         with:
           path: ${{ env.CCACHE_HOME }}
+          key: ccache-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-${{ matrix.settings.compiler.version }}-${{ matrix.settings.lib }}-${{ github.sha }}
+          restore-keys: |
+            ccache-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-${{ matrix.settings.compiler.version }}-${{ matrix.settings.lib }}-
+            ccache-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-${{ matrix.settings.compiler.version }}-
+            ccache-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-
+            ccache-${{ matrix.settings.os }}-${{ matrix.configuration }}-
+            ccache-${{ matrix.settings.os }}-
+
+      - name: Cache CCache data
+        if: matrix.settings.os == 'windows-latest'
+        uses: actions/cache@v3.3.2
+        with:
+          path: C:\Users\runneradmin\AppData\Local\ccache\
           key: ccache-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-${{ matrix.settings.compiler.version }}-${{ matrix.settings.lib }}-${{ github.sha }}
           restore-keys: |
             ccache-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-${{ matrix.settings.compiler.version }}-${{ matrix.settings.lib }}-
@@ -297,7 +311,7 @@ jobs:
         shell: cmd
         run: |
             call build\generators\conanbuild.bat
-            ccache -d %%HOMEPATH%%\.ccache -svvz
+            ccache -d C:\Users\runneradmin\AppData\Local\ccache\ -svvz
       
       - name: CCache Stats
         if: matrix.settings.os != 'windows-latest'
