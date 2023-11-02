@@ -113,20 +113,20 @@ jobs:
 
       - name: Add msbuild to PATH
         if: matrix.settings.os == 'windows-latest'
-        uses: microsoft/setup-msbuild@v1.3
+        uses: microsoft/setup-msbuild@v1.3.1
         with:
           vs-version: "16.5"
 
       - name: Install Latest GCC
         if: matrix.settings.compiler.type == 'GCC'
-        uses: egor-tensin/setup-gcc@v1
+        uses: egor-tensin/setup-gcc@v1.3
         with:
           version: ${{ matrix.settings.compiler.version }}
           platform: x64
 
       - name: Install Latest libstdC++11
         if: matrix.settings.compiler.type == 'CLANG' && matrix.settings.lib == 'libstdc++11'
-        uses: egor-tensin/setup-gcc@v1
+        uses: egor-tensin/setup-gcc@v1.3
         with:
           version: 12
           platform: x64

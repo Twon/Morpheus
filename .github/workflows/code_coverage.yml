@@ -42,12 +42,12 @@ jobs:
         os: [ "ubuntu-latest" ]
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4.1.1
 
       - uses: seanmiddleditch/gha-setup-ninja@master
 
       - name: Cache Conan data
-        uses: actions/cache@v3
+        uses: actions/cache@v3.3.2
         env:
           cache-name: cache-conan-data
         with:
@@ -142,24 +142,37 @@ jobs:
         # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
         run: |
            source build/${{env.BUILD_TYPE}}/generators/conanbuild.sh
-           cmake --preset ${{ env.CONAN_PRESET }} -DENABLE_CODE_COVERAGE=1
+           cmake --preset ${{ env.CONAN_PRESET }} -DENABLE_CODE_COVERAGE=1 -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
+
+      - name: CCache Configure
+        shell: bash
+        run: |
+          source build/${{env.BUILD_TYPE}}/generators/conanbuild.sh
+          mkdir $HOME/.ccache
+          export CCACHE_DIR=$HOME/.ccache
+          export CCACHE_SLOPPINESS=pch_defines,time_macros
+          echo "CCACHE_HOME=$HOME/.ccache" >> $GITHUB_ENV
+          ccache -p
 
       - name: Cache CCache data
-        uses: hendrikmuhs/ccache-action@v1.2.10
+        uses: actions/cache@v3.3.2
         with:
-          key: ccache-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-${{ matrix.settings.compiler.version }}-${{ matrix.settings.lib }}
+          path: ${{ env.CCACHE_HOME }}
+          key: ccache-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-${{ matrix.settings.compiler.version }}-${{ matrix.settings.lib }}-${{ github.sha }}
           restore-keys: |
-            ccache-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-${{ matrix.settings.compiler.version }}-
-            ccache-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-
-            ccache-${{ matrix.settings.os }}-${{ matrix.configuration }}-
-            ccache-${{ matrix.settings.os }}-
-          verbose: 2
+            ccache-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-${{ matrix.settings.compiler.version }}-${{ matrix.settings.lib }}-
 
       - name: Build
         # Build your program with the given configuration
         run: |
            source build/${{env.BUILD_TYPE}}/generators/conanbuild.sh
            cmake --build --preset ${{ env.CONAN_PRESET }}
+
+      - name: CCache Stats
+        shell: bash
+        run: |
+            source build/${{env.BUILD_TYPE}}/generators/conanbuild.sh
+            ccache -d $HOME/.ccache -svvz
 
       - name: Test
         working-directory: ${{github.workspace}}

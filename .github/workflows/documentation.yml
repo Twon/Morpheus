@@ -41,12 +41,12 @@ jobs:
         os: [ "ubuntu-latest" ]
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@4.1.1
 
       - uses: seanmiddleditch/gha-setup-ninja@master
 
       - name: Cache Conan data
-        uses: actions/cache@v3
+        uses: actions/cache@v3.3.2
         env:
           cache-name: cache-conan-data
         with:
@@ -59,7 +59,7 @@ jobs:
             ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.settings.os }}-
 
       - name: Install Latest GCC
-        uses: egor-tensin/setup-gcc@v1
+        uses: egor-tensin/setup-gcc@v1.3
         with:
           version: ${{ env.COMPILER_VERSION }}
           platform: x64
@@ -72,7 +72,7 @@ jobs:
           sudo apt-get -y install libglu1-mesa-dev
 
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4.7.1
         with:
           python-version: '3.11'
 
@@ -101,17 +101,6 @@ jobs:
         run: |
           conan install "${{github.workspace}}" --build missing -c tools.cmake.cmaketoolchain:generator="Ninja Multi-Config" --build catch2/3.3.2 -o build_docs=True
 
-      - name: Cache CCache data
-        uses: hendrikmuhs/ccache-action@v1.2.10
-        with:
-          key: ccache-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-${{ matrix.settings.compiler.version }}-${{ matrix.settings.lib }}
-          restore-keys: |
-            ccache-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-${{ matrix.settings.compiler.version }}-
-            ccache-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-
-            ccache-${{ matrix.settings.os }}-${{ matrix.configuration }}-
-            ccache-${{ matrix.settings.os }}-
-          verbose: 2
-
       - name: Configure Conan Build
         shell: bash
         working-directory: ${{github.workspace}}
@@ -134,7 +123,7 @@ jobs:
 
       - name: Deploy documentation
         if: github.ref == 'refs/heads/main'
-        uses: peaceiris/actions-gh-pages@v3
+        uses: peaceiris/actions-gh-pages@v3.9.3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./build/documentation/sphinx
