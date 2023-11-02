@@ -252,11 +252,11 @@ jobs:
         shell: cmd
         run: |
           call build\generators\conanbuild.bat
+          set CCACHE_SLOPPINESS=pch_defines,time_macros
+          ccache -p
 #          mkdir %HOMEPATH%\.ccache
 #          set CCACHE_DIR=%HOMEPATH%\.ccache
-          set CCACHE_SLOPPINESS=pch_defines,time_macros
 #          echo "CCACHE_HOME=%HOMEPATH%\.ccache" >> $env:GITHUB_ENV
-          ccache -p
 
       - name: CCache Configure
         if: matrix.settings.os != 'windows-latest'
