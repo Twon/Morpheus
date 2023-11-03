@@ -254,7 +254,7 @@ jobs:
           call build\generators\conanbuild.bat
           set CCACHE_SLOPPINESS=pch_defines,time_macros
           set CCACHE_NOHASHDIR=1
-          set CCACHE_LOGFILE=D:/a/Morpheus/Morpheus/build/CcacheLogFile.log
+          set CCACHE_LOGFILE=D:\\a\\Morpheus\\Morpheus\\build\\CcacheLogFile.log
           #set CCACHE_RECACHE=1
           ccache -p
 
@@ -311,8 +311,7 @@ jobs:
         run: |
             call build\generators\conanbuild.bat
             ccache -d C:\Users\runneradmin\AppData\Local\ccache\ -svvz
-            type D:/a/Morpheus/Morpheus/build/CcacheLogFile.log
-            rm D:/a/Morpheus/Morpheus/build/CcacheLogFile.log
+            type D:\a\Morpheus\Morpheus\build\CcacheLogFile.log
       
       - name: CCache Stats
         if: matrix.settings.os != 'windows-latest'
@@ -321,7 +320,6 @@ jobs:
             source build/generators/conanbuild.sh
             ccache -d $HOME/.ccache -svvz
             cat $HOME/.ccache/CcacheLogFile.log
-            rm $HOME/.ccache/CcacheLogFile.log
       
       - name: Test
         # Execute tests defined by the CMake configuration.
