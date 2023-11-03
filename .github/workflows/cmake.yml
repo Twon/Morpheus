@@ -254,7 +254,7 @@ jobs:
           call build\generators\conanbuild.bat
           set CCACHE_SLOPPINESS=pch_defines,time_macros
           set CCACHE_NOHASHDIR=1
-          set CCACHE_LOGFILE=C:\Users\runneradmin\AppData\Local\ccache\CcacheLogFile.log
+          set CCACHE_LOGFILE=C:\\Users\\runneradmin\\AppData\\Local\\ccache\\CcacheLogFile.log
           #set CCACHE_RECACHE=1
           ccache -p
 
@@ -278,7 +278,7 @@ jobs:
         uses: actions/cache@v3.3.2
         with:
           path: C:\Users\runneradmin\AppData\Local\ccache\
-          key: ccache-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-${{ matrix.settings.compiler.version }}-${{ matrix.settings.lib }}-${{ github.sha }}
+          key: ccache-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-${{ matrix.settings.compiler.version }}-${{ matrix.settings.lib }}-${{ github.run_number }}
           restore-keys: |
             ccache-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-${{ matrix.settings.compiler.version }}-${{ matrix.settings.lib }}-
 
@@ -287,7 +287,7 @@ jobs:
         uses: actions/cache@v3.3.2
         with:
           path: ${{ env.CCACHE_HOME }}
-          key: ccache-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-${{ matrix.settings.compiler.version }}-${{ matrix.settings.lib }}-${{ github.sha }}
+          key: ccache-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-${{ matrix.settings.compiler.version }}-${{ matrix.settings.lib }}-${{ github.run_number }}
           restore-keys: |
             ccache-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-${{ matrix.settings.compiler.version }}-${{ matrix.settings.lib }}-
 
