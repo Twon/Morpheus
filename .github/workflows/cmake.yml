@@ -313,6 +313,8 @@ jobs:
             ccache -d C:\Users\runneradmin\AppData\Local\ccache\ -svvz
             dir D:\a\Morpheus\Morpheus\build
             type D:\a\Morpheus\Morpheus\build\CcacheLogFile.log
+            rm D:\a\Morpheus\Morpheus\build\CcacheLogFile.log
+            dir D:\a\Morpheus\Morpheus\build
       
       - name: CCache Stats
         if: matrix.settings.os != 'windows-latest'
@@ -322,6 +324,8 @@ jobs:
             ccache -d $HOME/.ccache -svvz
             ls -la $HOME/.ccache
             cat $HOME/.ccache/CcacheLogFile.log
+            rm $HOME/.ccache/CcacheLogFile.log
+            ls -la $HOME/.ccache
       
       - name: Test
         # Execute tests defined by the CMake configuration.
