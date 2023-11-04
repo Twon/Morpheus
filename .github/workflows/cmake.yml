@@ -311,6 +311,7 @@ jobs:
         run: |
             call build\generators\conanbuild.bat
             ccache -d C:\Users\runneradmin\AppData\Local\ccache\ -svvz
+            dir D:\a\Morpheus\Morpheus\build
             type D:\a\Morpheus\Morpheus\build\CcacheLogFile.log
       
       - name: CCache Stats
@@ -319,6 +320,7 @@ jobs:
         run: |
             source build/generators/conanbuild.sh
             ccache -d $HOME/.ccache -svvz
+            ls -la $HOME/.ccache
             cat $HOME/.ccache/CcacheLogFile.log
       
       - name: Test
