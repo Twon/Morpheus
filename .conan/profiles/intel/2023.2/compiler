@@ -1,0 +1,4 @@
+include(../../compiler/intel)
+
+[settings]
+compiler.version=2023.2
