@@ -11,7 +11,6 @@ target_sources(MorpheusCore
         prerequisites.hpp
         sanitizers.hpp
         scoped_action.hpp
-        unreachable.hpp
         verify.hpp
     PRIVATE
         assert_handler.cpp
