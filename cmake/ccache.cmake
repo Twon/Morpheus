@@ -30,19 +30,32 @@ Enable use of Ccache for compiler caching during the build process.
 .. code-block:: cmake
 
   enable_ccacche(
+      [DEBUG]
+      [ICECC]<icecc path>
+      [LOGFILE]<ccache logfile path>
+      [NOHASDIR]
       [QUIET]
+      [RECACHE]
+      [SLOPPINESS]<sloppiness settings>
   )
    -- Searches for the ccache executable, and if found enables it for supported
    language with specified options.
 
-  ``QUIET`` Silent output from this method.
+  ``DEBUG`` to enable debugging.
+  ``ICECC`` to enable Icecream build support.
+  ``LOGFILE`` to enable ccache logging to file ${CMAKE_BINARY_DIR}/CCache_log.txt.
+  ``NOHASHDIR`` to exclude the current working directory from the cache hash.
+  ``QUIET`` Silent output from this method if ccache build is enabled.
+  ``RECACHE`` ccache will not use any previously stored result. New results will overwrite any pre-existing results.
+  ``SLOPPINESS`` ccache to relax some checks in order to increase the hit rate of cache hits: pch_defines,time_macros.
+  Please refer to `ccache documentation <https://ccache.dev/documentation.html>`_ for more details about options. 
 
 #]=======================================================================]
 function(enable_ccache)
-    set(options QUIET)
+    set(options DEBUG ICECC LOGFILE NOHASHDIR QUIET RECACHE SLOPPINESS)
     set(oneValueArgs)
-    set(multiValueArgs LANGUAGES OPTIONS)
-    cmake_parse_arguments(CCACHE "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
+    set(multiValueArgs LANGUAGES)
+    cmake_parse_arguments(CCACHE "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
     if (CCACHE_UNPARSED_ARGUMENTS)
         message(FATAL_ERROR "Morpheus: enable_ccache invalid arguments ${CCACHE_UNPARSED_ARGUMENTS}")
@@ -54,12 +67,16 @@ function(enable_ccache)
         message(DEBUG "Morpheus: If CCache compiler cache is desired then ensure this is a supported platform and ensure the Conan buildenv is active")
         return()
     endif()
-    message(STATUS "Morpheus: CCache found: ${CCACHE_BIN}. Enabling ccache as compiler cache tool.")
+
+    if (NOT CCACHE_QUIET)
+        message(STATUS "Morpheus: CCache found: ${CCACHE_BIN}. Enabling ccache as compiler cache tool.")
+    endif()
 
     if (CCACHE_DEBUG)
         message(STATUS "Morpheus: Create CCache debug files")
         list(APPEND ccacheEnv "CCACHE_DEBUG=1")
     endif()
+
     if (CCACHE_ICECC)
         find_program(ICECC_BIN icecc)
         if (ICECC_BIN)
@@ -69,21 +86,25 @@ function(enable_ccache)
             message(STATUS "Morpheus: Icecream executable not found")
         endif()
     endif()
-    if (CCACHE_SLOPPINESS)
-        message(STATUS "Morpheus: Enable CCache sloppiness")
-        list(APPEND ccacheEnv "CCACHE_SLOPPINESS=pch_defines,time_macros")
-    endif()
+
     if (CCACHE_LOGFILE)
         message(STATUS "Morpheus: Enable CCache logfile")
-        list(APPEND ccacheEnv "CCACHE_LOGFILE=CCache_log.txt")
+        list(APPEND ccacheEnv "CCACHE_LOGFILE=${CMAKE_BINARY_DIR}/CCache_log.txt")
     endif()
+
     if (CCACHE_NOHASDIR)
         message(STATUS "Morpheus: CCache do not hash current working directory")
         list(APPEND ccacheEnv "CCACHE_NOHASHDIR=1")
     endif()
+
     if (CCACHE_RECACHE)
         message(STATUS "Morpheus: Enable CCache forced recache")
         list(APPEND ccacheEnv "CCACHE_RECACHE=1")
+    endif()
+
+    if (CCACHE_SLOPPINESS)
+        message(STATUS "Morpheus: Enable CCache sloppiness")
+        list(APPEND ccacheEnv "CCACHE_SLOPPINESS=pch_defines,time_macros")
     endif()
 
     foreach(lang IN ITEMS C CXX OBJC OBJCXX)
@@ -94,6 +115,7 @@ function(enable_ccache)
 
     if (MSVC)
         message(STATUS "Morpheus: found generator ${CMAKE_GENERATOR} and OS ${CMAKE_HOST_SYSTEM_NAME} and MSVC ${MSVC}")
+
         foreach(lang IN ITEMS C CXX)
             foreach(config IN LISTS CMAKE_BUILD_TYPE CMAKE_CONFIGURATION_TYPES)
                 set(var CMAKE_${lang}_FLAGS)
@@ -105,6 +127,7 @@ function(enable_ccache)
                 set(${var} "${${var}}" CACHE STRING "Morpheus: Compile flags for MSVC" FORCE)
             endforeach()
         endforeach()
+
         if (DEFINED CMAKE_MSVC_DEBUG_INFORMATION_FORMAT)
             string(REGEX REPLACE "ProgramDatabase|EditAndContinue" "Embedded" replaced "${CMAKE_MSVC_DEBUG_INFORMATION_FORMAT}")
             set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "${replaced}" CACHE STRING "Morpheus: Compile flags for MSVC" FORCE)
@@ -115,11 +138,13 @@ function(enable_ccache)
 
     if (${CMAKE_GENERATOR} MATCHES "Ninja|Ninja Multi-Config|Makefiles")
         message(STATUS "Morpheus: found generator ${CMAKE_GENERATOR} and OS ${CMAKE_HOST_SYSTEM_NAME}")
+
         foreach(lang IN ITEMS ${LANGUAGES})
             set(CMAKE_${lang}_COMPILER_LAUNCHER ${CMAKE_COMMAND} -E env ${ccacheEnv} ${CCACHE_BIN} CACHE STRING "Morpheus compiler launcher" FORCE)
         endforeach()
     elseif (${CMAKE_GENERATOR} STREQUAL "Xcode")
         message(STATUS "Morpheus: found generator ${CMAKE_GENERATOR} and OS ${CMAKE_HOST_SYSTEM_NAME}")
+
         foreach(lang IN ITEMS ${LANGUAGES})
             set(launch${lang} ${CMAKE_BINARY_DIR}/launch-${lang})
             file(WRITE ${launch${lang}} "#!/bin/bash\n\n")
@@ -136,17 +161,22 @@ function(enable_ccache)
             endif()
         endforeach()
     elseif (${CMAKE_GENERATOR} MATCHES "Visual Studio")
-        message(STATUS "Morpheus: found generator ${CMAKE_GENERATOR} and OS ${CMAKE_HOST_SYSTEM_NAME}")              
+        message(STATUS "Morpheus: found generator ${CMAKE_GENERATOR} and OS ${CMAKE_HOST_SYSTEM_NAME}")      
+
         cmake_path(NATIVE_PATH CCACHE_BIN ccache_exe)
         file(WRITE ${CMAKE_BINARY_DIR}/launch-cl.cmd "@echo off\n")
+
         foreach(envVal IN ITEMS ${ccacheEnv})
             file(APPEND ${CMAKE_BINARY_DIR}/launch-cl.cmd "set ${envVal}\n")
         endforeach()
+
         foreach(lang IN ITEMS ${LANGUAGES})
             file(APPEND ${CMAKE_BINARY_DIR}/launch-cl.cmd "\"${ccache_exe}\" \"${CMAKE_${lang}_COMPILER}\" %*\n")
         endforeach()
+
         list(FILTER CMAKE_VS_GLOBALS EXCLUDE REGEX "^(CLTool(Path|Exe)|TrackFileAccess|UseMultiToolTask|DebugInformationFormat|EnforceProcessCountAcrossBuilds)=.*$"
         )
+
         list(APPEND CMAKE_VS_GLOBALS
             CLToolPath=${CMAKE_BINARY_DIR}
             CLToolExe=launch-cl.cmd
@@ -155,6 +185,8 @@ function(enable_ccache)
             TrackFileAccess=false
             UseMultiToolTask=true
         )
+
         set(CMAKE_VS_GLOBALS "${CMAKE_VS_GLOBALS}" CACHE STRING "Morpheus: Variables for Visual Studio" FORCE)
     endif()
+
 endfunction()

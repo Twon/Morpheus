@@ -25,8 +25,6 @@ include(CMakePackageConfigHelpers)
 
 option(MORPHEUS_BUILD_WITH_CCACHE "Enable the CCache compiler caching" ON)
 option(MORPHEUS_LINK_WITH_MOLD "Enable the mold linker" ON)
-# Icecream will be used only with CCache
-cmake_dependent_option(MORPHEUS_BUILD_WITH_ICECC "Enable build with Icecream" ON "MORPHEUS_BUILD_WITH_CCACHE" OFF)
 cmake_dependent_option(MORPHEUS_CODE_COVERAGE "Enable code coverage" ON "\"${CMAKE_CXX_COMPILER_ID}\" STREQUAL \"Clang\" OR \"${CMAKE_CXX_COMPILER_ID}\" STREQUAL \"GNU\"" OFF)
 cmake_dependent_option(MORPHEUS_INCLUDE_NATVIS "Enable inclusion of a natvis files for debugging" ON "\"${CMAKE_CXX_COMPILER_ID}\" STREQUAL \"MSVC\"" OFF)
 
@@ -98,32 +96,21 @@ endif()
 add_subdirectory(libraries)
 add_subdirectory(examples)
 
-# CCache / Icecream options management
-set(LANGUAGES CXX)
+#[[
+Ccache / Icecream options management
+In order to add/remove configuration options for ccache call the function enable_ccache with the following parameters:
+DEBUG to enable debugging
+ICECC to enable Icecream build support
+LOGFILE to enable ccache logging to file
+NOHASHDIR to exclude the current working directory from the cache hash
+QUIET Searches for the ccache executable, and if found enables it for supported language with specified options
+RECACHE ccache will not use any previously stored result. New results will overwrite any pre-existing results
+SLOPPINESS ccache to relax some checks in order to increase the hit rate of cache hits
+reference documentation: https://ccache.dev/documentation.html
+]]
 if (MORPHEUS_BUILD_WITH_CCACHE)
-    option(CCACHE_DEBUG "CCache debug enabled" OFF)
-    if (MORPHEUS_BUILD_WITH_ICECC)
-        option(CCACHE_ICECC "CCache build with Icecream" ON)
-    endif()
-    option(CCACHE_LOGFILE "CCache logfile enabled" OFF)
-    option(CCACHE_NOHASHDIR "CCache do not hash current working directory" ON)
-    option(CCACHE_RECACHE "CCache forced recache" OFF)
-    option(CCACHE_SLOPPINESS "CCache sloppiness enabled" ON)
-
-    if (CCACHE_DEBUG)
-        list(APPEND OPTIONS DEBUG)
-    endif()
-    if (CCACHE_ICECC)
-        list(APPEND OPTIONS ICECC)
-    endif()
-    if (CCACHE_NOHASHDIR)
-        list(APPEND OPTIONS NOHASHDIR)
-    endif()
-    if (CCACHE_SLOPPINESS)
-        list(APPEND OPTIONS SLOPPINESS)
-    endif()
-
-    enable_ccache(LANGUAGES OPTIONS)
+    set(LANGUAGES CXX)
+    enable_ccache(QUIET LANGUAGES ICECC NOHASHDIR SLOPPINESS)
 endif()
 
 if (ENABLE_CODE_COVERAGE)
