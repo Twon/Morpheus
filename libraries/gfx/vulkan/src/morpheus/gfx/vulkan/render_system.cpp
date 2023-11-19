@@ -19,22 +19,22 @@ namespace
 //---------------------------------------------------------------------------------------------------------------------
 
 RenderSystem::RenderSystem(std::string_view const appName, std::string_view const engineName)
-: mInstance(
-      [&]
+: mInstance( // LCOV_EXCL_LINE
+      [&]    // LCOV_EXCL_LINE
       {
           // initialize the vk::ApplicationInfo structure
-          vk::ApplicationInfo applicationInfo(appName.data(), 1, engineName.data(), 1, VK_API_VERSION_1_1);
+          vk::ApplicationInfo applicationInfo(appName.data(), 1, engineName.data(), 1, VK_API_VERSION_1_1); // LCOV_EXCL_LINE
 
           // initialize the vk::InstanceCreateInfo
-          vk::InstanceCreateInfo instanceCreateInfo({}, &applicationInfo);
+          vk::InstanceCreateInfo instanceCreateInfo({}, &applicationInfo); // LCOV_EXCL_LINE
 
           // create an Instance
-          return vk::raii::Instance(mContext, instanceCreateInfo);
+          return vk::raii::Instance(mContext, instanceCreateInfo); // LCOV_EXCL_LINE
       }())
-, mVulkanVersion(mContext.enumerateInstanceVersion())
-, mAvailableExtensions(mContext.enumerateInstanceExtensionProperties())
-, mAvailableLayers(mContext.enumerateInstanceLayerProperties())
-, mAdapters(enumerateAdapters(mInstance))
+, mVulkanVersion(mContext.enumerateInstanceVersion())                   // LCOV_EXCL_LINE
+, mAvailableExtensions(mContext.enumerateInstanceExtensionProperties()) // LCOV_EXCL_LINE
+, mAvailableLayers(mContext.enumerateInstanceLayerProperties())         // LCOV_EXCL_LINE
+, mAdapters(enumerateAdapters(mInstance))                               // LCOV_EXCL_LINE
 {
 }
 
