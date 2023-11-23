@@ -296,7 +296,6 @@ jobs:
         shell: cmd
         run: |
           call build\generators\conanbuild.bat
-
           call build\generators\conanbuild.bat
           set CCACHE_SLOPPINESS=pch_defines,time_macros
           set CCACHE_NOHASHDIR=1
@@ -319,7 +318,7 @@ jobs:
           #export CCACHE_RECACHE=1
           echo "CCACHE_HOME=$HOME/.ccache" >> $GITHUB_ENV
           ccache -p
-                    
+
           cmake --build --preset ${{ env.CONAN_PRESET }}
 
       - name: CCache Stats
