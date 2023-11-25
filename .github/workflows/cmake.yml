@@ -258,20 +258,13 @@ jobs:
 #          #set CCACHE_RECACHE=1
 #          ccache -p
 
-#      - name: CCache Configure
-#        if: matrix.settings.os != 'windows-latest'
-#        id: ccache-config-linux
-#        shell: bash
-#        run: |
-#          source build/generators/conanbuild.sh
-#          mkdir $HOME/.ccache
-#          export CCACHE_DIR=$HOME/.ccache
-#          export CCACHE_SLOPPINESS=pch_defines,time_macros
-#          export CCACHE_NOHASHDIR=1
-#          export CCACHE_LOGFILE=$HOME/.ccache/CcacheLogFile.log
-#          #export CCACHE_RECACHE=1
-#          echo "CCACHE_HOME=$HOME/.ccache" >> $GITHUB_ENV
-#          ccache -p
+      - name: CCache Configure
+        if: matrix.settings.os != 'windows-latest'
+        id: ccache-config-linux
+        shell: bash
+        run: |
+          mkdir $HOME/.ccache
+          echo "CCACHE_HOME=$HOME/.ccache" >> $GITHUB_ENV
 
       - name: Cache CCache data
         if: matrix.settings.os == 'windows-latest'
@@ -308,13 +301,11 @@ jobs:
         shell: bash
         run: |
           source build/generators/conanbuild.sh
-          mkdir $HOME/.ccache
           export CCACHE_DIR=$HOME/.ccache
           export CCACHE_SLOPPINESS=pch_defines,time_macros
           export CCACHE_NOHASHDIR=1
           export CCACHE_LOGFILE=$HOME/.ccache/CcacheLogFile.log
           #export CCACHE_RECACHE=1
-          echo "CCACHE_HOME=$HOME/.ccache" >> $GITHUB_ENV
           ccache -p
           cmake --build --preset ${{ env.CONAN_PRESET }}
 
@@ -324,10 +315,10 @@ jobs:
         run: |
             call build\generators\conanbuild.bat
             ccache -d C:\Users\runneradmin\AppData\Local\ccache\ -svvz
-            dir D:\a\Morpheus\Morpheus\build
+            #dir D:\a\Morpheus\Morpheus\build
             type D:\a\Morpheus\Morpheus\build\CcacheLogFile.log
-            rm D:\a\Morpheus\Morpheus\build\CcacheLogFile.log
-            dir D:\a\Morpheus\Morpheus\build
+            #rm D:\a\Morpheus\Morpheus\build\CcacheLogFile.log
+            #dir D:\a\Morpheus\Morpheus\build
       
       - name: CCache Stats
         if: matrix.settings.os != 'windows-latest'
@@ -335,10 +326,10 @@ jobs:
         run: |
             source build/generators/conanbuild.sh
             ccache -d $HOME/.ccache -svvz
-            ls -la $HOME/.ccache
+            #ls -la $HOME/.ccache
             cat $HOME/.ccache/CcacheLogFile.log
-            rm $HOME/.ccache/CcacheLogFile.log
-            ls -la $HOME/.ccache
+            #rm $HOME/.ccache/CcacheLogFile.log
+            #ls -la $HOME/.ccache
       
       - name: Setup tmate session
         uses: mxschmitt/action-tmate@v3
