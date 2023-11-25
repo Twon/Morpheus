@@ -34,6 +34,7 @@ TEST_CASE("Verify std::format specialisation for std::chrono::duration", "[morph
 
 TEST_CASE("Verify std::format specialisation for std::chrono::date", "[morpheus.conversion.chrono.date.formatter]")
 {
+    std::cout << "User-preferred locale setting is " << std::locale("").name().c_str() << '\n';
     std::string prev_loc = std::setlocale(LC_TIME, nullptr);
     std::cout << std::format("Original LC_TIME locale: {}\n", prev_loc);
 
