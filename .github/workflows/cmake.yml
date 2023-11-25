@@ -292,7 +292,7 @@ jobs:
           set CCACHE_SLOPPINESS=pch_defines,time_macros
           set CCACHE_NOHASHDIR=1
           set CCACHE_LOGFILE=D:\\a\\Morpheus\\Morpheus\\build\\CcacheLogFile.log
-          set CCACHE_RECACHE=1
+          #set CCACHE_RECACHE=1
           ccache -p
           cmake --build --preset ${{ env.CONAN_PRESET }}
 
