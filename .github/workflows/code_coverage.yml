@@ -149,12 +149,7 @@ jobs:
         run: |
           source build/${{env.BUILD_TYPE}}/generators/conanbuild.sh
           mkdir $HOME/.ccache
-          export CCACHE_DIR=$HOME/.ccache
-          export CCACHE_SLOPPINESS=pch_defines,time_macros
-          export CCACHE_NOHASHDIR=1
-          #export CCACHE_RECACHE=1
           echo "CCACHE_HOME=$HOME/.ccache" >> $GITHUB_ENV
-          ccache -p
 
       - name: Cache CCache data
         uses: actions/cache@v3.3.2
@@ -166,8 +161,15 @@ jobs:
 
       - name: Build
         # Build your program with the given configuration
+        shell: bash
         run: |
            source build/${{env.BUILD_TYPE}}/generators/conanbuild.sh
+           export CCACHE_DIR=$HOME/.ccache
+           export CCACHE_SLOPPINESS=pch_defines,time_macros
+           export CCACHE_NOHASHDIR=1
+           export CCACHE_LOGFILE=$HOME/.ccache/CcacheLogFile.log
+           #export CCACHE_RECACHE=1
+           ccache -p           
            cmake --build --preset ${{ env.CONAN_PRESET }}
 
       - name: CCache Stats
@@ -175,6 +177,10 @@ jobs:
         run: |
             source build/${{env.BUILD_TYPE}}/generators/conanbuild.sh
             ccache -d $HOME/.ccache -svvz
+            ls -la $HOME/.ccache
+            cat $HOME/.ccache/CcacheLogFile.log
+            rm $HOME/.ccache/CcacheLogFile.log
+            ls -la $HOME/.ccache            
 
       - name: Test
         working-directory: ${{github.workspace}}
