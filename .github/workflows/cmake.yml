@@ -246,32 +246,32 @@ jobs:
         shell: bash
         run: echo "CONAN_PRESET=conan-$(echo ${{matrix.configuration}} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
       
-      - name: CCache Configure
-        if: matrix.settings.os == 'windows-latest'
-        id: ccache-config-windows
-        shell: cmd
-        run: |
-          call build\generators\conanbuild.bat
-          set CCACHE_SLOPPINESS=pch_defines,time_macros
-          set CCACHE_NOHASHDIR=1
-          set CCACHE_LOGFILE=D:\\a\\Morpheus\\Morpheus\\build\\CcacheLogFile.log
-          #set CCACHE_RECACHE=1
-          ccache -p
+#      - name: CCache Configure
+#        if: matrix.settings.os == 'windows-latest'
+#        id: ccache-config-windows
+#        shell: cmd
+#        run: |
+#          call build\generators\conanbuild.bat
+#          set CCACHE_SLOPPINESS=pch_defines,time_macros
+#          set CCACHE_NOHASHDIR=1
+#          set CCACHE_LOGFILE=D:\\a\\Morpheus\\Morpheus\\build\\CcacheLogFile.log
+#          #set CCACHE_RECACHE=1
+#          ccache -p
 
-      - name: CCache Configure
-        if: matrix.settings.os != 'windows-latest'
-        id: ccache-config-linux
-        shell: bash
-        run: |
-          source build/generators/conanbuild.sh
-          mkdir $HOME/.ccache
-          export CCACHE_DIR=$HOME/.ccache
-          export CCACHE_SLOPPINESS=pch_defines,time_macros
-          export CCACHE_NOHASHDIR=1
-          export CCACHE_LOGFILE=$HOME/.ccache/CcacheLogFile.log
-          #export CCACHE_RECACHE=1
-          echo "CCACHE_HOME=$HOME/.ccache" >> $GITHUB_ENV
-          ccache -p
+#      - name: CCache Configure
+#        if: matrix.settings.os != 'windows-latest'
+#        id: ccache-config-linux
+#        shell: bash
+#        run: |
+#          source build/generators/conanbuild.sh
+#          mkdir $HOME/.ccache
+#          export CCACHE_DIR=$HOME/.ccache
+#          export CCACHE_SLOPPINESS=pch_defines,time_macros
+#          export CCACHE_NOHASHDIR=1
+#          export CCACHE_LOGFILE=$HOME/.ccache/CcacheLogFile.log
+#          #export CCACHE_RECACHE=1
+#          echo "CCACHE_HOME=$HOME/.ccache" >> $GITHUB_ENV
+#          ccache -p
 
       - name: Cache CCache data
         if: matrix.settings.os == 'windows-latest'
@@ -296,13 +296,11 @@ jobs:
         shell: cmd
         run: |
           call build\generators\conanbuild.bat
-          call build\generators\conanbuild.bat
           set CCACHE_SLOPPINESS=pch_defines,time_macros
           set CCACHE_NOHASHDIR=1
           set CCACHE_LOGFILE=D:\\a\\Morpheus\\Morpheus\\build\\CcacheLogFile.log
           #set CCACHE_RECACHE=1
           ccache -p
-
           cmake --build --preset ${{ env.CONAN_PRESET }}
 
       - name: Build
@@ -310,7 +308,6 @@ jobs:
         shell: bash
         run: |
           source build/generators/conanbuild.sh
-
           export CCACHE_DIR=$HOME/.ccache
           export CCACHE_SLOPPINESS=pch_defines,time_macros
           export CCACHE_NOHASHDIR=1
@@ -318,7 +315,6 @@ jobs:
           #export CCACHE_RECACHE=1
           echo "CCACHE_HOME=$HOME/.ccache" >> $GITHUB_ENV
           ccache -p
-
           cmake --build --preset ${{ env.CONAN_PRESET }}
 
       - name: CCache Stats
