@@ -104,7 +104,7 @@ function(enable_ccache)
 
     if (CCACHE_SLOPPINESS)
         message(STATUS "Morpheus: Enable CCache sloppiness")
-        list(APPEND ccacheEnv "CCACHE_SLOPPINESS=pch_defines,time_macros")
+        list(APPEND ccacheEnv "CCACHE_SLOPPINESS=pch_defines,time_macros,include_file_mtime,include_file_ctime")
     endif()
 
     foreach(lang IN ITEMS C CXX OBJC OBJCXX)
