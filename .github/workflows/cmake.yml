@@ -293,8 +293,8 @@ jobs:
           set CCACHE_NOHASHDIR=1
           set CCACHE_LOGFILE=D:\\a\\Morpheus\\Morpheus\\build\\CcacheLogFile.log
           set CCACHE_DEBUG=1
-          #set CCACHE_DEBUGDIR=D:\\a\\Morpheus\\Morpheus\\build\\
-          #set CCACHE_RECACHE=1
+          REM set CCACHE_DEBUGDIR=D:\\a\\Morpheus\\Morpheus\\build\\
+          REM set CCACHE_RECACHE=1
           ccache -p
           cmake --build --preset ${{ env.CONAN_PRESET }}
 
@@ -319,7 +319,7 @@ jobs:
         run: |
             call build\generators\conanbuild.bat
             ccache -d C:\Users\runneradmin\AppData\Local\ccache\ -svvz
-            dir *.ccache-log /s /b | type
+            dir *.ccache-log /s /b | type *
             REM dir D:\a\Morpheus\Morpheus\build
             REM type D:\a\Morpheus\Morpheus\build\CcacheLogFile.log
             REM rm D:\a\Morpheus\Morpheus\build\CcacheLogFile.log
