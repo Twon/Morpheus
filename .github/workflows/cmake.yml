@@ -292,6 +292,8 @@ jobs:
           set CCACHE_SLOPPINESS=pch_defines,time_macros,include_file_mtime,include_file_ctime
           set CCACHE_NOHASHDIR=1
           set CCACHE_LOGFILE=D:\\a\\Morpheus\\Morpheus\\build\\CcacheLogFile.log
+          set CCACHE_DEBUG=1
+          set CCACHE_DEBUGDIR=D:\\a\\Morpheus\\Morpheus\\build\\
           #set CCACHE_RECACHE=1
           ccache -p
           cmake --build --preset ${{ env.CONAN_PRESET }}
@@ -305,6 +307,8 @@ jobs:
           export CCACHE_SLOPPINESS=pch_defines,time_macros,include_file_mtime,include_file_ctime
           export CCACHE_NOHASHDIR=1
           export CCACHE_LOGFILE=$HOME/.ccache/CcacheLogFile.log
+          export CCACHE_DEBUG=1
+          export CCACHE_DEBUGDIR=$HOME/.ccache/
           #export CCACHE_RECACHE=1
           ccache -p
           cmake --build --preset ${{ env.CONAN_PRESET }}
@@ -316,7 +320,8 @@ jobs:
             call build\generators\conanbuild.bat
             ccache -d C:\Users\runneradmin\AppData\Local\ccache\ -svvz
             #dir D:\a\Morpheus\Morpheus\build
-            type D:\a\Morpheus\Morpheus\build\CcacheLogFile.log
+            #type D:\a\Morpheus\Morpheus\build\CcacheLogFile.log
+            type D:\a\Morpheus\Morpheus\build\*.ccache-log
             #rm D:\a\Morpheus\Morpheus\build\CcacheLogFile.log
             #dir D:\a\Morpheus\Morpheus\build
       
@@ -327,7 +332,8 @@ jobs:
             source build/generators/conanbuild.sh
             ccache -d $HOME/.ccache -svvz
             #ls -la $HOME/.ccache
-            cat $HOME/.ccache/CcacheLogFile.log
+            #cat $HOME/.ccache/CcacheLogFile.log
+            cat $HOME/.ccache/*.ccache-log
             #rm $HOME/.ccache/CcacheLogFile.log
             #ls -la $HOME/.ccache
       

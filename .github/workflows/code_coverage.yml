@@ -168,6 +168,8 @@ jobs:
            export CCACHE_SLOPPINESS=pch_defines,time_macros,include_file_mtime,include_file_ctime
            export CCACHE_NOHASHDIR=1
            export CCACHE_LOGFILE=$HOME/.ccache/CcacheLogFile.log
+           export CCACHE_DEBUG=1
+           export CCACHE_DEBUGDIR=$HOME/.ccache/
            #export CCACHE_RECACHE=1
            ccache -p           
            cmake --build --preset ${{ env.CONAN_PRESET }}
@@ -177,10 +179,11 @@ jobs:
         run: |
             source build/${{env.BUILD_TYPE}}/generators/conanbuild.sh
             ccache -d $HOME/.ccache -svvz
-            ls -la $HOME/.ccache
-            cat $HOME/.ccache/CcacheLogFile.log
-            rm $HOME/.ccache/CcacheLogFile.log
-            ls -la $HOME/.ccache            
+            cat $HOME/.ccache/*.ccache-log
+            #cat $HOME/.ccache/CcacheLogFile.log
+            #ls -la $HOME/.ccache
+            #rm $HOME/.ccache/CcacheLogFile.log
+            #ls -la $HOME/.ccache            
 
       - name: Test
         working-directory: ${{github.workspace}}
