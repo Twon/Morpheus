@@ -319,11 +319,11 @@ jobs:
         run: |
             call build\generators\conanbuild.bat
             ccache -d C:\Users\runneradmin\AppData\Local\ccache\ -svvz
-            dir /s /b *.ccache-log | type
-            #dir D:\a\Morpheus\Morpheus\build
-            #type D:\a\Morpheus\Morpheus\build\CcacheLogFile.log
-            #rm D:\a\Morpheus\Morpheus\build\CcacheLogFile.log
-            #dir D:\a\Morpheus\Morpheus\build
+            dir *.ccache-log /s /b | type
+            REM dir D:\a\Morpheus\Morpheus\build
+            REM type D:\a\Morpheus\Morpheus\build\CcacheLogFile.log
+            REM rm D:\a\Morpheus\Morpheus\build\CcacheLogFile.log
+            REM dir D:\a\Morpheus\Morpheus\build
       
       - name: CCache Stats
         if: matrix.settings.os != 'windows-latest'
