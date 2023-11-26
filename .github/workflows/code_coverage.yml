@@ -169,7 +169,7 @@ jobs:
            export CCACHE_NOHASHDIR=1
            export CCACHE_LOGFILE=$HOME/.ccache/CcacheLogFile.log
            export CCACHE_DEBUG=1
-           export CCACHE_DEBUGDIR=$HOME/.ccache/
+           #export CCACHE_DEBUGDIR=$HOME/.ccache/
            #export CCACHE_RECACHE=1
            ccache -p           
            cmake --build --preset ${{ env.CONAN_PRESET }}
@@ -179,7 +179,7 @@ jobs:
         run: |
             source build/${{env.BUILD_TYPE}}/generators/conanbuild.sh
             ccache -d $HOME/.ccache -svvz
-            cat $HOME/.ccache/*.ccache-log
+            find . -name "*.ccache-log" -exec cat {} +
             #cat $HOME/.ccache/CcacheLogFile.log
             #ls -la $HOME/.ccache
             #rm $HOME/.ccache/CcacheLogFile.log
