@@ -1,5 +1,6 @@
 target_sources(MorpheusCore
     PUBLIC
+        bit_cast.hpp
         coro.hpp
         date.hpp
         format.hpp
