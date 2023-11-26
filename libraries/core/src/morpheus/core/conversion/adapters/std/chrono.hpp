@@ -43,23 +43,22 @@ struct morpheus::fmt_ns::formatter<morpheus::date_ns::month>
         while (pos != std::end(ctx) && *pos != '}') {
             auto c = *pos;
             if (c != '%') {
-                ++pos;
-                continue;
+                ++pos; // LCOV_EXCL_LINE
+                continue; // LCOV_EXCL_LINE
             }
 
             pos++; // Skip %
             if (pos == std::end(ctx))
-                throw morpheus::fmt_ns::format_error("Invalid format");
+                throw morpheus::fmt_ns::format_error("Invalid format"); // LCOV_EXCL_LINE
 
             c = *pos;
             switch (c) {
             case 'm':
                 monthAsDecimal = true;
-                ++pos;
                 break;
-            default:
-                ++pos;
             }
+
+            ++pos;
         }
         return pos;
     }
