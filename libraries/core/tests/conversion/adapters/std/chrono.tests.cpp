@@ -44,10 +44,10 @@ TEST_CASE("Verify std::format specialisation for std::chrono::date", "[morpheus.
     REQUIRE(fmt_ns::format("{}", month_day{month{10}, day{8}}) == "Oct/08");
     REQUIRE(fmt_ns::format("{}", month_day_last{month{10}}) == "Oct/last");
     REQUIRE(fmt_ns::format("{}", year_month{year{1980}, month{10}}) == "1980/Oct");
-    REQUIRE(fmt_ns::format("{}", year_month_day{year{1980}, month{10}, day{8}}) == "1980-Oct-08");
+    REQUIRE(fmt_ns::format("{}", year_month_day{year{1980}, month{10}, day{8}}) == "1980-10-08");
     REQUIRE(fmt_ns::format("{}", year_month_day_last{year{1980}, month_day_last{month{10}}}) == "1980/Oct/last");
     REQUIRE(fmt_ns::format("{}", year_month_weekday{year{1980}, month{10}, weekday_indexed{Wednesday[2]}}) == "1980/Oct/Wed[2]");
-    REQUIRE(fmt_ns::format("{}", year_month_weekday_last{year{1980}, month{10}, weekday_last{Monday[last]}}) == "1980/Oct/last");
+    REQUIRE(fmt_ns::format("{}", year_month_weekday_last{year{1980}, month{10}, weekday_last{Monday[last]}}) == "1980/Oct/Mon[last]");
 }
 
 } // namespace morpheus::conversion
