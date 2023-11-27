@@ -89,8 +89,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4.1.1
 
-      - uses: seanmiddleditch/gha-setup-ninja@master
-
       - name: Cache Conan data
         uses: actions/cache@v3.3.2
         env:
@@ -162,9 +160,9 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Install Conan Package Tools
+      - name: Install Python requirements
         run: |
-          pip install -U conan
+          pip install -r ./requirements.txt
 
       - name: Configure Conan
         shell: bash
@@ -182,23 +180,6 @@ jobs:
           fi
 
           conan profile show -pr default
-
-#          echo "[buildenv]\n" >> .conan2/profiles/default
-#          echo "CMAKE_MAKE_PROGRAM=Ninja\n" >> .conan2/profiles/default
-#          echo "[conf]\n" >> .conan2/profiles/default
-#          echo "tools.cmake.cmaketoolchain:generator=Ninja" >> .conan2/profiles/default
-#
-#          conan profile show -pr default
-#          conan profile detect
-#          conan config install ..\.conan\
-#          conan profile show -pr default
-
-
-#      - name: Setup tmate session
-#        uses: mxschmitt/action-tmate@v3
-#        timeout-minutes: 15
-#        with:
-#          detached: true
 
       - name: Configure Install
         working-directory: ${{github.workspace}}
@@ -245,7 +226,7 @@ jobs:
       - name: Conan Preset
         shell: bash
         run: echo "CONAN_PRESET=conan-$(echo ${{matrix.configuration}} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
-      
+
 #      - name: CCache Configure
 #        if: matrix.settings.os == 'windows-latest'
 #        id: ccache-config-windows
@@ -324,7 +305,7 @@ jobs:
             type D:\a\Morpheus\Morpheus\build\*.ccache-log
             #rm D:\a\Morpheus\Morpheus\build\CcacheLogFile.log
             #dir D:\a\Morpheus\Morpheus\build
-      
+
       - name: CCache Stats
         if: matrix.settings.os != 'windows-latest'
         shell: bash
@@ -336,7 +317,7 @@ jobs:
             cat $HOME/.ccache/*.ccache-log
             #rm $HOME/.ccache/CcacheLogFile.log
             #ls -la $HOME/.ccache
-      
+
       - name: Test
         # Execute tests defined by the CMake configuration.
         # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail

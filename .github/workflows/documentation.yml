@@ -43,8 +43,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4.1.1
 
-      - uses: seanmiddleditch/gha-setup-ninja@master
-
       - name: Cache Conan data
         uses: actions/cache@v3.3.2
         env:
@@ -76,9 +74,9 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Install Conan Package Tools
+      - name: Install Python requirements
         run: |
-          pip install conan
+          pip install -r ./requirements.txt
 
       - name: Configure Conan
         shell: bash
