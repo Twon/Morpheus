@@ -41,12 +41,10 @@ jobs:
         os: [ "ubuntu-latest" ]
 
     steps:
-      - uses: actions/checkout@v2
-
-      - uses: seanmiddleditch/gha-setup-ninja@master
+      - uses: actions/checkout@v4.1.1
 
       - name: Cache Conan data
-        uses: actions/cache@v3
+        uses: actions/cache@v3.3.2
         env:
           cache-name: cache-conan-data
         with:
@@ -59,7 +57,7 @@ jobs:
             ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.settings.os }}-
 
       - name: Install Latest GCC
-        uses: egor-tensin/setup-gcc@v1
+        uses: egor-tensin/setup-gcc@v1.3
         with:
           version: ${{ env.COMPILER_VERSION }}
           platform: x64
@@ -72,13 +70,13 @@ jobs:
           sudo apt-get -y install libglu1-mesa-dev
 
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4.7.1
         with:
           python-version: '3.11'
 
-      - name: Install Conan Package Tools
+      - name: Install Python requirements
         run: |
-          pip install conan
+          pip install -r ./requirements.txt
 
       - name: Configure Conan
         shell: bash
@@ -123,7 +121,7 @@ jobs:
 
       - name: Deploy documentation
         if: github.ref == 'refs/heads/main'
-        uses: peaceiris/actions-gh-pages@v3
+        uses: peaceiris/actions-gh-pages@v3.9.3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./build/documentation/sphinx
