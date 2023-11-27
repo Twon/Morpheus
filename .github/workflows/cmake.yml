@@ -274,8 +274,8 @@ jobs:
           set CCACHE_NOHASHDIR=1
           set CCACHE_LOGFILE=D:\\a\\Morpheus\\Morpheus\\build\\CcacheLogFile.log
           set CCACHE_DEBUG=1
-          set CCACHE_DEBUGDIR=D:\\a\\Morpheus\\Morpheus\\build\\
-          #set CCACHE_RECACHE=1
+          REM set CCACHE_DEBUGDIR=D:\\a\\Morpheus\\Morpheus\\build\\
+          REM set CCACHE_RECACHE=1
           ccache -p
           cmake --build --preset ${{ env.CONAN_PRESET }}
 
@@ -289,7 +289,7 @@ jobs:
           export CCACHE_NOHASHDIR=1
           export CCACHE_LOGFILE=$HOME/.ccache/CcacheLogFile.log
           export CCACHE_DEBUG=1
-          export CCACHE_DEBUGDIR=$HOME/.ccache/
+          #export CCACHE_DEBUGDIR=$HOME/.ccache/
           #export CCACHE_RECACHE=1
           ccache -p
           cmake --build --preset ${{ env.CONAN_PRESET }}
@@ -300,11 +300,11 @@ jobs:
         run: |
             call build\generators\conanbuild.bat
             ccache -d C:\Users\runneradmin\AppData\Local\ccache\ -svvz
-            #dir D:\a\Morpheus\Morpheus\build
-            #type D:\a\Morpheus\Morpheus\build\CcacheLogFile.log
-            type D:\a\Morpheus\Morpheus\build\*.ccache-log
-            #rm D:\a\Morpheus\Morpheus\build\CcacheLogFile.log
-            #dir D:\a\Morpheus\Morpheus\build
+            dir *.ccache-log /s /b | type *
+            REM dir D:\a\Morpheus\Morpheus\build
+            REM type D:\a\Morpheus\Morpheus\build\CcacheLogFile.log
+            REM rm D:\a\Morpheus\Morpheus\build\CcacheLogFile.log
+            REM dir D:\a\Morpheus\Morpheus\build
 
       - name: CCache Stats
         if: matrix.settings.os != 'windows-latest'
@@ -312,9 +312,9 @@ jobs:
         run: |
             source build/generators/conanbuild.sh
             ccache -d $HOME/.ccache -svvz
+            find . -name "*.ccache-log" -exec cat {} +
             #ls -la $HOME/.ccache
             #cat $HOME/.ccache/CcacheLogFile.log
-            cat $HOME/.ccache/*.ccache-log
             #rm $HOME/.ccache/CcacheLogFile.log
             #ls -la $HOME/.ccache
 
