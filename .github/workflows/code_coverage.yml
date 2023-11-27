@@ -164,9 +164,9 @@ jobs:
            source build/${{env.BUILD_TYPE}}/generators/conanbuild.sh
            export CCACHE_DIR=$HOME/.ccache
            export CCACHE_SLOPPINESS=pch_defines,time_macros,include_file_mtime,include_file_ctime
-           export CCACHE_NOHASHDIR=1
-           export CCACHE_LOGFILE=$HOME/.ccache/CcacheLogFile.log
            export CCACHE_DEBUG=1
+           #export CCACHE_LOGFILE=$HOME/.ccache/CcacheLogFile.log
+           #export CCACHE_NOHASHDIR=1
            #export CCACHE_DEBUGDIR=$HOME/.ccache/
            #export CCACHE_RECACHE=1
            echo "Morpheus ccache show configuration"
