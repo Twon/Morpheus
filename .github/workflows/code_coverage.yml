@@ -167,10 +167,11 @@ jobs:
            export CCACHE_DIR=$HOME/.ccache
            export CCACHE_SLOPPINESS=pch_defines,time_macros,include_file_mtime,include_file_ctime
            export CCACHE_DEBUG=1
+           export CCACHE_NOHASHDIR=1
+           export CCACHE_BASEDIR=${{ github.workspace }}
+           export CCACHE_RECACHE=1
            #export CCACHE_LOGFILE=$HOME/.ccache/CcacheLogFile.log
-           #export CCACHE_NOHASHDIR=1
            #export CCACHE_DEBUGDIR=$HOME/.ccache/
-           #export CCACHE_RECACHE=1
            echo "Morpheus ccache show configuration"
            ccache -p
            cmake --build --preset ${{ env.CONAN_PRESET }}
@@ -181,10 +182,10 @@ jobs:
             source build/${{env.BUILD_TYPE}}/generators/conanbuild.sh
             echo "Morpheus ccache show stats"
             ccache -d $HOME/.ccache -svvz
-            echo "Morpheus showing ccache debug input files"
-            find . -name "*.ccache-input-text" -exec cat {} +
             echo "Morpheus showing ccache debug log files"
             find . -name "*.ccache-log" -exec cat {} +
+            #echo "Morpheus showing ccache debug input files"
+            #find . -name "*.ccache-input-text" -exec cat {} +
             #cat $HOME/.ccache/CcacheLogFile.log
             #ls -la $HOME/.ccache
             #rm $HOME/.ccache/CcacheLogFile.log
