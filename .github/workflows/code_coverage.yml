@@ -153,9 +153,11 @@ jobs:
         uses: actions/cache@v3.3.2
         with:
           path: ${{ env.CCACHE_HOME }}
-          key: ccache-${{ matrix.os }}-${{ github.run_number }}
+          #key: ccache-${{ matrix.os }}-${{ github.run_number }}
+          key: ccache-code-coverage-${{ github.run_number }}
           restore-keys: |
-            ccache-${{ matrix.os }}-
+            #ccache-${{ matrix.os }}-
+            ccache-code-coverage-
 
       - name: Build
         # Build your program with the given configuration
