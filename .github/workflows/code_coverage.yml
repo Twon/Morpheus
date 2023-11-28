@@ -169,7 +169,7 @@ jobs:
            export CCACHE_DEBUG=1
            export CCACHE_NOHASHDIR=1
            export CCACHE_BASEDIR=${{ github.workspace }}
-           export CCACHE_RECACHE=1
+           #export CCACHE_RECACHE=1
            #export CCACHE_LOGFILE=$HOME/.ccache/CcacheLogFile.log
            #export CCACHE_DEBUGDIR=$HOME/.ccache/
            echo "Morpheus ccache show configuration"
