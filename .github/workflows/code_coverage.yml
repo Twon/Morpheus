@@ -161,6 +161,7 @@ jobs:
 
       - name: Build
         # Build your program with the given configuration
+        # trigger code coverage workflow
         shell: bash
         run: |
            source build/${{env.BUILD_TYPE}}/generators/conanbuild.sh
