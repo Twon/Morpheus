@@ -49,15 +49,10 @@ jobs:
         env:
           cache-name: cache-conan-data
         with:
-          path: ${{github.workspace}}/.conan2/p
-          #key: ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-${{ matrix.settings.compiler.version }}-${{ matrix.settings.lib }}
+          path: ${{github.workspace}}/.conan2/p       
           key: ${{ hashFiles('**/conanfile.py') }}-code-coverage
           restore-keys: |
             ${{ hashFiles('**/conanfile.py') }}-code-coverage
-            #${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-${{ matrix.settings.compiler.version }}-
-            #${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-
-            #${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.settings.os }}-${{ matrix.configuration }}-
-            #${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.settings.os }}-
 
       # Previously GCC was installed via egor-tensin/setup-gcc@v1 but this does not install gcov with the compiler.
       # By default Ubuntu has Gcov 11 installed. This worked so long as the compiler was gcc 11, but if a later gcc was
@@ -131,7 +126,6 @@ jobs:
         working-directory: ${{github.workspace}}
         shell: bash
         run: |
-          #conan install "${{github.workspace}}" --build missing -c tools.cmake.cmaketoolchain:generator=Ninja --build catch2/3.4.0
           conan install "${{github.workspace}}" --build missing -c tools.cmake.cmaketoolchain:generator=Ninja
 
       - name: Conan Preset
@@ -156,9 +150,7 @@ jobs:
         uses: actions/cache@v3.3.2
         with:
           path: ${{ env.CCACHE_HOME }}
-          # key: ccache-${{ matrix.os }}-${{ github.run_number }}
           key: ccache-code-coverage-${{ github.run_number }}
-            # ccache-${{ matrix.os }}-
           restore-keys: |
             ccache-code-coverage-
 
