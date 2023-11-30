@@ -34,7 +34,15 @@ jobs:
           - {
               name: "Ubuntu GCC-12",
               os: ubuntu-latest,
-              compiler: { type: GCC, version: 12, conan: "gcc", cc: "gcc-12", cxx: "g++-12", std: 20 },
+              compiler: 
+                { 
+                  type: GCC,
+                  version: 12,
+                  conan: "gcc",
+                  cc: "gcc-12",
+                  cxx: "g++-12",
+                  std: 20 
+                },
               lib: "libstdc++11"
             }
           - {
@@ -70,7 +78,15 @@ jobs:
           - {
               name: "Visual Studio 2019",
               os: windows-latest,
-              compiler: { type: VISUAL, version: 16, conan: "mscv", cc: "cl", cxx: "cl", std: 20 },
+              compiler: 
+                { 
+                  type: VISUAL,
+                  version: 16,
+                  conan: "mscv",
+                  cc: "cl",
+                  cxx: "cl",
+                  std: 20 
+                },
             }
           - {
               name: "MacOS Apple Clang 14",
@@ -223,17 +239,17 @@ jobs:
         run: |
           cmake --version
           call build\generators\conanbuild.bat
-          cmake --preset conan-default -DENABLE_ADDRESS_SANITIZER=ON -DENABLE_UNDEFINED_BEHAVIOUR_SANITIZER=ON -DCMAKE_CXX_FLAGS_DEBUG="-Z7"
+          cmake --preset conan-default -DENABLE_ADDRESS_SANITIZER=ON -DENABLE_UNDEFINED_BEHAVIOUR_SANITIZER=ON -DCMAKE_CXX_FLAGS_DEBUG="/Z7"
 
       - name: Configure CMake
-        if: matrix.settings.os != 'windows-latest' && matrix.settings.compiler == 'GCC'
+        if: matrix.settings.os != 'windows-latest' && matrix.settings.compiler.type == 'GCC'
         shell: bash
         run: |
           source build/generators/conanbuild.sh
           cmake --preset conan-default -DENABLE_ADDRESS_SANITIZER=ON -DENABLE_UNDEFINED_BEHAVIOUR_SANITIZER=ON -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
 
       - name: Configure CMake
-        if: matrix.settings.os != 'windows-latest' && matrix.settings.compiler != 'GCC'
+        if: matrix.settings.os != 'windows-latest' && matrix.settings.compiler.type != 'GCC'
         shell: bash
         run: |
           source build/generators/conanbuild.sh
@@ -242,18 +258,6 @@ jobs:
       - name: Conan Preset
         shell: bash
         run: echo "CONAN_PRESET=conan-$(echo ${{matrix.configuration}} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
-
-#      - name: CCache Configure
-#        if: matrix.settings.os == 'windows-latest'
-#        id: ccache-config-windows
-#        shell: cmd
-#        run: |
-#          call build\generators\conanbuild.bat
-#          set CCACHE_SLOPPINESS=pch_defines,time_macros
-#          set CCACHE_NOHASHDIR=1
-#          set CCACHE_LOGFILE=D:\\a\\Morpheus\\Morpheus\\build\\CcacheLogFile.log
-#          #set CCACHE_RECACHE=1
-#          ccache -p
 
       - name: CCache Configure
         if: matrix.settings.os != 'windows-latest'
