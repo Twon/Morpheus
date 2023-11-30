@@ -131,7 +131,8 @@ jobs:
         working-directory: ${{github.workspace}}
         shell: bash
         run: |
-          conan install "${{github.workspace}}" --build missing -c tools.cmake.cmaketoolchain:generator=Ninja --build catch2/3.4.0
+          #conan install "${{github.workspace}}" --build missing -c tools.cmake.cmaketoolchain:generator=Ninja --build catch2/3.4.0
+          conan install "${{github.workspace}}" --build missing -c tools.cmake.cmaketoolchain:generator=Ninja
 
       - name: Conan Preset
         shell: bash
