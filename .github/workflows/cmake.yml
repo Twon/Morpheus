@@ -185,7 +185,8 @@ jobs:
         working-directory: ${{github.workspace}}
         shell: bash
         run: |
-          conan install "${{github.workspace}}" --build missing -pr:b default -c tools.cmake.cmaketoolchain:generator="Ninja Multi-Config" --build catch2/3.4.0
+          #conan install "${{github.workspace}}" --build missing -pr:b default -c tools.cmake.cmaketoolchain:generator="Ninja Multi-Config" --build catch2/3.4.0
+          conan install "${{github.workspace}}" --build missing -pr:b default -c tools.cmake.cmaketoolchain:generator="Ninja Multi-Config"
 
       - name: Configure Conan Build
         if: matrix.settings.os == 'windows-latest'
@@ -209,19 +210,34 @@ jobs:
 #          detached: true
 
       - name: Configure CMake
-        if: matrix.settings.os == 'windows-latest'
+        if: matrix.settings.os == 'windows-latest' && matrix.configuration == 'Release'
         shell: cmd
         run: |
           cmake --version
           call build\generators\conanbuild.bat
-          cmake --preset conan-default -DENABLE_ADDRESS_SANITIZER=ON -DENABLE_UNDEFINED_BEHAVIOUR_SANITIZER=ON -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
+          cmake --preset conan-default -DENABLE_ADDRESS_SANITIZER=ON -DENABLE_UNDEFINED_BEHAVIOUR_SANITIZER=ON
 
       - name: Configure CMake
-        if: matrix.settings.os != 'windows-latest'
+        if: matrix.settings.os == 'windows-latest' && matrix.configuration == 'Debug'
+        shell: cmd
+        run: |
+          cmake --version
+          call build\generators\conanbuild.bat
+          cmake --preset conan-default -DENABLE_ADDRESS_SANITIZER=ON -DENABLE_UNDEFINED_BEHAVIOUR_SANITIZER=ON -DCMAKE_CXX_FLAGS_DEBUG="-Z7"
+
+      - name: Configure CMake
+        if: matrix.settings.os != 'windows-latest' && matrix.settings.compiler == 'GCC'
         shell: bash
         run: |
           source build/generators/conanbuild.sh
           cmake --preset conan-default -DENABLE_ADDRESS_SANITIZER=ON -DENABLE_UNDEFINED_BEHAVIOUR_SANITIZER=ON -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
+
+      - name: Configure CMake
+        if: matrix.settings.os != 'windows-latest' && matrix.settings.compiler != 'GCC'
+        shell: bash
+        run: |
+          source build/generators/conanbuild.sh
+          cmake --preset conan-default -DENABLE_ADDRESS_SANITIZER=ON -DENABLE_UNDEFINED_BEHAVIOUR_SANITIZER=ON -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_FLAGS_DEBUG="-Xclang -fno-pch-timestamp" -DCMAKE_CXX_FLAGS_RELEASE="-Xclang -fno-pch-timestamp"
 
       - name: Conan Preset
         shell: bash
@@ -270,10 +286,11 @@ jobs:
         shell: cmd
         run: |
           call build\generators\conanbuild.bat
-          set CCACHE_SLOPPINESS=pch_defines,time_macros,include_file_mtime,include_file_ctime
-          set CCACHE_NOHASHDIR=1
+          set CCACHE_BASEDIR=${{ github.workspace }}
           set CCACHE_LOGFILE=D:\\a\\Morpheus\\Morpheus\\build\\CcacheLogFile.log
-          set CCACHE_DEBUG=1
+          set CCACHE_NOHASHDIR=1
+          set CCACHE_SLOPPINESS=pch_defines,time_macros,include_file_mtime,include_file_ctime
+          REM set CCACHE_DEBUG=1
           REM set CCACHE_DEBUGDIR=D:\\a\\Morpheus\\Morpheus\\build\\
           REM set CCACHE_RECACHE=1
           echo Morpheus ccache show configuration
@@ -285,11 +302,12 @@ jobs:
         shell: bash
         run: |
           source build/generators/conanbuild.sh
+          export CCACHE_BASEDIR=${{ github.workspace }}
           export CCACHE_DIR=$HOME/.ccache
-          export CCACHE_SLOPPINESS=pch_defines,time_macros,include_file_mtime,include_file_ctime
-          export CCACHE_NOHASHDIR=1
           export CCACHE_LOGFILE=$HOME/.ccache/CcacheLogFile.log
-          export CCACHE_DEBUG=1
+          export CCACHE_NOHASHDIR=1
+          export CCACHE_SLOPPINESS=pch_defines,time_macros,include_file_mtime,include_file_ctime
+          #export CCACHE_DEBUG=1
           #export CCACHE_DEBUGDIR=$HOME/.ccache/
           #export CCACHE_RECACHE=1
           echo "Morpheus ccache show configuration"
@@ -303,12 +321,13 @@ jobs:
             call build\generators\conanbuild.bat
             echo Morpheus ccache show stats
             ccache -d C:\Users\runneradmin\AppData\Local\ccache\ -svvz
-            echo Morpheus showing ccache debug input files
-            forfiles /M *.ccache-input-text /S /C "cmd /c type @file"
-            echo Morpheus showing ccache debug log files
-            forfiles /M *.ccache-log /S /C "cmd /c type @file"
+            echo Morpheus showing ccache log files
+            type D:\a\Morpheus\Morpheus\build\CcacheLogFile.log
+            REM echo Morpheus showing ccache debug input files
+            REM forfiles /M *.ccache-input-text /S /C "cmd /c type @file"
+            REM echo Morpheus showing ccache debug log files
+            REM forfiles /M *.ccache-log /S /C "cmd /c type @file"
             REM dir D:\a\Morpheus\Morpheus\build
-            REM type D:\a\Morpheus\Morpheus\build\CcacheLogFile.log
             REM rm D:\a\Morpheus\Morpheus\build\CcacheLogFile.log
             REM dir D:\a\Morpheus\Morpheus\build
 
@@ -319,12 +338,13 @@ jobs:
             source build/generators/conanbuild.sh
             echo "Morpheus ccache show stats"
             ccache -d $HOME/.ccache -svvz
-            echo "Morpheus showing ccache debug input files"
-            find . -name "*.ccache-input-text" -exec cat {} +
-            echo "Morpheus showing ccache debug log files"
-            find . -name "*.ccache-log" -exec cat {} +
+            echo "Morpheus show ccache log files"
+            cat $HOME/.ccache/CcacheLogFile.log
+            #echo "Morpheus showing ccache debug input files"
+            #find . -name "*.ccache-input-text" -exec cat {} +
+            #echo "Morpheus showing ccache debug log files"
+            #find . -name "*.ccache-log" -exec cat {} +
             #ls -la $HOME/.ccache
-            #cat $HOME/.ccache/CcacheLogFile.log
             #rm $HOME/.ccache/CcacheLogFile.log
             #ls -la $HOME/.ccache
 
