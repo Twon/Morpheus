@@ -208,8 +208,8 @@ jobs:
           # The same procedure must be followed every time that it changes something in the conanfile.py.
           # it's a bit tricky but it is what it is, this is what must be done in order to get 100% ccache hit rate.    
           # triggering cmake workflow
-          #conan install "${{github.workspace}}" --build missing -pr:b default -c tools.cmake.cmaketoolchain:generator="Ninja Multi-Config" --build catch2/3.4.0
-          conan install "${{github.workspace}}" --build missing -pr:b default -c tools.cmake.cmaketoolchain:generator="Ninja Multi-Config"
+          conan install "${{github.workspace}}" --build missing -pr:b default -c tools.cmake.cmaketoolchain:generator="Ninja Multi-Config" --build catch2/3.4.0
+          #conan install "${{github.workspace}}" --build missing -pr:b default -c tools.cmake.cmaketoolchain:generator="Ninja Multi-Config"
 
       - name: Configure Conan Build
         if: matrix.settings.os == 'windows-latest'
@@ -246,7 +246,7 @@ jobs:
         run: |
           cmake --version
           call build\generators\conanbuild.bat
-          cmake --preset conan-default -DENABLE_ADDRESS_SANITIZER=ON -DENABLE_UNDEFINED_BEHAVIOUR_SANITIZER=ON -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_FLAGS_DEBUG="/Z7" -DCMAKE_VS_GLOBALS="UseMultiToolTask=true;EnforceProcessCountAcrossBuilds=true"
+          cmake --preset conan-default -DENABLE_ADDRESS_SANITIZER=ON -DENABLE_UNDEFINED_BEHAVIOUR_SANITIZER=ON -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_FLAGS_DEBUG="/Z7" -DCMAKE_VS_GLOBALS="UseMultiToolTask=true;EnforceProcessCountAcrossBuilds=true;TrackFileAccess=false;DebugInformationFormat=OldStyle"      
 
       - name: Configure CMake
         if: matrix.settings.os != 'windows-latest' && matrix.settings.compiler.type == 'GCC'
