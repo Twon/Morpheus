@@ -206,8 +206,7 @@ jobs:
           # first time in order to correctly build the cache for Conan packages. After the first build of the Conan cache the option must
           # be removed for all the subsequent executions.
           # The same procedure must be followed every time that it changes something in the conanfile.py.
-          # it's a bit tricky but it is what it is, this is what must be done in order to get 100% ccache hit rate.    
-          # triggering cmake workflow
+          # it's a bit tricky but it is what it is, this is what must be done in order to get 100% ccache hit rate.
           conan install "${{github.workspace}}" --build missing -pr:b default -c tools.cmake.cmaketoolchain:generator="Ninja Multi-Config" --build catch2/3.4.0
           #conan install "${{github.workspace}}" --build missing -pr:b default -c tools.cmake.cmaketoolchain:generator="Ninja Multi-Config"
 
