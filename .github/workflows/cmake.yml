@@ -246,7 +246,7 @@ jobs:
         run: |
           cmake --version
           call build\generators\conanbuild.bat
-          cmake --preset conan-default -DENABLE_ADDRESS_SANITIZER=ON -DENABLE_UNDEFINED_BEHAVIOUR_SANITIZER=ON -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_FLAGS_DEBUG="/Y-;/Z7" -DCMAKE_VS_GLOBALS="UseMultiToolTask=true;EnforceProcessCountAcrossBuilds=true;TrackFileAccess=false;DebugInformationFormat=OldStyle"      
+          cmake --preset conan-default -DENABLE_ADDRESS_SANITIZER=ON -DENABLE_UNDEFINED_BEHAVIOUR_SANITIZER=ON -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_FLAGS_DEBUG="/YI;/Z7" -DCMAKE_VS_GLOBALS="UseMultiToolTask=true;EnforceProcessCountAcrossBuilds=true;TrackFileAccess=false;DebugInformationFormat=OldStyle"      
 
       - name: Configure CMake
         if: matrix.settings.os != 'windows-latest' && matrix.settings.compiler.type == 'GCC'
