@@ -209,6 +209,7 @@ jobs:
         working-directory: ${{github.workspace}}
         shell: bash
         run: |
+          #trigger workflow
           #conan install "${{github.workspace}}" --build missing -pr:b default -c tools.cmake.cmaketoolchain:generator="Ninja Multi-Config"
           conan install "${{github.workspace}}" --build missing -pr:b default -c tools.cmake.cmaketoolchain:generator="Ninja Multi-Config" --build catch2/3.4.0
 
