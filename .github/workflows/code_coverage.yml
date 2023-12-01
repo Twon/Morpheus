@@ -126,8 +126,14 @@ jobs:
         working-directory: ${{github.workspace}}
         shell: bash
         run: |
-          conan install "${{github.workspace}}" --build missing -c tools.cmake.cmaketoolchain:generator=Ninja --build catch2/3.4.0
-          #conan install "${{github.workspace}}" --build missing -c tools.cmake.cmaketoolchain:generator=Ninja
+          # In order to have ccache working correctly we can't build the catch library every time, otherwise the hash of the built files will
+          # change at every workflow run and then we will get cache misses. Therefore the --build catch2/3.4.0 option must be enabled only the
+          # first time in order to correctly build the cache for Conan packages. After the first build of the Conan cache the option must
+          # be removed for all the subsequent executions.
+          # The same procedure must be followed every time that it changes something in the conanfile.py.
+          # it's a bit tricky but it is what it is, this is what must be done in order to get 100% ccache hit rate.
+          #conan install "${{github.workspace}}" --build missing -c tools.cmake.cmaketoolchain:generator=Ninja --build catch2/3.4.0
+          conan install "${{github.workspace}}" --build missing -c tools.cmake.cmaketoolchain:generator=Ninja
 
       - name: Conan Preset
         shell: bash
