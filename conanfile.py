@@ -73,7 +73,6 @@ class Morpheus(ConanFile):
         "fmt/[^10]",
         "glbinding/3.1.0",
         "glew/2.2.0",
-        "gtest/1.13.0",
         "magic_enum/0.8.2",
         "ms-gsl/4.0.0",
         "rapidjson/cci.20220822",
@@ -103,6 +102,7 @@ class Morpheus(ConanFile):
     def build_requirements(self):
         self.tool_requires("ninja/1.11.1")
         self.test_requires("catch2/3.4.0")
+        self.test_requires("gtest/1.14.0")
 
         if get_cmake_version() < Version("3.27.0"):
             self.tool_requires("cmake/3.27.0")
@@ -169,7 +169,8 @@ class Morpheus(ConanFile):
         deps.generate()
 
     def layout(self):
-        cmake_layout(self)
+        #cmake_layout(self)
+        pass
 
     def package(self):
         copy(self, "*LICENSE*", dst="licenses", keep_path=False)
