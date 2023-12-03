@@ -169,8 +169,7 @@ class Morpheus(ConanFile):
         deps.generate()
 
     def layout(self):
-        #cmake_layout(self)
-        pass
+        cmake_layout(self)
 
     def package(self):
         copy(self, "*LICENSE*", dst="licenses", keep_path=False)
