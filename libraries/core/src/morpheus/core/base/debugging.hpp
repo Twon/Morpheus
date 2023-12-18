@@ -2,7 +2,6 @@
 
 #include <morpheus/core/base/compiler.hpp>
 #include <morpheus/core/base/platform.hpp>
-#include <morpheus/core/base/unreachable.hpp>
 
 #include <string_view>
 

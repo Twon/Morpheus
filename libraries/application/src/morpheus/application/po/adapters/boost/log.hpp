@@ -16,7 +16,7 @@ BOOST_LOG_OPEN_NAMESPACE
 namespace trivial {
 
 template <class CharType>
-void validate(boost::any& v, std::vector<std::basic_string<CharType>> const& values, severity_level* p, int)
+void validate(boost::any& v, std::vector<std::basic_string<CharType>> const& values, severity_level*, int)
 {
     namespace po = boost::program_options;
     po::validators::check_first_occurrence(v);

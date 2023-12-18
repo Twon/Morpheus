@@ -18,8 +18,8 @@ concurrency::Generator<Adapter> enumerateAdapters()
     MORPHEUS_VERIFY(driver.NvAPI_EnumPhysicalGPUs(gpus.data(), &gpuCount) == NVAPI_OK);
     for (std::uint32_t adapters = 0; adapters < gpuCount; ++adapters)
     {
-        using NvAPI_ShortString = std::array<char, NVAPI_SHORT_STRING_MAX>;
-        NvAPI_ShortString gpuName = {};
+        using NvAPIShortString = std::array<char, NVAPI_SHORT_STRING_MAX>;
+        NvAPIShortString gpuName = {};
         LUID id = {};
         MORPHEUS_VERIFY(driver.NvAPI_GPU_GetFullName(gpus[adapters], gpuName.data()) == NVAPI_OK);
         MORPHEUS_VERIFY(driver.NvAPI_GPU_GetAdapterIdFromPhysicalGpu(gpus[adapters], &id) == NVAPI_OK);

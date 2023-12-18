@@ -13,7 +13,7 @@ namespace boost
 {
 
 template <class CharType, class Rep, class Period>
-void validate(boost::any& v, std::vector<std::basic_string<CharType>> const& values, std::chrono::duration<Rep, Period>* p, int)
+void validate(boost::any& v, std::vector<std::basic_string<CharType>> const& values, std::chrono::duration<Rep, Period>*, int)
 {
     namespace po = boost::program_options;
     po::validators::check_first_occurrence(v);

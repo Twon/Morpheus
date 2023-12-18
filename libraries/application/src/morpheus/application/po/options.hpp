@@ -6,7 +6,17 @@
 
 #include <boost/dll.hpp>
 #include <boost/log/trivial.hpp>
+
+#if (MORPHEUS_COMPILER == MORPHEUS_GNUC_COMPILER)
+    #pragma GCC diagnostic push
+    #pragma GCC diagnostic ignored "-Wnull-dereference"
+#endif // (MORPHEUS_COMPILER == MORPHEUS_GNUC_COMPILER)
+
 #include <boost/program_options.hpp>
+
+#if (MORPHEUS_COMPILER == MORPHEUS_GNUC_COMPILER)
+    #pragma GCC diagnostic pop
+#endif // (MORPHEUS_COMPILER == MORPHEUS_GNUC_COMPILER)
 
 #include <iostream>
 #include <filesystem>

@@ -102,7 +102,7 @@ public:
         auto const [event, next] = getNext();
         return std::visit(functional::Overload{
             [](std::integral auto const value) { return boost::numeric_cast<Interger>(value); },
-            [](auto const value) -> Interger { throwJsonException("Unable to convert to integral representation"); }
+            [](auto const) -> Interger { throwJsonException("Unable to convert to integral representation"); }
         }, *next);
     }
 
@@ -124,7 +124,7 @@ public:
                 }
                 return boost::numeric_cast<Float>(value);
             },
-            [](auto const value) -> Float { throwJsonException("Unable to convert to floating point representation"); }
+            [](auto const) -> Float { throwJsonException("Unable to convert to floating point representation"); }
         }, *next);
     }
 
@@ -158,7 +158,7 @@ private:
         EndSequence,
     };
 
-    friend class JsonExtracter;
+    friend struct JsonExtracter;
     using FundamentalValue = std::variant<bool, std::int64_t, std::uint64_t, float, double, std::string>;
     using PossibleValue = std::optional<FundamentalValue>;
     using EventValue = std::tuple<Event, PossibleValue>;
@@ -168,7 +168,7 @@ private:
     memory::polymorphic_value<std::istream> mSourceStream; /// Owned input stream containing the Json source.
     rapidjson::IStreamWrapper mStream;
     rapidjson::Reader mJsonReader;
-    std::unique_ptr<class JsonExtracter> mExtractor;
+    std::unique_ptr<struct JsonExtracter> mExtractor;
     bool mValidate = true;
 };
 
