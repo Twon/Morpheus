@@ -21,11 +21,11 @@ public:
     , mPort(port)
     {}
 
-    [[nodisard]] auto name() const noexcept { return mName; }
+    [[nodiscard]] auto name() const noexcept { return mName; }
 
-    [[nodisard]] auto port() const noexcept { return mPort; }
+    [[nodiscard]] auto port() const noexcept { return mPort; }
 
-    [[nodisard]] auto operator<=>(NamedEndpoint const& rhs) const noexcept = default;
+    [[nodiscard]] auto operator<=>(NamedEndpoint const& rhs) const noexcept = default;
 
 private:
     std::string mName;
