@@ -33,9 +33,6 @@ concept Allocator = requires(A<T> a) {
 #if (__cpp_lib_allocate_at_least >= 202302L )
     { a.allocate_at_least(std::size_t{}) } -> std::same_as<std::allocation_result<typename std::allocator_traits<A<T>>::pointer, typename A<T>::size_type>>;
 #endif
-
-    /*          propagate_on_container_move_assignment(C++11)	std::true_type
-     */
 };
 
 // clang-format on

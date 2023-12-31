@@ -23,7 +23,6 @@ TEST_CASE("Verify memory concepts", "[morpheus.memory.concepts]")
         STATIC_REQUIRE(NullablePointer<std::shared_ptr<void>>);
     }
 
-
     STATIC_REQUIRE(Allocator<std::allocator, int>);
 }
 
