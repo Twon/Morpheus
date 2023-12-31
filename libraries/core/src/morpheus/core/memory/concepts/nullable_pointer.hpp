@@ -24,7 +24,7 @@ concept NullablePointer = requires(T t) {
     std::equality_comparable_with<T, nullptr_t>;
     std::swappable<T>;
     { T(nullptr) } -> std::same_as<T>;
-    { t = nullptr} -> std::same_as<T&>;
+    { t = nullptr } -> std::same_as<T&>;
 };
 
 // clang-format off

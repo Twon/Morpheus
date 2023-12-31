@@ -1,3 +1,4 @@
+#include "morpheus/core/memory/concepts/allocator.hpp"
 #include "morpheus/core/memory/concepts/copier.hpp"
 #include "morpheus/core/memory/concepts/deleter.hpp"
 #include "morpheus/core/memory/concepts/nullable_pointer.hpp"
@@ -21,6 +22,9 @@ TEST_CASE("Verify memory concepts", "[morpheus.memory.concepts]")
         STATIC_REQUIRE(NullablePointer<std::unique_ptr<void>>);
         STATIC_REQUIRE(NullablePointer<std::shared_ptr<void>>);
     }
+
+
+    STATIC_REQUIRE(Allocator<std::allocator, int>);
 }
 
 } // namespace morpheus::memory::concepts
