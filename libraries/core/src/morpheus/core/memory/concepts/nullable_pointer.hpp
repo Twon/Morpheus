@@ -21,10 +21,10 @@ concept NullablePointer = requires(T t) {
     std::assignable_from<T, T>;
     std::destructible<T>;
     std::equality_comparable<T>;
-    std::equality_comparable_with<T, nullptr_t>;
+    std::equality_comparable_with<T, std::nullptr_t>;
     std::swappable<T>;
     { T(nullptr) } -> std::same_as<T>;
-    { t = nullptr} -> std::same_as<T&>;
+    { t = nullptr } -> std::same_as<T&>;
 };
 
 // clang-format off
