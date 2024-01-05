@@ -9,6 +9,9 @@
 namespace morpheus::conversion
 {
 
+template <typename T>
+struct StringConverter; // Primary declaration
+
 template<typename T>
 struct StringConverter
 {
@@ -31,5 +34,4 @@ auto fromString(std::string_view const value)
     return StringConverter<T>::fromString(value);
 }
 
-
-}
+} // namespace morpheus::conversion
