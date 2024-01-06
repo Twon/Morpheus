@@ -3,6 +3,7 @@ target_sources(MorpheusCore
         aggregate.hpp
         complete.hpp
         constructible.hpp
+        enum.hpp
         hashable.hpp
         string.hpp
 )
