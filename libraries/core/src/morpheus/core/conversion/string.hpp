@@ -9,9 +9,6 @@
 namespace morpheus::conversion
 {
 
-template <typename T>
-struct StringConverter; // Primary declaration
-
 template<typename T>
 struct StringConverter
 {
