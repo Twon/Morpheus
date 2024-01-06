@@ -15,10 +15,10 @@ namespace morpheus::gfx::concepts
 template <typename T>
 concept Adapter = requires(T t)
 {
-    { t.getId() } -> std::equality_comparable;
-    { t.getName() } -> meta::ConvertableToStringView;
-    { t.getVendor() } -> std::same_as<Vendor>;
-    { t.getVideoModes() } -> VideoModeRange;
+    { t.id() } -> std::equality_comparable;
+    { t.name() } -> meta::ConvertableToStringView;
+    { t.vendor() } -> std::same_as<Vendor>;
+//    { t.getVideoModes() } -> VideoModeRange;
 };
 
 template <typename T>

@@ -37,13 +37,13 @@ public:
     ///@}
 
     /// Access the adapter Id.
-    [[nodiscard]] constexpr auto const& getId() const noexcept { return mAdapterId; }
+    [[nodiscard]] constexpr auto const& id() const noexcept { return mAdapterId; }
 
     /// Access the adapter name.
-    [[nodiscard]] constexpr auto const& getName() const noexcept { return mName; }
+    [[nodiscard]] constexpr auto const& name() const noexcept { return mName; }
 
     /// Access the adapter vendor.
-    [[nodiscard]] constexpr auto getVendor() const noexcept { return mVendor; }
+    [[nodiscard]] constexpr auto vendor() const noexcept { return mVendor; }
 
     /// Compare two adapter objects.
     [[nodiscard]] constexpr auto operator<=>(Adapter const& rhs) const noexcept = default;
