@@ -58,7 +58,7 @@ TEST_CASE("Test parsing of std chrono duration", "[morpheus.application.po.adapt
 
 struct TimeZone
 {
-    std::reference_wrapper<std::chrono::time_zone const> timezone = *date_ns::get_tzdb().current_zone();
+    std::reference_wrapper<date_ns::time_zone const> timezone = *date_ns::get_tzdb().current_zone();
 
     void addOptions(boost::program_options::options_description& options)
     {

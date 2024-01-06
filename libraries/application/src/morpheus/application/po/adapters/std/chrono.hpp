@@ -27,7 +27,7 @@ void validate(boost::any& v, std::vector<std::basic_string<CharType>> const& val
 }
 
 template <class CharType>
-void validate(boost::any& v, std::vector<std::basic_string<CharType>> const& values, std::reference_wrapper<std::chrono::time_zone const>*, int)
+void validate(boost::any& v, std::vector<std::basic_string<CharType>> const& values, std::reference_wrapper<date_ns::time_zone const>*, int)
 {
     namespace po = boost::program_options;
     po::validators::check_first_occurrence(v);
