@@ -26,4 +26,18 @@ void validate(boost::any& v, std::vector<std::basic_string<CharType>> const& val
         throw po::validation_error(po::validation_error::invalid_option_value);
 }
 
+template <class CharType>
+void validate(boost::any& v, std::vector<std::basic_string<CharType>> const& values, std::reference_wrapper<std::chrono::time_zone const>*, int)
+{
+    namespace po = boost::program_options;
+    po::validators::check_first_occurrence(v);
+    auto const& s = po::validators::get_single_string(values);
+
+    auto const duration = morpheus::conversion::fromString<std::chrono::time_zone>(s);
+    if (duration)
+        v = duration.value();
+    else
+        throw po::validation_error(po::validation_error::invalid_option_value);
+}
+
 } // namespace boost
