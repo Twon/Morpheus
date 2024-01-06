@@ -34,7 +34,7 @@ void validate(boost::any& v, std::vector<std::basic_string<CharType>> const& val
     po::validators::check_first_occurrence(v);
     auto const& s = po::validators::get_single_string(values);
 
-    auto const duration = morpheus::conversion::fromString<std::chrono::time_zone>(s);
+    auto const duration = morpheus::conversion::fromString<morpheus::date_ns::time_zone>(s);
     if (duration)
         v = duration.value();
     else
