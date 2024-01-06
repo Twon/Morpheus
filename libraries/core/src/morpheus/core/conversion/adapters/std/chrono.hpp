@@ -308,4 +308,24 @@ struct StringConverter<std::chrono::duration<Rep, Period>>
     }
 };
 
+template <>
+struct StringConverter<date_ns::time_zone>
+{
+    static std::string toString(date_ns::time_zone const& value)
+    {
+        return std::string(value.name());
+    }
+
+    static exp_ns::expected<std::reference_wrapper<date_ns::time_zone const>, std::string> fromString(std::string_view const value)
+    {
+        try {
+            auto const timezone = date_ns::get_tzdb().locate_zone(value);
+            return std::cref(*timezone);
+        }
+        catch(std::runtime_error const& e) {
+            return exp_ns::unexpected(fmt_ns::format("Unable to locate timezone, encounted error: {}", e.what()));
+        }
+    }
+};
+
 }
