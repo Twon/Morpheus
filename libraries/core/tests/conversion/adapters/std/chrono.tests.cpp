@@ -78,18 +78,18 @@ TEST_CASE("Verify std::format specialisation for std::chrono::date", "[morpheus.
 
 TEST_CASE("Verify toString handling for std::chrono::duration types", "[morpheus.conversion.chrono.time_zone.toString]")
 {
-    REQUIRE(toString(*std::chrono::get_tzdb().locate_zone("Africa/Johannesburg")) == "Africa/Johannesburg");
-    REQUIRE(toString(*std::chrono::get_tzdb().locate_zone("America/New_York")) == "America/New_York");
-    REQUIRE(toString(*std::chrono::get_tzdb().locate_zone("Asia/Hong_Kong")) == "Asia/Hong_Kong");
-    REQUIRE(toString(*std::chrono::get_tzdb().locate_zone("Europe/London")) == "Europe/London");
+    REQUIRE(toString(*date_ns::get_tzdb().locate_zone("Africa/Johannesburg")) == "Africa/Johannesburg");
+    REQUIRE(toString(*date_ns::get_tzdb().locate_zone("America/New_York")) == "America/New_York");
+    REQUIRE(toString(*date_ns::get_tzdb().locate_zone("Asia/Hong_Kong")) == "Asia/Hong_Kong");
+    REQUIRE(toString(*date_ns::get_tzdb().locate_zone("Europe/London")) == "Europe/London");
 }
 
 TEST_CASE("Verify fromString handling for std::chrono::duration types", "[morpheus.conversion.chrono.time_zone.fromString]")
 {
-    REQUIRE(fromString<std::chrono::time_zone>("Africa/Johannesburg") == *std::chrono::get_tzdb().locate_zone("Africa/Johannesburg"));
-    REQUIRE(fromString<std::chrono::time_zone>("America/New_York") == *std::chrono::get_tzdb().locate_zone("America/New_York"));
-    REQUIRE(fromString<std::chrono::time_zone>("Asia/Hong_Kong") == *std::chrono::get_tzdb().locate_zone("Asia/Hong_Kong"));
-    REQUIRE(fromString<std::chrono::time_zone>("Europe/London") == *std::chrono::get_tzdb().locate_zone("Europe/London"));
+    REQUIRE(fromString<date_ns::time_zone>("Africa/Johannesburg") == *date_ns::get_tzdb().locate_zone("Africa/Johannesburg"));
+    REQUIRE(fromString<date_ns::time_zone>("America/New_York") == *date_ns::get_tzdb().locate_zone("America/New_York"));
+    REQUIRE(fromString<date_ns::time_zone>("Asia/Hong_Kong") == *date_ns::get_tzdb().locate_zone("Asia/Hong_Kong"));
+    REQUIRE(fromString<date_ns::time_zone>("Europe/London") == *date_ns::get_tzdb().locate_zone("Europe/London"));
 }
 
 } // namespace morpheus::conversion
