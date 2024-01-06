@@ -90,6 +90,7 @@ TEST_CASE("Verify fromString handling for std::chrono::duration types", "[morphe
     REQUIRE(fromString<date_ns::time_zone>("America/New_York") == *date_ns::get_tzdb().locate_zone("America/New_York"));
     REQUIRE(fromString<date_ns::time_zone>("Asia/Hong_Kong") == *date_ns::get_tzdb().locate_zone("Asia/Hong_Kong"));
     REQUIRE(fromString<date_ns::time_zone>("Europe/London") == *date_ns::get_tzdb().locate_zone("Europe/London"));
+    REQUIRE(!fromString<date_ns::time_zone>("Invalid").has_value());
 }
 
 } // namespace morpheus::conversion
