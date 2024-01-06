@@ -1,4 +1,4 @@
-#include "morpheus/core/conversion/enum.hpp"
+#include "morpheus/core/conversion/adapters/enum.hpp"
 
 #include <catch2/catch_all.hpp>
 
