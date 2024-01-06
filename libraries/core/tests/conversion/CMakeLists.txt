@@ -1,6 +1,6 @@
 add_subdirectory(adapters)
 
 target_sources(MorpheusCoreTests
-    PUBLIC
+    PRIVATE
         enum.tests.cpp
 )
