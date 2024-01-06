@@ -3,4 +3,5 @@ target_sources(MorpheusCore
         chrono.hpp
         filesystem.hpp
         stacktrace.hpp
+        source_location.hpp
 )
