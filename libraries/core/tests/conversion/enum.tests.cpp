@@ -29,6 +29,7 @@ TEST_CASE("Verify fromString handling for enums", "[morpheus.conversion.enums.fr
     REQUIRE(fromString<CardSuits>("Diamonds") == CardSuits::Diamonds);
     REQUIRE(fromString<CardSuits>("Clubs") == CardSuits::Clubs);
     REQUIRE(fromString<CardSuits>("Spades") == CardSuits::Spades);
+    REQUIRE(!fromString<CardSuits>("Invalid").has_value());
 }
 
 } // namespace morpheus::conversion
