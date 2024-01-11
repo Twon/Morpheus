@@ -15,7 +15,7 @@ namespace boost::asio::ip
 {
 
 template <class CharType>
-void validate(boost::any& v, std::vector<std::basic_string<CharType>> const& values, address* p, int)
+void validate(boost::any& v, std::vector<std::basic_string<CharType>> const& values, address*, int)
 {
     namespace po = boost::program_options;
     po::validators::check_first_occurrence(v);
