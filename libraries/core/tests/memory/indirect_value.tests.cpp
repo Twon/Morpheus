@@ -1041,7 +1041,7 @@ namespace {
             : alloc_counter(a), dealloc_counter(d) {}
 
         template <typename U>
-        tracking_allocator(const tracking_allocator<U>& other)
+        explicit tracking_allocator(tracking_allocator<U> const& other) noexcept
             : alloc_counter(other.alloc_counter),
             dealloc_counter(other.dealloc_counter) {}
 
@@ -1092,10 +1092,10 @@ TEST_CASE("Allocator used to construct with allocate_indirect_value ")
     {
         unsigned allocs = 0;
         unsigned deallocs = 0;
-        tracking_allocator<int> alloc(&allocs, &deallocs);
 
         WHEN("Constructing a type from the allocator")
         {
+            tracking_allocator<CompositeType> alloc(&allocs, &deallocs);
             unsigned const value = 99;
             auto p = allocate_indirect_value<CompositeType>(std::allocator_arg_t{}, alloc, value);
 
@@ -1126,6 +1126,7 @@ TEST_CASE("Allocator used to construct with allocate_indirect_value ")
                 ThrowOnConstruction() { throw "I throw in my default constructor"; }
             };
 
+            tracking_allocator<ThrowOnConstruction> alloc(&allocs, &deallocs);
             CHECK_THROWS(allocate_indirect_value<ThrowOnConstruction>(std::allocator_arg_t{}, alloc));
 
             AND_THEN("Expect allocation and subsequent deallocation to be tracked after the throw")
