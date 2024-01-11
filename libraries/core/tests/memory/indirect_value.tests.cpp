@@ -371,6 +371,19 @@ TEST_CASE("Swap overload for indirect_value", "[morpheus.memory.indirect_value.s
                 REQUIRE(*b == a_value);
             }
         }
+        WHEN("The contents are copied")
+        {
+            auto c = a;
+            auto d = b;
+
+            THEN("The contents of the indirect_value should be copied to a new memory location")
+            {
+                REQUIRE(*c == *a);
+                REQUIRE(*d == *b);
+                REQUIRE(std::addressof(c) != std::addressof(a));
+                REQUIRE(std::addressof(d) != std::addressof(b));
+            }
+        }
     }
 }
 
