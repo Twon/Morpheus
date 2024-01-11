@@ -21,11 +21,11 @@ namespace morpheus::memory::concepts
 ///     https://rawgit.com/google/cxx-std-draft/allocator-paper/allocator_user_guide.html#reqs
 template <template <typename> class A, typename T>
 concept Allocator = requires(A<T> a) {
-    requires std::same_as<typename A<T>::value_type, T>;
-    requires NullablePointer<typename std::allocator_traits<A<T>>::pointer>;
-    requires NullablePointer<typename std::allocator_traits<A<T>>::const_pointer>;
-    requires std::unsigned_integral<typename A<T>::size_type>;
-    requires std::signed_integral<typename A<T>::difference_type>;
+    std::same_as<typename A<T>::value_type, T>;
+    NullablePointer<typename std::allocator_traits<A<T>>::pointer>;
+    NullablePointer<typename std::allocator_traits<A<T>>::const_pointer>;
+    std::unsigned_integral<typename A<T>::size_type>;
+    std::signed_integral<typename A<T>::difference_type>;
 
     { a.allocate(std::size_t{}) } -> std::same_as<typename std::allocator_traits<A<T>>::pointer>;
     { a.deallocate(typename std::allocator_traits<A<T>>::pointer{}, std::size_t{}) } -> std::same_as<void>;
