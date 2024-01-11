@@ -6,6 +6,8 @@
 
 #include <catch2/catch_all.hpp>
 
+#include <boost/interprocess/offset_ptr.hpp>
+
 #include <memory>
 
 namespace morpheus::memory::concepts
@@ -19,7 +21,7 @@ TEST_CASE("Verify memory concepts", "[morpheus.memory.concepts]")
     SECTION("Nullable pointer checks pointers and fancy pointer types")
     {
         STATIC_REQUIRE(NullablePointer<void*>);
-        STATIC_REQUIRE(NullablePointer<std::unique_ptr<void>>);
+        STATIC_REQUIRE(NullablePointer<boost::interprocess::offset_ptr<void>>);
         STATIC_REQUIRE(NullablePointer<std::shared_ptr<void>>);
     }
 
