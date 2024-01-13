@@ -3,5 +3,10 @@ exhale==0.3.6
 myst-parser==0.18.1
 Sphinx==4.5.0
 sphinx-rtd-theme==1.1.1
-sphinxcontrib-applehelp==1.0.7
-sphinxcontrib-moderncmakedomain==3.25.0
+sphinxcontrib-applehelp==1.0.4
+sphinxcontrib-devhelp==1.0.2
+sphinxcontrib-htmlhelp==2.0.1
+sphinxcontrib-jsmath==1.0.1
+sphinxcontrib-moderncmakedomain==3.27.0
+sphinxcontrib-qthelp==1.0.3
+sphinxcontrib-serializinghtml==1.1.5
