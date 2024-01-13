@@ -6,4 +6,5 @@ target_sources(MorpheusCoreTests
         invocable_traits.tests.cpp
         is_specialisation.tests.cpp
         is_string.tests.cpp
+        trait.tests.cpp
 )
