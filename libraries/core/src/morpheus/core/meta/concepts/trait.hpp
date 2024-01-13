@@ -15,7 +15,7 @@ namespace morpheus::meta::concepts
 /// \endcode
 /// \notes
 ///     See [Lightning Talk: Higher-Order Template Metaprogramming with C++23 - Ed Catmur - CppCon 2023](https://www.youtube.com/watch?v=KENynEQoqCo)
-template <class T, template <typename> class TT>
-concept Trait = TT<T>::value;
+template <class T, template <typename> class TT, class... Args>
+concept Trait = TT<T, Args...>::value;
 
 } // namespace morpheus::meta::concepts
