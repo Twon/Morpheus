@@ -9,8 +9,13 @@ namespace morpheus::meta::concepts
 {
 
 /// \concept Aggregate
+///     Ensures a type is a aggregate.
+template <typename T>
+concept Aggregate = std::is_aggregate_v<T>;
+
+/// \concept Aggregate
 ///     Ensures a type is a aggregate and is initialisable from the given argument types.
 template <typename T, typename... Args>
-concept AggregateConstructable = Trait<T, std::is_aggregate> && Constructible<T, Args...>;
+concept AggregateConstructable = Aggregate<T> && Constructible<T, Args...>;
 
 } // namespace morpheus::meta::concepts

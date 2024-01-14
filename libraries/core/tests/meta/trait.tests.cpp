@@ -4,6 +4,8 @@
 
 #include <type_traits>
 
+#if (MORPHEUS_COMPILER != MORPHEUS_APPLE_CLANG_COMPILER) || (MORPHEUS_COMP_VER >= 150000000)
+
 namespace morpheus::meta
 {
 
@@ -77,3 +79,5 @@ TEST_CASE("Meta Traits allows applying traits as a concept", "[morpheus.meta.con
 }
 
 } // namespace morpheus::meta
+
+#endif // (MORPHEUS_COMPILER != MORPHEUS_APPLE_CLANG_COMPILER) || (MORPHEUS_COMP_VER >= 150000000)
