@@ -100,7 +100,7 @@
             compile code paths if the current compiler is a variant of the Clang compiler.
      */
     #define MORPHEUS_IS_CLANG_COMPILER                                                                                \
-        (MORPHEUS_COMPILER == MORPHEUS_CLANG_COMPILER) || (MORPHEUS_COMPILER == MORPHEUS_APPLE_CLANG_COMPILER)
+        ((MORPHEUS_COMPILER == MORPHEUS_CLANG_COMPILER) || (MORPHEUS_COMPILER == MORPHEUS_APPLE_CLANG_COMPILER))
 
     /*! \def MORPHEUS_IS_GCC_COMPATIBLE_COMPILER
             This is a macro which can be used to with proprocessor directives to conditionally
