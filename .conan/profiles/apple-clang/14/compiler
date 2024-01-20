@@ -1,0 +1,4 @@
+include(../../compiler/apple-clang)
+
+[settings]
+compiler.version=14

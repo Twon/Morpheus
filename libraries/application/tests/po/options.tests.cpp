@@ -36,7 +36,7 @@ struct Person
 auto captureOutput(ranges::contiguous_range auto const& cliOptions, HelpDocumentation msgDetails, CustomProgramOptions auto&... options)
 {
     RedirectStream captureStream(std::cout);
-    auto const result = parseProgramOptions(ranges::size(cliOptions), ranges::data(cliOptions), msgDetails, options...);
+    auto const result = parseProgramOptions(static_cast<int>(ranges::size(cliOptions)), ranges::data(cliOptions), msgDetails, options...);
     REQUIRE(result);
     auto const output = captureStream.getOutput();
 
@@ -65,7 +65,7 @@ TEST_CASE_METHOD(LoggingFixture, "Ensure options parsing of native types works",
         WHEN("Parsing valid parameters")
         {
             std::array const cliOptions = { "dummyProgram.exe", "--first-name", "John", "--surname", "Doe", "--age", "42", "--year-of-birth", "1980", "--alive", "true" };
-            auto const result = parseProgramOptions(cliOptions.size(), cliOptions.data(), HelpDocumentation{}, person);
+            auto const result = parseProgramOptions(static_cast<int>(cliOptions.size()), cliOptions.data(), HelpDocumentation{}, person);
 
             THEN("Expect no error results and valid values extracted")
             {
@@ -81,13 +81,13 @@ TEST_CASE_METHOD(LoggingFixture, "Ensure options parsing of native types works",
         {
             std::array const cliOptions = { "--first-name", "John", "--surname", "Doe", "--age", "42", "--year-of-birth", "1980", "--alive", "true" };
             // RedirectStream captureErrors(std::cerr); Capture error logging
-            auto const result = parseProgramOptions(cliOptions.size(), cliOptions.data(), HelpDocumentation{}, person);
+            auto const result = parseProgramOptions(static_cast<int>(cliOptions.size()), cliOptions.data(), HelpDocumentation{}, person);
             THEN("Expect no error results and valid values extracted")
             {
                 REQUIRE(result);
             }
         }
-        WHEN("Requsting the help text is displayed")
+        WHEN("Requesting the help text is displayed")
         {
             std::array const cliOptions = { "dummyProgram.exe", "-h" };
             auto findOption = captureOutput(cliOptions, HelpDocumentation{}, person);
@@ -101,7 +101,7 @@ TEST_CASE_METHOD(LoggingFixture, "Ensure options parsing of native types works",
                 REQUIRE(findOption("--alive"));
             }
         }
-        WHEN("Requsting the help text is displayed when providing a version")
+        WHEN("Requesting the help text is displayed when providing a version")
         {
             std::array const cliOptions = { "dummyProgram.exe", "-h" };
             HelpDocumentation helpWithVersion;
@@ -118,7 +118,7 @@ TEST_CASE_METHOD(LoggingFixture, "Ensure options parsing of native types works",
                 REQUIRE(findOption("--alive"));
             }
         }
-        WHEN("Requsting the help text is displayed with multiple options objects")
+        WHEN("Requesting the help text is displayed with multiple options objects")
         {
             std::array const cliOptions = { "dummyProgram.exe", "-h" };
 

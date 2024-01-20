@@ -108,8 +108,8 @@ concurrency::Generator<Adapter> enumerateAdapters()
 //		auto const successful = wglMakeCurrent(hDC, glContext);
 		Context customContext(hwnd, pfd);
 		auto oldContext = customContext.enable();
-		const GLubyte* vendor = glGetString(GL_VENDOR);
-		const GLubyte* renderer = glGetString(GL_RENDERER);
+		//const GLubyte* vendor = glGetString(GL_VENDOR);
+		//const GLubyte* renderer = glGetString(GL_RENDERER);
 
 		// If the device is attached to the desktop, i.e. a graphics card
 		if (displayDevice.StateFlags & DISPLAY_DEVICE_ATTACHED_TO_DESKTOP)

@@ -21,7 +21,7 @@ auto getModuleHandle()
 	return hinst;
 }
 
-bool HandlePowerBroadCast(WPARAM wParam, LPARAM lParam)
+bool HandlePowerBroadCast(WPARAM wParam, LPARAM /*lParam*/)
 {
 	switch (wParam) {
 
@@ -234,16 +234,16 @@ auto adjustWindowConfig(RenderWindow::Config& config)
 
 		// We need to adjust the window rectangle to ensure the client is the
 		// requested size and takes the size of the window border into account.
-		RECT WndRect = { 0, 0, config.width, config.height };
-		MORPHEUS_VERIFY(::AdjustWindowRect(&WndRect, dwWindowStyle, false));
-		config.width = std::min<std::int16_t>((WndRect.right - WndRect.left), screenWidth);
-		config.height = std::min<std::int16_t>((WndRect.bottom - WndRect.top), screenHeight);
+        RECT WndRect = {0, 0, config.width, config.height};
+        MORPHEUS_VERIFY(::AdjustWindowRect(&WndRect, dwWindowStyle, false));
+        config.width = std::min<std::int16_t>(static_cast<std::int16_t>(WndRect.right - WndRect.left), screenWidth);
+        config.height = std::min<std::int16_t>(static_cast<std::int16_t>(WndRect.bottom - WndRect.top), screenHeight);
 
-		// If the window is going to go off the right and bottom of the
-		// screen then position it back so that in fits on the screen
-		config.startX = std::min<std::int16_t>(config.startX, static_cast<std::int16_t>(screenWidth - config.width));
-		config.startY = std::min<std::int16_t>(config.startY, static_cast<std::int16_t>(screenHeight - config.height));
-	}
+        // If the window is going to go off the right and bottom of the
+        // screen then position it back so that in fits on the screen
+        config.startX = std::min<std::int16_t>(config.startX, static_cast<std::int16_t>(screenWidth - config.width));
+        config.startY = std::min<std::int16_t>(config.startY, static_cast<std::int16_t>(screenHeight - config.height));
+    }
 	return dwWindowStyle;
 }
 

@@ -31,5 +31,4 @@ auto fromString(std::string_view const value)
     return StringConverter<T>::fromString(value);
 }
 
-
-}
+} // namespace morpheus::conversion

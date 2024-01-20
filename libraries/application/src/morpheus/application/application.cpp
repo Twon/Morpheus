@@ -3,6 +3,7 @@
 #include "morpheus/core/conformance/date.hpp"
 #include "morpheus/core/conformance/format.hpp"
 #include "morpheus/core/conformance/stacktrace.hpp"
+#include "morpheus/core/conversion/adapters/std/chrono.hpp"
 #include "morpheus/core/conversion/adapters/std/stacktrace.hpp"
 
 #include <boost/process/environment.hpp>
@@ -27,38 +28,33 @@ void terminationHandler()
     std::abort();
 }
 
-}
-
-Application::Application()
-{
-    std::set_terminate(terminationHandler);
-}
-
-std::string getDefaultApplicationLogName()
+/// Standardises all application logs to common log name format of <progam name>-<process id>-<yeah-month-day>.log
+/*std::string getDefaultApplicationLogName()
 {
     using namespace date_ns;
     auto const programName = boost::dll::program_location().stem().string();
     auto const processId = boost::this_process::get_id();
     auto const now = std::chrono::time_point{ std::chrono::system_clock::now() };
-    auto const ymd = year_month_day{ floor<days>(now) };
-//    auto const result = fmt_ns::format("{}{}{}-{}-{}", ymd.year(), ymd.month(), ymd.day(), programName, processId);
- //   auto const year = fmt_ns::format("{}", ymd.year());
-//    auto const year = fmt_ns::format("{:%Y}", ymd.year());
-/*    auto const month = fmt_ns::format("{:%m}", ymd.month());
-    auto const day = fmt_ns::format("{:%d}", ymd.day());
-    auto const monthDay = fmt_ns::format("{:%m}{:%d}", ymd.month(), ymd.day());
-    auto const yeahMonth = fmt_ns::format("{:%Y}{:%m}", ymd.year(), ymd.month());
-    auto const yeahMonthDay = fmt_ns::format("{:%Y}{:%m}{:%d}", ymd.year(), ymd.month(), ymd.day());
-    auto const result = fmt_ns::format("{:%Y}{:%m}{:%d}", ymd.year(), ymd.month(), ymd.day());
-    auto const date = fmt_ns::format("{:%m%d}", ymd);
-//    return result;
-//    auto const localTime = date_ns::zoned_time{ date_ns::current_zone(), system_clock::now() };
-//    return fmt_ns::format("{}_{}_{}", programName, processId, localTime);
-    auto const logfileName = fmt_ns::format("{}.{}.{}.log", programName, processId, yeahMonthDay);
+    auto const ymd = year_month_day{floor<days>(now)};
+    //    auto const localTime = date_ns::zoned_time{ date_ns::current_zone(), system_clock::now() };
+    //    return fmt_ns::format("{}_{}_{}", programName, processId, localTime);
+    return fmt_ns::format("{}.{}.{}.log", programName, processId, ymd);
+}*/
 
-    return logfileName;*/
-    // auto const logfileName = fmt_ns::format("{}.{}.{:%Y}{:%m}{:%d}.log", programName, processId, ymd.year(), ymd.month(), ymd.day());
-    return {};
+} // namespace
+
+Application::Application(int argc, char const* const* argv)
+: mConfig(
+      [&]
+      {
+          po::Config config;
+          if (auto invalid = parseProgramOptions(argc, argv, po::HelpDocumentation{}, config)) {
+          }
+          return config;
+      }())
+//`: mLogName(getDefaultApplicationLogName())
+{
+    std::set_terminate(terminationHandler);
 }
 
 // auto format = getDefaultApplicationLogName();

@@ -17,7 +17,7 @@ auto makeScopedValue(concepts::Reader auto& reader, std::string_view const key)
     return ScopedAction([&reader, key] { reader.beginValue(key); }, [&reader] { reader.endValue(); } );
 }
 
-auto makeScopedSequence(concepts::Reader auto& reader, std::optional<std::size_t> const size = std::nullopt)
+auto makeScopedSequence(concepts::Reader auto& reader, std::optional<std::size_t> const = std::nullopt)
 {
     return ScopedAction([&reader] { return reader.beginSequence(); }, [&reader] { reader.endSequence(); } );
 }
