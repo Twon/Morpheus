@@ -87,7 +87,7 @@ TEST_CASE_METHOD(LoggingFixture, "Ensure options parsing of native types works",
                 REQUIRE(result);
             }
         }
-        WHEN("Requsting the help text is displayed")
+        WHEN("Requesting the help text is displayed")
         {
             std::array const cliOptions = { "dummyProgram.exe", "-h" };
             auto findOption = captureOutput(cliOptions, HelpDocumentation{}, person);
@@ -101,7 +101,7 @@ TEST_CASE_METHOD(LoggingFixture, "Ensure options parsing of native types works",
                 REQUIRE(findOption("--alive"));
             }
         }
-        WHEN("Requsting the help text is displayed when providing a version")
+        WHEN("Requesting the help text is displayed when providing a version")
         {
             std::array const cliOptions = { "dummyProgram.exe", "-h" };
             HelpDocumentation helpWithVersion;
@@ -118,7 +118,7 @@ TEST_CASE_METHOD(LoggingFixture, "Ensure options parsing of native types works",
                 REQUIRE(findOption("--alive"));
             }
         }
-        WHEN("Requsting the help text is displayed with multiple options objects")
+        WHEN("Requesting the help text is displayed with multiple options objects")
         {
             std::array const cliOptions = { "dummyProgram.exe", "-h" };
 
