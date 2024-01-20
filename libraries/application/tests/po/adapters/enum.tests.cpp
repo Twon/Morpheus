@@ -32,7 +32,7 @@ struct Preferences
     }
 };
 
-TEST_CASE("Test parsing of std filesystem path", "[morpheus.application.po.adapters.enum]")
+TEST_CASE("Test parsing of enums as options", "[morpheus.application.po.adapters.enum]")
 {
     SECTION("Ensure valid value parse correctly")
     {

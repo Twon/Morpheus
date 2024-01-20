@@ -21,7 +21,7 @@ struct Filesystem
     }
 };
 
-TEST_CASE("Test parsing of std filesystem path", "[morpheus.application.po.adapters.std.filesystem]")
+TEST_CASE("Test parsing of std filesystem path as options", "[morpheus.application.po.adapters.std.filesystem]")
 {
     SECTION("Ensure valid value parse correctly")
     {
