@@ -1,6 +1,6 @@
 #pragma once
 
-#include <morpheus/core/base/unreachable.hpp>
+#include <morpheus/core/conformance/unreachable.hpp>
 
 #include <boost/hana/first.hpp>
 #include <boost/hana/pair.hpp>
@@ -15,10 +15,10 @@ namespace morpheus::functional
 {
 
 /// \struct CaseList
-///     Typelist to hold cases for the switch 
+///     Typelist to hold cases for the switch
 template<typename... Cases>
-struct CaseList 
-{ 
+struct CaseList
+{
 };
 
 constexpr auto switchCaseElement(auto case_, auto f) { return f(case_); }
@@ -71,7 +71,7 @@ template<class... T> struct SwitchCommonReference {
     using type = std::conditional_t<(std::is_rvalue_reference_v<T> && ...), std::add_rvalue_reference_t<std::common_type_t<T...>>,
                  std::conditional_t<(std::is_reference_v<T> && ...), std::add_lvalue_reference_t<std::common_type_t<T...>>,
                  std::common_type_t<T...>>>;
-};    
+};
 
 template<class Condition, class CaseList, class CaseHandler, class DefaultHandler>
 auto switchResult(CaseList caseList)
@@ -92,22 +92,22 @@ using SwitchResult = typename decltype(switchResult<Condition, CaseList, CaseHan
 
 }
 
-/// Compile time generation of switch statements.  Maps a given list of values  This is 
+/// Compile time generation of switch statements.  Maps a given list of values  This is
 ///
 template<class Condition, class CaseList, class CaseHandler, class DefaultCase = decltype(defaultCase)>
 constexpr detail::SwitchResult<Condition, CaseList, CaseHandler, DefaultCase> switch_(
     Condition const condition, /// The switch conditional value to be executed.
     CaseList const caseList, /// List of case predicates.
-    CaseHandler&& caseHander, /// Handler for case statement bodies. 
-    DefaultCase&& defaultCase = DefaultCase{} /// Handler for the default statement of the switch. 
+    CaseHandler&& caseHander, /// Handler for case statement bodies.
+    DefaultCase&& defaultCase = DefaultCase{} /// Handler for the default statement of the switch.
 )
 {
     constexpr std::size_t Size = boost::mp11::mp_size<CaseList>::value;
     static_assert(Size < MORPHEUS_SWITCH_MAX, "Increase MORPHEUS_SWITCH_MAX");
     using Result = detail::SwitchResult<Condition, CaseList, CaseHandler, DefaultCase>;
     return detail::switch_<Result, Condition, CaseList, CaseHandler, DefaultCase>
-        (std::integral_constant<std::size_t, Size>{}, condition, caseList, 
-        std::forward<CaseHandler>(caseHander), 
+        (std::integral_constant<std::size_t, Size>{}, condition, caseList,
+        std::forward<CaseHandler>(caseHander),
         std::forward<DefaultCase>(defaultCase)
     );
 }
