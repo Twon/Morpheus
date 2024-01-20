@@ -5,5 +5,7 @@ target_sources(MorpheusCore
         constructible.hpp
         enum.hpp
         hashable.hpp
+        satisfies.hpp
         string.hpp
+        trait.hpp
 )
