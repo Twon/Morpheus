@@ -8,9 +8,10 @@ namespace morpheus::gfx::gl4
 /*! \class render_system
         Rendering system abstraction based upon the OpenGL 4 graphics API.
  */
-class render_system : public gfx::render_system {
+class RenderSystem : public gfx::RenderSystem
+{
 public:
-    virtual ~render_system() override = default;
+
 
 private:
 };
