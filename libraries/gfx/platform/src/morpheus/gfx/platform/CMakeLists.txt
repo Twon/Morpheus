@@ -11,7 +11,6 @@ target_sources(MorpheusGfxPlatform
         adapter.hpp
         image.hpp
         pixel.hpp
-        render_system_factory.hpp
         render_system.hpp
         render_target.hpp
         render_window.hpp
@@ -20,7 +19,6 @@ target_sources(MorpheusGfxPlatform
     PRIVATE
         adapter.cpp
         image.cpp
-        render_system_factory.cpp
         render_system.cpp
         render_target.cpp
         render_window.cpp

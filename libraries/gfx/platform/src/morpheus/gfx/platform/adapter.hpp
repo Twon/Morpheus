@@ -21,10 +21,10 @@ public:
     /// \name Life cycle
     ///@{
     /// Default construction an empty adapter.
-    constexpr Adapter() noexcept = default;
+    constexpr explicit Adapter() noexcept = default;
 
     /// Constructs an adapter from name and id.
-    constexpr Adapter(
+    constexpr explicit Adapter(
         IdType adapterId,
         std::string_view const name,
         Vendor const vendor

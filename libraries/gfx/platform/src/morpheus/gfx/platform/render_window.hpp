@@ -52,20 +52,17 @@ public:
     /// Constructs a render window with the specified parameters.
     /// \param[in] width
     ///     The configuration the Window.
-    RenderWindow(Config const& config = Config{});
-
-    //! Destructor
-    ~RenderWindow();
+    explicit RenderWindow(Config const& config = Config{});
     ///@}
 
 
-    auto const& name() const noexcept { return mWindowName; }
+    [[nodiscard]] auto const& name() const noexcept { return mWindowName; }
 
 //    bool isHidden() const noexcept
 //    bool isFocus() const noexcept
 
     /// Query if the window full screen.
-    bool isFullScreen() const noexcept { return mIsFullScreen; }
+    [[nodiscard]] bool isFullScreen() const noexcept { return mIsFullScreen; }
 
 
     //    bool isVisible() const noexcept
