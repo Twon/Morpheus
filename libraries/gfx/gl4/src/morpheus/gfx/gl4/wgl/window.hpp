@@ -1,7 +1,6 @@
 #pragma once
 
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
+#include <morpheus/gfx/gl4/prerequisites.hpp>
 
 namespace morpheus::gfx::gl4::wgl
 {
