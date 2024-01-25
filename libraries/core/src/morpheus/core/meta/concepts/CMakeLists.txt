@@ -7,5 +7,7 @@ target_sources(MorpheusCore
         copyable.hpp
         enum.hpp
         hashable.hpp
+        satisfies.hpp
         string.hpp
+        trait.hpp
 )
