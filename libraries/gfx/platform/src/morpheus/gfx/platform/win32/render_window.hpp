@@ -16,12 +16,29 @@ class RenderWindow : protected gfx::RenderWindow {
 public:
     using Config = gfx::RenderWindow::Config;
 
-    RenderWindow(Config const config = Config{});
+    explicit RenderWindow(Config const config = Config{});
+    explicit RenderWindow(HWND const window);
+
+    RenderWindow(RenderWindow const&) = delete;
+    RenderWindow& operator=(RenderWindow const&) = delete;
+
+    RenderWindow(RenderWindow&&) = delete;
+    RenderWindow& operator=(RenderWindow&&) = delete;
+
     ~RenderWindow();
+
+    //! The width in pixels of the render target.
+    [[nodiscard]] std::uint16_t width() const noexcept { return gfx::RenderTarget::width(); }
+
+    //! The height in pixels of the render target.
+    [[nodiscard]] std::uint16_t height() const noexcept { return gfx::RenderTarget::height(); }
+
+    //! The colour depth of the pixels of the render target.
+    [[nodiscard]] std::uint16_t colourDepth() const noexcept { return gfx::RenderTarget::colourDepth(); }
 
     //    bool isHidden() const noexcept
     //    bool isFocus() const noexcept
-    bool isFullScreen() const noexcept { return gfx::RenderWindow::isFullScreen(); }
+    [[nodiscard]] bool isFullScreen() const noexcept { return gfx::RenderWindow::isFullScreen(); }
     //    bool isVisible() const noexcept
 
     //    void isHidden(bool const hidden) const noexcept
@@ -29,6 +46,9 @@ public:
     //    void isVisible(bool const visible) const noexcept
 
     void resize();
+
+    /// Access the underlying OS Window handle.
+    auto getHandle() const noexcept { return mWindow.get(); }
 
 private:
     friend LRESULT WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);

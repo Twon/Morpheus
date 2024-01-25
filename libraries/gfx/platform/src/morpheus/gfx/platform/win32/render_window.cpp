@@ -292,6 +292,11 @@ RenderWindow::RenderWindow(Config config)
 	}*/
 }
 
+RenderWindow::RenderWindow(HWND const window)
+{
+
+}
+
 RenderWindow::~RenderWindow()
 {
 	::UnregisterClass(mWindowName.c_str(), getModuleHandle());

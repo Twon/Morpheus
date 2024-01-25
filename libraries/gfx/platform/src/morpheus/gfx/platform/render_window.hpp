@@ -33,7 +33,7 @@ struct WindowConfig
             ("colour-depth", po::value(&colourDepth)->required(), "Colour depth in bits per pixel.")
             ("start-x", po::value(&startX)->default_value(startX), "Starting pixel in the x-dimension for the Window.")
             ("start-y", po::value(&startY)->default_value(startY), "Starting pixel in the y-dimension for the Window.")
-            ("full-screen", po::value(&isFullScreen)->default_value(isFullScreen), "Is the window to be started in full screen modde");
+            ("full-screen", po::value(&isFullScreen)->default_value(isFullScreen), "Is the window to be started in full screen mode");
         // clang-format on
     }
 };

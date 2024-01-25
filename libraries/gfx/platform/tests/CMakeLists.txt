@@ -12,3 +12,7 @@ target_link_libraries(MorpheusGfxTests
     PRIVATE
         morpheus::gfx::platform
 )
+
+if (WIN32)
+    add_subdirectory(win32)
+endif(WIN32)
