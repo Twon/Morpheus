@@ -20,7 +20,8 @@ struct WindowConfig
     std::uint16_t colourDepth = 32; /// The colour depth of the pixels of the render target.
     std::uint16_t startX = 0; /// The starting X position in pixels of the render window.
     std::uint16_t startY = 0; /// The starting Y position in pixels of the render window.
-    bool isFullScreen = false; /// Start the window in full screen mode.
+    bool fullScreen = false; /// Start the window in full screen mode.
+    bool visible = true; /// Should the window initially be visible.
 
     void addOptions(boost::program_options::options_description& options)
     {
@@ -33,7 +34,8 @@ struct WindowConfig
             ("colour-depth", po::value(&colourDepth)->required(), "Colour depth in bits per pixel.")
             ("start-x", po::value(&startX)->default_value(startX), "Starting pixel in the x-dimension for the Window.")
             ("start-y", po::value(&startY)->default_value(startY), "Starting pixel in the y-dimension for the Window.")
-            ("full-screen", po::value(&isFullScreen)->default_value(isFullScreen), "Is the window to be started in full screen mode");
+            ("full-screen", po::value(&fullScreen)->default_value(fullScreen), "Is the window to be started in full screen mode")
+            ("visible", po::value(&visible)->default_value(visible), "Is the window initially visible");
         // clang-format on
     }
 };
@@ -50,7 +52,7 @@ public:
     /// \name Life cycle
     ///@{
     /// Constructs a render window with the specified parameters.
-    /// \param[in] width
+    /// \param[in] config
     ///     The configuration the Window.
     explicit RenderWindow(Config const& config = Config{});
     ///@}
@@ -62,9 +64,9 @@ public:
 //    bool isFocus() const noexcept
 
     /// Query if the window full screen.
-    [[nodiscard]] bool isFullScreen() const noexcept { return mIsFullScreen; }
+    [[nodiscard]] bool fullScreen() const noexcept { return mFullScreen; }
 
-
+    /// Queries if the window is visible;
     //    bool isVisible() const noexcept
 
 //    void isHidden(bool const hidden) const noexcept
@@ -76,7 +78,7 @@ protected:
     std::uint16_t mStartX = 0; ///< The starting X position in pixels of the render window.
     std::uint16_t mStartY = 0; ///< The starting Y position in pixels of the render window.
     std::string mWindowName; ///< The name of the window.
-    bool mIsFullScreen; ///< Start the window in full screen mode.
+    bool mFullScreen; ///< Start the window in full screen mode.
 };
 
 } // namespace morpheus::gfx

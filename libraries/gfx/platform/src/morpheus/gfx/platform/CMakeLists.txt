@@ -6,6 +6,10 @@ if(WIN32)
     add_subdirectory(win32)
 endif(WIN32)
 
+if(UNIX AND NOT APPLE)
+    add_subdirectory(x11)
+endif(UNIX AND NOT APPLE)
+
 target_sources(MorpheusGfxPlatform
     PUBLIC
         adapter.hpp

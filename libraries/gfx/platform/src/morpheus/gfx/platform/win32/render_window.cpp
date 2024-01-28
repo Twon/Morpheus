@@ -187,7 +187,7 @@ LRESULT WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			case SC_MAXIMIZE:
 			case SC_KEYMENU:
 			case SC_MONITORPOWER:
-				if(thisWindow->isFullScreen())
+				if(thisWindow->fullScreen())
 					return 1;
 				break;
 			}
@@ -211,10 +211,11 @@ LRESULT WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 auto adjustWindowConfig(RenderWindow::Config& config)
 {
 	// The style of the window depends select setting of our window.
-	DWORD dwWindowStyle = 0;
+    DWORD dwWindowStyle = (config.visible) ? WS_VISIBLE : 0;
+    //DWORD dwWindowStyle = 0;
 
 	// Select the appropriate setting for full screen or windowed mode
-	if (config.isFullScreen)
+	if (config.fullScreen)
 	{
 		dwWindowStyle |= WS_POPUP;
 
@@ -277,8 +278,11 @@ RenderWindow::RenderWindow(Config config)
 ,   mWindow(createWindow(this, config))
 {
 	//  Display the window and force an initial paint
-	::ShowWindow(mWindow.get(), SW_SHOWNORMAL);
-	::UpdateWindow(mWindow.get());
+    //if (config.visible)
+	//{
+	//	::ShowWindow(mWindow.get(), SW_SHOWNORMAL);
+	//	::UpdateWindow(mWindow.get());
+	//}
 
 	// Get the true window dimensions
 /*	{
@@ -297,13 +301,38 @@ RenderWindow::RenderWindow(HWND const window)
 
 }
 
+RenderWindow::RenderWindow(RenderWindow&& rhs) noexcept
+: gfx::RenderWindow(std::move(rhs))
+, mWindow(std::move(rhs.mWindow))
+{
+    SetWindowLongPtr(mWindow.get(), 0, reinterpret_cast<LONG_PTR>(this));
+}
+
+RenderWindow& RenderWindow::operator=(RenderWindow&& rhs) noexcept
+{
+    gfx::RenderWindow::operator=(std::move(rhs));
+    mWindow = std::move(rhs.mWindow);
+    SetWindowLongPtr(mWindow.get(), 0, reinterpret_cast<LONG_PTR>(this));
+    return *this;
+}
+
+
 RenderWindow::~RenderWindow()
 {
 	::UnregisterClass(mWindowName.c_str(), getModuleHandle());
 }
 
+bool RenderWindow::visible() const noexcept
+{
+	// If only it where this simple, IsWindowVisible only queries the status flag, not if it is actually visible: https://stackoverflow.com/a/6269768/4764531
+	return IsWindowVisible(mWindow.get()) == TRUE;
+}
+
 void RenderWindow::resize()
 {
+    if (!visible())
+        return;
+
 	RECT windowRect{};
 	// Get the current starting X and Y positions of the window
 	::GetWindowRect(mWindow.get(), &windowRect);

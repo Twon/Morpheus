@@ -19,11 +19,11 @@ public:
     explicit RenderWindow(Config const config = Config{});
     explicit RenderWindow(HWND const window);
 
-    RenderWindow(RenderWindow const&) = delete;
+    explicit RenderWindow(RenderWindow const&) = delete;
     RenderWindow& operator=(RenderWindow const&) = delete;
 
-    RenderWindow(RenderWindow&&) = delete;
-    RenderWindow& operator=(RenderWindow&&) = delete;
+    explicit RenderWindow(RenderWindow&&) noexcept;
+    RenderWindow& operator=(RenderWindow&&) noexcept;
 
     ~RenderWindow();
 
@@ -38,8 +38,11 @@ public:
 
     //    bool isHidden() const noexcept
     //    bool isFocus() const noexcept
-    [[nodiscard]] bool isFullScreen() const noexcept { return gfx::RenderWindow::isFullScreen(); }
-    //    bool isVisible() const noexcept
+
+    /// \copydoc gfx::RenderWindow::fullScreen()
+    [[nodiscard]] bool fullScreen() const noexcept { return gfx::RenderWindow::fullScreen(); }
+
+    [[nodiscard]] bool visible() const noexcept;
 
     //    void isHidden(bool const hidden) const noexcept
     //    void isFocus(bool const focus) const noexcept
@@ -53,7 +56,7 @@ public:
 private:
     friend LRESULT WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
-    wil::unique_hwnd mWindow;/// OS window handle
+    wil::unique_hwnd mWindow; /// OS window handle
 };
 
 } // namespace morpheus::gfx::win32

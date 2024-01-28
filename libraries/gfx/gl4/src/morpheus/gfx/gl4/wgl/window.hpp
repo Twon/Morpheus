@@ -1,6 +1,7 @@
 #pragma once
 
 #include <morpheus/gfx/gl4/prerequisites.hpp>
+#include <morpheus/gfx/gl4/wgl/context.hpp>
 #include <morpheus/gfx/platform/win32/render_window.hpp>
 
 namespace morpheus::gfx::gl4::wgl
@@ -19,7 +20,7 @@ public:
     Window(Window const&) = delete;
     Window& operator=(Window const&) = delete;
 private:
-    HDC mDeviceContext;
+    Context mGLContext;
 };
 
 
