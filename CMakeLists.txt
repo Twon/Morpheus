@@ -37,7 +37,7 @@ list(APPEND CMAKE_MODULE_PATH
 )
 
 set(CMAKE_FIND_PACKAGE_PREFER_CONFIG ON)
-list(APPEND CMAKE_PREFIX_PATH "${CMAKE_BINARY_DIR}")
+list(APPEND CMAKE_PREFIX_PATH "${CMAKE_BINARY_DIR}" "${CMAKE_BINARY_DIR}/build/generators")
 
 #------------------------------------------------------------------------------------------------------------------------------------------
 # Custom CMake Includes
