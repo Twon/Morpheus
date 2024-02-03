@@ -68,7 +68,7 @@ class Morpheus(ConanFile):
     }
     exports_sources = ["CMakeLists.txt", "LICENSE", "version.txt", "cmake/*", "examples/*" "libraries/*"]
     requires = (
-        "boost/1.84.0",
+        "boost/1.83.0",
         "ctre/3.8.1",
         "fmt/[^10]",
         "glbinding/3.1.0",
