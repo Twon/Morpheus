@@ -33,11 +33,19 @@ void test()
     auto config = glXChooseFBConfig(xDisplay, xScreen, attributes.data(), &elements);
 }
 */
+
+auto createDisplay()
+{
+    if (auto const display XOpenDisplay(nullptr); !display)
+        throwRuntimeException("Unable to open XDisplay");
+    return display;
+}
+
 }
 
 RenderWindow::RenderWindow(Config const& config)
 : gfx::RenderWindow(config)
-, mDisplay(XOpenDisplay(nullptr), XCloseDisplay)
+, mDisplay(createDisplay())
 /*
 , mWindow(
     [&]{

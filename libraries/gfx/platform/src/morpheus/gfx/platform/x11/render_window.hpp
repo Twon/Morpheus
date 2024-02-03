@@ -72,9 +72,10 @@ private:
     template<typename T>
     using ResourceWrapper = std::unique_ptr<T, ReleaseResources<T>>;
 
+    using XCloseDisplayDispatch = decltype([](Display display){ XCloseDisplay(display); });
 
-    std::unique_ptr<Display, decltype(&XCloseDisplay)> mDisplay;
-//    ResourceWrapper<Window> mWindow;
+    std::unique_ptr<Display, XCloseDisplayDispatch> mDisplay;
+    //    ResourceWrapper<Window> mWindow;
 };
 
 } // namespace morpheus::gfx::x11
