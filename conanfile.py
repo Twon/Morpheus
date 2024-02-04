@@ -23,6 +23,7 @@ from conan import ConanFile
 from conan.errors import ConanException, ConanInvalidConfiguration
 from conan.tools.build import check_min_cppstd
 from conan.tools.cmake import cmake_layout, CMake, CMakeDeps, CMakeToolchain
+from conan.tools.env import VirtualBuildEnv
 from conan.tools.files import copy
 from conan.tools.scm import Version
 from conan.tools.files import load
@@ -104,8 +105,8 @@ class Morpheus(ConanFile):
         self.tool_requires("ninja/1.11.1")
         self.test_requires("catch2/3.4.0")
 
-        if get_cmake_version() < Version("3.27.0"):
-            self.tool_requires("cmake/3.27.0")
+        if get_cmake_version() < Version("3.28.1"):
+            self.tool_requires("cmake/3.28.1")
 
         if self.options.build_docs:
             self.build_requires("doxygen/1.9.4") # doxygen/1.9.5 will update dependency on zlib/1.2.12 to zlib/1.2.13
@@ -167,6 +168,8 @@ class Morpheus(ConanFile):
         tc.generate()
         deps = CMakeDeps(self)
         deps.generate()
+        ms = VirtualBuildEnv(self)
+        ms.generate()
 
     def layout(self):
         cmake_layout(self)
