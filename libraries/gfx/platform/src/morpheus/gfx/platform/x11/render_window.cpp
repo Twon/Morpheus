@@ -36,9 +36,10 @@ void test()
 
 auto createDisplay()
 {
-    if (auto const display XOpenDisplay(nullptr); !display)
+    if (auto const display = XOpenDisplay(nullptr); display)
+        return display;
+    else
         throwRuntimeException("Unable to open XDisplay");
-    return display;
 }
 
 }

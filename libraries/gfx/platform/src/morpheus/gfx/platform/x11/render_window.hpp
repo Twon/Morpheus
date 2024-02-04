@@ -9,6 +9,17 @@
 namespace morpheus::gfx::x11
 {
 
+struct XCloseDisplayDispatch
+{
+    auto operator()(::Display* display)
+    {
+        XCloseDisplay(display);
+    }
+};
+
+//using XCloseDisplayDispatch = decltype([](::Display* display){ XCloseDisplay(display); });
+using DisplayPtr = std::unique_ptr<Display, XCloseDisplayDispatch>;
+
 /*! \class RenderWindow
         A specialisation of the render window for the x11 platform on Linux.
  */
@@ -72,9 +83,9 @@ private:
     template<typename T>
     using ResourceWrapper = std::unique_ptr<T, ReleaseResources<T>>;
 
-    using XCloseDisplayDispatch = decltype([](Display display){ XCloseDisplay(display); });
 
-    std::unique_ptr<Display, XCloseDisplayDispatch> mDisplay;
+
+    DisplayPtr mDisplay;
     //    ResourceWrapper<Window> mWindow;
 };
 
