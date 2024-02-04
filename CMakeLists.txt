@@ -23,7 +23,7 @@ include(GNUInstallDirs)
 include(CMakeDependentOption)
 include(CMakePackageConfigHelpers)
 
-option(MORPHEUS_LINK_WITH_MOLD "Enable the mold linker" ON)
+option(MORPHEUS_LINK_WITH_MOLD "Enable the mold linker" OFF)
 cmake_dependent_option(MORPHEUS_CODE_COVERAGE "Enable code coverage" ON "\"${CMAKE_CXX_COMPILER_ID}\" STREQUAL \"Clang\" OR \"${CMAKE_CXX_COMPILER_ID}\" STREQUAL \"GNU\"" OFF)
 cmake_dependent_option(MORPHEUS_INCLUDE_NATVIS "Enable inclusion of a natvis files for debugging" ON "\"${CMAKE_CXX_COMPILER_ID}\" STREQUAL \"MSVC\"" OFF)
 
@@ -92,7 +92,7 @@ endif()
 #------------------------------------------------------------------------------------------------------------------------------------------
 
 add_subdirectory(libraries)
-add_subdirectory(examples)
+#add_subdirectory(examples)
 
 if (ENABLE_CODE_COVERAGE)
     enable_code_coverage()
