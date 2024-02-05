@@ -23,6 +23,7 @@ include(GNUInstallDirs)
 include(CMakeDependentOption)
 include(CMakePackageConfigHelpers)
 
+option(MORPHEUS_BUILD_WITH_CCACHE "Enable the CCache compiler caching" ON)
 option(MORPHEUS_LINK_WITH_MOLD "Enable the mold linker" ON)
 cmake_dependent_option(MORPHEUS_CODE_COVERAGE "Enable code coverage" ON "\"${CMAKE_CXX_COMPILER_ID}\" STREQUAL \"Clang\" OR \"${CMAKE_CXX_COMPILER_ID}\" STREQUAL \"GNU\"" OFF)
 cmake_dependent_option(MORPHEUS_INCLUDE_NATVIS "Enable inclusion of a natvis files for debugging" ON "\"${CMAKE_CXX_COMPILER_ID}\" STREQUAL \"MSVC\"" OFF)
@@ -41,6 +42,7 @@ list(APPEND CMAKE_PREFIX_PATH "${CMAKE_BINARY_DIR}" "${CMAKE_BINARY_DIR}/build/g
 
 #------------------------------------------------------------------------------------------------------------------------------------------
 # Custom CMake Includes
+include(ccache)
 include(coverage)
 include(compiler)
 include(documentation)
@@ -76,7 +78,7 @@ set(CMAKE_BUILD_WITH_INSTALL_RPATH ON)
 set(CMAKE_SKIP_BUILD_RPATH  FALSE)
 
 get_property(IS_MULTI_CONFIG GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
-if(IS_MULTI_CONFIG)
+if (IS_MULTI_CONFIG)
     set(RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin/$<CONFIG>)
     set(LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib/$<CONFIG>)
     file(RELATIVE_PATH MORPHEUS_RELATIVE_BUILD_RPATH ${RUNTIME_OUTPUT_DIRECTORY} ${LIBRARY_OUTPUT_DIRECTORY})
@@ -93,6 +95,23 @@ endif()
 
 add_subdirectory(libraries)
 add_subdirectory(examples)
+
+#[[
+Ccache / Icecream options management
+In order to add/remove configuration options for ccache call the function enable_ccache with the following parameters:
+DEBUG to enable debugging
+ICECC to enable Icecream build support
+LOGFILE to enable ccache logging to file
+NOHASHDIR to exclude the current working directory from the cache hash
+QUIET Searches for the ccache executable, and if found enables it for supported language with specified options
+RECACHE ccache will not use any previously stored result. New results will overwrite any pre-existing results
+SLOPPINESS ccache to relax some checks in order to increase the hit rate of cache hits
+reference documentation: https://ccache.dev/documentation.html
+]]
+if (MORPHEUS_BUILD_WITH_CCACHE)
+    set(LANGUAGES CXX)
+    enable_ccache(QUIET LANGUAGES ICECC NOHASHDIR SLOPPINESS)
+endif()
 
 if (ENABLE_CODE_COVERAGE)
     enable_code_coverage()
