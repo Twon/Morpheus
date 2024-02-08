@@ -1,5 +1,5 @@
 if(APPLE)
-	add_subdirectory(metal)
+#	add_subdirectory(metal)
 endif(APPLE)
 
 if(WIN32)
