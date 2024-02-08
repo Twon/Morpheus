@@ -7,7 +7,7 @@
 #endif
 
 // clang-format off
-#if (__cplusplus >= __cpp_lib_expected) && (__cpp_lib_expected >= 202211L)
+#if (__cpp_lib_expected >= 202202L)
     namespace morpheus { namespace exp_ns = std; }
 #else
     #include <tl/expected.hpp>
