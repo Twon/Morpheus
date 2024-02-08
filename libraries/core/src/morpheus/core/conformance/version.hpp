@@ -2,6 +2,11 @@
 
 #include <morpheus/core/base/platform.hpp>
 
+/// Ensure backware compatible support for __has_include
+#ifndef __has_include
+    #define __has_include(x) 0
+#endif
+
 /// \note
 ///     #include <version> on Windows can accidentally picks up VERSION files.  Use the old <ciso646>
 ///     instead.  For details see: https://bugs.llvm.org/show_bug.cgi?id=42540
