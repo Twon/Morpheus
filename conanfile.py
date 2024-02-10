@@ -71,7 +71,8 @@ class Morpheus(ConanFile):
     requires = (
         "boost/1.83.0",
         "ctre/3.8",
-        "fmt/[^10]",
+#        "fmt/[^10]", # Don't use this syntax because it can result in errors cause by different versions on different systems.
+        "fmt/10.2.1",
         "glbinding/3.1.0",
         "glew/2.2.0",
         "gtest/1.13.0",
@@ -96,6 +97,14 @@ class Morpheus(ConanFile):
     def checkMoldIsSupported(self):
         """ Mold is only tested on Linux with gcc and clang. In future support for icc may be added. """
         return self.settings.os == "Linux" and (self.settings.compiler == "clang" or self.settings.compiler == "gcc")
+
+    @property
+    def useDate(self):
+        """ Does the current compiler version lack support for Date and timezones via the STL. """
+        compiler = self.settings.compiler
+        version = Version(self.settings.compiler.version)
+        std_support = (compiler == "msvc" and version >= 193) or (compiler == "gcc" and version >= Version("14"))
+        return not std_support
 
     def config_options(self):
         if not self.checkMoldIsSupported():
@@ -122,7 +131,7 @@ class Morpheus(ConanFile):
         if self.settings.os in ["Windows"]:
             self.requires("wil/1.0.230411.1")
 
-        if self.settings.compiler != "msvc":
+        if self.useDate:
             self.requires("date/3.0.1")
 
 #    @property
