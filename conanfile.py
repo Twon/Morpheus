@@ -69,7 +69,7 @@ class Morpheus(ConanFile):
     }
     exports_sources = ["CMakeLists.txt", "LICENSE", "version.txt", "cmake/*", "examples/*" "libraries/*"]
     requires = (
-        "boost/1.84.0",
+        "boost/1.82.0",
         "ctre/3.8",
 #        "fmt/[^10]", # Don't use this syntax because it can result in errors cause by different versions on different systems.
         "fmt/10.2.1",
@@ -98,14 +98,6 @@ class Morpheus(ConanFile):
         """ Mold is only tested on Linux with gcc and clang. In future support for icc may be added. """
         return self.settings.os == "Linux" and (self.settings.compiler == "clang" or self.settings.compiler == "gcc")
 
-    @property
-    def useDate(self):
-        """ Does the current compiler version lack support for Date and timezones via the STL. """
-        compiler = self.settings.compiler
-        version = Version(self.settings.compiler.version)
-        std_support = (compiler == "msvc" and version >= 193) or (compiler == "gcc" and version >= Version("14"))
-        return not std_support
-
     def config_options(self):
         if not self.checkMoldIsSupported():
             self.options.rm_safe("link_with_mold")
@@ -114,8 +106,8 @@ class Morpheus(ConanFile):
         self.tool_requires("ninja/1.11.1")
         self.test_requires("catch2/3.4.0")
 
-        if get_cmake_version() < Version("3.28.1"):
-            self.tool_requires("cmake/3.28.1")
+        if get_cmake_version() < Version("3.27.0"):
+            self.tool_requires("cmake/3.27.0")
 
         if self.options.build_docs:
             self.build_requires("doxygen/1.9.4") # doxygen/1.9.5 will update dependency on zlib/1.2.12 to zlib/1.2.13
@@ -131,7 +123,7 @@ class Morpheus(ConanFile):
         if self.settings.os in ["Windows"]:
             self.requires("wil/1.0.230411.1")
 
-        if self.useDate:
+        if self.settings.compiler != "msvc":
             self.requires("date/3.0.1")
 
 #    @property
