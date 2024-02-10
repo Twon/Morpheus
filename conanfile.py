@@ -23,7 +23,6 @@ from conan import ConanFile
 from conan.errors import ConanException, ConanInvalidConfiguration
 from conan.tools.build import check_min_cppstd
 from conan.tools.cmake import cmake_layout, CMake, CMakeDeps, CMakeToolchain
-from conan.tools.env import VirtualBuildEnv
 from conan.tools.files import copy
 from conan.tools.scm import Version
 from conan.tools.files import load
@@ -169,8 +168,6 @@ class Morpheus(ConanFile):
         tc.generate()
         deps = CMakeDeps(self)
         deps.generate()
-        ms = VirtualBuildEnv(self)
-        ms.generate()
 
     def layout(self):
         cmake_layout(self)
