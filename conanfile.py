@@ -70,7 +70,8 @@ class Morpheus(ConanFile):
     requires = (
         "boost/1.82.0",
         "ctre/3.8",
-        "fmt/[^10]",
+#        "fmt/[^10]", # Don't use this syntax because it can result in errors cause by different versions on different systems.
+        "fmt/10.1.1",
         "glbinding/3.1.0",
         "glew/2.2.0",
         "gtest/1.13.0",
