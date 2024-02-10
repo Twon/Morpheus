@@ -13,27 +13,32 @@
      */
     #define MORPHEUS_CLANG_COMPILER                               1
 
+    /*! \def MORPHEUS_APPLE_CLANG_COMPILER
+            This token is used to signify the use of the Apple-Clang compiler.
+     */
+    #define MORPHEUS_APPLE_CLANG_COMPILER                         2
+
     /*! \def MORPHEUS_GNUC_COMPILER
             This token is used to signify the use of the GNUC C++ compiler.
      */
-    #define MORPHEUS_GNUC_COMPILER                                2
+    #define MORPHEUS_GNUC_COMPILER                                3
 
     /*! \def MORPHEUS_ICL_COMPILER
             This token is used to signify the use of the Intel C++ compiler.
      */
-    #define MORPHEUS_ICL_COMPILER                                 3
+    #define MORPHEUS_ICL_COMPILER                                 4
 
     /*! \def MORPHEUS_VISUALSTUDIO_COMPILER
             This token is used to signify the use of the Microsoft's C++ compiler. Only version
             including and beyond Visual Studio 2017 are supported.
      */
-    #define MORPHEUS_VISUALSTUDIO_COMPILER                        4
+    #define MORPHEUS_VISUALSTUDIO_COMPILER                        5
 
     /*! \def MORPHEUS_UNKNOWN_COMPILER
             This token is used to signify the use of the current compiler is unknown and as
             such is not supported.
      */
-    #define MORPHEUS_UNKNOWN_COMPILER                             5
+    #define MORPHEUS_UNKNOWN_COMPILER                             6
 
     /*! \def MORPHEUS_COMPILER_VERSION_NUMBER
             This is a macro which can be used to generate a compiler number composed of the
@@ -51,9 +56,14 @@
      */
     #if defined(__clang__)
 
-        #define MORPHEUS_COMPILER MORPHEUS_CLANG_COMPILER
-        #define MORPHEUS_COMP_VER                                                                                      \
-            MORPHEUS_COMPILER_VERSION_NUMBER(__clang_major__, __clang_minor__, __clang_patchlevel__)
+        #if defined(__apple_build_version__)
+            #define MORPHEUS_COMPILER MORPHEUS_APPLE_CLANG_COMPILER
+            #define MORPHEUS_COMP_VER __apple_build_version__
+        #else
+            #define MORPHEUS_COMPILER MORPHEUS_CLANG_COMPILER
+            #define MORPHEUS_COMP_VER                                                                                      \
+                MORPHEUS_COMPILER_VERSION_NUMBER(__clang_major__, __clang_minor__, __clang_patchlevel__)
+        #endif // defined(__apple_build_version__)
 
     #elif defined(__GNUC__)
 
@@ -85,13 +95,20 @@
 
     #endif
 
+    /*! \def MORPHEUS_IS_CLANG_COMPILER
+            This is a macro which can be used to with proprocessor directives to conditionally
+            compile code paths if the current compiler is a variant of the Clang compiler.
+     */
+    #define MORPHEUS_IS_CLANG_COMPILER                                                                                \
+        ((MORPHEUS_COMPILER == MORPHEUS_CLANG_COMPILER) || (MORPHEUS_COMPILER == MORPHEUS_APPLE_CLANG_COMPILER))
+
     /*! \def MORPHEUS_IS_GCC_COMPATIBLE_COMPILER
             This is a macro which can be used to with proprocessor directives to conditionally
             compile code paths if the current compiler is compatible with the settings of the
             GCC compiler.
      */
     #define MORPHEUS_IS_GCC_COMPATIBLE_COMPILER                                                                        \
-        (MORPHEUS_COMPILER == MORPHEUS_GNUC_COMPILER) || (MORPHEUS_COMPILER == MORPHEUS_CLANG_COMPILER) ||             \
+        (MORPHEUS_COMPILER == MORPHEUS_GNUC_COMPILER) || MORPHEUS_IS_CLANG_COMPILER ||                                 \
             (MORPHEUS_INTEL_COMPILER_FOR_LINUX)
 
     /*! \def MORPHEUS_IS_VISUALSTUDIO_COMPATIBLE_COMPILER

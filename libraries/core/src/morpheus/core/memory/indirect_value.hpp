@@ -31,7 +31,7 @@ namespace detail
 template <typename T, typename A, typename... Args>
 constexpr T* allocate_object(A& a, Args&&... args)
 {
-    using t_allocator = typename std::allocator_traits<A>::template rebind_alloc<T>;
+    using t_allocator = typename std::allocator_traits<std::remove_cv_t<A>>::template rebind_alloc<T>;
     using t_traits = std::allocator_traits<t_allocator>;
     t_allocator t_alloc(a);
     T* mem = t_traits::allocate(t_alloc, 1);
@@ -48,7 +48,7 @@ constexpr T* allocate_object(A& a, Args&&... args)
 template <typename T, typename A>
 constexpr void deallocate_object(A& a, T* p)
 {
-    using t_allocator = typename std::allocator_traits<A>::template rebind_alloc<T>;
+    using t_allocator = typename std::allocator_traits<std::remove_cv_t<A>>::template rebind_alloc<T>;
     using t_traits = std::allocator_traits<t_allocator>;
     t_allocator t_alloc(a);
     t_traits::destroy(t_alloc, p);
@@ -57,33 +57,43 @@ constexpr void deallocate_object(A& a, T* p)
 
 /// \struct allocator_delete
 ///     Deleter type specialised for use with allocator types.
-template <class T, class A>
-struct allocator_delete : A
+template <class A>
+struct allocator_delete
 {
+    using value_type = typename A::value_type;
+
+    A alloc;
+
     /// Construct with an allocator.
-    constexpr allocator_delete(A& a) : A(a) {}
+    constexpr allocator_delete(A& a)
+    : alloc(a)
+    {}
 
     /// Delete the input via the underlying allocator.
-    constexpr void operator()(T* ptr) const noexcept
+    constexpr void operator()(value_type* ptr) const noexcept
     {
-        static_assert(0 < sizeof(T), "can't delete an incomplete type");
-        detail::deallocate_object(*this, ptr);
+        static_assert(0 < sizeof(value_type), "can't delete an incomplete type");
+        detail::deallocate_object(alloc, ptr);
     }
 };
 
 /// \struct allocator_copy
 ///     Copier type specialised for use with allocator types.
-template <class T, class A>
-struct allocator_copy : A
+template <class A>
+struct allocator_copy
 {
-    /// Construct with an allocator.
-    constexpr allocator_copy(A& a) : A(a) {}
-
     /// The associated deleter to be used with this copier.
-    using deleter_type = allocator_delete<T, A>;
+    using deleter_type = allocator_delete<A>;
+
+    using value_type = typename A::value_type;
+
+    A alloc;
+
+    /// Construct with an allocator.
+    constexpr allocator_copy(A& a) : alloc(a) {}
 
     /// Create a copy of the input via the underlying allocator.
-    constexpr T* operator()(T const& t) const { return detail::allocate_object<T>(*this, t); }
+    constexpr value_type* operator()(value_type const& t) const { return detail::allocate_object<value_type>(alloc, t); }
 };
 
 /// \struct exchange_on_move_ptr
@@ -503,7 +513,7 @@ constexpr auto allocate_indirect_value(std::allocator_arg_t, A& a, Ts&&... ts)
 {
     auto* u = detail::allocate_object<T>(a, std::forward<Ts>(ts)...);
     try {
-        return indirect_value<T, detail::allocator_copy<T, A>, detail::allocator_delete<T, A>>(u, {a}, {a});
+        return indirect_value<T, detail::allocator_copy<A>, detail::allocator_delete<A>>(u, {a}, {a});
     }
     catch (...) {
         detail::deallocate_object(a, u);
