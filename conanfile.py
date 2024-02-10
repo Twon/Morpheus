@@ -23,6 +23,7 @@ from conan import ConanFile
 from conan.errors import ConanException, ConanInvalidConfiguration
 from conan.tools.build import check_min_cppstd
 from conan.tools.cmake import cmake_layout, CMake, CMakeDeps, CMakeToolchain
+from conan.tools.env import VirtualBuildEnv
 from conan.tools.files import copy
 from conan.tools.scm import Version
 from conan.tools.files import load
@@ -97,6 +98,14 @@ class Morpheus(ConanFile):
         """ Mold is only tested on Linux with gcc and clang. In future support for icc may be added. """
         return self.settings.os == "Linux" and (self.settings.compiler == "clang" or self.settings.compiler == "gcc")
 
+    @property
+    def useDate(self):
+        """ Does the current compiler version lack support for Date and timezones via the STL. """
+        compiler = self.settings.compiler
+        version = Version(self.settings.compiler.version)
+        std_support = (compiler == "msvc" and version >= 193) or (compiler == "gcc" and version >= Version("14"))
+        return not std_support
+
     def config_options(self):
         if not self.checkMoldIsSupported():
             self.options.rm_safe("link_with_mold")
@@ -122,7 +131,7 @@ class Morpheus(ConanFile):
         if self.settings.os in ["Windows"]:
             self.requires("wil/1.0.230411.1")
 
-        if self.settings.compiler != "msvc":
+        if self.useDate:
             self.requires("date/3.0.1")
 
 #    @property
@@ -168,6 +177,8 @@ class Morpheus(ConanFile):
         tc.generate()
         deps = CMakeDeps(self)
         deps.generate()
+        ms = VirtualBuildEnv(self)
+        ms.generate()
 
     def layout(self):
         cmake_layout(self)
