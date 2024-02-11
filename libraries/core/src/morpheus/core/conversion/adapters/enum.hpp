@@ -5,7 +5,7 @@
 #include "morpheus/core/conversion/string.hpp"
 #include "morpheus/core/meta/concepts/enum.hpp"
 
-#include <magic_enum.hpp>
+#include <magic_enum/magic_enum.hpp>
 
 #include <string>
 #include <string_view>

@@ -11,7 +11,7 @@
 #include <rapidjson/istreamwrapper.h>
 #include <rapidjson/reader.h>
 
-#include <magic_enum.hpp>
+#include <magic_enum/magic_enum.hpp>
 
 #include <concepts>
 #include <cstddef>
