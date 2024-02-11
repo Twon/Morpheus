@@ -31,7 +31,7 @@ import re, os.path
 import subprocess
 import sys
 
-required_conan_version = ">=1.59.0"
+required_conan_version = ">=2.0.17"
 
 
 def get_cmake_version():
@@ -69,15 +69,14 @@ class Morpheus(ConanFile):
     }
     exports_sources = ["CMakeLists.txt", "LICENSE", "version.txt", "cmake/*", "examples/*" "libraries/*"]
     requires = (
-        "boost/1.82.0",
-        "ctre/3.8",
-#        "fmt/[^10]", # Don't use this syntax because it can result in errors cause by different versions on different systems.
+        "boost/1.84.0",
+        "ctre/3.8.1",
         "fmt/10.2.1",
-        "glbinding/3.1.0",
+        "glbinding/3.3.0",
         "glew/2.2.0",
-        "magic_enum/0.8.2",
+        "magic_enum/0.9.5",
         "ms-gsl/4.0.0",
-        "rapidjson/cci.20220822",
+        "rapidjson/cci.20230929",
         "range-v3/0.12.0",
         "tl-expected/20190710",
         "vulkan-headers/1.3.239.0"#,
@@ -114,22 +113,22 @@ class Morpheus(ConanFile):
         self.test_requires("catch2/3.4.0")
         self.test_requires("gtest/1.14.0")
 
-        if get_cmake_version() < Version("3.27.0"):
-            self.tool_requires("cmake/3.27.0")
+        if get_cmake_version() < Version("3.28.1"):
+            self.tool_requires("cmake/3.28.1")
 
         if self.options.build_docs:
             self.build_requires("doxygen/1.9.4") # doxygen/1.9.5 will update dependency on zlib/1.2.12 to zlib/1.2.13
 
         if self.options.get_safe("link_with_mold", False):
-            self.build_requires("mold/1.11.0")
-            self.build_requires("openssl/3.1.2", override=True)
+            self.build_requires("mold/2.4.0")
+            self.build_requires("openssl/3.2.1", override=True)
 
     def requirements(self):
         if self.settings.os in ["Macos", "iOS", "tvOS"] and self.settings.compiler == "apple-clang":
             self.requires("moltenvk/1.2.2")
 
         if self.settings.os in ["Windows"]:
-            self.requires("wil/1.0.230411.1")
+            self.requires("wil/1.0.240122.1")
 
         if self.useDate:
             self.requires("date/3.0.1")
