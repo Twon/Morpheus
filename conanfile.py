@@ -79,7 +79,7 @@ class Morpheus(ConanFile):
         "rapidjson/cci.20230929",
         "range-v3/0.12.0",
         "tl-expected/20190710",
-        "vulkan-headers/1.3.268.0"#,
+        "vulkan-headers/1.3.239.0"#,
         #"zlib/1.2.12" # xapian-core/1.4.19' requires 'zlib/1.2.12' while 'boost/1.81.0' requires 'zlib/1.2.13'. To fix this conflict you need to override the package 'zlib' in your root package.
     )
 
