@@ -1,0 +1,19 @@
+[settings]
+compiler=intel-cc
+compiler.mode=icx
+
+{% set os = detect_api.detect_os() %}
+{% if os == "Linux" %}
+[conf]
+tools.intel:installation_path=/opt/intel/oneapi/
+[buildenv]
+CC=icx
+CXX=icpx
+{% endif %}
+{% if os == "Windows" %}
+[conf]
+tools.intel:installation_path=C:\Program Files (x86)\Intel\oneAPI
+[buildenv]
+CC=icx
+CXX=icx
+{% endif %}

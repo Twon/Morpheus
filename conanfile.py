@@ -144,7 +144,7 @@ class Morpheus(ConanFile):
     @property
     def _minimum_compilers_version(self):
         return {
-#            "intel-cc": "??"
+            "intel-cc": "2023.2",
             "msvc": "16",
             "gcc": "11",
             "clang": "13",

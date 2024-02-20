@@ -1,5 +1,5 @@
 {% set os = detect_api.detect_os() %}
-{% if os == "Linux" -%}
+{% if os == "Linux" %}
 [settings]
 mold*:build_type=Release
 onetbb*:build_type=Release

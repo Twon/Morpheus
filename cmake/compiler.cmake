@@ -33,4 +33,12 @@ target_compile_options(MorpheusConfig
         $<$<CXX_COMPILER_ID:MSVC>:${MSVC_WARNINGS}>
         $<$<CXX_COMPILER_ID:GNU>:${GCC_WARNINGS}>
         $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>>:${CLANG_WARNINGS}>
+        <$<CXX_COMPILER_ID:IntelLLVM>:${CLANG_WARNINGS}>
 )
+
+if (${MORPHEUS_BUILD_WITH_INTEL})
+    find_package(IntelSYSCL REQUIRED)
+    message(STATUS "Morpheus: found Intel One API DPC++/C++ Compiler.")
+    set(CMAKE_C_COMPILER icx PARENT_SCOPE)
+    set(CMAKE_CXX_COMPILER icpx PARENT_SCOPE)
+endif()
