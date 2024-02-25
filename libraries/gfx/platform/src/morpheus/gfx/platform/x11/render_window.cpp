@@ -47,16 +47,13 @@ auto createDisplay()
 RenderWindow::RenderWindow(Config const& config)
 : gfx::RenderWindow(config)
 , mDisplay(createDisplay())
-/*
 , mWindow(
     [&]{
 	    auto const screen = DefaultScreenOfDisplay(display);
 	    auto const screenId = DefaultScreen(display);
 	    return XCreateSimpleWindow(display, RootWindowOfScreen(screen), config.startX, config.startY, config.width, config.heigh, 1, BlackPixel(display, screenId), WhitePixel(display, screenId))
-    }(),
-    [&](auto const window){ XDestroyWindow(mDisplay, window); }(),
+    }(), XCloseDisplayDispatch{mDisplay}
   )
-*/
 {
 }
 
