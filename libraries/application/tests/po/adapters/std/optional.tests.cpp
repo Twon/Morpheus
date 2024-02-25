@@ -4,7 +4,6 @@
 
 #include <catch2/catch_test_macros.hpp>
 
-#include <boost/optional.hpp>
 #include <boost/program_options.hpp>
 
 #include <optional>
@@ -16,7 +15,6 @@ namespace morpheus::application::po
 struct OptionalConfig
 {
     std::optional<std::string> text;
-//    boost::optional<std::string> text;
 
     void addOptions(boost::program_options::options_description& options)
     {
