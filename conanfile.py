@@ -31,7 +31,7 @@ import re, os.path
 import subprocess
 import sys
 
-required_conan_version = ">=2.0.17"
+required_conan_version = ">=2.1.0"
 
 
 def get_cmake_version():
