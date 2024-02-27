@@ -53,8 +53,7 @@ jobs:
                   conan: "clang",
                   cc: "clang-14",
                   cxx: "clang++-14",
-                  std: 20,
-                  toolchain: "clang-libc++.cmake"
+                  std: 20
                 },
               lib: "libc++",
             }
@@ -68,8 +67,21 @@ jobs:
                   conan: "clang",
                   cc: "clang-15",
                   cxx: "clang++-15",
-                  std: 20,
-                  toolchain: "clang-libc++.cmake"
+                  std: 20
+                },
+              lib: "libc++",
+            }
+          - {
+              name: "Ubuntu Clang-16 + libc++",
+              os: ubuntu-latest,
+              compiler:
+                {
+                  type: CLANG,
+                  version: 16,
+                  conan: "clang",
+                  cc: "clang-16",
+                  cxx: "clang++-16",
+                  std: 20
                 },
               lib: "libc++",
             }
