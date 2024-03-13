@@ -10,13 +10,7 @@ RenderWindow::RenderWindow(Config const& config)
 ,   mStartX(config.startX)
 ,   mStartY(config.startY)
 ,   mWindowName(config.windowName)
-,   mIsFullScreen(config.isFullScreen)
-{
-}
-
-//---------------------------------------------------------------------------------------------------------------------
-
-RenderWindow::~RenderWindow()
+,   mFullScreen(config.fullScreen)
 {
 }
 

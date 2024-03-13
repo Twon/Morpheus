@@ -14,7 +14,6 @@ namespace nvapi
 
 class Driver
 {
-    static const std::string nvapiLibarayPath;
     boost::dll::shared_library mNvapi;
 
 public:

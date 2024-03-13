@@ -16,6 +16,12 @@ class Context
 public:
     explicit Context(HWND const window, PIXELFORMATDESCRIPTOR const& pfd);
 
+    Context(Context const&) = delete;
+    Context& operator=(Context const&) = delete;
+
+    Context(Context&&) = default;
+    Context& operator=(Context&&) = default;
+
     Context enable();
     void disable();
 

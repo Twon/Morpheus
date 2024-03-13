@@ -6,12 +6,13 @@
 namespace morpheus::gfx::d3d12
 {
 
-/*! \class render_system
+/*! \class Rrender_system
         Rendering system abstraction based upon the Microsoft DirectX 12 API.
  */
-class render_system : public gfx::render_system {
+class RenderSystem : public gfx::RenderSystem
+{
 public:
-    virtual ~render_system();
+
 
 private:
 };

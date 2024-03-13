@@ -3,10 +3,10 @@
 namespace morpheus::gfx::gl4
 {
 
-/*! \class types
+/*! \class TypeMapping
         Provides helper methods for mapping from native types to the underlying rendering API.
  */
-class type_mapping {
+class TypeMapping {
 public:
     /// \name Life cycle
     ///@{
@@ -18,7 +18,7 @@ public:
         \param[in] colourDepth
              The colour depth of the pixels of the render target.
      */
-    type_mapping(
+    TypeMapping(
  //       const std::uint32_t width,
  //       const std::uint32_t height,
  //       const std::uint32_t colourDepth

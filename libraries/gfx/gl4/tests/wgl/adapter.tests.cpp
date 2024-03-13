@@ -189,7 +189,7 @@ TEST_CASE("Iterates over the adapters in the list", "[morpheus.core.gfx.gl.wgl.a
         {
             for (auto& adapter : enumerateAdapters())
             {
-                INFO("The adapter id is: " << adapter.getId());
+                INFO("The adapter id is: " << adapter.id());
             }
         }
     }

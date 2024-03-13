@@ -13,7 +13,7 @@ concurrency::Generator<VideoMode> enumerateVideoModes(Adapter const& adapter)
 	for (DWORD dwCurrentSetting = 0; /* NO CONDITION */; ++dwCurrentSetting)
 	{
 		// Break out of the loop it there is no more video modes to enumerate
-		if (!EnumDisplaySettings(adapter.getId().c_str(), dwCurrentSetting, &devMode)) {
+		if (!EnumDisplaySettings(adapter.id().c_str(), dwCurrentSetting, &devMode)) {
 			break;
 		}
 

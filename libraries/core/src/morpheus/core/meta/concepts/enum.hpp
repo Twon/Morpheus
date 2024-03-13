@@ -5,6 +5,8 @@
 namespace morpheus::meta::concepts
 {
 
+/// \concept Enum
+///     Verifies a given T as an enumerated type.
 template <typename T>
 concept Enum = std::is_enum_v<T>;
 
