@@ -18,23 +18,26 @@ struct XCloseDisplayDispatch
 };
 
 //using XCloseDisplayDispatch = decltype([](::Display* display){ XCloseDisplay(display); });
-using DisplayPtr = std::unique_ptr<Display, XCloseDisplayDispatch>;
+using DisplayPtr = std::unique_ptr<::Display, XCloseDisplayDispatch>;
 
-struct XCloseDisplayDispatch
+struct XDestroyDisplayDispatch
 {
-    explicit XCloseDisplayDispatch(::Display* display) noexcept
+    explicit XDestroyDisplayDispatch(::Display* display) noexcept
     : mDisplay(display)
     {}
 
-    auto operator()(::Window* window)
-    { XDestroyWindow(mDisplay, window);
+    using pointer = ::Window;
+
+    auto operator()(pointer window)
+    {
+        XDestroyWindow(mDisplay, window);
     }
 
 private:
     ::Display* mDisplay = nullptr;
 };
 
-using WindowPtr = std::unique_ptr<Window, XCloseDisplayDispatch>;
+using WindowPtr = std::unique_ptr<Window, XDestroyDisplayDispatch>;
 
 /*! \class RenderWindow
         A specialisation of the render window for the x11 platform on Linux.
@@ -43,7 +46,7 @@ class RenderWindow : protected gfx::RenderWindow {
 public:
     using Config = gfx::RenderWindow::Config;
 
-    explicit RenderWindow(Config const& config = Config{});
+    explicit RenderWindow(Config const& config = Config{}){}
 
     explicit RenderWindow(RenderWindow const&) = delete;
     RenderWindow& operator=(RenderWindow const&) = delete;
@@ -51,7 +54,7 @@ public:
     explicit RenderWindow(RenderWindow&&) noexcept = delete;
     RenderWindow& operator=(RenderWindow&&) noexcept = delete;
 
-    ~RenderWindow();
+    ~RenderWindow() = default;
 
     //! The width in pixels of the render target.
     [[nodiscard]] std::uint16_t width() const noexcept { return gfx::RenderTarget::width(); }
@@ -101,8 +104,9 @@ private:
 
 
 
-    DisplayPtr mDisplay;
-    WindowPtr mWindow;
+//    // Requires std::experimental::unique_resource (or boost scope equivalent)
+//    DisplayPtr mDisplay;
+//    WindowPtr mWindow;
 };
 
 } // namespace morpheus::gfx::x11
