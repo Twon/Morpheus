@@ -179,6 +179,7 @@ jobs:
           python-version: '3.11'
 
       - name: Install Python requirements
+        shell: bash
         run: |
           sudo pip install -r ./requirements.txt
 
