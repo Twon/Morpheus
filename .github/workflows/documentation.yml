@@ -76,7 +76,7 @@ jobs:
 
       - name: Install Python requirements
         run: |
-          pip install -r ./requirements.txt
+          sudo pip install -r ./requirements.txt
 
       - name: Configure Conan
         shell: bash
