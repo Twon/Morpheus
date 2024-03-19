@@ -76,7 +76,7 @@ jobs:
 
       - name: Install Python requirements
         run: |
-          sudo pip install -r ./requirements.txt
+          pip install -r ./requirements.txt
 
       - name: Configure Conan
         shell: bash
@@ -91,13 +91,17 @@ jobs:
           sed -i.backup '1a onetbb*:build_type=Release' .conan2/profiles/default
           sed -i.backup '1a mold*:compiler.libcxx=libstdc++11' .conan2/profiles/default
 
+          sed -i.backup '[conf]' .conan2/profiles/default
+          sed -i.backup 'tools.system.package_manager:mode = install' .conan2/profiles/default
+          sed -i.backup 'tools.system.package_manager:sudo = True' .conan2/profiles/default
+
           conan profile show -pr default
 
       - name: Configure Install
         working-directory: ${{github.workspace}}
         shell: bash
         run: |
-          sudo conan install "${{github.workspace}}" --build missing -c tools.cmake.cmaketoolchain:generator="Ninja Multi-Config" -c tools.system.package_manager:mode=install --build catch2/3.3.2 --build gtest/1.14.0 -o build_docs=True -o boost/*:without_cobalt=True
+          conan install "${{github.workspace}}" --build missing -c tools.cmake.cmaketoolchain:generator="Ninja Multi-Config" --build catch2/3.3.2 --build gtest/1.14.0 -o build_docs=True -o boost/*:without_cobalt=True
 
       - name: Configure Conan Build
         shell: bash

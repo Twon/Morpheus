@@ -179,16 +179,8 @@ jobs:
           python-version: '3.11'
 
       - name: Install Python requirements
-        if: matrix.settings.os == 'windows-latest'
-        shell: cmd
         run: |
           pip install -r ./requirements.txt
-
-      - name: Install Python requirements
-        if: matrix.settings.os != 'windows-latest'
-        shell: bash
-        run: |
-          sudo pip install -r ./requirements.txt
 
       - name: Configure Conan
         shell: bash
@@ -204,22 +196,18 @@ jobs:
             sed -i.backup '1a onetbb*:build_type=Release' .conan2/profiles/default
             sed -i.backup '1a mold*:compiler.libcxx=libstdc++11' .conan2/profiles/default
           fi
+          if [[ "${{ matrix.settings.os }}" != "windows-latest" ]]; then
+            sed -i.backup '[conf]' .conan2/profiles/default
+            sed -i.backup 'tools.system.package_manager:mode = install' .conan2/profiles/default
+            sed -i.backup 'tools.system.package_manager:sudo = True' .conan2/profiles/default
+          fi
 
           conan profile show -pr default
 
       - name: Configure Install
-        if: matrix.settings.os == 'windows-latest'
-        shell: cmd
         working-directory: ${{github.workspace}}
         run: |
-          conan install "${{github.workspace}}" --build missing -pr:b default -c tools.cmake.cmaketoolchain:generator="Ninja Multi-Config" -c tools.system.package_manager:mode=install --build catch2/3.4.0 --build gtest/1.14.0 -o boost/*:without_cobalt=True
-
-      - name: Configure Install
-        if: matrix.settings.os != 'windows-latest'
-        shell: bash
-        working-directory: ${{github.workspace}}
-        run: |
-          sudo conan install "${{github.workspace}}" --build missing -pr:b default -c tools.cmake.cmaketoolchain:generator="Ninja Multi-Config" -c tools.system.package_manager:mode=install --build catch2/3.4.0 --build gtest/1.14.0 -o boost/*:without_cobalt=True
+          conan install "${{github.workspace}}" --build missing -pr:b default -c tools.cmake.cmaketoolchain:generator="Ninja Multi-Config" --build catch2/3.4.0 --build gtest/1.14.0 -o boost/*:without_cobalt=True
 
       - name: Configure Conan Build
         if: matrix.settings.os == 'windows-latest'
