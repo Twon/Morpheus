@@ -23,7 +23,7 @@ include(GNUInstallDirs)
 include(CMakeDependentOption)
 include(CMakePackageConfigHelpers)
 
-option(MORPHEUS_LINK_WITH_MOLD "Enable the mold linker" ON)
+cmake_dependent_option(MORPHEUS_LINK_WITH_MOLD "Enable the mold linker" ON "LINUX OR APPLE" OFF)
 cmake_dependent_option(MORPHEUS_CODE_COVERAGE "Enable code coverage" ON "\"${CMAKE_CXX_COMPILER_ID}\" STREQUAL \"Clang\" OR \"${CMAKE_CXX_COMPILER_ID}\" STREQUAL \"GNU\"" OFF)
 cmake_dependent_option(MORPHEUS_INCLUDE_NATVIS "Enable inclusion of a natvis files for debugging" ON "\"${CMAKE_CXX_COMPILER_ID}\" STREQUAL \"MSVC\"" OFF)
 
@@ -37,11 +37,7 @@ list(APPEND CMAKE_MODULE_PATH
 )
 
 set(CMAKE_FIND_PACKAGE_PREFER_CONFIG ON)
-if (${GENERATOR_IS_MULTI_CONFIG})
-    list(APPEND CMAKE_PREFIX_PATH "${CMAKE_BINARY_DIR}" "${CMAKE_BINARY_DIR}/build/generators")
-else()
-    list(APPEND CMAKE_PREFIX_PATH "${CMAKE_BINARY_DIR}" "${CMAKE_BINARY_DIR}/build/${CMAKE_BUILD_TYPE}/generators")
-endif()
+list(APPEND CMAKE_PREFIX_PATH "${CMAKE_BINARY_DIR}" "${CMAKE_BINARY_DIR}/build/generators")
 
 #------------------------------------------------------------------------------------------------------------------------------------------
 # Custom CMake Includes
