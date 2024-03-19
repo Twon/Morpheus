@@ -124,9 +124,9 @@ jobs:
           sed -i.backup '1a onetbb*:build_type=Release' .conan2/profiles/default
           sed -i.backup '1a mold*:compiler.libcxx=libstdc++11' .conan2/profiles/default
 
-          sed -i.backup '[conf]' .conan2/profiles/default
-          sed -i.backup 'tools.system.package_manager:mode = install' .conan2/profiles/default
-          sed -i.backup 'tools.system.package_manager:sudo = True' .conan2/profiles/default
+          sed -i.backup '\[conf\]' .conan2/profiles/default
+          sed -i.backup '/^\[conf\]$/,/^\[/ s/^tools.system.package_manager:mode = install/' .conan2/profiles/default
+          sed -i.backup '/^\[conf\]$/,/^\[/ s/^tools.system.package_manager:sudo = True/' .conan2/profiles/default
 
           conan profile show -pr default
 
