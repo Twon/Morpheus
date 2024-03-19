@@ -7,6 +7,7 @@ target_sources(MorpheusCore
         expected.hpp
         print.hpp
         ranges.hpp
+        scan.hpp
         source_location.hpp
         stacktrace.hpp
         unreachable.hpp
@@ -14,8 +15,9 @@ target_sources(MorpheusCore
 )
 
 find_package(fmt REQUIRED)
-find_package(tl-expected REQUIRED)
 find_package(range-v3 REQUIRED)
+find_package(scn REQUIRED)
+find_package(tl-expected REQUIRED)
 
 target_link_libraries(MorpheusCore
     PUBLIC
@@ -23,6 +25,7 @@ target_link_libraries(MorpheusCore
         $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:date::date-tz>
         fmt::fmt
         range-v3::range-v3
+        scn::scn
         tl::expected
 )
 
