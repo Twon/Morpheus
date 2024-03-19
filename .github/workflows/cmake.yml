@@ -197,9 +197,7 @@ jobs:
             sed -i.backup '1a mold*:compiler.libcxx=libstdc++11' .conan2/profiles/default
           fi
           if [[ "${{ matrix.settings.os }}" != "windows-latest" ]]; then
-            sed -i.backup '\[conf\]' .conan2/profiles/default
-            sed -i.backup '/^\[conf\]$/,/^\[/ s/^tools.system.package_manager:mode = install/' .conan2/profiles/default
-            sed -i.backup '/^\[conf\]$/,/^\[/ s/^tools.system.package_manager:sudo = True/' .conan2/profiles/default
+            echo "tools.system.package_manager:mode = install\ntools.system.package_manager:sudo = True\n" >> ~/.conan/global.conf
           fi
 
           conan profile show -pr default
