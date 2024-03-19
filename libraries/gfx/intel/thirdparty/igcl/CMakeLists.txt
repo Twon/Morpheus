@@ -1,7 +1,6 @@
 FetchContent_Declare(
     intelGraphicsControlLibrary
     GIT_REPOSITORY https://github.com/intel/drivers.gpu.control-library.git
-    GIT_TAG        121042bee6bae992d0d6d259c3bed347f218137f
 )
 FetchContent_MakeAvailable(intelGraphicsControlLibrary)
 
@@ -10,14 +9,14 @@ add_library(intel::GraphicsControlLibrary ALIAS GraphicsControlLibrary)
 
 target_include_directories(GraphicsControlLibrary
     PUBLIC
-        ${intelgraphicscontrollibrary_SOURCE_DIR}/includes/
+        ${intelgraphicscontrollibrary_SOURCE_DIR}/include/
 )
 
 target_sources(GraphicsControlLibrary
     PUBLIC
-        ${intelgraphicscontrollibrary_SOURCE_DIR}/includes/igcl_api.h
+        ${intelgraphicscontrollibrary_SOURCE_DIR}/include/igcl_api.h
     PRIVATE
-        ${intelgraphicscontrollibrary_SOURCE_DIR}/wrapper/cApiWrapper.cpp
+        ${intelgraphicscontrollibrary_SOURCE_DIR}/Source/cApiWrapper.cpp
 )
 
 set_target_properties(GraphicsControlLibrary
