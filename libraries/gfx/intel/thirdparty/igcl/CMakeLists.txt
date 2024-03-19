@@ -1,7 +1,6 @@
 FetchContent_Declare(
     intelGraphicsControlLibrary
     GIT_REPOSITORY https://github.com/intel/drivers.gpu.control-library.git
-    GIT_TAG        121042bee6bae992d0d6d259c3bed347f218137f
 )
 FetchContent_MakeAvailable(intelGraphicsControlLibrary)
 
