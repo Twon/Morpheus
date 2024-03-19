@@ -201,13 +201,20 @@ jobs:
             echo "tools.system.package_manager:sudo = True" >> .conan2/global.conf
           fi
 
+          echo "tools.cmake.cmaketoolchain:generator = Ninja Multi-Config" >> .conan2/global.conf
+
+          if [[ "${{ matrix.settings.os }}" != "windows-latest" ]]; then
+            echo "tools.system.package_manager:mode = install" >> .conan2/global.conf
+            echo "tools.system.package_manager:sudo = True" >> .conan2/global.conf
+          fi
+
           conan profile show -pr default
 
       - name: Configure Install
         working-directory: ${{github.workspace}}
         shell: bash
         run: |
-          conan install "${{github.workspace}}" --build missing -pr:b default -c tools.cmake.cmaketoolchain:generator="Ninja Multi-Config" --build catch2/3.4.0 --build gtest/1.14.0 -o boost/*:without_cobalt=True
+          conan install "${{github.workspace}}" --build missing -pr:b default --build catch2/3.4.0 --build gtest/1.14.0 -o boost/*:without_cobalt=True
 
       - name: Configure Conan Build
         if: matrix.settings.os == 'windows-latest'
