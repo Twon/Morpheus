@@ -1,5 +1,6 @@
 #pragma once
 
+#include <morpheus/core/base/architecture.hpp>
 #include <morpheus/core/base/platform.hpp>
 
 #include <array>
@@ -11,6 +12,9 @@
 #pragma warning(push)
 #pragma warning(disable : 4251)
 #endif // (MORPHEUS_COMPILER == MORPHEUS_VISUALSTUDIO_COMPILER)
+
+
+#if (MORPHEUS_PLATFORM_ARCHITECTURE == MORPHEUS_TARGET_ARCHITECTURE_X86) || (MORPHEUS_PLATFORM_ARCHITECTURE == MORPHEUS_TARGET_ARCHITECTURE_X64)
 
 namespace morpheus
 {
@@ -50,6 +54,8 @@ private:
 };
 
 } // namespace morpheus
+
+#endif // (MORPHEUS_PLATFORM_ARCHITECTURE == MORPHEUS_TARGET_ARCHITECTURE_X86) || (MORPHEUS_PLATFORM_ARCHITECTURE == MORPHEUS_TARGET_ARCHITECTURE_X64)
 
 #if (MORPHEUS_COMPILER == MORPHEUS_VISUALSTUDIO_COMPILER)
 #pragma warning(pop)
