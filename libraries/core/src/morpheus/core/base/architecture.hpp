@@ -59,7 +59,7 @@
 
             #define MORPHEUS_PLATFORM_ARCHITECTURE MORPHEUS_TARGET_ARCHITECTURE_ARM_8
 
-        #eldif defined(__ARM_ARCH_7__) || defined(__ARM_ARCH_7A__) || defined(__ARM_ARCH_7R__) || defined(__ARM_ARCH_7M__) || \
+        #elif defined(__ARM_ARCH_7__) || defined(__ARM_ARCH_7A__) || defined(__ARM_ARCH_7R__) || defined(__ARM_ARCH_7M__) || \
            (defined(__TARGET_ARCH_ARM) && __TARGET_ARCH_ARM - 0 >= 7)
 
             #define MORPHEUS_PLATFORM_ARCHITECTURE MORPHEUS_TARGET_ARCHITECTURE_ARM_7
