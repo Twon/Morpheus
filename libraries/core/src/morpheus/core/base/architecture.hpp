@@ -14,27 +14,27 @@
     #define MORPHEUS_TARGET_ARCHITECTURE_X64     2
 
     /// @def MORPHEUS_TARGET_ARCHITECTURE_POWERPC
-    ///	This token is used to signify the processor architecture is	PowerPC.
+    ///	This token is used to signify the processor architecture is PowerPC.
     #define MORPHEUS_TARGET_ARCHITECTURE_POWERPC 3
 
     ///	@def MORPHEUS_TARGET_ARCHITECTURE_ARM_4
-    ///	This token is used to signify the processor architecture is	ARM arch 4
+    ///	This token is used to signify the processor architecture is ARM arch 4
     #define MORPHEUS_TARGET_ARCHITECTURE_ARM_4 4
 
     ///	@def MORPHEUS_TARGET_ARCHITECTURE_ARM_5
-    ///	This token is used to signify the processor architecture is	ARM arch 5
+    ///	This token is used to signify the processor architecture is ARM arch 5
     #define MORPHEUS_TARGET_ARCHITECTURE_ARM_5 5
 
     ///	@def MORPHEUS_TARGET_ARCHITECTURE_ARM_6
-    ///	This token is used to signify the processor architecture is	ARM arch 6
+    ///	This token is used to signify the processor architecture is ARM arch 6
     #define MORPHEUS_TARGET_ARCHITECTURE_ARM_6 6
 
     ///	@def MORPHEUS_TARGET_ARCHITECTURE_ARM_7
-    ///	This token is used to signify the processor architecture is	ARM arch 7
+    ///	This token is used to signify the processor architecture is ARM arch 7
     #define MORPHEUS_TARGET_ARCHITECTURE_ARM_7 7
 
     ///	@def MORPHEUS_TARGET_ARCHITECTURE_ARM_8
-    ///	This token is used to signify the processor architecture is	ARM arch 8
+    ///	This token is used to signify the processor architecture is ARM arch 8
     #define MORPHEUS_TARGET_ARCHITECTURE_ARM_8 8
 
     /// @def MORPHEUS_TARGET_ARCHITECTURE_MIPS
