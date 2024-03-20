@@ -55,7 +55,7 @@
 
     #elif defined(__arm__) || defined(__arm64) || defined(_M_ARM) || defined(_M_ARM64) || defined(__TARGET_ARCH_ARM)
 
-        #if defined(__ARM_ARCH_8__) || defined(__ARM_ARCH_8A__) || (defined(__TARGET_ARCH_ARM) && __TARGET_ARCH_ARM - 0 >= 8)
+        #if defined(__ARM_ARCH_8__) || defined(__ARM_ARCH_8A__) || defined(__aarch64__) || (defined(__TARGET_ARCH_ARM) && __TARGET_ARCH_ARM - 0 >= 8)
 
             #define MORPHEUS_PLATFORM_ARCHITECTURE MORPHEUS_TARGET_ARCHITECTURE_ARM_8
 
