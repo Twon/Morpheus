@@ -76,6 +76,10 @@
 
         #endif
 
+    #elif defined(__mips__) || defined(__mips) || defined(__MIPS__)
+
+        #define MORPHEUS_PLATFORM_ARCHITECTURE MORPHEUS_TARGET_ARCHITECTURE_MIPS
+
     #else
 
         #define MORPHEUS_PLATFORM_ARCHITECTURE
