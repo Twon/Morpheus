@@ -34,7 +34,7 @@
     #define MORPHEUS_TARGET_ARCHITECTURE_ARM_4 7
 
     /// @def MORPHEUS_TARGET_ARCHITECTURE_MIPS
-    ///    This token is used to signify the processor architecture isMIPS
+    ///    This token is used to signify the processor architecture is MIPS
     #define MORPHEUS_TARGET_ARCHITECTURE_MIPS 8
 
     #if defined(__X86__) || defined(_X86_) || defined(_M_IX86)
