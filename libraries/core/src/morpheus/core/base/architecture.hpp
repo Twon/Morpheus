@@ -19,27 +19,27 @@
 
     ///	@def MORPHEUS_TARGET_ARCHITECTURE_ARM_4
     ///	This token is used to signify the processor architecture is ARM arch 4
-    #define MORPHEUS_TARGET_ARCHITECTURE_ARM_4 4
+    #define MORPHEUS_TARGET_ARCHITECTURE_ARM_4   4
 
     ///	@def MORPHEUS_TARGET_ARCHITECTURE_ARM_5
     ///	This token is used to signify the processor architecture is ARM arch 5
-    #define MORPHEUS_TARGET_ARCHITECTURE_ARM_5 5
+    #define MORPHEUS_TARGET_ARCHITECTURE_ARM_5   5
 
     ///	@def MORPHEUS_TARGET_ARCHITECTURE_ARM_6
     ///	This token is used to signify the processor architecture is ARM arch 6
-    #define MORPHEUS_TARGET_ARCHITECTURE_ARM_6 6
+    #define MORPHEUS_TARGET_ARCHITECTURE_ARM_6   6
 
     ///	@def MORPHEUS_TARGET_ARCHITECTURE_ARM_7
     ///	This token is used to signify the processor architecture is ARM arch 7
-    #define MORPHEUS_TARGET_ARCHITECTURE_ARM_7 7
+    #define MORPHEUS_TARGET_ARCHITECTURE_ARM_7   7
 
     ///	@def MORPHEUS_TARGET_ARCHITECTURE_ARM_8
     ///	This token is used to signify the processor architecture is ARM arch 8
-    #define MORPHEUS_TARGET_ARCHITECTURE_ARM_8 8
+    #define MORPHEUS_TARGET_ARCHITECTURE_ARM_8   8
 
     /// @def MORPHEUS_TARGET_ARCHITECTURE_MIPS
     ///    This token is used to signify the processor architecture is MIPS
-    #define MORPHEUS_TARGET_ARCHITECTURE_MIPS 8
+    #define MORPHEUS_TARGET_ARCHITECTURE_MIPS    9
 
     #if defined(__X86__) || defined(_X86_) || defined(_M_IX86)
 
