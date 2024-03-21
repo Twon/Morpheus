@@ -14,19 +14,41 @@ target_sources(MorpheusCore
         version.hpp
 )
 
+morpheus_conformance_check(
+    RESULT DATE_SUPPORTED
+    MSVC_VERSION "19.26"
+    GNU_VERSION "14"
+)
+
+morpheus_conformance_check(
+    RESULT EXPECTED_SUPPORTED
+    MSVC_VERSION "19.33"
+    GNU_VERSION "12"
+    CLANG_VERSION "16"
+    APPLECLANG_VERSION "15"
+)
+
+if (NOT ${DATE_SUPPORTED})
+    find_package(date REQUIRED)
+endif (NOT ${DATE_SUPPORTED})
+
+if (NOT ${EXPECTED_SUPPORTED})
+    find_package(tl-expected REQUIRED)
+endif (NOT ${EXPECTED_SUPPORTED})
+
 find_package(fmt REQUIRED)
 find_package(range-v3 REQUIRED)
 find_package(scn REQUIRED)
-find_package(tl-expected REQUIRED)
+
 
 target_link_libraries(MorpheusCore
     PUBLIC
-        $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:date::date> # Only Visual Studio 19.26 onwards has a complete implementation: https://en.cppreference.com/w/cpp/compiler_support
-        $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:date::date-tz>
+        $<$<NOT:$<BOOL:${DATE_SUPPORTED}>>:date::date>
+        $<$<NOT:$<BOOL:${DATE_SUPPORTED}>>:date::date-tz>
         fmt::fmt
         range-v3::range-v3
         scn::scn
-        tl::expected
+        $<$<NOT:$<BOOL:${EXPECTED_SUPPORTED}>>:tl::expected>
 )
 
 target_compile_definitions(MorpheusCore

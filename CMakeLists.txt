@@ -13,6 +13,7 @@ set(CMAKE_POLICY_DEFAULT_CMP0077 NEW)
 cmake_policy(SET CMP0076 NEW)
 cmake_policy(SET CMP0077 NEW)
 cmake_policy(SET CMP0127 NEW)
+cmake_policy(SET CMP0140 NEW)
 
 
 #------------------------------------------------------------------------------------------------------------------------------------------
@@ -43,6 +44,7 @@ list(APPEND CMAKE_PREFIX_PATH "${CMAKE_BINARY_DIR}" "${CMAKE_BINARY_DIR}/build/g
 # Custom CMake Includes
 include(coverage)
 include(compiler)
+include(conformance)
 include(documentation)
 include(IDESettings)
 include(linker)
