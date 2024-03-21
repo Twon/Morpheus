@@ -28,11 +28,16 @@ morpheus_conformance_check(
     APPLE_CLANG_VERSION "15.0"
 )
 
+message(STATUS "DATE_FALLBACK: ${DATE_FALLBACK}")
+message(STATUS "EXPECTED_FALLBACK: ${EXPECTED_FALLBACK}")
+
 if (${DATE_FALLBACK})
+    message(STATUS "find_package date")
     find_package(date REQUIRED)
 endif (${DATE_FALLBACK})
 
 if (${EXPECTED_FALLBACK})
+    message(STATUS "find_package tl-expected")
     find_package(tl-expected REQUIRED)
 endif (${EXPECTED_FALLBACK})
 
