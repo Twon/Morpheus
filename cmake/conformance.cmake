@@ -76,32 +76,23 @@ function(morpheus_conformance_check)
 
     foreach(compiler IN LISTS SUPPORTED_COMPILERS)
 
-        message(STATUS "compiler: ${compiler}")
-
         if (CMAKE_CXX_COMPILER_ID STREQUAL compiler)
 
             string(TOUPPER ${compiler} compiler_tag)
 
-            message(STATUS "compiler_tag: ${compiler_tag}")
-            message(STATUS "MORPHEUS_${compiler_tag}_VERSION: ${MORPHEUS_${compiler_tag}_VERSION}")
-
-
             if (NOT MORPHEUS_${compiler_tag}_VERSION)
                 set(${MORPHEUS_RESULT} FALSE)
-                message(STATUS "NOT MORPHEUS_${compiler_tag}_VERSION... returning MORPHEUS_RESULT: ${MORPHEUS_RESULT}}")
                 return(PROPAGATE ${MORPHEUS_RESULT})
             endif()
 
             if (CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL ${MORPHEUS_${compiler_tag}_VERSION})
                 set(${MORPHEUS_RESULT} TRUE)
-                message(STATUS "CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL MORPHEUS_${compiler_tag}_VERSION... returning MORPHEUS_RESULT: ${MORPHEUS_RESULT}}")
                 return(PROPAGATE ${MORPHEUS_RESULT})
             endif()
         endif()
     endforeach()
 
     set(${MORPHEUS_RESULT} FALSE)
-    message(STATUS "No matching MORPHEUS_${compiler_tag}_VERSION... returning MORPHEUS_RESULT: ${MORPHEUS_RESULT}}")
     return(PROPAGATE ${MORPHEUS_RESULT})
 
 endfunction()

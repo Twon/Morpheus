@@ -28,16 +28,11 @@ morpheus_conformance_check(
     APPLECLANG_VERSION "15"
 )
 
-message(STATUS "DATE_SUPPORTED: ${DATE_SUPPORTED}")
-message(STATUS "EXPECTED_SUPPORTED: ${EXPECTED_SUPPORTED}")
-
 if (NOT ${DATE_SUPPORTED})
-    message(STATUS "find_package date")
     find_package(date REQUIRED)
 endif (NOT ${DATE_SUPPORTED})
 
 if (NOT ${EXPECTED_SUPPORTED})
-    message(STATUS "find_package tl-expected")
     find_package(tl-expected REQUIRED)
 endif (NOT ${EXPECTED_SUPPORTED})
 
