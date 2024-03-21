@@ -15,31 +15,31 @@ target_sources(MorpheusCore
 )
 
 morpheus_conformance_check(
-    RESULT DATE_FALLBACK
+    RESULT DATE_SUPPORTED
     MSVC_VERSION "19.26"
-    GCC_VERSION "14"
+    GNU_VERSION "14"
 )
 
 morpheus_conformance_check(
-    RESULT EXPECTED_FALLBACK
+    RESULT EXPECTED_SUPPORTED
     MSVC_VERSION "19.33"
-    GCC_VERSION "12"
+    GNU_VERSION "12"
     CLANG_VERSION "16"
     APPLECLANG_VERSION "15"
 )
 
-message(STATUS "DATE_FALLBACK: ${DATE_FALLBACK}")
-message(STATUS "EXPECTED_FALLBACK: ${EXPECTED_FALLBACK}")
+message(STATUS "DATE_SUPPORTED: ${DATE_SUPPORTED}")
+message(STATUS "EXPECTED_SUPPORTED: ${EXPECTED_SUPPORTED}")
 
-if (${DATE_FALLBACK})
+if (NOT ${DATE_SUPPORTED})
     message(STATUS "find_package date")
     find_package(date REQUIRED)
-endif (${DATE_FALLBACK})
+endif (NOT ${DATE_SUPPORTED})
 
-if (${EXPECTED_FALLBACK})
+if (NOT ${EXPECTED_SUPPORTED})
     message(STATUS "find_package tl-expected")
     find_package(tl-expected REQUIRED)
-endif (${EXPECTED_FALLBACK})
+endif (NOT ${EXPECTED_SUPPORTED})
 
 find_package(fmt REQUIRED)
 find_package(range-v3 REQUIRED)
@@ -48,12 +48,12 @@ find_package(scn REQUIRED)
 
 target_link_libraries(MorpheusCore
     PUBLIC
-        $<$<BOOL:${DATE_FALLBACK}>:date::date> # Only Visual Studio 19.26 onwards has a complete implementation: https://en.cppreference.com/w/cpp/compiler_support
-        $<$<BOOL:${DATE_FALLBACK}>:date::date-tz>
+        $<$<NOT:$<BOOL:${DATE_SUPPORTED}>>:date::date> # Only Visual Studio 19.26 onwards has a complete implementation: https://en.cppreference.com/w/cpp/compiler_support
+        $<$<NOT:$<BOOL:${DATE_SUPPORTED}>>:date::date-tz>
         fmt::fmt
         range-v3::range-v3
         scn::scn
-        $<$<BOOL:${EXPECTED_FALLBACK}>:tl::expected>
+        $<$<NOT:$<BOOL:${EXPECTED_SUPPORTED}>>:tl::expected>
 )
 
 target_compile_definitions(MorpheusCore

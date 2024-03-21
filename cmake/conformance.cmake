@@ -39,14 +39,15 @@ is required.
    -- Generates library targets with default build directories and install options.
 
   ``RESULT``
-    The ``RESULT`` option is required to store the results of the function.
+    The ``RESULT`` option is required to store the results of the function.  TRUE if
+    there is compiler support for the feature.
 
   ``MSVC_VERSION``
     The ``MSVC_VERSION`` option is requests a version check against MSVC version
     if it is the active compiler.
 
-  ``GCC_VERSION``
-    The ``GCC_VERSION`` option is requests a version check against GCC version
+  ``GNU_VERSION``
+    The ``GNU_VERSION`` option is requests a version check against GCC version
     if it is the active compiler.
 
   ``CLANG_VERSION``
@@ -61,17 +62,17 @@ is required.
 #]=======================================================================]
 function(morpheus_conformance_check)
     set(options)
-    set(oneValueArgs RESULT MSVC_VERSION GCC_VERSION CLANG_VERSION APPLE_CLANG_VERSION)
+    set(oneValueArgs RESULT MSVC_VERSION GNU_VERSION CLANG_VERSION APPLE_CLANG_VERSION)
     set(multiValueArgs)
     cmake_parse_arguments(MORPHEUS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
     if (NOT MORPHEUS_RESULT)
         message(FATAL_ERROR "RESULT parameter must be supplied")
     endif()
-    if (NOT MORPHEUS_MSVC_VERSION AND NOT MORPHEUS_GCC_VERSION AND NOT MORPHEUS_CLANG_VERSION AND NOT MORPHEUS_APPLECLANG_VERSION)
+    if (NOT MORPHEUS_MSVC_VERSION AND NOT MORPHEUS_GNU_VERSION AND NOT MORPHEUS_CLANG_VERSION AND NOT MORPHEUS_APPLECLANG_VERSION)
         message(FATAL_ERROR "Must check a minumum of one compiler version")
     endif()
 
-    list(APPEND SUPPORTED_COMPILERS "MSVC" "GNUC" "Clang" "AppleClang")
+    list(APPEND SUPPORTED_COMPILERS "MSVC" "GNU" "Clang" "AppleClang")
 
     foreach(compiler IN LISTS SUPPORTED_COMPILERS)
         if (CMAKE_CXX_COMPILER_ID STREQUAL compiler)
@@ -79,11 +80,11 @@ function(morpheus_conformance_check)
             string(TOUPPER ${compiler} compiler_tag)
 
             if (NOT MORPHEUS_${compiler_tag}_VERSION)
-                set(${MORPHEUS_RESULT} TRUE)
+                set(${MORPHEUS_RESULT} FALSE)
                 return(PROPAGATE ${MORPHEUS_RESULT})
             endif()
 
-            if (CMAKE_CXX_COMPILER_VERSION VERSION_LESS ${MORPHEUS_${compiler_tag}_VERSION})
+            if (CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL ${MORPHEUS_${compiler_tag}_VERSION})
                 set(${MORPHEUS_RESULT} TRUE)
                 return(PROPAGATE ${MORPHEUS_RESULT})
             endif()
