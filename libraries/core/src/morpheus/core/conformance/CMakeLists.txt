@@ -43,7 +43,7 @@ find_package(scn REQUIRED)
 
 target_link_libraries(MorpheusCore
     PUBLIC
-        $<$<NOT:$<BOOL:${DATE_SUPPORTED}>>:date::date> # Only Visual Studio 19.26 onwards has a complete implementation: https://en.cppreference.com/w/cpp/compiler_support
+        $<$<NOT:$<BOOL:${DATE_SUPPORTED}>>:date::date>
         $<$<NOT:$<BOOL:${DATE_SUPPORTED}>>:date::date-tz>
         fmt::fmt
         range-v3::range-v3
