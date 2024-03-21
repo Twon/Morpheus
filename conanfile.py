@@ -106,7 +106,7 @@ class Morpheus(ConanFile):
 
     @property
     def useExpected(self):
-        """ Does the current compiler version lack support for Date and timezones via the STL. """
+        """ Does the current compiler version lack support for std::expected via the STL. """
         compiler = self.settings.compiler
         version = Version(self.settings.compiler.version)
         std_support = (compiler == "msvc" and version >= 193) or (compiler == "gcc" and version >= Version("12")) or \
@@ -139,11 +139,11 @@ class Morpheus(ConanFile):
         if self.settings.os in ["Windows"]:
             self.requires("wil/1.0.240122.1")
 
-        if self.useExpected:
-            self.requires("tl-expected/20190710")
-
         if self.useDate:
             self.requires("date/3.0.1")
+
+        if self.useExpected:
+            self.requires("tl-expected/20190710")
 
 #    @property
 #    def _source_subfolder(self):
