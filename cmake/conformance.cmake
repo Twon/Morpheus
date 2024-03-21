@@ -55,14 +55,14 @@ is required.
     if it is the active compiler.
 
   ``APPLECLANG_VERSION``
-    The ``APPLE_CLANG_VERSION`` option is requests a version check against
+    The ``APPLECLANG_VERSION`` option is requests a version check against
     apple-clang if it is the active compiler.
 
 
 #]=======================================================================]
 function(morpheus_conformance_check)
     set(options)
-    set(oneValueArgs RESULT MSVC_VERSION GNU_VERSION CLANG_VERSION APPLE_CLANG_VERSION)
+    set(oneValueArgs RESULT MSVC_VERSION GNU_VERSION CLANG_VERSION APPLECLANG_VERSION)
     set(multiValueArgs)
     cmake_parse_arguments(MORPHEUS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
     if (NOT MORPHEUS_RESULT)
