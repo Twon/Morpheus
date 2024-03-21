@@ -53,7 +53,7 @@ is required.
     The ``CLANG_VERSION`` option is requests a version check against Clang version
     if it is the active compiler.
 
-  ``APPLE_CLANG_VERSION``
+  ``APPLECLANG_VERSION``
     The ``APPLE_CLANG_VERSION`` option is requests a version check against
     apple-clang if it is the active compiler.
 
@@ -67,17 +67,16 @@ function(morpheus_conformance_check)
     if (NOT MORPHEUS_RESULT)
         message(FATAL_ERROR "RESULT parameter must be supplied")
     endif()
-    if (NOT MORPHEUS_MSVC_VERSION AND NOT MORPHEUS_GCC_VERSION AND NOT MORPHEUS_CLANG_VERSION AND NOT MORPHEUS_APPLE_CLANG_VERSION)
+    if (NOT MORPHEUS_MSVC_VERSION AND NOT MORPHEUS_GCC_VERSION AND NOT MORPHEUS_CLANG_VERSION AND NOT MORPHEUS_APPLECLANG_VERSION)
         message(FATAL_ERROR "Must check a minumum of one compiler version")
     endif()
 
-    list(APPEND SUPPORTED_COMPILERS "MSVC" "GNUC" "Clang" "Apple-Clang")
+    list(APPEND SUPPORTED_COMPILERS "MSVC" "GNUC" "Clang" "AppleClang")
 
     foreach(compiler IN LISTS SUPPORTED_COMPILERS)
         if (CMAKE_CXX_COMPILER_ID STREQUAL compiler)
 
             string(TOUPPER ${compiler} compiler_tag)
-            string(REPLACE "-" "_" compiler_tag ${compiler_tag})
 
             if (NOT MORPHEUS_${compiler_tag}_VERSION)
                 set(${MORPHEUS_RESULT} TRUE)

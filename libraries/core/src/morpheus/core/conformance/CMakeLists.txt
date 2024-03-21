@@ -25,7 +25,7 @@ morpheus_conformance_check(
     MSVC_VERSION "19.3"
     GCC_VERSION "12.0"
     CLANG_VERSION "16.0"
-    APPLE_CLANG_VERSION "15.0"
+    APPLECLANG_VERSION "15.0"
 )
 
 message(STATUS "DATE_FALLBACK: ${DATE_FALLBACK}")
