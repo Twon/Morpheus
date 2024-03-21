@@ -43,6 +43,7 @@ list(APPEND CMAKE_PREFIX_PATH "${CMAKE_BINARY_DIR}" "${CMAKE_BINARY_DIR}/build/g
 # Custom CMake Includes
 include(coverage)
 include(compiler)
+include(conformance)
 include(documentation)
 include(IDESettings)
 include(linker)
