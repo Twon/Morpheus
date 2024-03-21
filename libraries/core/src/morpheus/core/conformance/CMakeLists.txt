@@ -17,15 +17,15 @@ target_sources(MorpheusCore
 morpheus_conformance_check(
     RESULT DATE_FALLBACK
     MSVC_VERSION "19.26"
-    GCC_VERSION "14.0"
+    GCC_VERSION "14"
 )
 
 morpheus_conformance_check(
     RESULT EXPECTED_FALLBACK
-    MSVC_VERSION "19.3"
-    GCC_VERSION "12.0"
-    CLANG_VERSION "16.0"
-    APPLECLANG_VERSION "15.0"
+    MSVC_VERSION "19.33"
+    GCC_VERSION "12"
+    CLANG_VERSION "16"
+    APPLECLANG_VERSION "15"
 )
 
 message(STATUS "DATE_FALLBACK: ${DATE_FALLBACK}")
