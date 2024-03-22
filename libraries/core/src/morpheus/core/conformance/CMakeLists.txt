@@ -28,6 +28,14 @@ morpheus_conformance_check(
     APPLECLANG_VERSION "15"
 )
 
+morpheus_conformance_check(
+    RESULT FORMAT_SUPPORTED
+    MSVC_VERSION "19.29"
+    GNU_VERSION "13"
+    CLANG_VERSION "17"
+    APPLECLANG_VERSION "15"
+)
+
 if (NOT ${DATE_SUPPORTED})
     find_package(date REQUIRED)
 endif (NOT ${DATE_SUPPORTED})
@@ -36,7 +44,10 @@ if (NOT ${EXPECTED_SUPPORTED})
     find_package(tl-expected REQUIRED)
 endif (NOT ${EXPECTED_SUPPORTED})
 
-find_package(fmt REQUIRED)
+if (NOT ${FORMAT_SUPPORTED})
+    find_package(fmt REQUIRED)
+endif (NOT ${FORMAT_SUPPORTED})
+
 find_package(range-v3 REQUIRED)
 find_package(scn REQUIRED)
 
@@ -45,7 +56,7 @@ target_link_libraries(MorpheusCore
     PUBLIC
         $<$<NOT:$<BOOL:${DATE_SUPPORTED}>>:date::date>
         $<$<NOT:$<BOOL:${DATE_SUPPORTED}>>:date::date-tz>
-        fmt::fmt
+        $<$<NOT:$<BOOL:${DATE_SUPPORTED}>>:fmt::fmt>
         range-v3::range-v3
         scn::scn
         $<$<NOT:$<BOOL:${EXPECTED_SUPPORTED}>>:tl::expected>
