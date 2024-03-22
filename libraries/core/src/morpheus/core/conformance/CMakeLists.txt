@@ -31,10 +31,9 @@ morpheus_conformance_check(
 # Used for <format> and <print> support, so take the greatest version of both from https://en.cppreference.com/w/cpp/compiler_support
 morpheus_conformance_check(
     RESULT FORMAT_SUPPORTED
-    MSVC_VERSION "19.29"
-    GNU_VERSION "13"
-    CLANG_VERSION "17"
-    APPLECLANG_VERSION "15"
+    MSVC_VERSION "19.37"
+    GNU_VERSION "14"
+    CLANG_VERSION "18"
 )
 
 if (NOT ${DATE_SUPPORTED})

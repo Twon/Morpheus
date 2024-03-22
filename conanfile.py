@@ -114,11 +114,11 @@ class Morpheus(ConanFile):
 
     @property
     def useFMT(self):
-        """ Does the current compiler version lack support for std::format via the STL. """
+        """ Does the current compiler version lack support for std::format or std::print via the STL. """
         compiler = self.settings.compiler
         version = Version(self.settings.compiler.version)
-        std_support = (compiler == "msvc" and version >= 193) or (compiler == "gcc" and version >= Version("13")) or \
-                      (compiler == "clang" and version >= Version("17")) or (compiler == "apple-clang" and version >= Version("15"))
+        std_support = (compiler == "msvc" and version >= 193) or (compiler == "gcc" and version >= Version("14")) or \
+                      (compiler == "clang" and version >= Version("18")))
         return not std_support
 
     def config_options(self):
