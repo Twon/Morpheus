@@ -28,6 +28,7 @@ morpheus_conformance_check(
     APPLECLANG_VERSION "15"
 )
 
+# Used for <format> and <print> support, so take the greatest version of both from https://en.cppreference.com/w/cpp/compiler_support
 morpheus_conformance_check(
     RESULT FORMAT_SUPPORTED
     MSVC_VERSION "19.29"
@@ -56,7 +57,7 @@ target_link_libraries(MorpheusCore
     PUBLIC
         $<$<NOT:$<BOOL:${DATE_SUPPORTED}>>:date::date>
         $<$<NOT:$<BOOL:${DATE_SUPPORTED}>>:date::date-tz>
-        $<$<NOT:$<BOOL:${DATE_SUPPORTED}>>:fmt::fmt>
+        $<$<NOT:$<BOOL:${FORMAT_SUPPORTED}>>:fmt::fmt>
         range-v3::range-v3
         scn::scn
         $<$<NOT:$<BOOL:${EXPECTED_SUPPORTED}>>:tl::expected>
