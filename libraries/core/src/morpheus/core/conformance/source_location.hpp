@@ -4,6 +4,10 @@
     #include <source_location>
 #endif
 
+/// \namespace morpheus::sl_ns
+///     Conformance namespace abstracting the underlying source_location while compilers do not offer uniform support.
+///     When support is missing falls back to boost::source_location.
+
 // clang-format off
 #if (__cpp_lib_source_location >= 201907L)
 
