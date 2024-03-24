@@ -23,11 +23,13 @@ struct morpheus::fmt_ns::formatter<std::thread::id, charT>
             auto const idAsInt = *reinterpret_cast<std::uint64_t const*>(&id);
             return morpheus::fmt_ns::format_to(ctx.out(), "{}", idAsInt);
         }
-        else
+        else if constexpr (sizeof(id) == sizeof(std::uint32_t))
         {
             auto const idAsInt = *reinterpret_cast<std::uint32_t const*>(&id);
             return morpheus::fmt_ns::format_to(ctx.out(), "{}", idAsInt);
         }
+        else
+            static_assert(sizeof(id) == sizeof(std::uint32_t) || sizeof(id) == sizeof(std::uint64_t), "Expected size is 32 or 64-bits only. Extend support if required");
 #else
     #error "Compiler unsupported for fallback std::formatter<std::thread::id> support"
 #endif // (MORPHEUS_COMPILER == MORPHEUS_VISUALSTUDIO_COMPILER)
