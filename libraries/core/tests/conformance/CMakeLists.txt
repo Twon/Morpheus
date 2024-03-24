@@ -4,4 +4,5 @@ target_sources(MorpheusCoreTests
         print.tests.cpp
         scan.tests.cpp
         stacktrace.tests.cpp
+        thread.tests.cpp
 )

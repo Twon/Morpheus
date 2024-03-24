@@ -4,4 +4,5 @@ target_sources(MorpheusCore
         filesystem.hpp
         stacktrace.hpp
         source_location.hpp
+        thread.hpp
 )
