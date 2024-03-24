@@ -71,7 +71,6 @@ class Morpheus(ConanFile):
     requires = (
         "boost/1.84.0",
         "ctre/3.8.1",
-        "fmt/10.2.1",
         "glbinding/3.3.0",
         "glew/2.2.0",
         "magic_enum/0.9.5",
@@ -113,6 +112,15 @@ class Morpheus(ConanFile):
                       (compiler == "clang" and version >= Version("16")) or (compiler == "apple-clang" and version >= Version("15"))
         return not std_support
 
+    @property
+    def useFMT(self):
+        """ Does the current compiler version lack support for std::format or std::print via the STL. """
+        compiler = self.settings.compiler
+        version = Version(self.settings.compiler.version)
+        std_support = (compiler == "msvc" and version >= 193) or (compiler == "gcc" and version >= Version("14")) or \
+                      (compiler == "clang" and version >= Version("18"))
+        return not std_support
+
     def config_options(self):
         if not self.checkMoldIsSupported():
             self.options.rm_safe("link_with_mold")
@@ -144,6 +152,9 @@ class Morpheus(ConanFile):
 
         if self.useExpected:
             self.requires("tl-expected/20190710")
+
+        if self.useFMT:
+            self.requires("fmt/10.2.1")
 
 #    @property
 #    def _source_subfolder(self):
