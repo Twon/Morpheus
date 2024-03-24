@@ -9,7 +9,7 @@
 #if (__cpp_lib_formatters < 202302L)
 
 template <typename charT>
-struct std::formatter<std::thread:id, charT>
+struct std::formatter<std::thread::id, charT>
 {
     constexpr auto parse(morpheus::fmt_ns::format_parse_context& ctx) { return std::begin(ctx); }
 
