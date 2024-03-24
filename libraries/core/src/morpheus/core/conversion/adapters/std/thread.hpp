@@ -17,6 +17,9 @@ struct morpheus::fmt_ns::formatter<std::thread::id, charT>
     {
 #if MORPHEUS_IS_VISUALSTUDIO_COMPATIBLE_COMPILER
         return morpheus::fmt_ns::format_to(ctx.out(), "{}", id._Get_underlying_id());
+#elif (MORPHEUS_COMPILER == MORPHEUS_APPLE_CLANG_COMPILER)
+        auto const idAsInt = *reinterpret_cast<std::uint64_t const*>(&id);
+        return morpheus::fmt_ns::format_to(ctx.out(), "{:x}", idAsInt);
 #elif (MORPHEUS_IS_GCC_COMPATIBLE_COMPILER)
         if constexpr (sizeof(id) == sizeof(std::uint64_t))
         {
