@@ -23,7 +23,7 @@ concept DelegatedAggregateSerialisation = delegateAggregateSerialisation<T>;
 /// \concept SerialisableAggregate
 ///     Constrains a type to aggregate that opts into automatic serialisation.
 template<typename T>
-concept SerialisableAggregate = meta::concepts::Aggregate<T> and DelegatedAggregateSerialisation<T>;
+concept SerialisableAggregate = meta::concepts::Trait<T, std::is_aggregate> and DelegatedAggregateSerialisation<T>;
 
 namespace detail
 {
