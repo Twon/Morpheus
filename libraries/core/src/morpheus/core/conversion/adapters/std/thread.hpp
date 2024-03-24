@@ -13,7 +13,7 @@ struct std::formatter<std::thread::id, charT>
 {
     constexpr auto parse(morpheus::fmt_ns::format_parse_context& ctx) { return std::begin(ctx); }
 
-    constexpr auto format(std::thread:id const& id, morpheus::fmt_ns::format_context& ctx) const
+    constexpr auto format(std::thread::id const& id, morpheus::fmt_ns::format_context& ctx) const
     {
         std::stringstream str;
         str << id;
