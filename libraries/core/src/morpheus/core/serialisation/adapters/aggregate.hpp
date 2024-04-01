@@ -16,16 +16,16 @@ template<typename T>
 inline constexpr bool delegateAggregateSerialisation = false;
 
 /// \concept DelegatedAggregateSerialisation
-/// 
+///
 template<typename T>
 concept DelegatedAggregateSerialisation = delegateAggregateSerialisation<T>;
 
 /// \concept SerialisableAggregate
 ///     Constrains a type to aggregate that opts into automatic serialisation.
 template<typename T>
-concept SerialisableAggregate = meta::concepts::Aggregate<T> and DelegatedAggregateSerialisation<T>;
+concept SerialisableAggregate = meta::concepts::Trait<T, std::is_aggregate> and DelegatedAggregateSerialisation<T>;
 
-namespace detail 
+namespace detail
 {
 
 /// Opt in serialisation for aggregates.  Like pair and tuple it serialises as a sequence without the field key

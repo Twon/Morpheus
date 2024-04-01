@@ -46,7 +46,7 @@ TEST_CASE("Meta binary_search allows the compile time search of a predicate", "[
     STATIC_REQUIRE(meta::FindValueByIndex<1, 8>::value == false);
     STATIC_REQUIRE(meta::FindValueByIndex<1, 9>::value == false);
 
-    
+
     STATIC_REQUIRE((TestValues[0] == 0) == true);
     STATIC_REQUIRE((TestValues[1] == 1) == true);
     STATIC_REQUIRE((TestValues[2] == 2) == true);

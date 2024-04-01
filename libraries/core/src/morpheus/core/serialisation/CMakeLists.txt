@@ -1,5 +1,8 @@
 target_sources(MorpheusCore
     PUBLIC
+        binary_reader.hpp
+        binary_writer.hpp
+        exceptions.hpp
         fundamentals.hpp
         json_reader.hpp
         json_writer.hpp
@@ -11,6 +14,7 @@ target_sources(MorpheusCore
         write_serialiser.hpp
         write_serialiser_decl.hpp
      PRIVATE
+        exceptions.cpp
         json_reader.cpp
         json_writer.cpp
 )

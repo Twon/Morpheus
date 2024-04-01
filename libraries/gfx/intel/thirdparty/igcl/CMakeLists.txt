@@ -9,14 +9,14 @@ add_library(intel::GraphicsControlLibrary ALIAS GraphicsControlLibrary)
 
 target_include_directories(GraphicsControlLibrary
     PUBLIC
-        ${intelgraphicscontrollibrary_SOURCE_DIR}/includes/
+        ${intelgraphicscontrollibrary_SOURCE_DIR}/include/
 )
 
 target_sources(GraphicsControlLibrary
     PUBLIC
-        ${intelgraphicscontrollibrary_SOURCE_DIR}/includes/igcl_api.h
+        ${intelgraphicscontrollibrary_SOURCE_DIR}/include/igcl_api.h
     PRIVATE
-        ${intelgraphicscontrollibrary_SOURCE_DIR}/wrapper/cApiWrapper.cpp
+        ${intelgraphicscontrollibrary_SOURCE_DIR}/Source/cApiWrapper.cpp
 )
 
 set_target_properties(GraphicsControlLibrary

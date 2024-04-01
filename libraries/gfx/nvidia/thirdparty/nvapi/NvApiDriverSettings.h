@@ -1156,4 +1156,3 @@ typedef struct _SettingWSTRINGNameString {
 
 
 #endif // _NVAPI_DRIVER_SETTINGS_H_
-

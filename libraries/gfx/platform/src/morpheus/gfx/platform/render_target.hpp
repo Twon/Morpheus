@@ -42,14 +42,14 @@ public:
 protected:
     /// \name Data Members
     ///@{
-    
+
     /// The width in pixels of the render target.
     std::uint16_t mWidth = 0;
     /// The height in pixels of the render target.
     std::uint16_t mHeight = 0;
     /// The colour depth of the pixels of the render target.
     std::uint16_t mColourDepth = 0;
-    
+
     ///@}
 };
 

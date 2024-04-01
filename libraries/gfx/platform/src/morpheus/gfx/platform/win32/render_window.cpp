@@ -21,7 +21,7 @@ auto getModuleHandle()
 	return hinst;
 }
 
-bool HandlePowerBroadCast(WPARAM wParam, LPARAM lParam)
+bool HandlePowerBroadCast(WPARAM wParam, LPARAM /*lParam*/)
 {
 	switch (wParam) {
 
@@ -39,7 +39,7 @@ bool HandlePowerBroadCast(WPARAM wParam, LPARAM lParam)
 	}
 	break;
 
-	// Looks like the computers battery is getting low, should probably save any essential data 
+	// Looks like the computers battery is getting low, should probably save any essential data
 	// and auto save the application state so that the user can resume the game from the current
 	// position.
 	case PBT_APMBATTERYLOW:
@@ -72,14 +72,14 @@ LRESULT WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 	// Handle possible windows messages
 	switch(message) {
-	/// Handle the initial case of creating the window 
+	/// Handle the initial case of creating the window
 	case WM_CREATE:
 		{
 			LPCREATESTRUCT pCreateStruct = reinterpret_cast<LPCREATESTRUCT>( lParam );
 			thisWindow = reinterpret_cast<RenderWindow*>( pCreateStruct->lpCreateParams );
 
 			MORPHEUS_ASSERT_MSG(thisWindow, "Window32::WndProc() - Failed to create window");
-	
+
 			// Store pointer in window user data area
 			::SetWindowLongPtr( hWnd, 0, reinterpret_cast<LONG_PTR>(thisWindow) );
 //			thisWindow->SetActive( true );
@@ -105,7 +105,7 @@ LRESULT WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			}
 		}
 		break;
-		
+
 	case WM_SIZE:
 		{
 			MORPHEUS_VERIFY_MSG(thisWindow, "morpheus::gfx::win32::WndProc() - Failed to get active window - WM_SIZE");
@@ -145,12 +145,12 @@ LRESULT WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		{
 			MORPHEUS_ASSERT_MSG(thisWindow, "Window32::WndProc() - Failed to get active window - WM_EXITSIZEMOVE");
 //			pThisWindow->SetActive( true );
-				
+
 			//! @todo	Temp measure, find a better solution
 //			pThisWindow->ResizeWindow();
 		}
 		break;
-		
+
 	case WM_CLOSE:
 		{
 			MORPHEUS_ASSERT_MSG(thisWindow, "Window32::WndProc() - Failed to get active window - WM_CLOSE");
@@ -167,13 +167,13 @@ LRESULT WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 	case WM_DISPLAYCHANGE:
 		{
-				
+
 		}
 		break;
 
 	case WM_DEVICECHANGE:
 		{
-				
+
 		}
 		break;
 
@@ -193,18 +193,18 @@ LRESULT WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			}
 		}
 		break;
-		
+
 	case WM_DESTROY:
 		{
-				
+
 		}
 		break;
-		
+
 	default:
 		break;
 	}
 
-		
+
 	return ::DefWindowProc(hWnd, message, wParam, lParam);
 }
 
@@ -232,18 +232,18 @@ auto adjustWindowConfig(RenderWindow::Config& config)
 		std::int16_t const screenWidth = boost::numeric_cast<std::uint16_t>(::GetSystemMetrics(SM_CXSCREEN));
 		std::int16_t const screenHeight = boost::numeric_cast<std::uint16_t>(::GetSystemMetrics(SM_CYSCREEN));
 
-		// We need to adjust the window rectangle to ensure the client is the 
+		// We need to adjust the window rectangle to ensure the client is the
 		// requested size and takes the size of the window border into account.
-		RECT WndRect = { 0, 0, config.width, config.height };
-		MORPHEUS_VERIFY(::AdjustWindowRect(&WndRect, dwWindowStyle, false));
-		config.width = std::min<std::int16_t>((WndRect.right - WndRect.left), screenWidth);
-		config.height = std::min<std::int16_t>((WndRect.bottom - WndRect.top), screenHeight);
+        RECT WndRect = {0, 0, config.width, config.height};
+        MORPHEUS_VERIFY(::AdjustWindowRect(&WndRect, dwWindowStyle, false));
+        config.width = std::min<std::int16_t>(static_cast<std::int16_t>(WndRect.right - WndRect.left), screenWidth);
+        config.height = std::min<std::int16_t>(static_cast<std::int16_t>(WndRect.bottom - WndRect.top), screenHeight);
 
-		// If the window is going to go off the right and bottom of the
-		// screen then position it back so that in fits on the screen 
-		config.startX = std::min<std::int16_t>(config.startX, static_cast<std::int16_t>(screenWidth - config.width));
-		config.startY = std::min<std::int16_t>(config.startY, static_cast<std::int16_t>(screenHeight - config.height));
-	}
+        // If the window is going to go off the right and bottom of the
+        // screen then position it back so that in fits on the screen
+        config.startX = std::min<std::int16_t>(config.startX, static_cast<std::int16_t>(screenWidth - config.width));
+        config.startY = std::min<std::int16_t>(config.startY, static_cast<std::int16_t>(screenHeight - config.height));
+    }
 	return dwWindowStyle;
 }
 
@@ -253,7 +253,7 @@ auto createWindow(RenderWindow* thisWindow, RenderWindow::Config& config)
 	auto const hInstance = getModuleHandle();
 
 	// Next default values for new objects
-	::WNDCLASS const wcex{ 
+	::WNDCLASS const wcex{
 		.style = CS_OWNDC, .lpfnWndProc = WndProc, .cbClsExtra = 0, .cbWndExtra = sizeof(RenderWindow*), // Reserve space for the Window pointer returned by GetWindowLong
 		.hInstance = hInstance, .hIcon = ::LoadIcon(nullptr, IDI_APPLICATION), .hCursor = ::LoadCursor(nullptr, IDC_ARROW),
 		.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1), .lpszMenuName = nullptr, .lpszClassName = config.windowName.c_str()

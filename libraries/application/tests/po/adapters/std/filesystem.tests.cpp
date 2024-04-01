@@ -1,8 +1,11 @@
 #include "morpheus/application/po/adapters/std/filesystem.hpp"
 #include "morpheus/application/application.hpp"
+#include "morpheus/logging.hpp"
+
+#include <boost/dll.hpp>
+#include <boost/program_options.hpp>
 
 #include <catch2/catch_test_macros.hpp>
-#include <boost/dll.hpp>
 
 namespace morpheus::application::po
 {
@@ -21,7 +24,7 @@ struct Filesystem
     }
 };
 
-TEST_CASE("Test parsing of ", "[morpheus.application.po.adapters.std.filesystem]")
+TEST_CASE_METHOD(LoggingFixture, "Test parsing of std filesystem path as options", "[morpheus.application.po.adapters.std.filesystem]")
 {
     SECTION("Ensure valid value parse correctly")
     {
@@ -29,7 +32,7 @@ TEST_CASE("Test parsing of ", "[morpheus.application.po.adapters.std.filesystem]
         {
             Filesystem filesystem{};
             std::array cliOptions = { "dummyProgram.exe", "--path", param.data() };
-            auto const result = parseProgramOptions(cliOptions.size(), cliOptions.data(), HelpDocumentation{}, filesystem);
+            auto const result = parseProgramOptions(static_cast<int>(cliOptions.size()), cliOptions.data(), HelpDocumentation{}, filesystem);
             REQUIRE(!result);
             return filesystem.path;
         };

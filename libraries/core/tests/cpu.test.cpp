@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 
+#if (MORPHEUS_PLATFORM_ARCHITECTURE == MORPHEUS_TARGET_ARCHITECTURE_X86) || (MORPHEUS_PLATFORM_ARCHITECTURE == MORPHEUS_TARGET_ARCHITECTURE_X64)
 
 namespace morpheus::test
 {
@@ -29,3 +30,5 @@ TEST_CASE("Cpu can be queried for processor info", "[morpheus.core.cpu]")
 }
 
 } // namespace morpheus::test
+
+#endif // (MORPHEUS_PLATFORM_ARCHITECTURE == MORPHEUS_TARGET_ARCHITECTURE_X86) || (MORPHEUS_PLATFORM_ARCHITECTURE == MORPHEUS_TARGET_ARCHITECTURE_X64)

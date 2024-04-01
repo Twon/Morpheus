@@ -22,7 +22,8 @@
 from conan import ConanFile
 from conan.errors import ConanException, ConanInvalidConfiguration
 from conan.tools.build import check_min_cppstd
-from conan.tools.cmake import cmake_layout, CMake, CMakeDeps
+from conan.tools.cmake import cmake_layout, CMake, CMakeDeps, CMakeToolchain
+from conan.tools.env import VirtualBuildEnv
 from conan.tools.files import copy
 from conan.tools.scm import Version
 from conan.tools.files import load
@@ -30,7 +31,7 @@ import re, os.path
 import subprocess
 import sys
 
-required_conan_version = ">=1.59.0"
+required_conan_version = ">=2.1.0"
 
 
 def get_cmake_version():
@@ -56,27 +57,27 @@ class Morpheus(ConanFile):
         "shared": [True, False],
         "fPIC": [True, False],
         "tools": [True, False],
-        "build_docs": [True, False]
+        "build_docs": [True, False],
+        "link_with_mold": [True, False]
     }
     default_options = {
         "shared": False,
         "fPIC": True,
         "tools": True,
-        "build_docs": False
+        "build_docs": False,
+        "link_with_mold": True
     }
     exports_sources = ["CMakeLists.txt", "LICENSE", "version.txt", "cmake/*", "examples/*" "libraries/*"]
-    generators = "CMakeDeps", "CMakeToolchain"
     requires = (
-        "boost/1.82.0",
-        "fmt/[^10]",
-        "glbinding/3.1.0",
+        "boost/1.84.0",
+        "ctre/3.8.1",
+        "glbinding/3.3.0",
         "glew/2.2.0",
-        "gtest/1.13.0",
-        "magic_enum/0.8.2",
+        "magic_enum/0.9.5",
         "ms-gsl/4.0.0",
-        "rapidjson/cci.20220822",
+        "rapidjson/cci.20230929",
         "range-v3/0.12.0",
-        "tl-expected/20190710",
+        "scnlib/2.0.2",
         "vulkan-headers/1.3.239.0"#,
         #"zlib/1.2.12" # xapian-core/1.4.19' requires 'zlib/1.2.12' while 'boost/1.81.0' requires 'zlib/1.2.13'. To fix this conflict you need to override the package 'zlib' in your root package.
     )
@@ -90,25 +91,70 @@ class Morpheus(ConanFile):
         version = re.search(r'(\d+\.\d+\.\d+)', content).group(1)
         self.version = version.strip()
 
+    def checkMoldIsSupported(self):
+        """ Mold is only tested on Linux with gcc and clang. In future support for icc may be added. """
+        return self.settings.os == "Linux" and (self.settings.compiler == "clang" or self.settings.compiler == "gcc")
+
+    @property
+    def useDate(self):
+        """ Does the current compiler version lack support for Date and timezones via the STL. """
+        compiler = self.settings.compiler
+        version = Version(self.settings.compiler.version)
+        std_support = (compiler == "msvc" and version >= 193) or (compiler == "gcc" and version >= Version("14"))
+        return not std_support
+
+    @property
+    def useExpected(self):
+        """ Does the current compiler version lack support for std::expected via the STL. """
+        compiler = self.settings.compiler
+        version = Version(self.settings.compiler.version)
+        std_support = (compiler == "msvc" and version >= 193) or (compiler == "gcc" and version >= Version("12")) or \
+                      (compiler == "clang" and version >= Version("16")) or (compiler == "apple-clang" and version >= Version("15"))
+        return not std_support
+
+    @property
+    def useFMT(self):
+        """ Does the current compiler version lack support for std::format or std::print via the STL. """
+        compiler = self.settings.compiler
+        version = Version(self.settings.compiler.version)
+        std_support = (compiler == "msvc" and version >= 193) or (compiler == "gcc" and version >= Version("14")) or \
+                      (compiler == "clang" and version >= Version("18"))
+        return not std_support
+
+    def config_options(self):
+        if not self.checkMoldIsSupported():
+            self.options.rm_safe("link_with_mold")
+
     def build_requirements(self):
         self.tool_requires("ninja/1.11.1")
-        self.test_requires("catch2/3.3.2")
+        self.test_requires("catch2/3.4.0")
+        self.test_requires("gtest/1.14.0")
 
-        if get_cmake_version() < Version("3.27.0"):
-            self.tool_requires("cmake/3.27.0")
+        if get_cmake_version() < Version("3.28.1"):
+            self.tool_requires("cmake/3.28.1")
 
         if self.options.build_docs:
             self.build_requires("doxygen/1.9.4") # doxygen/1.9.5 will update dependency on zlib/1.2.12 to zlib/1.2.13
+
+        if self.options.get_safe("link_with_mold", False):
+            self.build_requires("mold/2.4.0")
+            self.build_requires("openssl/3.2.1", override=True)
 
     def requirements(self):
         if self.settings.os in ["Macos", "iOS", "tvOS"] and self.settings.compiler == "apple-clang":
             self.requires("moltenvk/1.2.2")
 
         if self.settings.os in ["Windows"]:
-            self.requires("wil/1.0.230411.1")
+            self.requires("wil/1.0.240122.1")
 
-        if self.settings.compiler != "msvc":
+        if self.useDate:
             self.requires("date/3.0.1")
+
+        if self.useExpected:
+            self.requires("tl-expected/20190710")
+
+        if self.useFMT:
+            self.requires("fmt/10.2.1")
 
 #    @property
 #    def _source_subfolder(self):
@@ -145,19 +191,16 @@ class Morpheus(ConanFile):
                         self.name, self._minimum_cpp_standard,
                         self.settings.compiler,
                         self.settings.compiler.version))
-    
-#    def generate(self):
-#        tc = CMakeToolchain(self, generator=os.getenv("CONAN_CMAKE_GENERATOR"))
-#        tc.variables["MORPHEUS_BUILD_DOCS"] = self.options.build_docs
-#        tc.generate()
-#        deps = CMakeDeps(self)
-        #import pdb; pdb.pm()
-#        breakpoint()
-#        deps.generate()
 
-#    def source(self):
-#        tools.get(**self.conan_data["sources"][self.version],
-#                  strip_root=True, destination=self._source_subfolder)
+    def generate(self):
+        tc = CMakeToolchain(self)
+        tc.variables["MORPHEUS_BUILD_DOCS"] = self.options.build_docs
+        tc.variables["MORPHEUS_LINK_WITH_MOLD"] = self.options.get_safe("link_with_mold", False)
+        tc.generate()
+        deps = CMakeDeps(self)
+        deps.generate()
+        ms = VirtualBuildEnv(self)
+        ms.generate()
 
     def layout(self):
         cmake_layout(self)
@@ -178,5 +221,3 @@ class Morpheus(ConanFile):
         #self.cpp_info.components["_wg21_linear_algebra"].names["cmake_find_package"] = "wg21_linear_algebra"
         #self.cpp_info.components["_wg21_linear_algebra"].names["cmake_find_package_multi"] = "wg21_linear_algebra"
         #self.cpp_info.components["_wg21_linear_algebra"].requires = ["mdspan::mdspan"]
-
-

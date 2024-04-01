@@ -4,11 +4,16 @@
 #include <morpheus/core/base/compiler.hpp>
 #include <morpheus/core/base/platform.hpp>
 #include <morpheus/core/base/cold.hpp>
+#include <morpheus/core/conformance/stacktrace.hpp>
+
+#include <boost/exception/all.hpp>
 
 #include <string_view>
 
 namespace morpheus
 {
+
+using ExceptionInfo = boost::error_info<struct tag_stacktrace, st_ns::stacktrace>;
 
 /// \group Exception Helpers
 ///     Throwing of exceptions is moved to explicitly outlined functions to ensure code density around exception sites.

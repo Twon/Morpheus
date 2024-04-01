@@ -10,35 +10,18 @@
 #if (__cpp_lib_format >= 201907L)
     namespace morpheus { namespace fmt_ns = std; }
 #else
+    #if (MORPHEUS_COMPILER == MORPHEUS_GNUC_COMPILER)
+        #pragma GCC diagnostic push
+        #pragma GCC diagnostic ignored "-Wstringop-overflow="
+    #endif // (MORPHEUS_COMPILER == MORPHEUS_GNUC_COMPILER)
+
     #include <fmt/format.h>
     #include <fmt/chrono.h>
     #include <fmt/ostream.h>
     namespace morpheus { namespace fmt_ns = fmt; }
-#endif
-// clang-format on
 
-// clang-format off
-#if (__cpp_lib_formatters < 202302L)
-
-#include "morpheus/core/conformance/stacktrace.hpp"
-#include <string_view>
-
-template <typename Allocator>
-struct morpheus::fmt_ns::formatter<morpheus::st_ns::basic_stacktrace<Allocator>> : public morpheus::fmt_ns::formatter<std::string_view>
-{
-    constexpr auto parse(morpheus::fmt_ns::format_parse_context& ctx)
-    {
-        auto pos = ctx.begin();
-        return pos;  // expect `}` at this position, otherwise, 
-                      // it's error! exception!
-    }
-
-    auto format(const morpheus::st_ns::basic_stacktrace<Allocator>& st, morpheus::fmt_ns::format_context& ctx) 
-    {
-        return morpheus::fmt_ns::format_to(ctx.out(), "{}", to_string(st));
-    }
-};
-
-
+    #if (MORPHEUS_COMPILER == MORPHEUS_GNUC_COMPILER)
+        #pragma GCC diagnostic pop
+    #endif // (MORPHEUS_COMPILER == MORPHEUS_GNUC_COMPILER)
 #endif
 // clang-format on

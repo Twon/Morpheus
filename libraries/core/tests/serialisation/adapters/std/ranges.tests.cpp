@@ -29,18 +29,7 @@ TEMPLATE_TEST_CASE("Verify serialisation of sequence containers std::ranges", "[
 {
     GIVEN("A range of values")
     {
-        TestType container([]
-        {
-            std::initializer_list<int> const values = {1, 2, 3, 4, 5};
-            if constexpr (std::is_constructible_v<TestType, decltype(values)>)
-            {
-                return values; 
-            }
-            else
-            {
-                return TestType{1, 2, 3, 4, 5};
-            }
-        }());
+        TestType container{1, 2, 3, 4, 5};
 
         THEN("Expect the following sequence of operations on the underlying writer")
         {

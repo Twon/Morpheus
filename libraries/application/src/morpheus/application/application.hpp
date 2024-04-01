@@ -3,38 +3,40 @@
 #include "morpheus/application/po/config.hpp"
 #include "morpheus/application/po/options.hpp"
 
+#include <filesystem>
+
 namespace morpheus::application
 {
 
 /// \class Application
 ///     The application class acts as a manager for a system of application components.  It is responsible for walking
-///     the application graph to collect commandline parameters  
-/// 
-/// 
-/// 
-//template<typename T>
+///     the application graph to initialised all components before entering the main loop.  When walking the component
+///     graph all commandline parameters will be collected and and sent for intialisation via input parameters.
+///
+///
+///
+// template<typename T>
 class Application {
 public:
-
     ///
-    Application();
-
-    /// 
     /// \param[in] argc The number of command line arguments.
     /// \param[in] argv List of command line arguments.
-    auto commandline(int argc, char* argv[])
-    {
-        using namespace po;
+    Application(int argc, char const* const* argv);
 
-        Config config;
-        return parseProgramOptions(argc, argv, HelpDocumentation{}, config);
-    }
+    /// Application command line configuration.
+    po::Config const& getConfig() const noexcept { return mConfig; }
 
+    /// Path to application log file.
+    std::filesystem::path getLogPath() const noexcept { return mLogPath; }
 
     void run()
     {
 
     }
+
+private:
+    po::Config mConfig; /// Common application configuration
+    std::filesystem::path mLogPath; /// Path to application log file.
 };
 
 } // namespace morpheus::application

@@ -14,7 +14,7 @@ TEST_CASE("Propagate constness and noexceptness to function_ref", "[morpheus.fun
     STATIC_REQUIRE(std::is_nothrow_move_assignable_v<ConcreteFunctionRef>);
 }
 
-void testFunction() { SUCCEED(); };
+void testFunction() { SUCCEED(); }
 
 TEST_CASE("Verify construction of function_ref", "[morpheus.functional.function_ref]")
 {
@@ -31,7 +31,7 @@ TEST_CASE("Verify construction of function_ref", "[morpheus.functional.function_
     }
     GIVEN("A class member function and class instance")
     {
-        struct TestForInvocable 
+        struct TestForInvocable
         {
             bool mRequiredData = true;
 
@@ -47,7 +47,7 @@ TEST_CASE("Verify construction of function_ref", "[morpheus.functional.function_
             THEN("Expect the function to be invocable by the function ref")
             {
                 functionView(0, 1);
-            }   
+            }
         }
     }
 /*    GIVEN("A class member function and class instance")

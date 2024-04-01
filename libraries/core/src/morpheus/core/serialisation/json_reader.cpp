@@ -1,10 +1,7 @@
-#include "morpheus/core/serialisation/json_reader.hpp"
-#include "morpheus/core/base/exceptions.hpp"
 #include "morpheus/core/base/verify.hpp"
 #include "morpheus/core/conformance/format.hpp"
+#include "morpheus/core/serialisation/json_reader.hpp"
 #include "morpheus/core/serialisation/read_serialiser.hpp"
-
-// #include <magic_enum_format.hpp>
 
 namespace morpheus::serialisation
 {
@@ -15,7 +12,7 @@ namespace
 void checkExpectedEvent(auto const event, auto const expected)
 {
     if (event != expected)
-        throwRuntimeException(fmt_ns::format("{} expected, but {} encountered", magic_enum::enum_name(expected), magic_enum::enum_name(event)));
+        throwJsonException(fmt_ns::format("{} expected, but {} encountered", magic_enum::enum_name(expected), magic_enum::enum_name(event)));
 }
 
 } // namespace
@@ -74,10 +71,11 @@ struct JsonExtracter : rapidjson::BaseReaderHandler<rapidjson::UTF8<>, JsonExtra
     }
 
     /// Raw number value encountered.
-    bool RawNumber(const Ch* str, rapidjson::SizeType len, bool copy)
+    bool RawNumber(const Ch*, rapidjson::SizeType, bool /*copy*/)
     {
+        // Method enabled via kParseNumbersAsStringsFlag.
         MORPHEUS_VERIFY(false);
-        //        mCurrent = std::string(value, len);
+        //        mCurrent = std::string(str, len);
         return static_cast<Override&>(*this).Default();
     }
 
@@ -96,7 +94,7 @@ struct JsonExtracter : rapidjson::BaseReaderHandler<rapidjson::UTF8<>, JsonExtra
     }
 
     /// Key value mapping type encountered.
-    bool Key(const Ch* str, rapidjson::SizeType len, bool copy)
+    bool Key(const Ch* str, rapidjson::SizeType len, bool /*copy*/)
     {
         mCurrent = {JsonReader::Event::BeginComposite, std::string(str, len)};
         return static_cast<Override&>(*this).Default();
@@ -135,7 +133,7 @@ JsonReader::EventValue JsonReader::getNext()
     if (mJsonReader.HasParseError()) {
         rapidjson::ParseErrorCode const c = mJsonReader.GetParseErrorCode();
         size_t const o = mJsonReader.GetErrorOffset();
-        throwRuntimeException(fmt_ns::format("Parse error at offset {}, error {}", o,  magic_enum::enum_name(c)));
+        throwJsonException(fmt_ns::format("Parse error at offset {}, error {}", o, magic_enum::enum_name(c)));
     }
     return mExtractor->mCurrent;
 }
@@ -182,10 +180,10 @@ void JsonReader::beginValue(std::string_view const key)
     checkExpectedEvent(event, Event::BeginComposite);
 
     if (!next)
-        throwRuntimeException("Unexpected empty composite");
+        throwJsonException("Unexpected empty composite");
 
     if (std::get<std::string>(*next) != key)
-        throwRuntimeException(fmt_ns::format("Expected key {} does not match actual key {}", key, std::get<std::string>(*next)));
+        throwJsonException(fmt_ns::format("Expected key {} does not match actual key {}", key, std::get<std::string>(*next)));
 }
 
 void JsonReader::endValue()
@@ -194,10 +192,11 @@ void JsonReader::endValue()
     //    MORPHEUS_VERIFY(event == Event::EndComposite);
 }
 
-void JsonReader::beginSequence(std::optional<std::size_t>)
+std::optional<std::size_t> JsonReader::beginSequence()
 {
     auto const [event, next] = getNext();
     MORPHEUS_VERIFY(event == Event::BeginSequence);
+    return std::nullopt;
 }
 
 void JsonReader::endSequence()

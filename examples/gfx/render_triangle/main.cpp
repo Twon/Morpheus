@@ -10,17 +10,18 @@ using namespace morpheus::gfx;
 class RenderTriange : public Application
 {
 public:
+    using Application::Application;
 
-	void Run()
+    void Run()
 	{
-		while ( true ) 
+		while ( true )
 		{
 //			#pragma FREEDOM_TODO( "Hide message pump behind Freedom operating system abstraction")
 
 			::MSG msg;
 			::ZeroMemory( &msg, sizeof(msg) );
 
-			// While there is messages in the queue pump them 
+			// While there is messages in the queue pump them
 			// till the message queue until it is empty
 			while (::PeekMessage( &msg, NULL, 0, 0, PM_NOREMOVE ) )
 			{
@@ -39,11 +40,13 @@ protected:
 
 int main(int argc, char *argv[])
 {
-	RenderTriange example;
-	if (auto const result = example.commandline(argc, argv); result)
-		return *result;
 
-	tryCatch([&] { example.Run(); }	);
+    tryCatch(
+        [&]
+        {
+            RenderTriange example(argc, argv);
+            example.Run();
+        });
 
-//    render_system_factory renderer_factory;
+    //    render_system_factory renderer_factory;
 }

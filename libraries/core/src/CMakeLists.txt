@@ -1,6 +1,6 @@
 morpheus_add_library(
-    NAME MorpheusCore 
-    ALIAS morpheus::core 
+    NAME MorpheusCore
+    ALIAS morpheus::core
     FOLDER "Libraries/Core"
 )
 
@@ -16,16 +16,18 @@ target_link_libraries(MorpheusCore
         morpheus::config
         Boost::headers
         Boost::log
+        ctre::ctre
         magic_enum::magic_enum
 )
 
 add_subdirectory(morpheus/core)
 
-#target_compile_definitions(MorpheusCore
-#    PUBLIC
+target_compile_definitions(MorpheusCore
+    PUBLIC
 #         MORPHEUS_SHARED_BUILD=1
 #         MORPHEUS_DLL_EXPORTS=1
-#)
+        BOOST_USE_WINAPI_VERSION=BOOST_WINAPI_NTDDI_WIN10
+)
 
 target_compile_options(MorpheusCore
     PRIVATE

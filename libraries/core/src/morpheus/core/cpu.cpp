@@ -1,6 +1,8 @@
 #include "morpheus/core/base/platform.hpp"
 #include <morpheus/core/cpu.hpp>
 
+#if (MORPHEUS_PLATFORM_ARCHITECTURE == MORPHEUS_TARGET_ARCHITECTURE_X86) || (MORPHEUS_PLATFORM_ARCHITECTURE == MORPHEUS_TARGET_ARCHITECTURE_X64)
+
 #if (MORPHEUS_IS_GCC_COMPATIBLE_COMPILER)
 #include <cpuid.h>
 #elif (MORPHEUS_IS_VISUALSTUDIO_COMPATIBLE_COMPILER)
@@ -92,7 +94,7 @@ auto query_vendor_id(CpuidLeafs const& cached_leafs)
 
 //---------------------------------------------------------------------------------------------------------------------
 
-const auto query_brand_id(CpuidLeafs const& cached_leafs)
+auto query_brand_id(CpuidLeafs const& cached_leafs)
 {
     std::array<char, 64> string_buffer;
     std::memset(&string_buffer[0], 0, sizeof(string_buffer));
@@ -124,3 +126,5 @@ Cpu::Cpu()
 //---------------------------------------------------------------------------------------------------------------------
 
 } // namespace morpheus
+
+#endif // (MORPHEUS_PLATFORM_ARCHITECTURE == MORPHEUS_TARGET_ARCHITECTURE_X86) || (MORPHEUS_PLATFORM_ARCHITECTURE == MORPHEUS_TARGET_ARCHITECTURE_X64)

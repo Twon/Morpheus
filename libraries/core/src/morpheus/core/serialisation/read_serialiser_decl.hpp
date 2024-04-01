@@ -17,9 +17,9 @@ auto makeScopedValue(concepts::Reader auto& reader, std::string_view const key)
     return ScopedAction([&reader, key] { reader.beginValue(key); }, [&reader] { reader.endValue(); } );
 }
 
-auto makeScopedSequence(concepts::Reader auto& reader, std::optional<std::size_t> const size = std::nullopt)
+auto makeScopedSequence(concepts::Reader auto& reader, std::optional<std::size_t> const = std::nullopt)
 {
-    return ScopedAction([&reader, size] { reader.beginSequence(size); }, [&reader] { reader.endSequence(); } );
+    return ScopedAction([&reader] { return reader.beginSequence(); }, [&reader] { reader.endSequence(); } );
 }
 
 auto makeScopedComposite(concepts::Reader auto& reader)
@@ -40,13 +40,13 @@ class ReadSerialiser
 public:
     /// Constructs a ReadSerialiser when the underlying reader supports default construction.
     template<meta::concepts::DefaultConstructible T = ReaderType>
-    ReadSerialiser() noexcept(meta::concepts::DefaultNothrowConstructible<T>) 
+    ReadSerialiser() noexcept(meta::concepts::DefaultNothrowConstructible<T>)
     {}
 
     template<typename... Args>
     requires(std::is_constructible_v<ReaderType, Args...>)
     ReadSerialiser(Args&&... args) noexcept(meta::concepts::NothrowConstructible<ReaderType, Args...>)
-    :   mReader(std::forward<Args>(args)...) 
+    :   mReader(std::forward<Args>(args)...)
     {}
 
 #if (__cpp_explicit_this_parameter >= 202110)

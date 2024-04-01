@@ -5,7 +5,7 @@ namespace morpheus::gfx::d3d12
 
 namespace
 {
-    auto createAdapters(const std::vector<DXGI_MODE_DESC>& displayModes)
+    auto createAdapters(std::vector<DXGI_MODE_DESC> const& /*displayModes*/)
     {
         return 0;
     }
@@ -13,9 +13,7 @@ namespace
 
 //---------------------------------------------------------------------------------------------------------------------
 
-video_mode_list::video_mode_list(
-    const std::vector<DXGI_MODE_DESC>& displayModes
-)
+video_mode_list::video_mode_list(std::vector<DXGI_MODE_DESC> const& /*displayModes*/)
 //:   mWidth(width),
 //    mHeight(height),
 //    mColourDepth(colourDepth)

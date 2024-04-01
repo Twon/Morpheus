@@ -13,6 +13,7 @@ set(CMAKE_POLICY_DEFAULT_CMP0077 NEW)
 cmake_policy(SET CMP0076 NEW)
 cmake_policy(SET CMP0077 NEW)
 cmake_policy(SET CMP0127 NEW)
+cmake_policy(SET CMP0140 NEW)
 
 
 #------------------------------------------------------------------------------------------------------------------------------------------
@@ -23,6 +24,7 @@ include(GNUInstallDirs)
 include(CMakeDependentOption)
 include(CMakePackageConfigHelpers)
 
+cmake_dependent_option(MORPHEUS_LINK_WITH_MOLD "Enable the mold linker" ON "LINUX OR APPLE" OFF)
 cmake_dependent_option(MORPHEUS_CODE_COVERAGE "Enable code coverage" ON "\"${CMAKE_CXX_COMPILER_ID}\" STREQUAL \"Clang\" OR \"${CMAKE_CXX_COMPILER_ID}\" STREQUAL \"GNU\"" OFF)
 cmake_dependent_option(MORPHEUS_INCLUDE_NATVIS "Enable inclusion of a natvis files for debugging" ON "\"${CMAKE_CXX_COMPILER_ID}\" STREQUAL \"MSVC\"" OFF)
 
@@ -36,14 +38,16 @@ list(APPEND CMAKE_MODULE_PATH
 )
 
 set(CMAKE_FIND_PACKAGE_PREFER_CONFIG ON)
-list(APPEND CMAKE_PREFIX_PATH "${CMAKE_BINARY_DIR}")
+list(APPEND CMAKE_PREFIX_PATH "${CMAKE_BINARY_DIR}" "${CMAKE_BINARY_DIR}/build/generators")
 
 #------------------------------------------------------------------------------------------------------------------------------------------
 # Custom CMake Includes
 include(coverage)
 include(compiler)
+include(conformance)
 include(documentation)
 include(IDESettings)
+include(linker)
 include(morpheus_add_executable)
 include(morpheus_add_library)
 include(morpheus_add_testing_library)
@@ -95,4 +99,3 @@ add_subdirectory(examples)
 if (ENABLE_CODE_COVERAGE)
     enable_code_coverage()
 endif()
-

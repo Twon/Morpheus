@@ -98,7 +98,7 @@ public:
 
     [[nodiscard]] constexpr direct_control_block* clone() const override { return new direct_control_block<T, U>(mStorage); }
 
-    [[nodiscard]] constexpr U* ptr() noexcept override { return &mStorage; };
+    [[nodiscard]] constexpr U* ptr() noexcept override { return &mStorage; }
 
     [[nodiscard]] constexpr U const* ptr() const noexcept override { return &mStorage; }
 
@@ -256,9 +256,10 @@ public:
             return;
         }
 
-        if (std::is_same_v<D, std::default_delete<U>> and std::is_same_v<C, default_copy<U>> and typeid(*u) != typeid(U)) {
-            throw bad_polymorphic_value_construction();
-        }
+        if constexpr(std::is_same_v<D, std::default_delete<U>> and std::is_same_v<C, default_copy<U>>)
+            if (typeid(*u) != typeid(U)) {
+                throw bad_polymorphic_value_construction();
+            }
 
         mControlBlock = ControlBlock(new detail::pointer_control_block<T, U, C, D>(u, std::move(c), std::move(d)));
         mValue = u;
@@ -332,13 +333,13 @@ public:
     // Observers
 #if (__cpp_explicit_this_parameter >= 202110L)
 
-    [[nodiscard]] constexpr auto* operator->(this Self&& self) noexcept { return (this->mValue); }
+  [[nodiscard]] constexpr auto* operator->(this Self&& self) noexcept { return std::forward_like<Self>(mValue); }
 
     /// Dereferences pointer to the managed object.
     template <typename Self>
     [[nodiscard]] constexpr std::copy_cvref_t<Self, T>&& operator*(this Self&& self) noexcept
     {
-        return *std::forward(self).mValue;
+        return *std::forward_like<Self>(mValue);
     }
 
 #else

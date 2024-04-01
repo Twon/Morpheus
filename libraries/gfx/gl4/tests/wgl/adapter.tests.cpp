@@ -57,8 +57,8 @@ exp_ns::expected<DisplayConfig, HRESULT> getCurrentDisplayConfig()
     {
         pathInfo.resize(trySize);
         modeInfo.resize(trySize);
-        UINT32 pathSize = pathInfo.size();
-        UINT32 modeSize = modeInfo.size();
+        UINT32 pathSize = static_cast<UINT32>(pathInfo.size());
+        UINT32 modeSize = static_cast<UINT32>(modeInfo.size());
 
         ULONG const rc = QueryDisplayConfig(QDC_ALL_PATHS, &pathSize, pathInfo.data(), &modeSize, modeInfo.data(), NULL);
 
@@ -121,8 +121,7 @@ TEST_CASE("Create an adapter mode list", "[morpheus.core.gfx.gl.wgl.adapter_list
 
     auto& [pathInfo, modeInfo] = result.value();
 
-    for (int tryEnable = 0;; ++tryEnable)
-    {
+    for (UINT32 tryEnable = 0;; ++tryEnable) {
         DISPLAYCONFIG_PATH_INFO* pCurrentPath = NULL;
         for (UINT32 i = 0, j = 0; i < pathInfo.size(); ++i)
         {
@@ -168,7 +167,7 @@ TEST_CASE("Create an adapter mode list", "[morpheus.core.gfx.gl.wgl.adapter_list
             break; // success!
         }
     }
-    //Note: pSource is pointing to the source relevant to the relevant source now! 
+    //Note: pSource is pointing to the source relevant to the relevant source now!
     //You just need to copy off whatever you need.
 }
 
