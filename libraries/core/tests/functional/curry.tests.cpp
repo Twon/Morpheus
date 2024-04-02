@@ -5,21 +5,50 @@
 namespace morpheus::functional
 {
 
-TEST_CASE("Verify construction of function_ref", "[morpheus.functional.function_ref]")
+TEST_CASE("Verify partial application via currying", "[morpheus.functional.curry]")
 {
-    GIVEN("A free standing function")
+    SECTION("Zero parameters")
     {
-        WHEN("Constructing a function reference to the function")
+        auto constexpr shouldCall = []()
         {
-            THEN("Expect the function to be invocable by the function ref") {}
-        }
+            SUCCEED();
+        };
+        curry(shouldCall);
     }
-    GIVEN("A class member function and class instance")
+    SECTION("One parameters")
     {
-        WHEN("Constructing a function reference to the function")
+        auto constexpr expectedParam1 = 1;
+        auto constexpr identity = [](auto a) { return a; };
+        curry(identity, expectedParam1);
+        REQUIRE(expectedParam1 == identity(expectedParam1));
+    }
+    SECTION("Two parameters")
+    {
+        auto constexpr expectedParam1 = 1;
+        auto constexpr expectedParam2 = 2;
+        auto constexpr add = [](auto a, auto b)
         {
-            THEN("Expect the function to be invocable by the function ref") {}
-        }
+            REQUIRE(a == expectedParam1);
+            REQUIRE(b == expectedParam2);
+            return a + b;
+        };
+        auto constexpr add1 = curry(add, expectedParam1);
+        REQUIRE(add1(expectedParam2) == (expectedParam1 + expectedParam2));
+    }
+    SECTION("Three parameters")
+    {
+        auto constexpr expectedParam1 = 1;
+        auto constexpr expectedParam2 = 2;
+        auto constexpr expectedParam3 = 3;
+        auto constexpr add = [](auto a, auto b, auto c)
+        {
+            REQUIRE(a == expectedParam1);
+            REQUIRE(b == expectedParam2);
+            REQUIRE(c == expectedParam3);
+            return a + b + c;
+        };
+        auto constexpr add1 = curry(add, expectedParam1);
+        REQUIRE(add1(expectedParam2, expectedParam3) == (expectedParam1 + expectedParam2, expectedParam3));
     }
 }
 
