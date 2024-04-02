@@ -6,19 +6,22 @@
 namespace morpheus::functional
 {
 
-/// \fun curry
+/// \fn curry
 ///
-///
+/// \note
+///     [Applicative: The Forgotten Functional Pattern in C++ - Ben Deane - CppNow 2023](https://youtu.be/At-b4PHNxMg?si=hDI3zgmfPwrrIxoe&t=1313)
 template <typename F, typename... Args>
-    requires std::invokable(F, Args...)
 constexpr auto curry(F&& f, Args&&... args) -> decltype(auto)
 {
-    if constexpr ()
-        else
+    if constexpr (std::invocable<F, Args...>)
+        return std::invoke(std::forward<F>(f), std::forward<Args>(args)...);
+    else
+    {
+        return [f = std::forward<F>(f), ...args = std::forward<Args>(args)]<typename Self, typename... As>(this Self&& self, As&&... as) -> decltype(auto)
         {
-            return [f = std::forward<F>(f), args = std::forward(args)]<typename Self, typename As>(this Self&& self, As&&... as) -> decltype(auto)
-            { return curry(std::forward_like<Self>(f), std::forward_like < Self(args)..., std::forward<As>(as)...); }
-        }
+            return curry(std::forward_like<Self>(f), std::forward_like<Self>(args)..., std::forward<As>(as)...);
+        };
+    }
 }
 
 } // namespace morpheus::functional
