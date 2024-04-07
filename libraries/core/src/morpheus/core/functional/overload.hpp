@@ -1,5 +1,6 @@
 #pragma once
 
+#include <type_traits>
 #include <utility>
 
 namespace morpheus::functional
@@ -10,9 +11,9 @@ namespace morpheus::functional
 /// \note
 ///     Following the example of https://www.modernescpp.com/index.php/visiting-a-std-variant-with-the-overload-pattern
 template<typename... Ts>
-struct Overload : Ts...
+struct Overload : std::remove_cvref_t<Ts>...
 {
-    using Ts::operator()...;
+    using std::remove_cvref_t<Ts>::operator()...;
 };
 
 template<class... Ts>
