@@ -5,6 +5,8 @@
 namespace morpheus::functional
 {
 
+#if (__cpp_explicit_this_parameter >= 202110L)
+
 TEST_CASE("Verify partial application via currying", "[morpheus.functional.curry]")
 {
     SECTION("Zero parameters")
@@ -51,5 +53,7 @@ TEST_CASE("Verify partial application via currying", "[morpheus.functional.curry
         REQUIRE(add1(expectedParam2, expectedParam3) == (expectedParam1 + expectedParam2 + expectedParam3));
     }
 }
+
+#endif // (__cpp_explicit_this_parameter >= 202110L)
 
 } // namespace morpheus::functional
