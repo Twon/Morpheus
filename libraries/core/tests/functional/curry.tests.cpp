@@ -48,7 +48,7 @@ TEST_CASE("Verify partial application via currying", "[morpheus.functional.curry
             return a + b + c;
         };
         auto constexpr add1 = curry(add, expectedParam1);
-        REQUIRE(add1(expectedParam2, expectedParam3) == (expectedParam1 + expectedParam2, expectedParam3));
+        REQUIRE(add1(expectedParam2, expectedParam3) == (expectedParam1 + expectedParam2 + expectedParam3));
     }
 }
 
