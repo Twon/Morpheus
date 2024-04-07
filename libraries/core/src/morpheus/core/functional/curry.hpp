@@ -7,8 +7,11 @@
 namespace morpheus::functional
 {
 
+#if (__cpp_explicit_this_parameter >= 202110L)
+
 /// \fn curry
-///
+///     Currying is a technique in which we consider a function takign multuiple arguments and turn it into a function which takes a single argument and
+///     returns a funtion to handle the remaining arguments.
 /// \note
 ///     [Applicative: The Forgotten Functional Pattern in C++ - Ben Deane - CppNow 2023](https://youtu.be/At-b4PHNxMg?si=hDI3zgmfPwrrIxoe&t=1313)
 template <typename F, typename... Args>
@@ -24,5 +27,7 @@ constexpr auto curry(F&& f, Args&&... args) -> decltype(auto)
         };
     }
 }
+
+#endif // (__cpp_explicit_this_parameter >= 202110L)
 
 } // namespace morpheus::functional
