@@ -1,7 +1,7 @@
 #include <morpheus/application/application.hpp>
 #include <morpheus/application/try_catch.hpp>
 #include <morpheus/gfx/gl4/render_system.hpp>
-#include <morpheus/gfx/platform/render_system_factory.hpp>
+//#include <morpheus/gfx/platform/render_system_factory.hpp>
 #include <morpheus/gfx/platform/win32/render_window.hpp>
 
 using namespace morpheus::application;

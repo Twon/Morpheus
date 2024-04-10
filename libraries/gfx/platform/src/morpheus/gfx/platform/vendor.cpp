@@ -9,6 +9,10 @@ std::optional<Vendor> vendorFromPciId(std::uint32_t const pciId)
     {
         return Vendor::AmdAti;
     }
+    else if (constexpr std::uint32_t Apple = 0x106B; Apple == pciId)
+    {
+        return Vendor::Apple;
+    }
     else if (constexpr std::uint32_t Intel = 0x10DE; Intel == pciId)
     {
         return Vendor::Intel;
