@@ -1,5 +1,11 @@
 #pragma once
 
+#include <morpheus/core/conformance/version.hpp>
+
+#if (__cpp_explicit_this_parameter >= 202110L)
+    #include <boost/hana/functional/curry.hpp>
+#endif // (__cpp_explicit_this_parameter >= 202110L)
+
 #include <concepts>
 #include <functional>
 #include <utility>
@@ -26,6 +32,14 @@ constexpr auto curry(F&& f, Args&&... args) -> decltype(auto)
             return curry(std::forward_like<Self>(f), std::forward_like<Self>(args)..., std::forward<As>(as)...);
         };
     }
+}
+
+#else
+
+template <typename F, typename... Args>
+constexpr auto curry(F&& f, Args&&... args) -> decltype(auto)
+{
+
 }
 
 #endif // (__cpp_explicit_this_parameter >= 202110L)
