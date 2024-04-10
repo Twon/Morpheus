@@ -91,13 +91,17 @@ jobs:
           sed -i.backup '1a onetbb*:build_type=Release' .conan2/profiles/default
           sed -i.backup '1a mold*:compiler.libcxx=libstdc++11' .conan2/profiles/default
 
+          echo "tools.cmake.cmaketoolchain:generator = Ninja Multi-Config" >> .conan2/global.conf
+          echo "tools.system.package_manager:mode = install" >> .conan2/global.conf
+          echo "tools.system.package_manager:sudo = True" >> .conan2/global.conf
+
           conan profile show -pr default
 
       - name: Configure Install
         working-directory: ${{github.workspace}}
         shell: bash
         run: |
-          conan install "${{github.workspace}}" --build missing -c tools.cmake.cmaketoolchain:generator="Ninja Multi-Config" --build catch2/3.3.2 --build gtest/1.14.0 -o build_docs=True -o boost/*:without_cobalt=True
+          conan install "${{github.workspace}}" --build missing --build catch2/3.3.2 --build gtest/1.14.0 -o build_docs=True -o boost/*:without_cobalt=True
 
       - name: Configure Conan Build
         shell: bash
