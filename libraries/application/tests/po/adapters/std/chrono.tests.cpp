@@ -1,6 +1,9 @@
 #include "morpheus/application/application.hpp"
 #include "morpheus/application/po/adapters/std/chrono.hpp"
 #include "morpheus/core/serialisation/adapters/std/chrono.hpp"
+#include "morpheus/logging.hpp"
+
+#include <boost/program_options.hpp>
 
 #include <catch2/catch_test_macros.hpp>
 
@@ -24,7 +27,7 @@ struct ChronoDuration
     }
 };
 
-TEST_CASE("Test parsing of std chrono duration", "[morpheus.application.po.adapters.std.chrono.duration]")
+TEST_CASE_METHOD(LoggingFixture, "Test parsing of std chrono duration", "[morpheus.application.po.adapters.std.chrono.duration]")
 {
     SECTION("Ensure valid value parse correctly")
     {
@@ -70,7 +73,7 @@ struct TimeZone
     }
 };
 
-TEST_CASE("Test parsing of std chrono time_zone", "[morpheus.application.po.adapters.std.chrono.time_zone]")
+TEST_CASE_METHOD(LoggingFixture, "Test parsing of std chrono time_zone", "[morpheus.application.po.adapters.std.chrono.time_zone]")
 {
     SECTION("Ensure valid value parse correctly")
     {

@@ -1,14 +1,13 @@
-#include <morpheus/gfx/platform/render_system_factory.hpp>
+#include "morpheus/core/visualisation/visualisation.hpp"
+//#include "morpheus/gfx/platform/render_system.hpp"
 
-namespace morpheus::gfx
+namespace morpheus::vis
 {
 
 //---------------------------------------------------------------------------------------------------------------------
 
-render_system_factory::~render_system_factory()
-{
-}
+
 
 //---------------------------------------------------------------------------------------------------------------------
 
-} // namespace morpheus::gfx
+} // namespace morpheus::vis

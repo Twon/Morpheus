@@ -6,12 +6,15 @@ if(WIN32)
     add_subdirectory(win32)
 endif(WIN32)
 
+if(UNIX AND NOT APPLE)
+    add_subdirectory(x11)
+endif(UNIX AND NOT APPLE)
+
 target_sources(MorpheusGfxPlatform
     PUBLIC
         adapter.hpp
         image.hpp
         pixel.hpp
-        render_system_factory.hpp
         render_system.hpp
         render_target.hpp
         render_window.hpp
@@ -20,7 +23,6 @@ target_sources(MorpheusGfxPlatform
     PRIVATE
         adapter.cpp
         image.cpp
-        render_system_factory.cpp
         render_system.cpp
         render_target.cpp
         render_window.cpp

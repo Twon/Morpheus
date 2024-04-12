@@ -31,7 +31,7 @@ import re, os.path
 import subprocess
 import sys
 
-required_conan_version = ">=2.0.17"
+required_conan_version = ">=2.1.0"
 
 
 def get_cmake_version():
@@ -71,14 +71,13 @@ class Morpheus(ConanFile):
     requires = (
         "boost/1.84.0",
         "ctre/3.8.1",
-        "fmt/10.2.1",
         "glbinding/3.3.0",
         "glew/2.2.0",
         "magic_enum/0.9.5",
         "ms-gsl/4.0.0",
         "rapidjson/cci.20230929",
         "range-v3/0.12.0",
-        "tl-expected/20190710",
+        "scnlib/2.0.2",
         "vulkan-headers/1.3.239.0"#,
         #"zlib/1.2.12" # xapian-core/1.4.19' requires 'zlib/1.2.12' while 'boost/1.81.0' requires 'zlib/1.2.13'. To fix this conflict you need to override the package 'zlib' in your root package.
     )
@@ -102,6 +101,24 @@ class Morpheus(ConanFile):
         compiler = self.settings.compiler
         version = Version(self.settings.compiler.version)
         std_support = (compiler == "msvc" and version >= 193) or (compiler == "gcc" and version >= Version("14"))
+        return not std_support
+
+    @property
+    def useExpected(self):
+        """ Does the current compiler version lack support for std::expected via the STL. """
+        compiler = self.settings.compiler
+        version = Version(self.settings.compiler.version)
+        std_support = (compiler == "msvc" and version >= 193) or (compiler == "gcc" and version >= Version("12")) or \
+                      (compiler == "clang" and version >= Version("16")) or (compiler == "apple-clang" and version >= Version("15"))
+        return not std_support
+
+    @property
+    def useFMT(self):
+        """ Does the current compiler version lack support for std::format or std::print via the STL. """
+        compiler = self.settings.compiler
+        version = Version(self.settings.compiler.version)
+        std_support = (compiler == "msvc" and version >= 193) or (compiler == "gcc" and version >= Version("14")) or \
+                      (compiler == "clang" and version >= Version("18"))
         return not std_support
 
     def config_options(self):
@@ -132,6 +149,12 @@ class Morpheus(ConanFile):
 
         if self.useDate:
             self.requires("date/3.0.1")
+
+        if self.useExpected:
+            self.requires("tl-expected/20190710")
+
+        if self.useFMT:
+            self.requires("fmt/10.2.1")
 
 #    @property
 #    def _source_subfolder(self):
