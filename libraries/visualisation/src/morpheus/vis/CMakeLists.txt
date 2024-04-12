@@ -1,4 +1,4 @@
-target_sources(MorpheusGfxPlatform
+target_sources(MorpheusVisualisation
     PUBLIC
         render_system_factory.hpp
         visualisation.hpp
