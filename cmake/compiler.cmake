@@ -30,6 +30,7 @@ target_link_libraries(MorpheusConfig
 
 target_compile_options(MorpheusConfig
     INTERFACE
+        $<$<CXX_COMPILER_ID:MSVC>:/Zc:__cplusplus> # https://devblogs.microsoft.com/cppblog/msvc-now-correctly-reports-__cplusplus/
         $<$<CXX_COMPILER_ID:MSVC>:${MSVC_WARNINGS}>
         $<$<CXX_COMPILER_ID:GNU>:${GCC_WARNINGS}>
         $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>>:${CLANG_WARNINGS}>
