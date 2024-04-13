@@ -17,7 +17,7 @@ namespace platform = morpheus::gfx::gl4::wgl;
 
 /// \todo
 ///     Delete me once I really exist and am accessed via a header.
-namespace morpheus::gfx::gl4::agl;
+namespace morpheus::gfx::gl4::agl {}
 
 namespace platform = morpheus::gfx::gl4::agl;
 

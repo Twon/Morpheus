@@ -1,5 +1,6 @@
 #pragma once
 
+#include "morpheus/application/po/adapters/enum.hpp"
 #include <morpheus/core/base/platform.hpp>
 
 #if (MORPHEUS_BUILD_PLATFORM == MORPHEUS_TARGET_PLATFORM_APPLE)
@@ -8,6 +9,7 @@
     #include <morpheus/gfx/d3d12/render_system.hpp>
 #endif // #if (MORPHEUS_BUILD_PLATFORM == MORPHEUS_TARGET_PLATFORM_APPLE)
 
+#include <morpheus/gfx/gl4/traits.hpp>
 #include <morpheus/gfx/gl4/render_system.hpp>
 #include <morpheus/gfx/vulkan/render_system.hpp>
 
@@ -16,10 +18,12 @@
 #include <boost/hana/tuple.hpp>
 #include <boost/hana.hpp>
 
+#include <boost/program_options/options_description.hpp>
+
 #include <cstdint>
 #include <type_traits>
 
-namespace morpheus::gfx
+namespace morpheus::vis
 {
 
 /// \enum API
@@ -56,31 +60,33 @@ public:
     /// Register program options
     void addOptions(boost::program_options::options_description& options)
     {
-        namespace hana = boost::hana;
-        hana::for_each(renderSystemAPIs)
+        namespace po = boost::program_options;
+        options.add_options()("render-system", po::value(&mActiveApi)->default_value(mActiveApi), "The rendering system to instantiate.");
     }
 
-    //void register()
+private:
 
     /// Returns a map of the available rendering systems to their respective underlying graphics APIs.
     ///
     static constexpr auto availableAPIs()
     {
-        return boost::hana::make_map(
+        namespace hana = boost::hana;
+        return hana::make_map(
 #if (MORPHEUS_BUILD_PLATFORM == MORPHEUS_TARGET_PLATFORM_APPLE)
-            boost::hana::make_pair(RenderSystemType<API::Metal>, boost::hana::type_c<metal::RenderSystem>)
+            hana::make_pair(RenderSystemType<API::Metal>, hana::type_c<gfx::metal::RenderSystem>)
 #elif (MORPHEUS_BUILD_PLATFORM == MORPHEUS_TARGET_PLATFORM_WINDOWS)
-            boost::hana::make_pair(RenderSystemType<API::D3D12>, boost::hana::type_c<d3d12::RenderSystem>),
+            hana::make_pair(RenderSystemType<API::D3D12>, hana::type_c<gfx::d3d12::RenderSystem>),
 #endif // #if (MORPHEUS_BUILD_PLATFORM == MORPHEUS_TARGET_PLATFORM_APPLE)
-            boost::hana::make_pair(RenderSystemType<API::OpenGL4>, boost::hana::type_c<gl4::RenderSystem>),
-            boost::hana::make_pair(RenderSystemType<API::Vulkan>, boost::hana::type_c<vulkan::RenderSystem>)
+            hana::make_pair(RenderSystemType<API::OpenGL4>, hana::type_c<gfx::gl4::RenderSystem<gfx::gl4::GL4Traits>>),
+            hana::make_pair(RenderSystemType<API::Vulkan>, hana::type_c<gfx::vulkan::RenderSystem>)
         );
     }
 
-private:
-    using APIMap = std::invoke_result_t<availableAPIs()>;
+    //using APIMap = std::invoke_result_t<decltype(&RenderSystemFactory::availableAPIs)()>;
 
-    constexpr static APIMap renderSystemAPIs = availableAPIs();
+    //constexpr static auto renderSystemAPIs = availableAPIs();
+
+    API mActiveApi = Vulkan;
 };
 
-} // namespace morpheus::gfx
+} // namespace morpheus::vis

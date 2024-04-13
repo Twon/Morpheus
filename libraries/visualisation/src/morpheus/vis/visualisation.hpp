@@ -11,7 +11,7 @@ namespace morpheus::vis
     \tparam R
         The render system used by the visualisation.
  */
-template <gxf::concepts::RenderSystem R>
+template <gfx::concepts::RenderSystem R>
 class Visualisation {
 public:
 
