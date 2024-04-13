@@ -58,6 +58,7 @@ class Morpheus(ConanFile):
         "fPIC": [True, False],
         "tools": [True, False],
         "build_docs": [True, False],
+        "build_with_modules": [True, False],
         "link_with_mold": [True, False]
     }
     default_options = {
@@ -65,6 +66,7 @@ class Morpheus(ConanFile):
         "fPIC": True,
         "tools": True,
         "build_docs": False,
+        "build_with_modules": False
         "link_with_mold": True
     }
     exports_sources = ["CMakeLists.txt", "LICENSE", "version.txt", "cmake/*", "examples/*" "libraries/*"]
@@ -195,6 +197,7 @@ class Morpheus(ConanFile):
     def generate(self):
         tc = CMakeToolchain(self)
         tc.variables["MORPHEUS_BUILD_DOCS"] = self.options.build_docs
+        tc.variables["MORPHEUS_MODULES_SUPPORT"] = self.options.build_with_modules
         tc.variables["MORPHEUS_LINK_WITH_MOLD"] = self.options.get_safe("link_with_mold", False)
         tc.generate()
         deps = CMakeDeps(self)

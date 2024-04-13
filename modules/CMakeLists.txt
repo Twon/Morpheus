@@ -1,0 +1,7 @@
+if (${MORPHEUS_MODULES_SUPPORT})
+
+    set(CMAKE_CXX_SCAN_FOR_MODULES ON)
+
+	add_subdirectory(std)
+
+endif (${MORPHEUS_MODULES_SUPPORT})

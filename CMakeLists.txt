@@ -94,8 +94,9 @@ if(IS_MULTI_CONFIG)
 endif()
 #------------------------------------------------------------------------------------------------------------------------------------------
 
-add_subdirectory(libraries)
 add_subdirectory(examples)
+add_subdirectory(modules)
+add_subdirectory(libraries)
 
 if (ENABLE_CODE_COVERAGE)
     enable_code_coverage()

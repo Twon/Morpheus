@@ -26,6 +26,7 @@ add_library(morpheus::config ALIAS MorpheusConfig)
 target_link_libraries(MorpheusConfig
     INTERFACE
         $<$<PLATFORM_ID:Linux>:dl>
+        std
 )
 
 target_compile_options(MorpheusConfig
