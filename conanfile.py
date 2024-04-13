@@ -66,7 +66,7 @@ class Morpheus(ConanFile):
         "fPIC": True,
         "tools": True,
         "build_docs": False,
-        "build_with_modules": False
+        "build_with_modules": False,
         "link_with_mold": True
     }
     exports_sources = ["CMakeLists.txt", "LICENSE", "version.txt", "cmake/*", "examples/*" "libraries/*"]
