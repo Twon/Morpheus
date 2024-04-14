@@ -1,3 +1,4 @@
+/// \type_traits.hpp Modularisation for https://eel.is/c++draft/meta.type.synop
 export namespace std
 {
 
