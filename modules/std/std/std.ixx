@@ -1,7 +1,10 @@
 
 module;
 
+#include <algorithm>
 #include <any>
+#include <array>
+#include <bit>
 #include <cstdint>
 #include <concepts>
 #include <functional>
@@ -10,18 +13,23 @@ module;
 #include <string>
 #include <string_view>
 #include <type_traits>
+#include <vector>
 
 export module std;
 
-#include "any.mxx"
-#include "cstdint.mxx"
-#include "concepts.mxx"
-#include "functional.mxx"
-#include "string.mxx"
-#include "source_location.mxx"
-#include "stacktrace.mxx"
-#include "string_view.mxx"
-#include "type_traits.mxx"
+#include "algorithm.hpp"
+#include "any.hpp"
+#include "array.hpp"
+#include "bit.hpp"
+#include "cstdint.hpp"
+#include "concepts.hpp"
+#include "functional.hpp"
+#include "string.hpp"
+#include "source_location.hpp"
+#include "stacktrace.hpp"
+#include "string_view.hpp"
+#include "type_traits.hpp"
+#include "vector.hpp"
 
 #pragma warning(push)
 #pragma warning(disable : 5244) // '#include <meow>' in the purview of module 'std' appears erroneous.
