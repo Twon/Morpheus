@@ -1,4 +1,5 @@
-/// \string_view.hpp Modularisation for https://eel.is/c++draft/string_view.syn
+/// \file string_view.hpp
+///     Modularisation for https://eel.is/c++draft/string_view.syn
 export namespace std
 {
 

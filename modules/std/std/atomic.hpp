@@ -1,4 +1,5 @@
-// \atomic.hpp Modularisation for https://eel.is/c++draft/atomics.syn
+/// \file atomic.hpp
+///     Modularisation for https://eel.is/c++draft/atomics.syn
 export namespace std
 {
 

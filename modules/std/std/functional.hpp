@@ -1,4 +1,5 @@
-/// https://en.cppreference.com/w/cpp/header/functional
+/// \file functional.hpp
+///     Modularisation for https://eel.is/c++draft/functional.syn
 export namespace std
 {
 

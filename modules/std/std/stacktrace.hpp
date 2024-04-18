@@ -1,3 +1,5 @@
+/// \file stacktrace.hpp
+///     Modularisation for https://eel.is/c++draft/stacktrace.syn
 export namespace std
 {
 

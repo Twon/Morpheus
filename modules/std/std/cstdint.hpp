@@ -1,4 +1,5 @@
-// \cstdint.hpp Modularisation for https://eel.is/c++draft/cstdint.syn
+/// \file cstdint.hpp
+///     Modularisation for https://eel.is/c++draft/cstdint.syn
 export namespace std {
 
 using std::int8_t;

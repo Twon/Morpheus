@@ -1,4 +1,5 @@
-/// \string.hpp Modularisation for https://eel.is/c++draft/string.syn
+/// \file string.hpp
+///     Modularisation for https://eel.is/c++draft/string.syn
 export namespace std
 {
 

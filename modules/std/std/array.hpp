@@ -1,4 +1,5 @@
-// \array.hpp Modularisation for https://eel.is/c++draft/array.syn
+/// \file array.hpp
+///     Modularisation for https://eel.is/c++draft/array.syn
 export namespace std
 {
 

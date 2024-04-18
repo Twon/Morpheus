@@ -1,4 +1,5 @@
-/// \any.hpp Modularisation for https://eel.is/c++draft/any.synop
+/// \file any.hpp
+///     Modularisation for https://eel.is/c++draft/any.synop
 export namespace std
 {
 

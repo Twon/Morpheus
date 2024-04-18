@@ -1,4 +1,5 @@
-// \bit.hpp Modularisation for https://eel.is/c++draft/bit.syn
+/// \file bit.hpp
+///     Modularisation for https://eel.is/c++draft/bit.syn
 export namespace std
 {
 

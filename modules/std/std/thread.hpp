@@ -1,4 +1,5 @@
-/// \thread.hpp Modularisation for https://eel.is/c++draft/thread.syn
+/// \file thread.hpp
+///     Modularisation for https://eel.is/c++draft/thread.syn
 export namespace std
 {
 

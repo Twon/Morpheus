@@ -1,4 +1,5 @@
-/// \vector.hpp Modularisation for https://eel.is/c++draft/vector.syn
+/// \file vector.hpp
+///     Modularisation for https://eel.is/c++draft/vector.syn
 export namespace std
 {
 

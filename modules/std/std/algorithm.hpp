@@ -1,4 +1,5 @@
-/// \algorithm.hpp Modularisation for https://eel.is/c++draft/algorithm.syn
+/// \file algorithm.hpp
+///     Modularisation for https://eel.is/c++draft/algorithm.syn
 export namespace std
 {
 
