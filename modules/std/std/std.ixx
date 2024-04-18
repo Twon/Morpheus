@@ -4,6 +4,7 @@ module;
 #include <algorithm>
 #include <any>
 #include <array>
+#include <atomic>
 #include <bit>
 #include <cstdint>
 #include <concepts>
@@ -20,6 +21,7 @@ export module std;
 #include "algorithm.hpp"
 #include "any.hpp"
 #include "array.hpp"
+#include "atomic.hpp"
 #include "bit.hpp"
 #include "cstdint.hpp"
 #include "concepts.hpp"
