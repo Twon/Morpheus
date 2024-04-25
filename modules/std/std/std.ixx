@@ -37,10 +37,18 @@ module;
 #include <fstream>
 #include <functional>
 #include <future>
+#if __has_include(<generator>)
+    #include <generator>
+#endif
 #if __has_include(<hazard_pointer>)
     #include <hazard_pointer>
 #endif
+#include <initializer_list>
+#include <iomanip>
+#include <ios>
 #include <latch>
+#include <list>
+#include <locale>
 #include <map>
 #include <mutex>
 #if __has_include(<rcu>)
@@ -81,9 +89,6 @@ export module std;
 #if __has_include(<expected>)
     #include "expected.hpp"
 #endif
-#if __has_include(<hazard_pointer>)
-    #include "hazard_pointer.hpp"
-#endif
 #include "filesystem.hpp"
 #if __has_include(<flat_map>)
     #include "flat_map.hpp"
@@ -98,7 +103,18 @@ export module std;
 #include "fstream.hpp"
 #include "functional.hpp"
 #include "future.hpp"
+#if __has_include(<generator>)
+    #include "generator.hpp"
+#endif
+#if __has_include(<hazard_pointer>)
+    #include "hazard_pointer.hpp"
+#endif
+#include "initializer_list.hpp"
+#include "iomanip.hpp"
+#include "ios.hpp"
 #include "latch.hpp"
+#include "list.hpp"
+#include "locale.hpp"
 #include "map.hpp"
 #include "mutex.hpp"
 #if __has_include(<rcu>)
