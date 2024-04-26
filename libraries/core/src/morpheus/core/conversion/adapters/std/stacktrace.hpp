@@ -3,7 +3,11 @@
 #include "morpheus/core/conformance/format.hpp"
 #include "morpheus/core/conformance/stacktrace.hpp"
 
-#include <string_view>
+//#if (MORPHEUS_MODULES_SUPPORT)
+//    import std;
+//#else
+    #include <string_view>
+//#endif // #if (MORPHEUS_MODULES_SUPPORT)
 
 // clang-format off
 #if (__cpp_lib_formatters < 202302L)

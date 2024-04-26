@@ -1,8 +1,12 @@
 #pragma once
 
-#if __has_include(<source_location>)
-    #include <source_location>
-#endif
+//#if (MORPHEUS_MODULES_SUPPORT)
+//    import std;
+//#else
+    #if __has_include(<source_location>)
+        #include <source_location>
+    #endif
+//#endif // #if (MORPHEUS_MODULES_SUPPORT)
 
 // clang-format off
 #if (__cpp_lib_source_location >= 201907L)

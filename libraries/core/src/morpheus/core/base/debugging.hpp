@@ -3,7 +3,11 @@
 #include <morpheus/core/base/compiler.hpp>
 #include <morpheus/core/base/platform.hpp>
 
-#include <string_view>
+//#if (MORPHEUS_MODULES_SUPPORT)
+//    import std;
+//#else
+    #include <string_view>
+//#endif // #if (MORPHEUS_MODULES_SUPPORT)
 
 namespace morpheus
 {

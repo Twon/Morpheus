@@ -1,11 +1,21 @@
+#if (MORPHEUS_MODULES_SUPPORT)
+//    import std;
+#endif // #if (MORPHEUS_MODULES_SUPPORT)
+
 #include "morpheus/core/base/assert_handler.hpp"
 #include "morpheus/core/base/debugging.hpp"
 #include "morpheus/core/conformance/format.hpp"
 #include "morpheus/core/conformance/stacktrace.hpp"
 #include "morpheus/core/conversion/adapters/std/stacktrace.hpp"
 
-#include <iostream>
-#include <utility>
+
+//#if (MORPHEUS_MODULES_SUPPORT)
+//    import std;
+//#else
+    #include <iostream>
+    #include <string_view>
+    #include <utility>
+//#endif // #if (MORPHEUS_MODULES_SUPPORT)
 
 namespace morpheus
 {

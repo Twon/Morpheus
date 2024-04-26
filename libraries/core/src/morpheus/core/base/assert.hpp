@@ -1,14 +1,18 @@
 #pragma once
 
-#include <morpheus/core/base/assert.hpp>
+#include <morpheus/core/base/assert_handler.hpp>
 #include <morpheus/core/base/platform.hpp>
 #include <morpheus/core/base/verify.hpp>
 #include <morpheus/core/conformance/source_location.hpp>
 
-#include <cstdint>
-#include <functional>
-#include <string>
-#include <string_view>
+//#if (MORPHEUS_MODULES_SUPPORT)
+//    import std;
+//#else
+    #include <cstdint>
+    #include <functional>
+    #include <string>
+    #include <string_view>
+//#endif // #if (MORPHEUS_MODULES_SUPPORT)
 
 namespace morpheus
 {

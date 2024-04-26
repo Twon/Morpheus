@@ -1,8 +1,14 @@
 #pragma once
 
-#include <cstdint>
 #include <morpheus/core/base/compiler.hpp>
 #include <morpheus/core/morpheuscore_export.h>
+
+//#if (MORPHEUS_MODULES_SUPPORT)
+//    import std;
+//#else
+    #include <cstdint>
+//#endif // #if (MORPHEUS_MODULES_SUPPORT)
+
 
 /*! \defgroup Platform Morpheus Supported Platforms
         The platform group of macros allow for compile time detection of the current platform.

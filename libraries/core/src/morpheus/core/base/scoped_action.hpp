@@ -1,7 +1,12 @@
 #pragma once
 
-#include <concepts>
-#include <utility>
+//#if (MORPHEUS_MODULES_SUPPORT)
+//    import std;
+//#else
+    #include <concepts>
+    #include <utility>
+//#endif // #if (MORPHEUS_MODULES_SUPPORT)
+
 
 namespace morpheus
 {

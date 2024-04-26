@@ -3,8 +3,12 @@
 
 #include <boost/test/debug.hpp>
 
-#include <cstdio>
-#include <iostream>
+//#if (MORPHEUS_MODULES_SUPPORT)
+//    import std;
+//#else
+    #include <cstdio>
+    #include <iostream>
+//#endif // #if (MORPHEUS_MODULES_SUPPORT)
 
 namespace morpheus
 {
