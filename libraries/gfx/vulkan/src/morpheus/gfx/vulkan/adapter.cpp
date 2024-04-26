@@ -10,7 +10,7 @@ Adapter::Adapter(vk::raii::PhysicalDevice&& physicalDevice)
 {
 }
 
-[[nodiscard]] Vendor Adapter::getVendor() const noexcept
+[[nodiscard]] Vendor Adapter::vendor() const noexcept
 {
     auto const vendor = vendorFromPciId(mPhysicalDevice.getProperties().vendorID);
     MORPHEUS_ASSERT(vendor);

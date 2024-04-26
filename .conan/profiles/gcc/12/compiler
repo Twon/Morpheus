@@ -2,3 +2,6 @@ include(../../compiler/gcc)
 
 [settings]
 compiler.version=12
+
+[conf]
+tools.build:compiler_executables={"c":"gcc-12","cpp":"g++-12"}

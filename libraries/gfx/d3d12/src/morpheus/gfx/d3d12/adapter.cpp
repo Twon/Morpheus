@@ -72,7 +72,7 @@ Adapter::Adapter(
 {
 }
 
-[[nodiscard]] Vendor Adapter::getVendor() const noexcept
+[[nodiscard]] Vendor Adapter::vendor() const noexcept
 {
     auto const vendor = vendorFromPciId(mDescription.VendorId);
     MORPHEUS_ASSERT(vendor);

@@ -1,3 +1,7 @@
+#include <morpheus/core/base/debugging.hpp>
+#include <morpheus/core/conformance/format.hpp>
+
+#include <morpheus/gfx/nvidia/adapter.hpp>
 #include <morpheus/gfx/nvidia/driver.hpp>
 #include <catch2/catch_all.hpp>
 
@@ -6,8 +10,14 @@
 namespace morpheus::gfx::nvidia::nvapi
 {
 
-TEST_CASE("Create an adapter mode list", "[morpheus.core.gfx.gl.wgl.adapter_list]")
+TEST_CASE("Create an adapter mode list", "[morpheus.core.gfx.nvidia.adapter_list]")
 {
+    auto adapters = enumerateAdapters();
+    for (auto const& adapter : adapters)
+    {
+        //debugPrint(fmt_ns::format("Graphics adapter is {}:id({}):vendor({})\n", adapter.name(), adapter.id(), adapter.vendor()));
+        debugPrint(fmt_ns::format("Graphics adapter is {}:id({})\n", adapter.name(), adapter.id()));
+    }
 }
 
 TEST_CASE("Concept checks for NVidia adapters", "[morpheus.gfx.gl.wgl.adapter.concepts]")

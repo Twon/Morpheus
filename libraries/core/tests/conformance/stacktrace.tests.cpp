@@ -1,10 +1,8 @@
 #include "morpheus/core/conformance/stacktrace.hpp"
 #include "morpheus/core/conformance/format.hpp"
 #include "morpheus/core/conversion/adapters/std/stacktrace.hpp"
-#include "morpheus/temp_file.hpp"
 
 #include <catch2/catch_all.hpp>
-#include <iostream>
 
 namespace morpheus
 {

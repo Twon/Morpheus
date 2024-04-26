@@ -1,8 +1,11 @@
 #include "morpheus/application/po/adapters/std/filesystem.hpp"
 #include "morpheus/application/application.hpp"
+#include "morpheus/logging.hpp"
+
+#include <boost/dll.hpp>
+#include <boost/program_options.hpp>
 
 #include <catch2/catch_test_macros.hpp>
-#include <boost/dll.hpp>
 
 namespace morpheus::application::po
 {
@@ -21,7 +24,7 @@ struct Filesystem
     }
 };
 
-TEST_CASE("Test parsing of std filesystem path", "[morpheus.application.po.adapters.std.filesystem]")
+TEST_CASE_METHOD(LoggingFixture, "Test parsing of std filesystem path as options", "[morpheus.application.po.adapters.std.filesystem]")
 {
     SECTION("Ensure valid value parse correctly")
     {
