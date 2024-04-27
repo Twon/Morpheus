@@ -92,7 +92,7 @@ function(enable_ccache)
         list(APPEND ccacheEnv "CCACHE_LOGFILE=${CMAKE_BINARY_DIR}/CCache_log.txt")
     endif()
 
-    if (CCACHE_NOHASDIR)
+    if (CCACHE_NOHASHDIR)
         message(STATUS "Morpheus: CCache do not hash current working directory")
         list(APPEND ccacheEnv "CCACHE_NOHASHDIR=1")
     endif()
