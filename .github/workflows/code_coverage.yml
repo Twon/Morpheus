@@ -95,13 +95,6 @@ jobs:
 
           sudo apt-get install libdatetime-perl
 
-      - name: Install Linux System Packages
-        shell: bash
-        run: |
-          sudo apt-get -y install libgl-dev
-          sudo apt-get -y install libopengl-dev
-          sudo apt-get -y install libglu1-mesa-dev
-
       - name: Set up Python
         uses: actions/setup-python@v4.7.1
         with:
