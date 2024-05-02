@@ -27,7 +27,8 @@ env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: Debug
   COMPILER_TYPE: gcc
-  COMPILER_VERSION: 12
+  COMPILER_VERSION: 13
+
   STDLIB: libstdc++11
 
 jobs:
@@ -123,13 +124,17 @@ jobs:
           sed -i.backup '1a onetbb*:build_type=Release' .conan2/profiles/default
           sed -i.backup '1a mold*:compiler.libcxx=libstdc++11' .conan2/profiles/default
 
+          echo "tools.cmake.cmaketoolchain:generator = Ninja" >> .conan2/global.conf
+          echo "tools.system.package_manager:mode = install" >> .conan2/global.conf
+          echo "tools.system.package_manager:sudo = True" >> .conan2/global.conf
+
           conan profile show -pr default
 
       - name: Configure Install
         working-directory: ${{github.workspace}}
         shell: bash
         run: |
-          conan install "${{github.workspace}}" --build missing -c tools.cmake.cmaketoolchain:generator=Ninja
+          conan install "${{github.workspace}}" --build missing --build gtest/1.14.0 -o boost/*:without_cobalt=True
 
       - name: Conan Preset
         shell: bash

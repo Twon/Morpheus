@@ -10,9 +10,9 @@ namespace nvapi
 using namespace std::literals;
 
 #if (MORPHEUS_PLATFORM_ARCHITECTURE	== MORPHEUS_TARGET_ARCHITECTURE_X86)
-    constexpr std::string Driver::nvapiLibarayPath = "nvapi.dll"s;
+    std::string nvapiLibarayPath = "nvapi.dll"s;
 #else
-    constexpr std::string Driver::nvapiLibarayPath = "nvapi64.dll"s;
+    std::string nvapiLibarayPath = "nvapi64.dll"s;
 #endif
 
 constexpr std::uint32_t offset_NvAPI_Initialize = 0x0150E828UL;

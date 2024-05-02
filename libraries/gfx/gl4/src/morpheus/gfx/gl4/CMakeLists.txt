@@ -11,3 +11,7 @@ target_sources(MorpheusGfxGL4
 if (WIN32)
     add_subdirectory(wgl)
 endif(WIN32)
+
+if(UNIX AND NOT APPLE)
+    add_subdirectory(xgl)
+endif(UNIX AND NOT APPLE)

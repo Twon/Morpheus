@@ -1,6 +1,9 @@
 #include "morpheus/application/application.hpp"
 #include "morpheus/application/po/adapters/std/chrono.hpp"
 #include "morpheus/core/serialisation/adapters/std/chrono.hpp"
+#include "morpheus/logging.hpp"
+
+#include <boost/program_options.hpp>
 
 #include <catch2/catch_test_macros.hpp>
 
@@ -24,7 +27,7 @@ struct ChronoDuration
     }
 };
 
-TEST_CASE("Test parsing of std chrono duration", "[morpheus.application.po.adapters.std.chrono.duration]")
+TEST_CASE_METHOD(LoggingFixture, "Test parsing of std chrono duration", "[morpheus.application.po.adapters.std.chrono.duration]")
 {
     SECTION("Ensure valid value parse correctly")
     {
@@ -52,6 +55,47 @@ TEST_CASE("Test parsing of std chrono duration", "[morpheus.application.po.adapt
         std::array cliOptions = {"dummyProgram.exe", "--duration", "invalid"};
         ChronoDuration<std::chrono::nanoseconds> durationOptions{};
         auto const result = parseProgramOptions(static_cast<int>(cliOptions.size()), cliOptions.data(), HelpDocumentation{}, durationOptions);
+        REQUIRE(result);
+    }
+}
+
+struct TimeZone
+{
+    std::reference_wrapper<date_ns::time_zone const> timezone = *date_ns::get_tzdb().current_zone();
+
+    void addOptions(boost::program_options::options_description& options)
+    {
+        namespace po = boost::program_options;
+        // clang-format off
+        options.add_options()
+            ("timezone", po::value(&timezone), "The timezone.");
+        // clang-format on
+    }
+};
+
+TEST_CASE_METHOD(LoggingFixture, "Test parsing of std chrono time_zone", "[morpheus.application.po.adapters.std.chrono.time_zone]")
+{
+    SECTION("Ensure valid value parse correctly")
+    {
+        auto getTimezone = [](std::string_view param)
+        {
+            TimeZone timezoneOptions{};
+            std::array cliOptions = {"dummyProgram.exe", "--timezone", param.data()};
+            auto const result = parseProgramOptions(static_cast<int>(cliOptions.size()), cliOptions.data(), HelpDocumentation{}, timezoneOptions);
+            REQUIRE(!result);
+            return timezoneOptions.timezone;
+        };
+
+        REQUIRE(getTimezone("Australia/Sydney") == *date_ns::get_tzdb().locate_zone("Australia/Sydney"));
+        REQUIRE(getTimezone("Brazil/East") == *date_ns::get_tzdb().locate_zone("Brazil/East"));
+        REQUIRE(getTimezone("Canada/Eastern") == *date_ns::get_tzdb().locate_zone("Canada/Eastern"));
+        REQUIRE(getTimezone("US/Central") == *date_ns::get_tzdb().locate_zone("US/Central"));
+    }
+    SECTION("Ensure invalid value parse correctly")
+    {
+        std::array cliOptions = {"dummyProgram.exe", "--timezone", "invalid"};
+        TimeZone timezoneOptions{};
+        auto const result = parseProgramOptions(static_cast<int>(cliOptions.size()), cliOptions.data(), HelpDocumentation{}, timezoneOptions);
         REQUIRE(result);
     }
 }
