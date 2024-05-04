@@ -170,8 +170,8 @@ class Morpheus(ConanFile):
 #            "intel-cc": "??"
             "msvc": "16",
             "gcc": "11",
-            "clang": "13",
-            "apple-clang": "13"
+            "clang": "15",
+            "apple-clang": "15"
         }
 
     def configure(self):

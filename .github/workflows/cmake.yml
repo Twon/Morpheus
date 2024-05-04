@@ -44,20 +44,6 @@ jobs:
               lib: "libstdc++11"
             }
           - {
-              name: "Ubuntu Clang-14 + libc++",
-              os: ubuntu-latest,
-              compiler:
-                {
-                  type: CLANG,
-                  version: 14,
-                  conan: "clang",
-                  cc: "clang-14",
-                  cxx: "clang++-14",
-                  std: 20
-                },
-              lib: "libc++",
-            }
-          - {
               name: "Ubuntu Clang-15 + libc++",
               os: ubuntu-latest,
               compiler:
@@ -81,6 +67,20 @@ jobs:
                   conan: "clang",
                   cc: "clang-16",
                   cxx: "clang++-16",
+                  std: 20
+                },
+              lib: "libc++",
+            }
+          - {
+              name: "Ubuntu Clang-17 + libc++",
+              os: ubuntu-latest,
+              compiler:
+                {
+                  type: CLANG,
+                  version: 17,
+                  conan: "clang",
+                  cc: "clang-17",
+                  cxx: "clang++-17",
                   std: 20
                 },
               lib: "libc++",
