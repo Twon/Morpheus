@@ -91,20 +91,6 @@ jobs:
               compiler: { type: VISUAL, version: 16, conan: "mscv", cc: "cl", cxx: "cl", std: 20 },
             }
           - {
-              name: "MacOS Apple Clang 14",
-              os: macos-13,
-              compiler:
-                {
-                  type: APPLE_CLANG,
-                  version: "14.3.1",
-                  conan: "apple-clang",
-                  cc: "clang",
-                  cxx: "clang++",
-                  std: 20
-                },
-              lib: "libc++",
-            }
-          - {
               name: "MacOS Apple Clang 15",
               os: macos-14,
               compiler:
