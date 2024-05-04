@@ -170,7 +170,7 @@ class Morpheus(ConanFile):
 #            "intel-cc": "??"
             "msvc": "16",
             "gcc": "11",
-            "clang": "15",
+            "clang": "16:",
             "apple-clang": "15"
         }
 
