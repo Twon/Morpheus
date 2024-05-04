@@ -2,7 +2,6 @@
 
 #include <morpheus/core/conformance/version.hpp>
 
-
 #if __has_include(<print>)
     #include <print>
 #endif // #if __has_include(<print>)
