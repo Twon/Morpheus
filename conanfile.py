@@ -54,19 +54,27 @@ class Morpheus(ConanFile):
     settings = "os", "compiler", "build_type", "arch"
     no_copy_source = True
     options = {
-        "shared": [True, False],
-        "fPIC": [True, False],
-        "tools": [True, False],
         "build_docs": [True, False],
-        "link_with_mold": [True, False]
+        "fPIC": [True, False],
+        "link_with_mold": [True, False],
+        "shared": [True, False],
+        "tools": [True, False],
+        "with_rs_direct_x12": [True, False],
+        "with_rs_metal": [True, False],
+        "with_rs_opengl": [True, False],
+        "with_rs_vulkan": [True, False]
     }
     default_options = {
-        "shared": False,
-        "fPIC": True,
-        "tools": True,
         "build_docs": False,
-        "link_with_mold": True
-    }
+        "fPIC": True,
+        "link_with_mold": True,
+        "shared": False,
+        "tools": True,
+        "with_rs_direct_x12": True,
+        "with_rs_metal": True,
+        "with_rs_opengl": True,
+        "with_rs_vulkan": True
+     }
     exports_sources = ["CMakeLists.txt", "LICENSE", "version.txt", "cmake/*", "examples/*" "libraries/*"]
     requires = (
         "boost/1.84.0",
@@ -78,7 +86,6 @@ class Morpheus(ConanFile):
         "rapidjson/cci.20230929",
         "range-v3/0.12.0",
         "scnlib/2.0.2",
-        "vulkan-headers/1.3.239.0"#,
         #"zlib/1.2.12" # xapian-core/1.4.19' requires 'zlib/1.2.12' while 'boost/1.81.0' requires 'zlib/1.2.13'. To fix this conflict you need to override the package 'zlib' in your root package.
     )
 
@@ -93,7 +100,7 @@ class Morpheus(ConanFile):
 
     def checkMoldIsSupported(self):
         """ Mold is only tested on Linux with gcc and clang. In future support for icc may be added. """
-        return self.settings.os == "Linux" and (self.settings.compiler == "clang" or self.settings.compiler == "gcc")
+        return self.settings.os in ["Macos", "iOS", "tvOS", "Linux"] and (self.settings.arch != "armv8" )
 
     @property
     def useDate(self):
@@ -125,6 +132,12 @@ class Morpheus(ConanFile):
         if not self.checkMoldIsSupported():
             self.options.rm_safe("link_with_mold")
 
+        if not (self.settings.os in ["Macos", "iOS", "tvOS"]):
+            self.options.rm_safe("with_rs_metal")
+
+        if not (self.settings.os in ["Windows"]):
+            self.options.rm_safe("with_rs_direct_x12")
+
     def build_requirements(self):
         self.tool_requires("ninja/1.11.1")
         self.test_requires("catch2/3.5.3")
@@ -141,8 +154,11 @@ class Morpheus(ConanFile):
             self.build_requires("openssl/3.2.1", override=True)
 
     def requirements(self):
-        if self.settings.os in ["Macos", "iOS", "tvOS"] and self.settings.compiler == "apple-clang":
-            self.requires("moltenvk/1.2.2")
+        if self.options.get_safe("with_rs_vulkan", False):
+            self.requires("vulkan-headers/1.3.239.0")
+        
+            if (self.settings.os in ["Macos", "iOS", "tvOS"]):
+                self.requires("moltenvk/1.2.2")
 
         if self.settings.os in ["Windows"]:
             self.requires("wil/1.0.240122.1")
@@ -194,6 +210,7 @@ class Morpheus(ConanFile):
 
     def generate(self):
         tc = CMakeToolchain(self)
+        tc.variables["BUILD_SHARED_LIBS"] = self.options.shared
         tc.variables["MORPHEUS_BUILD_DOCS"] = self.options.build_docs
         tc.variables["MORPHEUS_LINK_WITH_MOLD"] = self.options.get_safe("link_with_mold", False)
         tc.generate()
