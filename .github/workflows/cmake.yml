@@ -206,8 +206,9 @@ jobs:
       - name: Configure Conan
         shell: bash
         run: |
-          if [[ "${{matrix.settings.os}}" == *"mac"* ]]; then
+          if [[ "${{matrix.settings.os}}" == *"macos"* ]]; then
             alias sed='gsed'
+            echo "Setting sed alias"
           fi
           
           conan profile detect --force
