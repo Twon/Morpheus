@@ -186,6 +186,7 @@ jobs:
         shell: bash
         run: |
           brew install gnu-sed
+          echo 'alias sed=gnu-sed' >> ~/.bash_aliases
 
       - name: Install Linux System Packages
         if: contains( matrix.settings.os, 'ubuntu')
@@ -206,11 +207,9 @@ jobs:
       - name: Configure Conan
         shell: bash
         run: |
-          echo "${BASH_VERSION}"
-          if echo "${{matrix.settings.os}}" | grep -q "macos"; then
-            alias sed='gsed'
-            which sed
+          if [ -f ~/.bash_aliases ]; then
             echo "Setting sed alias"
+            source ~/.bash_aliases
           fi
           
           conan profile detect --force
