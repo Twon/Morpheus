@@ -207,7 +207,7 @@ jobs:
         shell: bash
         run: |
           echo "${BASH_VERSION}"
-          if [[ "${{matrix.settings.os}}" =~ *"macos"* ]]; then
+          if [[ "${{matrix.settings.os}}" =~ .*macos.* ]]; then
             alias sed='gsed'
             echo "Setting sed alias"
           fi
