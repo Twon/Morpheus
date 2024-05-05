@@ -209,6 +209,7 @@ jobs:
           echo "${BASH_VERSION}"
           if echo "${{matrix.settings.os}}" | grep -q "macos"; then
             alias sed='gsed'
+            which sed
             echo "Setting sed alias"
           fi
           
