@@ -213,6 +213,7 @@ jobs:
             alias
           fi
           
+          gsed -i '.backup' '1a mold*:build_type=Release' .conan2/profiles/default
           conan profile detect --force
           sed -i.backup '/^\[settings\]$/,/^\[/ s/^build_type=.*/build_type=${{ matrix.configuration }}/' .conan2/profiles/default
           sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.cppstd=.*/compiler.cppstd=${{ matrix.settings.compiler.std }}/' .conan2/profiles/default
