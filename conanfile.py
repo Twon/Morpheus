@@ -79,8 +79,6 @@ class Morpheus(ConanFile):
     requires = (
         "boost/1.85.0",
         "ctre/3.8.1",
-        "glbinding/3.3.0",
-        "glew/2.2.0",
         "magic_enum/0.9.5",
         "ms-gsl/4.0.0",
         "rapidjson/cci.20230929",
@@ -160,6 +158,10 @@ class Morpheus(ConanFile):
             if (self.settings.os in ["Macos", "iOS", "tvOS"]):
                 self.requires("moltenvk/1.2.2")
 
+        if self.options.get_safe("with_rs_opengl", False):
+            self.requires("glbinding/3.3.0")
+            self.requires("glew/2.2.0")
+
         if self.settings.os in ["Windows"]:
             self.requires("wil/1.0.240122.1")
 
@@ -213,6 +215,10 @@ class Morpheus(ConanFile):
         tc.variables["BUILD_SHARED_LIBS"] = self.options.shared
         tc.variables["MORPHEUS_BUILD_DOCS"] = self.options.build_docs
         tc.variables["MORPHEUS_LINK_WITH_MOLD"] = self.options.get_safe("link_with_mold", False)
+        tc.variables["MORPHEUS_RENDER_SYSTEM_DIRECT_X12"] = self.options.get_safe("with_rs_direct_x12", False)
+        tc.variables["MORPHEUS_RENDER_SYSTEM_METAL"] = self.options.get_safe("with_rs_metal", False)
+        tc.variables["MORPHEUS_RENDER_SYSTEM_OPENGL"] = self.options.get_safe("with_rs_opengl", False)
+        tc.variables["MORPHEUS_RENDER_SYSTEM_VULKAN"] = self.options.get_safe("with_rs_vulkan", False)
         tc.generate()
         deps = CMakeDeps(self)
         deps.generate()
