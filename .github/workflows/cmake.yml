@@ -186,7 +186,7 @@ jobs:
         shell: bash
         run: |
           brew install gnu-sed
-          echo 'alias sed=gnu-sed' >> ~/.bash_aliases
+          echo 'alias sed=gsed' >> ~/.bash_aliases
 
       - name: Install Linux System Packages
         if: contains( matrix.settings.os, 'ubuntu')
