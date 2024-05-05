@@ -209,7 +209,8 @@ jobs:
         run: |
           if [ -f ~/.bash_aliases ]; then
             echo "Setting sed alias"
-            source ~/.bash_aliases
+            source ~/.bash_aliasesa
+            alias
           fi
           
           conan profile detect --force
