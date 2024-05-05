@@ -179,6 +179,13 @@ jobs:
         uses: maxim-lobanov/setup-xcode@v1.6.0
         with:
           xcode-version: '${{matrix.settings.compiler.version}}'
+      
+      - name: GNU-Sed for Mac
+        if: contains(matrix.settings.os, 'macos')
+        shell: bash
+        run: |
+          brew install gnu-sed
+          alias sed='gsed'
 
       - name: Install Linux System Packages
         if: contains( matrix.settings.os, 'ubuntu')
