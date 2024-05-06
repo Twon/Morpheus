@@ -180,7 +180,7 @@ jobs:
         with:
           xcode-version: '${{matrix.settings.compiler.version}}'
       
-      # Sed on Mac is BSD-Sed, not GNU-Sed and the syntaxes differ.  Rather than adjust subsequent sed command, we make sure a consisten version of sed is available.
+      # Sed on Mac is BSD-Sed, not GNU-Sed and the syntaxes differ.  Rather than adjust subsequent sed command, we make sure a consistent version of sed is available.
       - name: GNU-Sed for Mac
         if: contains(matrix.settings.os, 'macos')
         shell: bash
@@ -213,7 +213,6 @@ jobs:
             alias
           fi
           
-          gsed -i '.backup' '1a mold*:build_type=Release' .conan2/profiles/default
           conan profile detect --force
           sed -i.backup '/^\[settings\]$/,/^\[/ s/^build_type=.*/build_type=${{ matrix.configuration }}/' .conan2/profiles/default
           sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.cppstd=.*/compiler.cppstd=${{ matrix.settings.compiler.std }}/' .conan2/profiles/default
