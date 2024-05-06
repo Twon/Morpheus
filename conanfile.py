@@ -93,7 +93,7 @@ class Morpheus(ConanFile):
 
     def checkMoldIsSupported(self):
         """ Mold is only tested on Linux with gcc and clang. In future support for icc may be added. """
-        return self.settings.os == "Linux" and (self.settings.compiler == "clang" or self.settings.compiler == "gcc")
+        return self.settings.os in ["Macos", "iOS", "tvOS", "Linux"] and (self.settings.arch != "armv8" )
 
     @property
     def useDate(self):

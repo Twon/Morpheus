@@ -96,7 +96,8 @@ jobs:
               compiler:
                 {
                   type: APPLE_CLANG,
-                  version: "14.3.1",
+                  version: "14",
+                  xcode: "14.3.1",
                   conan: "apple-clang",
                   cc: "clang",
                   cxx: "clang++",
@@ -110,7 +111,8 @@ jobs:
               compiler:
                 {
                   type: APPLE_CLANG,
-                  version: "15.2",
+                  version: "15",
+                  xcode: "15.2",
                   conan: "apple-clang",
                   cc: "clang",
                   cxx: "clang++",
@@ -174,11 +176,19 @@ jobs:
         run: |
           sudo apt install -y libc++-${{ matrix.settings.compiler.version }}-dev libc++abi-${{ matrix.settings.compiler.version }}-dev libunwind-${{ matrix.settings.compiler.version }}-dev
 
-      - name: Select Xcode ${{matrix.settings.compiler.version}}
+      - name: Select Xcode ${{matrix.settings.compiler.xcode}}
         if: contains(matrix.settings.os, 'macos')
         uses: maxim-lobanov/setup-xcode@v1.6.0
         with:
-          xcode-version: '${{matrix.settings.compiler.version}}'
+          xcode-version: '${{matrix.settings.compiler.xcode}}'
+
+      # Sed on Mac is BSD-Sed, not GNU-Sed and the syntaxes differ.  Rather than adjust subsequent sed command, we make sure a consistent version of sed is available.
+      - name: GNU-Sed for Mac
+        if: contains(matrix.settings.os, 'macos')
+        shell: bash
+        run: |
+          brew install gnu-sed
+          echo 'alias sed=gsed' >> ~/.bash_aliases
 
       - name: Install Linux System Packages
         if: contains( matrix.settings.os, 'ubuntu')
@@ -199,16 +209,26 @@ jobs:
       - name: Configure Conan
         shell: bash
         run: |
+          if [ -f ~/.bash_aliases ]; then
+            shopt -s expand_aliases 
+            source ~/.bash_aliases
+            alias
+          fi
+
           conan profile detect --force
           sed -i.backup '/^\[settings\]$/,/^\[/ s/^build_type=.*/build_type=${{ matrix.configuration }}/' .conan2/profiles/default
           sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.cppstd=.*/compiler.cppstd=${{ matrix.settings.compiler.std }}/' .conan2/profiles/default
-          if [[ "${{ matrix.settings.compiler.type }}" == "GCC" || "${{ matrix.settings.compiler.type }}" == "CLANG" ]]; then
+          if [[ "${{ matrix.settings.compiler.type }}" == "GCC" || "${{ matrix.settings.compiler.type }}" == "CLANG" || "${{ matrix.settings.compiler.type }}" == "APPLE_CLANG" ]]; then
             sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler=.*/compiler=${{ matrix.settings.compiler.conan }}/' .conan2/profiles/default
             sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.version=.*/compiler.version=${{ matrix.settings.compiler.version }}/' .conan2/profiles/default
             sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.libcxx=.*/compiler.libcxx=${{ matrix.settings.lib }}/' .conan2/profiles/default
             sed -i.backup '1a mold*:build_type=Release' .conan2/profiles/default
             sed -i.backup '1a onetbb*:build_type=Release' .conan2/profiles/default
-            sed -i.backup '1a mold*:compiler.libcxx=libstdc++11' .conan2/profiles/default
+            if [[ "${{ matrix.settings.compiler.type }}" == "APPLE_CLANG" ]]; then
+              sed -i.backup '1a mold*:compiler.libcxx=libc++' .conan2/profiles/default
+            else
+              sed -i.backup '1a mold*:compiler.libcxx=libstdc++11' .conan2/profiles/default
+            fi
           fi
 
           echo "tools.cmake.cmaketoolchain:generator = Ninja Multi-Config" >> .conan2/global.conf
