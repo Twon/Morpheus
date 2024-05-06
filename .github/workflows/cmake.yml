@@ -222,6 +222,8 @@ jobs:
             sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler=.*/compiler=${{ matrix.settings.compiler.conan }}/' .conan2/profiles/default
             sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.version=.*/compiler.version=${{ matrix.settings.compiler.version }}/' .conan2/profiles/default
             sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.libcxx=.*/compiler.libcxx=${{ matrix.settings.lib }}/' .conan2/profiles/default
+            sed -i.backup '1a mold*:build_type=Release' .conan2/profiles/default
+            sed -i.backup '1a onetbb*:build_type=Release' .conan2/profiles/default
           fi
 
           echo "tools.cmake.cmaketoolchain:generator = Ninja Multi-Config" >> .conan2/global.conf
