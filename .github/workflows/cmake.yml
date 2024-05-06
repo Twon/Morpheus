@@ -110,7 +110,7 @@ jobs:
               compiler:
                 {
                   type: APPLE_CLANG,
-                  version: "15",
+                  version: "15.2",
                   conan: "apple-clang",
                   cc: "clang",
                   cxx: "clang++",
@@ -217,8 +217,9 @@ jobs:
           sed -i.backup '/^\[settings\]$/,/^\[/ s/^build_type=.*/build_type=${{ matrix.configuration }}/' .conan2/profiles/default
           sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.cppstd=.*/compiler.cppstd=${{ matrix.settings.compiler.std }}/' .conan2/profiles/default
           if [[ "${{ matrix.settings.compiler.type }}" == "GCC" || "${{ matrix.settings.compiler.type }}" == "CLANG" || "${{ matrix.settings.compiler.type }}" == "APPLE_CLANG" ]]; then
+            MAJOR_COMPILER_VER="${{ matrix.settings.compiler.version }}/1" | bc 
             sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler=.*/compiler=${{ matrix.settings.compiler.conan }}/' .conan2/profiles/default
-            sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.version=.*/compiler.version=${{ matrix.settings.compiler.version }}/' .conan2/profiles/default
+            sed -i.backup "/^\[settings\]$/,/^\[/ s/^compiler.version=.*/compiler.version=${MAJOR_COMPILER_VER}/" .conan2/profiles/default
             sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.libcxx=.*/compiler.libcxx=${{ matrix.settings.lib }}/' .conan2/profiles/default
             sed -i.backup '1a mold*:build_type=Release' .conan2/profiles/default
             sed -i.backup '1a onetbb*:build_type=Release' .conan2/profiles/default
