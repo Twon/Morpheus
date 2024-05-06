@@ -27,6 +27,7 @@ from conan.tools.env import VirtualBuildEnv
 from conan.tools.files import copy
 from conan.tools.scm import Version
 from conan.tools.files import load
+from conan.tools.system.package_manager import Apt
 import re, os.path
 import subprocess
 import sys
@@ -59,7 +60,11 @@ class Morpheus(ConanFile):
         "fPIC": [True, False],
         "link_with_mold": [True, False],
         "shared": [True, False],
-        "tools": [True, False]
+        "tools": [True, False],
+        "with_rs_direct_x12": [True, False],
+        "with_rs_metal": [True, False],
+        "with_rs_opengl": [True, False],
+        "with_rs_vulkan": [True, False]
     }
     default_options = {
         "build_docs": False,
@@ -67,20 +72,21 @@ class Morpheus(ConanFile):
         "fPIC": True,
         "link_with_mold": True,
         "shared": False,
-        "tools": True
+        "tools": True,
+        "with_rs_direct_x12": True,
+        "with_rs_metal": True,
+        "with_rs_opengl": True,
+        "with_rs_vulkan": True
     }
     exports_sources = ["CMakeLists.txt", "LICENSE", "version.txt", "cmake/*", "examples/*" "libraries/*"]
     requires = (
-        "boost/1.84.0",
+        "boost/1.85.0",
         "ctre/3.8.1",
-        "glbinding/3.3.0",
-        "glew/2.2.0",
         "magic_enum/0.9.5",
         "ms-gsl/4.0.0",
         "rapidjson/cci.20230929",
         "range-v3/0.12.0",
         "scnlib/2.0.2",
-        "vulkan-headers/1.3.239.0"#,
         #"zlib/1.2.12" # xapian-core/1.4.19' requires 'zlib/1.2.12' while 'boost/1.81.0' requires 'zlib/1.2.13'. To fix this conflict you need to override the package 'zlib' in your root package.
     )
 
@@ -130,9 +136,15 @@ class Morpheus(ConanFile):
         if not self.checkCCacheIsSupported():
             self.options.rm_safe("build_with_ccache")
 
+        if not (self.settings.os in ["Macos", "iOS", "tvOS"]):
+            self.options.rm_safe("with_rs_metal")
+
+        if not (self.settings.os in ["Windows"]):
+            self.options.rm_safe("with_rs_direct_x12")
+
     def build_requirements(self):
         self.tool_requires("ninja/1.11.1")
-        self.test_requires("catch2/3.4.0")
+        self.test_requires("catch2/3.5.3")
         self.test_requires("gtest/1.14.0")
 
         if get_cmake_version() < Version("3.28.1"):
@@ -149,8 +161,15 @@ class Morpheus(ConanFile):
             self.build_requires("ccache/4.8.3")
 
     def requirements(self):
-        if self.settings.os in ["Macos", "iOS", "tvOS"] and self.settings.compiler == "apple-clang":
-            self.requires("moltenvk/1.2.2")
+        if self.options.get_safe("with_rs_vulkan", False):
+            self.requires("vulkan-headers/1.3.239.0")
+        
+            if (self.settings.os in ["Macos", "iOS", "tvOS"]):
+                self.requires("moltenvk/1.2.2")
+
+        if self.options.get_safe("with_rs_opengl", False):
+            self.requires("glbinding/3.3.0")
+            self.requires("glew/2.2.0")
 
         if self.settings.os in ["Windows"]:
             self.requires("wil/1.0.240122.1")
@@ -163,6 +182,11 @@ class Morpheus(ConanFile):
 
         if self.useFMT:
             self.requires("fmt/10.2.1")
+
+    def system_requirements(self):
+        if self.options.get_safe("with_rs_opengl", False):
+            apt = Apt(self)
+            apt.install(["libgl-dev", "libopengl-dev", "libglu1-mesa-dev"], update=True, check=True)
 
 #    @property
 #    def _source_subfolder(self):
@@ -202,9 +226,14 @@ class Morpheus(ConanFile):
 
     def generate(self):
         tc = CMakeToolchain(self)
+        tc.variables["BUILD_SHARED_LIBS"] = self.options.shared
         tc.variables["MORPHEUS_BUILD_DOCS"] = self.options.build_docs
-        tc.variables["MORPHEUS_LINK_WITH_MOLD"] = self.options.get_safe("link_with_mold", False)
         tc.variables["MORPHEUS_BUILD_WITH_CCACHE"] = self.options.get_safe("build_with_ccache", False)
+        tc.variables["MORPHEUS_LINK_WITH_MOLD"] = self.options.get_safe("link_with_mold", False)
+        tc.variables["MORPHEUS_RENDER_SYSTEM_DIRECT_X12"] = self.options.get_safe("with_rs_direct_x12", False)
+        tc.variables["MORPHEUS_RENDER_SYSTEM_METAL"] = self.options.get_safe("with_rs_metal", False)
+        tc.variables["MORPHEUS_RENDER_SYSTEM_OPENGL"] = self.options.get_safe("with_rs_opengl", False)
+        tc.variables["MORPHEUS_RENDER_SYSTEM_VULKAN"] = self.options.get_safe("with_rs_vulkan", False)
         tc.generate()
         deps = CMakeDeps(self)
         deps.generate()
