@@ -176,8 +176,9 @@ class Morpheus(ConanFile):
             self.requires("fmt/10.2.1")
 
     def system_requirements(self):
-        apt = Apt(self)
-        apt.install(["libgl-dev", "libopengl-dev", "libglu1-mesa-dev"], update=True, check=True)
+        if self.options.get_safe("with_rs_opengl", False):
+            apt = Apt(self)
+            apt.install(["libgl-dev", "libopengl-dev", "libglu1-mesa-dev"], update=True, check=True)
 
 #    @property
 #    def _source_subfolder(self):
