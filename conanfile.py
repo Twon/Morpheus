@@ -101,6 +101,11 @@ class Morpheus(ConanFile):
         """ Mold is only tested on Linux with gcc and clang. In future support for icc may be added. """
         return self.settings.os == "Linux" and (self.settings.compiler == "clang" or self.settings.compiler == "gcc")
 
+    def checkCCacheIsSupported(self):
+        """ CCache is fully supported on Linux and macOS with gcc and clang and on Windows msvc. """
+        return (self.settings.os == "Macos" or self.settings.os == "Linux" or self.settings.os == "Windows") and \
+               (self.settings.compiler == "clang" or self.settings.compiler == "gcc" or self.settings.compiler == "msvc" or self.settings.compiler == "apple-clang")    
+
     @property
     def useDate(self):
         """ Does the current compiler version lack support for Date and timezones via the STL. """
