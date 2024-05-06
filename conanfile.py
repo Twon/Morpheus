@@ -27,6 +27,7 @@ from conan.tools.env import VirtualBuildEnv
 from conan.tools.files import copy
 from conan.tools.scm import Version
 from conan.tools.files import load
+from conan.tools.system.package_manager import Apt
 import re, os.path
 import subprocess
 import sys
@@ -173,6 +174,11 @@ class Morpheus(ConanFile):
 
         if self.useFMT:
             self.requires("fmt/10.2.1")
+
+    def system_requirements(self):
+        if self.options.get_safe("with_rs_opengl", False):
+            apt = Apt(self)
+            apt.install(["libgl-dev", "libopengl-dev", "libglu1-mesa-dev"], update=True, check=True)
 
 #    @property
 #    def _source_subfolder(self):
