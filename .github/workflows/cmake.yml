@@ -224,6 +224,12 @@ jobs:
             sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.libcxx=.*/compiler.libcxx=${{ matrix.settings.lib }}/' .conan2/profiles/default
             sed -i.backup '1a mold*:build_type=Release' .conan2/profiles/default
             sed -i.backup '1a onetbb*:build_type=Release' .conan2/profiles/default
+
+            if [[ "${{ matrix.settings.compiler.type }}" == "APPLE_CLANG" ]]; then
+              sed -i.backup '1a mold*:compiler.libcxx=libstdc++' .conan2/profiles/default
+            else
+              sed -i.backup '1a mold*:compiler.libcxx=libstdc++11' .conan2/profiles/default
+            fi
           fi
 
           echo "tools.cmake.cmaketoolchain:generator = Ninja Multi-Config" >> .conan2/global.conf
