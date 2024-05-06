@@ -23,19 +23,19 @@ public:
     {}
 
     /// \copydoc morpheus::serialisation::concepts::ReaderArchtype::isTextual()
-    static constexpr bool isTextual() { return false; }
+    static constexpr bool isTextual() noexcept { return false; }
 
     /// \copydoc morpheus::serialisation::concepts::ReaderArchtype::beginComposite()
-    void beginComposite(){}
+    void beginComposite() noexcept {}
 
     /// \copydoc morpheus::serialisation::concepts::ReaderArchtype::endComposite()
-    void endComposite(){}
+    void endComposite() noexcept {}
 
     /// \copydoc morpheus::serialisation::concepts::ReaderArchtype::beginValue()
-    void beginValue(std::string_view const) {}
+    void beginValue(std::string_view const) noexcept {}
 
     /// \copydoc morpheus::serialisation::concepts::ReaderArchtype::endValue()
-    void endValue(){}
+    void endValue() noexcept {}
 
     /// \copydoc morpheus::serialisation::concepts::ReaderArchtype::beginSequence()
     std::optional<std::size_t> beginSequence()
@@ -44,7 +44,7 @@ public:
     }
 
     /// \copydoc morpheus::serialisation::concepts::ReaderArchtype::endSequence()
-    void endSequence(){}
+    void endSequence() noexcept {}
 
     /// \copydoc morpheus::serialisation::concepts::ReaderArchtype::beginNullable()
     bool beginNullable()
@@ -53,7 +53,7 @@ public:
     }
 
     /// \copydoc morpheus::serialisation::concepts::ReaderArchtype::endNullable()
-    void endNullable(){}
+    void endNullable() noexcept {}
 
     template <typename T>
     requires std::integral<T> or std::floating_point<T>
