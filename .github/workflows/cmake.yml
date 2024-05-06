@@ -208,13 +208,11 @@ jobs:
         shell: bash
         run: |
           if [ -f ~/.bash_aliases ]; then
-            echo "Setting sed alias"
             shopt -s expand_aliases 
             source ~/.bash_aliases
             alias
           fi
           
-          which sed
           conan profile detect --force
           sed -i.backup '/^\[settings\]$/,/^\[/ s/^build_type=.*/build_type=${{ matrix.configuration }}/' .conan2/profiles/default
           sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.cppstd=.*/compiler.cppstd=${{ matrix.settings.compiler.std }}/' .conan2/profiles/default
