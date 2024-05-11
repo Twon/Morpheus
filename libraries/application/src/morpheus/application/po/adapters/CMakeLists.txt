@@ -2,5 +2,7 @@ add_subdirectory(std)
 
 target_sources(MorpheusApplication
     PUBLIC
-        enums.hpp
+        FILE_SET HEADERS
+        FILES
+            enums.hpp
 )
