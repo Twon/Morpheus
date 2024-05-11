@@ -132,8 +132,16 @@ function(morpheus_add_target_properties)
     set(multiValueArgs)
     cmake_parse_arguments(MORPHEUS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
+    target_compile_features(${MORPHEUS_NAME}
+        PUBLIC
+            cxx_std_23
+    )
+
     set_target_properties(${MORPHEUS_NAME}
         PROPERTIES
+            CXX_STANDARD 23
+            CXX_STANDARD_REQUIRED ON
+            CXX_EXTENSIONS OFF
             ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
             LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
             RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
@@ -146,7 +154,16 @@ function(morpheus_add_target_properties)
         )
     endif()
 
+    # Create an empty header set here so that the subsequent install step finds it.
+    target_sources(${MORPHEUS_NAME}
+        PUBLIC
+            FILE_SET HEADERS
+            FILES
+    )
+
     install(TARGETS ${MORPHEUS_NAME}
+            FILE_SET HEADERS
+            INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
             RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
             ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
             LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
