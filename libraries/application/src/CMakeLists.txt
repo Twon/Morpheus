@@ -10,13 +10,6 @@ target_include_directories(MorpheusApplication
         $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 
-#target_include_directories(MorpheusApplication
-#    PUBLIC
-#        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
-#        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
-#        $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
-#)
-
 target_link_libraries(MorpheusApplication
     PUBLIC
         morpheus::core

@@ -1,4 +1,6 @@
 target_sources(MorpheusCore
     PUBLIC
-        named_endpoint.hpp
+        FILE_SET HEADERS
+        FILES
+            named_endpoint.hpp
 )

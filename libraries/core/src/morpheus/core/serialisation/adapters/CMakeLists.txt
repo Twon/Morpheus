@@ -1,6 +1,8 @@
 target_sources(MorpheusCore
     PUBLIC
-        aggregate.hpp
+        FILE_SET HEADERS
+        FILES
+            aggregate.hpp
 )
 
 add_subdirectory(std)

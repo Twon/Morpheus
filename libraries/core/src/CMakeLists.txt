@@ -47,16 +47,6 @@ install(TARGETS MorpheusCore
         PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/core
 )
 
-# Hierarchically copy headers to the install dir
-install (
-    DIRECTORY
-        ${CMAKE_CURRENT_SOURCE_DIR}/morpheus/core
-    DESTINATION
-        ${CMAKE_INSTALL_INCLUDEDIR}/morpheus/core
-    FILES_MATCHING PATTERN
-        "*.hpp"
-)
-
 install(
     FILES
         ${CMAKE_CURRENT_BINARY_DIR}/morpheus/core/morpheuscore_export.h
