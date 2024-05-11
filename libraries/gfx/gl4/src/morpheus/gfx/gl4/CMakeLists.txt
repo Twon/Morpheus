@@ -1,8 +1,10 @@
 target_sources(MorpheusGfxGL4
     PUBLIC
-        prerequisites.hpp
-        render_system.hpp
-        type_mapping.hpp
+        FILE_SET HEADERS
+        FILES
+            prerequisites.hpp
+            render_system.hpp
+            type_mapping.hpp
     PRIVATE
         render_system.cpp
         type_mapping.cpp

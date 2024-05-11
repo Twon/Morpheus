@@ -1,7 +1,10 @@
 target_sources(MorpheusGfxNVidia
 	PUBLIC
-		adapter.hpp
-		driver.hpp
+	    FILE_SET HEADERS
+	    FILES	
+		    adapter.hpp
+		    driver.hpp
+		    functions.hpp
 	PRIVATE
 		adapter.cpp
 		driver.cpp
