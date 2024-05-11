@@ -7,6 +7,8 @@ target_sources(MorpheusCoreTests
         exceptions.tests.cpp
         json_reader.tests.cpp
         json_writer.tests.cpp
+        yaml_reader.tests.cpp
+        yaml_writer.tests.cpp
         read_serialiser.tests.cpp
         write_serialiser.tests.cpp
 )
