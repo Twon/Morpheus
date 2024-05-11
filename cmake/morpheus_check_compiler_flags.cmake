@@ -117,6 +117,9 @@ function(morpheus_check_compiler_flags)
     foreach(language IN LISTS languages)
         
         set(COMPILER ${CMAKE_${language}_COMPILER_ID})
+        if (${MORPHEUS_PREFIX}_${COMPILER}_FLAGS)
+            continue()
+        endif()
 
         foreach(flags IN LISTS MORPHEUS_FLAGS)
             if (NOT MORPHEUS_QUIET)
