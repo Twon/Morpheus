@@ -47,4 +47,4 @@ namespace mopheus
     #define MORPHEUS_NO_SANITIZE_ADDRESS
 #endif
 
-} // namespace mopheus
+} // namespace morpheus
