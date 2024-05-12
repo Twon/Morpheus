@@ -20,7 +20,7 @@ namespace morpheus::serialisation
 {
 
 /// \class YamlWriter
-///     Implementes the concept Writer for a streaming JSON writer which writes item by item to the output stream.
+///     Implementes the concept Writer for a streaming YAML writer which writes item by item to the output stream.
 class MORPHEUSCORE_EXPORT YamlWriter
 {
 public:
