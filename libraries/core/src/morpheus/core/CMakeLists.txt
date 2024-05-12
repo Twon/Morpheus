@@ -1,12 +1,10 @@
 target_sources(MorpheusCore
     PUBLIC
-        cpu.hpp
-        game/game.hpp
-        world/world_model.hpp
+        FILE_SET HEADERS
+        FILES
+            cpu.hpp
     PRIVATE
         cpu.cpp
-        game/game.cpp
-        world/world_model.cpp
 )
 
 add_subdirectory(base)
