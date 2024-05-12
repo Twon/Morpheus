@@ -1,4 +1,4 @@
-#include "morpheus/core/serialisation/json_writer.hpp"
+#include "morpheus/core/serialisation/yaml_writer.hpp"
 #include "morpheus/core/conformance/format.hpp"
 #include "morpheus/core/serialisation/adapters/aggregate.hpp"
 #include "morpheus/core/serialisation/adapters/std/chrono.hpp"
@@ -29,7 +29,7 @@ template<class T>
 std::string serialise(T const& value)
 {
     std::ostringstream oss;
-    JsonWriteSerialiser serialiser{oss};
+    YamlWriteSerialiser serialiser{oss};
     serialiser.serialise(value);
     return oss.str();
 }
@@ -51,7 +51,7 @@ T toFloatingPoint(std::string_view value)
 
 }
 
-TEMPLATE_TEST_CASE("Json writer can write single native types to underlying text representation", "[morpheus.serialisation.json_writer.native]",
+TEMPLATE_TEST_CASE("Yaml writer can write single native types to underlying text representation", "[morpheus.serialisation.yaml_writer.native]",
     bool, std::int8_t, std::uint8_t, std::int16_t, std::uint16_t, std::int32_t, std::uint32_t, std::int64_t, std::uint64_t, float, double)
 {
     if constexpr (std::is_integral_v<TestType>)
@@ -75,6 +75,7 @@ TEMPLATE_TEST_CASE("Json writer can write single native types to underlying text
         REQUIRE(test::serialise(-std::numeric_limits<TestType>::signaling_NaN()) == "NaN");
 
 #if (__cpp_lib_to_chars >= 201611L)
+//  Check the below for rapiyaml and remove or modify as necessary
         // RapidJson ouputs "1.401298464324817e-45" vs "1e-45" for float, but SetMaxDecimalPlaces() would effect all non-scientific values so we compare
         // against the underling value not string representation.
 //        REQUIRE(test::toFloatingPoint<TestType>(test::serialise(std::numeric_limits<TestType>::denorm_min())) == Approx(std::numeric_limits<TestType>::denorm_min()));
@@ -83,19 +84,19 @@ TEMPLATE_TEST_CASE("Json writer can write single native types to underlying text
     }
 }
 
-TEST_CASE("Json writer can write simple composite types to underlying text representation", "[morpheus.serialisation.json_writer.composite]")
+TEST_CASE("Yaml writer can write simple composite types to underlying text representation", "[morpheus.serialisation.yaml_writer.composite]")
 {
-    GIVEN("A Json writer")
+    GIVEN("A Yaml writer")
     {
         std::ostringstream strStream;
-        JsonWriter writer{ strStream };
+        YamlWriter writer{ strStream };
 
         WHEN("Writing an empty composite")
         {
             writer.beginComposite();
             writer.endComposite();
 
-            THEN("Expect an empty composite in the json document")
+            THEN("Expect an empty composite in the yaml document")
             {
                 REQUIRE(strStream.str() == "{}");
             }
@@ -109,7 +110,7 @@ TEST_CASE("Json writer can write simple composite types to underlying text repre
             writer.endValue();
             writer.endComposite();
 
-            THEN("Expect an null composite in the json document")
+            THEN("Expect an null composite in the yaml document")
             {
                 REQUIRE(strStream.str() == R"({"x":null})");
             }
@@ -122,7 +123,7 @@ TEST_CASE("Json writer can write simple composite types to underlying text repre
             writer.endValue();
             writer.endComposite();
 
-            THEN("Expect an empty composite in the json document")
+            THEN("Expect an empty composite in the yaml document")
             {
                 REQUIRE(strStream.str() == R"({"key":"value"})");
             }
@@ -141,7 +142,7 @@ TEST_CASE("Json writer can write simple composite types to underlying text repre
             writer.endValue();
             writer.endComposite();
 
-            THEN("Expect an empty composite in the json document")
+            THEN("Expect an empty composite in the yaml document")
             {
                 REQUIRE(strStream.str() == R"({"1":"A","2":"B","3":"C"})");
             }
@@ -149,18 +150,18 @@ TEST_CASE("Json writer can write simple composite types to underlying text repre
     }
 }
 
-TEST_CASE("Json writer can write simple sequence types to underlying text representation", "[morpheus.serialisation.json_writer.squence]")
+TEST_CASE("Yaml writer can write simple sequence types to underlying text representation", "[morpheus.serialisation.yaml_writer.squence]")
 {
-    GIVEN("A Json writer")
+    GIVEN("A Yaml writer")
     {
         std::ostringstream strStream;
-        JsonWriter writer{ strStream };
+        YamlWriter writer{ strStream };
 
         WHEN("Writing an simple value")
         {
             writer.write("value");
 
-            THEN("Expect an empty composite in the json document")
+            THEN("Expect an empty composite in the yaml document")
             {
                 REQUIRE(strStream.str() == R"("value")");
             }
@@ -170,7 +171,7 @@ TEST_CASE("Json writer can write simple sequence types to underlying text repres
             writer.beginSequence();
             writer.endSequence();
 
-            THEN("Expect an empty composite in the json document")
+            THEN("Expect an empty composite in the yaml document")
             {
                 REQUIRE(strStream.str() == "[]");
             }
@@ -181,7 +182,7 @@ TEST_CASE("Json writer can write simple sequence types to underlying text repres
             writer.write("value");
             writer.endSequence();
 
-            THEN("Expect an empty composite in the json document")
+            THEN("Expect an empty composite in the yaml document")
             {
                 REQUIRE(strStream.str() == R"(["value"])");
             }
@@ -194,7 +195,7 @@ TEST_CASE("Json writer can write simple sequence types to underlying text repres
             writer.write("C");
             writer.endSequence();
 
-            THEN("Expect an empty composite in the json document")
+            THEN("Expect an empty composite in the yaml document")
             {
                 REQUIRE(strStream.str() == R"(["A","B","C"])");
             }
@@ -222,7 +223,7 @@ struct Example2
 template<>
 inline constexpr bool delegateAggregateSerialisation<Example2> = true;
 
-TEST_CASE("Json writer can write simple aggregates types to underlying text representation", "[morpheus.serialisation.json_writer.aggregate]")
+TEST_CASE("Yaml writer can write simple aggregates types to underlying text representation", "[morpheus.serialisation.yaml_writer.aggregate]")
 {
     GIVEN("An aggregate that opts into serialisation")
     {
@@ -250,7 +251,7 @@ TEST_CASE("Json writer can write simple aggregates types to underlying text repr
     }
 }
 
-TEST_CASE("Json writer can write std types to underlying text representation", "[morpheus.serialisation.json_writer.adapters.std]")
+TEST_CASE("Yaml writer can write std types to underlying text representation", "[morpheus.serialisation.yaml_writer.adapters.std]")
 {
     SECTION("Chrono types")
     {

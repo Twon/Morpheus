@@ -122,7 +122,7 @@ TEST_CASE("Yaml reader provides basic reader functionality", "[morpheus.serialis
         {
             YamlReader reader =  test::readerFromString(str);
 
-            THEN("Expect an empty composite in the json document")
+            THEN("Expect an empty composite in the yaml document")
             {
                 reader.beginComposite();
                 reader.endComposite();

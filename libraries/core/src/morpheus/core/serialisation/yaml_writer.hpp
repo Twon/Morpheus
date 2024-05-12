@@ -2,8 +2,12 @@
 
 #include "morpheus/core/base/platform.hpp"
 
-#include <rapidjson/writer.h>
-#include <rapidjson/ostreamwrapper.h>
+//#include <rapidjson/writer.h>
+//#include <rapidjson/ostreamwrapper.h>
+
+#include <ryml_all.hpp>     //  details around which header to include are mentioned  at
+                            //  https://github.com/biojppm/rapidyaml/blob/master/samples/quickstart.cpp
+
 
 #include <cstddef>
 #include <cstdint>
@@ -81,6 +85,7 @@ public:
     template <std::size_t N> void write(const char(&str)[N]) { write(std::string_view(str, N-1)); }
 
 private:
+    //  TODO completely rework this section for ryml calls instead of rapidjson
     template<typename OutputStream>
     using RapidYamlWriter = rapidjson::Writer<
         OutputStream,
@@ -89,7 +94,7 @@ private:
         rapidjson::CrtAllocator,
         (rapidjson::kWriteDefaultFlags | rapidjson::kWriteNanAndInfFlag)
     >;
-    
+
     rapidjson::OStreamWrapper mStream;
     RapidYamlWriter<rapidjson::OStreamWrapper> mYamlWriter;
 };

@@ -10,7 +10,8 @@
 
 //#include <rapidjson/istreamwrapper.h>
 //#include <rapidjson/reader.h>
-#include <ryml_all.hpp>
+#include <ryml_all.hpp>     //  details around which header to include are mentioned  at
+                            //  https://github.com/biojppm/rapidyaml/blob/master/samples/quickstart.cpp
 
 
 #include <magic_enum/magic_enum.hpp>
