@@ -25,7 +25,7 @@ from conan.tools.build import check_min_cppstd
 from conan.tools.cmake import cmake_layout, CMake, CMakeDeps, CMakeToolchain
 from conan.tools.env import VirtualBuildEnv
 from conan.tools.files import copy
-from conan.tools.scm import Version
+from conan.tools.scm import Git, Version
 from conan.tools.files import load
 from conan.tools.system.package_manager import Apt
 import re, os.path
@@ -76,7 +76,7 @@ class Morpheus(ConanFile):
         "with_rs_opengl": True,
         "with_rs_vulkan": True
      }
-    exports_sources = ["CMakeLists.txt", "LICENSE", "version.txt", "cmake/*", "examples/*" "libraries/*"]
+    #exports_sources = ["CMakeLists.txt", "LICENSE", "version.txt", "cmake/*", "examples/*" "libraries/*"]
     requires = (
         "boost/1.85.0",
         "ctre/3.8.1",
@@ -234,8 +234,18 @@ class Morpheus(ConanFile):
     def layout(self):
         cmake_layout(self)
 
+    def source(self):
+        git = Git(self)
+        git.clone(url=self.url, target=".")
+        #git.checkout("<tag> or <commit hash>")
+
+    def build(self):
+        cmake = CMake(self)
+        cmake.configure()
+        cmake.build()
+
     def package(self):
-        copy(self, "*LICENSE*", dst="licenses", keep_path=False)
+        copy(self, pattern="LICENSE", src=self.source_folder, dst=os.path.join(self.package_folder, "licenses"))
         cmake = CMake(self)
         cmake.configure()
         cmake.install()
@@ -244,9 +254,39 @@ class Morpheus(ConanFile):
 #        self.info.header_only()
 
     def package_info(self):
-        pass
-        #self.cpp_info.names["cmake_find_package"] = "wg21_linear_algebra"
-        #self.cpp_info.names["cmake_find_package_multi"] = "wg21_linear_algebra"
-        #self.cpp_info.components["_wg21_linear_algebra"].names["cmake_find_package"] = "wg21_linear_algebra"
-        #self.cpp_info.components["_wg21_linear_algebra"].names["cmake_find_package_multi"] = "wg21_linear_algebra"
-        #self.cpp_info.components["_wg21_linear_algebra"].requires = ["mdspan::mdspan"]
+        self.cpp_info.components["core"].set_property("cmake_file_name", "MorpheusCore")
+        self.cpp_info.components["core"].set_property("cmake_target_name", "morpheus::core")
+        self.cpp_info.components["core"].defines = ["BOOST_USE_WINAPI_VERSION=BOOST_WINAPI_NTDDI_WIN10"]
+        self.cpp_info.components["core"].requires = ["boost::headers", "boost::log", "ctre::ctre", "magic_enum::magic_enum", "ms-gsl::ms-gsl", "range-v3::range-v3", "rapidjson::rapidjson", "scnlib::scnlib"]
+
+        if self.useDate:
+            self.cpp_info.components["core"].requires.append("date::date")
+            self.cpp_info.components["core"].requires.append("date::date-tz")
+
+        if self.useExpected:
+            self.cpp_info.components["core"].requires.append("tl-expected::expected")
+
+        if self.useFMT:
+            self.cpp_info.components["core"].requires.append("fmt::fmt")
+
+        if self.options.get_safe("with_rs_vulkan", False):
+            self.cpp_info.components["vulkan"].set_property("cmake_file_name", "MorpheusGfxVulkan")
+            self.cpp_info.components["vulkan"].set_property("cmake_target_name", "morpheus::gfx::vulkan")
+            self.cpp_info.components["vulkan"].requires.append("vulkan-headers::vulkan-headers")
+        
+            if (self.settings.os in ["Macos", "iOS", "tvOS"]):
+                self.cpp_info.components["vulkan"].requires.append("moltenvk::moltenvk")
+
+        if self.options.get_safe("with_rs_opengl", False):
+            self.cpp_info.components["opengl"].set_property("cmake_file_name", "MorpheusGfxVulkan")
+            self.cpp_info.components["opengl"].set_property("cmake_target_name", "morpheus::gfx::vulkan")
+            self.cpp_info.components["opengl"].requires.append("glbinding::glbinding")
+            self.cpp_info.components["opengl"].requires.append("glew::glew")
+
+
+        #self.cpp_info.components["ssl"].set_property("cmake_file_name", "SSL")
+        #self.cpp_info.components["ssl"].includedirs = ["include/headers_ssl"]
+        #self.cpp_info.components["ssl"].libs = ["libssl"]
+        #self.cpp_info.components["ssl"].requires = ["crypto", "boost::headers"]  # Depends on headers component in boost package
+
+
