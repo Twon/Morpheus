@@ -24,7 +24,7 @@ from conan.errors import ConanException, ConanInvalidConfiguration
 from conan.tools.build import check_min_cppstd
 from conan.tools.cmake import cmake_layout, CMake, CMakeDeps, CMakeToolchain
 from conan.tools.env import VirtualBuildEnv
-from conan.tools.files import copy
+from conan.tools.files import copy, rm
 from conan.tools.scm import Git, Version
 from conan.tools.files import load
 from conan.tools.system.package_manager import Apt
@@ -76,7 +76,6 @@ class Morpheus(ConanFile):
         "with_rs_opengl": True,
         "with_rs_vulkan": True
      }
-    #exports_sources = ["CMakeLists.txt", "LICENSE", "version.txt", "cmake/*", "examples/*" "libraries/*"]
     requires = (
         "boost/1.85.0",
         "ctre/3.8.1",
@@ -234,10 +233,18 @@ class Morpheus(ConanFile):
     def layout(self):
         cmake_layout(self)
 
-    def source(self):
-        git = Git(self)
-        git.clone(url=self.url, target=".")
-        #git.checkout("<tag> or <commit hash>")
+    def export_sources(self):
+        copy(self, "CMakeLists.txt", src=self.recipe_folder, dst=self.export_sources_folder)
+        copy(self, "LICENSE", src=self.recipe_folder, dst=self.export_sources_folder)
+        copy(self, "version.txt", src=self.recipe_folder, dst=self.export_sources_folder)
+        copy(self, "cmake/*", src=self.recipe_folder, dst=self.export_sources_folder)
+        copy(self, "examples/*", src=self.recipe_folder, dst=self.export_sources_folder)
+        copy(self, "libraries/*", src=self.recipe_folder, dst=self.export_sources_folder)
+
+    #def source(self):
+    #    git = Git(self)
+    #    git.clone(url=self.url, target=".")
+    #    #git.checkout("<tag> or <commit hash>")
 
     def build(self):
         cmake = CMake(self)
@@ -249,7 +256,7 @@ class Morpheus(ConanFile):
         cmake = CMake(self)
         cmake.configure()
         cmake.install()
-
+        rm(self, "*export-set*.cmake", os.path.join(self.package_folder, "lib", "cmake", "morpheus"))
 #    def package_id(self):
 #        self.info.header_only()
 
@@ -258,6 +265,7 @@ class Morpheus(ConanFile):
         self.cpp_info.components["core"].set_property("cmake_target_name", "morpheus::core")
         self.cpp_info.components["core"].defines = ["BOOST_USE_WINAPI_VERSION=BOOST_WINAPI_NTDDI_WIN10"]
         self.cpp_info.components["core"].requires = ["boost::headers", "boost::log", "ctre::ctre", "magic_enum::magic_enum", "ms-gsl::ms-gsl", "range-v3::range-v3", "rapidjson::rapidjson", "scnlib::scnlib"]
+        self.cpp_info.components["core"].builddirs.append(os.path.join("lib", "cmake", "morpheus"))
 
         if self.useDate:
             self.cpp_info.components["core"].requires.append("date::date")
