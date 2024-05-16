@@ -277,13 +277,13 @@ class Morpheus(ConanFile):
         if self.useFMT:
             self.cpp_info.components["core"].requires.append("fmt::fmt")
 
-        if self.options.get_safe("with_rs_vulkan", False):
-            self.cpp_info.components["vulkan"].set_property("cmake_file_name", "MorpheusGfxVulkan")
-            self.cpp_info.components["vulkan"].set_property("cmake_target_name", "morpheus::gfx::vulkan")
-            self.cpp_info.components["vulkan"].requires.append("vulkan-headers::vulkan-headers")
-        
-            if (self.settings.os in ["Macos", "iOS", "tvOS"]):
-                self.cpp_info.components["vulkan"].requires.append("moltenvk::moltenvk")
+        if self.options.get_safe("with_rs_direct_x12", False):
+            self.cpp_info.components["directx12"].set_property("cmake_file_name", "MorpheusGfxDirectX12")
+            self.cpp_info.components["directx12"].set_property("cmake_target_name", "morpheus::gfx::directx12")
+
+        if self.options.get_safe("with_rs_metal", False):
+            self.cpp_info.components["metal"].set_property("cmake_file_name", "MorpheusGfxMetal")
+            self.cpp_info.components["metal"].set_property("cmake_target_name", "morpheus::gfx::metal")
 
         if self.options.get_safe("with_rs_opengl", False):
             self.cpp_info.components["opengl"].set_property("cmake_file_name", "MorpheusGfxVulkan")
@@ -291,6 +291,13 @@ class Morpheus(ConanFile):
             self.cpp_info.components["opengl"].requires.append("glbinding::glbinding")
             self.cpp_info.components["opengl"].requires.append("glew::glew")
 
+        if self.options.get_safe("with_rs_vulkan", False):
+            self.cpp_info.components["vulkan"].set_property("cmake_file_name", "MorpheusGfxVulkan")
+            self.cpp_info.components["vulkan"].set_property("cmake_target_name", "morpheus::gfx::vulkan")
+            self.cpp_info.components["vulkan"].requires.append("vulkan-headers::vulkan-headers")
+        
+            if (self.settings.os in ["Macos", "iOS", "tvOS"]):
+                self.cpp_info.components["vulkan"].requires.append("moltenvk::moltenvk")
 
         #self.cpp_info.components["ssl"].set_property("cmake_file_name", "SSL")
         #self.cpp_info.components["ssl"].includedirs = ["include/headers_ssl"]
