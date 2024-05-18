@@ -1,26 +1,35 @@
+FetchContent_Declare(
+    NVApi
+    GIT_REPOSITORY https://github.com/NVIDIA/nvapi.git
+)
+FetchContent_MakeAvailable(NVApi)
+
+
+
+
 add_library(NvapiHeaders STATIC)
 add_library(NVidia::NvapiHeaders ALIAS NvapiHeaders)
 target_include_directories(NvapiHeaders
     PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+        $<BUILD_INTERFACE:${NVApi_SOURCE_DIR}>
 )
 
 target_sources(NvapiHeaders
 	PUBLIC
-		nvapi.h
-		nvapi_lite_common.h
-		nvapi_lite_d3dext.h
-		nvapi_lite_salend.h
-		nvapi_lite_salstart.h
-		nvapi_lite_sli.h
-		nvapi_lite_stereo.h
-		nvapi_lite_surround.h
-		NvApiDriverSettings.h
-		nvHLSLExtns.h
-		nvHLSLExtnsInternal.h
-		nvShaderExtnEnums.h
+	    ${NVApi_SOURCE_DIR}/nvapi.h
+		${NVApi_SOURCE_DIR}/nvapi_lite_common.h
+		${NVApi_SOURCE_DIR}/nvapi_lite_d3dext.h
+		${NVApi_SOURCE_DIR}/nvapi_lite_salend.h
+		${NVApi_SOURCE_DIR}/nvapi_lite_salstart.h
+		${NVApi_SOURCE_DIR}/nvapi_lite_sli.h
+		${NVApi_SOURCE_DIR}/nvapi_lite_stereo.h
+		${NVApi_SOURCE_DIR}/nvapi_lite_surround.h
+		${NVApi_SOURCE_DIR}/NvApiDriverSettings.h
+		${NVApi_SOURCE_DIR}/nvHLSLExtns.h
+		${NVApi_SOURCE_DIR}/nvHLSLExtnsInternal.h
+		${NVApi_SOURCE_DIR}/nvShaderExtnEnums.h
 	PRIVATE
-		NvApiDriverSettings.cpp
+	${NVApi_SOURCE_DIR}/NvApiDriverSettings.cpp
 )
 
 set_target_properties(NvapiHeaders
