@@ -29,7 +29,7 @@ target_sources(NvapiHeaders
 		${NVApi_SOURCE_DIR}/nvHLSLExtnsInternal.h
 		${NVApi_SOURCE_DIR}/nvShaderExtnEnums.h
 	PRIVATE
-	${NVApi_SOURCE_DIR}/NvApiDriverSettings.cpp
+	    ${NVApi_SOURCE_DIR}/NvApiDriverSettings.cpp
 )
 
 set_target_properties(NvapiHeaders
