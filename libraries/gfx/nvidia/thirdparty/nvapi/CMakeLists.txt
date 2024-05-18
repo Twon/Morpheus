@@ -1,6 +1,8 @@
 FetchContent_Declare(
     NVApi
     GIT_REPOSITORY https://github.com/NVIDIA/nvapi.git
+	GIT_TAG main
+	GIT_SHALLOW TRUE
 )
 FetchContent_MakeAvailable(NVApi)
 
