@@ -1,40 +1,38 @@
+include(FetchContent)
 FetchContent_Declare(
-    NVApi
+    nvapi
     GIT_REPOSITORY https://github.com/NVIDIA/nvapi.git
 	GIT_TAG main
 	GIT_SHALLOW TRUE
 )
-FetchContent_MakeAvailable(NVApi)
+FetchContent_MakeAvailable(nvapi)
 
-
-
-
-add_library(NvapiHeaders STATIC)
-add_library(NVidia::NvapiHeaders ALIAS NvapiHeaders)
-target_include_directories(NvapiHeaders
+add_library(Nvapi STATIC)
+add_library(NVidia::Nvapi ALIAS Nvapi)
+target_include_directories(Nvapi
     PUBLIC
-        $<BUILD_INTERFACE:${NVApi_SOURCE_DIR}>
+        $<BUILD_INTERFACE:${nvidiaAPI_SOURCE_DIR}>
 )
 
-target_sources(NvapiHeaders
+target_sources(Nvapi
 	PUBLIC
-	    ${NVApi_SOURCE_DIR}/nvapi.h
-		${NVApi_SOURCE_DIR}/nvapi_lite_common.h
-		${NVApi_SOURCE_DIR}/nvapi_lite_d3dext.h
-		${NVApi_SOURCE_DIR}/nvapi_lite_salend.h
-		${NVApi_SOURCE_DIR}/nvapi_lite_salstart.h
-		${NVApi_SOURCE_DIR}/nvapi_lite_sli.h
-		${NVApi_SOURCE_DIR}/nvapi_lite_stereo.h
-		${NVApi_SOURCE_DIR}/nvapi_lite_surround.h
-		${NVApi_SOURCE_DIR}/NvApiDriverSettings.h
-		${NVApi_SOURCE_DIR}/nvHLSLExtns.h
-		${NVApi_SOURCE_DIR}/nvHLSLExtnsInternal.h
-		${NVApi_SOURCE_DIR}/nvShaderExtnEnums.h
+	    ${nvapi_SOURCE_DIR}/nvapi.h
+		${nvapi_SOURCE_DIR}/nvapi_lite_common.h
+		${nvapi_SOURCE_DIR}/nvapi_lite_d3dext.h
+		${nvapi_SOURCE_DIR}/nvapi_lite_salend.h
+		${nvapi_SOURCE_DIR}/nvapi_lite_salstart.h
+		${nvapi_SOURCE_DIR}/nvapi_lite_sli.h
+		${nvapi_SOURCE_DIR}/nvapi_lite_stereo.h
+		${nvapi_SOURCE_DIR}/nvapi_lite_surround.h
+		${nvapi_SOURCE_DIR}/NvApiDriverSettings.h
+		${nvapi_SOURCE_DIR}/nvHLSLExtns.h
+		${nvapi_SOURCE_DIR}/nvHLSLExtnsInternal.h
+		${nvapi_SOURCE_DIR}/nvShaderExtnEnums.h
 	PRIVATE
-	    ${NVApi_SOURCE_DIR}/NvApiDriverSettings.cpp
+	    ${nvapi_SOURCE_DIR}/NvApiDriverSettings.c
 )
 
-set_target_properties(NvapiHeaders
+set_target_properties(Nvapi
     PROPERTIES
         FOLDER "Thirdparty"
         ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
@@ -42,7 +40,7 @@ set_target_properties(NvapiHeaders
         RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
 )
 
-install(TARGETS NvapiHeaders
+install(TARGETS Nvapi
         RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}

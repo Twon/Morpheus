@@ -11,5 +11,5 @@ target_link_libraries(MorpheusGfxNVidia
 	PUBLIC
 		Boost::filesystem
 	PRIVATE
-		NVidia::NvapiHeaders
+		NVidia::Nvapi
 )

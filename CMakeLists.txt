@@ -5,7 +5,7 @@ file(STRINGS "version.txt" MORPHEUS_VERSION)
 project(Morpheus
     VERSION ${MORPHEUS_VERSION}
     DESCRIPTION "A high performance focused game engine using object oriented techniques based in the latest C++"
-    LANGUAGES CXX
+    LANGUAGES C CXX
 )
 
 set(CMAKE_POLICY_DEFAULT_CMP0076 NEW)
