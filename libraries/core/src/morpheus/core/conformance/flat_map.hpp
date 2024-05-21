@@ -5,7 +5,7 @@
 #endif
 
 // clang-format off
-#if (__cpp_lib_source_location >= 201907L)
+#if (__cpp_lib_flat_map>= 202207L)
 
     namespace morpheus { namespace fm_ns = std; }
 
