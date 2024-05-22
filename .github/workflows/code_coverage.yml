@@ -66,6 +66,7 @@ jobs:
       - name: Install Latest GCC
         shell: bash
         run: |
+          sudo apt update
           sudo apt install -y g++-${{ env.COMPILER_VERSION }}
 
           # We need to update symlink otherwise we end up with miss matched gcc/g++ and gcov versions.
