@@ -27,7 +27,7 @@ env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: Debug
   COMPILER_TYPE: gcc
-  COMPILER_VERSION: 13
+  COMPILER_VERSION: 14
 
   STDLIB: libstdc++11
 
@@ -66,7 +66,6 @@ jobs:
       - name: Install Latest GCC
         shell: bash
         run: |
-          sudo apt update
           sudo apt install -y g++-${{ env.COMPILER_VERSION }}
 
           # We need to update symlink otherwise we end up with miss matched gcc/g++ and gcov versions.
