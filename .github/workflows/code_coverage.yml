@@ -165,7 +165,7 @@ jobs:
         run: cmake --build --preset ${{ env.CONAN_PRESET }} --target coverage-cobertura
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3.1.4
+        uses: codecov/codecov-action@v4.4.1
         with:
           working-directory: ${{github.workspace}}/build/${{env.BUILD_TYPE}}/coverage
           gcov: true
