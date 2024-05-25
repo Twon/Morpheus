@@ -11,7 +11,7 @@ add_library(Nvapi STATIC)
 add_library(NVidia::Nvapi ALIAS Nvapi)
 target_include_directories(Nvapi
     PUBLIC
-        $<BUILD_INTERFACE:${nvidiaAPI_SOURCE_DIR}>
+        $<BUILD_INTERFACE:${nvapi_SOURCE_DIR}>
 )
 
 target_sources(Nvapi
