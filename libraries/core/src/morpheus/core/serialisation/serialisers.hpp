@@ -8,6 +8,8 @@
 #include "morpheus/core/serialisation/serialise.hpp"
 #include "morpheus/core/serialisation/read_serialiser.hpp"
 #include "morpheus/core/serialisation/write_serialiser.hpp"
+#include "morpheus/core/serialisation/yaml_writer.hpp"
+#include "morpheus/core/serialisation/yaml_reader.hpp"
 
 namespace morpheus::serialisation
 {
@@ -18,4 +20,6 @@ using BinaryReadSerialiser = ReadSerialiser<BinaryReader>;
 using JsonWriteSerialiser = WriteSerialiser<JsonWriter>;
 using JsonReadSerialiser = ReadSerialiser<JsonReader>;
 
+using YamlWriteSerialiser = WriteSerialiser<YamlWriter>;
+using YamlReadSerialiser = ReadSerialiser<YamlReader>;
 }

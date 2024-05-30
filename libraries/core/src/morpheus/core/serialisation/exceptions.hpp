@@ -25,10 +25,21 @@ public:
     using std::runtime_error::runtime_error;
 };
 
+/// \class YamlException
+///     Exception type to be thrown for errors when parsing YAML.
+class YamlException : public std::runtime_error
+{
+public:
+    using std::runtime_error::runtime_error;
+};
+
 /// Throws a std::runtime_error derived binary exception with the attached message.
 MORPHEUSCORE_EXPORT [[noreturn]] MORPHEUS_FUNCTION_COLD void throwBinaryException(std::string_view message);
 
 /// Throws a std::runtime_error derived Json exception with the attached message.
 MORPHEUSCORE_EXPORT [[noreturn]] MORPHEUS_FUNCTION_COLD void throwJsonException(std::string_view message);
+
+/// Throws a std::runtime_error derived Yaml exception with the attached message.
+MORPHEUSCORE_EXPORT [[noreturn]] MORPHEUS_FUNCTION_COLD void throwYamlException(std::string_view message);
 
 } // namespace morpheus::serialisation

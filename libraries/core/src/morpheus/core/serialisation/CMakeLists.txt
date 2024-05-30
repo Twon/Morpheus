@@ -13,6 +13,8 @@ target_sources(MorpheusCore
         text_writer.hpp
         write_serialiser.hpp
         write_serialiser_decl.hpp
+        yaml_reader.hpp
+        yaml_writer.hpp
      PRIVATE
         exceptions.cpp
         json_reader.cpp
@@ -22,6 +24,7 @@ target_sources(MorpheusCore
 target_link_libraries(MorpheusCore
     PUBLIC
         rapidjson
+        ryml::ryml  # https://conan.io/center/recipes/rapidyaml?version=0.5.0
 )
 
 add_subdirectory(adapters)
