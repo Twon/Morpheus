@@ -166,8 +166,9 @@ jobs:
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4.4.1
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         with:
           working-directory: ${{github.workspace}}/build/${{env.BUILD_TYPE}}/coverage
-          gcov: true
-          gcov_include: ${{github.workspace}}/build/${{env.BUILD_TYPE}}/coverage/html
           files: ${{github.workspace}}/build/${{env.BUILD_TYPE}}/coverage/cobertura_coverage.xml
+
