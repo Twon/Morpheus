@@ -1,9 +1,7 @@
 include(FetchContent)
 FetchContent_Declare(
     nvapi
-    GIT_REPOSITORY https://github.com/NVIDIA/nvapi.git
-	GIT_TAG main
-	GIT_SHALLOW TRUE
+    URL https://download.nvidia.com/XFree86/nvapi-open-source-sdk/R550-OpenSource.tar
 )
 FetchContent_MakeAvailable(nvapi)
 
@@ -11,26 +9,26 @@ add_library(Nvapi STATIC)
 add_library(NVidia::Nvapi ALIAS Nvapi)
 target_include_directories(Nvapi
     PUBLIC
-        $<BUILD_INTERFACE:${nvapi_SOURCE_DIR}>
+        ${nvapi_SOURCE_DIR}/R550-OpenSource
+        $<BUILD_INTERFACE:${nvapi_SOURCE_DIR}/R550-OpenSource>
 )
 
-target_sources(Nvapi
-	PUBLIC
-	    ${nvapi_SOURCE_DIR}/nvapi.h
-		${nvapi_SOURCE_DIR}/nvapi_lite_common.h
-		${nvapi_SOURCE_DIR}/nvapi_lite_d3dext.h
-		${nvapi_SOURCE_DIR}/nvapi_lite_salend.h
-		${nvapi_SOURCE_DIR}/nvapi_lite_salstart.h
-		${nvapi_SOURCE_DIR}/nvapi_lite_sli.h
-		${nvapi_SOURCE_DIR}/nvapi_lite_stereo.h
-		${nvapi_SOURCE_DIR}/nvapi_lite_surround.h
-		${nvapi_SOURCE_DIR}/NvApiDriverSettings.h
-		${nvapi_SOURCE_DIR}/nvHLSLExtns.h
-		${nvapi_SOURCE_DIR}/nvHLSLExtnsInternal.h
-		${nvapi_SOURCE_DIR}/nvShaderExtnEnums.h
-	PRIVATE
-	    ${nvapi_SOURCE_DIR}/NvApiDriverSettings.c
+target_compile_options(Nvapi
+    PRIVATE
+         /wd4838
+         /FIstddef.h
+         /FI${nvapi_SOURCE_DIR}/R550-OpenSource/nvapi.h
+
 )
+target_sources(Nvapi
+    PUBLIC
+        ${nvapi_SOURCE_DIR}/R550-OpenSource/nvapi.h
+        ${nvapi_SOURCE_DIR}/R550-OpenSource/nvapi_interface.h
+        ${nvapi_SOURCE_DIR}/R550-OpenSource/NvApiDriverSettings.h
+    PRIVATE
+        ${nvapi_SOURCE_DIR}/R550-OpenSource/NvApiDriverSettings.c
+)
+set_source_files_properties(${nvapi_SOURCE_DIR}/R550-OpenSource/NvApiDriverSettings.c PROPERTIES LANGUAGE CXX)
 
 set_target_properties(Nvapi
     PROPERTIES

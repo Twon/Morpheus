@@ -4,10 +4,10 @@ morpheus_add_tests(
     LABELS GPU
 )
 target_sources(MorpheusGfxNVidiaTests
-	PRIVATE
-		driver.tests.cpp
+    PRIVATE
+        driver.tests.cpp
 )
 target_link_libraries(MorpheusGfxNVidiaTests
-	PRIVATE
-		MorpheusGfxNVidia
+    PRIVATE
+        MorpheusGfxNVidia
 )
