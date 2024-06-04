@@ -20,7 +20,6 @@ concept NullablePointer = requires(T t) {
     requires std::copy_constructible<T>;
     requires std::assignable_from<T&, T>;
     requires std::destructible<T>;
-    requires std::destructible<T>;
     requires std::equality_comparable<T>;
     requires std::equality_comparable_with<T, std::nullptr_t>;
     requires std::swappable<T>;
