@@ -56,6 +56,7 @@ class Morpheus(ConanFile):
     no_copy_source = True
     options = {
         "build_docs": [True, False],
+        "build_with_ccache": [True, False],
         "fPIC": [True, False],
         "link_with_mold": [True, False],
         "shared": [True, False],
@@ -67,6 +68,7 @@ class Morpheus(ConanFile):
     }
     default_options = {
         "build_docs": False,
+        "build_with_ccache": True,
         "fPIC": True,
         "link_with_mold": True,
         "shared": False,
@@ -75,7 +77,7 @@ class Morpheus(ConanFile):
         "with_rs_metal": True,
         "with_rs_opengl": True,
         "with_rs_vulkan": True
-     }
+    }
     exports_sources = ["CMakeLists.txt", "LICENSE", "version.txt", "cmake/*", "examples/*" "libraries/*"]
     requires = (
         "boost/1.85.0",
@@ -131,6 +133,9 @@ class Morpheus(ConanFile):
         if not self.checkMoldIsSupported():
             self.options.rm_safe("link_with_mold")
 
+        if not self.checkCCacheIsSupported():
+            self.options.rm_safe("build_with_ccache")
+
         if not (self.settings.os in ["Macos", "iOS", "tvOS"]):
             self.options.rm_safe("with_rs_metal")
 
@@ -149,8 +154,11 @@ class Morpheus(ConanFile):
             self.build_requires("doxygen/1.9.4") # doxygen/1.9.5 will update dependency on zlib/1.2.12 to zlib/1.2.13
 
         if self.options.get_safe("link_with_mold", False):
-            self.build_requires("mold/2.4.0")
-            self.build_requires("openssl/3.2.1", override=True)
+            self.build_requires("mold/1.11.0")
+            self.build_requires("openssl/3.1.2", override=True)
+
+        if self.options.get_safe("build_with_ccache", False):
+            self.build_requires("ccache/4.8.3")
 
     def requirements(self):
         if self.options.get_safe("with_rs_vulkan", False):
@@ -220,6 +228,7 @@ class Morpheus(ConanFile):
         tc = CMakeToolchain(self)
         tc.variables["BUILD_SHARED_LIBS"] = self.options.shared
         tc.variables["MORPHEUS_BUILD_DOCS"] = self.options.build_docs
+        tc.variables["MORPHEUS_BUILD_WITH_CCACHE"] = self.options.get_safe("build_with_ccache", False)
         tc.variables["MORPHEUS_LINK_WITH_MOLD"] = self.options.get_safe("link_with_mold", False)
         tc.variables["MORPHEUS_RENDER_SYSTEM_DIRECT_X12"] = self.options.get_safe("with_rs_direct_x12", False)
         tc.variables["MORPHEUS_RENDER_SYSTEM_METAL"] = self.options.get_safe("with_rs_metal", False)

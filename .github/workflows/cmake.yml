@@ -34,7 +34,15 @@ jobs:
           - {
               name: "Ubuntu GCC-12",
               os: ubuntu-latest,
-              compiler: { type: GCC, version: 12, conan: "gcc", cc: "gcc-12", cxx: "g++-12", std: 20 },
+              compiler:
+                {
+                  type: GCC,
+                  version: 12,
+                  conan: "gcc",
+                  cc: "gcc-12",
+                  cxx: "g++-12",
+                  std: 20
+                },
               lib: "libstdc++11"
             }
           - {
@@ -88,7 +96,15 @@ jobs:
           - {
               name: "Visual Studio 2019",
               os: windows-latest,
-              compiler: { type: VISUAL, version: 16, conan: "mscv", cc: "cl", cxx: "cl", std: 20 },
+              compiler:
+                {
+                  type: VISUAL,
+                  version: 16,
+                  conan: "mscv",
+                  cc: "cl",
+                  cxx: "cl",
+                  std: 20
+                },
             }
           - {
               name: "MacOS Apple Clang 14",
@@ -130,9 +146,9 @@ jobs:
           key: ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-${{ matrix.settings.compiler.version }}-${{ matrix.settings.lib }}
           restore-keys: |
             ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-${{ matrix.settings.compiler.version }}-
-            ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-
-            ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.settings.os }}-${{ matrix.configuration }}-
-            ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.settings.os }}-
+            #${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-
+            #${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.settings.os }}-${{ matrix.configuration }}-
+            #${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.settings.os }}-
 
 #      - uses: lhotari/action-upterm@v1
 #        with:
@@ -214,10 +230,18 @@ jobs:
           conan profile show -pr default
 
       - name: Configure Install
+        if: matrix.settings.os != 'windows-latest'
         working-directory: ${{github.workspace}}
         shell: bash
         run: |
-          conan install "${{github.workspace}}" --build missing -pr:b default -o boost/*:without_cobalt=True
+          conan install "${{github.workspace}}" --build missing -pr:b default -c tools.cmake.cmaketoolchain:generator="Ninja Multi-Config"  -o boost/*:without_cobalt=True
+
+      - name: Configure Install
+        if: matrix.settings.os == 'windows-latest'
+        working-directory: ${{github.workspace}}
+        shell: bash
+        run: |
+          conan install "${{github.workspace}}" --build missing -pr:b default -o boost/*:without_cobalt=True -c tools.cmake.cmaketoolchain:generator="Ninja Multi-Config"
 
       - name: Configure Conan Build
         if: matrix.settings.os == 'windows-latest'
@@ -241,29 +265,79 @@ jobs:
 #          detached: true
 
       - name: Configure CMake
-        if: matrix.settings.os == 'windows-latest'
+        if: matrix.settings.os == 'windows-latest' && matrix.configuration == 'Release'
         shell: cmd
         run: |
           cmake --version
           call build\generators\conanbuild.bat
-          cmake --preset conan-default -DENABLE_ADDRESS_SANITIZER=ON -DENABLE_UNDEFINED_BEHAVIOUR_SANITIZER=ON
+          cmake --preset conan-default -DENABLE_ADDRESS_SANITIZER=ON -DENABLE_UNDEFINED_BEHAVIOUR_SANITIZER=ON -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_VS_GLOBALS="UseMultiToolTask=true;EnforceProcessCountAcrossBuilds=true"
 
       - name: Configure CMake
-        if: matrix.settings.os != 'windows-latest'
+        if: matrix.settings.os == 'windows-latest' && matrix.configuration == 'Debug'
+        shell: cmd
+        run: |
+          cmake --version
+          call build\generators\conanbuild.bat
+          cmake --preset conan-default -DENABLE_ADDRESS_SANITIZER=ON -DENABLE_UNDEFINED_BEHAVIOUR_SANITIZER=ON -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_FLAGS_DEBUG="/YI;/Z7" -DCMAKE_VS_GLOBALS="UseMultiToolTask=true;EnforceProcessCountAcrossBuilds=true;TrackFileAccess=false;DebugInformationFormat=OldStyle"
+
+      - name: Configure CMake
+        if: matrix.settings.os != 'windows-latest' && matrix.settings.compiler.type == 'GCC'
         shell: bash
         run: |
           source build/generators/conanbuild.sh
-          cmake --preset conan-default -DENABLE_ADDRESS_SANITIZER=ON -DENABLE_UNDEFINED_BEHAVIOUR_SANITIZER=ON
+          cmake --preset conan-default -DENABLE_ADDRESS_SANITIZER=ON -DENABLE_UNDEFINED_BEHAVIOUR_SANITIZER=ON -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
+
+      - name: Configure CMake
+        if: matrix.settings.os != 'windows-latest' && matrix.settings.compiler.type != 'GCC'
+        shell: bash
+        run: |
+          source build/generators/conanbuild.sh
+          cmake --preset conan-default -DENABLE_ADDRESS_SANITIZER=ON -DENABLE_UNDEFINED_BEHAVIOUR_SANITIZER=ON -DCMAKE_CXX_COMPILER_LAUNCHER=ccache -DCMAKE_CXX_FLAGS_DEBUG="-Xclang -fno-pch-timestamp" -DCMAKE_CXX_FLAGS_RELEASE="-Xclang -fno-pch-timestamp"
 
       - name: Conan Preset
         shell: bash
         run: echo "CONAN_PRESET=conan-$(echo ${{matrix.configuration}} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
 
+      - name: CCache Configure
+        if: matrix.settings.os != 'windows-latest'
+        id: ccache-config-linux
+        shell: bash
+        run: |
+          mkdir $HOME/.ccache
+          echo "CCACHE_HOME=$HOME/.ccache" >> $GITHUB_ENV
+
+      - name: Cache CCache data
+        if: matrix.settings.os == 'windows-latest'
+        uses: actions/cache@v3.3.2
+        with:
+          path: C:\Users\runneradmin\AppData\Local\ccache\
+          key: ccache-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-${{ matrix.settings.compiler.version }}-${{ matrix.settings.lib }}-${{ github.run_number }}
+          restore-keys: |
+            ccache-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-${{ matrix.settings.compiler.version }}-${{ matrix.settings.lib }}-
+
+      - name: Cache CCache data
+        if: matrix.settings.os != 'windows-latest'
+        uses: actions/cache@v3.3.2
+        with:
+          path: ${{ env.CCACHE_HOME }}
+          key: ccache-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-${{ matrix.settings.compiler.version }}-${{ matrix.settings.lib }}-${{ github.run_number }}
+          restore-keys: |
+            ccache-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-${{ matrix.settings.compiler.version }}-${{ matrix.settings.lib }}-
+
       - name: Build
         if: matrix.settings.os == 'windows-latest'
         shell: cmd
         run: |
           call build\generators\conanbuild.bat
+          set CCACHE_BASEDIR=${{ github.workspace }}
+          set CCACHE_LOGFILE=D:\\a\\Morpheus\\Morpheus\\build\\CcacheLogFile.log
+          set CCACHE_NOHASHDIR=1
+          set CCACHE_SLOPPINESS=pch_defines,time_macros,include_file_mtime,include_file_ctime
+          REM set CCACHE_DEBUG=1
+          REM set CCACHE_DEBUGDIR=D:\\a\\Morpheus\\Morpheus\\build\\
+          REM set CCACHE_RECACHE=1
+          echo Morpheus ccache show configuration
+          ccache -p
           cmake --build --preset ${{ env.CONAN_PRESET }}
 
       - name: Build
@@ -271,7 +345,51 @@ jobs:
         shell: bash
         run: |
           source build/generators/conanbuild.sh
+          export CCACHE_BASEDIR=${{ github.workspace }}
+          export CCACHE_DIR=$HOME/.ccache
+          export CCACHE_LOGFILE=$HOME/.ccache/CcacheLogFile.log
+          export CCACHE_NOHASHDIR=1
+          export CCACHE_SLOPPINESS=pch_defines,time_macros,include_file_mtime,include_file_ctime
+          #export CCACHE_DEBUG=1
+          #export CCACHE_DEBUGDIR=$HOME/.ccache/
+          #export CCACHE_RECACHE=1
+          echo "Morpheus ccache show configuration"
+          ccache -p
           cmake --build --preset ${{ env.CONAN_PRESET }}
+
+      - name: CCache Stats
+        if: matrix.settings.os == 'windows-latest'
+        shell: cmd
+        run: |
+            call build\generators\conanbuild.bat
+            echo Morpheus ccache show stats
+            ccache -d C:\Users\runneradmin\AppData\Local\ccache\ -svvz
+            echo Morpheus showing ccache log files
+            type D:\a\Morpheus\Morpheus\build\CcacheLogFile.log
+            REM echo Morpheus showing ccache debug input files
+            REM forfiles /M *.ccache-input-text /S /C "cmd /c type @file"
+            REM echo Morpheus showing ccache debug log files
+            REM forfiles /M *.ccache-log /S /C "cmd /c type @file"
+            REM dir D:\a\Morpheus\Morpheus\build
+            REM rm D:\a\Morpheus\Morpheus\build\CcacheLogFile.log
+            REM dir D:\a\Morpheus\Morpheus\build
+
+      - name: CCache Stats
+        if: matrix.settings.os != 'windows-latest'
+        shell: bash
+        run: |
+            source build/generators/conanbuild.sh
+            echo "Morpheus ccache show stats"
+            ccache -d $HOME/.ccache -svvz
+            echo "Morpheus show ccache log files"
+            cat $HOME/.ccache/CcacheLogFile.log
+            #echo "Morpheus showing ccache debug input files"
+            #find . -name "*.ccache-input-text" -exec cat {} +
+            #echo "Morpheus showing ccache debug log files"
+            #find . -name "*.ccache-log" -exec cat {} +
+            #ls -la $HOME/.ccache
+            #rm $HOME/.ccache/CcacheLogFile.log
+            #ls -la $HOME/.ccache
 
       - name: Test
         # Execute tests defined by the CMake configuration.

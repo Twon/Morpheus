@@ -51,12 +51,9 @@ jobs:
           cache-name: cache-conan-data
         with:
           path: ${{github.workspace}}/.conan2/p
-          key: ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-${{ matrix.settings.compiler.version }}-${{ matrix.settings.lib }}
+          key: ${{ hashFiles('**/conanfile.py') }}-code-coverage
           restore-keys: |
-            ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-${{ matrix.settings.compiler.version }}-
-            ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-
-            ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.settings.os }}-${{ matrix.configuration }}-
-            ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.settings.os }}-
+            ${{ hashFiles('**/conanfile.py') }}-code-coverage
 
       # Previously GCC was installed via egor-tensin/setup-gcc@v1 but this does not install gcov with the compiler.
       # By default Ubuntu has Gcov 11 installed. This worked so long as the compiler was gcc 11, but if a later gcc was
@@ -127,7 +124,14 @@ jobs:
         working-directory: ${{github.workspace}}
         shell: bash
         run: |
-          conan install "${{github.workspace}}" --build missing -o boost/*:without_cobalt=True
+          # In order to have ccache working correctly we can't build the catch library every time, otherwise the hash of the built files will
+          # change at every workflow run and then we will get cache misses. Therefore the --build catch2/3.4.0 option must be enabled only the
+          # first time in order to correctly build the cache for Conan packages. After the first build of the Conan cache the option must
+          # be removed for all the subsequent executions.
+          # The same procedure must be followed every time that it changes something in the conanfile.py.
+          # it's a bit tricky but it is what it is, this is what must be done in order to get 100% ccache hit rate.
+          #conan install "${{github.workspace}}" --build missing -c tools.cmake.cmaketoolchain:generator=Ninja --build catch2/3.4.0 --build gtest/1.14.0
+          conan install "${{github.workspace}}" --build missing -c tools.cmake.cmaketoolchain:generator=Ninja -o boost/*:without_cobalt=True
 
       - name: Conan Preset
         shell: bash
@@ -138,13 +142,57 @@ jobs:
         # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
         run: |
            source build/${{env.BUILD_TYPE}}/generators/conanbuild.sh
-           cmake --preset ${{ env.CONAN_PRESET }} -DENABLE_CODE_COVERAGE=1
+           cmake --preset ${{ env.CONAN_PRESET }} -DENABLE_CODE_COVERAGE=1 -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
+
+      - name: CCache Configure
+        shell: bash
+        run: |
+          source build/${{env.BUILD_TYPE}}/generators/conanbuild.sh
+          mkdir $HOME/.ccache
+          echo "CCACHE_HOME=$HOME/.ccache" >> $GITHUB_ENV
+
+      - name: Cache CCache data
+        uses: actions/cache@v3.3.2
+        with:
+          path: ${{ env.CCACHE_HOME }}
+          key: ccache-code-coverage-${{ github.run_number }}
+          restore-keys: |
+            ccache-code-coverage-
 
       - name: Build
         # Build your program with the given configuration
+        shell: bash
         run: |
            source build/${{env.BUILD_TYPE}}/generators/conanbuild.sh
+           export CCACHE_DIR=$HOME/.ccache
+           export CCACHE_SLOPPINESS=pch_defines,time_macros,include_file_mtime,include_file_ctime
+           export CCACHE_NOHASHDIR=1
+           export CCACHE_BASEDIR=${{ github.workspace }}
+           export CCACHE_LOGFILE=$HOME/.ccache/CcacheLogFile.log
+           #export CCACHE_DEBUG=1
+           #export CCACHE_UMASK=002
+           #export CCACHE_NOINODECACHE=1
+           #export CCACHE_RECACHE=1
+           #export CCACHE_DEBUGDIR=$HOME/.ccache/
+           echo "Morpheus ccache show configuration"
+           ccache -p
            cmake --build --preset ${{ env.CONAN_PRESET }}
+
+      - name: CCache Stats
+        shell: bash
+        run: |
+            source build/${{env.BUILD_TYPE}}/generators/conanbuild.sh
+            echo "Morpheus ccache show stats"
+            ccache -d $HOME/.ccache -svvz
+            echo "Morpheus showing ccache log file"
+            cat $HOME/.ccache/CcacheLogFile.log
+            #echo "Morpheus showing ccache debug log files"
+            #find . -name "*.ccache-log" -exec cat {} +
+            #echo "Morpheus showing ccache debug input files"
+            #find . -name "*.ccache-input-text" -exec cat {} +
+            #ls -la $HOME/.ccache
+            #rm $HOME/.ccache/CcacheLogFile.log
+            #ls -la $HOME/.ccache
 
       - name: Test
         working-directory: ${{github.workspace}}
