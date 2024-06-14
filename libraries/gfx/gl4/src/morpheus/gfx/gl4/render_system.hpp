@@ -6,13 +6,15 @@
 namespace morpheus::gfx::gl4
 {
 
-/*! \class render_system
-        Rendering system abstraction based upon the OpenGL 4 graphics API.
- */
+/// \class RenderSystem
+///     Rendering system abstraction based upon the OpenGL 4 graphics API.
+/// \tparam T
+///     The traits of the rendering system.
+template <class T>
 class RenderSystem : public gfx::RenderSystem
 {
 public:
-
+    using Window = typename T::Window;
 
 private:
 };
