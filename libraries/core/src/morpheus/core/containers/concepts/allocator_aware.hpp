@@ -20,7 +20,7 @@ concept AllocatorAware = Container<X> && requires(X x, X&& rx, typename X::alloc
     { X(std::as_const(x), a) };
     { X(std::move(rx)) };
     { X(std::move(rx), a) };
-    { std::as_const(x).get_allocator() } noexcept -> std::same_as<typename X::allocator_type>;
+    { std::as_const(x).get_allocator() } -> std::same_as<typename X::allocator_type>;
     { x = x } -> std::same_as<X&>;
     { x = rx } -> std::same_as<X&>;
     { x.swap(x) } -> std::same_as<void>;
