@@ -3,5 +3,5 @@ target_sources(MorpheusCoreTests
         allocator_aware.tests.cpp
         container.tests.cpp
 #        iterator.tests.cpp
-#        sequence.tests.cpp
+        sequence.tests.cpp
 )
