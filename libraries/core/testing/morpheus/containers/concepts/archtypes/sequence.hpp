@@ -18,7 +18,7 @@ struct Sequence : Container
     constexpr Sequence(size_type, value_type);
     constexpr Sequence(iterator, iterator);
 #if (__cpp_lib_containers_ranges >= 202202L)
-    constexpr Sequence(ranges::from_range, ranges::subrange<typename T::value_type>{});
+    constexpr Sequence(std::from_range, ranges::subrange<typename T::value_type>{});
 #endif // (__cpp_lib_containers_ranges >= 202202L)
     constexpr Sequence(std::initializer_list<int>);
     constexpr Sequence(Sequence const&);
