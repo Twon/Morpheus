@@ -12,14 +12,6 @@ namespace morpheus::containers::concepts::archtypes
 
 struct Sequence : Container
 {
-    using value_type = int;
-    using reference = value_type&;
-    using const_reference = value_type const&;
-    using iterator = int*;
-    using const_iterator = int const *;
-    using difference_type = std::ptrdiff_t;
-    using size_type = std::size_t;
-
     constexpr Sequence();
     constexpr Sequence(size_type, value_type);
     constexpr Sequence(iterator, iterator);
