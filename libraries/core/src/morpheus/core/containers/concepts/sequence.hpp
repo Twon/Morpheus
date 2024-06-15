@@ -20,7 +20,7 @@ concept Sequence = Container<T> && requires(T t, typename T::value_type v, typen
     { T(s, v) };
     { T(i, i) };
 #if (__cpp_lib_containers_ranges >= 202202L)
-    { T(ranges::from_range, ranges::subrange<typename T::value_type>{}) };
+    { T(std::from_range, ranges::subrange<typename T::value_type>{}) };
 #endif // (__cpp_lib_containers_ranges >= 202202L)
     { T(il) };
     { t = il };
