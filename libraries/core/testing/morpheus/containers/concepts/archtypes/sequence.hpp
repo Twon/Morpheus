@@ -14,6 +14,8 @@
 namespace morpheus::containers::concepts::archtypes
 {
 
+/// \brief Sequence
+///      Archtype providing the minimal interface required to meet the concepts::Sequence constraints.
 struct Sequence : Container
 {
     constexpr Sequence();

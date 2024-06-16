@@ -1,11 +1,13 @@
 #pragma once
 
 #include "morpheus/core/containers/concepts/container.hpp"
-
 #include "morpheus/core/conformance/ranges.hpp"
+#include "morpheus/core/meta/is_array.hpp"
 
 #include <concepts>
 #include <initializer_list>
+#include <forward_list>
+#include <string>
 #include <version>
 
 namespace morpheus::containers::concepts
@@ -42,5 +44,23 @@ concept Sequence = Container<T> && requires(T t, typename T::value_type v, typen
     { t.assign(il) } -> std::same_as<void>;
     { t.assign(s, v) } -> std::same_as<void>;
 };
+
+/// \concept StrictSequence
+///     Concept strictly capturing the requirements for a sequence container as outline in the standard at
+///     <a href="https://eel.is/c++draft/sequence.reqmts">[sequence.requirements]</a>, details at
+///     <a href="https://en.cppreference.com/w/cpp/named_req/SequenceContainer">SequenceContainer</a>.
+///     The requirements <a href="https://eel.is/c++draft/sequence.reqmts">[sequence.requirements]</a> don't
+///     actually match numerous types listed as sequence containers.  This includes:
+///      - std::string
+///      - std::forward_list
+///      - std::array
+///     Hoever they are listed as as Sequence types while having interfaces that differ from the Sequence
+///     container requirements so this extension concept exactly mirrors that requirement.
+template <typename T>
+concept StrictSequence = meta::is_array_v<T> || 
+                         std::same_as<T, std::string> ||
+                         std::same_as<T, std::forward_list<typename T::value_type>> ||
+                         Sequence<T>; 
+
 
 } // namespace morpheus::containers::concepts

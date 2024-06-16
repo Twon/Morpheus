@@ -21,12 +21,21 @@ TEMPLATE_TEST_CASE("Verify sequence containers concepts", "[morpheus.containers.
     }
     SECTION("STL container tests")
     {
-        //STATIC_REQUIRE(Sequence<std::array<TestType, 10>>);
+        STATIC_REQUIRE(!Sequence<std::array<TestType, 10>>);
         STATIC_REQUIRE(Sequence<std::deque<TestType>>);
-        //STATIC_REQUIRE(Sequence<std::forward_list<TestType>>);
+        STATIC_REQUIRE(!Sequence<std::forward_list<TestType>>);
         STATIC_REQUIRE(Sequence<std::list<TestType>>);
-        //STATIC_REQUIRE(Sequence<std::string>);
+        STATIC_REQUIRE(!Sequence<std::string>);
         STATIC_REQUIRE(Sequence<std::vector<TestType>>);
+    }
+    SECTION("Test strict sequence matches exact STL sequence containers")
+    {
+        STATIC_REQUIRE(StrictSequence<std::array<TestType, 10>>);
+        STATIC_REQUIRE(StrictSequence<std::deque<TestType>>);
+        STATIC_REQUIRE(StrictSequence<std::forward_list<TestType>>);
+        STATIC_REQUIRE(StrictSequence<std::list<TestType>>);
+        STATIC_REQUIRE(StrictSequence<std::string>);
+        STATIC_REQUIRE(StrictSequence<std::vector<TestType>>);
     }
 }
 
