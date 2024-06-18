@@ -8,8 +8,7 @@ target_sources(MorpheusGfxNVidia
 )
 
 target_link_libraries(MorpheusGfxNVidia
-	PUBLIC
-		Boost::filesystem
-	PRIVATE
-		NVidia::NvapiHeaders
+    PUBLIC
+        Boost::filesystem
+        NVidia::Nvapi
 )
