@@ -1,6 +1,9 @@
 target_sources(MorpheusCoreTesting
     PUBLIC
         allocator_aware.hpp
+        associative.hpp
         container.hpp
+        reversible.hpp
         sequence.hpp
+        unordered.hpp
 )

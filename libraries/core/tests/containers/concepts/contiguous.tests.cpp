@@ -33,8 +33,10 @@ TEMPLATE_TEST_CASE("Verify contiguous containers concepts", "[morpheus.container
         STATIC_REQUIRE(!Contiguous<std::multimap<TestType, TestType>>);
         STATIC_REQUIRE(!Contiguous<std::multiset<TestType>>);
         STATIC_REQUIRE(!Contiguous<std::set<TestType>>);
-        STATIC_REQUIRE(!Contiguous<std::unordered_set<TestType>>);
         STATIC_REQUIRE(!Contiguous<std::unordered_map<TestType, TestType>>);
+        STATIC_REQUIRE(!Contiguous<std::unordered_multimap<TestType, TestType>>);
+        STATIC_REQUIRE(!Contiguous<std::unordered_multiset<TestType>>);
+        STATIC_REQUIRE(!Contiguous<std::unordered_set<TestType>>);
         if constexpr(std::is_same_v<TestType, bool>)
         {
             STATIC_REQUIRE(!Contiguous<std::vector<TestType>>);

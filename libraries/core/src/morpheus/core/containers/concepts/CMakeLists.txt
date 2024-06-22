@@ -1,10 +1,10 @@
 target_sources(MorpheusCore
     PUBLIC
         allocator_aware.hpp
-        #associative.hpp
+        associative.hpp
         container.hpp
-        #contiguous.hpp
-#        iterator.hpp
-        #sequence.hpp
-#        unordered_associative.hpp
+        contiguous.hpp
+        reversible.hpp
+        sequence.hpp
+        unordered.hpp
 )
