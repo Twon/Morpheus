@@ -23,6 +23,18 @@ concept InsertNodeHandleReturnType = requires
     requires requires { std::same_as<I, typename T::iterator>; } or requires { std::same_as<I, typename T::insert_return_type>; };
 };
 
+template <typename I, typename T>
+concept BoundReturnType = requires
+{
+    requires std::same_as<I, typename T::iterator> or std::same_as<I, std::pair<typename T::iterator, typename T::iterator>>;
+};
+
+template <typename I, typename T>
+concept BoundConstReturnType = requires
+{
+    requires std::same_as<I, typename T::const_iterator> or std::same_as<I, std::pair<typename T::const_iterator, typename T::const_iterator>>;
+};
+
 }
 
 /// \concept Associative
@@ -30,8 +42,9 @@ concept InsertNodeHandleReturnType = requires
 ///     <a href="https://eel.is/c++draft/container.requirements#associative.reqmts">[associative.reqmts]</a>, details at
 ///     <a href="https://en.cppreference.com/w/cpp/named_req/AssociativeContainer">AssociativeContainer</a>.
 template <typename T>
-concept Associative = AllocatorAware<T> && requires(T t, typename T::value_type v, typename T::size_type s, typename T::iterator i, typename T::const_iterator ci,
-                                                    typename T::key_compare c, typename T::node_type n, std::initializer_list<typename T::value_type> il)
+concept Associative = AllocatorAware<T> && requires(T t, typename T::value_type v, typename T::key_type k, typename T::size_type s, typename T::iterator i, 
+                                                    typename T::const_iterator ci, typename T::key_compare c, typename T::node_type n,
+                                                    std::initializer_list<typename T::value_type> il)
 {
     requires (std::default_initializable<typename T::key_compare>) and (std::copy_constructible<typename T::key_compare>);
     { T(c) };
@@ -44,8 +57,8 @@ concept Associative = AllocatorAware<T> && requires(T t, typename T::value_type 
     { T(il, c) };
     { T(il) };
     { t = il };
-    { t.key_comp() } -> std::same_as<typename T::key_compare>;
-    { t.value_comp() } -> std::same_as<typename T::value_compare>; 
+    { std::as_const(t).key_comp() } -> std::same_as<typename T::key_compare>;
+    { std::as_const(t).value_comp() } -> std::same_as<typename T::value_compare>; 
     { t.emplace() } -> detail::InsertReturnType<T>;
     { t.emplace_hint(i) } -> std::same_as<typename T::iterator>;
     { t.insert(v) } -> detail::InsertReturnType<T>;
@@ -57,6 +70,23 @@ concept Associative = AllocatorAware<T> && requires(T t, typename T::value_type 
     { t.insert(il) } -> std::same_as<void>; 
     { t.insert(std::move(n)) } -> detail::InsertNodeHandleReturnType<T>;
     { t.insert(ci, std::move(n)) } -> std::same_as<typename T::iterator>;
+    { t.extract(k) } -> std::same_as<typename T::node_type>; 
+    { t.extract(ci) } -> std::same_as<typename T::node_type>; 
+    { t.merge(t) } -> std::same_as<void>; 
+    { t.erase(i) } -> std::same_as<typename T::iterator>; 
+    { t.erase(ci) } -> std::same_as<typename T::iterator>; 
+    { t.erase(i, i) } -> std::same_as<typename T::iterator>; 
+    { t.erase(ci, ci) } -> std::same_as<typename T::iterator>; 
+    { t.erase(k) } -> std::same_as<typename T::size_type>; 
+    { t.find(k) } -> std::same_as<typename T::iterator>; 
+    { std::as_const(t).find(k) } -> std::same_as<typename T::const_iterator>; 
+    { std::as_const(t).count(k) } -> std::same_as<typename T::size_type>; 
+    { t.lower_bound(k) } -> detail::BoundReturnType<T>;
+    { std::as_const(t).lower_bound(k) } -> detail::BoundConstReturnType<T>;
+    { t.equal_range(k) } -> detail::BoundReturnType<T>;
+    { std::as_const(t).equal_range(k) } -> detail::BoundConstReturnType<T>;
+    { t.upper_bound(k) } -> detail::BoundReturnType<T>;
+    { std::as_const(t).upper_bound(k) } -> detail::BoundConstReturnType<T>;
 };
 
 } // namespace morpheus::containers::concepts

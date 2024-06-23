@@ -33,6 +33,7 @@ template<bool M = false>
 struct Mapped
 {
     using value_type = int;
+    using key_type = value_type; 
     using allocator_type = std::allocator<value_type>;
 
     constexpr auto operator<=>(Mapped const&) const = default;
@@ -43,6 +44,7 @@ struct Mapped<true>
 {
     using mapped_type = int;
     using value_type = std::pair<const int, mapped_type>;
+    using key_type = typename value_type::first_type; 
     using allocator_type = std::allocator<value_type>;
     constexpr auto operator<=>(Mapped const&) const = default;
 };
@@ -64,8 +66,11 @@ struct Associative : AllocatorAware, detail::Multi<multi>, detail::Mapped<mapped
             return typename AllocatorAware::iterator{};
         }
     })>;
-    //using insert_return_type = std::conditional_t<multi, iterator, int>;
+    using BoundReturnType = std::conditional_t<multi, iterator, std::pair<iterator, iterator>>;
+    using BoundConstReturnType = std::conditional_t<multi, const_iterator, std::pair<const_iterator, const_iterator>>;
+
     using value_type = typename detail::Mapped<mapped>::value_type;
+    using key_type = typename detail::Mapped<mapped>::key_type;
     using allocator_type = typename detail::Mapped<mapped>::allocator_type;
     using key_compare = std::less<int>;
     using value_compare = key_compare;
@@ -105,6 +110,31 @@ struct Associative : AllocatorAware, detail::Multi<multi>, detail::Mapped<mapped
     constexpr void insert(std::initializer_list<value_type>);
     constexpr InsertNodeHandleReturnType insert(node_type&&);
     constexpr iterator insert(const_iterator, node_type&&);
+
+    constexpr node_type extract(key_type);
+    constexpr node_type extract(const_iterator);
+
+    constexpr void clear();
+
+    constexpr void merge(Associative const&);
+    
+    constexpr iterator erase(iterator);
+    constexpr iterator erase(const_iterator);
+    constexpr iterator erase(iterator, iterator);
+    constexpr iterator erase(const_iterator, const_iterator);
+    constexpr size_type erase(key_type const&);
+
+    constexpr iterator find(key_type const&);
+    constexpr const_iterator find(key_type const&) const;
+    
+    constexpr size_type count(key_type const&) const;
+
+    BoundReturnType lower_bound(key_type const&);
+    BoundConstReturnType lower_bound(key_type const&) const;
+    BoundReturnType equal_range(key_type const&);
+    BoundConstReturnType equal_range(key_type const&) const;
+    BoundReturnType upper_bound(key_type const&);
+    BoundConstReturnType upper_bound(key_type const&) const;
 
     constexpr auto operator<=>(Associative const&) const = default;
 
