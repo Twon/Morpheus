@@ -3,6 +3,7 @@
 #include "morpheus/core/containers/concepts/container.hpp"
 #include "morpheus/core/conformance/ranges.hpp"
 #include "morpheus/core/meta/is_array.hpp"
+#include "morpheus/core/meta/is_string.hpp"
 
 #include <concepts>
 #include <initializer_list>
@@ -58,7 +59,7 @@ concept Sequence = Container<T> && requires(T t, typename T::value_type v, typen
 ///     container requirements so this extension concept exactly mirrors that requirement.
 template <typename T>
 concept StrictSequence = meta::is_array_v<T> || 
-                         std::same_as<T, std::string> ||
+                         meta::is_string_v<T> ||
                          std::same_as<T, std::forward_list<typename T::value_type>> ||
                          Sequence<T>; 
 
