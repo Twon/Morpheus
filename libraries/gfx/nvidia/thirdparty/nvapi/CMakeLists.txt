@@ -5,8 +5,11 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(nvapi)
 
-add_library(Nvapi STATIC)
-add_library(NVidia::Nvapi ALIAS Nvapi)
+morpheus_add_library(
+    NAME Nvapi
+    ALIAS NVidia::Nvapi
+)
+
 target_include_directories(Nvapi
     PUBLIC
         ${nvapi_SOURCE_DIR}/R550-OpenSource

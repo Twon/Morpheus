@@ -4,6 +4,11 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(intelGraphicsControlLibrary)
 
+morpheus_add_library(
+    NAME GraphicsControlLibrary
+    ALIAS intel::GraphicsControlLibrary
+)
+
 add_library(GraphicsControlLibrary)
 add_library(intel::GraphicsControlLibrary ALIAS GraphicsControlLibrary)
 
