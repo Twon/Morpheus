@@ -1,5 +1,6 @@
 #pragma once
 
+#include "morpheus/core/containers/concepts/detail/return_types.hpp"
 #include "morpheus/core/containers/concepts/allocator_aware.hpp"
 
 #include <concepts>
@@ -7,35 +8,6 @@
 
 namespace morpheus::containers::concepts
 {
-
-namespace detail
-{
-
-template <typename I, typename T>
-concept InsertReturnType = requires
-{
-    requires std::same_as<I, typename T::iterator> or std::same_as<I, std::pair<typename T::iterator, bool>>;
-};
-
-template <typename I, typename T>
-concept InsertNodeHandleReturnType = requires
-{
-    requires requires { std::same_as<I, typename T::iterator>; } or requires { std::same_as<I, typename T::insert_return_type>; };
-};
-
-template <typename I, typename T>
-concept BoundReturnType = requires
-{
-    requires std::same_as<I, typename T::iterator> or std::same_as<I, std::pair<typename T::iterator, typename T::iterator>>;
-};
-
-template <typename I, typename T>
-concept BoundConstReturnType = requires
-{
-    requires std::same_as<I, typename T::const_iterator> or std::same_as<I, std::pair<typename T::const_iterator, typename T::const_iterator>>;
-};
-
-}
 
 /// \concept Associative
 ///     Concept capturing the requirements for an associative container as outline in the standard at
@@ -77,10 +49,12 @@ concept Associative = AllocatorAware<T> && requires(T t, typename T::value_type 
     { t.erase(ci) } -> std::same_as<typename T::iterator>; 
     { t.erase(i, i) } -> std::same_as<typename T::iterator>; 
     { t.erase(ci, ci) } -> std::same_as<typename T::iterator>; 
-    { t.erase(k) } -> std::same_as<typename T::size_type>; 
+    { t.erase(k) } -> std::same_as<typename T::size_type>;
+    { t.clear() } -> std::same_as<void>; 
     { t.find(k) } -> std::same_as<typename T::iterator>; 
     { std::as_const(t).find(k) } -> std::same_as<typename T::const_iterator>; 
-    { std::as_const(t).count(k) } -> std::same_as<typename T::size_type>; 
+    { std::as_const(t).count(k) } -> std::same_as<typename T::size_type>;
+    { std::as_const(t).contains(k) } -> std::same_as<bool>;  
     { t.lower_bound(k) } -> detail::BoundReturnType<T>;
     { std::as_const(t).lower_bound(k) } -> detail::BoundConstReturnType<T>;
     { t.equal_range(k) } -> detail::BoundReturnType<T>;

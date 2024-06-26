@@ -1,3 +1,5 @@
+add_subdirectory(detail)
+
 target_sources(MorpheusCore
     PUBLIC
         allocator_aware.hpp
