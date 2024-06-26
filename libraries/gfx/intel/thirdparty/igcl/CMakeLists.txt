@@ -9,9 +9,6 @@ morpheus_add_library(
     ALIAS intel::GraphicsControlLibrary
 )
 
-add_library(GraphicsControlLibrary)
-add_library(intel::GraphicsControlLibrary ALIAS GraphicsControlLibrary)
-
 target_include_directories(GraphicsControlLibrary
     PUBLIC
         ${intelgraphicscontrollibrary_SOURCE_DIR}/include/
