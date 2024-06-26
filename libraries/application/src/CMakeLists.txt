@@ -6,8 +6,8 @@ morpheus_add_library(
 
 target_include_directories(MorpheusApplication
     PUBLIC
+        $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/include>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
-        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 
 target_link_libraries(MorpheusApplication

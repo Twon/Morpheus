@@ -179,10 +179,6 @@ class Morpheus(ConanFile):
             apt = Apt(self)
             apt.install(["libgl-dev", "libopengl-dev", "libglu1-mesa-dev"], update=True, check=True)
 
-#    @property
-#    def _source_subfolder(self):
-#        return "source_subfolder"
-
     @property
     def _minimum_cpp_standard(self):
         return 20
@@ -241,11 +237,6 @@ class Morpheus(ConanFile):
         copy(self, "examples/*", src=self.recipe_folder, dst=self.export_sources_folder)
         copy(self, "libraries/*", src=self.recipe_folder, dst=self.export_sources_folder)
 
-    #def source(self):
-    #    git = Git(self)
-    #    git.clone(url=self.url, target=".")
-    #    #git.checkout("<tag> or <commit hash>")
-
     def build(self):
         cmake = CMake(self)
         cmake.configure()
@@ -257,8 +248,6 @@ class Morpheus(ConanFile):
         cmake.configure()
         cmake.install()
         rm(self, "*export-set*.cmake", os.path.join(self.package_folder, "lib", "cmake", "morpheus"))
-#    def package_id(self):
-#        self.info.header_only()
 
     def package_info(self):
         self.cpp_info.components["core"].set_property("cmake_file_name", "MorpheusCore")
@@ -298,10 +287,4 @@ class Morpheus(ConanFile):
         
             if (self.settings.os in ["Macos", "iOS", "tvOS"]):
                 self.cpp_info.components["vulkan"].requires.append("moltenvk::moltenvk")
-
-        #self.cpp_info.components["ssl"].set_property("cmake_file_name", "SSL")
-        #self.cpp_info.components["ssl"].includedirs = ["include/headers_ssl"]
-        #self.cpp_info.components["ssl"].libs = ["libssl"]
-        #self.cpp_info.components["ssl"].requires = ["crypto", "boost::headers"]  # Depends on headers component in boost package
-
 
