@@ -3,7 +3,7 @@
 #include <memory>
 #include <functional>
 
-namespace quantbox
+namespace morpheus
 {
 
 TEST_CASE("Ensure the address sanitizer detects unsafe use after free memory usage", "[quantbox.cmake.asan]")
@@ -15,4 +15,4 @@ TEST_CASE("Ensure the address sanitizer detects unsafe use after free memory usa
     dangling.get() = 0; // If asan works this is an error!
 }
 
-} // quantbox
+} // morpheus
