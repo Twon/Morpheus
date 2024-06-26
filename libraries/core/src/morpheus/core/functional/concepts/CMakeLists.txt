@@ -1,5 +1,7 @@
 target_sources(MorpheusCore
     PUBLIC
-        function.hpp
-        hash.hpp
+        FILE_SET HEADERS
+        FILES
+            function.hpp
+            hash.hpp
 )
