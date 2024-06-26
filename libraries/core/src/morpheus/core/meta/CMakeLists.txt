@@ -5,6 +5,7 @@ target_sources(MorpheusCore
             aggregate.hpp
             binary_search.hpp
             complete.hpp
+            is_array.hpp
             is_specialisation.hpp
             is_string.hpp
 )

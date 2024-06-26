@@ -8,8 +8,9 @@ target_sources(MorpheusCore
 )
 
 add_subdirectory(base)
-add_subdirectory(conformance)
 add_subdirectory(concurrency)
+add_subdirectory(conformance)
+add_subdirectory(containers)
 add_subdirectory(functional)
 add_subdirectory(memory)
 add_subdirectory(meta)

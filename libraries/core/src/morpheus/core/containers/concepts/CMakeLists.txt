@@ -1,0 +1,12 @@
+add_subdirectory(detail)
+
+target_sources(MorpheusCore
+    PUBLIC
+        allocator_aware.hpp
+        associative.hpp
+        container.hpp
+        contiguous.hpp
+        reversible.hpp
+        sequence.hpp
+        unordered.hpp
+)
