@@ -13,7 +13,7 @@ namespace morpheus::gfx::vulkan
 class Version
 {
 public:
-    /// Constuct a Vulkan version from the packed version number:
+    /// Construct a Vulkan version from the packed version number:
     constexpr explicit Version(std::uint32_t const version) noexcept : mVersion(version) {}
 
     /// The Vulkan API variant number.

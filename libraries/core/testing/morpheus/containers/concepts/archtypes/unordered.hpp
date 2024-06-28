@@ -7,7 +7,7 @@
 #include <compare>
 #include <functional>
 
-namespace morpheus::containers::concepts::archtypes
+namespace morpheus::containers::concepts::archetypes
 {
 
 namespace detail
@@ -48,7 +48,7 @@ struct Mapped<true>
     constexpr auto operator<=>(Mapped const&) const = default;
 };
 
-} // namespace morpheus::containers::concepts::archtypes::detail
+} // namespace morpheus::containers::concepts::archetypes::detail
 
 template<bool multi = false, bool mapped = false>
 struct Unordered : public AllocatorAware, detail::Multi<multi>, detail::Mapped<mapped>
@@ -168,4 +168,4 @@ struct Unordered : public AllocatorAware, detail::Multi<multi>, detail::Mapped<m
 
 };
 
-} // namespace morpheus::containers::concepts::archtypes
+} // namespace morpheus::containers::concepts::archetypes

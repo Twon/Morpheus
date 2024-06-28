@@ -19,8 +19,8 @@ namespace morpheus::memory::concepts
 /// \par
 ///     Allocators provide a number of services:
 ///      - Perform allocation, construction, destruction and deallocation.
-///      - Seperate allocation from construction,
-///      - Seperate deallocation from destruction.
+///      - Separate allocation from construction,
+///      - Separate deallocation from destruction.
 ///      - Encapsulate information about the allocation strategy.
 ///      - Encapsulate information about the addressing model.
 ///      - Hide memory management and addressing model details from users.

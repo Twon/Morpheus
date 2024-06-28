@@ -1,5 +1,5 @@
 morpheus_add_testing_library(
-    INFERFACE
+    INTERFACE
 	NAME MorpheusGfxPlatformMocking
 	ALIAS morpheus::gfx::platform::mocking
     FOLDER "Libraries/Gfx/Platform"

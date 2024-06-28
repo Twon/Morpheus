@@ -9,7 +9,7 @@
 namespace morpheus::application::po
 {
 
-TEST_CASE_METHOD(LoggingFixture, "Ensure application parse common parameters", "[morpheus.application.application.paremeters]")
+TEST_CASE_METHOD(LoggingFixture, "Ensure application parse common parameters", "[morpheus.application.application.parameters]")
 {
     GIVEN("A common application parameters")
     {

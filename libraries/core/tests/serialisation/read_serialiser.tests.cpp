@@ -10,38 +10,38 @@ namespace morpheus::serialisation
 
 TEST_CASE("Check concepts for read serialisation", "[morpheus.serialisation.read_serialiser.concepts]")
 {
-    STATIC_REQUIRE(concepts::Reader<concepts::ReaderArchtype>);
+    STATIC_REQUIRE(concepts::Reader<concepts::ReaderArchetype>);
 }
 
 TEST_CASE("Ensure read serialiser are default constructible where the underlying reader supports it", "[morpheus.serialisation.read_serialiser.default_construction]")
 {
     GIVEN("A default constructible reader")
     {
-        STATIC_REQUIRE(std::is_default_constructible_v<concepts::ReaderArchtype>);
+        STATIC_REQUIRE(std::is_default_constructible_v<concepts::ReaderArchetype>);
 
-        WHEN("Ensure read serialiser of given tyoe")
+        WHEN("Ensure read serialiser of given type")
         {
-            using ReadSerialiserArchitype = ReadSerialiser<concepts::ReaderArchtype>;
+            using ReadSerialiserArchetype = ReadSerialiser<concepts::ReaderArchetype>;
             THEN("Is default construtible")
             {
-                STATIC_REQUIRE(std::is_default_constructible_v<ReadSerialiserArchitype>);
+                STATIC_REQUIRE(std::is_default_constructible_v<ReadSerialiserArchetype>);
             }
         }
     }
     GIVEN("A non-default constructible reader")
     {
-        struct NonDefaultConstuctibleReader : concepts::ReaderArchtype
+        struct NonDefaultConstuctibleReader : concepts::ReaderArchetype
         {
             NonDefaultConstuctibleReader() = delete;
         };
         STATIC_REQUIRE(!std::is_default_constructible_v<NonDefaultConstuctibleReader>);
 
-        WHEN("Ensure read serialiser of given tyoe")
+        WHEN("Ensure read serialiser of given type")
         {
-            using NonDefaultConstuctibleReadSerialiserArchitype = ReadSerialiser<NonDefaultConstuctibleReader>;
+            using NonDefaultConstuctibleReadSerialiserArchetype = ReadSerialiser<NonDefaultConstuctibleReader>;
             THEN("Is default construtible")
             {
-                STATIC_REQUIRE(!std::is_default_constructible_v<NonDefaultConstuctibleReadSerialiserArchitype>);
+                STATIC_REQUIRE(!std::is_default_constructible_v<NonDefaultConstuctibleReadSerialiserArchetype>);
             }
         }
     }
@@ -51,7 +51,7 @@ TEST_CASE("Ensure read serialiser are forward constructible where the underlying
 {
     GIVEN("A reader with multiple constructors")
     {
-        struct MultiConstructorReader : concepts::ReaderArchtype
+        struct MultiConstructorReader : concepts::ReaderArchetype
         {
             MultiConstructorReader() = delete;
             MultiConstructorReader(int, bool) {}
@@ -61,34 +61,34 @@ TEST_CASE("Ensure read serialiser are forward constructible where the underlying
         STATIC_REQUIRE(std::is_constructible_v<MultiConstructorReader, int, bool>);
         STATIC_REQUIRE(std::is_constructible_v<MultiConstructorReader, int, bool, int, bool>);
 
-        WHEN("Ensure read serialiser of given tyoe")
+        WHEN("Ensure read serialiser of given type")
         {
-            using ForwardingSerialiserArchitype = ReadSerialiser<MultiConstructorReader>;
+            using ForwardingSerialiserArchetype = ReadSerialiser<MultiConstructorReader>;
             THEN("Is default construtible")
             {
-                STATIC_REQUIRE(!std::is_constructible_v<ForwardingSerialiserArchitype, int>);
-                STATIC_REQUIRE(std::is_constructible_v<ForwardingSerialiserArchitype, int, bool>);
-                STATIC_REQUIRE(!std::is_constructible_v<ForwardingSerialiserArchitype, int, bool, int>);
-                STATIC_REQUIRE(std::is_constructible_v<ForwardingSerialiserArchitype, int, bool, int, bool>);
+                STATIC_REQUIRE(!std::is_constructible_v<ForwardingSerialiserArchetype, int>);
+                STATIC_REQUIRE(std::is_constructible_v<ForwardingSerialiserArchetype, int, bool>);
+                STATIC_REQUIRE(!std::is_constructible_v<ForwardingSerialiserArchetype, int, bool, int>);
+                STATIC_REQUIRE(std::is_constructible_v<ForwardingSerialiserArchetype, int, bool, int, bool>);
             }
         }
     }
     GIVEN("A non-default constructible reader")
     {
-        STATIC_REQUIRE(!std::is_constructible_v<concepts::ReaderArchtype, int>);
-        STATIC_REQUIRE(!std::is_constructible_v<concepts::ReaderArchtype, int, bool>);
-        STATIC_REQUIRE(!std::is_constructible_v<concepts::ReaderArchtype, int, bool, int>);
-        STATIC_REQUIRE(!std::is_constructible_v<concepts::ReaderArchtype, int, bool, int, bool>);
+        STATIC_REQUIRE(!std::is_constructible_v<concepts::ReaderArchetype, int>);
+        STATIC_REQUIRE(!std::is_constructible_v<concepts::ReaderArchetype, int, bool>);
+        STATIC_REQUIRE(!std::is_constructible_v<concepts::ReaderArchetype, int, bool, int>);
+        STATIC_REQUIRE(!std::is_constructible_v<concepts::ReaderArchetype, int, bool, int, bool>);
 
-        WHEN("Ensure read serialiser of given tyoe")
+        WHEN("Ensure read serialiser of given type")
         {
-            using ReadSerialiserArchitype = ReadSerialiser<concepts::ReaderArchtype>;
+            using ReadSerialiserArchetype = ReadSerialiser<concepts::ReaderArchetype>;
             THEN("Is default construtible")
             {
-                STATIC_REQUIRE(!std::is_constructible_v<ReadSerialiserArchitype, int>);
-                STATIC_REQUIRE(!std::is_constructible_v<ReadSerialiserArchitype, int, bool>);
-                STATIC_REQUIRE(!std::is_constructible_v<ReadSerialiserArchitype, int, bool, int>);
-                STATIC_REQUIRE(!std::is_constructible_v<ReadSerialiserArchitype, int, bool, int, bool>);
+                STATIC_REQUIRE(!std::is_constructible_v<ReadSerialiserArchetype, int>);
+                STATIC_REQUIRE(!std::is_constructible_v<ReadSerialiserArchetype, int, bool>);
+                STATIC_REQUIRE(!std::is_constructible_v<ReadSerialiserArchetype, int, bool, int>);
+                STATIC_REQUIRE(!std::is_constructible_v<ReadSerialiserArchetype, int, bool, int, bool>);
             }
         }
     }

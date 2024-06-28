@@ -12,12 +12,12 @@ namespace morpheus
 {
 
 /// \struct Assertion
-///     Minium required information to report an assetion.
+///     Minimum required information to report an assetion.
 struct Assertion
 {
     sl_ns::source_location location; ///< The location of the assertion.
     std::string_view expression;     ///< The expression which resulted in the assertion.
-    std::string_view message;        ///< Message with human readable decription of the assertion.
+    std::string_view message;        ///< Message with human readable description of the assertion.
 };
 
 /// \using AssertHandler
@@ -49,16 +49,16 @@ MORPHEUSCORE_EXPORT AssertHaltHandler setAssertHaltHandler(AssertHaltHandler han
 [[nodiscard]] MORPHEUSCORE_EXPORT AssertHaltHandler const& getAssertHaltHandler();
 
 /// \enum AssertType
-///     Defines the behavour type for assert handlers.
+///     Defines the behaviour type for assert handlers.
 enum class MORPHEUSCORE_EXPORT AssertType
 {
-    Assert, ///< Assert behavour calls the handler and calls halt if the handler returns true.
-    Verify  ///< Verify behavour calls the handler and unconditionally calls halt.
+    Assert, ///< Assert behaviour calls the handler and calls halt if the handler returns true.
+    Verify  ///< Verify behaviour calls the handler and unconditionally calls halt.
 };
 
 /// Triggers the global assert handler.
-/// \param[in] type The type of assert behavour.
-/// \param[in] location The source file location where the assert orginated.
+/// \param[in] type The type of assert behaviour.
+/// \param[in] location The source file location where the assert originated.
 /// \param[in] expr String representation of the condition.
 /// \param[in] message An optional message describing the assert.
 MORPHEUSCORE_EXPORT void assertHandler(AssertType type, sl_ns::source_location const location, std::string_view const expr,

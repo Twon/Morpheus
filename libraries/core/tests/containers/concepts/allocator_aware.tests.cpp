@@ -20,7 +20,7 @@ TEMPLATE_TEST_CASE("Verify allocator aware containers concepts", "[morpheus.cont
 {
     SECTION("Archtype test")
     {
-        STATIC_REQUIRE(AllocatorAware<archtypes::AllocatorAware>);
+        STATIC_REQUIRE(AllocatorAware<archetypes::AllocatorAware>);
     }
     SECTION("STL container tests")
     {

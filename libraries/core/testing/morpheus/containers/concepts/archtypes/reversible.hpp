@@ -6,7 +6,7 @@
 #include <compare>
 #include <iterator>
 
-namespace morpheus::containers::concepts::archtypes
+namespace morpheus::containers::concepts::archetypes
 {
 
 // Pull range access functions into scope.
@@ -26,4 +26,4 @@ struct Reversible : Container
     constexpr const_reverse_iterator rend() const noexcept;
 };
 
-} // namespace morpheus::containers::concepts::archtypes
+} // namespace morpheus::containers::concepts::archetypes

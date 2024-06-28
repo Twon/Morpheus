@@ -57,7 +57,7 @@ commonly associated attributes.
 
 #]=======================================================================]
 function(morpheus_add_target)
-    set(options INFERFACE)
+    set(options INTERFACE)
     set(oneValueArgs TYPE NAME ALIAS FOLDER)
     set(multiValueArgs)
     cmake_parse_arguments(MORPHEUS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
@@ -77,8 +77,8 @@ function(morpheus_add_target)
     if (NOT MORPHEUS_ALIAS AND MORPHEUS_TYPE STREQUAL library)
         message(FATAL_ERROR "ALIAS parameter must be supplied for library targets")
     endif()
-    if (NOT MORPHEUS_INFERFACE AND NOT MORPHEUS_TYPE STREQUAL library)
-        message(FATAL_ERROR "INFERFACE parameter can only be used with library targets")
+    if (NOT MORPHEUS_INTERFACE AND NOT MORPHEUS_TYPE STREQUAL library)
+        message(FATAL_ERROR "INTERFACE parameter can only be used with library targets")
     endif()
 
     if (MORPHEUS_TYPE STREQUAL executable)

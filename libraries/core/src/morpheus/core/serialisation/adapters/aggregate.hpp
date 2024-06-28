@@ -29,7 +29,7 @@ namespace detail
 {
 
 /// Opt in serialisation for aggregates.  Like pair and tuple it serialises as a sequence without the field key
-/// as fields can only be accessed by the underlying field value.  Hense if you want an aggregate with named
+/// as fields can only be accessed by the underlying field value.  Hence if you want an aggregate with named
 /// field then this should have its one specialised serialisation method
 template<concepts::WriteSerialiser Serialiser, SerialisableAggregate AggregateType>
 void serialise(Serialiser& s, AggregateType const& value)

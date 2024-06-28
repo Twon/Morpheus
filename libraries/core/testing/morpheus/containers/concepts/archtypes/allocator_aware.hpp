@@ -5,7 +5,7 @@
 #include <compare>
 #include <memory>
 
-namespace morpheus::containers::concepts::archtypes
+namespace morpheus::containers::concepts::archetypes
 {
 
 struct AllocatorAware : public Container
@@ -29,4 +29,4 @@ struct AllocatorAware : public Container
     constexpr void swap(AllocatorAware&) noexcept;
 };
 
-} // namespace morpheus::containers::concepts::archtypes
+} // namespace morpheus::containers::concepts::archetypes

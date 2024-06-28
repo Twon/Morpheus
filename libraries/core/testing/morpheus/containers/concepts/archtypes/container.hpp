@@ -4,7 +4,7 @@
 #include <compare>
 #include <iterator>
 
-namespace morpheus::containers::concepts::archtypes
+namespace morpheus::containers::concepts::archetypes
 {
 
 // Pull range access functions into scope.
@@ -45,4 +45,4 @@ struct Container
     constexpr bool empty() const noexcept;
 };
 
-} // namespace morpheus::containers::concepts::archtypes
+} // namespace morpheus::containers::concepts::archetypes

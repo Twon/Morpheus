@@ -8,19 +8,19 @@ namespace morpheus::serialisation::concepts
 {
 
 template <typename Type>
-concept ReadSerialisableFreeStading = requires(ReadSerialiserArchtype s, Type t)
+concept ReadSerialisableFreeStading = requires(ReadSerialiserArchetype s, Type t)
 {
     { deserialise(s, t) } -> std::same_as<Type>;
 };
 
 template <typename Type>
-concept ReadSerialisableInsrusive = requires(ReadSerialiserArchtype s, Type t)
+concept ReadSerialisableInsrusive = requires(ReadSerialiserArchetype s, Type t)
 {
     { t.deserialise(s) } -> std::same_as<void>;
 };
 
 template <typename Type>
-concept ReadSerialisableNative = requires(ReadSerialiserArchtype s, Type t)
+concept ReadSerialisableNative = requires(ReadSerialiserArchetype s, Type t)
 {
     { s.reader().template read<Type>() } -> std::same_as<Type>;
 };

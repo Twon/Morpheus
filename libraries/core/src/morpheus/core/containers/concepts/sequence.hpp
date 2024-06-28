@@ -55,7 +55,7 @@ concept Sequence = Container<T> && requires(T t, typename T::value_type v, typen
 ///      - std::string
 ///      - std::forward_list
 ///      - std::array
-///     Hoever they are listed as as Sequence types while having interfaces that differ from the Sequence
+///     However they are listed as as Sequence types while having interfaces that differ from the Sequence
 ///     container requirements so this extension concept exactly mirrors that requirement.
 template <typename T>
 concept StrictSequence = meta::is_array_v<T> ||

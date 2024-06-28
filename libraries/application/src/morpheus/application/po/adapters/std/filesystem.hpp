@@ -10,8 +10,8 @@
 namespace boost
 {
 
-/// The default behavour for parsing of std::filesystem::path is fine except for the handling of spaces.  However specialising
-/// boost::lexical_cast for std::filesystem::path so strings are directly convertible to paths is enought to ensure correct
+/// The default behaviour for parsing of std::filesystem::path is fine except for the handling of spaces.  However specialising
+/// boost::lexical_cast for std::filesystem::path so strings are directly convertible to paths is enough to ensure correct
 /// handling of paths
 /// @note
 ///     https://github.com/boostorg/program_options/issues/69
