@@ -17,7 +17,7 @@ template<bool M = false>
 struct Multi
 {
     struct insert_return_type {};
-    
+
     constexpr auto operator<=>(Multi const&) const = default;
 };
 
@@ -32,7 +32,7 @@ template<bool M = false>
 struct Mapped
 {
     using value_type = int;
-    using key_type = value_type; 
+    using key_type = value_type;
     using allocator_type = std::allocator<value_type>;
 
     constexpr auto operator<=>(Mapped const&) const = default;
@@ -43,7 +43,7 @@ struct Mapped<true>
 {
     using mapped_type = int;
     using value_type = std::pair<const int, mapped_type>;
-    using key_type = typename value_type::first_type; 
+    using key_type = typename value_type::first_type;
     using allocator_type = std::allocator<value_type>;
     constexpr auto operator<=>(Mapped const&) const = default;
 };
@@ -64,7 +64,7 @@ struct Unordered : public AllocatorAware, detail::Multi<multi>, detail::Mapped<m
 
     using InsertReturnType = std::conditional_t<multi, iterator, std::pair<iterator, bool>>;
     using InsertNodeHandleReturnType = std::invoke_result_t<decltype([]
-    { 
+    {
         if constexpr (requires { requires requires {typename detail::Multi<multi>::insert_return_type; }; })
         {
             return typename detail::Multi<multi>::insert_return_type{};
@@ -129,7 +129,7 @@ struct Unordered : public AllocatorAware, detail::Multi<multi>, detail::Mapped<m
     constexpr node_type extract(const_iterator);
 
     constexpr void merge(Unordered const&);
-    
+
     constexpr iterator erase(iterator);
     constexpr iterator erase(const_iterator);
     constexpr iterator erase(iterator, iterator);
@@ -140,7 +140,7 @@ struct Unordered : public AllocatorAware, detail::Multi<multi>, detail::Mapped<m
 
     constexpr iterator find(key_type const&);
     constexpr const_iterator find(key_type const&) const;
-    
+
     constexpr size_type count(key_type const&) const;
 
     constexpr bool contains(key_type const&) const;
@@ -168,4 +168,4 @@ struct Unordered : public AllocatorAware, detail::Multi<multi>, detail::Mapped<m
 
 };
 
-} // namespace morpheus::containers::concepts::archtypes 
+} // namespace morpheus::containers::concepts::archtypes

@@ -15,11 +15,11 @@ namespace morpheus::containers::concepts
 ///     <a href="https://eel.is/c++draft/unord.req">[unord.req]</a>, details at
 ///     <a href="https://en.cppreference.com/w/cpp/named_req/UnorderedAssociativeContainer">UnorderedAssociativeContainerr</a>.
 template <typename T>
-concept Unordered = AllocatorAware<T> && requires(T t, typename T::value_type v, typename T::key_type k, typename T::size_type s, typename T::iterator i, 
+concept Unordered = AllocatorAware<T> && requires(T t, typename T::value_type v, typename T::key_type k, typename T::size_type s, typename T::iterator i,
                                                   typename T::const_iterator ci, typename T::hasher h, typename T::key_equal e, typename T::local_iterator l,
                                                   typename T::node_type n, std::initializer_list<typename T::value_type> il)
 {
-    requires functional::concepts::Hash<typename T::hasher, typename T::key_type>;                                  
+    requires functional::concepts::Hash<typename T::hasher, typename T::key_type>;
     requires (std::default_initializable<typename T::key_equal>) && (std::copy_constructible<typename T::key_equal>);
     { T(s, h, e) };
     { T(s, h) };
@@ -34,7 +34,7 @@ concept Unordered = AllocatorAware<T> && requires(T t, typename T::value_type v,
     { T(std::from_range, ranges::subrange<typename T::iterator>{}, s) };
     { T(std::from_range, ranges::subrange<typename T::iterator>{}) };
 #endif // (__cpp_lib_containers_ranges >= 202202L)
-    { T(il, s, h, e) }; 
+    { T(il, s, h, e) };
     { T(il, s, h) };
     { T(il, s) };
     { T(il) };
@@ -49,20 +49,20 @@ concept Unordered = AllocatorAware<T> && requires(T t, typename T::value_type v,
 #if (__cpp_lib_containers_ranges >= 202202L)
     { t.insert_range(ranges::subrange<typename T::iterator>{}) } -> std::same_as<void>;
 #endif // (__cpp_lib_containers_ranges >= 202202L)
-    { t.insert(il) } -> std::same_as<void>; 
+    { t.insert(il) } -> std::same_as<void>;
     { t.insert(std::move(n)) } -> detail::InsertNodeHandleReturnType<T>;
     { t.insert(ci, std::move(n)) } -> std::same_as<typename T::iterator>;
-    { t.extract(k) } -> std::same_as<typename T::node_type>; 
-    { t.extract(ci) } -> std::same_as<typename T::node_type>; 
-    { t.merge(t) } -> std::same_as<void>; 
-    { t.erase(i) } -> std::same_as<typename T::iterator>; 
-    { t.erase(ci) } -> std::same_as<typename T::iterator>; 
-    { t.erase(i, i) } -> std::same_as<typename T::iterator>; 
-    { t.erase(ci, ci) } -> std::same_as<typename T::iterator>; 
+    { t.extract(k) } -> std::same_as<typename T::node_type>;
+    { t.extract(ci) } -> std::same_as<typename T::node_type>;
+    { t.merge(t) } -> std::same_as<void>;
+    { t.erase(i) } -> std::same_as<typename T::iterator>;
+    { t.erase(ci) } -> std::same_as<typename T::iterator>;
+    { t.erase(i, i) } -> std::same_as<typename T::iterator>;
+    { t.erase(ci, ci) } -> std::same_as<typename T::iterator>;
     { t.erase(k) } -> std::same_as<typename T::size_type>;
-    { t.clear() } -> std::same_as<void>; 
-    { t.find(k) } -> std::same_as<typename T::iterator>; 
-    { std::as_const(t).find(k) } -> std::same_as<typename T::const_iterator>; 
+    { t.clear() } -> std::same_as<void>;
+    { t.find(k) } -> std::same_as<typename T::iterator>;
+    { std::as_const(t).find(k) } -> std::same_as<typename T::const_iterator>;
     { std::as_const(t).count(k) } -> std::same_as<typename T::size_type>;
     { std::as_const(t).contains(k) } -> std::same_as<bool>;
     { t.equal_range(k) } -> detail::BoundReturnType<T>;
@@ -78,8 +78,8 @@ concept Unordered = AllocatorAware<T> && requires(T t, typename T::value_type v,
     { std::as_const(t).load_factor() } -> std::same_as<float>;
     { std::as_const(t).max_load_factor() } -> std::same_as<float>;
     { t.max_load_factor(float{}) } -> std::same_as<void>;
-    { t.rehash(s) } -> std::same_as<void>; 
-    { t.reserve(s) } -> std::same_as<void>; 
+    { t.rehash(s) } -> std::same_as<void>;
+    { t.reserve(s) } -> std::same_as<void>;
 };
 
 } // namespace morpheus::containers::concepts

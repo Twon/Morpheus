@@ -9,7 +9,7 @@
 namespace morpheus::containers::concepts::archtypes
 {
 
-// Pull range access functions into scope. 
+// Pull range access functions into scope.
 using std::rbegin;
 using std::rend;
 using std::crbegin;
@@ -26,4 +26,4 @@ struct Reversible : Container
     constexpr const_reverse_iterator rend() const noexcept;
 };
 
-} // namespace morpheus::containers::concepts::archtypes 
+} // namespace morpheus::containers::concepts::archtypes

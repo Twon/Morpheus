@@ -18,7 +18,7 @@ struct AllocatorAware : public Container
     constexpr AllocatorAware(AllocatorAware const&, allocator_type const&);
     constexpr AllocatorAware(AllocatorAware&&);
     constexpr AllocatorAware(AllocatorAware&&, allocator_type const&);
- 
+
     constexpr AllocatorAware& operator=(AllocatorAware const&);
     constexpr AllocatorAware& operator=(AllocatorAware&&);
 
@@ -29,4 +29,4 @@ struct AllocatorAware : public Container
     constexpr void swap(AllocatorAware&) noexcept;
 };
 
-} // namespace morpheus::containers::concepts::archtypes 
+} // namespace morpheus::containers::concepts::archtypes
