@@ -1,4 +1,4 @@
-#include "morpheus/containers/concepts/archtypes/allocator_aware.hpp"
+#include "morpheus/containers/concepts/archetypes/allocator_aware.hpp"
 #include "morpheus/core/containers/concepts/allocator_aware.hpp"
 
 #include <catch2/catch_all.hpp>

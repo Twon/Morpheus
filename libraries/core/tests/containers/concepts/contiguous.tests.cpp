@@ -1,4 +1,4 @@
-#include "morpheus/containers/concepts/archtypes/sequence.hpp"
+#include "morpheus/containers/concepts/archetypes/sequence.hpp"
 #include "morpheus/core/containers/concepts/contiguous.hpp"
 #include "morpheus/core/meta/is_specialisation.hpp"
 

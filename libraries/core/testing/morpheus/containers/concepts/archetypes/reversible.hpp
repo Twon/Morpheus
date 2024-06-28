@@ -1,6 +1,6 @@
 #pragma once
 
-#include "morpheus/containers/concepts/archtypes/container.hpp"
+#include "morpheus/containers/concepts/archetypes/container.hpp"
 
 #include <cstddef>
 #include <compare>

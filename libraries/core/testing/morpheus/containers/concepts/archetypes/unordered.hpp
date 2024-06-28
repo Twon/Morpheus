@@ -1,12 +1,11 @@
 #pragma once
 
-#include "morpheus/containers/concepts/archtypes/allocator_aware.hpp"
+#include "morpheus/containers/concepts/archetypes/allocator_aware.hpp"
 
 #include "morpheus/core/conformance/ranges.hpp"
 
 #include <compare>
 #include <functional>
-#include <initializer_list>
 
 namespace morpheus::containers::concepts::archetypes
 {
@@ -52,14 +51,16 @@ struct Mapped<true>
 } // namespace morpheus::containers::concepts::archetypes::detail
 
 template<bool multi = false, bool mapped = false>
-struct Associative : AllocatorAware, detail::Multi<multi>, detail::Mapped<mapped>
+struct Unordered : public AllocatorAware, detail::Multi<multi>, detail::Mapped<mapped>
 {
     using value_type = typename detail::Mapped<mapped>::value_type;
     using key_type = typename detail::Mapped<mapped>::key_type;
     using allocator_type = typename detail::Mapped<mapped>::allocator_type;
-    using key_compare = std::less<int>;
-    using value_compare = key_compare;
+    using hasher = std::hash<int>;
+    using key_equal = std::equal_to<int>;
     struct node_type{};
+    struct local_iterator{};
+    using const_local_iterator = local_iterator const;
 
     using InsertReturnType = std::conditional_t<multi, iterator, std::pair<iterator, bool>>;
     using InsertNodeHandleReturnType = std::invoke_result_t<decltype([]
@@ -73,32 +74,43 @@ struct Associative : AllocatorAware, detail::Multi<multi>, detail::Mapped<mapped
             return typename AllocatorAware::iterator{};
         }
     })>;
+
     using BoundReturnType = std::conditional_t<multi, iterator, std::pair<iterator, iterator>>;
     using BoundConstReturnType = std::conditional_t<multi, const_iterator, std::pair<const_iterator, const_iterator>>;
 
     using AllocatorAware::AllocatorAware;
-    using detail::Mapped<mapped>::Mapped;
+    using AllocatorAware::begin;
+    using AllocatorAware::end;
 
-    constexpr Associative();
-    constexpr Associative(key_compare const&);
-    constexpr Associative(iterator, iterator, key_compare const&);
-    constexpr Associative(iterator, iterator);
+    constexpr Unordered();
+    constexpr Unordered(size_type, hasher const&, key_equal const&);
+    constexpr Unordered(size_type, hasher const&);
+    constexpr Unordered(size_type);
+    constexpr Unordered(iterator, iterator, size_type, hasher const&, key_equal const&);
+    constexpr Unordered(iterator, iterator, size_type, hasher const&);
+    constexpr Unordered(iterator, iterator, size_type);
+    constexpr Unordered(iterator, iterator);
+    //constexpr Unordered(iterator, iterator, key_compare const&);
 #if (__cpp_lib_containers_ranges >= 202202L)
-    constexpr Associative(std::from_range_t, ranges::range auto, key_compare const&);
-    constexpr Associative(std::from_range_t, ranges::range auto);
+    constexpr Unordered(std::from_range_t, ranges::range auto, size_type, hasher const&, key_equal const&);
+    constexpr Unordered(std::from_range_t, ranges::range auto, size_type, hasher const&);
+    constexpr Unordered(std::from_range_t, ranges::range auto, size_type);
+    constexpr Unordered(std::from_range_t, ranges::range auto);
 #endif // (__cpp_lib_containers_ranges >= 202202L)
-    constexpr Associative(std::initializer_list<value_type>, key_compare const&);
-    constexpr Associative(std::initializer_list<value_type>);
-    constexpr Associative(Associative const&);
-    constexpr Associative(Associative&&);
-    constexpr Associative& operator=(Associative const&);
-    constexpr Associative& operator=(Associative&&);
-    constexpr Associative& operator=(std::initializer_list<value_type>);
+    constexpr Unordered(std::initializer_list<value_type>, size_type, hasher const&, key_equal const&);
+    constexpr Unordered(std::initializer_list<value_type>, size_type, hasher const&);
+    constexpr Unordered(std::initializer_list<value_type>, size_type);
+    constexpr Unordered(std::initializer_list<value_type>);
+    constexpr Unordered(Unordered const&);
+    constexpr Unordered(Unordered&&);
+    constexpr Unordered& operator=(Unordered const&);
+    constexpr Unordered& operator=(Unordered&&);
+    constexpr Unordered& operator=(std::initializer_list<value_type>);
 
     constexpr allocator_type get_allocator() const noexcept;
 
-    constexpr key_compare key_comp() const;
-    constexpr value_compare value_comp() const;
+    constexpr hasher hash_function() const;
+    constexpr key_equal key_eq() const;
 
     constexpr InsertReturnType emplace(auto... args);
     constexpr iterator emplace_hint(iterator, auto... args);
@@ -116,7 +128,7 @@ struct Associative : AllocatorAware, detail::Multi<multi>, detail::Mapped<mapped
     constexpr node_type extract(key_type);
     constexpr node_type extract(const_iterator);
 
-    constexpr void merge(Associative const&);
+    constexpr void merge(Unordered const&);
 
     constexpr iterator erase(iterator);
     constexpr iterator erase(const_iterator);
@@ -133,14 +145,25 @@ struct Associative : AllocatorAware, detail::Multi<multi>, detail::Mapped<mapped
 
     constexpr bool contains(key_type const&) const;
 
-    BoundReturnType lower_bound(key_type const&);
-    BoundConstReturnType lower_bound(key_type const&) const;
     BoundReturnType equal_range(key_type const&);
     BoundConstReturnType equal_range(key_type const&) const;
-    BoundReturnType upper_bound(key_type const&);
-    BoundConstReturnType upper_bound(key_type const&) const;
 
-    constexpr auto operator<=>(Associative const&) const = default;
+    constexpr size_type bucket_count() const;
+    constexpr size_type max_bucket_count() const;
+    constexpr size_type bucket(size_type) const;
+    constexpr size_type bucket_size(size_type) const;
+    constexpr local_iterator begin(size_type) noexcept;
+    constexpr local_iterator end(size_type) noexcept;
+    constexpr const_local_iterator begin(size_type) const noexcept;
+    constexpr const_local_iterator end(size_type) const noexcept;
+    constexpr float load_factor() const;
+    constexpr float max_load_factor() const;
+    constexpr void max_load_factor(float);
+
+    constexpr void rehash(size_type);
+    constexpr void reserve(size_type);
+
+    constexpr auto operator<=>(Unordered const&) const = default;
 
 
 };
