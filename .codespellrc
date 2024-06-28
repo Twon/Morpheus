@@ -1,0 +1,3 @@
+# See: https://github.com/codespell-project/codespell#using-a-config-file
+[codespell]
+ignore-words-list = thirdparty,twon,wil
