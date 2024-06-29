@@ -129,7 +129,7 @@ function(targets_get_translation_units)
 
     # CMAKE_CXX_SOURCE_FILE_EXTENSIONS defined in: https://github.com/Kitware/CMake/blob/master/Modules/CMakeCXXCompiler.cmake.in
     foreach(cppExt IN LISTS CMAKE_CXX_SOURCE_FILE_EXTENSIONS)
-        # Filter on a copy of the oringal source list
+        # Filter on a copy of the original source list
         set(filteredTargetSource "${targetSource}")
         # Escape any file extensions with special characters (i.e. the '+' in "c++").
         string(REGEX REPLACE "([][+.*()^])" "\\\\\\1" cppExt "${cppExt}")
@@ -139,8 +139,8 @@ function(targets_get_translation_units)
 
     get_target_property(targetBinaryDir ${ARGS_TARGET} BINARY_DIR)
     foreach(file IN LISTS targetTranslationUnits)
-        targets_relative_path_of_source(TARGET_NAME ${COVERAGE_TARGET_NAME} RESULT file SOURCE_FILE ${file})
-        set(translationUnitLocation "${targetBinaryDir}/CMakeFiles/${COVERAGE_TARGET_NAME}.dir/${file}")
+        targets_relative_path_of_source(TARGET_NAME ${ARGS_TARGET} RESULT file SOURCE_FILE ${file})
+        set(translationUnitLocation "${targetBinaryDir}/CMakeFiles/${ARGS_TARGET}.dir/${file}")
         list(APPEND targetTranslationUnitLocations ${translationUnitLocation})
     endforeach()
 

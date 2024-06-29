@@ -55,13 +55,13 @@ concept Sequence = Container<T> && requires(T t, typename T::value_type v, typen
 ///      - std::string
 ///      - std::forward_list
 ///      - std::array
-///     Hoever they are listed as as Sequence types while having interfaces that differ from the Sequence
+///     However they are listed as as Sequence types while having interfaces that differ from the Sequence
 ///     container requirements so this extension concept exactly mirrors that requirement.
 template <typename T>
-concept StrictSequence = meta::is_array_v<T> || 
+concept StrictSequence = meta::is_array_v<T> ||
                          meta::is_string_v<T> ||
                          std::same_as<T, std::forward_list<typename T::value_type>> ||
-                         Sequence<T>; 
+                         Sequence<T>;
 
 
 } // namespace morpheus::containers::concepts

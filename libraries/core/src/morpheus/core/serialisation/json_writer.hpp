@@ -16,7 +16,7 @@ namespace morpheus::serialisation
 {
 
 /// \class JsonWriter
-///     Implementes the concept Writer for a streaming JSON writer which writes item by item to the output stream.
+///     Implements the concept Writer for a streaming JSON writer which writes item by item to the output stream.
 class MORPHEUSCORE_EXPORT JsonWriter
 {
 public:

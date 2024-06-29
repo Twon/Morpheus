@@ -13,9 +13,9 @@
 namespace morpheus::serialisation::concepts
 {
 
-/// \struct ReaderArchtype
-///     Archtype for the Reader concept, defining the minimal viable implementation.
-struct ReaderArchtype
+/// \struct ReaderArchetype
+///     Archetype for the Reader concept, defining the minimal viable implementation.
+struct ReaderArchetype
 {
     /// Query if the underlying serialisation format is text based.
     consteval bool isTextual() noexcept;
@@ -59,6 +59,6 @@ struct ReaderArchtype
     consteval T read();
 };
 
-using ReadSerialiserArchtype = serialisation::ReadSerialiser<ReaderArchtype>;
+using ReadSerialiserArchetype = serialisation::ReadSerialiser<ReaderArchetype>;
 
 } // morpheus::serialisation::concepts

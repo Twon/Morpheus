@@ -62,7 +62,7 @@ std::array<char, Size> serialiseWithLimitedSpace(auto const& value)
 /// testing condition where storage is exhuasted.
 ///
 /// \tparam T The type of value to be deserialised.
-/// \param[in] storage The binary blob represending the serialised form of the type.
+/// \param[in] storage The binary blob representing the serialised form of the type.
 /// \returns The deserialised value.
 template <typename T>
 T deserialiseWithIoStream(auto const& storage)
@@ -96,7 +96,7 @@ std::array<char, Size> serialiseWithSpanStream(auto const& value)
 /// testing condition where storage is exhuasted.
 ///
 /// \tparam T The type of value to be deserialised.
-/// \param[in] storage The binary blob represending the serialised form of the type.
+/// \param[in] storage The binary blob representing the serialised form of the type.
 /// \returns The deserialised value.
 template <typename T>
 T deserialiseWithSpanStream(auto const& storage)
@@ -111,7 +111,7 @@ T deserialiseWithSpanStream(auto const& storage)
 /// Deserialised a value from a binary blob of data.
 ///
 /// \tparam T The type of value to be deserialised.
-/// \param[in] value The binary blob represending the serialised form of the type.
+/// \param[in] value The binary blob representing the serialised form of the type.
 /// \returns The deserialised value.
 template <typename T>
 T deserialise(std::vector<char> const& value)
@@ -123,7 +123,7 @@ T deserialise(std::vector<char> const& value)
     return serialiser.deserialise<T>();
 }
 
-/// Serialises an object to a binary blob and then deserialise back into the orginal form.
+/// Serialises an object to a binary blob and then deserialise back into the original form.
 ///
 /// \tparam T The type of value to be serialised/deserialised.
 /// \param[in] value The value to be serialised then deserialised.

@@ -324,7 +324,7 @@ struct StringConverter<date_ns::time_zone>
             return std::cref(*timezone);
         }
         catch(std::runtime_error const& e) {
-            return exp_ns::unexpected(fmt_ns::format("Unable to locate timezone, encounted error: {}", e.what()));
+            return exp_ns::unexpected(fmt_ns::format("Unable to locate timezone, encountered error: {}", e.what()));
         }
     }
 };

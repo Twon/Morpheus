@@ -1,6 +1,6 @@
 #pragma once
 
-#include "morpheus/containers/concepts/archtypes/allocator_aware.hpp"
+#include "morpheus/containers/concepts/archetypes/allocator_aware.hpp"
 
 #include "morpheus/core/conformance/ranges.hpp"
 
@@ -8,7 +8,7 @@
 #include <functional>
 #include <initializer_list>
 
-namespace morpheus::containers::concepts::archtypes
+namespace morpheus::containers::concepts::archetypes
 {
 
 namespace detail
@@ -18,7 +18,7 @@ template<bool M = false>
 struct Multi
 {
     struct insert_return_type {};
-    
+
     constexpr auto operator<=>(Multi const&) const = default;
 };
 
@@ -33,7 +33,7 @@ template<bool M = false>
 struct Mapped
 {
     using value_type = int;
-    using key_type = value_type; 
+    using key_type = value_type;
     using allocator_type = std::allocator<value_type>;
 
     constexpr auto operator<=>(Mapped const&) const = default;
@@ -44,12 +44,12 @@ struct Mapped<true>
 {
     using mapped_type = int;
     using value_type = std::pair<const int, mapped_type>;
-    using key_type = typename value_type::first_type; 
+    using key_type = typename value_type::first_type;
     using allocator_type = std::allocator<value_type>;
     constexpr auto operator<=>(Mapped const&) const = default;
 };
 
-} // namespace morpheus::containers::concepts::archtypes::detail
+} // namespace morpheus::containers::concepts::archetypes::detail
 
 template<bool multi = false, bool mapped = false>
 struct Associative : AllocatorAware, detail::Multi<multi>, detail::Mapped<mapped>
@@ -63,7 +63,7 @@ struct Associative : AllocatorAware, detail::Multi<multi>, detail::Mapped<mapped
 
     using InsertReturnType = std::conditional_t<multi, iterator, std::pair<iterator, bool>>;
     using InsertNodeHandleReturnType = std::invoke_result_t<decltype([]
-    { 
+    {
         if constexpr (requires { requires requires {typename detail::Multi<multi>::insert_return_type; }; })
         {
             return typename detail::Multi<multi>::insert_return_type{};
@@ -78,7 +78,7 @@ struct Associative : AllocatorAware, detail::Multi<multi>, detail::Mapped<mapped
 
     using AllocatorAware::AllocatorAware;
     using detail::Mapped<mapped>::Mapped;
-    
+
     constexpr Associative();
     constexpr Associative(key_compare const&);
     constexpr Associative(iterator, iterator, key_compare const&);
@@ -99,7 +99,7 @@ struct Associative : AllocatorAware, detail::Multi<multi>, detail::Mapped<mapped
 
     constexpr key_compare key_comp() const;
     constexpr value_compare value_comp() const;
-    
+
     constexpr InsertReturnType emplace(auto... args);
     constexpr iterator emplace_hint(iterator, auto... args);
 
@@ -117,7 +117,7 @@ struct Associative : AllocatorAware, detail::Multi<multi>, detail::Mapped<mapped
     constexpr node_type extract(const_iterator);
 
     constexpr void merge(Associative const&);
-    
+
     constexpr iterator erase(iterator);
     constexpr iterator erase(const_iterator);
     constexpr iterator erase(iterator, iterator);
@@ -125,10 +125,10 @@ struct Associative : AllocatorAware, detail::Multi<multi>, detail::Mapped<mapped
     constexpr size_type erase(key_type const&);
 
     constexpr void clear();
-    
+
     constexpr iterator find(key_type const&);
     constexpr const_iterator find(key_type const&) const;
-    
+
     constexpr size_type count(key_type const&) const;
 
     constexpr bool contains(key_type const&) const;
@@ -145,4 +145,4 @@ struct Associative : AllocatorAware, detail::Multi<multi>, detail::Mapped<mapped
 
 };
 
-} // namespace morpheus::containers::concepts::archtypes 
+} // namespace morpheus::containers::concepts::archetypes

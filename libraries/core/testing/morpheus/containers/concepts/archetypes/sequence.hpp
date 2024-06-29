@@ -1,6 +1,6 @@
 #pragma once
 
-#include "morpheus/containers/concepts/archtypes/container.hpp"
+#include "morpheus/containers/concepts/archetypes/container.hpp"
 
 #include "morpheus/core/conformance/ranges.hpp"
 
@@ -11,11 +11,11 @@
 #include <ranges>
 #include <vector>
 
-namespace morpheus::containers::concepts::archtypes
+namespace morpheus::containers::concepts::archetypes
 {
 
 /// \brief Sequence
-///      Archtype providing the minimal interface required to meet the concepts::Sequence constraints.
+///      Archetypes providing the minimal interface required to meet the concepts::Sequence constraints.
 struct Sequence : Container
 {
     constexpr Sequence();
@@ -52,4 +52,4 @@ struct Sequence : Container
     constexpr void assign(size_type, value_type);
 };
 
-} // namespace morpheus::containers::concepts::archtypes
+} // namespace morpheus::containers::concepts::archetypes

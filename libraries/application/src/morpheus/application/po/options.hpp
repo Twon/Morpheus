@@ -35,7 +35,7 @@ concept CustomProgramOptions = requires(T& t, boost::program_options::options_de
 // clang-format on
 
 /// \struct HelpDocumentation
-///     Holds commom help documentation information for applications.
+///     Holds common help documentation information for applications.
 struct HelpDocumentation
 {
     std::string_view name;
@@ -74,8 +74,8 @@ std::optional<int> parseProgramOptions(std::span<char const * const> parameters,
 
         if (msgDetails.version && vm.count("version"))
         {
-            auto const ouput = fmt_ns::format("{} {}", boost::dll::program_location().stem().string(), *msgDetails.version);
-            print_ns::print("{}", ouput);
+            auto const output = fmt_ns::format("{} {}", boost::dll::program_location().stem().string(), *msgDetails.version);
+            print_ns::print("{}", output);
             return 1;
         }
 

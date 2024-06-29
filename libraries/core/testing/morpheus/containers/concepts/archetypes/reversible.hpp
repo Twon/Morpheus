@@ -1,15 +1,15 @@
 #pragma once
 
-#include "morpheus/containers/concepts/archtypes/container.hpp"
+#include "morpheus/containers/concepts/archetypes/container.hpp"
 
 #include <cstddef>
 #include <compare>
 #include <iterator>
 
-namespace morpheus::containers::concepts::archtypes
+namespace morpheus::containers::concepts::archetypes
 {
 
-// Pull range access functions into scope. 
+// Pull range access functions into scope.
 using std::rbegin;
 using std::rend;
 using std::crbegin;
@@ -26,4 +26,4 @@ struct Reversible : Container
     constexpr const_reverse_iterator rend() const noexcept;
 };
 
-} // namespace morpheus::containers::concepts::archtypes 
+} // namespace morpheus::containers::concepts::archetypes

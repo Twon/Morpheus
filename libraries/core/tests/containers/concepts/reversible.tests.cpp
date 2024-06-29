@@ -1,4 +1,4 @@
-#include "morpheus/containers/concepts/archtypes/reversible.hpp"
+#include "morpheus/containers/concepts/archetypes/reversible.hpp"
 #include "morpheus/core/containers/concepts/reversible.hpp"
 
 #include <catch2/catch_all.hpp>
@@ -18,9 +18,9 @@ namespace morpheus::containers::concepts
 
 TEMPLATE_TEST_CASE("Verify containers concepts", "[morpheus.containers.concepts.iterator]", bool, std::int8_t, std::uint8_t, std::int16_t, std::uint16_t, std::int32_t, std::uint32_t, std::int64_t, std::uint64_t, float, double)
 {
-    SECTION("Archtype test")
+    SECTION("Archetype test")
     {
-        STATIC_REQUIRE(Reversible<archtypes::Reversible>);
+        STATIC_REQUIRE(Reversible<archetypes::Reversible>);
     }
     SECTION("STL container tests")
     {

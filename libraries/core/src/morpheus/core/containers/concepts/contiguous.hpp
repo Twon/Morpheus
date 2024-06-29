@@ -15,7 +15,7 @@ namespace morpheus::containers::concepts
 template <typename T>
 concept Contiguous = StrictSequence<T> && requires(T t){
     requires std::contiguous_iterator<typename T::iterator>;
-    requires std::contiguous_iterator<typename T::const_iterator>; 
+    requires std::contiguous_iterator<typename T::const_iterator>;
 };
 
 } // namespace morpheus::containers::concepts
