@@ -14,7 +14,7 @@ namespace morpheus::application::po
 {
 
 /// \struct Config
-///     Standard appication program options
+///     Standard application program options
 struct Config
 {
     bool loggingEnabled = true; ///< Logging is enabled.

@@ -51,7 +51,7 @@
             the code base.
 
         \def    MORPHEUS_COMP_VER
-            This token is used to numerate the version of the current current complier
+            This token is used to numerate the version of the current current compiler
             (denoted by MORPHEUS_COMPILER)
      */
     #if defined(__clang__)

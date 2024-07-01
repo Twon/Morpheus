@@ -1,1 +1,1 @@
-add_subdirectory(archtypes)
+add_subdirectory(archetypes)

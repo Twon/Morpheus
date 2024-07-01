@@ -11,7 +11,7 @@ namespace morpheus::application
 /// \class Application
 ///     The application class acts as a manager for a system of application components.  It is responsible for walking
 ///     the application graph to initialised all components before entering the main loop.  When walking the component
-///     graph all commandline parameters will be collected and and sent for intialisation via input parameters.
+///     graph all commandline parameters will be collected and and sent for initialisation via input parameters.
 ///
 ///
 ///

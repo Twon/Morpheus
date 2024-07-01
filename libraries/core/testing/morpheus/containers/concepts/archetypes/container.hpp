@@ -4,10 +4,10 @@
 #include <compare>
 #include <iterator>
 
-namespace morpheus::containers::concepts::archtypes
+namespace morpheus::containers::concepts::archetypes
 {
 
-// Pull range access functions into scope. 
+// Pull range access functions into scope.
 using std::begin;
 using std::end;
 using std::cbegin;
@@ -28,7 +28,7 @@ struct Container
     constexpr Container();
     constexpr Container(Container const&);
     constexpr Container(Container&&);
-    constexpr ~Container();
+    constexpr ~Container() = default;
     constexpr Container& operator=(Container const&);
     constexpr Container& operator=(Container&&);
 
@@ -40,9 +40,9 @@ struct Container
     constexpr const_iterator end() const noexcept;
     constexpr const_iterator cbegin() const noexcept;
     constexpr const_iterator cend() const noexcept;
-    constexpr size_type size() const noexcept; 
-    constexpr size_type max_size() const noexcept; 
-    constexpr bool empty() const noexcept; 
+    constexpr size_type size() const noexcept;
+    constexpr size_type max_size() const noexcept;
+    constexpr bool empty() const noexcept;
 };
 
-} // namespace morpheus::containers::concepts::archtypes 
+} // namespace morpheus::containers::concepts::archetypes

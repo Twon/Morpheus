@@ -223,7 +223,7 @@ function(enable_code_coverage)
         WORKING_DIRECTORY
             ${CMAKE_BINARY_DIR}
         COMMENT
-            "Distributed proccessing of coverage data collection and report generation"
+            "Distributed processing of coverage data collection and report generation"
     )
 
     add_custom_target(coverage)
@@ -247,7 +247,7 @@ function(enable_code_coverage)
         WORKING_DIRECTORY
             ${CMAKE_BINARY_DIR}
         COMMENT
-            "Distributed proccessing of coverage data collection and lcov report generation"
+            "Distributed processing of coverage data collection and lcov report generation"
     )
 
     add_custom_target(coverage-lcov-info

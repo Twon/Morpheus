@@ -5,7 +5,7 @@
 
 namespace morpheus::gfx::vulkan {
 
-TEST_CASE("Test construction of std::error_code object via make_error_code", "[vulkan.vesion]")
+TEST_CASE("Test construction of std::error_code object via make_error_code", "[vulkan.version]")
 {
     constexpr std::uint8_t expectedVariant = 0;
     constexpr std::uint8_t expectedMajor = 1;

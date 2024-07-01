@@ -98,7 +98,7 @@ struct allocator_copy
 
 /// \struct exchange_on_move_ptr
 ///     Thin wrapper for a pointer to ensure moving of pointers results in a exchange with nullptr.  Use ensures
-///     containing classes can rely on the rule of zero for special memmber functions.
+///     containing classes can rely on the rule of zero for special member functions.
 template <typename T>
 struct exchange_on_move_ptr
 {
@@ -136,7 +136,7 @@ struct exchange_on_move_ptr
     /// Implicit conversion to underlying raw pointer type.
     constexpr explicit(false) operator T*() const noexcept { return ptr; }
 
-    /// Alows for exchanging with any input pointer type.
+    /// Allows for exchanging with any input pointer type.
     friend T* exchange(exchange_on_move_ptr& lhs, auto rhs) { return std::exchange(lhs.ptr, rhs); }
 
     T* ptr = nullptr; ///< Underlying pointer to be exchanged.
@@ -373,7 +373,7 @@ public:
         return *this;
     }
 
-    /// Move assignement, assigns contents via moving from the right hand side to the left hand side.
+    /// Move assignment, assigns contents via moving from the right hand side to the left hand side.
     constexpr indirect_value&
     operator=(indirect_value&& i) noexcept(std::is_nothrow_move_assignable_v<copier_type>&& std::is_nothrow_move_assignable_v<deleter_type>)
     {

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "morpheus/core/serialisation/concepts/write_serialiser.hpp"
-#include "morpheus/core/serialisation/concepts/writer_archtype.hpp"
+#include "morpheus/core/serialisation/concepts/writer_archetype.hpp"
 
 #include <concepts>
 

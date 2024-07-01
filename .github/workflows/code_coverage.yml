@@ -171,4 +171,3 @@ jobs:
         with:
           working-directory: ${{github.workspace}}/build/${{env.BUILD_TYPE}}/coverage
           files: ${{github.workspace}}/build/${{env.BUILD_TYPE}}/coverage/cobertura_coverage.xml
-
