@@ -5,11 +5,14 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(nvapi)
 
-add_library(Nvapi STATIC)
-add_library(NVidia::Nvapi ALIAS Nvapi)
+morpheus_add_library(
+    NAME Nvapi
+    ALIAS NVidia::Nvapi
+)
+
 target_include_directories(Nvapi
     PUBLIC
-        ${nvapi_SOURCE_DIR}/R550-OpenSource
+        $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/include>
         $<BUILD_INTERFACE:${nvapi_SOURCE_DIR}/R550-OpenSource>
 )
 
@@ -22,9 +25,12 @@ target_compile_options(Nvapi
 )
 target_sources(Nvapi
     PUBLIC
-        ${nvapi_SOURCE_DIR}/R550-OpenSource/nvapi.h
-        ${nvapi_SOURCE_DIR}/R550-OpenSource/nvapi_interface.h
-        ${nvapi_SOURCE_DIR}/R550-OpenSource/NvApiDriverSettings.h
+        $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/include/nvapi.h>
+        $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/include/nvapi_interface.h>
+        $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/include/NvApiDriverSettings.h>
+        $<BUILD_INTERFACE:${nvapi_SOURCE_DIR}/R550-OpenSource/nvapi.h>
+        $<BUILD_INTERFACE:${nvapi_SOURCE_DIR}/R550-OpenSource/nvapi_interface.h>
+        $<BUILD_INTERFACE:${nvapi_SOURCE_DIR}/R550-OpenSource/NvApiDriverSettings.h>
     PRIVATE
         ${nvapi_SOURCE_DIR}/R550-OpenSource/NvApiDriverSettings.c
 )
