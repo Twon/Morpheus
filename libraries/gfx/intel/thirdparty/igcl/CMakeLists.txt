@@ -11,26 +11,14 @@ morpheus_add_library(
 
 target_include_directories(GraphicsControlLibrary
     PUBLIC
-        ${intelgraphicscontrollibrary_SOURCE_DIR}/include/
+        $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/include>
+        $<BUILD_INTERFACE:${intelgraphicscontrollibrary_SOURCE_DIR}/include/>
 )
 
 target_sources(GraphicsControlLibrary
     PUBLIC
-        ${intelgraphicscontrollibrary_SOURCE_DIR}/include/igcl_api.h
+        $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/include/igcl_api.h>
+        $<BUILD_INTERFACE:${intelgraphicscontrollibrary_SOURCE_DIR}/include/igcl_api.h>
     PRIVATE
         ${intelgraphicscontrollibrary_SOURCE_DIR}/Source/cApiWrapper.cpp
-)
-
-set_target_properties(GraphicsControlLibrary
-    PROPERTIES
-        FOLDER "Thirdparty"
-        ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
-        LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
-        RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
-)
-
-install(TARGETS GraphicsControlLibrary
-        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
 )
