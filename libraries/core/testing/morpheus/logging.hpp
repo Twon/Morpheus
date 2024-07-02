@@ -6,7 +6,7 @@ namespace morpheus
 {
 
 /// \struct LoggingFixture
-///     Testing fixture which when used as or in a specific test fixture disable logging output and renables it at the end of the fixture scope.
+///     Testing fixture which when used as or in a specific test fixture disable logging output and re-enables it at the end of the fixture scope.
 struct LoggingFixture
 {
     LoggingFixture()

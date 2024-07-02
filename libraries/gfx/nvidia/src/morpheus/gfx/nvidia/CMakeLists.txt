@@ -1,15 +1,17 @@
 target_sources(MorpheusGfxNVidia
 	PUBLIC
-		adapter.hpp
-		driver.hpp
+	    FILE_SET HEADERS
+	    FILES	
+		    adapter.hpp
+		    driver.hpp
+		    functions.hpp
 	PRIVATE
 		adapter.cpp
 		driver.cpp
 )
 
 target_link_libraries(MorpheusGfxNVidia
-	PUBLIC
-		Boost::filesystem
-	PRIVATE
-		NVidia::NvapiHeaders
+    PUBLIC
+        Boost::filesystem
+        NVidia::Nvapi
 )

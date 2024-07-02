@@ -15,14 +15,16 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER I
 OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ]]
 
+include(morpheus_add_library)
 include(warnings)
 
-set(CMAKE_CXX_STANDARD 23)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS OFF)
+morpheus_add_library(
+    NAME MorpheusConfig
+    ALIAS morpheus::config
+    FOLDER "Libraries/Core"
+    INTERFACE
+)
 
-add_library(MorpheusConfig INTERFACE)
-add_library(morpheus::config ALIAS MorpheusConfig)
 target_link_libraries(MorpheusConfig
     INTERFACE
         $<$<PLATFORM_ID:Linux>:dl>

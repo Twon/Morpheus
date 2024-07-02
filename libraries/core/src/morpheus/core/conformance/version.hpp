@@ -2,7 +2,7 @@
 
 #include <morpheus/core/base/platform.hpp>
 
-/// Ensure backware compatible support for __has_include
+/// Ensure backward compatible support for __has_include
 #ifndef __has_include
     #define __has_include(x) 0
 #endif

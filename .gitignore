@@ -4,6 +4,7 @@
 .vscode
 .venv
 [Bb]uild*
+Install*
 cmake-build-debug
 env/*
 [Oo]ut

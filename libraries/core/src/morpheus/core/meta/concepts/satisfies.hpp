@@ -22,7 +22,7 @@ template <class T, auto C>
 concept Satisfies = requires { C.template operator()<T>(); };
 
 /// \concept SatisfiesAfter
-///     Higher order helper concept for ensureing a concept satisfies an input trait, after an applied transfromation.  The apply the trait this should
+///     Higher order helper concept for ensureing a concept satisfies an input trait, after an applied transformation.  The apply the trait this should
 ///     be wrapped in shark quotes, i.e []< traits to constraint >{}
 /// \code
 ///     class B {};

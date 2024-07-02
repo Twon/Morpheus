@@ -567,7 +567,7 @@ ctl_result_t CtlSharpnessTest(ctl_display_output_handle_t hDisplayOutput)
 }
 
 /***************************************************************
- * @brief Get's custom 3d struct data buffer for known data types
+ * @brief Gets custom 3d struct data buffer for known data types
  * place_holder_for_Detailed_desc
  * @param ctl_3d_feature_getset_t*
  * @return true/false

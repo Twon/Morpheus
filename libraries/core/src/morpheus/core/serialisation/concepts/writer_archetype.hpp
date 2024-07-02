@@ -13,9 +13,9 @@
 namespace morpheus::serialisation::concepts
 {
 
-/// \struct WriterArchtype
-///     Archtype for the Writer concept, defining the minimal viable implementation.
-struct WriterArchtype
+/// \struct WriterArchetype
+///     Archetype for the Writer concept, defining the minimal viable implementation.
+struct WriterArchetype
 {
     /// Query if the underlying serialisation format is text based.
     consteval bool isTextual() noexcept;
@@ -57,6 +57,6 @@ struct WriterArchtype
     consteval void write(std::span<std::byte const> const value);
 };
 
-using WriteSerialiserArchtype = serialisation::WriteSerialiser<WriterArchtype>;
+using WriteSerialiserArchtype = serialisation::WriteSerialiser<WriterArchetype>;
 
 } // morpheus::serialisation::concepts

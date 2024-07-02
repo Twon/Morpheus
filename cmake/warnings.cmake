@@ -31,7 +31,7 @@ set(GCC_CLANG_COMPATIBLE_WARNINGS
     -Wmissing-include-dirs # Warn if a user-supplied include directory does not exist.
     -Wnull-dereference # Warn on null pointer dereference.
     -Wpedantic # Standard conformance.
-    -Wshadow # Warning of a variabled shadows the declation of one from the parent context.
+    -Wshadow # Warning of a variabled shadows the declaration of one from the parent context.
 )
 
 set(GCC_WARNINGS

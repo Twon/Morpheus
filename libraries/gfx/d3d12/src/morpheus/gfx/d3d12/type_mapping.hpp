@@ -14,7 +14,7 @@ public:
     /*! Maps between the native pixel format type to the underlying
         <a href="https://docs.microsoft.com/en-us/windows/desktop/api/dxgiformat/ne-dxgiformat-dxgi_format">Direct X format type</a>.
         \param[in] format
-            The native API repesentation of pixel format to map to the underlying hardware API.
+            The native API representation of pixel format to map to the underlying hardware API.
         \return
             The underlying hardware pixel format which represents the user requested type in the hardware API.
      */
