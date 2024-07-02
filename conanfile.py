@@ -56,6 +56,7 @@ class Morpheus(ConanFile):
     no_copy_source = True
     options = {
         "build_docs": [True, False],
+        "build_with_modules": [True, False],
         "fPIC": [True, False],
         "link_with_mold": [True, False],
         "shared": [True, False],
@@ -67,6 +68,7 @@ class Morpheus(ConanFile):
     }
     default_options = {
         "build_docs": False,
+        "build_with_modules": False,
         "fPIC": True,
         "link_with_mold": True,
         "shared": False,
@@ -141,8 +143,8 @@ class Morpheus(ConanFile):
         self.test_requires("catch2/3.5.3")
         self.test_requires("gtest/1.14.0")
 
-        if get_cmake_version() < Version("3.28.1"):
-            self.tool_requires("cmake/3.28.1")
+        if get_cmake_version() < Version("3.29.0"):
+            self.tool_requires("cmake/3.29.0")
 
         if self.options.build_docs:
             self.build_requires("doxygen/1.9.4") # doxygen/1.9.5 will update dependency on zlib/1.2.12 to zlib/1.2.13
@@ -215,6 +217,7 @@ class Morpheus(ConanFile):
         tc = CMakeToolchain(self)
         tc.variables["BUILD_SHARED_LIBS"] = self.options.shared
         tc.variables["MORPHEUS_BUILD_DOCS"] = self.options.build_docs
+        tc.variables["MORPHEUS_MODULES_SUPPORT"] = self.options.build_with_modules
         tc.variables["MORPHEUS_LINK_WITH_MOLD"] = self.options.get_safe("link_with_mold", False)
         tc.variables["MORPHEUS_RENDER_SYSTEM_DIRECT_X12"] = self.options.get_safe("with_rs_direct_x12", False)
         tc.variables["MORPHEUS_RENDER_SYSTEM_METAL"] = self.options.get_safe("with_rs_metal", False)

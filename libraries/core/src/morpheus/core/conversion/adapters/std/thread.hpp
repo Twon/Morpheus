@@ -1,7 +1,6 @@
 #pragma once
 
 #include "morpheus/core/conformance/format.hpp"
-#include "morpheus/core/conformance/format.hpp"
 
 #include <thread>
 

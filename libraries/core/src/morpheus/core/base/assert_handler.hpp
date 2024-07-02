@@ -1,12 +1,18 @@
 #pragma once
 
+//#if (MORPHEUS_MODULES_SUPPORT)
+//    import std;
+//#endif // #if (MORPHEUS_MODULES_SUPPORT)
+
 #include <morpheus/core/base/platform.hpp>
 #include <morpheus/core/conformance/source_location.hpp>
 
-#include <cstdint>
-#include <functional>
-#include <string>
-#include <string_view>
+//#if (!MORPHEUS_MODULES_SUPPORT)
+    #include <cstdint>
+    #include <functional>
+    #include <string>
+    #include <string_view>
+//#endif // #if (!MORPHEUS_MODULES_SUPPORT)
 
 namespace morpheus
 {

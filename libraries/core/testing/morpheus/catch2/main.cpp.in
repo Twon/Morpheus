@@ -1,3 +1,7 @@
+#if (MORPHEUS_MODULES_SUPPORT)
+//    import std;
+#endif // #if (MORPHEUS_MODULES_SUPPORT)
+
 #include <morpheus/catch2/adapters/assert.hpp>
 #include <morpheus/catch2/adapters/gmock.hpp>
 #include <catch2/catch_all.hpp>

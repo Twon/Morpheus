@@ -1,8 +1,12 @@
 #pragma once
 
-#if __has_include(<stacktrace>)
-    #include <stacktrace>
-#endif
+//#if (MORPHEUS_MODULES_SUPPORT)
+//    import std;
+//#else
+    #if __has_include(<stacktrace>)
+        #include <stacktrace>
+    #endif
+//#endif // #if (MORPHEUS_MODULES_SUPPORT)
 
 // clang-format off
 #if (__cpp_lib_stacktrace >= 202011L)
