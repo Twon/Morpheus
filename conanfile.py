@@ -284,7 +284,6 @@ class Morpheus(ConanFile):
             self.cpp_info.components["vulkan"].set_property("cmake_file_name", "MorpheusGfxVulkan")
             self.cpp_info.components["vulkan"].set_property("cmake_target_name", "morpheus::gfx::vulkan")
             self.cpp_info.components["vulkan"].requires.append("vulkan-headers::vulkan-headers")
-        
+
             if (self.settings.os in ["Macos", "iOS", "tvOS"]):
                 self.cpp_info.components["vulkan"].requires.append("moltenvk::moltenvk")
-
