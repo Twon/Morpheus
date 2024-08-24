@@ -11,8 +11,6 @@ target_include_directories(MacOSWindow
 target_link_libraries(MacOSWindow
     PRIVATE
         morpheus::gfx::platform
-        "-framework Foundation"
-        "-framework Cocoa"
 )
 
 target_sources(MacOSWindow

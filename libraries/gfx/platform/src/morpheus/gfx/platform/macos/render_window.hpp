@@ -1,20 +1,20 @@
+
 #pragma once
 
 #include <morpheus/gfx/platform/render_window.hpp>
 #include <morpheus/core/base/prerequisites.hpp>
 
-#include <wil/resource.h>
 #include <string>
 
-namespace morpheus::gfx::win32
+namespace morpheus::gfx::macos
 {
 
 /*! \class RenderWindow
-        A specialisation of the render window for the Windows platform based on the Win32 API.
+        A specialisation of the render window for the MacOS platform based on the Coooa API.
  */
 class RenderWindow : protected gfx::RenderWindow {
 public:
-    using WindowHandle = HWND;
+    using WindowHandle = void*;
     using Config = gfx::RenderWindow::Config;
 
     explicit RenderWindow(Config const config = Config{});
@@ -52,12 +52,11 @@ public:
     void resize();
 
     /// Access the underlying OS Window handle.
-    auto getHandle() const noexcept { return mWindow.get(); }
+    auto getHandle() const noexcept { return mHandle; }
 
 private:
-    friend LRESULT WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
-    wil::unique_hwnd mWindow; /// OS window handle
+    WindowHandle mHandle;
 };
 
-} // namespace morpheus::gfx::win32
+} // namespace morpheus::gfx::macos
