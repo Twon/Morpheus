@@ -17,7 +17,7 @@ struct morpheus::scan_ns::scanner<ScannableType> : morpheus::scan_ns::scanner<st
     template <typename Context>
     auto scan(ScannableType& val, Context& ctx) const -> morpheus::scan_ns::scan_expected<typename Context::iterator>
     {
-        return morpheus::scan_ns::scan<int, int>(ctx.range(), "[{}, {}]")
+        return morpheus::scan_ns::scan<int, double>(ctx.range(), "[{}, {}]")
             .transform(
                 [&val](auto const& result)
                 {
