@@ -10,14 +10,14 @@ namespace morpheus::gfx::macos
 {
 
 /*! \class RenderWindow
-        A specialisation of the render window for the MacOS platform based on the Coooa API.
+        A specialisation of the render window for the MacOS platform based on the Cocoa API.
  */
 class RenderWindow : protected gfx::RenderWindow {
 public:
     using WindowHandle = void*;
     using Config = gfx::RenderWindow::Config;
 
-    explicit RenderWindow(Config const config = Config{});
+    explicit RenderWindow(Config const& config = Config{});
     explicit RenderWindow(WindowHandle const window);
 
     explicit RenderWindow(RenderWindow const&) = delete;
@@ -57,6 +57,9 @@ public:
 private:
 
     WindowHandle mHandle;
+
+    // Should we use a Windows controller subclass to enable unit testing?
+    // https://eschatologist.net/blog/?p=10
 };
 
 } // namespace morpheus::gfx::macos

@@ -10,6 +10,29 @@ int main(int argc, const char * argv[])
 
         NSLog (@"hello world");
 
+        NSUserDefaults *standardDefaults = [NSUserDefaults standardUserDefaults];
+
+        [standardDefaults setString:@"Example Window" forKey:@"window-name"];
+        [standardDefaults setInteger:600 forKey:@"width"];
+        [standardDefaults setInteger:800 forKey:@"height"];
+        [standardDefaults setInteger:32 forKey:@"colour-depth"];
+        [standardDefaults setInteger:0 forKey:@"start-x"];
+        [standardDefaults setInteger:0 forKey:@"start-y"];
+        [standardDefaults setBool:0 forKey:@"full-screen"];
+        [standardDefaults setBool:1 forKey:@"visible"];
+
+        // https://perspx.com/archives/parsing-command-line-arguments-nsuserdefaults/
+        NSString* windowName= [standardDefaults stringForKey:@"window-name"];
+        NSInteger width = [standardDefaults integerForKey:@"width"];
+        NSInteger height = [standardDefaults integerForKey:@"height"];
+        NSInteger colourDepth = [standardDefaults integerForKey:@"colour-depth"];
+        NSInteger startX = [standardDefaults integerForKey:@"start-x"];
+        NSInteger startY = [standardDefaults integerForKey:@"start-y"];
+        BOOL fullscreen = [standardDefaults stringForKey:@"full-screen"];
+        BOOL visible = [standardDefaults stringForKey:@"visible"];
+
+        NSLog (@"Window name: %@\nWidth: %d\nHeight: %d\nColour Depth: %d\n", windowName, width, height, colourDepth);
+
         [NSApplication sharedApplication];
         [NSApp setDelegate: [ApplicationDelegate alloc]];
         [NSApp setActivationPolicy:NSApplicationActivationPolicyRegular];
