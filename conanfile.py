@@ -74,10 +74,11 @@ class Morpheus(ConanFile):
         "with_rs_direct_x12": True,
         "with_rs_metal": True,
         "with_rs_opengl": True,
-        "with_rs_vulkan": True
+        "with_rs_vulkan": True,
+        "date*:use_system_tz_db": True,
      }
     requires = (
-        "boost/1.85.0",
+        "boost/1.86.0",
         "ctre/3.8.1",
         "magic_enum/0.9.5",
         "ms-gsl/4.0.0",
