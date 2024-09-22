@@ -6,7 +6,7 @@
 #include "morpheus/core/conversion/adapters/std/chrono.hpp"
 #include "morpheus/core/conversion/adapters/std/stacktrace.hpp"
 
-#include <boost/process/environment.hpp>
+#include <boost/process/v1/environment.hpp>
 #include <boost/dll.hpp>
 #include <chrono>
 

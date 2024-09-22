@@ -138,18 +138,18 @@ class Morpheus(ConanFile):
             self.options.rm_safe("with_rs_direct_x12")
 
     def build_requirements(self):
-        self.tool_requires("ninja/1.11.1")
-        self.test_requires("catch2/3.5.3")
-        self.test_requires("gtest/1.14.0")
+        self.tool_requires("ninja/1.12.1")
+        self.test_requires("catch2/3.7.0")
+        self.test_requires("gtest/1.15.0")
 
-        if get_cmake_version() < Version("3.28.1"):
-            self.tool_requires("cmake/3.28.1")
+        if get_cmake_version() < Version("3.30.1"):
+            self.tool_requires("cmake/3.30 .1")
 
         if self.options.build_docs:
             self.build_requires("doxygen/1.9.4") # doxygen/1.9.5 will update dependency on zlib/1.2.12 to zlib/1.2.13
 
         if self.options.get_safe("link_with_mold", False):
-            self.build_requires("mold/2.4.0")
+            self.build_requires("mold/2.33.0")
             self.build_requires("openssl/3.2.1", override=True)
 
     def requirements(self):
@@ -164,7 +164,7 @@ class Morpheus(ConanFile):
             self.requires("glew/2.2.0")
 
         if self.settings.os in ["Windows"]:
-            self.requires("wil/1.0.240122.1")
+            self.requires("wil/1.0.240803.1")
 
         if self.useDate:
             self.requires("date/3.0.1")
@@ -173,7 +173,7 @@ class Morpheus(ConanFile):
             self.requires("tl-expected/20190710")
 
         if self.useFMT:
-            self.requires("fmt/10.2.1")
+            self.requires("fmt/11.0.2")
 
     def system_requirements(self):
         if self.options.get_safe("with_rs_opengl", False):
