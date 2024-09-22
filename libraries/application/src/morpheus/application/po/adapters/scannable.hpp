@@ -22,7 +22,7 @@ void validate(boost::any& v, std::vector<std::basic_string<CharType>> const& val
 
     auto const result = morpheus::scan_ns::scan<S>(s, "{}");
     if (result)
-        v = result.value();
+        v = result.value().value();
     else
         throw po::validation_error(po::validation_error::invalid_option_value);
 }
