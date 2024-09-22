@@ -154,7 +154,7 @@ class Morpheus(ConanFile):
 
     def requirements(self):
         if self.options.get_safe("with_rs_vulkan", False):
-            self.requires("vulkan-headers/1.3.290.0")
+            self.requires("vulkan-headers/1.3.239.0")
 
             if (self.settings.os in ["Macos", "iOS", "tvOS"]):
                 self.requires("moltenvk/1.2.2")
