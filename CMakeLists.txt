@@ -5,7 +5,7 @@ file(STRINGS "version.txt" MORPHEUS_VERSION)
 project(Morpheus
     VERSION ${MORPHEUS_VERSION}
     DESCRIPTION "A high performance focused game engine using object oriented techniques based in the latest C++"
-    LANGUAGES CXX
+    LANGUAGES C CXX
 )
 
 set(CMAKE_POLICY_DEFAULT_CMP0076 NEW)
@@ -13,6 +13,7 @@ set(CMAKE_POLICY_DEFAULT_CMP0077 NEW)
 cmake_policy(SET CMP0076 NEW)
 cmake_policy(SET CMP0077 NEW)
 cmake_policy(SET CMP0127 NEW)
+cmake_policy(SET CMP0135 NEW)
 cmake_policy(SET CMP0140 NEW)
 
 
@@ -24,6 +25,10 @@ include(GNUInstallDirs)
 include(CMakeDependentOption)
 include(CMakePackageConfigHelpers)
 
+option(MORPHEUS_RENDER_SYSTEM_DIRECT_X12 "Build with support for the Dirext X 12 render system" ON)
+option(MORPHEUS_RENDER_SYSTEM_METAL "Build with support for the Metal render system" ON)
+option(MORPHEUS_RENDER_SYSTEM_OPENGL "Build with support for the Open GL render system" ON)
+option(MORPHEUS_RENDER_SYSTEM_VULKAN "Build with support for the Vulkan render system" ON)
 cmake_dependent_option(MORPHEUS_LINK_WITH_MOLD "Enable the mold linker" ON "LINUX OR APPLE" OFF)
 cmake_dependent_option(MORPHEUS_CODE_COVERAGE "Enable code coverage" ON "\"${CMAKE_CXX_COMPILER_ID}\" STREQUAL \"Clang\" OR \"${CMAKE_CXX_COMPILER_ID}\" STREQUAL \"GNU\"" OFF)
 cmake_dependent_option(MORPHEUS_INCLUDE_NATVIS "Enable inclusion of a natvis files for debugging" ON "\"${CMAKE_CXX_COMPILER_ID}\" STREQUAL \"MSVC\"" OFF)
@@ -38,7 +43,7 @@ list(APPEND CMAKE_MODULE_PATH
 )
 
 set(CMAKE_FIND_PACKAGE_PREFER_CONFIG ON)
-list(APPEND CMAKE_PREFIX_PATH "${CMAKE_BINARY_DIR}" "${CMAKE_BINARY_DIR}/build/generators")
+list(APPEND CMAKE_PREFIX_PATH "${CMAKE_BINARY_DIR}" "${CMAKE_BINARY_DIR}/generators")
 
 #------------------------------------------------------------------------------------------------------------------------------------------
 # Custom CMake Includes

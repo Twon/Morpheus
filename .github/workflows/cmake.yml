@@ -180,13 +180,6 @@ jobs:
         with:
           xcode-version: '${{matrix.settings.compiler.version}}'
 
-      - name: Install Linux System Packages
-        if: contains( matrix.settings.os, 'ubuntu')
-        run: |
-          sudo apt-get -y install libgl-dev
-          sudo apt-get -y install libopengl-dev
-          sudo apt-get -y install libglu1-mesa-dev
-
       - name: Set up Python
         uses: actions/setup-python@v4.7.1
         with:
@@ -224,7 +217,7 @@ jobs:
         working-directory: ${{github.workspace}}
         shell: bash
         run: |
-          conan install "${{github.workspace}}" --build missing -pr:b default --build catch2/3.4.0 --build gtest/1.14.0 -o boost/*:without_cobalt=True
+          conan install "${{github.workspace}}" --build missing -pr:b default -o boost/*:without_cobalt=True
 
       - name: Configure Conan Build
         if: matrix.settings.os == 'windows-latest'

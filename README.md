@@ -41,7 +41,7 @@ To set up Conan for the repository create a repository local virtual environment
 cd <project root>
 python3 -m venv .venv               # Create a Python virtual env
 source ./.venv/bin/activate         # Activate the virtual env for bash by source.
-pip install -r ./requirements.txt   # Install all Python dependecies
+pip install -r ./requirements.txt   # Install all Python dependencies
 conan profile detect --force        # Generate a default configuration with the local machine settings
 conan config install ./.conan       # Install supported build profiles from ./.conan to ./conan2
 ```

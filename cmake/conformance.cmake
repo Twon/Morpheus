@@ -69,7 +69,7 @@ function(morpheus_conformance_check)
         message(FATAL_ERROR "RESULT parameter must be supplied")
     endif()
     if (NOT MORPHEUS_MSVC_VERSION AND NOT MORPHEUS_GNU_VERSION AND NOT MORPHEUS_CLANG_VERSION AND NOT MORPHEUS_APPLECLANG_VERSION)
-        message(FATAL_ERROR "Must check a minumum of one compiler version")
+        message(FATAL_ERROR "Must check a minimum of one compiler version")
     endif()
 
     list(APPEND SUPPORTED_COMPILERS "MSVC" "GNU" "Clang" "AppleClang")

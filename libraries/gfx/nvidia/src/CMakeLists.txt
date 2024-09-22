@@ -12,7 +12,6 @@ target_include_directories(MorpheusGfxNVidia
 target_link_libraries(MorpheusGfxNVidia
 	PUBLIC
         morpheus::gfx::platform
-		NVidia::NvapiHeaders
 )
 
 set_target_properties(MorpheusGfxNVidia

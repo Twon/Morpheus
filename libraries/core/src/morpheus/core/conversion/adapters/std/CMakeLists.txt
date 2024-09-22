@@ -1,8 +1,10 @@
 target_sources(MorpheusCore
     PUBLIC
-        chrono.hpp
-        filesystem.hpp
-        stacktrace.hpp
-        source_location.hpp
-        thread.hpp
+        FILE_SET HEADERS
+        FILES
+            chrono.hpp
+            filesystem.hpp
+            stacktrace.hpp
+            source_location.hpp
+            thread.hpp
 )

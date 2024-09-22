@@ -1,17 +1,19 @@
 target_sources(MorpheusCore
     PUBLIC
-        bit_cast.hpp
-        coro.hpp
-        date.hpp
-        format.hpp
-        expected.hpp
-        print.hpp
-        ranges.hpp
-        scan.hpp
-        source_location.hpp
-        stacktrace.hpp
-        unreachable.hpp
-        version.hpp
+        FILE_SET HEADERS
+        FILES
+            bit_cast.hpp
+            coro.hpp
+            date.hpp
+            format.hpp
+            expected.hpp
+            print.hpp
+            ranges.hpp
+            scan.hpp
+            source_location.hpp
+            stacktrace.hpp
+            unreachable.hpp
+            version.hpp
 )
 
 morpheus_conformance_check(

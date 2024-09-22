@@ -1,6 +1,10 @@
+add_subdirectory(concepts)
+
 target_sources(MorpheusCore
     PUBLIC
-        curry.hpp
-        function_ref.hpp
-        overload.hpp
+        FILE_SET HEADERS
+        FILES
+            curry.hpp
+            function_ref.hpp
+            overload.hpp
 )

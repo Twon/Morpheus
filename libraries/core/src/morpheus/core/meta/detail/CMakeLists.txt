@@ -1,5 +1,8 @@
 target_sources(MorpheusCore
     PUBLIC
-        aggregate.hpp
-        any.hpp
+        FILE_SET HEADERS
+        FILES
+            aggregate.hpp
+            any.hpp
+            scannable.hpp
 )

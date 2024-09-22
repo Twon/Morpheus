@@ -27,7 +27,7 @@ env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: Debug
   COMPILER_TYPE: gcc
-  COMPILER_VERSION: 13
+  COMPILER_VERSION: 12
 
   STDLIB: libstdc++11
 
@@ -95,13 +95,6 @@ jobs:
 
           sudo apt-get install libdatetime-perl
 
-      - name: Install Linux System Packages
-        shell: bash
-        run: |
-          sudo apt-get -y install libgl-dev
-          sudo apt-get -y install libopengl-dev
-          sudo apt-get -y install libglu1-mesa-dev
-
       - name: Set up Python
         uses: actions/setup-python@v4.7.1
         with:
@@ -134,7 +127,7 @@ jobs:
         working-directory: ${{github.workspace}}
         shell: bash
         run: |
-          conan install "${{github.workspace}}" --build missing --build catch2/3.4.0 --build gtest/1.14.0 -o boost/*:without_cobalt=True
+          conan install "${{github.workspace}}" --build missing -o boost/*:without_cobalt=True
 
       - name: Conan Preset
         shell: bash
@@ -172,9 +165,9 @@ jobs:
         run: cmake --build --preset ${{ env.CONAN_PRESET }} --target coverage-cobertura
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3.1.4
+        uses: codecov/codecov-action@v4.4.1
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         with:
           working-directory: ${{github.workspace}}/build/${{env.BUILD_TYPE}}/coverage
-          gcov: true
-          gcov_include: ${{github.workspace}}/build/${{env.BUILD_TYPE}}/coverage/html
           files: ${{github.workspace}}/build/${{env.BUILD_TYPE}}/coverage/cobertura_coverage.xml

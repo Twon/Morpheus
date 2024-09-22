@@ -1,5 +1,7 @@
 #pragma once
 
+#include <morpheus/core/conformance/format.hpp>
+
 #include <vulkan/vulkan.hpp>
 #include <cstdint>
 
@@ -11,7 +13,7 @@ namespace morpheus::gfx::vulkan
 class Version
 {
 public:
-    /// Constuct a Vulkan version from the packed version number:
+    /// Construct a Vulkan version from the packed version number:
     constexpr explicit Version(std::uint32_t const version) noexcept : mVersion(version) {}
 
     /// The Vulkan API variant number.
@@ -31,3 +33,21 @@ private:
 };
 
 } // namespace morpheus::gfx::vulkan
+
+
+template <>
+struct morpheus::fmt_ns::formatter<morpheus::gfx::vulkan::Version>
+{
+    template <typename Context>
+    constexpr auto parse(Context& context)
+    {
+        return std::begin(context);
+    }
+
+    template <typename Context>
+    constexpr auto format(morpheus::gfx::vulkan::Version const& value, Context& context) const
+    {
+        return morpheus::fmt_ns::format_to(context.out(), "{{variant={},major={},minor={},patch={}}}", value.variant(), value.major(), value.minor(),
+                                           value.patch());
+    }
+};

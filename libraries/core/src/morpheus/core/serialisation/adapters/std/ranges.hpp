@@ -16,7 +16,7 @@ template <typename T>
 inline constexpr bool isEnabledForRangeSerialisation = false;
 
 /// \concept IsRange
-///   For the purpose of serialisation of ranges we want to know that a given type is range, but also that we explicityly want to opt in as a Range
+///   For the purpose of serialisation of ranges we want to know that a given type is range, but also that we explicitly want to opt in as a Range
 ///   compatible type.  This is because certain type which already count as ranges are already handled within the framework, mainly strings.
 ///   Rather than special case ignoring strings an potentially other types the user must opt in by specialising \ref isEnabledForRangeSerialisation
 ///   for types that should be included for range support.
