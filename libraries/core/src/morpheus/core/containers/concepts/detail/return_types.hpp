@@ -15,7 +15,7 @@ concept InsertReturnType = requires
 template <typename I, typename T>
 concept InsertNodeHandleReturnType = requires
 {
-    requires requires { std::same_as<I, typename T::iterator>; } or requires { std::same_as<I, typename T::insert_return_type>; };
+    requires requires { requires std::same_as<I, typename T::iterator>; } or requires { requires std::same_as<I, typename T::insert_return_type>; };
 };
 
 template <typename I, typename T>

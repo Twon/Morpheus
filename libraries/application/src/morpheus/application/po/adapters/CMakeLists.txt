@@ -5,4 +5,5 @@ target_sources(MorpheusApplication
         FILE_SET HEADERS
         FILES
             enums.hpp
+            scannable.hpp
 )
