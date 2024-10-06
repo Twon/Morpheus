@@ -28,7 +28,7 @@ struct is_specialisation_of<Template, Template<T...>> : std::true_type {};
 
 /// \var is_specialisation_of_v
 ///     Provides a meta functions for testing if a type is a specialisation of a given template type.
-/// \note 
+/// \note
 ///     Follows the proposed meta function outlined in: http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2020/p2098r0.pdf
 template <template <typename...> class Template, typename T>
 inline constexpr bool is_specialisation_of_v = false;
