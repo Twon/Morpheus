@@ -7,6 +7,7 @@
 #endif
 
 // clang-format off
+#include <utility>
 #include <scn/scan.h>
 namespace morpheus { namespace scan_ns = scn; }
 

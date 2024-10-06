@@ -29,7 +29,7 @@ public:
     /// Default construction an empty adapter.
     constexpr Adapter() noexcept = default;
     /// Constructs an adapter with the specified parameters.
-    ///     \param[in] dxgiAdapter The DXGI adapter object.
+    /// \param[in] dxgiAdapter The DXGI adapter object.
     Adapter(DXGIAdapter dxgiAdapter);
 
     ///@}
