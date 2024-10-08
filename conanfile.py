@@ -143,7 +143,7 @@ class Morpheus(ConanFile):
         self.test_requires("gtest/1.15.0")
 
         if get_cmake_version() < Version("3.30.1"):
-            self.tool_requires("cmake/3.30 .1")
+            self.tool_requires("cmake/3.30.1")
 
         if self.options.build_docs:
             self.build_requires("doxygen/1.9.4") # doxygen/1.9.5 will update dependency on zlib/1.2.12 to zlib/1.2.13
