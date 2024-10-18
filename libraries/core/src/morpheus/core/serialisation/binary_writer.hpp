@@ -24,25 +24,25 @@ namespace morpheus::serialisation
 class BinaryWriter
 {
 public:
-    BinaryWriter(std::ostream& outStream)
+    BinaryWriter(std::ostream& outStream) noexcept
     : mOutStream(outStream)
     {
     }
 
     /// \copydoc morpheus::serialisation::concepts::ReaderArchtype::isTextual()
-    static constexpr bool isTextual() { return false; }
+    static constexpr bool isTextual() noexcept { return false; }
 
     /// \copydoc morpheus::serialisation::concepts::WriterArchtype::beginComposite()
-    void beginComposite() {}
+    void beginComposite() noexcept {}
 
     /// \copydoc morpheus::serialisation::concepts::WriterArchtype::endComposite()
-    void endComposite() {}
+    void endComposite() noexcept {}
 
     /// \copydoc morpheus::serialisation::concepts::WriterArchtype::beginValue()
-    void beginValue(std::string_view const) {}
+    void beginValue(std::string_view const) noexcept {}
 
     /// \copydoc morpheus::serialisation::concepts::WriterArchtype::endValue()
-    void endValue() {}
+    void endValue() noexcept {}
 
     /// \copydoc morpheus::serialisation::concepts::WriterArchtype::beginSequence()
     void beginSequence(std::optional<std::size_t> size = std::nullopt)
@@ -54,7 +54,7 @@ public:
     }
 
     /// \copydoc morpheus::serialisation::concepts::WriterArchtype::endSequence()
-    void endSequence() {}
+    void endSequence() noexcept {}
 
     /// \copydoc morpheus::serialisation::concepts::WriterArchtype::beginNullable()
     void beginNullable(bool const null)
@@ -63,7 +63,7 @@ public:
     }
 
     /// \copydoc morpheus::serialisation::concepts::WriterArchtype::endNullable()
-    void endNullable() {}
+    void endNullable() noexcept {}
 
     template <typename T>
     requires std::integral<T> or std::floating_point<T>
@@ -79,7 +79,7 @@ public:
     /// \copydoc morpheus::serialisation::concepts::WriterArchtype::write(std::string_view const)
     void write(std::string_view const value)
     {
-        auto length = value.size();
+        auto const length = value.size();
         write(length);
 
         auto const writtenSize = static_cast<std::size_t>(mOutStream.rdbuf()->sputn(value.data(), value.size()));
@@ -91,7 +91,7 @@ public:
     /// \copydoc morpheus::serialisation::concepts::WriterArchtype::write(std::span<std::byte> const)
     void write(std::span<std::byte const> const value)
     {
-        auto length = value.size();
+        auto const length = value.size();
         write(length);
 
         auto const writtenSize = static_cast<std::size_t>(mOutStream.rdbuf()->sputn(reinterpret_cast<const char*>(value.data()), value.size()));

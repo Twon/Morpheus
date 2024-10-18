@@ -35,7 +35,7 @@ namespace mopheus
 /// @}
 
 /*! \def MORPHEUS_NO_SANITIZE_ADDRESS
-        Compiler agnostic abstraction of the attibute to eliminate address sanitizer from a method.
+        Compiler agnostic abstraction of the attribute to eliminate address sanitizer from a method.
 */
 #if (MORPHEUS_IS_GCC_COMPATIBLE_COMPILER)
     // https://clang.llvm.org/docs/AddressSanitizer.html#disabling-instrumentation-with-attribute-no-sanitize-address

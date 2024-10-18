@@ -1,7 +1,9 @@
 target_sources(MorpheusApplication
     PUBLIC
-        config.hpp
-        options.hpp
+        FILE_SET HEADERS
+        FILES
+            config.hpp
+            options.hpp
     PRIVATE
         config.cpp
 )

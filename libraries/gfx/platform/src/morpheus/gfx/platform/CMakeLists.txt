@@ -12,14 +12,16 @@ endif(UNIX AND NOT APPLE)
 
 target_sources(MorpheusGfxPlatform
     PUBLIC
-        adapter.hpp
-        image.hpp
-        pixel.hpp
-        render_system.hpp
-        render_target.hpp
-        render_window.hpp
-        vendor.hpp
-        video_mode.hpp
+        FILE_SET HEADERS
+        FILES
+            adapter.hpp
+            image.hpp
+            pixel.hpp
+            render_system.hpp
+            render_target.hpp
+            render_window.hpp
+            vendor.hpp
+            video_mode.hpp
     PRIVATE
         adapter.cpp
         image.cpp

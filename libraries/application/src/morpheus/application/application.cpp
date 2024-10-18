@@ -6,7 +6,7 @@
 #include "morpheus/core/conversion/adapters/std/chrono.hpp"
 #include "morpheus/core/conversion/adapters/std/stacktrace.hpp"
 
-#include <boost/process/environment.hpp>
+#include <boost/process/v1/environment.hpp>
 #include <boost/dll.hpp>
 #include <chrono>
 
@@ -28,7 +28,7 @@ void terminationHandler()
     std::abort();
 }
 
-/// Standardises all application logs to common log name format of <progam name>-<process id>-<yeah-month-day>.log
+/// Standardises all application logs to common log name format of <program name>-<process id>-<yeah-month-day>.log
 /*std::string getDefaultApplicationLogName()
 {
     using namespace date_ns;

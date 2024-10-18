@@ -1,7 +1,9 @@
 target_sources(MorpheusCore
     PUBLIC
-        allocator.hpp
-        copier.hpp
-        deleter.hpp
-        nullable_pointer.hpp
+        FILE_SET HEADERS
+        FILES
+            allocator.hpp
+            copier.hpp
+            deleter.hpp
+            nullable_pointer.hpp
 )

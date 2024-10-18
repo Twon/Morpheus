@@ -4,8 +4,11 @@ target_sources(MorpheusCoreTests
 #        binary_search.tests.cpp
         complete.tests.cpp
         invocable_traits.tests.cpp
+        is_array.tests.cpp
         is_specialisation.tests.cpp
         is_string.tests.cpp
         satisfies.tests.cpp
         trait.tests.cpp
 )
+
+add_subdirectory(concepts)

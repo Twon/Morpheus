@@ -10,7 +10,7 @@ namespace morpheus::network
 {
 
 /// \class NamedEndpoint
-///     Allows for hostname to endpont resolution via DNS lookup.a
+///     Allows for hostname to endpoint resolution via DNS lookup.
 /// \todo
 ///     https://stackoverflow.com/questions/31314433/how-do-i-convert-a-host-name-in-to-a-boost-address-or-endpoint
 class NamedEndpoint
@@ -34,7 +34,7 @@ private:
 
 } // namespace morpheus::network
 
-/// std::hash specialisation for named enpoint
+/// std::hash specialisation for named endpoint
 template <>
 struct std::hash<morpheus::network::NamedEndpoint>
 {

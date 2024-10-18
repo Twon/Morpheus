@@ -6,7 +6,7 @@ morpheus_add_library(
 
 target_include_directories(MorpheusCore
     PUBLIC
-        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
+        $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/include>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
 )
@@ -45,16 +45,6 @@ configure_file(${CMAKE_CURRENT_BINARY_DIR}/morpheuscore_export.h ${CMAKE_CURRENT
 
 install(TARGETS MorpheusCore
         PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/core
-)
-
-# Hierarchically copy headers to the install dir
-install (
-    DIRECTORY
-        ${CMAKE_CURRENT_SOURCE_DIR}/morpheus/core
-    DESTINATION
-        ${CMAKE_INSTALL_INCLUDEDIR}/morpheus/core
-    FILES_MATCHING PATTERN
-        "*.hpp"
 )
 
 install(
