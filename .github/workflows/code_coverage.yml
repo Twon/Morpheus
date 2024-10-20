@@ -50,7 +50,7 @@ jobs:
         env:
           cache-name: cache-conan-data
         with:
-          path: ${{github.workspace}}/.conan2/p
+          path: ${{github.workspace}}/conan_cache_save.tgz
           key: ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-${{ matrix.settings.compiler.version }}-${{ matrix.settings.lib }}
           restore-keys: |
             ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-${{ matrix.settings.compiler.version }}-
@@ -123,6 +123,13 @@ jobs:
 
           conan profile show -pr default
 
+      - name: Conan Cache Restore
+        shell: bash
+        run: |
+          if [ -f ./conan_cache_save.tgz ]; then
+              conan cache restore ./conan_cache_save.tgz
+          fi
+
       - name: Configure Install
         working-directory: ${{github.workspace}}
         shell: bash
@@ -171,3 +178,6 @@ jobs:
         with:
           working-directory: ${{github.workspace}}/build/${{env.BUILD_TYPE}}/coverage
           files: ${{github.workspace}}/build/${{env.BUILD_TYPE}}/coverage/cobertura_coverage.xml
+
+      - name: Conan Cache Save
+        run: conan cache save "*"

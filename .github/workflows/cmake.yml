@@ -126,7 +126,7 @@ jobs:
         env:
           cache-name: cache-conan-data
         with:
-          path: ${{github.workspace}}/.conan2/p
+          path: ${{github.workspace}}/conan_cache_save.tgz
           key: ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-${{ matrix.settings.compiler.version }}-${{ matrix.settings.lib }}
           restore-keys: |
             ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-${{ matrix.settings.compiler.version }}-
@@ -213,6 +213,13 @@ jobs:
 
           conan profile show -pr default
 
+      - name: Conan Cache Restore
+        shell: bash
+        run: |
+          if [ -f ./conan_cache_save.tgz ]; then
+              conan cache restore ./conan_cache_save.tgz
+          fi
+
       - name: Configure Install
         working-directory: ${{github.workspace}}
         shell: bash
@@ -277,3 +284,6 @@ jobs:
         # Execute tests defined by the CMake configuration.
         # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
         run: ctest --preset ${{ env.CONAN_PRESET }} -LE GPU # Exclude GPU tests as Github actions do not have the supported hardware/drivers
+
+      - name: Conan Cache Save
+        run: conan cache save "*"
