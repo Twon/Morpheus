@@ -75,7 +75,6 @@ class Morpheus(ConanFile):
         "with_rs_metal": True,
         "with_rs_opengl": True,
         "with_rs_vulkan": True,
-        "date*:use_system_tz_db": True,
      }
     requires = (
         "boost/1.86.0",
@@ -167,7 +166,7 @@ class Morpheus(ConanFile):
             self.requires("wil/1.0.240803.1", transitive_headers=True)
 
         if self.useDate:
-            self.requires("date/3.0.1", transitive_headers=True)
+            self.requires("date/3.0.3", transitive_headers=True)
 
         if self.useExpected:
             self.requires("tl-expected/20190710", transitive_headers=True)
