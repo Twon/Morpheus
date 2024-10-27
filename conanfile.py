@@ -34,7 +34,6 @@ import sys
 
 required_conan_version = ">=2.1.0"
 
-
 def get_cmake_version():
     try:
         out, _ = subprocess.Popen(["cmake", "--version"], stdout=subprocess.PIPE, shell=False).communicate()
