@@ -180,6 +180,6 @@ jobs:
           files: ${{github.workspace}}/build/${{env.BUILD_TYPE}}/coverage/cobertura_coverage.xml
 
       - name: Conan Cache Save
-        run: | 
+        run: |
           conan cache clean
           conan cache save "*/*:*"
