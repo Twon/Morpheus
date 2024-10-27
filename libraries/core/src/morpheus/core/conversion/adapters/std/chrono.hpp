@@ -17,7 +17,7 @@
 #define MORPHEUS_CPP_LIB_CHRONO_FORMATTING \
             (((MORPHEUS_COMPILER == MORPHEUS_VISUALSTUDIO_COMPILER) && (__cpp_lib_chrono < 201907L)) || \
              ((MORPHEUS_COMPILER == MORPHEUS_GNUC_COMPILER) && (MORPHEUS_COMP_VER < 140000000)) || \
-             ((MORPHEUS_COMPILER == MORPHEUS_CLANG_COMPILER) && (MORPHEUS_COMP_VER < 170000000)) || \
+             ((MORPHEUS_COMPILER == MORPHEUS_CLANG_COMPILER) && (MORPHEUS_COMP_VER < 190000000)) || \
              ((MORPHEUS_COMPILER == MORPHEUS_APPLE_CLANG_COMPILER) && (MORPHEUS_COMP_VER < 150000000)))
 
 #if MORPHEUS_CPP_LIB_CHRONO_FORMATTING
@@ -256,7 +256,7 @@ struct StringConverter<std::chrono::duration<Rep, Period>>
         constexpr auto matchString = []<ctll::fixed_string T>(auto const searchStr) -> exp_ns::expected<std::chrono::duration<Rep, Period>, std::string_view>
         {
             if (auto m = ctre::match<T>(searchStr)) {
-                return std::chrono::duration<Rep, Period>(std::stoi(std::string(m.template get<1>().to_view())));
+                return std::chrono::duration<Rep, Period>(std::stoimstd::string(m.template get<1>().to_view())));
             }
             else {
                 return exp_ns::unexpected(std::string_view{"Unable to parse std::chrono::duration"});
