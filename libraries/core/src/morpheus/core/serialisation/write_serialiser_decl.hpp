@@ -44,7 +44,7 @@ public:
 
     /// \name Serialise
     ///     Custom serialise function specialisations should serialise sub-members via the writes serialisers
-    ///     methods.  This allows breaking of cirular dependencies in the dispatching of serialisation calls and delays
+    ///     methods.  This allows breaking of circular dependencies in the dispatching of serialisation calls and delays
     ///     look up of the actual serialisation call to the second phase of the two-phase lookup. With the dependency
     ///     broken the actual underlying calls dispatch to the serialise customisation point object which then finds
     ///     the correct call via ADL dispatch.

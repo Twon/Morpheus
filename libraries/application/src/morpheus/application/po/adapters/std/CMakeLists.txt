@@ -1,6 +1,8 @@
 target_sources(MorpheusApplication
     PUBLIC
-        chrono.hpp
-        filesystem.hpp
-        optional.hpp
+        FILE_SET HEADERS
+        FILES
+            chrono.hpp
+            filesystem.hpp
+            optional.hpp
 )

@@ -6,7 +6,7 @@ namespace morpheus::meta::concepts
 {
 
 /// \concept Trait
-///     Higher order helper concept for applying type traits as useable concepts.
+///     Higher order helper concept for applying type traits as usable concepts.
 /// \code
 ///     concept ExampleConcept = requires(T t, T const tc)
 ///     {

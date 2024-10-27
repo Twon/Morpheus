@@ -291,7 +291,7 @@ TEST_CASE("Json reader raise an error on reading incorrect types", "[morpheus.se
     }
 }
 
-TEST_CASE("Json reader thows an error on invalid json input", "[morpheus.serialisation.json_reader.invalid_json]")
+TEST_CASE("Json reader throws an error on invalid json input", "[morpheus.serialisation.json_reader.invalid_json]")
 {
     GIVEN("A type serialising a integer")
     {

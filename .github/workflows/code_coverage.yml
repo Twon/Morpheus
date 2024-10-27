@@ -27,7 +27,7 @@ env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: Debug
   COMPILER_TYPE: gcc
-  COMPILER_VERSION: 13
+  COMPILER_VERSION: 12
 
   STDLIB: libstdc++11
 
@@ -50,7 +50,7 @@ jobs:
         env:
           cache-name: cache-conan-data
         with:
-          path: ${{github.workspace}}/.conan2/p
+          path: ${{github.workspace}}/conan_cache_save.tgz
           key: ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-${{ matrix.settings.compiler.version }}-${{ matrix.settings.lib }}
           restore-keys: |
             ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-${{ matrix.settings.compiler.version }}-
@@ -123,6 +123,13 @@ jobs:
 
           conan profile show -pr default
 
+      - name: Conan Cache Restore
+        shell: bash
+        run: |
+          if [ -f ./conan_cache_save.tgz ]; then
+              conan cache restore ./conan_cache_save.tgz
+          fi
+
       - name: Configure Install
         working-directory: ${{github.workspace}}
         shell: bash
@@ -165,9 +172,12 @@ jobs:
         run: cmake --build --preset ${{ env.CONAN_PRESET }} --target coverage-cobertura
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3.1.4
+        uses: codecov/codecov-action@v4.4.1
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         with:
           working-directory: ${{github.workspace}}/build/${{env.BUILD_TYPE}}/coverage
-          gcov: true
-          gcov_include: ${{github.workspace}}/build/${{env.BUILD_TYPE}}/coverage/html
           files: ${{github.workspace}}/build/${{env.BUILD_TYPE}}/coverage/cobertura_coverage.xml
+
+      - name: Conan Cache Save
+        run: conan cache save "*"

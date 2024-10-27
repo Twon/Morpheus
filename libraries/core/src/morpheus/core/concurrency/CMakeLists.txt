@@ -1,4 +1,6 @@
 target_sources(MorpheusCore
     PUBLIC
-        generator.hpp
+        FILE_SET HEADERS
+        FILES
+            generator.hpp
 )

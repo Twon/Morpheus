@@ -1,10 +1,13 @@
 target_sources(MorpheusCore
     PUBLIC
-        aggregate.hpp
-        binary_search.hpp
-        complete.hpp
-        is_specialisation.hpp
-        is_string.hpp
+        FILE_SET HEADERS
+        FILES
+            aggregate.hpp
+            binary_search.hpp
+            complete.hpp
+            is_array.hpp
+            is_specialisation.hpp
+            is_string.hpp
 )
 
 add_subdirectory(concepts)

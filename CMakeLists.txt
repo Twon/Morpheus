@@ -5,7 +5,7 @@ file(STRINGS "version.txt" MORPHEUS_VERSION)
 project(Morpheus
     VERSION ${MORPHEUS_VERSION}
     DESCRIPTION "A high performance focused game engine using object oriented techniques based in the latest C++"
-    LANGUAGES CXX
+    LANGUAGES C CXX
 )
 
 set(CMAKE_POLICY_DEFAULT_CMP0076 NEW)
@@ -13,6 +13,7 @@ set(CMAKE_POLICY_DEFAULT_CMP0077 NEW)
 cmake_policy(SET CMP0076 NEW)
 cmake_policy(SET CMP0077 NEW)
 cmake_policy(SET CMP0127 NEW)
+cmake_policy(SET CMP0135 NEW)
 cmake_policy(SET CMP0140 NEW)
 
 

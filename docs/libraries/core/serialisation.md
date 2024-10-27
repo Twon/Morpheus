@@ -40,7 +40,7 @@ The serialisation framework provides concepts for readers and writers, which are
 # Overview of serialisation in C++
 - Killing C++ Serialization Overhead & Complexity - Eyal Zedaka - CppCon 2022: https://youtu.be/G7-GQhCw8eE
 
-# Exisiting	C++ Serialisation Libraries
+# Existing	C++ Serialisation Libraries
 - Alpaca: https://github.com/p-ranav/alpaca
 - Arvo: https://avro.apache.org/
 - Bitsery: https://github.com/fraillt/bitsery

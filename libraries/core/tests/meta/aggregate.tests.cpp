@@ -21,7 +21,7 @@ struct AggregateWithArray
     double second;
 };
 
-TEST_CASE("Aggregate allows contraining a type to being an aggregate", "[morpheus.meta.aggregate.fieldsCount]")
+TEST_CASE("Aggregate allows constraining a type to being an aggregate", "[morpheus.meta.aggregate.fieldsCount]")
 {
 //    STATIC_REQUIRE(fieldsCount<SimpleAggregate>() == 3);
 //    STATIC_REQUIRE(fieldsCount<AggregateWithArray>() == 2);
@@ -39,13 +39,13 @@ struct TestNonAggregate : private TestAggregate
     TestNonAggregate() = default;
 };
 
-TEST_CASE("Aggregate allows contraining a type to being an aggregate", "[morpheus.meta.concept.aggregate]")
+TEST_CASE("Aggregate allows constraining a type to being an aggregate", "[morpheus.meta.concept.aggregate]")
 {
     STATIC_REQUIRE(concepts::Aggregate<TestAggregate>);
     STATIC_REQUIRE(!concepts::Aggregate<TestNonAggregate>);
 }
 
-TEST_CASE("Aggregate constructable allows contraining a type to being an aggregate and constructable from a given set of parameter types", "[morpheus.meta.concept.aggregate_constructable]")
+TEST_CASE("Aggregate constructable allows constraining a type to being an aggregate and constructable from a given set of parameter types", "[morpheus.meta.concept.aggregate_constructable]")
 {
 #if (__cpp_aggregate_paren_init >= 201902L)
     STATIC_REQUIRE(concepts::AggregateConstructable<TestAggregate, int>);
@@ -57,7 +57,7 @@ TEST_CASE("Aggregate constructable allows contraining a type to being an aggrega
 #endif // #if (__cpp_aggregate_paren_init >= 201902L)
 }
 
-TEST_CASE("Aggregate constructable with type convertable to any", "[morpheus.meta.concept.aggregate_constructable_to_any]")
+TEST_CASE("Aggregate constructable with type convertible to any", "[morpheus.meta.concept.aggregate_constructable_to_any]")
 {
     STATIC_REQUIRE(concepts::AggregateConstructable<TestAggregate, detail::Any>);
 #if (__cpp_aggregate_paren_init >= 201902L)
@@ -68,7 +68,7 @@ TEST_CASE("Aggregate constructable with type convertable to any", "[morpheus.met
 #endif // #if (__cpp_aggregate_paren_init >= 201902L)
 }
 
-TEST_CASE("Aggregate constructable from indicies", "[morpheus.meta.concept.aggregate_constructable_from_indicies]")
+TEST_CASE("Aggregate constructable from indices", "[morpheus.meta.concept.aggregate_constructable_from_indices]")
 {
     STATIC_REQUIRE(detail::AggregateConstructibleFromIndicies<TestAggregate, std::index_sequence<>>::value);
     STATIC_REQUIRE(detail::AggregateConstructibleFromIndicies<TestAggregate, std::index_sequence<0>>::value);
