@@ -256,7 +256,7 @@ struct StringConverter<std::chrono::duration<Rep, Period>>
         constexpr auto matchString = []<ctll::fixed_string T>(auto const searchStr) -> exp_ns::expected<std::chrono::duration<Rep, Period>, std::string_view>
         {
             if (auto m = ctre::match<T>(searchStr)) {
-                return std::chrono::duration<Rep, Period>(std::stoimstd::string(m.template get<1>().to_view())));
+                return std::chrono::duration<Rep, Period>(std::stoi(std::string(m.template get<1>().to_view())));
             }
             else {
                 return exp_ns::unexpected(std::string_view{"Unable to parse std::chrono::duration"});
