@@ -110,7 +110,7 @@ jobs:
               compiler:
                 {
                   type: APPLE_CLANG,
-                  version: "15.2",
+                  version: "15.3",
                   conan: "apple-clang",
                   cc: "clang",
                   cxx: "clang++",
