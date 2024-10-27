@@ -286,4 +286,6 @@ jobs:
         run: ctest --preset ${{ env.CONAN_PRESET }} -LE GPU # Exclude GPU tests as Github actions do not have the supported hardware/drivers
 
       - name: Conan Cache Save
-        run: conan cache save "*"
+        run: |
+          conan cache clean
+          conan cache save "*/*:*"

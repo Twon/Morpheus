@@ -131,4 +131,6 @@ jobs:
           publish_dir: ./build/documentation/sphinx
 
       - name: Conan Cache Save
-        run: conan cache save "*"
+        run: |
+          conan cache clean
+          conan cache save "*/*:*"
