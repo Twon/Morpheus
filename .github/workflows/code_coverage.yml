@@ -46,17 +46,17 @@ jobs:
       - uses: actions/checkout@v4.1.1
 
       - name: Cache Conan data
-        uses: actions/cache@v3.3.2
+        uses: actions/cache@v4.1.2
         env:
           cache-name: cache-conan-data
         with:
           path: ${{github.workspace}}/conan_cache_save.tgz
-          key: ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-${{ matrix.settings.compiler.version }}-${{ matrix.settings.lib }}
+          key: ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.os }}-${{ env.BUILD_TYPE }}-${{ env.COMPILER_TYPE }}-${{ env.COMPILER_VERSION }}-${{ env.STDLIB }}
           restore-keys: |
-            ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-${{ matrix.settings.compiler.version }}-
-            ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-
-            ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.settings.os }}-${{ matrix.configuration }}-
-            ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.settings.os }}-
+            ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.os }}-${{ env.BUILD_TYPE }}-${{ env.COMPILER_TYPE }}-${{ env.COMPILER_VERSION }}-
+            ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.os }}-${{ env.BUILD_TYPE }}-${{ env.COMPILER_TYPE }}-
+            ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.os }}-${{ env.BUILD_TYPE }}-
+            ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.os }}-
 
       # Previously GCC was installed via egor-tensin/setup-gcc@v1 but this does not install gcov with the compiler.
       # By default Ubuntu has Gcov 11 installed. This worked so long as the compiler was gcc 11, but if a later gcc was
