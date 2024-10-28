@@ -133,10 +133,10 @@ jobs:
               lib: "libc++",
             }
     steps:
-      - uses: actions/checkout@v4.1.1
+      - uses: actions/checkout@v4.2.2
 
       - name: Cache Conan data
-        uses: actions/cache@v3.3.2
+        uses: actions/cache@v4.1.2
         env:
           cache-name: cache-conan-data
         with:
@@ -157,7 +157,7 @@ jobs:
 
       - name: Add msbuild to PATH
         if: matrix.settings.os == 'windows-latest'
-        uses: microsoft/setup-msbuild@v1.3.1
+        uses: microsoft/setup-msbuild@v2
         with:
           vs-version: "16.5"
 
@@ -195,7 +195,7 @@ jobs:
           xcode-version: '${{matrix.settings.compiler.version}}'
 
       - name: Set up Python
-        uses: actions/setup-python@v4.7.1
+        uses: actions/setup-python@v5.3.0
         with:
           python-version: '3.11'
 
