@@ -34,7 +34,6 @@ import sys
 
 required_conan_version = ">=2.1.0"
 
-
 def get_cmake_version():
     try:
         out, _ = subprocess.Popen(["cmake", "--version"], stdout=subprocess.PIPE, shell=False).communicate()
@@ -75,7 +74,6 @@ class Morpheus(ConanFile):
         "with_rs_metal": True,
         "with_rs_opengl": True,
         "with_rs_vulkan": True,
-        "date*:use_system_tz_db": True,
      }
     requires = (
         "boost/1.86.0",
@@ -154,26 +152,26 @@ class Morpheus(ConanFile):
 
     def requirements(self):
         if self.options.get_safe("with_rs_vulkan", False):
-            self.requires("vulkan-headers/1.3.239.0")
+            self.requires("vulkan-headers/1.3.239.0", transitive_headers=True)
 
             if (self.settings.os in ["Macos", "iOS", "tvOS"]):
-                self.requires("moltenvk/1.2.2")
+                self.requires("moltenvk/1.2.2", transitive_headers=True)
 
         if self.options.get_safe("with_rs_opengl", False):
-            self.requires("glbinding/3.3.0")
-            self.requires("glew/2.2.0")
+            self.requires("glbinding/3.3.0", transitive_headers=True)
+            self.requires("glew/2.2.0", transitive_headers=True)
 
         if self.settings.os in ["Windows"]:
-            self.requires("wil/1.0.240803.1")
+            self.requires("wil/1.0.240803.1", transitive_headers=True)
 
         if self.useDate:
-            self.requires("date/3.0.1")
+            self.requires("date/3.0.3", transitive_headers=True)
 
         if self.useExpected:
-            self.requires("tl-expected/20190710")
+            self.requires("tl-expected/20190710", transitive_headers=True)
 
         if self.useFMT:
-            self.requires("fmt/11.0.2")
+            self.requires("fmt/11.0.2", transitive_headers=True)
 
     def system_requirements(self):
         if self.options.get_safe("with_rs_opengl", False):

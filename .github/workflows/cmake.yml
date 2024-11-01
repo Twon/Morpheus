@@ -110,7 +110,7 @@ jobs:
               compiler:
                 {
                   type: APPLE_CLANG,
-                  version: "15.2",
+                  version: "15.3",
                   conan: "apple-clang",
                   cc: "clang",
                   cxx: "clang++",
@@ -119,14 +119,14 @@ jobs:
               lib: "libc++",
             }
     steps:
-      - uses: actions/checkout@v4.1.1
+      - uses: actions/checkout@v4.2.2
 
       - name: Cache Conan data
-        uses: actions/cache@v3.3.2
+        uses: actions/cache@v4.1.2
         env:
           cache-name: cache-conan-data
         with:
-          path: ${{github.workspace}}/.conan2/p
+          path: ${{github.workspace}}/conan_cache_save.tgz
           key: ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-${{ matrix.settings.compiler.version }}-${{ matrix.settings.lib }}
           restore-keys: |
             ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-${{ matrix.settings.compiler.version }}-
@@ -143,7 +143,7 @@ jobs:
 
       - name: Add msbuild to PATH
         if: matrix.settings.os == 'windows-latest'
-        uses: microsoft/setup-msbuild@v1.3.1
+        uses: microsoft/setup-msbuild@v2
         with:
           vs-version: "16.5"
 
@@ -181,7 +181,7 @@ jobs:
           xcode-version: '${{matrix.settings.compiler.version}}'
 
       - name: Set up Python
-        uses: actions/setup-python@v4.7.1
+        uses: actions/setup-python@v5.3.0
         with:
           python-version: '3.11'
 
@@ -212,6 +212,13 @@ jobs:
           fi
 
           conan profile show -pr default
+
+      - name: Conan Cache Restore
+        shell: bash
+        run: |
+          if [ -f ./conan_cache_save.tgz ]; then
+              conan cache restore ./conan_cache_save.tgz
+          fi
 
       - name: Configure Install
         working-directory: ${{github.workspace}}
@@ -277,3 +284,8 @@ jobs:
         # Execute tests defined by the CMake configuration.
         # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
         run: ctest --preset ${{ env.CONAN_PRESET }} -LE GPU # Exclude GPU tests as Github actions do not have the supported hardware/drivers
+
+      - name: Conan Cache Save
+        run: |
+          conan cache clean
+          conan cache save "*/*:*"
