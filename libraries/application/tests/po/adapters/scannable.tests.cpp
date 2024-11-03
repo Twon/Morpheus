@@ -1,5 +1,6 @@
-#include "morpheus/application/application.hpp"
+#include "morpheus/application/po/options.hpp"
 #include "morpheus/application/po/adapters/scannable.hpp"
+#include "morpheus/application/version.hpp"
 #include "morpheus/logging.hpp"
 
 #include <catch2/catch_test_macros.hpp>

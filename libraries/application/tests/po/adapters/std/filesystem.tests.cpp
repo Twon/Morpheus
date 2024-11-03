@@ -1,11 +1,19 @@
-#include "morpheus/application/po/adapters/std/filesystem.hpp"
-#include "morpheus/application/application.hpp"
+#include "morpheus/application/po/adapters/std/filesystem.hpp" // IWYU pragma: keep
+#include "morpheus/application/po/options.hpp"
+#include "morpheus/application/version.hpp"
 #include "morpheus/logging.hpp"
 
-#include <boost/dll.hpp>
-#include <boost/program_options.hpp>
-
+#include <boost/dll/runtime_symbol_info.hpp>
+#include <boost/filesystem/path.hpp>
+#include <boost/program_options/options_description.hpp>
+#include <boost/program_options/value_semantic.hpp>
 #include <catch2/catch_test_macros.hpp>
+
+#include <array>
+#include <filesystem>
+#include <optional>
+#include <string_view>
+#include <string>
 
 namespace morpheus::application::po
 {

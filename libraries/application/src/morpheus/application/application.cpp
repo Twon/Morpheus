@@ -1,4 +1,6 @@
 #include "morpheus/application/application.hpp"
+#include "morpheus/application/version.hpp" 
+#include "morpheus/application/po/options.hpp"
 #include "morpheus/core/base/debugging.hpp"
 #include "morpheus/core/conformance/date.hpp"
 #include "morpheus/core/conformance/format.hpp"

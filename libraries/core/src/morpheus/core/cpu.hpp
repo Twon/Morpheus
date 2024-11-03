@@ -1,7 +1,7 @@
 #pragma once
 
-#include <morpheus/core/base/architecture.hpp>
-#include <morpheus/core/base/platform.hpp>
+#include "morpheus/core/base/architecture.hpp"
+#include "morpheus/core/base/compiler.hpp"
 
 #include <array>
 #include <cstdint>
