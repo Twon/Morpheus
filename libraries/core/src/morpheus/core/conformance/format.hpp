@@ -3,7 +3,7 @@
 #include <morpheus/core/conformance/version.hpp>
 
 #if __has_include(<format>)
-    #include <format>
+    #include <format> // IWYU pragma: export
 #endif
 
 // clang-format off
@@ -15,9 +15,9 @@
         #pragma GCC diagnostic ignored "-Wstringop-overflow="
     #endif // (MORPHEUS_COMPILER == MORPHEUS_GNUC_COMPILER)
 
-    #include <fmt/format.h>
-    #include <fmt/chrono.h>
-    #include <fmt/ostream.h>
+    #include <fmt/format.h> // IWYU pragma: export
+    #include <fmt/chrono.h> // IWYU pragma: export
+    #include <fmt/ostream.h> // IWYU pragma: export
     namespace morpheus { namespace fmt_ns = fmt; }
 
     #if (MORPHEUS_COMPILER == MORPHEUS_GNUC_COMPILER)

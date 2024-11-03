@@ -1,7 +1,7 @@
 #pragma once
 
 #if __has_include(<stacktrace>)
-    #include <stacktrace>
+    #include <stacktrace> // IWYU pragma: export
 #endif
 
 // clang-format off
@@ -12,7 +12,7 @@
     #define MORPHEUS_CURRENT_STACKTRACE ::morpheus::st_ns::stacktrace::current()
 #else
 
-    #include <boost/stacktrace/stacktrace.hpp>
+    #include <boost/stacktrace/stacktrace.hpp> // IWYU pragma: export
     namespace morpheus { namespace st_ns = boost::stacktrace; }
 
     #define MORPHEUS_CURRENT_STACKTRACE ::morpheus::st_ns::stacktrace()
