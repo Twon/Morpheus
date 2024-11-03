@@ -1,5 +1,6 @@
 #pragma once
 
+// IWYU pragma: always_keep
 #include <morpheus/core/base/platform.hpp>
 
 #if (MORPHEUS_BUILD_PLATFORM == MORPHEUS_TARGET_PLATFORM_PC_WINDOWS)

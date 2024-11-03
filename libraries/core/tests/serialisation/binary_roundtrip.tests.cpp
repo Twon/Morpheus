@@ -12,7 +12,14 @@
 
 #include "morpheus/serialisation/helpers.hpp"
 
-#include <catch2/catch_all.hpp>
+#include <catch2/catch_test_macros.hpp>
+
+#include <chrono>
+#include <memory>
+#include <optional>
+#include <string>
+#include <utility>
+#include <variant>
 
 using namespace Catch;
 

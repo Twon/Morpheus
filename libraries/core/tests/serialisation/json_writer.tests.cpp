@@ -12,11 +12,23 @@
 #include "morpheus/core/serialisation/serialisers.hpp"
 #include "morpheus/core/serialisation/write_serialiser.hpp"
 
-#include <catch2/catch_all.hpp>
+#include <catch2/catch_template_test_macros.hpp>
+#include <catch2/catch_test_macros.hpp>
+#include <catch2/catch_tostring.hpp>
+
 #include <charconv>
+#include <chrono>
+#include <cstdint>
 #include <limits>
+#include <memory>
+#include <optional>
+#include <sstream>
 #include <string>
 #include <system_error>
+#include <tuple>
+#include <utility>
+#include <variant>
+#include <vector> 
 
 using namespace Catch;
 

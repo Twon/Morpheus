@@ -5,6 +5,8 @@
 #include <morpheus/gfx/platform/render_target.hpp>
 
 #include <boost/program_options/options_description.hpp>
+
+#include <cstdint>
 #include <string>
 
 namespace morpheus::gfx
