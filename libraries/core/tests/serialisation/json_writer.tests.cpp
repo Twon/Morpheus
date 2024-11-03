@@ -28,7 +28,7 @@
 #include <tuple>
 #include <utility>
 #include <variant>
-#include <vector> 
+#include <vector>
 
 using namespace Catch;
 
