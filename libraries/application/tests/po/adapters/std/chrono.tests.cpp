@@ -11,7 +11,7 @@
 
 #include <array>
 #include <chrono>
-#include <functional> 
+#include <functional>
 #include <optional>
 #include <string_view>
 #include <string>

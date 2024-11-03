@@ -7,8 +7,8 @@
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/catch_tostring.hpp>
 
-#include <array> 
-#include <filesystem> 
+#include <array>
+#include <filesystem>
 
 namespace morpheus::application::po
 {
