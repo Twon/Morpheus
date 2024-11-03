@@ -1,0 +1,6 @@
+[
+    { include: ["<__fwd/string_view.h>", "private", "<string_view>", "public"] },
+    { include: ["<bits/chrono.h>", "private", "<chrono>", "public"] },
+    { include: ["<boost/program_options/detail/parsers.hpp>", "private", "<boost/program_options/parsers.hpp>", "public"] },
+    { include: ["<boost/program_options/detail/value_semantic.hpp>", "private", "<boost/program_options/value_semantic.hpp>", "public"] },
+]
