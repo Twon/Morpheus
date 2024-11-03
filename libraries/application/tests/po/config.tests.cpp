@@ -1,11 +1,14 @@
 #include "morpheus/application/po/config.hpp"
 #include "morpheus/application/po/options.hpp"
+#include "morpheus/application/version.hpp"
 
 #include <boost/log/trivial.hpp>
 
 #include <catch2/catch_test_macros.hpp>
 
 #include <array>
+#include <filesystem>
+#include <optional>
 
 namespace morpheus::application::po
 {
