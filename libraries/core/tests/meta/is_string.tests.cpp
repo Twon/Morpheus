@@ -1,7 +1,11 @@
 #include "morpheus/core/meta/concepts/string.hpp"
 #include "morpheus/core/meta/is_string.hpp"
 
-#include <catch2/catch_all.hpp>
+#include <catch2/catch_test_macros.hpp>
+
+#include <cstdint>
+#include <string_view>
+#include <string>
 
 namespace morpheus::meta
 {

@@ -2,6 +2,7 @@
 
 #include "morpheus/core/base/assert.hpp"
 #include "morpheus/core/base/cold.hpp"
+#include "morpheus/core/base/export.hpp"
 #include "morpheus/core/functional/overload.hpp"
 #include "morpheus/core/memory/polymorphic_value.hpp"
 #include "morpheus/core/serialisation/exceptions.hpp"
@@ -17,6 +18,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <istream>
+#include <limits>
 #include <memory>
 #include <optional>
 #include <span>

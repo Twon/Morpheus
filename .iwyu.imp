@@ -1,7 +1,14 @@
 [
+    { include: ["<__fwd/istream.h>", "private", "<istream>", "public"] },
+    { include: ["<__fwd/ostream.h>", "private", "<ostream>", "public"] },
     { include: ["<__fwd/sstream.h>", "private", "<sstream>", "public"] },
     { include: ["<__fwd/string_view.h>", "private", "<string_view>", "public"] },
+    { include: ["<__fwd/string.h>", "private", "<string>", "public"] },
+    { include: ["<__math/traits.h>", "private", "<cmath>", "public"] },
     { include: ["<bits/chrono.h>", "private", "<chrono>", "public"] },
+    { include: ["<boost/asio/ip/impl/address.ipp>", "private", "<boost/asio/ip/address.hpp>", "public"] },
+    { include: ["<boost/asio/ip/impl/address_v4.ipp>", "private", "<boost/asio/ip/address_v4.hpp>", "public"] },
+    { include: ["<boost/asio/ip/impl/address_v6.ipp>", "private", "<boost/asio/ip/address_v6.hpp>", "public"] },
     { include: ["<boost/program_options/detail/parsers.hpp>", "private", "<boost/program_options/parsers.hpp>", "public"] },
     { include: ["<boost/program_options/detail/value_semantic.hpp>", "private", "<boost/program_options/value_semantic.hpp>", "public"] },
 ]

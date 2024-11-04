@@ -3,8 +3,9 @@
 #include <catch2/catch_test_macros.hpp>
 #include <vulkan/vulkan_core.h>
 
-#include <string_view>
 #include <array>
+#include <string_view>
+#include <system_error>
 
 TEST_CASE("Test construction of std::error_code object via make_error_code", "[vulkan.error_code.make_error_code]")
 {

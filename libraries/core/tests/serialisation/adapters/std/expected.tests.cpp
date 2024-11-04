@@ -6,6 +6,7 @@
 
 #include <catch2/catch_test_macros.hpp>
 #include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
 #include <string>
 #include <string_view>
