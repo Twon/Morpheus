@@ -13,7 +13,7 @@
 #include <string_view>
 #include <string>
 #include <tuple>
-#include <utility>   
+#include <utility>
 
 namespace morpheus::serialisation
 {
