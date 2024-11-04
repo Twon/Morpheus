@@ -1,6 +1,7 @@
 #include "morpheus/application/po/options.hpp"
 #include "morpheus/application/po/adapters/scannable.hpp"
 #include "morpheus/application/version.hpp"
+#include "morpheus/core/conformance/scan.hpp"
 #include "morpheus/logging.hpp"
 
 #include <boost/program_options/options_description.hpp>
@@ -11,6 +12,7 @@
 #include <compare>
 #include <cstdint>
 #include <optional>
+#include <string>
 #include <string_view>
 #include <tuple>
 
