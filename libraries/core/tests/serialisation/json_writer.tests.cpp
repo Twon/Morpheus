@@ -16,7 +16,7 @@
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/catch_tostring.hpp>
 
-#include <charconv>
+#include <charconv> // IWYU pragma: keep
 #include <chrono>
 #include <cstdint>
 #include <limits>
@@ -24,7 +24,7 @@
 #include <optional>
 #include <sstream>
 #include <string>
-#include <system_error>
+#include <system_error> // IWYU pragma: keep
 #include <tuple>
 #include <utility>
 #include <variant>

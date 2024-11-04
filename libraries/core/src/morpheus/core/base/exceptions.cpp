@@ -1,4 +1,5 @@
 #include <morpheus/core/base/exceptions.hpp>
+#include <morpheus/core/conformance/stacktrace.hpp>
 
 #include <boost/exception/exception.hpp>
 

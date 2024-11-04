@@ -239,7 +239,7 @@ endfunction()
 
 if (IWYU_ENABLE)
     enable_iwyu(
-        NO_FORWARD_DECLARATIONS QUOTED_INCLUDES_FIRST
+        QUOTED_INCLUDES_FIRST
         MAX_LINE_LENGTH 160
         MAPPING_FILE ${PROJECT_SOURCE_DIR}/.iwyu.imp
     )

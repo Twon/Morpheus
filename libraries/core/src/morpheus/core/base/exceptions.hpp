@@ -1,8 +1,6 @@
 
 #pragma once
 
-#include <morpheus/core/base/compiler.hpp>
-#include <morpheus/core/base/platform.hpp>
 #include <morpheus/core/base/cold.hpp>
 #include <morpheus/core/conformance/stacktrace.hpp>
 
