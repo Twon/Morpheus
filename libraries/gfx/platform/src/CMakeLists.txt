@@ -12,6 +12,7 @@ target_include_directories(MorpheusGfxPlatform
 target_link_libraries(MorpheusGfxPlatform
 	PUBLIC
 		morpheus::core
+        morpheus::application
 )
 
 set_target_properties(MorpheusGfxPlatform

@@ -3,7 +3,7 @@
 #include <morpheus/core/base/scoped_action.hpp>
 #include <morpheus/redirect_stream.hpp>
 
-#include <catch2/catch_all.hpp>
+#include <catch2/catch_test_macros.hpp>
 
 #include <iostream>
 
