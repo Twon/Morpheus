@@ -3,7 +3,6 @@
 
 #include <boost/exception/exception.hpp>
 
-#include <exception>
 #include <stdexcept>
 #include <string>
 

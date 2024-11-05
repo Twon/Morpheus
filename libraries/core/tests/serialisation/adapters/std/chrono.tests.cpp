@@ -1,3 +1,4 @@
+#include "morpheus/core/base/compiler.hpp"
 #include "morpheus/core/conformance/date.hpp"
 #include "morpheus/core/serialisation/adapters/std/chrono.hpp"
 #include "morpheus/core/serialisation/mock/reader.hpp"
@@ -9,6 +10,7 @@
 #include <gtest/gtest.h>
 
 #include <chrono>
+#include <cstdint>
 #include <string>
 #include <string_view>
 

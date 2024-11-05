@@ -1,6 +1,9 @@
 #include "morpheus/gfx/vulkan/version.hpp"
 
 #include <catch2/catch_test_macros.hpp>
+#include <vulkan/vulkan_core.h>
+
+#include <cstdint>
 
 namespace morpheus::gfx::vulkan {
 

@@ -13,7 +13,7 @@
 //#include "morpheus/core/serialisation/read_serialiser.hpp"
 //#include "morpheus/core/serialisation/serialisers.hpp"
 
-#include <catch2/catch_all.hpp>
+#include <catch2/catch_test_macros.hpp>
 
 using namespace Catch;
 

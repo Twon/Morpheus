@@ -5,6 +5,7 @@
 
 #include <array>
 #include <string_view>
+#include <string>
 #include <system_error>
 
 TEST_CASE("Test construction of std::error_code object via make_error_code", "[vulkan.error_code.make_error_code]")
@@ -47,7 +48,6 @@ TEST_CASE("Test construction of std::error_code object via make_error_code", "[v
     for (const auto result_code : vkUniqueResults)
     {
         std::error_code error_code = make_error_code(result_code);
-        INFO("Testing VkResult enum: " << error_code);
         REQUIRE( error_code.value() == result_code);
         REQUIRE( std::string_view(error_code.category().name()) == std::string_view("vulkan_error_category"));
         REQUIRE( error_code.message() != "unknown" );

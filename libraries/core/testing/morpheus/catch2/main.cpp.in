@@ -4,8 +4,6 @@
 #include <catch2/catch_config.hpp>
 #include <catch2/catch_session.hpp>
 
-#include <string>
-
 int main(int argc, char** argv)
 {
 #if __has_include(<gmock/gmock.h>)
