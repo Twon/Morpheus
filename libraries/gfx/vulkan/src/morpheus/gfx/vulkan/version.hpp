@@ -49,5 +49,5 @@ struct morpheus::fmt_ns::formatter<morpheus::gfx::vulkan::Version>
     {
         return morpheus::fmt_ns::format_to(context.out(), "{{variant={},major={},minor={},patch={}}}", value.variant(), value.major(), value.minor(),
                                            value.patch());
-    } 
+    }
 };
