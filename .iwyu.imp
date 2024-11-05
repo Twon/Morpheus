@@ -11,4 +11,7 @@
     { include: ["<boost/asio/ip/impl/address_v6.ipp>", "private", "<boost/asio/ip/address_v6.hpp>", "public"] },
     { include: ["<boost/program_options/detail/parsers.hpp>", "private", "<boost/program_options/parsers.hpp>", "public"] },
     { include: ["<boost/program_options/detail/value_semantic.hpp>", "private", "<boost/program_options/value_semantic.hpp>", "public"] },
+    { include: ["<catch2/catch_tostring.hpp>", "private", "<catch2/catch_test_macros.hpp>", "public"] },
+
+    
 ]
