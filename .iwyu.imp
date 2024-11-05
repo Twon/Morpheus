@@ -13,5 +13,5 @@
     { include: ["<boost/program_options/detail/value_semantic.hpp>", "private", "<boost/program_options/value_semantic.hpp>", "public"] },
     { include: ["<catch2/catch_tostring.hpp>", "private", "<catch2/catch_test_macros.hpp>", "public"] },
 
-    
+
 ]
