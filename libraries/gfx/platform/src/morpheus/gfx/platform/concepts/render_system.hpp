@@ -1,7 +1,7 @@
 #pragma once
 
 #include "morpheus/core/meta/concepts/copyable.hpp"
-#include "morpheus/gfx/concepts/adapter.hpp"
+#include "morpheus/gfx/platform/concepts/adapter.hpp"
 
 namespace morpheus::gfx::concepts
 {
@@ -16,11 +16,13 @@ namespace morpheus::gfx::concepts
 template <typename T>
 concept RenderSystem = requires(T t)
 {
-    requires !meta::Copyable<T>;
-    { t.adapters() } -> AdapterRange;
+    typename T::Window;
 
-    { t.beginFrame() } -> std::same_as<void>;
-    { t.endFrame() } -> std::same_as<void>;
+//    requires !meta::Copyable<T>;
+//    { t.adapters() } -> AdapterRange;
+
+//    { t.beginFrame() } -> std::same_as<void>;
+//    { t.endFrame() } -> std::same_as<void>;
 };
 
 } // namespace morpheus::gfx::concepts
