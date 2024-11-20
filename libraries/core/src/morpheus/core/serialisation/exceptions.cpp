@@ -18,4 +18,9 @@ void throwJsonException(std::string_view message)
     throw boost::enable_error_info(JsonException(std::string(message))) << ExceptionInfo(MORPHEUS_CURRENT_STACKTRACE);
 }
 
+void throwYamlException(std::string_view message)
+{
+    throw boost::enable_error_info(YamlException(std::string(message))) << ExceptionInfo(MORPHEUS_CURRENT_STACKTRACE);
+}
+
 } // namespace morpheus::serialisation

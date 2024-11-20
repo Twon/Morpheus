@@ -17,6 +17,7 @@ TEST_CASE("Serialisatoin exception helpers", "[morpheus.serialisation.exception.
 {
     REQUIRE_THROWS_AS(throwBinaryException("Test binary exception"), BinaryException);
     REQUIRE_THROWS_AS(throwJsonException("Tesst Json exception"), JsonException);
+    REQUIRE_THROWS_AS(throwYamlException("Test Yaml exception"), YamlException);
 }
 
 
