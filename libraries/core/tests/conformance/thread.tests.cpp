@@ -1,10 +1,10 @@
 #include "morpheus/core/conformance/format.hpp"
 #include "morpheus/core/conversion/adapters/std/thread.hpp"
-#include "morpheus/temp_file.hpp"
 
 #include <catch2/catch_test_macros.hpp>
 #include <thread>
 #include <sstream>
+#include <string>
 
 namespace morpheus
 {
