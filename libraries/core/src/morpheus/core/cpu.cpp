@@ -1,7 +1,8 @@
-#include "morpheus/core/base/platform.hpp"
-#include <morpheus/core/cpu.hpp>
+#include "morpheus/core/base/architecture.hpp"
 
 #if (MORPHEUS_PLATFORM_ARCHITECTURE == MORPHEUS_TARGET_ARCHITECTURE_X86) || (MORPHEUS_PLATFORM_ARCHITECTURE == MORPHEUS_TARGET_ARCHITECTURE_X64)
+
+#include "morpheus/core/cpu.hpp"
 
 #if (MORPHEUS_IS_GCC_COMPATIBLE_COMPILER)
 #include <cpuid.h>

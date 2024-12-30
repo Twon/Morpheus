@@ -2,10 +2,10 @@
 
 // clang-format off
 #if __has_include(<coroutine>)
-    #include <coroutine>
+    #include <coroutine> // IWYU pragma: export
     namespace morpheus { namespace coro_ns = std; }
 #else
-    #include <experimental/coroutine>
+    #include <experimental/coroutine> // IWYU pragma: export
     namespace morpheus { namespace coro_ns = std::experimental; }
 #endif
 // clang-format on

@@ -1,8 +1,9 @@
-#include "morpheus/application/po/adapters/boost/log.hpp"
-#include "morpheus/application/po/adapters/std/filesystem.hpp"
+#include "morpheus/application/po/adapters/boost/log.hpp" // IWYU pragma: keep
+#include "morpheus/application/po/adapters/std/filesystem.hpp" // IWYU pragma: keep
 #include "morpheus/application/po/config.hpp"
 
 #include <boost/program_options/options_description.hpp>
+#include <boost/program_options/value_semantic.hpp>
 
 namespace morpheus::application::po
 {

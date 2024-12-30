@@ -1,7 +1,7 @@
 #include "morpheus/core/conformance/scan.hpp"
 #include "morpheus/core/meta/concepts/scannable.hpp"
 
-#include <catch2/catch_all.hpp>
+#include <catch2/catch_test_macros.hpp>
 
 #include <tuple>
 

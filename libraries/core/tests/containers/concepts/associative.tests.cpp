@@ -1,7 +1,8 @@
 #include "morpheus/containers/concepts/archetypes/associative.hpp"
 #include "morpheus/core/containers/concepts/associative.hpp"
 
-#include <catch2/catch_all.hpp>
+#include <catch2/catch_test_macros.hpp>
+#include <catch2/catch_template_test_macros.hpp>
 
 #include <array>
 #include <deque>
