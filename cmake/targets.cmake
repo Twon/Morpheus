@@ -26,6 +26,20 @@ Overview
 
 Locates all targets with in a directory and its subdirectories.
 
+.. code-block:: cmake
+
+  targets_get_all(
+      [DIRECTORY <directory>]
+      [RESULT <result>]
+  )
+
+  ``DIRECTORY``
+    The ``DIRECTORY`` option specifies the directory to recursively search for targets
+    from.
+
+  ``RESULT``
+    The ``RESULT`` option is required to store the results of the function.  The list
+    of all targets from the specified directory and below.
 
 #]=======================================================================]
 function(targets_get_all)
@@ -59,6 +73,20 @@ Overview
 
 Given a list of targets will return a list of targets containing sources to be
 compiled.
+
+.. code-block:: cmake
+
+  targets_filter_for_sources(
+      [TARGETS <targets...>]
+      [RESULT <result>]
+  )
+
+  ``TARGETS``
+    The ``TARGETS`` option specifies a list of targets to retrieve source files for.
+
+  ``RESULT``
+    The ``RESULT`` option is required to store the results of the function.  The list
+    of source files for all requested targets.
 
 #]=======================================================================]
 function(targets_filter_for_sources)
@@ -137,10 +165,15 @@ function(targets_get_translation_units)
         list(APPEND targetTranslationUnits ${filteredTargetSource})
     endforeach()
 
+    get_property(IS_MULTI_CONFIG GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
     get_target_property(targetBinaryDir ${ARGS_TARGET} BINARY_DIR)
     foreach(file IN LISTS targetTranslationUnits)
         targets_relative_path_of_source(TARGET_NAME ${ARGS_TARGET} RESULT file SOURCE_FILE ${file})
-        set(translationUnitLocation "${targetBinaryDir}/CMakeFiles/${ARGS_TARGET}.dir/${file}")
+        if(IS_MULTI_CONFIG)
+            set(translationUnitLocation "${targetBinaryDir}/CMakeFiles/${ARGS_TARGET}.dir/$<CONFIG>/${file}")
+        else()
+            set(translationUnitLocation "${targetBinaryDir}/CMakeFiles/${ARGS_TARGET}.dir/${file}")
+        endif()
         list(APPEND targetTranslationUnitLocations ${translationUnitLocation})
     endforeach()
 
