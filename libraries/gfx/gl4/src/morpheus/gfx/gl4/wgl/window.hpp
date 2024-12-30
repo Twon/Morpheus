@@ -9,7 +9,7 @@ namespace morpheus::gfx::gl4::wgl
 
 /// \class Window
 ///
-class Window : protected gfx::win32::RenderWindow
+class Window : public gfx::win32::RenderWindow
 {
 public:
     using Config = WindowConfig;

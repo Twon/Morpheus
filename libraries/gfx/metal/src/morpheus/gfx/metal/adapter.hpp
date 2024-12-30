@@ -35,7 +35,7 @@ public:
     Adapter& operator=(Adapter const& rhs);
     ~Adapter();
 private:
-    class Implementation;
+    struct Implementation;
 
     /// \name Data Members
     ///@{
