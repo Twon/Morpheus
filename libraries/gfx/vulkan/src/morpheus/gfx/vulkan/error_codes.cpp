@@ -86,7 +86,7 @@ public:
         case VK_ERROR_INVALID_DEVICE_ADDRESS_EXT:
             return "A buffer creation failed because the requested address is not available.";
         case VK_ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT:
-            return "An operation on a swapchain created with VK_FULL_SCREEN_EXCLUSIVE_APPLICATION_CONTROLLED_EXT failed as it did not have exlusive full-screen access. This may occur due to implementation-dependent reasons, outside of the application’s control.";
+            return "An operation on a swapchain created with VK_FULL_SCREEN_EXCLUSIVE_APPLICATION_CONTROLLED_EXT failed as it did not have exclusive full-screen access. This may occur due to implementation-dependent reasons, outside of the application’s control.";
         default:
             return "unknown";
       }

@@ -57,7 +57,7 @@ commonly associated attributes.
 
 #]=======================================================================]
 function(morpheus_add_target)
-    set(options INFERFACE)
+    set(options INTERFACE)
     set(oneValueArgs TYPE NAME ALIAS FOLDER)
     set(multiValueArgs)
     cmake_parse_arguments(MORPHEUS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
@@ -77,8 +77,11 @@ function(morpheus_add_target)
     if (NOT MORPHEUS_ALIAS AND MORPHEUS_TYPE STREQUAL library)
         message(FATAL_ERROR "ALIAS parameter must be supplied for library targets")
     endif()
-    if (NOT MORPHEUS_INFERFACE AND NOT MORPHEUS_TYPE STREQUAL library)
-        message(FATAL_ERROR "INFERFACE parameter can only be used with library targets")
+    if (MORPHEUS_INTERFACE AND NOT MORPHEUS_TYPE STREQUAL library)
+        message(FATAL_ERROR "INTERFACE parameter can only be used with library targets")
+    endif()
+    if(${MORPHEUS_INTERFACE})
+        set(isInterface "INTERFACE")
     endif()
 
     if (MORPHEUS_TYPE STREQUAL executable)
@@ -87,18 +90,16 @@ function(morpheus_add_target)
             add_executable(${MORPHEUS_ALIAS} ALIAS ${MORPHEUS_NAME})
         endif()
     else()
-        if (NOT MORPHEUS_INFERFACE)
-            add_library(${MORPHEUS_NAME})
-        else()
-            add_library(${MORPHEUS_NAME} INTERFACE)
-        endif()
+        add_library(${MORPHEUS_NAME} ${isInterface})
         add_library(${MORPHEUS_ALIAS} ALIAS ${MORPHEUS_NAME})
     endif()
 
     morpheus_add_target_properties(
         NAME ${MORPHEUS_NAME}
         FOLDER ${MORPHEUS_FOLDER}
+        ${isInterface}
     )
+
 endfunction()
 
 #[=======================================================================[.rst:
@@ -127,13 +128,24 @@ commonly associated attributes.
 
 #]=======================================================================]
 function(morpheus_add_target_properties)
-    set(options)
+    set(options INTERFACE)
     set(oneValueArgs NAME FOLDER)
     set(multiValueArgs)
     cmake_parse_arguments(MORPHEUS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
+    if(${MORPHEUS_INTERFACE})
+        set(scope "INTERFACE")
+    else()
+        set(scope "PUBLIC")
+    endif()
+
+    target_compile_features(${MORPHEUS_NAME} ${scope} cxx_std_23)
+
     set_target_properties(${MORPHEUS_NAME}
         PROPERTIES
+            CXX_STANDARD 23
+            CXX_STANDARD_REQUIRED ON
+            CXX_EXTENSIONS OFF
             ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
             LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
             RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
@@ -146,7 +158,13 @@ function(morpheus_add_target_properties)
         )
     endif()
 
+    # Create an empty header set here so that the subsequent install step finds it.
+    target_sources(${MORPHEUS_NAME} ${scope} FILE_SET HEADERS FILES)
+
     install(TARGETS ${MORPHEUS_NAME}
+            EXPORT morpheus-export-set
+            FILE_SET HEADERS
+            INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
             RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
             ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
             LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}

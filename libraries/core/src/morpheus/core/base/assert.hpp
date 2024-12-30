@@ -1,6 +1,5 @@
 #pragma once
 
-#include <morpheus/core/base/assert.hpp>
 #include <morpheus/core/base/platform.hpp>
 #include <morpheus/core/base/verify.hpp>
 #include <morpheus/core/conformance/source_location.hpp>

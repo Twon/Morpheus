@@ -5,6 +5,15 @@ if (NOT ${VulkanHeaders_FOUND})
     return()
 endif()
 
+if(APPLE)
+    find_package(moltenvk REQUIRED)
+    if (NOT ${moltenvk_FOUND})
+        message("Metal VK not found.  Unable to support Vulkan based render system on MacOS.")
+        return()
+    endif()
+endif(APPLE)
+
+
 morpheus_add_library(
     NAME MorpheusGfxVulkan
     ALIAS morpheus::gfx::vulkan

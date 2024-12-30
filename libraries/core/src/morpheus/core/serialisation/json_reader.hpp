@@ -46,15 +46,13 @@ class MORPHEUSCORE_EXPORT JsonReader
 public:
     using OwnedStream = memory::polymorphic_value<std::istream>;
 
-
-
     static constexpr bool canBeTextual() { return true; }
 
     /// \copydoc morpheus::serialisation::concepts::ReaderArchtype::isTextual()
     static constexpr bool isTextual() { return true; }
 
     /// Json reader take in a stream of json to extract data members from.
-    /// \param[in] stream Stream used to read in the json source.  This must outlive the reader as its held by referece.
+    /// \param[in] stream Stream used to read in the json source.  This must outlive the reader as its held by reference.
     explicit JsonReader(OwnedStream stream, bool validate = true);
     explicit JsonReader(JsonReader const& rhs);
     ~JsonReader();
@@ -95,14 +93,14 @@ public:
     }
 
     /// Reads a integral type from the serialisation.
-    template <std::integral Interger>
-    requires(not std::is_same_v<bool, Interger>)
-    Interger read()
+    template <std::integral Integer>
+    requires(not std::is_same_v<bool, Integer>)
+    Integer read()
     {
         auto const [event, next] = getNext();
         return std::visit(functional::Overload{
-            [](std::integral auto const value) { return boost::numeric_cast<Interger>(value); },
-            [](auto const) -> Interger { throwJsonException("Unable to convert to integral representation"); }
+            [](std::integral auto const value) { return boost::numeric_cast<Integer>(value); },
+            [](auto const) -> Integer { throwJsonException("Unable to convert to integral representation"); }
         }, *next);
     }
 

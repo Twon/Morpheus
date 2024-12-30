@@ -46,7 +46,6 @@ TEST_CASE_METHOD(LoggingFixture, "Test parsing of enums as options", "[morpheus.
             return preferences.drink;
         };
 
-        auto const exeLocation = boost::dll::program_location().parent_path();
         REQUIRE(getDrink("Coke") == Drink::Coke);
         REQUIRE(getDrink("Pepsi") == Drink::Pepsi);
         REQUIRE(getDrink("Tango") == Drink::Tango);

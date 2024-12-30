@@ -27,7 +27,7 @@ env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: Debug
   COMPILER_TYPE: gcc
-  COMPILER_VERSION: 13
+  COMPILER_VERSION: 12
 
   STDLIB: libstdc++11
 
@@ -43,20 +43,20 @@ jobs:
         os: [ "ubuntu-latest" ]
 
     steps:
-      - uses: actions/checkout@v4.1.1
+      - uses: actions/checkout@v4.2.2
 
       - name: Cache Conan data
-        uses: actions/cache@v3.3.2
+        uses: actions/cache@v4.1.2
         env:
           cache-name: cache-conan-data
         with:
-          path: ${{github.workspace}}/.conan2/p
-          key: ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-${{ matrix.settings.compiler.version }}-${{ matrix.settings.lib }}
+          path: ${{github.workspace}}/conan_cache_save.tgz
+          key: ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.os }}-${{ env.BUILD_TYPE }}-${{ env.COMPILER_TYPE }}-${{ env.COMPILER_VERSION }}-${{ env.STDLIB }}
           restore-keys: |
-            ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-${{ matrix.settings.compiler.version }}-
-            ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-
-            ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.settings.os }}-${{ matrix.configuration }}-
-            ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.settings.os }}-
+            ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.os }}-${{ env.BUILD_TYPE }}-${{ env.COMPILER_TYPE }}-${{ env.COMPILER_VERSION }}-
+            ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.os }}-${{ env.BUILD_TYPE }}-${{ env.COMPILER_TYPE }}-
+            ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.os }}-${{ env.BUILD_TYPE }}-
+            ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.os }}-
 
       # Previously GCC was installed via egor-tensin/setup-gcc@v1 but this does not install gcov with the compiler.
       # By default Ubuntu has Gcov 11 installed. This worked so long as the compiler was gcc 11, but if a later gcc was
@@ -95,15 +95,8 @@ jobs:
 
           sudo apt-get install libdatetime-perl
 
-      - name: Install Linux System Packages
-        shell: bash
-        run: |
-          sudo apt-get -y install libgl-dev
-          sudo apt-get -y install libopengl-dev
-          sudo apt-get -y install libglu1-mesa-dev
-
       - name: Set up Python
-        uses: actions/setup-python@v4.7.1
+        uses: actions/setup-python@v5.3.0
         with:
           python-version: '3.11'
 
@@ -130,11 +123,18 @@ jobs:
 
           conan profile show -pr default
 
+      - name: Conan Cache Restore
+        shell: bash
+        run: |
+          if [ -f ./conan_cache_save.tgz ]; then
+              conan cache restore ./conan_cache_save.tgz
+          fi
+
       - name: Configure Install
         working-directory: ${{github.workspace}}
         shell: bash
         run: |
-          conan install "${{github.workspace}}" --build missing --build gtest/1.14.0 -o boost/*:without_cobalt=True
+          conan install "${{github.workspace}}" --build missing -o boost/*:without_cobalt=True
 
       - name: Conan Preset
         shell: bash
@@ -172,9 +172,14 @@ jobs:
         run: cmake --build --preset ${{ env.CONAN_PRESET }} --target coverage-cobertura
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3.1.4
+        uses: codecov/codecov-action@v4.4.1
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         with:
           working-directory: ${{github.workspace}}/build/${{env.BUILD_TYPE}}/coverage
-          gcov: true
-          gcov_include: ${{github.workspace}}/build/${{env.BUILD_TYPE}}/coverage/html
           files: ${{github.workspace}}/build/${{env.BUILD_TYPE}}/coverage/cobertura_coverage.xml
+
+      - name: Conan Cache Save
+        run: |
+          conan cache clean
+          conan cache save "*/*:*"

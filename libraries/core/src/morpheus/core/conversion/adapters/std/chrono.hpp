@@ -17,7 +17,7 @@
 #define MORPHEUS_CPP_LIB_CHRONO_FORMATTING \
             (((MORPHEUS_COMPILER == MORPHEUS_VISUALSTUDIO_COMPILER) && (__cpp_lib_chrono < 201907L)) || \
              ((MORPHEUS_COMPILER == MORPHEUS_GNUC_COMPILER) && (MORPHEUS_COMP_VER < 140000000)) || \
-             ((MORPHEUS_COMPILER == MORPHEUS_CLANG_COMPILER) && (MORPHEUS_COMP_VER < 170000000)) || \
+             ((MORPHEUS_COMPILER == MORPHEUS_CLANG_COMPILER) && (MORPHEUS_COMP_VER < 180000000)) || \
              ((MORPHEUS_COMPILER == MORPHEUS_APPLE_CLANG_COMPILER) && (MORPHEUS_COMP_VER < 150000000)))
 
 #if MORPHEUS_CPP_LIB_CHRONO_FORMATTING
@@ -324,7 +324,7 @@ struct StringConverter<date_ns::time_zone>
             return std::cref(*timezone);
         }
         catch(std::runtime_error const& e) {
-            return exp_ns::unexpected(fmt_ns::format("Unable to locate timezone, encounted error: {}", e.what()));
+            return exp_ns::unexpected(fmt_ns::format("Unable to locate timezone, encountered error: {}", e.what()));
         }
     }
 };

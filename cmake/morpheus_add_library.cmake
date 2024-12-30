@@ -48,9 +48,13 @@ and allows configuration for common optional settings
   ``FOLDER``
     The ``FOLDER`` option provides a folder location for the target within an IDE.
 
+  ``INTERFACE``
+    The ``INTERFACE`` option is only applicable for library targets and specifies
+    the library is an interface library.
+
 #]=======================================================================]
 function(morpheus_add_library)
-    set(options)
+    set(options INTERFACE)
     set(oneValueArgs NAME ALIAS FOLDER)
     set(multiValueArgs)
     cmake_parse_arguments(MORPHEUS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
@@ -60,12 +64,22 @@ function(morpheus_add_library)
     if (NOT MORPHEUS_ALIAS)
         message(FATAL_ERROR "ALIAS parameter must be supplied")
     endif()
+    if(${MORPHEUS_INTERFACE})
+        set(isInterface "INTERFACE")
+    endif()
 
     morpheus_add_target(
         TYPE library
         NAME ${MORPHEUS_NAME}
         ALIAS ${MORPHEUS_ALIAS}
         FOLDER ${MORPHEUS_FOLDER}
+        ${isInterface}
+    )
+
+    install(
+        EXPORT morpheus-export-set
+        NAMESPACE morpheus::
+        DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/morpheus"
     )
 
 endfunction()

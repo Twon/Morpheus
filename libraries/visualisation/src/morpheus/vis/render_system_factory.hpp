@@ -44,7 +44,7 @@ constexpr auto RenderSystemType = boost::hana::type_c<boost::hana::integral_cons
 
 /// \class RenderSystemFactory
 ///     The render system factory manages the available render systems for a target system.
-///     Supported render systems can be queried and specfic type can be instantiated to
+///     Supported render systems can be queried and specific type can be instantiated to
 ///     render visualalisation with.
 class RenderSystemFactory
 {
