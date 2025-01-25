@@ -28,6 +28,7 @@ find_package(ctre REQUIRED)
 find_package(magic_enum REQUIRED)
 find_package(Microsoft.GSL REQUIRED)
 find_package(RapidJSON REQUIRED)
+find_package(ryml REQUIRED)
 
 if(WIN32)
     find_package(wil REQUIRED)
