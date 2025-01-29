@@ -62,6 +62,7 @@ target_link_libraries(MorpheusCore
         range-v3::range-v3
         scn::scn
         $<$<NOT:$<BOOL:${EXPECTED_SUPPORTED}>>:tl::expected>
+        $<$<AND:$<CXX_COMPILER_ID:GNU>,$<OR:$<VERSION_GREATER_EQUAL:$<CXX_COMPILER_VERSION>,12>,$<VERSION_LESS_EQUAL:$<CXX_COMPILER_VERSION>,13>>>:-lstdc++_libbacktrace>
 )
 
 target_compile_definitions(MorpheusCore
