@@ -45,7 +45,7 @@ jobs:
             }
           - {
               name: "Ubuntu Clang-14 + libc++",
-              os: ubuntu-latest,
+              os: ubuntu-22.04,
               compiler:
                 {
                   type: CLANG,
