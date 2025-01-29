@@ -59,7 +59,7 @@ jobs:
             }
           - {
               name: "Ubuntu Clang-15 + libc++",
-              os: ubuntu-latest,
+              os: ubuntu-22.04,
               compiler:
                 {
                   type: CLANG,
@@ -73,7 +73,7 @@ jobs:
             }
           - {
               name: "Ubuntu Clang-16 + libc++",
-              os: ubuntu-latest,
+              os: ubuntu-22.04,
               compiler:
                 {
                   type: CLANG,
