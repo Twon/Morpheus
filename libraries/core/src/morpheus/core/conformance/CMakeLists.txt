@@ -62,8 +62,8 @@ target_link_libraries(MorpheusCore
         range-v3::range-v3
         scn::scn
         $<$<NOT:$<BOOL:${EXPECTED_SUPPORTED}>>:tl::expected>
-        $<$<AND:$<CXX_COMPILER_ID:GNU>,$<CXX_COMPILER_VERSION:13>>>:-lstdc++_libbacktrace>
-        $<$<AND:$<CXX_COMPILER_ID:GNU>,$<CXX_COMPILER_VERSION:14>>>:-lstdc++exp>
+        $<$<AND:$<CXX_COMPILER_ID:GNU>,$<VERSION_EQUAL:$<CMAKE_CXX_COMPILER_VERSION>,13>>>:-lstdc++_libbacktrace>
+        $<$<AND:$<CXX_COMPILER_ID:GNU>,$<VERSION_GREATER_EQUAL:$<CMAKE_CXX_COMPILER_VERSION>,14>>>:-lstdc++exp>
 )
 
 target_compile_definitions(MorpheusCore
