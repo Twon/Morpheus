@@ -53,8 +53,6 @@ endif (NOT ${FORMAT_SUPPORTED})
 find_package(range-v3 REQUIRED)
 find_package(scn REQUIRED)
 
-set(GCC_VERSION "${CMAKE_CXX_COMPILER_VERSION}")
-
 target_link_libraries(MorpheusCore
     PUBLIC
         $<$<NOT:$<BOOL:${DATE_SUPPORTED}>>:date::date>
@@ -63,8 +61,8 @@ target_link_libraries(MorpheusCore
         range-v3::range-v3
         scn::scn
         $<$<NOT:$<BOOL:${EXPECTED_SUPPORTED}>>:tl::expected>
-        $<$<AND:$<CXX_COMPILER_ID:GNU>,$<VERSION_EQUAL:$<GCC_VERSION>,13>>>:-lstdc++_libbacktrace>
-        $<$<AND:$<CXX_COMPILER_ID:GNU>,$<VERSION_GREATER_EQUAL:$<GCC_VERSION>,14>>>:-lstdc++exp>
+        $<$<AND:$<CXX_COMPILER_ID:GNU>,$<VERSION_EQUAL:$<CXX_COMPILER_VERSION>,13>>:-lstdc++_libbacktrace>
+        $<$<AND:$<CXX_COMPILER_ID:GNU>,$<VERSION_GREATER_EQUAL:$<CXX_COMPILER_VERSION>,14>>:-lstdc++exp>
 )
 
 target_compile_definitions(MorpheusCore
