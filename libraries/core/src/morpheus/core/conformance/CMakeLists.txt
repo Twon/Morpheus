@@ -67,7 +67,7 @@ target_link_libraries(MorpheusCore
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL 13 AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS 14)
-        target_link_libraries(my_target PRIVATE stdc++_libbacktrace)
+        target_link_libraries(MorpheusCore PRIVATE stdc++_libbacktrace)
     endif()
 endif()
 
