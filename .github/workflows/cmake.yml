@@ -216,6 +216,7 @@ jobs:
             sed -i.backup '1a mold*:build_type=Release' .conan2/profiles/default
             sed -i.backup '1a onetbb*:build_type=Release' .conan2/profiles/default
             sed -i.backup '1a mold*:compiler.libcxx=libstdc++11' .conan2/profiles/default
+            sed -i.backup '1a doxygen*:compiler.cppstd=17' .conan2/profiles/default
           fi
 
           echo "tools.cmake.cmaketoolchain:generator = Ninja Multi-Config" >> .conan2/global.conf
@@ -267,14 +268,14 @@ jobs:
         run: |
           cmake --version
           call build\generators\conanbuild.bat
-          cmake --preset conan-default -DENABLE_ADDRESS_SANITIZER=ON -DENABLE_UNDEFINED_BEHAVIOUR_SANITIZER=ON
+          cmake --preset conan-default -DENABLE_ADDRESS_SANITIZER=ON -DENABLE_UNDEFINED_BEHAVIOUR_SANITIZER=ON -DCMAKE_VERBOSE_MAKEFILE:BOOL:ON
 
       - name: Configure CMake
         if: matrix.settings.os != 'windows-latest'
         shell: bash
         run: |
           source build/generators/conanbuild.sh
-          cmake --preset conan-default -DENABLE_ADDRESS_SANITIZER=ON -DENABLE_UNDEFINED_BEHAVIOUR_SANITIZER=ON
+          cmake --preset conan-default -DENABLE_ADDRESS_SANITIZER=ON -DENABLE_UNDEFINED_BEHAVIOUR_SANITIZER=ON -DCMAKE_VERBOSE_MAKEFILE:BOOL:ON
 
       - name: Conan Preset
         shell: bash
