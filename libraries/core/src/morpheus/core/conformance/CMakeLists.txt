@@ -53,7 +53,6 @@ endif (NOT ${FORMAT_SUPPORTED})
 find_package(range-v3 REQUIRED)
 find_package(scn REQUIRED)
 
-
 target_link_libraries(MorpheusCore
     PUBLIC
         $<$<NOT:$<BOOL:${DATE_SUPPORTED}>>:date::date>
@@ -62,7 +61,15 @@ target_link_libraries(MorpheusCore
         range-v3::range-v3
         scn::scn
         $<$<NOT:$<BOOL:${EXPECTED_SUPPORTED}>>:tl::expected>
+        $<$<AND:$<CXX_COMPILER_ID:GNU>,$<CXX_COMPILER_VERSION:13>>:-lstdc++_libbacktrace>
+        $<$<AND:$<CXX_COMPILER_ID:GNU>,$<VERSION_GREATER_EQUAL:$<CXX_COMPILER_VERSION>,14>>:-lstdc++exp>
 )
+
+if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    if(CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL 13 AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS 14)
+        target_link_libraries(MorpheusCore PUBLIC stdc++_libbacktrace)
+    endif()
+endif()
 
 target_compile_definitions(MorpheusCore
     PUBLIC
