@@ -119,20 +119,20 @@ jobs:
 #                },
 #              lib: "libc++",
 #            }
-#          - {
-#              name: "Ubuntu Clang-19 + libc++",
-#              os: ubuntu-latest,
-#              compiler:
-#                {
-#                  type: CLANG,
-#                  version: 19,
-#                  conan: "clang",
-#                  cc: "clang-19",
-#                  cxx: "clang++-19",
-#                  std: 20
-#                },
-#              lib: "libc++",
-#            }
+          - {
+              name: "Ubuntu Clang-19 + libc++",
+              os: ubuntu-latest,
+              compiler:
+                {
+                  type: CLANG,
+                  version: 19,
+                  conan: "clang",
+                  cc: "clang-19",
+                  cxx: "clang++-19",
+                  std: 20
+                },
+              lib: "libc++",
+            }
           - {
               name: "Visual Studio 2019",
               os: windows-latest,
