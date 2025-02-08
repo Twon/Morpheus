@@ -105,20 +105,20 @@ jobs:
                 },
               lib: "libc++",
             }
-#          - {
-#              name: "Ubuntu Clang-18 + libc++",
-#              os: ubuntu-latest,
-#              compiler:
-#                {
-#                  type: CLANG,
-#                  version: 18,
-#                  conan: "clang",
-#                  cc: "clang-18",
-#                  cxx: "clang++-18",
-#                  std: 20
-#                },
-#              lib: "libc++",
-#            }
+          - {
+              name: "Ubuntu Clang-18 + libc++",
+              os: ubuntu-latest,
+              compiler:
+                {
+                  type: CLANG,
+                  version: 18,
+                  conan: "clang",
+                  cc: "clang-18",
+                  cxx: "clang++-18",
+                  std: 20
+                },
+              lib: "libc++",
+            }
 #          - {
 #              name: "Ubuntu Clang-19 + libc++",
 #              os: ubuntu-latest,
