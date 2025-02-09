@@ -6,12 +6,6 @@
     #include <format>
 #endif
 
-#define VALUE_TO_STRING(x) #x
-#define VALUE(x) VALUE_TO_STRING(x)
-#define PRINT_MACRO_AT_COMPILE_TIME(var) #var "=`" VALUE(var) "`"
-
-#pragma message PRINT_MACRO_AT_COMPILE_TIME(__cpp_lib_format)
-
 // clang-format off
 #if (__cpp_lib_format >= 201907L)
     namespace morpheus { namespace fmt_ns = std; }
