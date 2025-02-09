@@ -24,7 +24,7 @@ add_subdirectory(morpheus/core)
 
 target_compile_definitions(MorpheusCore
     PUBLIC
-        $<$<PLATFORM_ID:Windows>:BOOST_USE_WINAPI_VERSION=BOOST_WINAPI_NTDDI_WIN10> 
+        $<$<PLATFORM_ID:Windows>:BOOST_USE_WINAPI_VERSION=BOOST_WINAPI_NTDDI_WIN10>
 )
 
 target_compile_options(MorpheusCore
