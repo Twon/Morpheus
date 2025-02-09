@@ -12,7 +12,7 @@ template <class T, class Context, class Scanner = typename Context::template sca
 concept ScannableWith =
     std::semiregular<Scanner> &&
     requires(Scanner& s, const Scanner& cs, T& t, Context& ctx, scan_ns::basic_scan_parse_context<typename Context::char_type> pctx) {
-        { s.parse(pctx) } -> std::same_as<scan_ns::scan_expected<typename decltype(pctx)::iterator>>;
+        { s.parse(pctx) } -> std::same_as<typename decltype(pctx)::iterator>;
         { cs.scan(t, ctx) } -> std::same_as<scan_ns::scan_expected<typename Context::iterator>>;
     };
 

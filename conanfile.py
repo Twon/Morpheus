@@ -82,7 +82,7 @@ class Morpheus(ConanFile):
         "ms-gsl/4.0.0",
         "rapidjson/cci.20230929",
         "range-v3/0.12.0",
-        "scnlib/2.0.2",
+        "scnlib/4.0.1",
     )
 
     build_requires = (
