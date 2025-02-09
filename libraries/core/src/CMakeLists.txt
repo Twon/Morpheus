@@ -24,15 +24,12 @@ add_subdirectory(morpheus/core)
 
 target_compile_definitions(MorpheusCore
     PUBLIC
-#         MORPHEUS_SHARED_BUILD=1
-#         MORPHEUS_DLL_EXPORTS=1
-        BOOST_USE_WINAPI_VERSION=BOOST_WINAPI_NTDDI_WIN10
+        $<$<PLATFORM_ID:Windows>:BOOST_USE_WINAPI_VERSION=BOOST_WINAPI_NTDDI_WIN10>
 )
 
 target_compile_options(MorpheusCore
     PRIVATE
-#        -enable-hosted-libstdcxx
-	    $<$<CXX_COMPILER_ID:MSVC>:/wd4251> # class 'foo' needs to have dll-interface to be used by clients of class 'bar'
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4251> # class 'foo' needs to have dll-interface to be used by clients of class 'bar'
 )
 get_target_property(SOURCES_FILES MorpheusCore SOURCES)
 source_group(TREE ${CMAKE_CURRENT_LIST_DIR} FILES ${SOURCES_FILES})
