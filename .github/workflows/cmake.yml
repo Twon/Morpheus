@@ -115,7 +115,7 @@ jobs:
                   conan: "clang",
                   cc: "clang-18",
                   cxx: "clang++-18",
-                  std: 20
+                  std: 23
                 },
               lib: "libc++",
             }
