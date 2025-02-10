@@ -122,14 +122,14 @@ class Morpheus(ConanFile):
         std_support = (compiler == "msvc" and version >= 193) or (compiler == "gcc" and version >= Version("14")) or \
                       (compiler == "clang" and version >= Version("19"))
         return not std_support
-    
+
     @property
     def useRanges(self):
         """ Does the current compiler version lack support for std::ranges via the STL. """
         compiler = self.settings.compiler
         version = Version(self.settings.compiler.version)
         std_support = (compiler == "msvc" and version >= 193) or (compiler == "gcc" and version >= Version("10")) or \
-                      (compiler == "clang" and version >= Version("16"))
+                      (compiler == "clang" and version >= Version("16")) or (compiler == "apple-clang" and version >= Version("15"))
         return not std_support
 
     def config_options(self):
