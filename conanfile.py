@@ -82,7 +82,7 @@ class Morpheus(ConanFile):
         "ms-gsl/4.0.0",
         "rapidjson/cci.20230929",
         "range-v3/0.12.0",
-        "scnlib/2.0.2",
+        "scnlib/4.0.1",
     )
 
     build_requires = (
@@ -121,7 +121,7 @@ class Morpheus(ConanFile):
         compiler = self.settings.compiler
         version = Version(self.settings.compiler.version)
         std_support = (compiler == "msvc" and version >= 193) or (compiler == "gcc" and version >= Version("14")) or \
-                      (compiler == "clang" and version >= Version("18"))
+                      (compiler == "clang" and version >= Version("19"))
         return not std_support
 
     def config_options(self):
@@ -143,7 +143,7 @@ class Morpheus(ConanFile):
             self.tool_requires("cmake/3.30.1")
 
         if self.options.build_docs:
-            self.build_requires("doxygen/1.12.0")
+            self.build_requires("doxygen/1.13.2")
 
         if self.options.get_safe("link_with_mold", False):
             self.build_requires("mold/2.33.0")
