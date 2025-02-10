@@ -4,5 +4,4 @@
 mold*:build_type=Release
 onetbb*:build_type=Release
 mold*:compiler.libcxx=libstdc++11
-doxygen*:compiler.cppstd=17
 {% endif %}
