@@ -43,7 +43,7 @@ morpheus_conformance_check(
     MSVC_VERSION "19.29"
     GNU_VERSION "10"
     CLANG_VERSION "16"
-    APPLECLANG_VERSION "14"
+    APPLECLANG_VERSION "15"
 )
 
 if (NOT ${DATE_SUPPORTED})
