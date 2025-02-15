@@ -1,5 +1,6 @@
+clang-format==19.1.7
 cmake==3.31.4
 conan>=2.1.0
 ninja==1.11.1.1
-pre-commit==3.7.0
 pip==25.0.1
+pre-commit==3.7.0

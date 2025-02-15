@@ -11,7 +11,7 @@
       "hidden": true,
       "generator": "Ninja Multi-Config",
       "cacheVariables": {
-        "CMAKE_MAKE_PROGRAM": "${sourceDir}/.venv/bin/ninja", 
+        "CMAKE_MAKE_PROGRAM": "${sourceDir}/.venv/bin/ninja",
         "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
       }
     },
@@ -24,7 +24,7 @@
         "CMAKE_INTERPROCEDURAL_OPTIMIZATION_DEBUG" : "OFF"
       },
       "inherits": [
-        "ninja" 
+        "ninja"
       ],
       "hidden": true
     },
@@ -149,27 +149,27 @@
       "hidden": true
     },
 
-    { "name": "apple-clang-x64", "displayName": "apple-clang x64", "description": "apple-clang for x64", "inherits": [ "apple-clang" ] },
-    { "name": "clang15-x64", "displayName": "clang-15 x64", "description": "clang15 for x64", "inherits": [ "clang15" ] },
-    { "name": "clang16-x64", "displayName": "clang-16 x64", "description": "clang16 for x64", "inherits": [ "clang16" ] },
-    { "name": "clang17-x64", "displayName": "clang-17 x64", "description": "clang17 for x64", "inherits": [ "clang17" ] },
-    { "name": "clang18-x64", "displayName": "clang-18 x64", "description": "clang18 for x64", "inherits": [ "clang18" ] },
-    { "name": "clang19-x64", "displayName": "clang-19 x64", "description": "clang19 for x64", "inherits": [ "clang19" ] },
-    { "name": "gcc12-x64", "displayName": "gcc-12 x64", "description": "gcc12 for x64", "inherits": [ "gcc12" ] },
-    { "name": "gcc13-x64", "displayName": "gcc-13 x64", "description": "gcc13 for x64", "inherits": [ "gcc13" ] },
-    { "name": "gcc14-x64", "displayName": "gcc-14 x64", "description": "gcc14 for x64", "inherits": [ "gcc14" ] },
-    { "name": "msvc-x64", "displayName": "MSVC x64", "description": "mscv for x64", "inherits": [ "mscv" ] }
+    { "name": "apple-clang", "displayName": "apple-clang", "description": "apple-clang", "inherits": [ "apple-clang" ] },
+    { "name": "clang15", "displayName": "clang-15", "description": "clang15", "inherits": [ "clang15" ] },
+    { "name": "clang16", "displayName": "clang-16", "description": "clang16", "inherits": [ "clang16" ] },
+    { "name": "clang17", "displayName": "clang-17", "description": "clang17", "inherits": [ "clang17" ] },
+    { "name": "clang18", "displayName": "clang-18", "description": "clang18", "inherits": [ "clang18" ] },
+    { "name": "clang19", "displayName": "clang-19", "description": "clang19", "inherits": [ "clang19" ] },
+    { "name": "gcc12", "displayName": "gcc-12", "description": "gcc12", "inherits": [ "gcc12" ] },
+    { "name": "gcc13", "displayName": "gcc-13", "description": "gcc13", "inherits": [ "gcc13" ] },
+    { "name": "gcc14", "displayName": "gcc-14", "description": "gcc14", "inherits": [ "gcc14" ] },
+    { "name": "msvc", "displayName": "MSVC", "description": "mscv", "inherits": [ "mscv" ] }
   ],
   "buildPresets": [
-    { "name": "apple-clang-x64", "displayName": "apple-clang-15 x64", "configurePreset": "apple-clang-x64" },
-    { "name": "clang15-x64", "displayName": "clang-15 x64", "configurePreset": "clang15-x64" },
-    { "name": "clang16-x64", "displayName": "clang-16 x64", "configurePreset": "clang16-x64" },
-    { "name": "clang17-x64", "displayName": "clang-17 x64", "configurePreset": "clang17-x64" },
-    { "name": "clang18-x64", "displayName": "clang-18 x64", "configurePreset": "clang18-x64" },
-    { "name": "clang19-x64", "displayName": "clang-19 x64", "configurePreset": "clang19-x64" },
-    { "name": "gcc12-x64", "displayName": "gcc-12 x64", "configurePreset": "gcc12-x64" },
-    { "name": "gcc13-x64", "displayName": "gcc-13 x64", "configurePreset": "gcc13-x64" },
-    { "name": "gcc14-x64", "displayName": "gcc-14 x64", "configurePreset": "gcc14-x64" },
-    { "name": "msvc-x64", "displayName": "MSVC x64", "configurePreset": "msvc-x64" }
+    { "name": "apple-clang", "displayName": "apple-clang", "configurePreset": "apple-clang" },
+    { "name": "clang15", "displayName": "clang-15", "configurePreset": "clang15" },
+    { "name": "clang16", "displayName": "clang-16", "configurePreset": "clang16" },
+    { "name": "clang17", "displayName": "clang-17", "configurePreset": "clang17" },
+    { "name": "clang18", "displayName": "clang-18", "configurePreset": "clang18" },
+    { "name": "clang19", "displayName": "clang-19", "configurePreset": "clang19" },
+    { "name": "gcc12", "displayName": "gcc-12", "configurePreset": "gcc12" },
+    { "name": "gcc13", "displayName": "gcc-13", "configurePreset": "gcc13" },
+    { "name": "gcc14", "displayName": "gcc-14", "configurePreset": "gcc14" },
+    { "name": "msvc", "displayName": "MSVC", "configurePreset": "msvc" }
   ]
 }
