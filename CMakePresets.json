@@ -36,8 +36,7 @@
       },
       "inherits": [
         "default"
-      ],
-      "hidden": true
+      ]
     },
     {
       "name": "clang16",
@@ -47,8 +46,7 @@
       },
       "inherits": [
         "default"
-      ],
-      "hidden": true
+      ]
     },
     {
       "name": "clang17",
@@ -58,8 +56,7 @@
       },
       "inherits": [
         "default"
-      ],
-      "hidden": true
+      ]
     },
     {
       "name": "clang18",
@@ -69,8 +66,7 @@
       },
       "inherits": [
         "default"
-      ],
-      "hidden": true
+      ]
     },
     {
       "name": "clang19",
@@ -80,8 +76,7 @@
       },
       "inherits": [
         "default"
-      ],
-      "hidden": true
+      ]
     },
     {
       "name": "gcc12",
@@ -91,8 +86,7 @@
       },
       "inherits": [
         "default"
-      ],
-      "hidden": true
+      ]
     },
     {
       "name": "gcc13",
@@ -102,8 +96,7 @@
       },
       "inherits": [
         "default"
-      ],
-      "hidden": true
+      ]
     },
     {
       "name": "gcc14",
@@ -113,11 +106,10 @@
       },
       "inherits": [
         "default"
-      ],
-      "hidden": true
+      ]
     },
     {
-      "name": "mscv",
+      "name": "msvc",
       "condition": {
         "type": "equals",
         "lhs": "${hostSystemName}",
@@ -129,8 +121,7 @@
       },
       "inherits": [
         "default"
-      ],
-      "hidden": true
+      ]
     },
     {
       "name": "apple-clang",
@@ -145,20 +136,8 @@
       },
       "inherits": [
         "default"
-      ],
-      "hidden": true
-    },
-
-    { "name": "apple-clang", "displayName": "apple-clang", "description": "apple-clang", "inherits": [ "apple-clang" ] },
-    { "name": "clang15", "displayName": "clang-15", "description": "clang15", "inherits": [ "clang15" ] },
-    { "name": "clang16", "displayName": "clang-16", "description": "clang16", "inherits": [ "clang16" ] },
-    { "name": "clang17", "displayName": "clang-17", "description": "clang17", "inherits": [ "clang17" ] },
-    { "name": "clang18", "displayName": "clang-18", "description": "clang18", "inherits": [ "clang18" ] },
-    { "name": "clang19", "displayName": "clang-19", "description": "clang19", "inherits": [ "clang19" ] },
-    { "name": "gcc12", "displayName": "gcc-12", "description": "gcc12", "inherits": [ "gcc12" ] },
-    { "name": "gcc13", "displayName": "gcc-13", "description": "gcc13", "inherits": [ "gcc13" ] },
-    { "name": "gcc14", "displayName": "gcc-14", "description": "gcc14", "inherits": [ "gcc14" ] },
-    { "name": "msvc", "displayName": "MSVC", "description": "mscv", "inherits": [ "mscv" ] }
+      ]
+    }
   ],
   "buildPresets": [
     { "name": "apple-clang", "displayName": "apple-clang", "configurePreset": "apple-clang" },
