@@ -24,6 +24,10 @@ namespace mopheus
     #if __has_feature(thread_sanitizer)
         #define MORPHEUS_COMPILER_THREAD_SANITIZER
     #endif
+
+#elif defined(__DOXYGEN__)
+    #define MORPHEUS_COMPILER_ADDRESS_SANITIZER
+    #define MORPHEUS_COMPILER_THREAD_SANITIZER
 #else
     #ifdef __SANITIZE_ADDRESS__
         #define MORPHEUS_COMPILER_ADDRESS_SANITIZER
