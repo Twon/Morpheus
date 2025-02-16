@@ -32,8 +32,11 @@ struct Multi<true>
 template<bool M = false>
 struct Mapped
 {
+    /// The value type of the container.
     using value_type = int;
+    /// The key type of the container.
     using key_type = value_type;
+    /// The allocator type of the container.
     using allocator_type = std::allocator<value_type>;
 
     constexpr auto operator<=>(Mapped const&) const = default;
@@ -42,9 +45,13 @@ struct Mapped
 template<>
 struct Mapped<true>
 {
+    /// The mapped type of the container.
     using mapped_type = int;
+    /// The value type of the container.
     using value_type = std::pair<const int, mapped_type>;
+    /// The key type of the container.
     using key_type = typename value_type::first_type;
+    /// The allocator type of the container.
     using allocator_type = std::allocator<value_type>;
     constexpr auto operator<=>(Mapped const&) const = default;
 };
@@ -54,10 +61,15 @@ struct Mapped<true>
 template<bool multi = false, bool mapped = false>
 struct Associative : AllocatorAware, detail::Multi<multi>, detail::Mapped<mapped>
 {
+    /// The value type of the container.
     using value_type = typename detail::Mapped<mapped>::value_type;
+    /// The key type of the container.
     using key_type = typename detail::Mapped<mapped>::key_type;
+    /// The allocator type of the container.
     using allocator_type = typename detail::Mapped<mapped>::allocator_type;
+    /// The key comparison type of the container.
     using key_compare = std::less<int>;
+    /// The value comparison type of the container.
     using value_compare = key_compare;
     struct node_type{};
 
@@ -79,7 +91,9 @@ struct Associative : AllocatorAware, detail::Multi<multi>, detail::Mapped<mapped
     using AllocatorAware::AllocatorAware;
     using detail::Mapped<mapped>::Mapped;
 
+    /// Default constructor.
     constexpr Associative();
+    /// Construct the container with a specific key comparison function.
     constexpr Associative(key_compare const&);
     constexpr Associative(iterator, iterator, key_compare const&);
     constexpr Associative(iterator, iterator);
