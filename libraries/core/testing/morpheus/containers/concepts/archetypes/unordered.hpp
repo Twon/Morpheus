@@ -68,12 +68,12 @@ struct Unordered : public AllocatorAware, detail::Multi<multi>, detail::Mapped<m
     struct GetInsertReturnType {
         using type = typename AllocatorAware::iterator; // Default if not available
     };
-    
+
     template <typename T>
     struct GetInsertReturnType<T, std::void_t<typename T::insert_return_type>> {
         using type = typename T::insert_return_type; // Use if available
     };
-    
+
     // Alias to extract type easily
     using InsertNodeHandleReturnType = typename GetInsertReturnType<detail::Multi<multi>>::type;
 
