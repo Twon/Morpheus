@@ -48,7 +48,7 @@ struct ReaderArchetype
 
     /// Read any arithmetic type from the serialisation.
     template <typename T> requires std::is_arithmetic_v<T>
-    T read();
+    consteval T read();
 
     /// Read a string from the serialisation.
     template <typename T> requires std::is_same_v<T, std::string>
