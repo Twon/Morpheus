@@ -63,17 +63,11 @@ struct Unordered : public AllocatorAware, detail::Multi<multi>, detail::Mapped<m
     using const_local_iterator = local_iterator const;
 
     using InsertReturnType = std::conditional_t<multi, iterator, std::pair<iterator, bool>>;
-    using InsertNodeHandleReturnType = std::invoke_result_t<decltype([]
-    {
-        if constexpr (requires { requires requires {typename detail::Multi<multi>::insert_return_type; }; })
-        {
-            return typename detail::Multi<multi>::insert_return_type{};
-        }
-        else
-        {
-            return typename AllocatorAware::iterator{};
-        }
-    })>;
+    using InsertNodeHandleReturnType = std::conditional_t<
+        requires { typename detail<true>::Multi::insert_return_type; },
+        typename detail<true>::Multi::insert_return_type,
+        typename AllocatorAware::iterator
+    >;
 
     using BoundReturnType = std::conditional_t<multi, iterator, std::pair<iterator, iterator>>;
     using BoundConstReturnType = std::conditional_t<multi, const_iterator, std::pair<const_iterator, const_iterator>>;
