@@ -6,6 +6,7 @@
 
 #include <compare>
 #include <functional>
+#include <type_traits>
 
 namespace morpheus::containers::concepts::archetypes
 {
