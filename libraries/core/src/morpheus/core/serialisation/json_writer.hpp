@@ -33,19 +33,19 @@ public:
     /// \copydoc morpheus::serialisation::concepts::WriterArchtype::endComposite()
     void endComposite();
 
-    /// \copydoc morpheus::serialisation::concepts::WriterArchtype::beginValue()
+    /// \copydoc morpheus::serialisation::concepts::WriterArchtype::beginValue(std::string_view const)
     void beginValue(std::string_view const key);
 
     /// \copydoc morpheus::serialisation::concepts::WriterArchtype::endValue()
     void endValue();
 
-    /// \copydoc morpheus::serialisation::concepts::WriterArchtype::beginSequence()
+    /// \copydoc morpheus::serialisation::concepts::WriterArchtype::beginSequence(std::optional<std::size_t>)
     void beginSequence(std::optional<std::size_t> size = std::nullopt);
 
     /// \copydoc morpheus::serialisation::concepts::WriterArchtype::endSequence()
     void endSequence();
 
-    /// \copydoc morpheus::serialisation::concepts::WriterArchtype::beginNullable()
+    /// \copydoc morpheus::serialisation::concepts::WriterArchtype::beginNullable(bool const)
     void beginNullable(bool const null);
 
     /// \copydoc morpheus::serialisation::concepts::WriterArchtype::endNullable()
