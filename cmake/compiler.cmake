@@ -28,6 +28,7 @@ morpheus_add_library(
 target_link_libraries(MorpheusConfig
     INTERFACE
         $<$<PLATFORM_ID:Linux>:dl>
+        std
 )
 
 target_compile_options(MorpheusConfig
@@ -36,4 +37,9 @@ target_compile_options(MorpheusConfig
         $<$<CXX_COMPILER_ID:MSVC>:${MSVC_WARNINGS}>
         $<$<CXX_COMPILER_ID:GNU>:${GCC_WARNINGS}>
         $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>>:${CLANG_WARNINGS}>
+)
+
+target_compile_definitions(MorpheusConfig
+    INTERFACE
+        MORPHEUS_MODULES_SUPPORT=$<BOOL:${MORPHEUS_MODULES_SUPPORT}>
 )
