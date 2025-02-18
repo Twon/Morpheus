@@ -77,7 +77,7 @@ function(morpheus_add_target)
     if (NOT MORPHEUS_ALIAS AND MORPHEUS_TYPE STREQUAL library)
         message(FATAL_ERROR "ALIAS parameter must be supplied for library targets")
     endif()
-    if (NOT MORPHEUS_INTERFACE AND NOT MORPHEUS_TYPE STREQUAL library)
+    if (MORPHEUS_INTERFACE AND NOT MORPHEUS_TYPE STREQUAL library)
         message(FATAL_ERROR "INTERFACE parameter can only be used with library targets")
     endif()
     if(${MORPHEUS_INTERFACE})
@@ -90,7 +90,7 @@ function(morpheus_add_target)
             add_executable(${MORPHEUS_ALIAS} ALIAS ${MORPHEUS_NAME})
         endif()
     else()
-        add_library(${MORPHEUS_NAME} ${isInterface}) 
+        add_library(${MORPHEUS_NAME} ${isInterface})
         add_library(${MORPHEUS_ALIAS} ALIAS ${MORPHEUS_NAME})
     endif()
 
@@ -132,15 +132,15 @@ function(morpheus_add_target_properties)
     set(oneValueArgs NAME FOLDER)
     set(multiValueArgs)
     cmake_parse_arguments(MORPHEUS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
-   
+
     if(${MORPHEUS_INTERFACE})
         set(scope "INTERFACE")
     else()
-        set(scope "PUBLIC") 
+        set(scope "PUBLIC")
     endif()
 
-    target_compile_features(${MORPHEUS_NAME} ${scope} cxx_std_23) 
-    
+    target_compile_features(${MORPHEUS_NAME} ${scope} cxx_std_23)
+
     set_target_properties(${MORPHEUS_NAME}
         PROPERTIES
             CXX_STANDARD 23
@@ -160,7 +160,7 @@ function(morpheus_add_target_properties)
 
     # Create an empty header set here so that the subsequent install step finds it.
     target_sources(${MORPHEUS_NAME} ${scope} FILE_SET HEADERS FILES)
- 
+
     install(TARGETS ${MORPHEUS_NAME}
             EXPORT morpheus-export-set
             FILE_SET HEADERS

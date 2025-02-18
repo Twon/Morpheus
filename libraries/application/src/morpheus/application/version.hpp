@@ -2,6 +2,8 @@
 
 #include <morpheus/core/conformance/format.hpp>
 
+#include <cstdint>
+
 namespace morpheus::application
 {
 

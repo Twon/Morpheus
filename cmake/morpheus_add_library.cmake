@@ -80,6 +80,6 @@ function(morpheus_add_library)
         EXPORT morpheus-export-set
         NAMESPACE morpheus::
         DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/morpheus"
-    )    
+    )
 
 endfunction()
