@@ -1,8 +1,12 @@
+#include "morpheus/core/conformance/coro.hpp"
 #include "morpheus/core/conformance/ranges.hpp"
 #include "morpheus/core/concurrency/generator.hpp"
 
-#include <catch2/catch_all.hpp>
-#include <iostream>
+#include <catch2/catch_test_macros.hpp>
+
+#include <concepts>
+#include <cstddef>
+#include <type_traits>
 
 namespace morpheus::concurrency
 {

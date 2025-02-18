@@ -1,7 +1,9 @@
 #pragma once
 
-#include "morpheus/core/base/platform.hpp"
+#include "morpheus/core/base/export.hpp"
 
+#include <rapidjson/allocators.h>
+#include <rapidjson/encodings.h>
 #include <rapidjson/writer.h>
 #include <rapidjson/ostreamwrapper.h>
 
