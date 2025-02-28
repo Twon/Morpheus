@@ -1,12 +1,11 @@
 
 #pragma once
 
-#include <morpheus/core/base/compiler.hpp>
-#include <morpheus/core/base/platform.hpp>
 #include <morpheus/core/base/cold.hpp>
 #include <morpheus/core/conformance/stacktrace.hpp>
 
-#include <boost/exception/all.hpp>
+#include <boost/exception/detail/error_info_impl.hpp>
+#include <boost/exception/info.hpp>
 
 #include <string_view>
 
