@@ -17,12 +17,18 @@ using std::crend;
 
 struct Reversible : Container
 {
+    /// The reverse iterator type of the container.
     using reverse_iterator = std::reverse_iterator<iterator>;
+    /// The const reverse iterator type of the container.
     using const_reverse_iterator = std::reverse_iterator<const_iterator>;
 
+    /// returns an reverse iterator to the beginning
     constexpr reverse_iterator rbegin() noexcept;
+    /// returns an reverse iterator to the end
     constexpr reverse_iterator rend() noexcept;
+    /// returns a const reverse iterator to the beginning
     constexpr const_reverse_iterator rbegin() const noexcept;
+    /// returns a const reverse iterator to the end
     constexpr const_reverse_iterator rend() const noexcept;
 };
 

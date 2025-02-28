@@ -1,3 +1,4 @@
+#include "morpheus/core/conformance/ranges.hpp"
 #include "morpheus/core/conformance/scan.hpp"
 #include "morpheus/core/meta/concepts/scannable.hpp"
 
@@ -35,8 +36,8 @@ class UnscannableType;
 
 TEST_CASE("Meta concept scannable_with verifies a given type customises scan_ns::scanner", "[morpheus.meta.concepts.scannable_with]")
 {
-    STATIC_REQUIRE(!detail::ScannableWith<UnscannableType, scan_ns::basic_scan_context<char>>);
-    STATIC_REQUIRE(detail::ScannableWith<ScannableType, scan_ns::basic_scan_context<char>>);
+    STATIC_REQUIRE(!detail::ScannableWith<UnscannableType, scan_ns::basic_scan_context<morpheus::ranges::subrange<char*, char*>, char>>);
+    STATIC_REQUIRE(detail::ScannableWith<ScannableType, scan_ns::basic_scan_context<morpheus::ranges::subrange<char*, char*>, char>>);
 }
 
 TEST_CASE("Meta concept scannable_with verifies a given type customises scan_ns::scanner", "[morpheus.meta.concepts.scannable]")

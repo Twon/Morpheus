@@ -82,8 +82,7 @@ class Morpheus(ConanFile):
         "ms-gsl/4.0.0",
         "rapidjson/cci.20230929",
         "range-v3/0.12.0",
-        "scnlib/2.0.2",
-        #"zlib/1.2.12" # xapian-core/1.4.19' requires 'zlib/1.2.12' while 'boost/1.81.0' requires 'zlib/1.2.13'. To fix this conflict you need to override the package 'zlib' in your root package.
+        "scnlib/4.0.1",
     )
 
     build_requires = (
@@ -122,7 +121,7 @@ class Morpheus(ConanFile):
         compiler = self.settings.compiler
         version = Version(self.settings.compiler.version)
         std_support = (compiler == "msvc" and version >= 193) or (compiler == "gcc" and version >= Version("14")) or \
-                      (compiler == "clang" and version >= Version("18"))
+                      (compiler == "clang" and version >= Version("19"))
         return not std_support
 
     def config_options(self):
@@ -144,7 +143,7 @@ class Morpheus(ConanFile):
             self.tool_requires("cmake/3.30.1")
 
         if self.options.build_docs:
-            self.build_requires("doxygen/1.9.4") # doxygen/1.9.5 will update dependency on zlib/1.2.12 to zlib/1.2.13
+            self.build_requires("doxygen/1.13.2")
 
         if self.options.get_safe("link_with_mold", False):
             self.build_requires("mold/2.33.0")

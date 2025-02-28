@@ -31,6 +31,8 @@ auto deserialise(Serialiser& serialiser)
 
 }
 
+/// \struct serialise_fn
+///     Customisation point functor for serialising a value.
 struct serialise_fn {
     template<concepts::WriteSerialiser Serialiser, typename Type>
     void operator() (Serialiser& serialiser, Type const& value) const
@@ -40,6 +42,8 @@ struct serialise_fn {
     }
 };
 
+/// \struct deserialise_fn
+///     Customisation point functor for deserialising a value.
 struct deserialise_fn {
     template<concepts::ReadSerialiser Serialiser, typename Type>
     auto operator() (Serialiser& serialiser) const
