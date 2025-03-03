@@ -1,5 +1,7 @@
 #pragma once
 
+#include <morpheus/core/conformance/version.hpp>
+
 #if __has_include(<stacktrace>)
     #include <stacktrace>
 #endif
@@ -11,7 +13,6 @@
 
     #define MORPHEUS_CURRENT_STACKTRACE ::morpheus::st_ns::stacktrace::current()
 #else
-
     #include <boost/stacktrace/stacktrace.hpp>
     namespace morpheus { namespace st_ns = boost::stacktrace; }
 
