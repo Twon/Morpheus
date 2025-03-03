@@ -333,13 +333,14 @@ public:
     // Observers
 #if (__cpp_explicit_this_parameter >= 202110L)
 
-  [[nodiscard]] constexpr auto* operator->(this Self&& self) noexcept { return std::forward_like<Self>(mValue); }
+    template <typename Self>
+    [[nodiscard]] constexpr T* operator->(this Self&& self) noexcept { return (self.mValue); }
 
     /// Dereferences pointer to the managed object.
     template <typename Self>
-    [[nodiscard]] constexpr std::copy_cvref_t<Self, T>&& operator*(this Self&& self) noexcept
+    [[nodiscard]] constexpr auto&& operator*(this Self&& self) noexcept
     {
-        return *std::forward_like<Self>(mValue);
+        return *std::forward_like<decltype(self)>(self.mValue);
     }
 
 #else

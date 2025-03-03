@@ -7,6 +7,8 @@
 #include "morpheus/core/meta/concepts/complete.hpp"
 #include "morpheus/core/meta/concepts/hashable.hpp"
 
+#include <boost/type_traits/copy_cv_ref.hpp>
+
 #include <concepts>
 #include <exception>
 #include <memory>
@@ -174,16 +176,16 @@ struct indirect_value_base<T, CD, CD>
 #if (__cpp_explicit_this_parameter >= 202110L)
     /// Access the copier.
     template <typename Self>
-    [[nodiscard]] constexpr std::copy_cvref_t<Self, auto> getC(this Self&& self)
+    [[nodiscard]] constexpr auto getC(this Self&& self) -> boost::copy_cv_ref_t<CD, decltype(self)>
     {
-        return std::forward_like<Self>(mCopierDeleterCombined);
+        return std::forward_like<decltype(self)>(self.mCopierDeleterCombined);
     }
 
     /// Access the deleter.
     template <typename Self>
-    [[nodiscard]] constexpr std::copy_cvref_t<Self, auto> getD(this Self&& self)
+    [[nodiscard]] constexpr auto getD(this Self&& self) -> boost::copy_cv_ref_t<CD, decltype(self)>
     {
-        return std::forward_like<Self>(mCopierDeleterCombined);
+        return std::forward_like<decltype(self)>(self.mCopierDeleterCombined);
     }
 #else
     /// Access the copier.
@@ -243,16 +245,16 @@ struct indirect_value_base
 #if (__cpp_explicit_this_parameter >= 202110L)
     /// Access the copier.
     template <typename Self>
-    [[nodiscard]] constexpr std::copy_cvref_t<Self, auto> getC(this Self&& self)
+    [[nodiscard]] constexpr auto getC(this Self&& self) -> boost::copy_cv_ref_t<C, decltype(self)>
     {
-        return std::forward_like<Self>(mCopier);
+        return std::forward_like<decltype(self)>(self.mCopier);
     }
 
     /// Access the deleter.
     template <typename Self>
-    [[nodiscard]] constexpr std::copy_cvref_t<Self, auto> getD(this Self&& self)
+    [[nodiscard]] constexpr auto getD(this Self&& self) -> boost::copy_cv_ref_t<D, decltype(self)>
     {
-        return std::forward_like<Self>(mDeleter);
+        return std::forward_like<decltype(self)>(self.mDeleter);
     }
 #else
     /// Access the copier.
@@ -388,25 +390,25 @@ public:
 
     /// Accesses the contained value.
     template <typename Self>
-    [[nodiscard]] constexpr auto* operator->(this Self&& self) noexcept
+    [[nodiscard]] constexpr auto operator->(this Self&& self) noexcept -> boost::copy_cv_t<T*, decltype(self)>
     {
-        return (this->mValue);
+        return (self.mValue);
     }
 
     /// Dereferences pointer to the managed object.
     template <typename Self>
-    [[nodiscard]] constexpr std::copy_cvref_t<Self, T>&& operator*(this Self&& self) noexcept
+    [[nodiscard]] constexpr auto operator*(this Self&& self) noexcept -> boost::copy_cv_ref_t<T, decltype(self)>
     {
-        return *std::forward(self).mValue;
+        return std::forward_like<decltype(self)>(*self.mValue);
     }
 
     /// If *this contains a value, returns a reference to the contained value. Otherwise, throws a bad_indirect_value_access exception.
     template <typename Self>
-    [[nodiscard]] constexpr auto& value(this Self&& self)
+    [[nodiscard]] constexpr auto value(this Self&& self) -> boost::copy_cv_ref_t<T, decltype(self)>
     {
-        if (!this->mValue)
+        if (!self.mValue)
             throw bad_indirect_value_access();
-        return *(this->mValue);
+        return std::forward_like<decltype(self)>(*self.mValue);
     }
 #else
     /// Accesses the contained value.

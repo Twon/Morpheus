@@ -1,6 +1,4 @@
-if(APPLE)
-    add_subdirectory(metal)
-endif(APPLE)
+add_subdirectory(metal)
 
 if(WIN32)
     add_subdirectory(d3d12)

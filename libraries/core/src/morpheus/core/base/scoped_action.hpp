@@ -40,9 +40,9 @@ public:
 #if (__cpp_explicit_this_parameter >= 202110L)
     /// Access the returned value of the entry action on beginning of the managed scope.
     template <typename Self>
-    [[nodiscard]] std::copy_cvref_t<Self, auto> value(this Self&& self)
+    [[nodiscard]] auto&& value(this Self&& self)
     {
-        return mEntryReturnValue;
+        return std::forward_like<decltype(self)>(self.mEntryReturnValue);
     }
 #else
     /// Access the returned value of the entry action on beginning of the managed scope.
