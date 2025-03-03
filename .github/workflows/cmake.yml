@@ -124,6 +124,7 @@ jobs:
               os: ubuntu-latest,
               compiler:
                 {
+                  type: CLANG,
                   version: 19,
                   conan: "clang",
                   cc: "clang-19",
