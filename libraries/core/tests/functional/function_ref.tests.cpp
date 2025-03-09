@@ -5,6 +5,8 @@
 namespace morpheus::functional
 {
 
+using namespace func_ref_ns;
+
 TEST_CASE("Propagate constness and noexceptness to function_ref", "[morpheus.functional.function_ref]")
 {
     using ConcreteFunctionRef = func_ref_ns::function_ref<void()>;
@@ -67,6 +69,17 @@ TEST_CASE("Verify construction of function_ref", "[morpheus.functional.function_
 */
 //    auto const lambda = [](){};
 //    func_ref_ns::function_ref<void()> lambdaView = lambda;
+}
+
+TEST_CASE("Verify use of function_ref as an argument", "[morpheus.functional.function_ref.argument]")
+{
+    auto const constexpr callable = [](function_ref<void(int, int)>){ SUCCEED(); };
+
+
+    //auto const lambda = [](int, int){ SUCCEED(); };
+    function_ref<void(int, int)> functionView([](int, int){ SUCCEED(); });
+    function_ref<void(int, int)> functionView2 = functionView;
+    functionView2(0, 1);
 }
 
 } // morpheus::functional

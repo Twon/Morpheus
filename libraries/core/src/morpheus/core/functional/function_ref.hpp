@@ -35,6 +35,40 @@ inline constexpr nontype_t<V> nontype{};
 template <class Signature>
 class function_ref;
 
+namespace details
+{
+
+template <typename Return, class... Args>
+struct QualityFunctionSignature;
+
+template <typename Return, class... Args>
+struct QualityFunctionSignature<Return(Args...)>
+{
+    static constexpr bool isNoexcept = false;
+    static constexpr bool isConst = false;
+};
+
+template <typename Return, class... Args>
+struct QualityFunctionSignature<Return(Args...) noexcept>
+{
+    static constexpr bool isNoexcept = true;
+    static constexpr bool isConst = false;
+};
+
+template <typename Return, class... Args>
+struct QualityFunctionSignature<Return(Args...) const> : QualityFunctionSignature<Return(Args...)>
+{
+    static constexpr bool isConst = true;
+};
+
+template <typename Return, class... Args>
+struct QualityFunctionSignature<Return(Args...) const noexcept> : QualityFunctionSignature<Return(Args...) noexcept>
+{
+    static constexpr bool isConst = true;
+};
+
+} // namespace details
+
 /// \class function_ref
 ///     Implementation of [p0792r10](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2022/p0792r10.html)
 ///     function_ref, a simple non-owning reference to a callable.  This allows binding to callables of:
@@ -46,9 +80,9 @@ class function_ref;
 template <typename Return, class... Args>
 class function_ref<Return(Args...)>
 {
-
-    static constexpr bool isNoexcept = meta::IsNothrowInvocable<Return, Args...>;
-    static constexpr bool isConst = meta::IsConstInvocable<Return, Args...>;
+    using signature = details::QualityFunctionSignature<Return(Args...)>;
+    static constexpr bool isNoexcept = signature::isNoexcept;
+    static constexpr bool isConst = signature::isConst;
 
     template <typename... T>
     static constexpr bool isInvokableWith = []()
@@ -120,8 +154,8 @@ public:
     {}
 
     template <auto F, class T>
-    constexpr function_ref(nontype_t<F>, constness<T> const* object) noexcept
-        requires isInvokableWith<decltype(F), constness<T> const*>
+    constexpr function_ref(nontype_t<F>, constness<T>* object) noexcept
+        requires isInvokableWith<decltype(F), constness<T>*>
     : mInvoke(
           [](Storage storage, Args... args) noexcept(isNoexcept) -> Return
           {
@@ -133,7 +167,7 @@ public:
 
     template <class F, class T = std::remove_reference_t<F>>
     constexpr function_ref(F&& f) noexcept
-        requires(not std::is_same_v<F, function_ref> and not std::is_member_pointer_v<F> and isInvokableWith<F, constness<T>>)
+        requires(not std::is_same_v<std::remove_cvref_t<F>, function_ref> and not std::is_member_pointer_v<T> and isInvokableWith<constness<T>>)
     : mInvoke(
           [](Storage storage, Args... args) noexcept(isNoexcept) -> Return
           {
