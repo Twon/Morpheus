@@ -68,7 +68,7 @@ target_link_libraries(MorpheusCore
         scn::scn
         $<$<NOT:$<BOOL:${EXPECTED_SUPPORTED}>>:tl::expected>
         $<$<AND:$<CXX_COMPILER_ID:GNU>,$<BOOL:${GCC_STACKTRACE_SUPPORTED}>,$<OR:$<VERSION_GREATER_EQUAL:$<CXX_COMPILER_VERSION>,12>,$<VERSION_LESS_EQUAL:$<CXX_COMPILER_VERSION>,13>>>:-lstdc++_libbacktrace>
-        $<$<AND:$<CXX_COMPILER_ID:GNU>,$<BOOL:${GCC_STACKTRACE_SUPPORTED}>,$<VERSION_GREATER_EQUAL:$<CXX_COMPILER_VERSION>,14>>:-lstdc++exp>        
+        $<$<AND:$<CXX_COMPILER_ID:GNU>,$<BOOL:${GCC_STACKTRACE_SUPPORTED}>,$<VERSION_GREATER_EQUAL:$<CXX_COMPILER_VERSION>,14>>:-lstdc++exp>
 )
 
 target_compile_definitions(MorpheusCore
