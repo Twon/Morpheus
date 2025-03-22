@@ -31,7 +31,7 @@ public:
     /// \copydoc morpheus::serialisation::concepts::ReaderArchtype::endComposite()
     void endComposite() noexcept {}
 
-    /// \copydoc morpheus::serialisation::concepts::ReaderArchtype::beginValue()
+    /// \copydoc morpheus::serialisation::concepts::ReaderArchtype::beginValue(std::string_view const)
     void beginValue(std::string_view const) noexcept {}
 
     /// \copydoc morpheus::serialisation::concepts::ReaderArchtype::endValue()

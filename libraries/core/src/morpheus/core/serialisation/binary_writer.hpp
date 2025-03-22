@@ -38,7 +38,7 @@ public:
     /// \copydoc morpheus::serialisation::concepts::WriterArchtype::endComposite()
     void endComposite() noexcept {}
 
-    /// \copydoc morpheus::serialisation::concepts::WriterArchtype::beginValue()
+    /// \copydoc morpheus::serialisation::concepts::WriterArchtype::beginValue(std::string_view const)
     void beginValue(std::string_view const) noexcept {}
 
     /// \copydoc morpheus::serialisation::concepts::WriterArchtype::endValue()
@@ -56,7 +56,7 @@ public:
     /// \copydoc morpheus::serialisation::concepts::WriterArchtype::endSequence()
     void endSequence() noexcept {}
 
-    /// \copydoc morpheus::serialisation::concepts::WriterArchtype::beginNullable()
+    /// \copydoc morpheus::serialisation::concepts::WriterArchtype::beginNullable(bool const)
     void beginNullable(bool const null)
     {
         write(null);
