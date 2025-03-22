@@ -9,11 +9,36 @@ using namespace func_ref_ns;
 
 TEST_CASE("Propagate constness and noexceptness to function_ref", "[morpheus.functional.function_ref]")
 {
-    using ConcreteFunctionRef = func_ref_ns::function_ref<void()>;
+    using ConcreteFunctionRef = function_ref<void()>;
     STATIC_REQUIRE(std::is_nothrow_copy_constructible_v<ConcreteFunctionRef>);
     STATIC_REQUIRE(std::is_nothrow_copy_assignable_v<ConcreteFunctionRef>);
     STATIC_REQUIRE(std::is_nothrow_move_constructible_v<ConcreteFunctionRef>);
     STATIC_REQUIRE(std::is_nothrow_move_assignable_v<ConcreteFunctionRef>);
+}
+
+TEST_CASE("Propagate constness and noexceptness to function_ref", "[morpheus.functional.function_ref.callable_qualifications]")
+{
+    struct TestNonConstNothrowable
+    {
+        void operator()() noexcept {}
+    };
+    STATIC_REQUIRE(meta::IsNothrowInvocable<TestNonConstNothrowable>);
+    STATIC_REQUIRE(!meta::IsConstInvocable<TestNonConstNothrowable>);
+
+    struct TestNonConstThrowable
+    {
+        void operator()() {}
+    };
+    STATIC_REQUIRE(!meta::IsNothrowInvocable<TestNonConstThrowable>);
+    STATIC_REQUIRE(!meta::IsConstInvocable<TestNonConstThrowable>);
+
+    function_ref<void() const> constFunction = [](){};
+    STATIC_REQUIRE(!meta::IsNothrowInvocable<decltype(constFunction)>);
+    STATIC_REQUIRE(meta::IsConstInvocable<decltype(constFunction)>);
+
+    function_ref<void() const noexcept> noexceptConstFunction = []() noexcept {};
+    STATIC_REQUIRE(meta::IsNothrowInvocable<decltype(noexceptConstFunction)>);
+    STATIC_REQUIRE(meta::IsConstInvocable<decltype(noexceptConstFunction)>);
 }
 
 void testFunction() { SUCCEED(); }
@@ -80,6 +105,21 @@ TEST_CASE("Verify use of function_ref as an argument", "[morpheus.functional.fun
     function_ref<void(int, int)> functionView([](int, int){ SUCCEED(); });
     function_ref<void(int, int)> functionView2 = functionView;
     functionView2(0, 1);
+}
+
+TEST_CASE("Verify use of function_ref as an argument", "[morpheus.functional.function_ref.deduction_guides]")
+{
+    // [func.wrap.ref.deduct]
+    // template <class F> requires std::is_function_v<F>
+    // function_ref(F*) -> function_ref<F>;
+    function_ref simpleCallable = testFunction;
+    simpleCallable();
+
+    // template <auto f, class F = std::remove_pointer_t<decltype(f)>>
+    // requires std::is_function_v<F>
+    // function_ref(nontype_t<f>) -> function_ref<F>;
+    function_ref simpleCallable2 = nontype<&testFunction>;
+    simpleCallable2();
 }
 
 } // morpheus::functional

@@ -32,9 +32,6 @@ struct nontype_t
 template <auto V>
 inline constexpr nontype_t<V> nontype{};
 
-template <class Signature>
-class function_ref;
-
 namespace details
 {
 
@@ -44,6 +41,7 @@ struct QualityFunctionSignature;
 template <typename Return, class... Args>
 struct QualityFunctionSignature<Return(Args...)>
 {
+    using function = Return(Args...);
     static constexpr bool isNoexcept = false;
     static constexpr bool isConst = false;
 };
@@ -51,6 +49,7 @@ struct QualityFunctionSignature<Return(Args...)>
 template <typename Return, class... Args>
 struct QualityFunctionSignature<Return(Args...) noexcept>
 {
+    using function = Return(Args...);
     static constexpr bool isNoexcept = true;
     static constexpr bool isConst = false;
 };
@@ -69,6 +68,9 @@ struct QualityFunctionSignature<Return(Args...) const noexcept> : QualityFunctio
 
 } // namespace details
 
+template <class Signature, class = details::QualityFunctionSignature<Signature>::function>
+class function_ref;
+
 /// \class function_ref
 ///     Implementation of [p0792r10](https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2022/p0792r10.html)
 ///     function_ref, a simple non-owning reference to a callable.  This allows binding to callables of:
@@ -77,10 +79,10 @@ struct QualityFunctionSignature<Return(Args...) const noexcept> : QualityFunctio
 ///     - Member functions
 /// \note
 ///      [func.wrap.ref.class]
-template <typename Return, class... Args>
-class function_ref<Return(Args...)>
+template <class Signature, typename Return, class... Args>
+class function_ref<Signature, Return(Args...)>
 {
-    using signature = details::QualityFunctionSignature<Return(Args...)>;
+    using signature = details::QualityFunctionSignature<Signature>;
     static constexpr bool isNoexcept = signature::isNoexcept;
     static constexpr bool isConst = signature::isConst;
 
@@ -238,12 +240,12 @@ template <class F>
 requires std::is_function_v<F>
 function_ref(F*) -> function_ref<F>;
 
-template <auto f>
-requires std::is_function_v<decltype(f)>
-function_ref(nontype_t<f>) -> function_ref<std::remove_pointer_t<decltype(f)>>;
+template <auto f, class F = std::remove_pointer_t<decltype(f)>>
+requires std::is_function_v<F>
+function_ref(nontype_t<f>) -> function_ref<F>;
 
-// template<auto f>
-// function_ref(nontype_t<f>, auto)->function_ref<see below>;
+//template<auto f, class T, F = decltype(f)>
+//function_ref(nontype_t<f>, T&&)->function_ref<see below>;
 
 /*
 
@@ -258,4 +260,5 @@ function_ref(nontype_t<f>) -> function_ref<std::remove_pointer_t<decltype(f)>>;
 */
 
 } // namespace morpheus::func_ref_ns
+
 #endif
