@@ -1,5 +1,7 @@
 #pragma once
 
+#include <morpheus/core/conformance/version.hpp>
+
 #if __has_include(<stacktrace>)
     #include <stacktrace> // IWYU pragma: export
 #endif
