@@ -72,7 +72,7 @@ target_link_libraries(MorpheusCore
         range-v3::range-v3
         scn::scn
         $<$<NOT:$<BOOL:${EXPECTED_SUPPORTED}>>:tl::expected>
-        $<$<AND:$<CXX_COMPILER_ID:GNU>,$<BOOL:${GCC_STACKTRACE_SUPPORTED}>,$<OR:$<VERSION_GREATER_EQUAL:$<CXX_COMPILER_VERSION>,12>,$<VERSION_LESS:$<CXX_COMPILER_VERSION>,14>>>:-lstdc++_libbacktrace>
+        $<$<AND:$<CXX_COMPILER_ID:GNU>,$<BOOL:${GCC_STACKTRACE_SUPPORTED}>,$<VERSION_GREATER_EQUAL:$<CXX_COMPILER_VERSION>,12>,$<VERSION_LESS:$<CXX_COMPILER_VERSION>,14>>:-lstdc++_libbacktrace>
         $<$<AND:$<CXX_COMPILER_ID:GNU>,$<BOOL:${GCC_STACKTRACE_SUPPORTED}>,$<VERSION_GREATER_EQUAL:$<CXX_COMPILER_VERSION>,14>>:-lstdc++exp>
 )
 
