@@ -7,6 +7,7 @@
 #include <compare>
 #include <functional>
 #include <initializer_list>
+#include <type_traits>
 
 namespace morpheus::containers::concepts::archetypes
 {
@@ -77,17 +78,20 @@ struct Associative : AllocatorAware, detail::Multi<multi>, detail::Mapped<mapped
     struct node_type{};
 
     using InsertReturnType = std::conditional_t<multi, iterator, std::pair<iterator, bool>>;
-    using InsertNodeHandleReturnType = std::invoke_result_t<decltype([]
-    {
-        if constexpr (requires { requires requires {typename detail::Multi<multi>::insert_return_type; }; })
-        {
-            return typename detail::Multi<multi>::insert_return_type{};
-        }
-        else
-        {
-            return typename AllocatorAware::iterator{};
-        }
-    })>;
+
+    template <typename, typename = void>
+    struct GetInsertReturnType {
+        using type = typename AllocatorAware::iterator; // Default if not available
+    };
+
+    template <typename T>
+    struct GetInsertReturnType<T, std::void_t<typename T::insert_return_type>> {
+        using type = typename T::insert_return_type; // Use if available
+    };
+
+    // Alias to extract type easily
+    using InsertNodeHandleReturnType = typename GetInsertReturnType<detail::Multi<multi>>::type;
+
     using BoundReturnType = std::conditional_t<multi, iterator, std::pair<iterator, iterator>>;
     using BoundConstReturnType = std::conditional_t<multi, const_iterator, std::pair<const_iterator, const_iterator>>;
 

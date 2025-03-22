@@ -229,9 +229,9 @@ jobs:
           xcode-version: '${{matrix.settings.compiler.version}}'
 
       - name: Set up Python
-        uses: actions/setup-python@v5.3.0
+        uses: actions/setup-python@v5.4.0
         with:
-          python-version: '3.11'
+          python-version: '3.13'
 
       - name: Install Python requirements
         run: |
@@ -241,6 +241,7 @@ jobs:
         shell: bash
         run: |
           conan profile detect --force
+
           sed -i.backup '/^\[settings\]$/,/^\[/ s/^build_type=.*/build_type=${{ matrix.configuration }}/' .conan2/profiles/default
           sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.cppstd=.*/compiler.cppstd=${{ matrix.settings.compiler.std }}/' .conan2/profiles/default
           if [[ "${{ matrix.settings.compiler.type }}" == "GCC" || "${{ matrix.settings.compiler.type }}" == "CLANG" ]]; then
