@@ -64,6 +64,16 @@ endif (NOT ${RANGES_SUPPORTED})
 
 find_package(scn REQUIRED)
 
+# GCC 12 and later must be compiled with support for stacktrace for it to be usable: https://stackoverflow.com/questions/72341483/how-can-i-generate-a-c23-stacktrace-with-gcc-12-1
+if(${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU" AND ${CMAKE_CXX_COMPILER_VERSION} VERSION_GREATER_EQUAL 12)
+    include(CheckCXXSymbolExists)
+    check_cxx_symbol_exists(_GLIBCXX_HAVE_STACKTRACE "version" GCC_STACKTRACE_SUPPORTED)
+    if(${GCC_STACKTRACE_SUPPORTED})
+        message(STATUS "morpheus: GCC version ${CMAKE_CXX_COMPILER_VERSION} is built with support for stacktrace")
+    else()
+        message(STATUS "morpheus: GCC version ${CMAKE_CXX_COMPILER_VERSION} is not built with support for stacktrace")
+    endif()
+endif()
 
 target_link_libraries(MorpheusCore
     PUBLIC
@@ -73,6 +83,8 @@ target_link_libraries(MorpheusCore
         $<$<NOT:$<BOOL:${RANGES_SUPPORTED}>>:range-v3::range-v3>
         scn::scn
         $<$<NOT:$<BOOL:${EXPECTED_SUPPORTED}>>:tl::expected>
+        $<$<AND:$<CXX_COMPILER_ID:GNU>,$<BOOL:${GCC_STACKTRACE_SUPPORTED}>,$<VERSION_GREATER_EQUAL:$<CXX_COMPILER_VERSION>,12>,$<VERSION_LESS:$<CXX_COMPILER_VERSION>,14>>:-lstdc++_libbacktrace>
+        $<$<AND:$<CXX_COMPILER_ID:GNU>,$<BOOL:${GCC_STACKTRACE_SUPPORTED}>,$<VERSION_GREATER_EQUAL:$<CXX_COMPILER_VERSION>,14>>:-lstdc++exp>
 )
 
 target_compile_definitions(MorpheusCore
