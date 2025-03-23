@@ -38,6 +38,14 @@ morpheus_conformance_check(
     CLANG_VERSION "19"
 )
 
+morpheus_conformance_check(
+    RESULT RANGES_SUPPORTED
+    MSVC_VERSION "19.29"
+    GNU_VERSION "10"
+    CLANG_VERSION "16"
+    APPLECLANG_VERSION "15"
+)
+
 if (NOT ${DATE_SUPPORTED})
     find_package(date REQUIRED)
 endif (NOT ${DATE_SUPPORTED})
@@ -50,7 +58,10 @@ if (NOT ${FORMAT_SUPPORTED})
     find_package(fmt REQUIRED)
 endif (NOT ${FORMAT_SUPPORTED})
 
-find_package(range-v3 REQUIRED)
+if (NOT ${RANGES_SUPPORTED})
+    find_package(range-v3 REQUIRED)
+endif (NOT ${RANGES_SUPPORTED})
+
 find_package(scn REQUIRED)
 
 # GCC 12 and later must be compiled with support for stacktrace for it to be usable: https://stackoverflow.com/questions/72341483/how-can-i-generate-a-c23-stacktrace-with-gcc-12-1
@@ -69,7 +80,7 @@ target_link_libraries(MorpheusCore
         $<$<NOT:$<BOOL:${DATE_SUPPORTED}>>:date::date>
         $<$<NOT:$<BOOL:${DATE_SUPPORTED}>>:date::date-tz>
         $<$<NOT:$<BOOL:${FORMAT_SUPPORTED}>>:fmt::fmt>
-        range-v3::range-v3
+        $<$<NOT:$<BOOL:${RANGES_SUPPORTED}>>:range-v3::range-v3>
         scn::scn
         $<$<NOT:$<BOOL:${EXPECTED_SUPPORTED}>>:tl::expected>
         $<$<AND:$<CXX_COMPILER_ID:GNU>,$<BOOL:${GCC_STACKTRACE_SUPPORTED}>,$<VERSION_GREATER_EQUAL:$<CXX_COMPILER_VERSION>,12>,$<VERSION_LESS:$<CXX_COMPILER_VERSION>,14>>:-lstdc++_libbacktrace>
