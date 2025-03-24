@@ -1,8 +1,10 @@
-#include "morpheus/application/application.hpp"
+#include "morpheus/application/po/options.hpp"
 #include "morpheus/gfx/platform/render_window.hpp"
 #include "morpheus/logging.hpp"
 
 #include <catch2/catch_test_macros.hpp>
+
+#include <array>
 
 namespace morpheus::gfx
 {
