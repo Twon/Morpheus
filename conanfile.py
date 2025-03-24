@@ -81,7 +81,6 @@ class Morpheus(ConanFile):
         "magic_enum/0.9.5",
         "ms-gsl/4.0.0",
         "rapidjson/cci.20230929",
-        "range-v3/0.12.0",
         "scnlib/4.0.1",
     )
 
@@ -122,6 +121,15 @@ class Morpheus(ConanFile):
         version = Version(self.settings.compiler.version)
         std_support = (compiler == "msvc" and version >= 193) or (compiler == "gcc" and version >= Version("14")) or \
                       (compiler == "clang" and version >= Version("19"))
+        return not std_support
+
+    @property
+    def useRanges(self):
+        """ Does the current compiler version lack support for std::ranges via the STL. """
+        compiler = self.settings.compiler
+        version = Version(self.settings.compiler.version)
+        std_support = (compiler == "msvc" and version >= 193) or (compiler == "gcc" and version >= Version("10")) or \
+                      (compiler == "clang" and version >= Version("16")) or (compiler == "apple-clang" and version >= Version("15"))
         return not std_support
 
     def config_options(self):
@@ -171,6 +179,9 @@ class Morpheus(ConanFile):
 
         if self.useFMT:
             self.requires("fmt/11.0.2", transitive_headers=True)
+
+        if self.useRanges:
+            self.requires("range-v3/cci.20240905", transitive_headers=True)
 
     def system_requirements(self):
         if self.options.get_safe("with_rs_opengl", False):

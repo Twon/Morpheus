@@ -176,8 +176,9 @@ jobs:
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         with:
-          working-directory: ${{github.workspace}}/build/${{env.BUILD_TYPE}}/coverage
           files: ${{github.workspace}}/build/${{env.BUILD_TYPE}}/coverage/cobertura_coverage.xml
+          fail_ci_if_error: true
+          verbose: true
 
       - name: Conan Cache Save
         run: |

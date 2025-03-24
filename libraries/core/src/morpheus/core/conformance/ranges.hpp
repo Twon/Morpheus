@@ -7,7 +7,7 @@
 #endif
 
 // clang-format off
-#if (__cpp_lib_ranges >= 202110L)
+#if (__cpp_lib_ranges >= 201911L)
 
     #include <algorithm> // IWYU pragma: export
     #include <iterator> // IWYU pragma: export
