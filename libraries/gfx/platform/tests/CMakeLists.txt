@@ -6,6 +6,7 @@ morpheus_add_tests(
 target_sources(MorpheusGfxTests
     PRIVATE
         image.tests.cpp
+        render_window.tests.cpp
         vendor.tests.cpp
 )
 
