@@ -9,8 +9,8 @@ namespace morpheus::gfx
 
 TEST_CASE_METHOD(LoggingFixture, "Test parsing of WindowConfig options", "[morpheus.gfx.window_config.add_options]")
 {
-    std::array cliOptions = { 
-        "dummyProgram.exe", 
+    std::array cliOptions = {
+        "dummyProgram.exe",
         "--window-name", "Test Window",
         "--width", "400",
         "--height", "300",
