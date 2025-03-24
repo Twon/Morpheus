@@ -32,7 +32,6 @@ TEST_CASE_METHOD(LoggingFixture, "Test parsing of WindowConfig options", "[morph
     REQUIRE(config.startY == 102);
     REQUIRE(config.fullScreen == true);
     REQUIRE(config.visible == true);
-
 }
 
 } // namespace morpheus::gfx
