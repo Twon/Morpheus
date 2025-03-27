@@ -7,8 +7,8 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
+#include <cstdint>
 #include <optional>
-#include <string_view>
 
 namespace morpheus::serialisation
 {

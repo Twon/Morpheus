@@ -1,5 +1,7 @@
 #pragma once
 
+#include <morpheus/core/conformance/version.hpp>
+
 #if __has_include(<source_location>)
     #include <source_location> // IWYU pragma: export
 #endif
