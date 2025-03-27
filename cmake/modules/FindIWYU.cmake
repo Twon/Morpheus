@@ -24,7 +24,7 @@ option(IWYU_ENABLE "Build with support for Include What You Use" OFF)
 
 set(IWYU_VERBOSITY_LEVEL 3 CACHE STRING "IWYU verbosity level (the higher the level, the more output)")
 
-find_program(iwyu_EXECUTABLE
+find_program(IWYU_EXECUTABLE
     NAMES include-what-you-use
 )
 
@@ -87,15 +87,15 @@ function(get_iwyu_version)
     endforeach()
 endfunction()
 
-if(iwyu_EXECUTABLE)
-    mark_as_advanced(iwyu_EXECUTABLE)
-    get_iwyu_version(EXECUTABLE ${iwyu_EXECUTABLE} RESULT iwyu_VERSION)
-    _iwyu_log("include-what-you-use version ${iwyu_VERSION}")
+if(IWYU_EXECUTABLE)
+    mark_as_advanced(IWYU_EXECUTABLE)
+    get_iwyu_version(EXECUTABLE ${IWYU_EXECUTABLE} RESULT IWYU_VERSION)
+    _iwyu_log("include-what-you-use version ${IWYU_VERSION}")
 endif()
 
 include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(iwyu DEFAULT_MSG iwyu_EXECUTABLE iwyu_VERSION)
-mark_as_advanced(iwyu_EXECUTABLE iwyu_VERSION)
+find_package_handle_standard_args(IWYU DEFAULT_MSG IWYU_EXECUTABLE IWYU_VERSION)
+mark_as_advanced(IWYU_EXECUTABLE IWYU_VERSION)
 
 
 
@@ -105,7 +105,7 @@ macro(_iwyu_args_append arg)
 endmacro()
 
 macro(_iwyu_args_append_if_present option arg)
-    if(IWYU_${option})
+    if(IWYU_ARGS_${option})
         _iwyu_args_append("${arg}")
     endif()
 endmacro()
@@ -117,7 +117,8 @@ enable_iwyu
 Overview
 ^^^^^^^^
 
-Gets the version of Include What You Use.
+Sets up the required configuration and enables usage of Include What You Use via
+CMake built in support.
 
 .. code-block:: cmake
 
@@ -184,16 +185,16 @@ Gets the version of Include What You Use.
 #]=======================================================================]
 function(enable_iwyu)
     set(options QUIET REQUIRED ERROR NO_DEFAULT_MAPPINGS PCH_IN_CODE TRANSITIVE_INCLUDES_ONLY NO_COMMENTS NO_FORWARD_DECLARATIONS CXX17_NAMESPACES QUOTED_INCLUDES_FIRST)
-    set(oneValueArgs MAPPING_FILE MAX_LINE_LENGTH)
+    set(oneValueArgs MAPPING_FILE MAX_LINE_LENGTH VERBOSITY_LEVEL)
     set(multiValueArgs KEEP)
-    cmake_parse_arguments(IWYU "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
+    cmake_parse_arguments(IWYU_ARGS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
-    if(IWYU_UNPARSED_ARGUMENTS)
-        message(FATAL_ERROR "Invalid arguments '${IWYU_UNPARSED_ARGUMENTS}'")
+    if(IWYU_ARGS_UNPARSED_ARGUMENTS)
+        message(FATAL_ERROR "Invalid arguments '${IWYU_ARGS_UNPARSED_ARGUMENTS}'")
     endif()
 
-    if(IWYU_KEYWORDS_MISSING_VALUES)
-        message(FATAL_ERROR "No value provided for '${IWYU_UNPARSED_ARGUMENTS}'")
+    if(IWYU_ARGS_KEYWORDS_MISSING_VALUES)
+        message(FATAL_ERROR "No value provided for '${IWYU_ARGS_KEYWORDS_MISSING_VALUES}'")
     endif()
 
     if (NOT IWYU_ENABLE)
@@ -201,24 +202,24 @@ function(enable_iwyu)
         return()
     endif()
 
-    if(IWYU_KEEP)
-        foreach(pattern ${IWYU_KEEP})
+    if(IWYU_ARGS_KEEP)
+        foreach(pattern ${IWYU_ARGS_KEEP})
             _iwyu_args_append("--keep=${pattern}")
         endforeach()
     endif()
 
-    if(IWYU_MAPPING_FILE)
-        if(NOT EXISTS ${IWYU_MAPPING_FILE})
-            message(FATAL_ERROR "IWYU: Mapping file '${IWYU_MAPPING_FILE}' does not exist")
+    if(IWYU_ARGS_MAPPING_FILE)
+        if(NOT EXISTS ${IWYU_ARGS_MAPPING_FILE})
+            message(FATAL_ERROR "IWYU: Mapping file '${IWYU_ARGS_MAPPING_FILE}' does not exist")
         endif()
-        _iwyu_args_append("--mapping_file=${IWYU_MAPPING_FILE}")
+        _iwyu_args_append("--mapping_file=${IWYU_ARGS_MAPPING_FILE}")
     endif()
 
-    if(IWYU_MAX_LINE_LENGTH)
-        if(NOT IWYU_MAX_LINE_LENGTH GREATER 0)
-            message(FATAL_ERROR "IWYU: Invalid MAX_LINE_LENGTH value = '${IWYU_MAX_LINE_LENGTH}")
+    if(IWYU_ARGS_MAX_LINE_LENGTH)
+        if(NOT IWYU_ARGS_MAX_LINE_LENGTH GREATER 0)
+            message(FATAL_ERROR "IWYU: Invalid MAX_LINE_LENGTH value = '${IWYU_ARGS_MAX_LINE_LENGTH}")
         endif()
-        _iwyu_args_append("--max_line_length=${IWYU_MAX_LINE_LENGTH}")
+        _iwyu_args_append("--max_line_length=${IWYU_ARGS_MAX_LINE_LENGTH}")
     endif()
 
     _iwyu_args_append_if_present(ERROR "--error")
@@ -229,18 +230,22 @@ function(enable_iwyu)
     _iwyu_args_append_if_present(NO_FORWARD_DECLARATIONS "--no_fwd_decls")
     _iwyu_args_append_if_present(CXX17_NAMESPACES "--cxx17ns")
     _iwyu_args_append_if_present(QUOTED_INCLUDES_FIRST "--quoted_includes_first")
-    _iwyu_args_append("--verbose=${IWYU_VERBOSITY_LEVEL}")
 
-    set(CMAKE_CXX_INCLUDE_WHAT_YOU_USE "${iwyu_EXECUTABLE};${_iwyu_args}" PARENT_SCOPE)
+    if(IWYU_ARGS_VERBOSITY_LEVEL)
+        _iwyu_args_append("--verbose=${IWYU_ARGS_VERBOSITY_LEVEL}")
+    endif()
+
+    set(CMAKE_CXX_INCLUDE_WHAT_YOU_USE "${IWYU_EXECUTABLE};${_iwyu_args}" PARENT_SCOPE)
 
     _iwyu_log("  Arguments: ${_iwyu_args}")
     _iwyu_log("Enabling include-what-you-use - done")
 endfunction()
 
 if (IWYU_ENABLE)
+ 
     enable_iwyu(
         QUOTED_INCLUDES_FIRST
         MAX_LINE_LENGTH 160
-        MAPPING_FILE ${PROJECT_SOURCE_DIR}/.iwyu.imp
+        MAPPING_FILE ${PROJECT_SOURCE_DIR}/cmake/iwyu/morpheus.imp
     )
 endif()
