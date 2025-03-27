@@ -1,4 +1,3 @@
-#include "morpheus/core/meta/concepts/string.hpp"
 #include "morpheus/core/meta/is_array.hpp"
 
 #include <catch2/catch_test_macros.hpp>
