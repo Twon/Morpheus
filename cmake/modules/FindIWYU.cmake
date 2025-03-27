@@ -242,7 +242,6 @@ function(enable_iwyu)
 endfunction()
 
 if (IWYU_ENABLE)
- 
     enable_iwyu(
         QUOTED_INCLUDES_FIRST
         MAX_LINE_LENGTH 160
