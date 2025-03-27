@@ -1,6 +1,5 @@
 #pragma once
 
-#include "morpheus/core/base/platform.hpp"
 #include "morpheus/gfx/platform/vendor.hpp"
 
 #include <compare>
@@ -46,7 +45,7 @@ public:
     [[nodiscard]] constexpr auto vendor() const noexcept { return mVendor; }
 
     /// Compare two adapter objects.
-    [[nodiscard]] constexpr auto operator<=>(Adapter const& rhs) const noexcept = default;
+    [[nodiscard]] constexpr auto operator<=>(Adapter const& rhs) const noexcept -> std::strong_ordering = default;
 private:
     /// \name Data Members
     ///@{
