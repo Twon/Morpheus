@@ -3,6 +3,7 @@
 #include <morpheus/catch2/adapters/assert.hpp>
 #include <catch2/catch_all.hpp>
 
+#include <string_view>
 #include <utility>
 
 namespace morpheus
