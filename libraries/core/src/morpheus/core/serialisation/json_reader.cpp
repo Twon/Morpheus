@@ -1,7 +1,6 @@
 #include "morpheus/core/base/verify.hpp"
 #include "morpheus/core/conformance/format.hpp"
 #include "morpheus/core/serialisation/json_reader.hpp"
-#include "morpheus/core/serialisation/read_serialiser.hpp"
 
 namespace morpheus::serialisation
 {

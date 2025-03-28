@@ -2,7 +2,7 @@
 
 #include <cstdint>
 #include <morpheus/core/base/compiler.hpp>
-#include <morpheus/core/morpheuscore_export.h>
+#include <morpheus/core/base/export.hpp>
 
 /*! \defgroup Platform Morpheus Supported Platforms
         The platform group of macros allow for compile time detection of the current platform.

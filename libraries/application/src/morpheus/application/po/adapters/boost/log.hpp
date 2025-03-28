@@ -1,5 +1,6 @@
 #pragma once
 
+// IWYU pragma: always_keep
 #include <boost/any.hpp>
 #include <boost/algorithm/string.hpp>
 #include <boost/log/trivial.hpp>

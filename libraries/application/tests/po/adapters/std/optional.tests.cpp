@@ -1,11 +1,14 @@
-#include "morpheus/application/application.hpp"
-#include "morpheus/application/po/adapters/std/optional.hpp"
+#include "morpheus/application/po/options.hpp"
+#include "morpheus/application/po/adapters/std/optional.hpp" // IWYU pragma: keep
+#include "morpheus/application/version.hpp"
 #include "morpheus/logging.hpp"
 
 #include <catch2/catch_test_macros.hpp>
 
-#include <boost/program_options.hpp>
+#include <boost/program_options/options_description.hpp>
+#include <boost/program_options/value_semantic.hpp>
 
+#include <array>
 #include <optional>
 #include <string>
 

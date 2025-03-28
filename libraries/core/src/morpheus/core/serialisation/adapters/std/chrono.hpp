@@ -1,5 +1,6 @@
 #pragma once
 
+// IWYU pragma: always_keep
 #include "morpheus/core/conformance/date.hpp"
 #include "morpheus/core/conversion/adapters/std/chrono.hpp"
 #include "morpheus/core/meta/is_specialisation.hpp"
