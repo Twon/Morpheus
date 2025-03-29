@@ -7,7 +7,7 @@
 #include "morpheus/core/serialisation/adapters/std/set.hpp"
 #include "morpheus/core/serialisation/adapters/std/unordered_set.hpp"
 #include "morpheus/core/serialisation/adapters/std/vector.hpp"
-#include "morpheus/core/serialisation/mock/reader.hpp"
+//#include "morpheus/core/serialisation/mock/reader.hpp"
 #include "morpheus/core/serialisation/mock/serialisers.hpp"
 #include "morpheus/core/serialisation/mock/writer.hpp"
 #include "morpheus/core/serialisation/write_serialiser.hpp"

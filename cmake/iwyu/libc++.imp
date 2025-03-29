@@ -1,3 +1,4 @@
 [
+    { include: ["<_abort.h>", "private", "<cstdlib>", "public"] },
     { include: ["<__ostream/basic_ostream.h>", "private", "<ostream>", "public"] },
 ]

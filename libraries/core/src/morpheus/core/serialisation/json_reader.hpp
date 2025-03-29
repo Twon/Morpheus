@@ -1,7 +1,6 @@
 #pragma once
 
 #include "morpheus/core/base/assert.hpp"
-#include "morpheus/core/base/cold.hpp"
 #include "morpheus/core/base/export.hpp"
 #include "morpheus/core/functional/overload.hpp"
 #include "morpheus/core/memory/polymorphic_value.hpp"
@@ -14,6 +13,7 @@
 
 #include <magic_enum/magic_enum.hpp>
 
+#include <cmath>
 #include <concepts>
 #include <cstddef>
 #include <cstdint>
@@ -21,7 +21,6 @@
 #include <limits>
 #include <memory>
 #include <optional>
-#include <span>
 #include <string>
 #include <string_view>
 #include <tuple>

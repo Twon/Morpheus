@@ -2,6 +2,7 @@
 #include "morpheus/core/serialisation/adapters/std/source_location.hpp"
 #include "morpheus/core/serialisation/mock/writer.hpp"
 #include "morpheus/core/serialisation/mock/serialisers.hpp"
+#include "morpheus/core/serialisation/write_serialiser.hpp"
 
 #include <catch2/catch_test_macros.hpp>
 #include <gmock/gmock.h>

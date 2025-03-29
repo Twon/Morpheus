@@ -1,11 +1,13 @@
 #include <morpheus/catch2/adapters/assert.hpp>
 #include <morpheus/core/base/assert.hpp>
+#include <morpheus/core/base/assert_handler.hpp>
 #include <morpheus/core/base/scoped_action.hpp>
 #include <morpheus/redirect_stream.hpp>
 
 #include <catch2/catch_test_macros.hpp>
 
 #include <iostream>
+#include <string_view>
 
 namespace morpheus
 {

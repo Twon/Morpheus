@@ -11,6 +11,9 @@
 // #include <boost/process/v1/environment.hpp>
 // #include <boost/dll.hpp>
 
+#include <cstdlib>
+#include <exception>
+
 namespace morpheus::application
 {
 
