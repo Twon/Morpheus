@@ -1,6 +1,5 @@
 #pragma once
 
-#include <morpheus/core/base/platform.hpp>
 #include <cstdint>
 #include <optional>
 

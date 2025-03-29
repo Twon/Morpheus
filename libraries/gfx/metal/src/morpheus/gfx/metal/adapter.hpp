@@ -1,7 +1,8 @@
 #pragma once
 
-#include <morpheus/core/base/platform.hpp>
 #include <morpheus/core/memory/indirect_value.hpp>
+
+#include <cstdint>
 
 namespace morpheus::gfx::metal
 {
@@ -35,7 +36,7 @@ public:
     Adapter& operator=(Adapter const& rhs);
     ~Adapter();
 private:
-    class Implementation;
+    struct Implementation;
 
     /// \name Data Members
     ///@{

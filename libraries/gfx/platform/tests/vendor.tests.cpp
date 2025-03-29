@@ -4,6 +4,9 @@
 #include <catch2/catch_test_macros.hpp>
 #include <magic_enum/magic_enum.hpp>
 
+#include <array>
+#include <optional>
+#include <utility>
 
 namespace morpheus::gfx
 {
