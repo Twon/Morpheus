@@ -76,7 +76,7 @@ class Morpheus(ConanFile):
         "with_rs_vulkan": True,
      }
     requires = (
-        "boost/1.86.0",
+        "boost/1.87.0",
         "ctre/3.8.1",
         "magic_enum/0.9.5",
         "ms-gsl/4.0.0",
