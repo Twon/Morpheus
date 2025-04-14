@@ -1,5 +1,6 @@
 #pragma once
 
+// IWYU pragma: always_keep
 #include "morpheus/core/meta/concepts/aggregate.hpp"
 #include "morpheus/core/serialisation/concepts/write_serialiser.hpp"
 

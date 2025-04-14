@@ -1,8 +1,8 @@
 #include "morpheus/containers/concepts/archetypes/container.hpp"
 #include "morpheus/core/containers/concepts/container.hpp"
-#include "morpheus/core/meta/is_specialisation.hpp"
 
-#include <catch2/catch_all.hpp>
+#include <catch2/catch_test_macros.hpp>
+#include <catch2/catch_template_test_macros.hpp>
 
 #include <array>
 #include <deque>

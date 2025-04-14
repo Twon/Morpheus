@@ -1,11 +1,9 @@
 #pragma once
 
-#include <morpheus/core/base/platform.hpp>
+#include <morpheus/core/base/export.hpp>
 #include <morpheus/core/conformance/source_location.hpp>
 
-#include <cstdint>
 #include <functional>
-#include <string>
 #include <string_view>
 
 namespace morpheus

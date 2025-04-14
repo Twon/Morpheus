@@ -1,5 +1,5 @@
 //#include <morpheus/gfx/metal/video_mode_list.hpp>
-#include <catch2/catch_all.hpp>
+#include <catch2/catch_test_macros.hpp>
 
 namespace morpheus::test
 {
