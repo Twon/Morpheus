@@ -1,6 +1,6 @@
-#include <morpheus/gfx/platform/render_system_factory.hpp>
+#include <morpheus/vis/render_system_factory.hpp>
 
-namespace morpheus::gfx
+namespace morpheus::vis
 {
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -8,4 +8,4 @@ namespace morpheus::gfx
 
 //---------------------------------------------------------------------------------------------------------------------
 
-} // namespace morpheus::gfx
+} // namespace morpheus::vis
