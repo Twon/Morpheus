@@ -27,7 +27,7 @@ env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: Debug
   COMPILER_TYPE: gcc
-  COMPILER_VERSION: 12
+  COMPILER_VERSION: 14
 
   STDLIB: libstdc++11
 
@@ -96,9 +96,9 @@ jobs:
           sudo apt-get install libdatetime-perl
 
       - name: Set up Python
-        uses: actions/setup-python@v5.3.0
+        uses: actions/setup-python@v5.4.0
         with:
-          python-version: '3.11'
+          python-version: '3.13'
 
       - name: Install Python requirements
         run: |
