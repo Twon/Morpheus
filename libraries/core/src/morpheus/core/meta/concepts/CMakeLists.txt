@@ -10,6 +10,7 @@ target_sources(MorpheusCore
             enum.hpp
             hashable.hpp
             satisfies.hpp
+            scannable.hpp
             string.hpp
             trait.hpp
 )

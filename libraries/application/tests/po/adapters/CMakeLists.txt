@@ -4,4 +4,5 @@ add_subdirectory(std)
 target_sources(MorpheusApplicationTests
     PRIVATE
         enum.tests.cpp
+        scannable.tests.cpp
 )

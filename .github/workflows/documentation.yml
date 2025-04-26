@@ -41,20 +41,21 @@ jobs:
         os: [ "ubuntu-latest" ]
 
     steps:
-      - uses: actions/checkout@v4.1.1
+      - uses: actions/checkout@v4.2.2
 
       - name: Cache Conan data
-        uses: actions/cache@v3.3.2
+        uses: actions/cache@v4.2.2
         env:
           cache-name: cache-conan-data
         with:
-          path: ${{github.workspace}}/.conan2/p
-          key: ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-${{ matrix.settings.compiler.version }}-${{ matrix.settings.lib }}
+          path: ${{github.workspace}}/conan_cache_save.tgz
+          key: ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.os }}-${{ env.BUILD_TYPE }}-${{ env.COMPILER_TYPE }}-${{ env.COMPILER_VERSION }}-${{ env.STDLIB }}-documentation
           restore-keys: |
-            ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-${{ matrix.settings.compiler.version }}-
-            ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-
-            ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.settings.os }}-${{ matrix.configuration }}-
-            ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.settings.os }}-
+            ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.os }}-${{ env.BUILD_TYPE }}-${{ env.COMPILER_TYPE }}-${{ env.COMPILER_VERSION }}-${{ env.STDLIB }}
+            ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.os }}-${{ env.BUILD_TYPE }}-${{ env.COMPILER_TYPE }}-${{ env.COMPILER_VERSION }}-
+            ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.os }}-${{ env.BUILD_TYPE }}-${{ env.COMPILER_TYPE }}-
+            ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.os }}-${{ env.BUILD_TYPE }}-
+            ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.os }}-
 
       - name: Install Latest GCC
         uses: egor-tensin/setup-gcc@v1.3
@@ -63,7 +64,7 @@ jobs:
           platform: x64
 
       - name: Set up Python
-        uses: actions/setup-python@v4.7.1
+        uses: actions/setup-python@v5.3.0
         with:
           python-version: '3.11'
 
@@ -84,11 +85,19 @@ jobs:
           sed -i.backup '1a onetbb*:build_type=Release' .conan2/profiles/default
           sed -i.backup '1a mold*:compiler.libcxx=libstdc++11' .conan2/profiles/default
 
+          echo 'core.sources:download_urls=["origin", "https://c3i.jfrog.io/artifactory/conan-center-backup-sources/"]' >> .conan2/global.conf
           echo "tools.cmake.cmaketoolchain:generator = Ninja Multi-Config" >> .conan2/global.conf
           echo "tools.system.package_manager:mode = install" >> .conan2/global.conf
           echo "tools.system.package_manager:sudo = True" >> .conan2/global.conf
 
           conan profile show -pr default
+
+      - name: Conan Cache Restore
+        shell: bash
+        run: |
+          if [ -f ./conan_cache_save.tgz ]; then
+              conan cache restore ./conan_cache_save.tgz
+          fi
 
       - name: Configure Install
         working-directory: ${{github.workspace}}
@@ -122,3 +131,8 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./build/documentation/sphinx
+
+      - name: Conan Cache Save
+        run: |
+          conan cache clean
+          conan cache save "*/*:*"

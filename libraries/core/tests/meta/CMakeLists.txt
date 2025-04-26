@@ -10,3 +10,5 @@ target_sources(MorpheusCoreTests
         satisfies.tests.cpp
         trait.tests.cpp
 )
+
+add_subdirectory(concepts)

@@ -4,4 +4,5 @@ target_sources(MorpheusCore
         FILES
             aggregate.hpp
             any.hpp
+            scannable.hpp
 )
