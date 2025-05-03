@@ -1,6 +1,6 @@
 
 #include <morpheus/core/base/prerequisites.hpp>
-#include <morpheus/gfx/platform/win32/monitor.h>
+#include <morpheus/gfx/platform/win32/monitor.hpp>
 
 #include <vector>
 
