@@ -20,10 +20,10 @@ public:
     /// \name Life cycle
     ///@{
     /// Default construction an empty adapter.
-    constexpr explicit Monitor() noexcept = default;
+    explicit Monitor() noexcept = default;
 
     /// Constructs an adapter from name and id.
-    constexpr explicit Monitor(
+    explicit Monitor(
         std::string_view const name,
         Pixels const width,
         Pixels const height,
@@ -42,25 +42,25 @@ public:
     ///@}
 
     /// Access the adapter name.
-    [[nodiscard]] constexpr auto const& name() const noexcept { return mName; }
+    [[nodiscard]] auto const& name() const noexcept { return mName; }
 
     /// The width in pixels of the render target.
-    [[nodiscard]] constexpr Pixels width() const noexcept { return mWidth; }
+    [[nodiscard]] Pixels width() const noexcept { return mWidth; }
 
     /// The height in pixels of the render target.
-    [[nodiscard]] constexpr Pixels height() const noexcept { return mHeight; }
+    [[nodiscard]] Pixels height() const noexcept { return mHeight; }
 
     /// Left origin of the monitor in pixels, relative to the global virtual screen coordinate space.
-    [[nodiscard]] constexpr PixelDiff x() const noexcept { return mX; }
+    [[nodiscard]] PixelDiff x() const noexcept { return mX; }
 
     /// Top origin of the monitor in pixels, relative to the global virtual screen coordinate space.
-    [[nodiscard]] constexpr PixelDiff y() const noexcept { return mY; }
+    [[nodiscard]] PixelDiff y() const noexcept { return mY; }
 
     /// Is this the primary monitor?
-    [[nodiscard]] constexpr bool primary() const noexcept { return mPrimary; }
+    [[nodiscard]] bool primary() const noexcept { return mPrimary; }
 
     /// Compare two adapter objects.
-    [[nodiscard]] constexpr auto operator<=>(Monitor const& rhs) const noexcept = default;
+    [[nodiscard]] auto operator<=>(Monitor const& rhs) const noexcept = default;
 private:
     /// \name Data Members
     ///@{
