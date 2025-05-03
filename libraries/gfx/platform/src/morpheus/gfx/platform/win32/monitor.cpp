@@ -14,10 +14,10 @@ BOOL CALLBACK MonitorEnumProc(HMONITOR hMon, HDC, LPRECT, LPARAM lParam) {
     if (GetMonitorInfo(hMon, &info)) {
         monitors->emplace_back(Monitor{
             info.szDevice,
-            info.rcMonitor.left,
-            info.rcMonitor.top,
-            info.rcMonitor.right - info.rcMonitor.left,
-            info.rcMonitor.bottom - info.rcMonitor.top,
+            static_cast<Monitor::Pixels>(info.rcMonitor.left),
+            static_cast<Monitor::Pixels>(info.rcMonitor.top),
+            static_cast<Monitor::PixelDiff>(nfo.rcMonitor.right - info.rcMonitor.left),
+            static_cast<Monitor::PixelDiff>(info.rcMonitor.bottom - info.rcMonitor.top),
             (info.dwFlags & MONITORINFOF_PRIMARY) != 0
         });
     }
