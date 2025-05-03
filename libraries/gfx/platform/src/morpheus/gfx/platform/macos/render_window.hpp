@@ -45,9 +45,14 @@ public:
 
     [[nodiscard]] bool visible() const noexcept;
 
+    /// Does the window have focus?
+    [[nodiscard]] bool hasFocus() const;
+
     //    void isHidden(bool const hidden) const noexcept
     //    void isFocus(bool const focus) const noexcept
     //    void isVisible(bool const visible) const noexcept
+
+    void show();
 
     void resize();
 
