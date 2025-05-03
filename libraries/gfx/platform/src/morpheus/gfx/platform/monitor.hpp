@@ -51,10 +51,10 @@ public:
     [[nodiscard]] Pixels height() const noexcept { return mHeight; }
 
     /// Left origin of the monitor in pixels, relative to the global virtual screen coordinate space.
-    [[nodiscard]] PixelDiff x() const noexcept { return mX; }
+    [[nodiscard]] PixelDiff startX() const noexcept { return mX; }
 
     /// Top origin of the monitor in pixels, relative to the global virtual screen coordinate space.
-    [[nodiscard]] PixelDiff y() const noexcept { return mY; }
+    [[nodiscard]] PixelDiff startY() const noexcept { return mY; }
 
     /// Is this the primary monitor?
     [[nodiscard]] bool primary() const noexcept { return mPrimary; }

@@ -1,4 +1,5 @@
 #include <morpheus/gfx/platform/macos/application_delegate.h>
+#include <morpheus/gfx/platform/macos/monitor.h>
 #include <morpheus/gfx/platform/macos/render_window.hpp>
 #include <morpheus/gfx/platform/macos/window_delegate.h>
 
@@ -35,7 +36,17 @@ int main(int argc, const char * argv[])
         // BOOL visible = [standardDefaults stringForKey:@"visible"];
 
         // NSLog (@"Window name: %@\nWidth: %ld\nHeight: %ld\nColour Depth: %ld\n", windowName, static_cast<long>(width), static_cast<long>(height), static_cast<long>(colourDepth));
-
+        for (const auto& monitors : enumerateMonitors())
+        {
+            NSLog(@"Monitor: %s, %d x %d, %d x %d, %s",
+                  monitors.name().c_str(),
+                  monitors.width(),
+                  monitors.height(),
+                  monitors.startX(),
+                  monitors.startY(),
+                  monitors.primary() ? "Primary" : "Secondary");
+        }
+        
         [NSApplication sharedApplication];
         [NSApp setDelegate: [ApplicationDelegate alloc]];
         [NSApp setActivationPolicy:NSApplicationActivationPolicyRegular];
