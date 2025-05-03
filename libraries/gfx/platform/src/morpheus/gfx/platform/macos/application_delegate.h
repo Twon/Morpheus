@@ -5,4 +5,3 @@
 @interface ApplicationDelegate : NSResponder<NSApplicationDelegate>
 - (void) applicationWillFinishLaunching: (NSNotification *)notification;
 @end
-

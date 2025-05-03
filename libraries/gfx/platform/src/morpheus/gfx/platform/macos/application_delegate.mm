@@ -13,7 +13,7 @@
         return;
     mainMenu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
     [NSApp setMainMenu:mainMenu];
-    
+
     // Application Menu (aka Apple Menu)
     NSMenuItem* appleItem = [mainMenu addItemWithTitle:@"" action:nil keyEquivalent:@""];
     NSMenu* appleMenu = [[NSMenu alloc] initWithTitle:@""];

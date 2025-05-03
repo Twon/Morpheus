@@ -30,7 +30,7 @@ public:
         PixelDiff const x,
         PixelDiff const y,
         bool const primary = false
-    )   noexcept 
+    )   noexcept
     :   mName(name)
     ,   mWidth(width)
     ,   mHeight(height)
