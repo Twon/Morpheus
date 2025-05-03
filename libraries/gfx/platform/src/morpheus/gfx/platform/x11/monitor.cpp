@@ -11,7 +11,7 @@ namespace morpheus::gfx::x11
 concurrency::Generator<Monitor> enumerateMonitors() noexcept
 {
     Display* display = XOpenDisplay(nullptr);
-    if (!display) return result;
+    if (!display) co_return;
 
     Window root = DefaultRootWindow(display);
     XRRScreenResources* resources = XRRGetScreenResources(display, root);
