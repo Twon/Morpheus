@@ -13,12 +13,12 @@ BOOL CALLBACK MonitorEnumProc(HMONITOR hMon, HDC, LPRECT, LPARAM lParam) {
     info.cbSize = sizeof(info);
     if (GetMonitorInfo(hMon, &info)) {
         monitors->emplace_back(Monitor{
-            .name = info.szDevice,
-            .x = info.rcMonitor.left,
-            .y = info.rcMonitor.top,
-            .width = info.rcMonitor.right - info.rcMonitor.left,
-            .height = info.rcMonitor.bottom - info.rcMonitor.top,
-            .isPrimary = (info.dwFlags & MONITORINFOF_PRIMARY) != 0
+            info.szDevice,
+            info.rcMonitor.left,
+            info.rcMonitor.top,
+            info.rcMonitor.right - info.rcMonitor.left,
+            info.rcMonitor.bottom - info.rcMonitor.top,
+            (info.dwFlags & MONITORINFOF_PRIMARY) != 0
         });
     }
     return TRUE;
