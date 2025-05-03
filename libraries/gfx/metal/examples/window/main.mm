@@ -46,7 +46,7 @@ int main(int argc, const char * argv[])
                   monitors.startY(),
                   monitors.primary() ? "Primary" : "Secondary");
         }
-        
+
         [NSApplication sharedApplication];
         [NSApp setDelegate: [ApplicationDelegate alloc]];
         [NSApp setActivationPolicy:NSApplicationActivationPolicyRegular];
