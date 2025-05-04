@@ -15,5 +15,5 @@ target_link_libraries(MacOSWindow
 
 target_sources(MacOSWindow
     PRIVATE
-        main.mm
+        main.cpp
 )
