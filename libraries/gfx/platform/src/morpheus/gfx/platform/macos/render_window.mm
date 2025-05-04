@@ -1,5 +1,6 @@
 
 #include <morpheus/core/base/exceptions.hpp>
+#include <morpheus/gfx/platform/macos/application_delegate.h>
 #include <morpheus/gfx/platform/macos/render_window.hpp>
 #include <morpheus/gfx/platform/macos/window_delegate.h>
 
@@ -39,7 +40,17 @@ RenderWindow::RenderWindow(Config const& config)
             [(NSWindow *)mHandle makeKeyAndOrderFront:nil];
         }
 
-        [(NSWindow *)mHandle setDelegate: [WindowDelegate alloc]];
+        [NSApp setDelegate: [ApplicationDelegate alloc]];
+        [NSApp setActivationPolicy:NSApplicationActivationPolicyRegular];
+        [NSApp activateIgnoringOtherApps:YES];
+
+
+        [(NSWindow *)mHandle setBackgroundColor:[NSColor blackColor]];
+        // [window setIsVisible:YES];
+        // [window makeKeyAndOrderFront:windoAw];
+        [[NSApplication sharedApplication] finishLaunching];
+        [NSApp run];
+        //[(NSWindow *)mHandle setDelegate: [WindowDelegate alloc]];
     }
 }
 

@@ -4,6 +4,11 @@
 #import <Foundation/Foundation.h>
 
 @implementation ApplicationDelegate
+
+- (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)sender {
+    return YES;
+}
+
 - (void) applicationWillFinishLaunching: (NSNotification *)notification
 {
     // TODO - Create the menu here.

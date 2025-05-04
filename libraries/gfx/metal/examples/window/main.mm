@@ -44,10 +44,10 @@ int main(int argc, const char * argv[])
             NSLog(@"%s", std::format("Monitor: {}", monitors).c_str());
         }
 
-        [NSApplication sharedApplication];
-        [NSApp setDelegate: [ApplicationDelegate alloc]];
-        [NSApp setActivationPolicy:NSApplicationActivationPolicyRegular];
-        [NSApp activateIgnoringOtherApps:YES];
+        // [NSApplication sharedApplication];
+        // [NSApp setDelegate: [ApplicationDelegate alloc]];
+        // [NSApp setActivationPolicy:NSApplicationActivationPolicyRegular];
+        // [NSApp activateIgnoringOtherApps:YES];
 
         RenderWindow::Config config;
         RenderWindow window(config);
@@ -71,11 +71,11 @@ int main(int argc, const char * argv[])
 
 
 
-        [[NSApplication sharedApplication] finishLaunching];
+        // [[NSApplication sharedApplication] finishLaunching];
 
-        // [window setBackgroundColor:[NSColor blackColor]];
-        // [window setIsVisible:YES];
-        // [window makeKeyAndOrderFront:window];
-        [NSApp run];
+        // // [window setBackgroundColor:[NSColor blackColor]];
+        // // [window setIsVisible:YES];
+        // // [window makeKeyAndOrderFront:window];
+        // [NSApp run];
     }
 }
