@@ -1,4 +1,5 @@
 
+#include <morpheus/core/base/exceptions.hpp>
 #include <morpheus/gfx/platform/macos/render_window.hpp>
 #include <morpheus/gfx/platform/macos/window_delegate.h>
 
@@ -11,6 +12,13 @@ RenderWindow::RenderWindow(Config const& config)
 : gfx::RenderWindow(config)
 {
     @autoreleasepool {
+
+        if ([NSThread currentThread] != [NSThread mainThread])
+        {
+            // See https://lists.apple.com/archives/cocoa-dev/2011/Feb/msg00460.html
+            throwRuntimeException("Cannot create a window from a worker thread. (OS X limitation)");
+        }
+
         NSString* title = [[NSString alloc] initWithUTF8String:config.windowName.c_str()];
 
         NSRect frame = NSMakeRect(config.startX, config.startY, config.width, config.height);
@@ -30,6 +38,8 @@ RenderWindow::RenderWindow(Config const& config)
         {
             [(NSWindow *)mHandle makeKeyAndOrderFront:nil];
         }
+
+        [(NSWindow *)mHandle setDelegate: [WindowDelegate alloc]];
     }
 }
 

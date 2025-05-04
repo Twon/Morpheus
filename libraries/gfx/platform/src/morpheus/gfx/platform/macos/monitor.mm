@@ -20,10 +20,10 @@ concurrency::Generator<Monitor> enumerateMonitors() noexcept
 
         co_yield Monitor{
             "Display " + std::to_string(id),
-            static_cast<Monitor::Pixels>(bounds.size.width),
-            static_cast<Monitor::Pixels>(bounds.size.height),
             static_cast<Monitor::PixelDiff>(bounds.origin.x),
             static_cast<Monitor::PixelDiff>(bounds.origin.y),
+            static_cast<Monitor::Pixels>(bounds.size.width),
+            static_cast<Monitor::Pixels>(bounds.size.height),
             isPrimary
         };
     }

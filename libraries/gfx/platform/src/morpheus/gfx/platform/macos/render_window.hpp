@@ -62,7 +62,7 @@ public:
 private:
 
     WindowHandle mHandle;
-
+    
     // Should we use a Windows controller subclass to enable unit testing?
     // https://eschatologist.net/blog/?p=10
 };

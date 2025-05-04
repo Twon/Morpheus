@@ -1,3 +1,4 @@
+#include <morpheus/core/conformance/print.hpp>
 #include <morpheus/gfx/platform/macos/application_delegate.h>
 #include <morpheus/gfx/platform/macos/monitor.h>
 #include <morpheus/gfx/platform/macos/render_window.hpp>
@@ -6,6 +7,7 @@
 #import <Cocoa/Cocoa.h>
 #import <Foundation/Foundation.h>
 
+using namespace morpheus;
 using namespace morpheus::gfx::macos;
 
 int main(int argc, const char * argv[])
@@ -38,26 +40,14 @@ int main(int argc, const char * argv[])
         // NSLog (@"Window name: %@\nWidth: %ld\nHeight: %ld\nColour Depth: %ld\n", windowName, static_cast<long>(width), static_cast<long>(height), static_cast<long>(colourDepth));
         for (const auto& monitors : enumerateMonitors())
         {
-            NSLog(@"Monitor: %s, %d x %d, %d x %d, %s",
-                  monitors.name().c_str(),
-                  monitors.width(),
-                  monitors.height(),
-                  monitors.startX(),
-                  monitors.startY(),
-                  monitors.primary() ? "Primary" : "Secondary");
+            //fmt_ns::print("Monitor: {}", monitors);
+            NSLog(@"%s", std::format("Monitor: {}", monitors).c_str());
         }
 
         [NSApplication sharedApplication];
         [NSApp setDelegate: [ApplicationDelegate alloc]];
         [NSApp setActivationPolicy:NSApplicationActivationPolicyRegular];
         [NSApp activateIgnoringOtherApps:YES];
-
-        if ([NSThread currentThread] != [NSThread mainThread])
-        {
-            // See https://lists.apple.com/archives/cocoa-dev/2011/Feb/msg00460.html
-            NSLog (@"Cannot create a window from a worker thread. (OS X limitation)");
-            return 1;
-        }
 
         RenderWindow::Config config;
         RenderWindow window(config);

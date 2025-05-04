@@ -23,10 +23,10 @@ concurrency::Generator<Monitor> enumerateMonitors() noexcept
             if (crtc) {
                 co_yield Monitor{
                     output->name,
-                    static_cast<Monitor::Pixels>(crtc->x),
-                    static_cast<Monitor::Pixels>(crtc->y),
                     static_cast<Monitor::PixelDiff>(crtc->width),
                     static_cast<Monitor::PixelDiff>(crtc->height),
+                    static_cast<Monitor::Pixels>(crtc->x),
+                    static_cast<Monitor::Pixels>(crtc->y),
                     (resources->outputs[i] == XRRGetOutputPrimary(display, root))
                 };
                 XRRFreeCrtcInfo(crtc);

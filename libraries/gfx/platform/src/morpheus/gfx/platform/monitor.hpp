@@ -1,10 +1,11 @@
 #pragma once
 
+#include <morpheus/core/conformance/format.hpp>
+
 #include <compare>
-#include <concepts>
+#include <cstdint>
 #include <string>
 #include <string_view>
-#include <type_traits>
 
 namespace morpheus::gfx
 {
@@ -25,17 +26,17 @@ public:
     /// Constructs an adapter from name and id.
     explicit Monitor(
         std::string_view const name,
-        Pixels const width,
-        Pixels const height,
         PixelDiff const x,
         PixelDiff const y,
+        Pixels const width,
+        Pixels const height,
         bool const primary = false
     )   noexcept
     :   mName(name)
-    ,   mWidth(width)
-    ,   mHeight(height)
     ,   mX(x)
     ,   mY(y)
+    ,   mWidth(width)
+    ,   mHeight(height)
     ,   mPrimary(primary)
     {
     }
@@ -65,12 +66,29 @@ private:
     /// \name Data Members
     ///@{
     std::string mName; //!< The name of the monitor
-    Pixels mWidth = 0; //!< The width in pixels of the screen
-    Pixels mHeight = 0; //!< The height in pixels of the screen
     PixelDiff mX = 0; //!< Left origin of the monitor in pixels, relative to the global virtual screen coordinate space.
     PixelDiff mY = 0; //!< Top origin of the monitor in pixels, relative to the global virtual screen coordinate space.
+    Pixels mWidth = 0; //!< The width in pixels of the screen
+    Pixels mHeight = 0; //!< The height in pixels of the screen
     bool mPrimary = false; //!< Is this the primary monitor?
     ///@}
 };
 
 } // namespace morpheus::gfx
+
+template <>
+struct morpheus::fmt_ns::formatter<morpheus::gfx::Monitor>
+{
+    template <typename Context>
+    constexpr auto parse(Context& context)
+    {
+        return std::begin(context);
+    }
+
+    template <typename Context>
+    constexpr auto format(morpheus::gfx::Monitor const& value, Context& context) const
+    {
+        return morpheus::fmt_ns::format_to(context.out(), "{{name={},{{x={},y={}}},{{width={},height={}}},primary={}}}", 
+            value.name(), value.startX(), value.startY(), value.width(), value.height(), value.primary());
+    }
+};
