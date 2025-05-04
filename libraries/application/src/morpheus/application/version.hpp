@@ -1,6 +1,7 @@
 #pragma once
 
 #include <morpheus/core/conformance/format.hpp>
+#include <morpheus/core/conformance/scan.hpp>
 
 #include <cstdint>
 
@@ -33,3 +34,20 @@ struct morpheus::fmt_ns::formatter<morpheus::application::Version>
         return morpheus::fmt_ns::format_to(context.out(), "{{major={},minor={},patch={}}}", value.major, value.minor, value.patch);
     }
 };
+
+template <>
+struct morpheus::scan_ns::scanner<morpheus::application::Version> : morpheus::scan_ns::scanner<std::string>
+{
+    template <typename Context>
+    auto scan(morpheus::application::Version& val, Context& ctx) const -> morpheus::scan_ns::scan_expected<typename Context::iterator>
+    {
+        return morpheus::scan_ns::scan<std::uint16_t, std::uint16_t, std::uint16_t>(ctx.range(), "{{major={},minor={},patch={}}}")
+            .transform(
+                [&val](auto const& result)
+                {
+                    std::tie(val.major, val.minor, val.patch) = result.values();
+                    return result.begin();
+                });
+    }
+};
+
