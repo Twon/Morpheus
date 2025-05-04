@@ -70,7 +70,7 @@ public:
         return std::tie(mName, mX, mY, mWidth, mHeight, mPrimary) <=> std::tie(rhs.mName, rhs.mX, rhs.mY, rhs.mWidth, rhs.mHeight, rhs.mPrimary);
     }
 
-    [[nodiscard]] bool operator==(const Monitor& rhs) const
+    [[nodiscard]] bool operator==(const Monitor& rhs) const noexcept
     {
         return std::tie(mName, mX, mY, mWidth, mHeight, mPrimary) == std::tie(rhs.mName, rhs.mX, rhs.mY, rhs.mWidth, rhs.mHeight, rhs.mPrimary);
     }

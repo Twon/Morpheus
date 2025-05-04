@@ -35,7 +35,7 @@ public:
         return std::tie(mName, mPort) <=> std::tie(rhs.mName, rhs.mPort);
     }
 
-    [[nodiscard]] bool operator==(const Monitor& rhs) const
+    [[nodiscard]] bool operator==(const Monitor& rhs) const noexcept
     {
         return std::tie(mName, mPort) == std::tie(rhs.mName, rhs.mPort);
     }
