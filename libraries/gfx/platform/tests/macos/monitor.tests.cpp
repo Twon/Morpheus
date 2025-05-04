@@ -5,10 +5,11 @@
 namespace morpheus::gfx::macos
 {
 
-TEST_CASE("MacMonitorEnumerator returns at least one screen", "[morpheus.gfx.macos.monitor]")
+TEST_CASE("enumerateMonitors for mac returns at least one screen", "[morpheus.gfx.macos.monitor]")
 {
     const auto monitors = enumerateMonitors();
-    const auto monitorsCollection = ranges::to<std::vector>(monitors);
+    std::vector<Monitor> monitorsCollection;
+    ranges::copy(monitors.begin(), monitors.end(), std::back_inserter(monitorsCollection));
     REQUIRE(!monitorsCollection.empty());
 }
 

@@ -2,14 +2,16 @@
 
 #include <catch2/catch_test_macros.hpp>
 
+#include <algorithm>
 
 namespace morpheus::gfx::x11
 {
 
-TEST_CASE("MacMonitorEnumerator returns at least one screen", "[morpheus.gfx.x11.monitor]")
+TEST_CASE("enumerateMonitors for x11 returns at least one screen", "[morpheus.gfx.x11.monitor]")
 {
     const auto monitors = enumerateMonitors();
-    const auto monitorsCollection = ranges::to<std::vector>(monitors);
+    std::vector<Monitor> monitorsCollection;
+    ranges::copy(monitors.begin(), monitors.end(), std::back_inserter(monitorsCollection));
     REQUIRE(!monitorsCollection.empty());
 }
 
