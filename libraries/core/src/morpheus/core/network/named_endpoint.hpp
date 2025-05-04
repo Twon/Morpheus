@@ -34,6 +34,11 @@ public:
     {
         return std::tie(mName, mPort) <=> std::tie(rhs.mName, rhs.mPort);
     }
+
+    [[nodiscard]] bool operator==(const Monitor& rhs) const
+    {
+        return std::tie(mName, mPort) == std::tie(rhs.mName, rhs.mPort);
+    }
 #endif
 
 private:
