@@ -1,5 +1,5 @@
 #include <morpheus/core/conformance/print.hpp>
-#include <morpheus/gfx/platform/macos/monitor.h>
+#include <morpheus/gfx/platform/macos/monitor.hpp>
 #include <morpheus/gfx/platform/macos/render_window.hpp>
 
 #include <iostream>

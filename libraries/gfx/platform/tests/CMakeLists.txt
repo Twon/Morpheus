@@ -16,6 +16,10 @@ target_link_libraries(MorpheusGfxTests
         morpheus::gfx::platform
 )
 
+if (APPLE)
+    add_subdirectory(macos)
+endif(APPLE)
+
 if (WIN32)
     add_subdirectory(win32)
 endif(WIN32)

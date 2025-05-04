@@ -3,7 +3,7 @@ target_sources(MorpheusGfxPlatform
         FILE_SET HEADERS
         FILES
             application_delegate.h
-            monitor.h
+            monitor.hpp
             render_window.hpp
             window_delegate.h
     PRIVATE

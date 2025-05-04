@@ -1,5 +1,5 @@
 
-#include <morpheus/gfx/platform/macos/monitor.h>
+#include <morpheus/gfx/platform/macos/monitor.hpp>
 
 #include <CoreGraphics/CoreGraphics.h>
 #include <vector>

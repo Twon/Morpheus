@@ -20,7 +20,7 @@ struct Version
 } // namespace morpheus::application
 
 template <>
-struct morpheus::fmt_ns::formatter<morpheus::application::Version>
+struct morpheus::fmt_ns::formatter<morpheus::application::Version> : morpheus::fmt_ns::formatter<std::string>
 {
     template <typename Context>
     constexpr auto parse(Context& context)

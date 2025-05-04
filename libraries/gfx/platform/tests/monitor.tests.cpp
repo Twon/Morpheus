@@ -6,8 +6,7 @@
 namespace morpheus::gfx
 {
 
-
-TEST_CASE("Ensure image accessors", "[morpheus.gfx.monitor.constructors]")
+TEST_CASE("Ensure monitors construct", "[morpheus.gfx.monitor.constructors]")
 {
     constexpr std::string_view name = "Default Monitor";
     constexpr Monitor::PixelDiff x = 100;
@@ -58,7 +57,7 @@ TEST_CASE("Ensure image accessors", "[morpheus.gfx.monitor.constructors]")
     }
 }
 
-TEST_CASE("Ensure image accessors", "[morpheus.gfx.monitor.assignment]")
+TEST_CASE("Ensure monitor assign correctly", "[morpheus.gfx.monitor.assignment]")
 {
     constexpr std::string_view name = "Default Monitor";
     constexpr Monitor::PixelDiff x = 100;
@@ -144,6 +143,12 @@ TEST_CASE("Ensure image accessors", "[morpheus.gfx.monitor.comparison]")
         REQUIRE(monitor2 <= monitor2);
         REQUIRE(monitor2 <= monitor3);
     }
+}
+
+TEST_CASE("Ensure format is supported for monitors", "[morpheus.gfx.monitor.fmt]")
+{
+    Monitor monitor("Main Display", 100, 200, 600, 800, true);
+    REQUIRE(fmt_ns::format("{}", monitor) == "{name=Main Display,{x=100,y=200},{width=600,height=800},primary=true}");
 }
 
 }

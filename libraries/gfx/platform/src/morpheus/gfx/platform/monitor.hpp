@@ -93,7 +93,7 @@ private:
 } // namespace morpheus::gfx
 
 template <>
-struct morpheus::fmt_ns::formatter<morpheus::gfx::Monitor>
+struct morpheus::fmt_ns::formatter<morpheus::gfx::Monitor> : morpheus::fmt_ns::formatter<std::string>
 {
     template <typename Context>
     constexpr auto parse(Context& context)
