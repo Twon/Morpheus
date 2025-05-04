@@ -50,4 +50,3 @@ struct morpheus::scan_ns::scanner<morpheus::application::Version> : morpheus::sc
                 });
     }
 };
-
