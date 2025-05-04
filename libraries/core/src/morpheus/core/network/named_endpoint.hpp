@@ -25,7 +25,7 @@ public:
 
     [[nodiscard]] auto port() const noexcept { return mPort; }
 
-#if defined(__cpp_lib_constexpr_string) && (__cpp_lib_constexpr_string >= 201907L)
+#if defined(__cpp_lib_three_way_comparison) && (__cpp_lib_three_way_comparison >= 201907L)
     /// Compare two adapter objects.
     [[nodiscard]] auto operator<=>(NamedEndpoint const& rhs) const noexcept = default;
 #else
