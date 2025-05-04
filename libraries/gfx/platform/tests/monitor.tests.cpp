@@ -9,6 +9,13 @@ namespace morpheus::gfx
 
 TEST_CASE("Ensure image accessors", "[morpheus.gfx.monitor.constructors]")
 {
+    constexpr std::string_view name = "Default Monitor";
+    constexpr Monitor::PixelDiff x = 100;
+    constexpr Monitor::PixelDiff y = 200;
+    constexpr Monitor::Pixels width = 600;
+    constexpr Monitor::Pixels height = 800;
+    constexpr bool primary = true;
+
     SECTION("Default constructor")
     {
         Monitor monitor;
@@ -20,12 +27,6 @@ TEST_CASE("Ensure image accessors", "[morpheus.gfx.monitor.constructors]")
     }
     SECTION("Constructor with parameters")
     {
-        constexpr std::string_view name = "Default Monitor";
-        constexpr Monitor::PixelDiff x = 100;
-        constexpr Monitor::PixelDiff y = 200;
-        constexpr Monitor::Pixels width = 600;
-        constexpr Monitor::Pixels height = 800;
-        constexpr bool primary = true;
         Monitor monitor(name, x, y, width, height, primary);
         REQUIRE(monitor.name() == name);
         REQUIRE(monitor.startX() == x);
@@ -36,7 +37,7 @@ TEST_CASE("Ensure image accessors", "[morpheus.gfx.monitor.constructors]")
     }
     SECTION("Copy constructor")
     {
-        Monitor monitor1("Monitor 1", 100, 200, 600, 800, true);
+        Monitor monitor1(name, x, y, width, height, primary);
         Monitor monitor2(monitor1);
         REQUIRE(monitor2.startX() == monitor1.startX());
         REQUIRE(monitor2.startY() == monitor1.startY());
@@ -46,21 +47,29 @@ TEST_CASE("Ensure image accessors", "[morpheus.gfx.monitor.constructors]")
     }
     SECTION("Move constructor")
     {
-        Monitor monitor1("Monitor 1", 100, 200, 600, 800, true);
+        Monitor monitor1(name, x, y, width, height, primary);
         Monitor monitor2(std::move(monitor1));
-        REQUIRE(monitor2.startX() == 100);
-        REQUIRE(monitor2.startY() == 200);
-        REQUIRE(monitor2.width() == 600);
-        REQUIRE(monitor2.height() == 800);
-        REQUIRE(monitor2.primary() == true);
+        REQUIRE(monitor2.name() == name);
+        REQUIRE(monitor2.startX() == x);
+        REQUIRE(monitor2.startY() == y);
+        REQUIRE(monitor2.width() == width);
+        REQUIRE(monitor2.height() == height);
+        REQUIRE(monitor2.primary() == primary);
     }
 }
 
 TEST_CASE("Ensure image accessors", "[morpheus.gfx.monitor.assignment]")
 {
+    constexpr std::string_view name = "Default Monitor";
+    constexpr Monitor::PixelDiff x = 100;
+    constexpr Monitor::PixelDiff y = 200;
+    constexpr Monitor::Pixels width = 600;
+    constexpr Monitor::Pixels height = 800;
+    constexpr bool primary = true;
+
     SECTION("Copy assignment operator")
     {
-        Monitor monitor1("Monitor 1", 100, 200, 600, 800, true);
+        Monitor monitor1(name, x, y, width, height, primary);
         Monitor monitor2;
         monitor2 = monitor1;
         REQUIRE(monitor2.startX() == monitor1.startX());
@@ -71,121 +80,70 @@ TEST_CASE("Ensure image accessors", "[morpheus.gfx.monitor.assignment]")
     }
     SECTION("Move assignment operator")
     {
-        Monitor monitor1("Monitor 1", 100, 200, 600, 800, true);
+        Monitor monitor1(name, x, y, width, height, primary);
         Monitor monitor2;
         monitor2 = std::move(monitor1);
-        REQUIRE(monitor2.startX() == 100);
-        REQUIRE(monitor2.startY() == 200);
-        REQUIRE(monitor2.width() == 600);
-        REQUIRE(monitor2.height() == 800);
-        REQUIRE(monitor2.primary() == true);
+        REQUIRE(monitor2.name() == name);
+        REQUIRE(monitor2.startX() == x);
+        REQUIRE(monitor2.startY() == y);
+        REQUIRE(monitor2.width() == width);
+        REQUIRE(monitor2.height() == height);
+        REQUIRE(monitor2.primary() == primary);
     }
 }
-/*
+
 TEST_CASE("Ensure image accessors", "[morpheus.gfx.monitor.comparison]")
 {
+    constexpr std::string_view name = "Default Monitor";
+    constexpr Monitor::PixelDiff x = 100;
+    constexpr Monitor::PixelDiff y = 200;
+    constexpr Monitor::Pixels width = 600;
+    constexpr Monitor::Pixels height = 800;
+    constexpr bool primary = true;
+
     SECTION("Comparison operator")
     {
-        Monitor monitor1("Monitor 1", 100, 200, 600, 800, true);
-        Monitor monitor2("Monitor 2", 100, 200, 600, 800, true);
-        REQUIRE(monitor1 == monitor2);
-        monitor2 = Monitor("Monitor 3", 100, 200, 600, 800, false);
+        Monitor monitor1(name, x, y, width, height, primary);
+        REQUIRE(monitor1 == monitor1);
+        Monitor monitor2 = Monitor("Monitor 2", x, y, width, height, false);
         REQUIRE(monitor1 != monitor2);
     }
     SECTION("Less than operator")
     {
-        Monitor monitor1("Monitor 1", 100, 200, 600, 800, true);
-        Monitor monitor2("Monitor 2", 100, 200, 600, 800, true);
+        Monitor monitor1("Monitor 1", x, y, width, height, true);
+        Monitor monitor2("Monitor 2", x, y, width, height, true);
         REQUIRE(monitor1 < monitor2);
-        monitor2 = Monitor("Monitor 3", 100, 200, 600, 800, false);
-        REQUIRE(monitor1 > monitor2);
+        Monitor monitor3 = Monitor("Monitor 3", x, y, width, height, false);
+        REQUIRE(monitor3 > monitor2);
     }
     SECTION("Greater than operator")
     {
-        Monitor monitor1("Monitor 1", 100, 200, 600, 800, true);
-        Monitor monitor2("Monitor 2", 100, 200, 600, 800, true);
-        REQUIRE(monitor1 > monitor2);
-        monitor2 = Monitor("Monitor 3", 100, 200, 600, 800, false);
-        REQUIRE(monitor1 < monitor2);
+        Monitor monitor1("Monitor 1", x, y, width, height, true);
+        Monitor monitor2("Monitor 2", x, y, width, height, true);
+        REQUIRE(monitor2 > monitor1);
+        Monitor monitor3 = Monitor("Monitor 3", x, y, width, height, false);
+        REQUIRE(monitor2 < monitor3);
     }
     SECTION("Less than or equal to operator")
     {
-        Monitor monitor1("Monitor 1", 100, 200, 600, 800, true);
-        Monitor monitor2("Monitor 2", 100, 200, 600, 800, true);
+        Monitor monitor1("Monitor 1", x, y, width, height, true);
+        Monitor monitor2("Monitor 2", x, y, width, height, true);
         REQUIRE(monitor1 <= monitor2);
-        monitor2 = Monitor("Monitor 3", 100, 200, 600, 800, false);
-        REQUIRE(monitor1 >= monitor2);
+        REQUIRE(monitor2 <= monitor2);
+        Monitor monitor3 = Monitor("Monitor 3", x, y, width, height, false);
+        REQUIRE(monitor3 >= monitor2);
+        REQUIRE(monitor3 >= monitor3);
     }
     SECTION("Greater than or equal to operator")
     {
-        Monitor monitor1("Monitor 1", 100, 200, 600, 800, true);
-        Monitor monitor2("Monitor 2", 100, 200, 600, 800, true);
-        REQUIRE(monitor1 >= monitor2);
-        monitor2 = Monitor("Monitor 3", 100, 200, 600, 800, false);
-        REQUIRE(monitor1 <= monitor2);
-    }
-    SECTION("Name accessor")
-    {
-        Monitor monitor("Monitor 1", 100, 200, 600, 800, true);
-        REQUIRE(monitor.name() == "Monitor 1");
-    }
-    SECTION("Width accessor")
-    {
-        Monitor monitor("Monitor 1", 100, 200, 600, 800, true);
-        REQUIRE(monitor.width() == 600);
-    }
-    SECTION("Height accessor")
-    {
-        Monitor monitor("Monitor 1", 100, 200, 600, 800, true);
-        REQUIRE(monitor.height() == 800);
-    }
-    SECTION("StartX accessor")
-    {
-        Monitor monitor("Monitor 1", 100, 200, 600, 800, true);
-        REQUIRE(monitor.startX() == 100);
-    }
-    SECTION("StartY accessor")
-    {
-        Monitor monitor("Monitor 1", 100, 200, 600, 800, true);
-        REQUIRE(monitor.startY() == 200);
-    }
-    SECTION("Primary accessor")
-    {
-        Monitor monitor("Monitor 1", 100, 200, 600, 800, true);
-        REQUIRE(monitor.primary() == true);
-    }
-    SECTION("Primary accessor false")
-    {
-        Monitor monitor("Monitor 1", 100, 200, 600, 800, false);
-        REQUIRE(monitor.primary() == false);
-    }
-    SECTION("Primary accessor default")
-    {
-        Monitor monitor("Monitor 1", 100, 200, 600, 800);
-        REQUIRE(monitor.primary() == false);
-    }
-    SECTION("Primary accessor default true")
-    {
-        Monitor monitor("Monitor 1", 100, 200, 600, 800, true);
-        REQUIRE(monitor.primary() == true);
-    }
-    SECTION("Primary accessor default false")
-    {
-        Monitor monitor("Monitor 1", 100, 200, 600, 800, false);
-        REQUIRE(monitor.primary() == false);
-    }
-    SECTION("Primary accessor default empty")
-    {
-        Monitor monitor;
-        REQUIRE(monitor.primary() == false);
-    }
-    SECTION("Primary accessor default empty true")
-    {
-        Monitor monitor;
-        monitor = Monitor("Monitor 1", 100, 200, 600, 800, true);
-        REQUIRE(monitor.primary() == true);
+        Monitor monitor1("Monitor 1", x, y, width, height, true);
+        Monitor monitor2("Monitor 2", x, y, width, height, true);
+        REQUIRE(monitor2 >= monitor2);
+        REQUIRE(monitor2 >= monitor2);
+        Monitor monitor3 = Monitor("Monitor 3", x, y, width, height, false);
+        REQUIRE(monitor2 <= monitor2);
+        REQUIRE(monitor2 <= monitor3);
     }
 }
-*/
 
 }
