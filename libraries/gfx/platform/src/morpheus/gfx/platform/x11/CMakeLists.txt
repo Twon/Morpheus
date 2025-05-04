@@ -8,3 +8,13 @@ target_sources(MorpheusGfxPlatform
         monitor.cpp
         render_window.cpp
 )
+
+find_package(X11 REQUIRED)
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(XRANDR REQUIRED xrandr)
+
+target_link_libraries(MorpheusGfxPlatform
+    PRIVATE
+        X11
+        Xrandr
+)
