@@ -88,7 +88,7 @@ struct morpheus::fmt_ns::formatter<morpheus::gfx::Monitor>
     template <typename Context>
     constexpr auto format(morpheus::gfx::Monitor const& value, Context& context) const
     {
-        return morpheus::fmt_ns::format_to(context.out(), "{{name={},{{x={},y={}}},{{width={},height={}}},primary={}}}", 
+        return morpheus::fmt_ns::format_to(context.out(), "{{name={},{{x={},y={}}},{{width={},height={}}},primary={}}}",
             value.name(), value.startX(), value.startY(), value.width(), value.height(), value.primary());
     }
 };
