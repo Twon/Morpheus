@@ -10,6 +10,7 @@ namespace morpheus::gfx::x11
 
 concurrency::Generator<Monitor> enumerateMonitors() noexcept
 {
+    // LCOV_EXCL_START
     Display* display = XOpenDisplay(nullptr);
     if (!display) co_return;
 
@@ -36,6 +37,7 @@ concurrency::Generator<Monitor> enumerateMonitors() noexcept
     }
     XRRFreeScreenResources(resources);
     XCloseDisplay(display);
+    // LCOV_EXCL_STOP
 }
 
 } // namespace morpheus::gfx::x11

@@ -9,6 +9,7 @@ namespace morpheus::gfx::macos
 
 concurrency::Generator<Monitor> enumerateMonitors() noexcept
 {
+    // LCOV_EXCL_START
     uint32_t displayCount = 0;
     CGGetActiveDisplayList(0, nullptr, &displayCount);
     std::vector<CGDirectDisplayID> displays(displayCount);
@@ -27,6 +28,7 @@ concurrency::Generator<Monitor> enumerateMonitors() noexcept
             isPrimary
         };
     }
+    // LCOV_EXCL_STOP
 }
 
 } // namespace morpheus::gfx::macos
