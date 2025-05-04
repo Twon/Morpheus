@@ -7,7 +7,7 @@ namespace morpheus::gfx
 {
 
 
-TEST_CASE("Ensure image accessors", "[morpheus.gfx.monitor.construtors]")
+TEST_CASE("Ensure image accessors", "[morpheus.gfx.monitor.constructors]")
 {
     SECTION("Default constructor")
     {
