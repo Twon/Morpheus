@@ -1,23 +1,23 @@
+
 #pragma once
 
 #include <morpheus/gfx/platform/render_window.hpp>
 #include <morpheus/core/base/prerequisites.hpp>
 
-#include <wil/resource.h>
 #include <string>
 
-namespace morpheus::gfx::win32
+namespace morpheus::gfx::macos
 {
 
 /*! \class RenderWindow
-        A specialisation of the render window for the Windows platform based on the Win32 API.
+        A specialisation of the render window for the MacOS platform based on the Cocoa API.
  */
 class RenderWindow : protected gfx::RenderWindow {
 public:
-    using WindowHandle = HWND;
+    using WindowHandle = void*;
     using Config = gfx::RenderWindow::Config;
 
-    explicit RenderWindow(Config const config = Config{});
+    explicit RenderWindow(Config const& config = Config{});
     explicit RenderWindow(WindowHandle const window);
 
     explicit RenderWindow(RenderWindow const&) = delete;
@@ -45,19 +45,26 @@ public:
 
     [[nodiscard]] bool visible() const noexcept;
 
+    /// Does the window have focus?
+    [[nodiscard]] bool hasFocus() const;
+
     //    void isHidden(bool const hidden) const noexcept
     //    void isFocus(bool const focus) const noexcept
     //    void isVisible(bool const visible) const noexcept
 
+    void show();
+
     void resize();
 
     /// Access the underlying OS Window handle.
-    auto getHandle() const noexcept { return mWindow.get(); }
+    auto getHandle() const noexcept { return mHandle; }
 
 private:
-    friend LRESULT WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
-    wil::unique_hwnd mWindow; /// OS window handle
+    WindowHandle mHandle;
+
+    // Should we use a Windows controller subclass to enable unit testing?
+    // https://eschatologist.net/blog/?p=10
 };
 
-} // namespace morpheus::gfx::win32
+} // namespace morpheus::gfx::macos
