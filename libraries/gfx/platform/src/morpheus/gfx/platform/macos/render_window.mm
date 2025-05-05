@@ -47,10 +47,11 @@ RenderWindow::RenderWindow(Config const& config)
 
         [(NSWindow *)mHandle setBackgroundColor:[NSColor blackColor]];
         // [window setIsVisible:YES];
-        // [window makeKeyAndOrderFront:windoAw];
+        // [window makeKeyAndOrderFront:window];
+
+        // [(NSWindow *)mHandle setDelegate: [WindowDelegate alloc]];
         [[NSApplication sharedApplication] finishLaunching];
-        [NSApp run];
-        //[(NSWindow *)mHandle setDelegate: [WindowDelegate alloc]];
+        // [NSApp run];
     }
 }
 
@@ -74,6 +75,10 @@ RenderWindow::RenderWindow(WindowHandle const window)
 RenderWindow::~RenderWindow()
 {
     @autoreleasepool {
+
+        // WindowDelegate* delegate = (WindowDelegate*)[(NSWindow*)mHandle delegate];
+        // [delegate release];
+        
         if (mHandle)
         {
             [(NSWindow *)mHandle close];
@@ -93,6 +98,25 @@ bool RenderWindow::hasFocus() const {
 
 void RenderWindow::show() {
     [(NSWindow*)mHandle makeKeyAndOrderFront:nil];
+}
+
+void RenderWindow::pollEvents()
+{
+    @autoreleasepool {
+
+        NSApplication* app = NSApplication.sharedApplication;
+        NSEvent* event = [app nextEventMatchingMask:NSEventMaskAny
+                                          untilDate:[NSDate distantPast]
+                                             inMode:NSDefaultRunLoopMode
+                                            dequeue:YES];
+        if (event)
+        {
+            [app sendEvent:event];
+
+            // WindowDelegate* delegate = (WindowDelegate*)[(NSWindow*)mHandle delegate];
+            // mShouldClose = [delegate shouldClose];
+        }
+    }
 }
 
 } // namespace morpheus::gfx::macos
