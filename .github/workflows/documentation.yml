@@ -44,7 +44,7 @@ jobs:
       - uses: actions/checkout@v4.2.2
 
       - name: Cache Conan data
-        uses: actions/cache@v4.1.2
+        uses: actions/cache@v4.2.2
         env:
           cache-name: cache-conan-data
         with:
@@ -85,6 +85,7 @@ jobs:
           sed -i.backup '1a onetbb*:build_type=Release' .conan2/profiles/default
           sed -i.backup '1a mold*:compiler.libcxx=libstdc++11' .conan2/profiles/default
 
+          echo 'core.sources:download_urls=["origin", "https://c3i.jfrog.io/artifactory/conan-center-backup-sources/"]' >> .conan2/global.conf
           echo "tools.cmake.cmaketoolchain:generator = Ninja Multi-Config" >> .conan2/global.conf
           echo "tools.system.package_manager:mode = install" >> .conan2/global.conf
           echo "tools.system.package_manager:sudo = True" >> .conan2/global.conf

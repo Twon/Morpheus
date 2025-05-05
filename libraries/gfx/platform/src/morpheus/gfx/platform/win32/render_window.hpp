@@ -14,10 +14,11 @@ namespace morpheus::gfx::win32
  */
 class RenderWindow : protected gfx::RenderWindow {
 public:
+    using WindowHandle = HWND;
     using Config = gfx::RenderWindow::Config;
 
     explicit RenderWindow(Config const config = Config{});
-    explicit RenderWindow(HWND const window);
+    explicit RenderWindow(WindowHandle const window);
 
     explicit RenderWindow(RenderWindow const&) = delete;
     RenderWindow& operator=(RenderWindow const&) = delete;

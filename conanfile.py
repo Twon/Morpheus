@@ -76,14 +76,12 @@ class Morpheus(ConanFile):
         "with_rs_vulkan": True,
      }
     requires = (
-        "boost/1.86.0",
-        "ctre/3.8.1",
-        "magic_enum/0.9.5",
-        "ms-gsl/4.0.0",
+        "boost/1.87.0",
+        "ctre/3.9.0",
+        "magic_enum/0.9.7",
+        "ms-gsl/4.1.0",
         "rapidjson/cci.20230929",
-        "range-v3/0.12.0",
-        "scnlib/2.0.2",
-        #"zlib/1.2.12" # xapian-core/1.4.19' requires 'zlib/1.2.12' while 'boost/1.81.0' requires 'zlib/1.2.13'. To fix this conflict you need to override the package 'zlib' in your root package.
+        "scnlib/4.0.1",
     )
 
     build_requires = (
@@ -122,7 +120,16 @@ class Morpheus(ConanFile):
         compiler = self.settings.compiler
         version = Version(self.settings.compiler.version)
         std_support = (compiler == "msvc" and version >= 193) or (compiler == "gcc" and version >= Version("14")) or \
-                      (compiler == "clang" and version >= Version("18"))
+                      (compiler == "clang" and version >= Version("19"))
+        return not std_support
+
+    @property
+    def useRanges(self):
+        """ Does the current compiler version lack support for std::ranges via the STL. """
+        compiler = self.settings.compiler
+        version = Version(self.settings.compiler.version)
+        std_support = (compiler == "msvc" and version >= 193) or (compiler == "gcc" and version >= Version("10")) or \
+                      (compiler == "clang" and version >= Version("16")) or (compiler == "apple-clang" and version >= Version("15"))
         return not std_support
 
     def config_options(self):
@@ -137,18 +144,18 @@ class Morpheus(ConanFile):
 
     def build_requirements(self):
         self.tool_requires("ninja/1.12.1")
-        self.test_requires("catch2/3.7.0")
-        self.test_requires("gtest/1.15.0")
+        self.test_requires("catch2/3.8.0")
+        self.test_requires("gtest/1.16.0")
 
-        if get_cmake_version() < Version("3.30.1"):
-            self.tool_requires("cmake/3.30.1")
+        if get_cmake_version() < Version("4.0.1"):
+            self.tool_requires("cmake/4.0.1")
 
         if self.options.build_docs:
-            self.build_requires("doxygen/1.9.4") # doxygen/1.9.5 will update dependency on zlib/1.2.12 to zlib/1.2.13
+            self.build_requires("doxygen/1.13.2")
 
         if self.options.get_safe("link_with_mold", False):
-            self.build_requires("mold/2.33.0")
-            self.build_requires("openssl/3.2.1", override=True)
+            self.build_requires("mold/2.36.0")
+            #self.build_requires("openssl/3.2.1", override=True)
 
     def requirements(self):
         if self.options.get_safe("with_rs_vulkan", False):
@@ -171,7 +178,10 @@ class Morpheus(ConanFile):
             self.requires("tl-expected/20190710", transitive_headers=True)
 
         if self.useFMT:
-            self.requires("fmt/11.0.2", transitive_headers=True)
+            self.requires("fmt/11.1.4", transitive_headers=True)
+
+        if self.useRanges:
+            self.requires("range-v3/0.12.0", transitive_headers=True)
 
     def system_requirements(self):
         if self.options.get_safe("with_rs_opengl", False):

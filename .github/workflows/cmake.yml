@@ -39,13 +39,19 @@ jobs:
             }
           - {
               name: "Ubuntu GCC-13",
-              os: ubuntu-latest,
-              compiler: { type: GCC, version: 13, conan: "gcc", cc: "gcc-13", cxx: "g++-13", std: 20 },
+              os: ubuntu-22.04,
+              compiler: { type: GCC, version: 13, conan: "gcc", cc: "gcc-13", cxx: "g++-13", std: 23 },
+              lib: "libstdc++11"
+            }
+          - {
+              name: "Ubuntu GCC-14",
+              os: ubuntu-24.04,
+              compiler: { type: GCC, version: 14, conan: "gcc", cc: "gcc-14", cxx: "g++-14", std: 23 },
               lib: "libstdc++11"
             }
           - {
               name: "Ubuntu Clang-14 + libc++",
-              os: ubuntu-latest,
+              os: ubuntu-22.04,
               compiler:
                 {
                   type: CLANG,
@@ -59,7 +65,7 @@ jobs:
             }
           - {
               name: "Ubuntu Clang-15 + libc++",
-              os: ubuntu-latest,
+              os: ubuntu-22.04,
               compiler:
                 {
                   type: CLANG,
@@ -73,7 +79,7 @@ jobs:
             }
           - {
               name: "Ubuntu Clang-16 + libc++",
-              os: ubuntu-latest,
+              os: ubuntu-22.04,
               compiler:
                 {
                   type: CLANG,
@@ -99,6 +105,34 @@ jobs:
                 },
               lib: "libc++",
             }
+          - {
+              name: "Ubuntu Clang-18 + libc++",
+              os: ubuntu-latest,
+              compiler:
+                {
+                  type: CLANG,
+                  version: 18,
+                  conan: "clang",
+                  cc: "clang-18",
+                  cxx: "clang++-18",
+                  std: 23
+                },
+              lib: "libc++",
+            }
+#          - {
+#              name: "Ubuntu Clang-19 + libc++",
+#              os: ubuntu-latest,
+#              compiler:
+#                {
+#                  type: CLANG,
+#                  version: 19,
+#                  conan: "clang",
+#                  cc: "clang-19",
+#                  cxx: "clang++-19",
+#                  std: 20
+#                },
+#              lib: "libc++",
+#            }
           - {
               name: "Visual Studio 2019",
               os: windows-latest,
@@ -136,7 +170,7 @@ jobs:
       - uses: actions/checkout@v4.2.2
 
       - name: Cache Conan data
-        uses: actions/cache@v4.1.2
+        uses: actions/cache@v4.2.2
         env:
           cache-name: cache-conan-data
         with:
@@ -218,6 +252,7 @@ jobs:
             sed -i.backup '1a mold*:compiler.libcxx=libstdc++11' .conan2/profiles/default
           fi
 
+          echo 'core.sources:download_urls=["origin", "https://c3i.jfrog.io/artifactory/conan-center-backup-sources/"]' >> .conan2/global.conf
           echo "tools.cmake.cmaketoolchain:generator = Ninja Multi-Config" >> .conan2/global.conf
 
           if [[ "${{ matrix.settings.os }}" != "windows-latest" ]]; then

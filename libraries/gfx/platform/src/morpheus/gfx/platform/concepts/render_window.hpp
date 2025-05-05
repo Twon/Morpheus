@@ -11,6 +11,7 @@ namespace morpheus::gfx::concepts
 template <typename T>
 concept RenderWindow = requires(T t)
 {
+    typename T::WindowHandle;
     { t.width() } -> std::convertible_to<std::uint32_t>;
     { t.height() } -> std::convertible_to<std::uint32_t>;
     { t.colourDepth() } -> std::convertible_to<std::uint32_t>;

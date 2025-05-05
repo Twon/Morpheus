@@ -25,7 +25,21 @@ public:
 
     [[nodiscard]] auto port() const noexcept { return mPort; }
 
+#if defined(__cpp_lib_three_way_comparison) && (__cpp_lib_three_way_comparison >= 201907L)
+    /// Compare two adapter objects.
     [[nodiscard]] auto operator<=>(NamedEndpoint const& rhs) const noexcept = default;
+#else
+    /// Compare two adapter objects.
+    [[nodiscard]] auto operator<=>(NamedEndpoint const& rhs) const noexcept
+    {
+        return std::tie(mName, mPort) <=> std::tie(rhs.mName, rhs.mPort);
+    }
+
+    [[nodiscard]] bool operator==(const NamedEndpoint& rhs) const noexcept
+    {
+        return std::tie(mName, mPort) == std::tie(rhs.mName, rhs.mPort);
+    }
+#endif
 
 private:
     std::string mName;
