@@ -25,4 +25,9 @@ int main(int argc, char const* argv[])
     }
 
     RenderWindow window(config);
+
+    while (!window.shouldClose())
+    {
+        window.pollEvents();
+    }
 }

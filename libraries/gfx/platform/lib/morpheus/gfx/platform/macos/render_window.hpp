@@ -38,6 +38,8 @@ public:
     //! The colour depth of the pixels of the render target.
     [[nodiscard]] std::uint16_t colourDepth() const noexcept { return gfx::RenderTarget::colourDepth(); }
 
+    [[nodiscard]] bool shouldClose() const noexcept { return mShouldClose; }
+
     //    bool isHidden() const noexcept
     //    bool isFocus() const noexcept
 
@@ -60,8 +62,11 @@ public:
     /// Access the underlying OS Window handle.
     auto getHandle() const noexcept { return mHandle; }
 
+    void pollEvents();
+
 private:
     WindowHandle mHandle;
+    bool mShouldClose = false;
 
     // Should we use a Windows controller subclass to enable unit testing?
     // https://eschatologist.net/blog/?p=10
