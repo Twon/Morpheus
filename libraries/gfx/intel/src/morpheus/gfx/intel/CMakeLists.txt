@@ -1,6 +1,8 @@
 target_sources(MorpheusGfxIntel
     PUBLIC
-        adapter.hpp
+        FILE_SET HEADERS
+        FILES
+            adapter.hpp
     PRIVATE
         adapter.cpp
 )

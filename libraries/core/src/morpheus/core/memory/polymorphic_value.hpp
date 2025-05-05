@@ -31,7 +31,7 @@ namespace detail
 {
 
 /// \struct control_block_deleter
-///     Specialiation of a deleter that uses a control blocks in built destory method to clean up resources used
+///     Specialiation of a deleter that uses a control blocks in built destroy method to clean up resources used
 ///     to hold the control block.
 struct control_block_deleter
 {
@@ -44,7 +44,7 @@ struct control_block_deleter
     }
 };
 
-/// \stuct control_block_copier
+/// \struct control_block_copier
 ///    Specialisation of a copier that uses a control block to clone a copied control block.
 struct control_block_copier
 {
@@ -81,7 +81,7 @@ struct control_block
 };
 
 /// \class  direct_control_block
-///     Direct control blocks contain the underlying type for the contiaining polymorpic embbeded withn
+///     Direct control blocks contain the underlying type for the containing polymorphic embedded withn
 ///     the control block.
 /// \tparam T The underlying base polymorphic type.
 /// \tparam U The underlying derived polymorphic type.
@@ -218,7 +218,7 @@ template <typename T>
 class polymorphic_value
 {
 public:
-    /// The base type of the underlying polymorphic hierarchy suported as an element in polymorpic value.
+    /// The base type of the underlying polymorphic hierarchy supported as an element in polymorphic value.
     using element_type = T;
 
     template <class U>
@@ -232,7 +232,7 @@ public:
     /// Allows explicit construction from a nullptr.
     constexpr polymorphic_value(nullptr_t) noexcept {}
 
-    /// Copy constuction.
+    /// Copy construction.
     constexpr polymorphic_value(const polymorphic_value& p)
     : mControlBlock(p.mControlBlock)
     , mValue((mControlBlock) ? mControlBlock->ptr() : nullptr)
@@ -333,13 +333,14 @@ public:
     // Observers
 #if (__cpp_explicit_this_parameter >= 202110L)
 
-  [[nodiscard]] constexpr auto* operator->(this Self&& self) noexcept { return std::forward_like<Self>(mValue); }
+    template <typename Self>
+    [[nodiscard]] constexpr T* operator->(this Self&& self) noexcept { return (self.mValue); }
 
     /// Dereferences pointer to the managed object.
     template <typename Self>
-    [[nodiscard]] constexpr std::copy_cvref_t<Self, T>&& operator*(this Self&& self) noexcept
+    [[nodiscard]] constexpr auto&& operator*(this Self&& self) noexcept
     {
-        return *std::forward_like<Self>(mValue);
+        return *std::forward_like<decltype(self)>(self.mValue);
     }
 
 #else

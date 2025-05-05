@@ -29,7 +29,7 @@ public:
     /// Default construction an empty adapter.
     constexpr Adapter() noexcept = default;
     /// Constructs an adapter with the specified parameters.
-    ///     \param[in] dxgiAdapter The DXGI adapter object.
+    /// \param[in] dxgiAdapter The DXGI adapter object.
     Adapter(DXGIAdapter dxgiAdapter);
 
     ///@}
@@ -40,14 +40,14 @@ public:
     /// The DXGI adapter description.
     [[nodiscard]] DXGI_ADAPTER_DESC1 const& dxgDescription() const noexcept { return mDescription; }
 
-    /// \copydoc morpheus::gfx::Adapter::getId()
-    [[nodiscard]] auto getId() const noexcept { return mDescription.DeviceId; }
+    /// \copydoc morpheus::gfx::Adapter::id()
+    [[nodiscard]] auto id() const noexcept { return mDescription.DeviceId; }
 
-    /// \copydoc morpheus::gfx::Adapter::getName()
-    [[nodiscard]] std::wstring_view getName() const noexcept { return mDescription.Description; }
+    /// \copydoc morpheus::gfx::Adapter::name()
+    [[nodiscard]] std::wstring_view name() const noexcept { return mDescription.Description; }
 
-    /// \copydoc morpheus::gfx::Adapter::getVendor()
-    [[nodiscard]] Vendor getVendor() const noexcept;
+    /// \copydoc morpheus::gfx::Adapter::vendor()
+    [[nodiscard]] Vendor vendor() const noexcept;
 
     /// \copydoc morpheus::gfx::Adapter::operator<=>()
     [[nodiscard]] constexpr auto operator<=>(Adapter const& rhs) const noexcept = default;

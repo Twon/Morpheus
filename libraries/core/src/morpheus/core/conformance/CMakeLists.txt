@@ -1,17 +1,19 @@
 target_sources(MorpheusCore
     PUBLIC
-        bit_cast.hpp
-        coro.hpp
-        date.hpp
-        format.hpp
-        expected.hpp
-        print.hpp
-        ranges.hpp
-        scan.hpp
-        source_location.hpp
-        stacktrace.hpp
-        unreachable.hpp
-        version.hpp
+        FILE_SET HEADERS
+        FILES
+            bit_cast.hpp
+            coro.hpp
+            date.hpp
+            format.hpp
+            expected.hpp
+            print.hpp
+            ranges.hpp
+            scan.hpp
+            source_location.hpp
+            stacktrace.hpp
+            unreachable.hpp
+            version.hpp
 )
 
 morpheus_conformance_check(
@@ -33,7 +35,15 @@ morpheus_conformance_check(
     RESULT FORMAT_SUPPORTED
     MSVC_VERSION "19.37"
     GNU_VERSION "14"
-    CLANG_VERSION "18"
+    CLANG_VERSION "19"
+)
+
+morpheus_conformance_check(
+    RESULT RANGES_SUPPORTED
+    MSVC_VERSION "19.29"
+    GNU_VERSION "10"
+    CLANG_VERSION "16"
+    APPLECLANG_VERSION "15"
 )
 
 if (NOT ${DATE_SUPPORTED})
@@ -48,18 +58,33 @@ if (NOT ${FORMAT_SUPPORTED})
     find_package(fmt REQUIRED)
 endif (NOT ${FORMAT_SUPPORTED})
 
-find_package(range-v3 REQUIRED)
+if (NOT ${RANGES_SUPPORTED})
+    find_package(range-v3 REQUIRED)
+endif (NOT ${RANGES_SUPPORTED})
+
 find_package(scn REQUIRED)
 
+# GCC 12 and later must be compiled with support for stacktrace for it to be usable: https://stackoverflow.com/questions/72341483/how-can-i-generate-a-c23-stacktrace-with-gcc-12-1
+if(${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU" AND ${CMAKE_CXX_COMPILER_VERSION} VERSION_GREATER_EQUAL 12)
+    include(CheckCXXSymbolExists)
+    check_cxx_symbol_exists(_GLIBCXX_HAVE_STACKTRACE "version" GCC_STACKTRACE_SUPPORTED)
+    if(${GCC_STACKTRACE_SUPPORTED})
+        message(STATUS "morpheus: GCC version ${CMAKE_CXX_COMPILER_VERSION} is built with support for stacktrace")
+    else()
+        message(STATUS "morpheus: GCC version ${CMAKE_CXX_COMPILER_VERSION} is not built with support for stacktrace")
+    endif()
+endif()
 
 target_link_libraries(MorpheusCore
     PUBLIC
         $<$<NOT:$<BOOL:${DATE_SUPPORTED}>>:date::date>
         $<$<NOT:$<BOOL:${DATE_SUPPORTED}>>:date::date-tz>
         $<$<NOT:$<BOOL:${FORMAT_SUPPORTED}>>:fmt::fmt>
-        range-v3::range-v3
+        $<$<NOT:$<BOOL:${RANGES_SUPPORTED}>>:range-v3::range-v3>
         scn::scn
         $<$<NOT:$<BOOL:${EXPECTED_SUPPORTED}>>:tl::expected>
+        $<$<AND:$<CXX_COMPILER_ID:GNU>,$<BOOL:${GCC_STACKTRACE_SUPPORTED}>,$<VERSION_GREATER_EQUAL:$<CXX_COMPILER_VERSION>,12>,$<VERSION_LESS:$<CXX_COMPILER_VERSION>,14>>:-lstdc++_libbacktrace>
+        $<$<AND:$<CXX_COMPILER_ID:GNU>,$<BOOL:${GCC_STACKTRACE_SUPPORTED}>,$<VERSION_GREATER_EQUAL:$<CXX_COMPILER_VERSION>,14>>:-lstdc++exp>
 )
 
 target_compile_definitions(MorpheusCore

@@ -62,7 +62,7 @@ public:
 
     /// \name Deserialise
     ///     Custom deserialise function specialisations should deserialise sub-members via the readers deserialisers
-    ///     methods.  This allows breaking of cirular dependencies in the dispatching of deserialisation calls and
+    ///     methods.  This allows breaking of circular dependencies in the dispatching of deserialisation calls and
     ///     delays look up of the actual deserialisation call to the second phase of the two-phase lookup. With the
     ///     dependency broken the actual underlying calls dispatch to the deserialise customisation point object which
     ///     then finds the correct call via ADL dispatch.

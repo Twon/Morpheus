@@ -39,13 +39,19 @@ jobs:
             }
           - {
               name: "Ubuntu GCC-13",
-              os: ubuntu-latest,
-              compiler: { type: GCC, version: 13, conan: "gcc", cc: "gcc-13", cxx: "g++-13", std: 20 },
+              os: ubuntu-22.04,
+              compiler: { type: GCC, version: 13, conan: "gcc", cc: "gcc-13", cxx: "g++-13", std: 23 },
+              lib: "libstdc++11"
+            }
+          - {
+              name: "Ubuntu GCC-14",
+              os: ubuntu-24.04,
+              compiler: { type: GCC, version: 14, conan: "gcc", cc: "gcc-14", cxx: "g++-14", std: 23 },
               lib: "libstdc++11"
             }
           - {
               name: "Ubuntu Clang-14 + libc++",
-              os: ubuntu-latest,
+              os: ubuntu-22.04,
               compiler:
                 {
                   type: CLANG,
@@ -59,7 +65,7 @@ jobs:
             }
           - {
               name: "Ubuntu Clang-15 + libc++",
-              os: ubuntu-latest,
+              os: ubuntu-22.04,
               compiler:
                 {
                   type: CLANG,
@@ -73,7 +79,7 @@ jobs:
             }
           - {
               name: "Ubuntu Clang-16 + libc++",
-              os: ubuntu-latest,
+              os: ubuntu-22.04,
               compiler:
                 {
                   type: CLANG,
@@ -85,6 +91,48 @@ jobs:
                 },
               lib: "libc++",
             }
+          - {
+              name: "Ubuntu Clang-17 + libc++",
+              os: ubuntu-latest,
+              compiler:
+                {
+                  type: CLANG,
+                  version: 17,
+                  conan: "clang",
+                  cc: "clang-17",
+                  cxx: "clang++-17",
+                  std: 20
+                },
+              lib: "libc++",
+            }
+          - {
+              name: "Ubuntu Clang-18 + libc++",
+              os: ubuntu-latest,
+              compiler:
+                {
+                  type: CLANG,
+                  version: 18,
+                  conan: "clang",
+                  cc: "clang-18",
+                  cxx: "clang++-18",
+                  std: 23
+                },
+              lib: "libc++",
+            }
+#          - {
+#              name: "Ubuntu Clang-19 + libc++",
+#              os: ubuntu-latest,
+#              compiler:
+#                {
+#                  type: CLANG,
+#                  version: 19,
+#                  conan: "clang",
+#                  cc: "clang-19",
+#                  cxx: "clang++-19",
+#                  std: 20
+#                },
+#              lib: "libc++",
+#            }
           - {
               name: "Visual Studio 2019",
               os: windows-latest,
@@ -110,7 +158,7 @@ jobs:
               compiler:
                 {
                   type: APPLE_CLANG,
-                  version: "15.2",
+                  version: "15.3",
                   conan: "apple-clang",
                   cc: "clang",
                   cxx: "clang++",
@@ -119,14 +167,14 @@ jobs:
               lib: "libc++",
             }
     steps:
-      - uses: actions/checkout@v4.1.1
+      - uses: actions/checkout@v4.2.2
 
       - name: Cache Conan data
-        uses: actions/cache@v3.3.2
+        uses: actions/cache@v4.2.2
         env:
           cache-name: cache-conan-data
         with:
-          path: ${{github.workspace}}/.conan2/p
+          path: ${{github.workspace}}/conan_cache_save.tgz
           key: ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-${{ matrix.settings.compiler.version }}-${{ matrix.settings.lib }}
           restore-keys: |
             ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-${{ matrix.settings.compiler.version }}-
@@ -143,7 +191,7 @@ jobs:
 
       - name: Add msbuild to PATH
         if: matrix.settings.os == 'windows-latest'
-        uses: microsoft/setup-msbuild@v1.3.1
+        uses: microsoft/setup-msbuild@v2
         with:
           vs-version: "16.5"
 
@@ -180,15 +228,8 @@ jobs:
         with:
           xcode-version: '${{matrix.settings.compiler.version}}'
 
-      - name: Install Linux System Packages
-        if: contains( matrix.settings.os, 'ubuntu')
-        run: |
-          sudo apt-get -y install libgl-dev
-          sudo apt-get -y install libopengl-dev
-          sudo apt-get -y install libglu1-mesa-dev
-
       - name: Set up Python
-        uses: actions/setup-python@v4.7.1
+        uses: actions/setup-python@v5.3.0
         with:
           python-version: '3.11'
 
@@ -211,6 +252,7 @@ jobs:
             sed -i.backup '1a mold*:compiler.libcxx=libstdc++11' .conan2/profiles/default
           fi
 
+          echo 'core.sources:download_urls=["origin", "https://c3i.jfrog.io/artifactory/conan-center-backup-sources/"]' >> .conan2/global.conf
           echo "tools.cmake.cmaketoolchain:generator = Ninja Multi-Config" >> .conan2/global.conf
 
           if [[ "${{ matrix.settings.os }}" != "windows-latest" ]]; then
@@ -220,11 +262,18 @@ jobs:
 
           conan profile show -pr default
 
+      - name: Conan Cache Restore
+        shell: bash
+        run: |
+          if [ -f ./conan_cache_save.tgz ]; then
+              conan cache restore ./conan_cache_save.tgz
+          fi
+
       - name: Configure Install
         working-directory: ${{github.workspace}}
         shell: bash
         run: |
-          conan install "${{github.workspace}}" --build missing -pr:b default --build catch2/3.4.0 --build gtest/1.14.0 -o boost/*:without_cobalt=True
+          conan install "${{github.workspace}}" --build missing -pr:b default -o boost/*:without_cobalt=True
 
       - name: Configure Conan Build
         if: matrix.settings.os == 'windows-latest'
@@ -284,3 +333,8 @@ jobs:
         # Execute tests defined by the CMake configuration.
         # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
         run: ctest --preset ${{ env.CONAN_PRESET }} -LE GPU # Exclude GPU tests as Github actions do not have the supported hardware/drivers
+
+      - name: Conan Cache Save
+        run: |
+          conan cache clean
+          conan cache save "*/*:*"

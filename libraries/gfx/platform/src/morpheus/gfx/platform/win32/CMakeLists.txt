@@ -1,7 +1,11 @@
 target_sources(MorpheusGfxPlatform
     PUBLIC
-        render_window.hpp
+        FILE_SET HEADERS
+        FILES
+            monitor.hpp
+            render_window.hpp
     PRIVATE
+        monitor.cpp
         render_window.cpp
 )
 

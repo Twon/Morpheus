@@ -1,5 +1,6 @@
 #include "morpheus/application/application.hpp"
 #include "morpheus/application/po/adapters/enum.hpp"
+#include "morpheus/logging.hpp"
 
 #include <catch2/catch_test_macros.hpp>
 
@@ -32,7 +33,7 @@ struct Preferences
     }
 };
 
-TEST_CASE("Test parsing of enums as options", "[morpheus.application.po.adapters.enum]")
+TEST_CASE_METHOD(LoggingFixture, "Test parsing of enums as options", "[morpheus.application.po.adapters.enum]")
 {
     SECTION("Ensure valid value parse correctly")
     {
@@ -45,7 +46,6 @@ TEST_CASE("Test parsing of enums as options", "[morpheus.application.po.adapters
             return preferences.drink;
         };
 
-        auto const exeLocation = boost::dll::program_location().parent_path();
         REQUIRE(getDrink("Coke") == Drink::Coke);
         REQUIRE(getDrink("Pepsi") == Drink::Pepsi);
         REQUIRE(getDrink("Tango") == Drink::Tango);

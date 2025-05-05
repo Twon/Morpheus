@@ -4,6 +4,7 @@
 #include <morpheus/core/conformance/ranges.hpp>
 
 #include <cassert>
+#include <concepts>
 #include <iterator>
 #include <utility>
 
@@ -56,9 +57,10 @@ struct Generator
 
         auto return_void() { return coro_ns::suspend_never{}; }
 
-        auto yield_value(const T value)
+        template<std::convertible_to<T> From>
+        auto yield_value(From&& from)
         {
-            current_value = value;
+            current_value = std::forward<From>(from);
             return coro_ns::suspend_always{};
         }
 

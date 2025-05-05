@@ -52,7 +52,7 @@ the installation process
 
 #]=======================================================================]
 function(morpheus_add_testing_library)
-    set(options INFERFACE)
+    set(options INTERFACE)
     set(oneValueArgs NAME ALIAS FOLDER)
     set(multiValueArgs)
     cmake_parse_arguments(MORPHEUS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
@@ -63,7 +63,7 @@ function(morpheus_add_testing_library)
         message(FATAL_ERROR "ALIAS parameter must be supplied")
     endif()
 
-    if (NOT MORPHEUS_INFERFACE)
+    if (NOT MORPHEUS_INTERFACE)
         add_library(${MORPHEUS_NAME})
         target_link_libraries(${MORPHEUS_NAME}
             PUBLIC

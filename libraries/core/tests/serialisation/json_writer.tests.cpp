@@ -75,7 +75,7 @@ TEMPLATE_TEST_CASE("Json writer can write single native types to underlying text
         REQUIRE(test::serialise(-std::numeric_limits<TestType>::signaling_NaN()) == "NaN");
 
 #if (__cpp_lib_to_chars >= 201611L)
-        // RapidJson ouputs "1.401298464324817e-45" vs "1e-45" for float, but SetMaxDecimalPlaces() would effect all non-scientific values so we compare
+        // RapidJson outputs "1.401298464324817e-45" vs "1e-45" for float, but SetMaxDecimalPlaces() would effect all non-scientific values so we compare
         // against the underling value not string representation.
 //        REQUIRE(test::toFloatingPoint<TestType>(test::serialise(std::numeric_limits<TestType>::denorm_min())) == Approx(std::numeric_limits<TestType>::denorm_min()));
 //        REQUIRE(test::toFloatingPoint<TestType>(test::serialise(std::numeric_limits<TestType>::denorm_min())) == Approx(std::numeric_limits<TestType>::denorm_min()));
@@ -149,7 +149,7 @@ TEST_CASE("Json writer can write simple composite types to underlying text repre
     }
 }
 
-TEST_CASE("Json writer can write simple sequence types to underlying text representation", "[morpheus.serialisation.json_writer.squence]")
+TEST_CASE("Json writer can write simple sequence types to underlying text representation", "[morpheus.serialisation.json_writer.sequence]")
 {
     GIVEN("A Json writer")
     {
@@ -228,7 +228,7 @@ TEST_CASE("Json writer can write simple aggregates types to underlying text repr
     {
         STATIC_REQUIRE(SerialisableAggregate<Example>);
 
-        WHEN("Writing default intialised instance")
+        WHEN("Writing default initialised instance")
         {
             THEN("Expect the aggregate values serialised as a sequence")
             {
@@ -240,7 +240,7 @@ TEST_CASE("Json writer can write simple aggregates types to underlying text repr
     {
         STATIC_REQUIRE(SerialisableAggregate<Example2>);
 
-        WHEN("Writing default intialised instance")
+        WHEN("Writing default initialised instance")
         {
             THEN("Expect the aggregate values serialised as a sequence embedding in a sequence")
             {

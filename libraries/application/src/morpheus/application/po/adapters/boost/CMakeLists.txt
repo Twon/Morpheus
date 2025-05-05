@@ -1,5 +1,7 @@
 target_sources(MorpheusApplication
     PUBLIC
-        asio.hpp
-        log.hpp
+        FILE_SET HEADERS
+        FILES
+            asio.hpp
+            log.hpp
 )

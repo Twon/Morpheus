@@ -132,8 +132,12 @@ function(enable_code_coverage)
     set(LCOV_HTML_PATH "${COVERAGE_REPORT_DIR}/html")
 
     if (NOT TARGET CodeCoverage)
-        add_library(CodeCoverage INTERFACE)
-        add_library(coverage::coverage ALIAS CodeCoverage)
+
+        morpheus_add_library(
+            NAME CodeCoverage
+            ALIAS coverage::coverage
+            INTERFACE
+        )
 
         foreach (FLAGS ${COVERAGE_SUPPORTED_FLAGS})
             set(CMAKE_REQUIRED_FLAGS "${FLAGS}")
@@ -219,7 +223,7 @@ function(enable_code_coverage)
         WORKING_DIRECTORY
             ${CMAKE_BINARY_DIR}
         COMMENT
-            "Distributed proccessing of coverage data collection and report generation"
+            "Distributed processing of coverage data collection and report generation"
     )
 
     add_custom_target(coverage)
@@ -243,7 +247,7 @@ function(enable_code_coverage)
         WORKING_DIRECTORY
             ${CMAKE_BINARY_DIR}
         COMMENT
-            "Distributed proccessing of coverage data collection and lcov report generation"
+            "Distributed processing of coverage data collection and lcov report generation"
     )
 
     add_custom_target(coverage-lcov-info
