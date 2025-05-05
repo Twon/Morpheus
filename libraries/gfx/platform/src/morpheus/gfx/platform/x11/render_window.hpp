@@ -4,6 +4,7 @@
 
 #include <X11/Xlib.h>
 
+#include <functional>
 #include <memory>
 
 namespace morpheus::gfx::x11

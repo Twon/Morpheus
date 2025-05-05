@@ -1,11 +1,15 @@
-#include "morpheus/application/application.hpp"
-#include "morpheus/application/po/adapters/enum.hpp"
+#include "morpheus/application/po/options.hpp"
+#include "morpheus/application/po/adapters/enum.hpp" // IWYU pragma: keep
+#include "morpheus/application/version.hpp"
 #include "morpheus/logging.hpp"
 
+#include <boost/program_options/options_description.hpp>
+#include <boost/program_options/value_semantic.hpp>
 #include <catch2/catch_test_macros.hpp>
 
 #include <array>
 #include <cstdint>
+#include <optional>
 #include <string_view>
 
 namespace morpheus::application::po
