@@ -84,6 +84,9 @@ RenderWindow::~RenderWindow()
         // WindowDelegate* delegate = (WindowDelegate*)[(NSWindow*)mHandle
         // delegate]; [delegate release];
 
+        // WindowDelegate* delegate = (WindowDelegate*)[(NSWindow*)mHandle
+        // delegate]; [delegate release];
+
         if (mHandle)
         {
             [(NSWindow*)mHandle close];
