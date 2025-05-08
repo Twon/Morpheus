@@ -10,9 +10,9 @@ target_include_directories(MorpheusVisualisation
 )
 
 target_link_libraries(MorpheusVisualisation
-	PUBLIC
-		morpheus::application
-		morpheus::core
+    PUBLIC
+        morpheus::application
+        morpheus::core
         morpheus::gfx::gl4
         morpheus::gfx::platform
         morpheus::gfx::vulkan

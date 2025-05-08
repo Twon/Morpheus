@@ -1,6 +1,7 @@
- #pragma once
+#pragma once
 
 #include <morpheus/core/base/platform.hpp>
+
 #include <string>
 
 namespace morpheus::gfx
