@@ -66,6 +66,9 @@ public:
     /// Query if the window full screen.
     [[nodiscard]] bool fullScreen() const noexcept { return mFullScreen; }
 
+    /// Query if the window refresh rate in Htz.
+    [[nodiscard]] std::uint16_t refreshRate() const noexcept { return mRefreshRate; }
+
     /// Queries if the window is visible;
     //    bool isVisible() const noexcept
 
@@ -77,7 +80,8 @@ protected:
 
     std::uint16_t mStartX = 0; ///< The starting X position in pixels of the render window.
     std::uint16_t mStartY = 0; ///< The starting Y position in pixels of the render window.
-    std::string mWindowName; ///< The name of the window.
+    std::uint16_t mRefreshRate = 0; ///< The refresh rate of the render window.
+    std::string mWindowName;   ///< The name of the window.
     bool mFullScreen; ///< Start the window in full screen mode.
 };
 
