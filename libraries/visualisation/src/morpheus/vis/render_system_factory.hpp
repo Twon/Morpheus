@@ -27,7 +27,7 @@ namespace morpheus::vis
 {
 
 /// \enum API
-///     Enumerate type describing the underlying graphics API for avaiable render systems.
+///     Enumerate type describing the underlying graphics API for available render systems.
 enum API : std::uint32_t
 {
     D3D12,
@@ -37,7 +37,7 @@ enum API : std::uint32_t
 };
 
 /// \var RenderSystemType
-///     Template variable taking a non-type template parameter which is an intergral type describing the a render systems
+///     Template variable taking a non-type template parameter which is an integral type describing the a render systems
 ///     underlying API.
 template <auto Type>
 constexpr auto RenderSystemType = boost::hana::type_c<boost::hana::integral_constant<std::remove_const_t<decltype(Type)>, Type>>;
