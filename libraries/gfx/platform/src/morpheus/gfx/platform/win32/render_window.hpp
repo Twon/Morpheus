@@ -28,14 +28,17 @@ public:
 
     ~RenderWindow();
 
-    //! The width in pixels of the render target.
-    [[nodiscard]] std::uint16_t width() const noexcept { return gfx::RenderTarget::width(); }
+    /// \copydoc gfx::RenderTarget::width()
+    [[nodiscard]] std::uint16_t width() const noexcept { return gfx::RenderWindow::width(); }
 
-    //! The height in pixels of the render target.
-    [[nodiscard]] std::uint16_t height() const noexcept { return gfx::RenderTarget::height(); }
+    /// \copydoc gfx::RenderTarget::height()
+    [[nodiscard]] std::uint16_t height() const noexcept { return gfx::RenderWindow::height(); }
 
-    //! The colour depth of the pixels of the render target.
-    [[nodiscard]] std::uint16_t colourDepth() const noexcept { return gfx::RenderTarget::colourDepth(); }
+    /// \copydoc gfx::RenderTarget::colourDepth()
+    [[nodiscard]] std::uint16_t colourDepth() const noexcept { return gfx::RenderWindow::colourDepth(); }
+
+    /// \copydoc gfx::RenderTarget::refreshRate()
+    [[nodiscard]] std::uint16_t refreshRate() const noexcept { return gfx::RenderWindow::refreshRate(); }
 
     //    bool isHidden() const noexcept
     //    bool isFocus() const noexcept
