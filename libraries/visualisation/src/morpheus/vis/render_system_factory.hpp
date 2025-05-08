@@ -37,7 +37,7 @@ enum API : std::uint32_t
 };
 
 /// \var RenderSystemType
-///     Template variable taking a non-type template parameter which is an integral type describing the a render systems
+///     Template variable taking a non-type template parameter which is an integral type describing the render systems
 ///     underlying API.
 template <auto Type>
 constexpr auto RenderSystemType = boost::hana::type_c<boost::hana::integral_constant<std::remove_const_t<decltype(Type)>, Type>>;
@@ -73,7 +73,7 @@ private:
         namespace hana = boost::hana;
         return hana::make_map(
 #if (MORPHEUS_BUILD_PLATFORM == MORPHEUS_TARGET_PLATFORM_APPLE)
-            hana::make_pair(RenderSystemType<API::Metal>, hana::type_c<gfx::metal::RenderSystem>)
+            hana::make_pair(RenderSystemType<API::Metal>, hana::type_c<gfx::metal::RenderSystem>),
 #elif (MORPHEUS_BUILD_PLATFORM == MORPHEUS_TARGET_PLATFORM_WINDOWS)
             hana::make_pair(RenderSystemType<API::D3D12>, hana::type_c<gfx::d3d12::RenderSystem>),
 #endif // #if (MORPHEUS_BUILD_PLATFORM == MORPHEUS_TARGET_PLATFORM_APPLE)
