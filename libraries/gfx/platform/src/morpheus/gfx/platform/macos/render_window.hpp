@@ -65,7 +65,7 @@ public:
     void pollEvents();
 
 private:
- 
+
     WindowHandle mHandle;
     bool mShouldClose = false;
 
