@@ -18,4 +18,9 @@ int main(int argc, const char * argv[])
 
     RenderWindow::Config config;
     RenderWindow window(config);
+
+    while (!window.shouldClose())
+    {
+        window.pollEvents();
+    }
 }
