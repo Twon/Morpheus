@@ -100,3 +100,9 @@ GENERATE_XML           = @DOXYGEN_GENERATE_XML@
 # This tag requires that the tag GENERATE_XML is set to YES.
 
 XML_OUTPUT             = @DOXYGEN_XML_OUTPUT@
+
+# File extension that should be parse for doxygen comments.
+FILE_PATTERNS          = *.h *.hpp *.cpp *.m *.mm
+
+# Handle Objective-C++ files
+EXTENSION_MAPPING      = mm=Objective-C++ m=Objective-C
