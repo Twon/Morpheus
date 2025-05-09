@@ -101,13 +101,5 @@ GENERATE_XML           = @DOXYGEN_GENERATE_XML@
 
 XML_OUTPUT             = @DOXYGEN_XML_OUTPUT@
 
-# File extension that should be parse for doxygen comments.
-FILE_PATTERNS          = *.h *.hpp *.cpp *.m *.mm
-
-# Handle Objective-C++ files
-EXTENSION_MAPPING = mm=Objective-C m=Objective-C
-
-# Despite its name, this setting in Doxygen is not just for Java. It actually
-# enables parsing and formatting styles that are also needed for Objective-C,
-# because Objective-C shares some syntactic and structural similarities with Java.
-OPTIMIZE_OUTPUT_JAVA = YES
+# Files to exclude from documentation generation.
+EXCLUDE                = @DOXYGEN_EXCLUDE@
