@@ -30,7 +30,7 @@ endmacro()
 function(add_documentation)
     set(options)
     set(oneValueArgs PROJECT PROJECT_NUMBER OUTPUT_DIRECTORY WORKING_DIRECTORY)
-    set(multiValueArgs INPUT_DIRECTORY PUBLIC_HEADERS)
+    set(multiValueArgs INPUT_DIRECTORY PUBLIC_HEADERS EXCLUDE_FILES)
     cmake_parse_arguments(DOCUMENTATION "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
     if (DOCUMENTATION_PROJECT)
@@ -81,6 +81,7 @@ function(add_documentation)
     set(DOXYGEN_GENERATE_LATEX NO)
     set(DOXYGEN_GENERATE_XML YES)
     set(DOXYGEN_XML_OUTPUT xml)
+    set(DOXYGEN_EXCLUDE ${DOCUMENTATION_EXCLUDE_FILES})
 
     configure_file(${PROJECT_SOURCE_DIR}/docs/Doxyfile.in ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile @ONLY)
     set(doxygenXmlOutputDir ${DOXYGEN_OUTPUT_DIRECTORY}/${DOXYGEN_XML_OUTPUT})
@@ -139,5 +140,8 @@ if(MORPHEUS_BUILD_DOCUMENTATION)
         INPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/examples
         INPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/libraries
         OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/documentation
+        EXCLUDE_FILES 
+            ${PROJECT_SOURCE_DIR}/libraries/gfx/platform/src/morpheus/gfx/platform/macos/application_delegate.h
+            ${PROJECT_SOURCE_DIR}/libraries/gfx/platform/src/morpheus/gfx/platform/macos/window_delegate.h
     )
 endif()
