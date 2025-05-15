@@ -30,10 +30,10 @@ struct WindowConfig
         namespace po = boost::program_options;
         // clang-format off
         options.add_options()
-            ("window-name", po::value(&windowName)->required(), "The title of the Window.")
-            ("width", po::value(&width)->required(), "Width in pixels of the window.")
-            ("height", po::value(&height)->required(), "Height in pixels of the window.")
-            ("colour-depth", po::value(&colourDepth)->required(), "Colour depth in bits per pixel.")
+            ("window-name", po::value(&windowName)->default_value(windowName), "The title of the Window.")
+            ("width", po::value(&width)->default_value(width), "Width in pixels of the window.")
+            ("height", po::value(&height)->default_value(height), "Height in pixels of the window.")
+            ("colour-depth", po::value(&colourDepth)->default_value(colourDepth), "Colour depth in bits per pixel.")
             ("start-x", po::value(&startX)->default_value(startX), "Starting pixel in the x-dimension for the Window.")
             ("start-y", po::value(&startY)->default_value(startY), "Starting pixel in the y-dimension for the Window.")
             ("full-screen", po::value(&fullScreen)->default_value(fullScreen), "Is the window to be started in full screen mode")

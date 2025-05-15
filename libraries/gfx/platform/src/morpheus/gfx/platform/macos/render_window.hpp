@@ -37,14 +37,17 @@ public:
     //! The colour depth of the pixels of the render target.
     [[nodiscard]] std::uint16_t colourDepth() const noexcept { return gfx::RenderTarget::colourDepth(); }
 
-    [[nodiscard]] bool shouldClose() const noexcept { return mShouldClose; }
+    [[nodiscard]] bool shouldClose() const noexcept;
 
 
     //    bool isHidden() const noexcept
     //    bool isFocus() const noexcept
 
     /// \copydoc gfx::RenderWindow::fullScreen()
-    [[nodiscard]] bool fullScreen() const noexcept { return gfx::RenderWindow::fullScreen(); }
+    [[nodiscard]] bool fullScreen() const noexcept
+    { 
+        return gfx::RenderWindow::fullScreen();
+    }
 
     [[nodiscard]] bool visible() const noexcept;
 
@@ -65,9 +68,10 @@ public:
     void pollEvents();
 
 private:
-
+    class Impl;
+    std::unique_ptr<Impl> mThis; // The internal implementation.
     WindowHandle mHandle;
-    bool mShouldClose = false;
+
 
     // Should we use a Windows controller subclass to enable unit testing?
     // https://eschatologist.net/blog/?p=10
