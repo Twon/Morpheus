@@ -63,6 +63,14 @@ function(morpheus_add_testing_library)
         message(FATAL_ERROR "ALIAS parameter must be supplied")
     endif()
 
+    if (NOT Catch2::Catch2)
+        find_package(Catch2 3 REQUIRED)
+    endif(NOT Catch2::Catch2)
+
+    if (NOT GTest::gmock)
+        find_package(GTest REQUIRED)
+    endif(NOT GTest::gmock) 
+
     if (NOT MORPHEUS_INTERFACE)
         add_library(${MORPHEUS_NAME})
         target_link_libraries(${MORPHEUS_NAME}

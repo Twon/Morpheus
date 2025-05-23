@@ -67,7 +67,10 @@ function(morpheus_add_tests)
         add_executable(${MORPHEUS_ALIAS} ALIAS ${MORPHEUS_NAME})
     endif()
 
-    #find_package(Catch2 3 REQUIRED HINTS ${Catch2_DIR})
+    if (NOT Catch2::Catch2)
+        find_package(Catch2 3 REQUIRED)
+    endif(NOT Catch2::Catch2)
+
     target_link_libraries(${MORPHEUS_NAME}
         PRIVATE
              Catch2::Catch2
