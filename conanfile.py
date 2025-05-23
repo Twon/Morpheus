@@ -264,14 +264,14 @@ class Morpheus(ConanFile):
         self.cpp_info.components["core"].set_property("cmake_target_name", "morpheus::core")
         self.cpp_info.components["core"].defines = ["BOOST_USE_WINAPI_VERSION=BOOST_WINAPI_NTDDI_WIN10"]
         self.cpp_info.components["core"].requires = [
-            "boost::headers", 
-            "boost::log", 
-            "ctre::ctre", 
-            "magic_enum::magic_enum", 
-            "ms-gsl::ms-gsl", 
-            "range-v3::range-v3", 
-            "rapidjson::rapidjson", 
-            "scnlib::scnlib", 
+            "boost::headers",
+            "boost::log",
+            "ctre::ctre",
+            "magic_enum::magic_enum",
+            "ms-gsl::ms-gsl",
+            "range-v3::range-v3",
+            "rapidjson::rapidjson",
+            "scnlib::scnlib",
             "unordered_dense::unordered_dense"
         ]
         self.cpp_info.components["core"].builddirs.append(os.path.join("lib", "cmake", "morpheus"))

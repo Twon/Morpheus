@@ -69,7 +69,7 @@ function(morpheus_add_testing_library)
 
     if (NOT GTest::gmock)
         find_package(GTest REQUIRED)
-    endif(NOT GTest::gmock) 
+    endif(NOT GTest::gmock)
 
     if (NOT MORPHEUS_INTERFACE)
         add_library(${MORPHEUS_NAME})
