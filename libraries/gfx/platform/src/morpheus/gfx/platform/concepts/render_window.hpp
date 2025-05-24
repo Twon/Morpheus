@@ -6,6 +6,8 @@
 namespace morpheus::gfx::concepts
 {
 
+/// \concept RenderWindow
+///
 template <typename T>
 concept RenderWindow = requires(T t)
 {
@@ -15,8 +17,5 @@ concept RenderWindow = requires(T t)
     { t.colourDepth() } -> std::convertible_to<std::uint32_t>;
     { t.refreshRate() } -> std::convertible_to<std::uint32_t>;
 };
-
-template <typename T>
-concept VideoModeRange = VideoMode<ranges::range_value_t<T>>;
 
 } // namespace morpheus::gfx::concepts
