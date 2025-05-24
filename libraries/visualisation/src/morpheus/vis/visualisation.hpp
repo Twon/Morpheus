@@ -19,7 +19,7 @@ public:
     Visualisation& operator=(Visualisation const&) = delete;
 
     /// Register program options
-    void addOptions(boost::program_options::options_description& options)
+    void addOptions(boost::program_options::options_description& )
     {
     }
 
