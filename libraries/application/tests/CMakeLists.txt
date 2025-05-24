@@ -11,8 +11,7 @@ target_sources(MorpheusApplicationTests
 
 target_link_libraries(MorpheusApplicationTests
     PRIVATE
-         MorpheusCore
-         morpheus::application
+        morpheus::application
 )
 
 add_subdirectory(po)

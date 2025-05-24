@@ -11,6 +11,7 @@ target_link_libraries(MorpheusGfxGL4Tests
 
 target_sources(MorpheusGfxGL4Tests
     PRIVATE
+        concept_checks.tests.cpp
         render_system.tests.cpp
 )
 
