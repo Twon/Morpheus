@@ -29,7 +29,7 @@ constexpr auto switchTag(auto case_) { return switchCaseElement(case_, boost::ha
     #define MORPHEUS_SWITCH_MAX 64
 #endif
 
-inline constexpr auto defaultCase = [](auto unhandledValue){};
+inline constexpr auto defaultCase = [](auto){};
 
 template<class CT, CT C, class T = std::integral_constant<CT, C>>
 using SwitchCase = boost::hana::pair<std::integral_constant<CT, C>, T>;

@@ -6,7 +6,7 @@
 #include <boost/hana/zip.hpp>
 #include <boost/mp11.hpp>
 #include <catch2/catch_all.hpp>
-#include <magic_enum_format.hpp>
+#include <magic_enum/magic_enum_format.hpp>
 
 #include <tuple>
 
