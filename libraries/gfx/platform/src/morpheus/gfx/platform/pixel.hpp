@@ -6,10 +6,10 @@
 namespace morpheus::gfx
 {
 
-/*! \enum pixel_format
+/*! \enum PixelFormat
 
  */
-enum class pixel_format : std::int32_t
+enum class PixelFormat : std::int32_t
 {
     UNKNOWN,
 //    VK_FORMAT_R8_UNORM

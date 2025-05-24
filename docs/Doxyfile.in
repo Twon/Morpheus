@@ -100,3 +100,6 @@ GENERATE_XML           = @DOXYGEN_GENERATE_XML@
 # This tag requires that the tag GENERATE_XML is set to YES.
 
 XML_OUTPUT             = @DOXYGEN_XML_OUTPUT@
+
+# Files to exclude from documentation generation.
+EXCLUDE                = @DOXYGEN_EXCLUDE@
