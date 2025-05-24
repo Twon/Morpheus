@@ -6,6 +6,8 @@ morpheus_add_tests(
 target_sources(MorpheusGfxTests
     PRIVATE
         image.tests.cpp
+        monitor.tests.cpp
+        render_window.tests.cpp
         vendor.tests.cpp
 )
 
@@ -13,6 +15,10 @@ target_link_libraries(MorpheusGfxTests
     PRIVATE
         morpheus::gfx::platform
 )
+
+if (APPLE)
+    add_subdirectory(macos)
+endif(APPLE)
 
 if (WIN32)
     add_subdirectory(win32)

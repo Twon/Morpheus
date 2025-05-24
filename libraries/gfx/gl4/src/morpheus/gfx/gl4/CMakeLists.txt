@@ -10,6 +10,10 @@ target_sources(MorpheusGfxGL4
         type_mapping.cpp
 )
 
+if(APPLE)
+    add_subdirectory(agl)
+endif(APPLE)
+
 if (WIN32)
     add_subdirectory(wgl)
 endif(WIN32)
