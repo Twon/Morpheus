@@ -1,7 +1,9 @@
 #pragma once
 
+#include <morpheus/core/conformance/version.hpp>
+
 #if __has_include(<source_location>)
-    #include <source_location>
+    #include <source_location> // IWYU pragma: export
 #endif
 
 // clang-format off
@@ -13,7 +15,7 @@
 
 #else
 
-    #include <boost/assert/source_location.hpp>
+    #include <boost/assert/source_location.hpp> // IWYU pragma: export
 
     namespace morpheus{ namespace sl_ns = boost; }
 

@@ -2,11 +2,10 @@
 
 // clang-format off
 #if __has_include(<bit>)
-    #include <bit>
+    #include <bit> // IWYU pragma: export
 #endif
 
 #if ( __cpp_lib_bit_cast >= 201806L )
-    #include <bit>
     namespace morpheus { namespace bit_ns = std; }
 #else
     namespace morpheus {
