@@ -73,7 +73,6 @@ function(morpheus_add_tests)
 
     target_link_libraries(${MORPHEUS_NAME}
         PRIVATE
-             Catch2::Catch2
              morpheus::core::testing
     )
 

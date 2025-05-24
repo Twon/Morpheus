@@ -17,8 +17,8 @@ target_sources(MorpheusCoreTests
 
 target_link_libraries(MorpheusCoreTests
     PRIVATE
-         MorpheusCore
-         morpheus::core::mocking
+        morpheus::core
+        morpheus::core::mocking
 )
 
 add_subdirectory(base)
