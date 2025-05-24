@@ -10,8 +10,8 @@ namespace morpheus::containers
 {
 
 /// \struct string_hash
-///     Defines a hasher for string which enable heterogenous overloads as outlined at 
-///     <a href="https://github.com/martinus/unordered_dense?tab=readme-ov-file#324-heterogeneous-overloads-using-is_transparent ">unordered_dense</a> 
+///     Defines a hasher for string which enable heterogeneous overloads as outlined at
+///     <a href="https://github.com/martinus/unordered_dense?tab=readme-ov-file#324-heterogeneous-overloads-using-is_transparent ">unordered_dense</a>
 struct string_hash {
     using is_transparent = void; // enable heterogeneous overloads
     using is_avalanching = void; // mark class as high quality avalanching hash
@@ -47,12 +47,12 @@ struct UnorderdDenseSet<std::string> {
 }
 
 /// \using UnorderdMap
-///     Helper alias which ensure users get heterogenous overloads where possible.
+///     Helper alias which ensure users get heterogeneous overloads where possible.
 template<typename K, typename V>
 using UnorderedMap = details::UnorderdDenseMap<K, V>::type;
 
 /// \using UnorderedSet
-///     Helper alias which ensure users get heterogenous overloads where possible.
+///     Helper alias which ensure users get heterogeneous overloads where possible.
 template<typename V>
 using UnorderedSet = details::UnorderdDenseSet< V>::type;
 
