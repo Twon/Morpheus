@@ -6,4 +6,5 @@ target_sources(MorpheusCore
         FILES
             function_ref.hpp
             overload.hpp
+            switch.hpp
 )
