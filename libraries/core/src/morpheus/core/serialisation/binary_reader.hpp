@@ -55,6 +55,7 @@ public:
     /// \copydoc morpheus::serialisation::concepts::ReaderArchtype::endNullable()
     void endNullable() noexcept {}
 
+    /// Reads a integral type, a float or double type from the serialisation.
     template <typename T>
     requires std::integral<T> or std::floating_point<T>
     T read()
@@ -68,6 +69,7 @@ public:
     }
 
     // clang-format off
+    /// Reads a string type from the serialisation.
     template <typename T>
     requires std::is_same_v<T, std::string>
     T read()
@@ -81,6 +83,7 @@ public:
         return value;
     }
 
+    /// Reads a stream of bytes from the serialisation.
     template <typename T>
     requires std::is_same_v<T, std::vector<std::byte>>
     T read()
