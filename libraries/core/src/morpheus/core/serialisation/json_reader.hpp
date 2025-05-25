@@ -4,6 +4,7 @@
 #include "morpheus/core/base/cold.hpp"
 #include "morpheus/core/functional/overload.hpp"
 #include "morpheus/core/memory/polymorphic_value.hpp"
+#include "morpheus/core/serialisation/concepts/reader_archetype.hpp"
 #include "morpheus/core/serialisation/exceptions.hpp"
 
 #include <boost/numeric/conversion/cast.hpp>

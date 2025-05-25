@@ -63,7 +63,7 @@ struct control_block_copier
 ///     for construction and assignment operations.  Type erasure is used here so subclasses can specify how to copy
 ///     but also where to allocate memory from.  This allows for instance subclasses to be derived which use allocator
 ///     or other memory resources from which to allocate from when cloning objects and other control blocks.
-/// \tparam The underlying polymorphic type the control block creates.
+/// \tparam T The underlying polymorphic type the control block creates.
 template <class T>
 struct control_block
 {
