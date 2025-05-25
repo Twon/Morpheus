@@ -2,6 +2,7 @@
 
 #include "morpheus/core/base/cold.hpp"
 #include "morpheus/core/conformance/format.hpp"
+#include "morpheus/core/serialisation/concepts/reader_archetype.hpp"
 #include "morpheus/core/serialisation/exceptions.hpp"
 
 #include <cstdint>
