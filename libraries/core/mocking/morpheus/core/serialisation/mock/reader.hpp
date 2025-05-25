@@ -72,7 +72,7 @@ public:
     MOCK_METHOD(std::vector<std::byte>, read, (std::vector<std::byte>), ());
     ///@}
 
-    /// Template wrapper around read which dispatchs to the correct concrete read method based on the type T.
+    /// Template wrapper around read which dispatches to the correct concrete read method based on the type T.
     template<typename T>
     T read() requires requires(Reader r) { r.read(T{}); }
     {
