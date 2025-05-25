@@ -55,6 +55,8 @@ public:
     /// \copydoc morpheus::serialisation::concepts::ReaderArchtype::endNullable()
     void endNullable() noexcept {}
 
+    // Work around for Doxygen duplicate symbols bug, this is now fixed in Doyxgn 1.14.0: https://github.com/doxygen/doxygen/commit/64d0cb7f695b2ebe63131c06b7762c1f75212c28
+    /// @cond INTERNAL
     /// Reads a integral type, a float or double type from the serialisation.
     template <typename T>
     requires std::integral<T> or std::floating_point<T>
@@ -97,7 +99,7 @@ public:
         return value;
     }
     // clang-format on
-
+    /// @endcond
 
 private:
     std::istream& mInStream;

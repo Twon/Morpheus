@@ -81,6 +81,8 @@ public:
     /// \copydoc morpheus::serialisation::concepts::ReaderArchtype::endNullable()
     void endNullable();
 
+    // Work around for Doxygen duplicate symbols bug, this is now fixed in Doyxgn 1.14.0: https://github.com/doxygen/doxygen/commit/64d0cb7f695b2ebe63131c06b7762c1f75212c28
+    /// @cond INTERNAL
     // clang-format off
     /// Read a boolean from the serialisation.
     template <typename T>
@@ -144,7 +146,7 @@ public:
         return {};
     }
     // clang-format on
-
+    /// @endcond
 private:
     enum class Event : std::uint32_t
     {
