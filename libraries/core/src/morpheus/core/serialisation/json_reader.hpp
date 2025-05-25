@@ -136,6 +136,7 @@ public:
         return std::get<T>(*next);
     }
 
+    /// Read a blob of binary from the serialisation.
     template <typename T>
     requires std::is_same_v<T, std::vector<std::byte>>
     T read()
