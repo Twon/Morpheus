@@ -1,6 +1,7 @@
 #pragma once
 
 #include "morpheus/core/base/platform.hpp"
+#include "morpheus/core/serialisation/concepts/writer_archetype.hpp"
 
 #include <rapidjson/writer.h>
 #include <rapidjson/ostreamwrapper.h>

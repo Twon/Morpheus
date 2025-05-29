@@ -4,6 +4,7 @@
 #include "morpheus/core/base/cold.hpp"
 #include "morpheus/core/functional/overload.hpp"
 #include "morpheus/core/memory/polymorphic_value.hpp"
+#include "morpheus/core/serialisation/concepts/reader_archetype.hpp"
 #include "morpheus/core/serialisation/exceptions.hpp"
 
 #include <boost/numeric/conversion/cast.hpp>
@@ -136,6 +137,7 @@ public:
         return std::get<T>(*next);
     }
 
+    /// Read a blob of binary from the serialisation.
     template <typename T>
     requires std::is_same_v<T, std::vector<std::byte>>
     T read()
@@ -143,7 +145,6 @@ public:
         return {};
     }
     // clang-format on
-
 private:
     enum class Event : std::uint32_t
     {

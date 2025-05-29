@@ -13,7 +13,7 @@ namespace morpheus::meta::concepts
 ///         { T.getType() } -> Trait<std::is_enum>;
 ///     };
 /// \endcode
-/// \notes
+/// \note
 ///     See [Lightning Talk: Higher-Order Template Metaprogramming with C++23 - Ed Catmur - CppCon 2023](https://www.youtube.com/watch?v=KENynEQoqCo)
 template <class T, template <typename, typename...> class TT, class... Args>
 concept Trait = TT<T, Args...>::value;

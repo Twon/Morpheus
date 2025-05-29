@@ -77,6 +77,8 @@ struct Associative : AllocatorAware, detail::Multi<multi>, detail::Mapped<mapped
     struct node_type{};
 
     using InsertReturnType = std::conditional_t<multi, iterator, std::pair<iterator, bool>>;
+
+    /// @cond INTERNAL
     using InsertNodeHandleReturnType = std::invoke_result_t<decltype([]
     {
         if constexpr (requires { requires requires {typename detail::Multi<multi>::insert_return_type; }; })
@@ -88,6 +90,8 @@ struct Associative : AllocatorAware, detail::Multi<multi>, detail::Mapped<mapped
             return typename AllocatorAware::iterator{};
         }
     })>;
+    /// @endcond
+
     using BoundReturnType = std::conditional_t<multi, iterator, std::pair<iterator, iterator>>;
     using BoundConstReturnType = std::conditional_t<multi, const_iterator, std::pair<const_iterator, const_iterator>>;
 
