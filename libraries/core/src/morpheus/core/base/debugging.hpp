@@ -1,7 +1,6 @@
 #pragma once
 
-#include <morpheus/core/base/compiler.hpp>
-#include <morpheus/core/base/platform.hpp>
+#include <morpheus/core/base/export.hpp>
 
 #include <string_view>
 

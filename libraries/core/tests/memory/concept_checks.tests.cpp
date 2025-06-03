@@ -4,7 +4,7 @@
 #include "morpheus/core/memory/concepts/nullable_pointer.hpp"
 #include "morpheus/core/memory/default_copy.hpp"
 
-#include <catch2/catch_all.hpp>
+#include <catch2/catch_test_macros.hpp>
 
 #include <boost/interprocess/offset_ptr.hpp>
 

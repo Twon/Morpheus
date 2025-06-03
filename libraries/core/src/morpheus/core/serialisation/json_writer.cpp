@@ -2,6 +2,8 @@
 #include "morpheus/core/base/verify.hpp"
 #include "morpheus/core/serialisation/json_writer.hpp"
 
+#include <rapidjson/rapidjson.h>
+
 namespace morpheus::serialisation
 {
 

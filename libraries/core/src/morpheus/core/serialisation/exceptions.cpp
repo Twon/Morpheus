@@ -1,9 +1,8 @@
 #include "morpheus/core/base/exceptions.hpp"
-#include "morpheus/core/serialisation/exceptions.hpp"
 #include "morpheus/core/conformance/stacktrace.hpp"
 #include "morpheus/core/serialisation/exceptions.hpp"
 
-#include <boost/exception/all.hpp>
+#include <boost/exception/exception.hpp>
 
 namespace morpheus::serialisation
 {

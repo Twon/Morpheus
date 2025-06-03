@@ -1,5 +1,6 @@
 #pragma once
 
+// IWYU pragma: always_keep
 #include "morpheus/core/serialisation/adapters/std/ranges.hpp"
 
 #include <forward_list>
