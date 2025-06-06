@@ -12,3 +12,5 @@ target_compile_definitions(MorpheusCoreTesting
 	    GTEST_DONT_DEFINE_FAIL
 	    GTEST_DONT_DEFINE_SUCCEED
 )
+
+add_subdirectory(std)

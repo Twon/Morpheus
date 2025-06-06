@@ -22,6 +22,7 @@ target_link_libraries(MorpheusCoreTests
 )
 
 add_subdirectory(base)
+add_subdirectory(catch2)
 add_subdirectory(conformance)
 add_subdirectory(containers)
 add_subdirectory(conversion)
