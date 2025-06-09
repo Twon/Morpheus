@@ -144,7 +144,6 @@ inline char const* Get3DFeatureName(ctl_3d_feature_t FeatureType)
 /***************************************************************
  * @brief
  * Helper function/macros
- * @param
  * @return char*
  ***************************************************************/
 inline char const* GetProfileTypeName(ctl_3d_tier_type_flags_t Flag)
@@ -162,7 +161,6 @@ inline char const* GetProfileTypeName(ctl_3d_tier_type_flags_t Flag)
 /***************************************************************
  * @brief
  * Helper function/macros
- * @param
  * @return char*
  ***************************************************************/
 inline char const* GetProfileTierName(ctl_3d_tier_profile_flags_t Flags)
@@ -183,7 +181,6 @@ inline char const* GetProfileTierName(ctl_3d_tier_profile_flags_t Flags)
  * @brief Method to print 3d feature support across UMD in a generic way
  *
  * place_holder_for_Detailed_desc
- * @param
  * @return
  ***************************************************************/
 inline void Print3DFeatureSupport(ctl_3d_feature_details_t* pFeatureDetails)
@@ -192,7 +189,6 @@ inline void Print3DFeatureSupport(ctl_3d_feature_details_t* pFeatureDetails)
     FeatureSupport = pFeatureDetails->FeatureMiscSupport;
     if (CTL_3D_FEATURE_MISC_FLAG_DX11 & FeatureSupport)
     {
-        printf("  pFeatureDetails->FeatureMiscSupport = CTL_3D_FEATURE_MISC_FLAG_DX11\n");
     }
     if (CTL_3D_FEATURE_MISC_FLAG_DX12 & FeatureSupport)
     {
@@ -213,7 +209,6 @@ inline void Print3DFeatureSupport(ctl_3d_feature_details_t* pFeatureDetails)
  * @brief Method to print 3d feature details struct in a generic way
  *
  * place_holder_for_Detailed_desc
- * @param
  * @return
  ***************************************************************/
 inline void Print3DFeatureDetail(ctl_3d_feature_details_t* pFeatureDetails)
@@ -384,7 +379,6 @@ inline void Print3DFeatureDetail(ctl_3d_feature_details_t* pFeatureDetails)
 /***************************************************************
  * @brief
  * place_holder_for_Detailed_desc
- * @param
  * @return
  ***************************************************************/
 ctl_result_t CtlLevel0HandleTest(ctl_device_adapter_handle_t hDevices)
@@ -458,7 +452,6 @@ ctl_result_t CtlLevel0HandleTest(ctl_device_adapter_handle_t hDevices)
 /***************************************************************
  * @brief
  * Sharpness interface usage model
- * @param
  * @return
  ***************************************************************/
 ctl_result_t CtlSharpnessTest(ctl_display_output_handle_t hDisplayOutput)
@@ -623,7 +616,6 @@ inline bool Get3DCustomStruct(ctl_3d_feature_getset_t* p3DGetSetArgs)
 /***************************************************************
  * @brief
  * Various gaming feature get/set usage model
- * @param
  * @return
  ***************************************************************/
 ctl_result_t CtlGet3DGlobalTest(ctl_device_adapter_handle_t hDevices)
@@ -713,7 +705,6 @@ ctl_result_t CtlGet3DGlobalTest(ctl_device_adapter_handle_t hDevices)
 /***************************************************************
  * @brief CtlGetDisplayPropertiesTest
  * Display properties test
- * @param
  * @return
  ***************************************************************/
 ctl_result_t CtlGetDisplayPropertiesTest(ctl_display_output_handle_t hDisplayOutput, ctl_display_properties_t* pStdisplayproperties)
@@ -751,7 +742,6 @@ ctl_result_t CtlGetDisplayPropertiesTest(ctl_display_output_handle_t hDisplayOut
 /***************************************************************
  * @brief
  * Encoder properties test
- * @param
  * @return
  ***************************************************************/
 ctl_result_t CtlGetDisplayEncoderPropertiesTest(ctl_display_output_handle_t hDisplayOutput, ctl_adapter_display_encoder_properties_t* pStdisplayencoderproperties)
@@ -780,7 +770,6 @@ ctl_result_t CtlGetDisplayEncoderPropertiesTest(ctl_display_output_handle_t hDis
 /***************************************************************
  * @brief
  * Example function which shows how to wait on property changes
- * @param
  * @return
  ***************************************************************/
 bool QuiteEventThread = false;
@@ -814,7 +803,6 @@ DWORD WINAPI CtlEventThread(LPVOID ThreadParameterPtr)
 /***************************************************************
  * @brief
  * Example function which shows how to wait on property changes
- * @param
  * @return
  ***************************************************************/
 ctl_result_t CtlTestEvents(ctl_device_adapter_handle_t hAdapter)
@@ -938,7 +926,6 @@ ctl_result_t CtlTestEvents(ctl_device_adapter_handle_t hAdapter)
 /***************************************************************
  * @brief
  * Print driver version info
- * @param
  * @return
  ***************************************************************/
 void PrintAdapterProperties(ctl_device_adapter_properties_t StDeviceAdapterProperties)
@@ -964,7 +951,6 @@ void PrintAdapterProperties(ctl_device_adapter_properties_t StDeviceAdapterPrope
  * @brief
  * To test an additional caller which will do it's own ctlInit
  * ctlEnumerate etc.
- * @param
  * @return
  ***************************************************************/
 ctl_result_t CtlTestAdditionalCaller(void)
@@ -1057,7 +1043,6 @@ void PrintDetailsFromSysman(ctl_device_adapter_handle_t hDevice)
  * @brief Main Function
  *
  * place_holder_for_Detailed_desc
- * @param
  * @return
  ***************************************************************/
 int main()
