@@ -1,5 +1,6 @@
 #pragma once
 
+#include "morpheus/core/serialisation/concepts/reader_archetype.hpp"
 #include "morpheus/core/serialisation/exceptions.hpp"
 
 #include <concepts>
