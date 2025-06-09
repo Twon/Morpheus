@@ -1,21 +1,22 @@
+
+
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="../../">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Serialisation &mdash; Morpheus 0.0.1 documentation</title>
-      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
-      <link rel="stylesheet" href="../../_static/graphviz.css" type="text/css" />
-  <!--[if lt IE 9]>
-    <script src="../../_static/js/html5shiv.min.js"></script>
-  <![endif]-->
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+
   
-        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-        <script src="../../_static/jquery.js"></script>
-        <script src="../../_static/underscore.js"></script>
-        <script src="../../_static/doctools.js"></script>
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=d45e8c67"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
@@ -28,11 +29,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="../../index.html" class="icon icon-home"> Morpheus
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Morpheus
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -71,7 +76,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="../../index.html" class="icon icon-home"></a></li>
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
       <li class="breadcrumb-item active">Serialisation</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../../_sources/libraries/core/serialisation.md.txt" rel="nofollow"> View page source</a>
@@ -83,7 +88,7 @@
            <div itemprop="articleBody">
              
   <section id="serialisation">
-<h1>Serialisation<a class="headerlink" href="#serialisation" title="Permalink to this headline"></a></h1>
+<h1>Serialisation<a class="headerlink" href="#serialisation" title="Link to this heading"></a></h1>
 <p>Serialisation is the process of writing objects to and output format and reading them back in. The serialisation framework is designed to be extensible and support a wide range of format, including both binary and text based serialisation.</p>
 <p>Within the framework their are concepts defining interfaces for readers and writers. Reader and writers support a basic set of fundamental operation which must be support for the framework to convert the data of supported types to the serialisation format. Currently supported formats include:</p>
 <ul class="simple">
@@ -102,11 +107,11 @@
 <li><p>Cap’n Proto</p></li>
 </ul>
 <section id="entry-points">
-<h2>Entry Points<a class="headerlink" href="#entry-points" title="Permalink to this headline"></a></h2>
+<h2>Entry Points<a class="headerlink" href="#entry-points" title="Link to this heading"></a></h2>
 <p>The serialisation framework is based on 2 entry points, <code class="docutils literal notranslate"><span class="pre">serialise</span></code> and <code class="docutils literal notranslate"><span class="pre">deserialise</span></code> which are <a class="reference external" href="https://quuxplusone.github.io/blog/2018/03/19/customization-points-for-functions/">customisation point object (CPOs)</a>.  These CPOs do the work of then dispatching to an appropriate overload for the actual type being serialised.</p>
 </section>
 <section id="reader-and-writers">
-<h2>Reader and Writers<a class="headerlink" href="#reader-and-writers" title="Permalink to this headline"></a></h2>
+<h2>Reader and Writers<a class="headerlink" href="#reader-and-writers" title="Link to this heading"></a></h2>
 <p>The serialisation framework provides concepts for readers and writers, which are interfaces specifying how read and write the fundmental primitive types supported by the C++ language.  All serialisation is build upon these basic building blocks.</p>
 <p>.. doxygenconcept:: morpheus::serialisation::concepts::Reader
 :project: morpheus_core</p>
@@ -115,25 +120,25 @@
 </section>
 </section>
 <section id="serialisation-specifications">
-<h1>Serialisation specifications:<a class="headerlink" href="#serialisation-specifications" title="Permalink to this headline"></a></h1>
+<h1>Serialisation specifications:<a class="headerlink" href="#serialisation-specifications" title="Link to this heading"></a></h1>
 <ul class="simple">
 <li><p>ASN.1: https://en.wikipedia.org/wiki/ASN.1</p></li>
 </ul>
 </section>
 <section id="serialisation-formats">
-<h1>Serialisation Formats<a class="headerlink" href="#serialisation-formats" title="Permalink to this headline"></a></h1>
+<h1>Serialisation Formats<a class="headerlink" href="#serialisation-formats" title="Link to this heading"></a></h1>
 <ul class="simple">
 <li><p>https://en.wikipedia.org/wiki/Comparison_of_data-serialization_formats</p></li>
 </ul>
 </section>
 <section id="overview-of-serialisation-in-c">
-<h1>Overview of serialisation in C++<a class="headerlink" href="#overview-of-serialisation-in-c" title="Permalink to this headline"></a></h1>
+<h1>Overview of serialisation in C++<a class="headerlink" href="#overview-of-serialisation-in-c" title="Link to this heading"></a></h1>
 <ul class="simple">
 <li><p>Killing C++ Serialization Overhead &amp; Complexity - Eyal Zedaka - CppCon 2022: https://youtu.be/G7-GQhCw8eE</p></li>
 </ul>
 </section>
 <section id="existing-c-serialisation-libraries">
-<h1>Existing	C++ Serialisation Libraries<a class="headerlink" href="#existing-c-serialisation-libraries" title="Permalink to this headline"></a></h1>
+<h1>Existing	C++ Serialisation Libraries<a class="headerlink" href="#existing-c-serialisation-libraries" title="Link to this heading"></a></h1>
 <ul class="simple">
 <li><p>Alpaca: https://github.com/p-ranav/alpaca</p></li>
 <li><p>Arvo: https://avro.apache.org/</p></li>
@@ -154,7 +159,7 @@
 </ul>
 </section>
 <section id="toml-sax-parsers">
-<h1>Toml Sax Parsers<a class="headerlink" href="#toml-sax-parsers" title="Permalink to this headline"></a></h1>
+<h1>Toml Sax Parsers<a class="headerlink" href="#toml-sax-parsers" title="Link to this heading"></a></h1>
 <ul class="simple">
 <li><p>loltoml: https://github.com/andrusha97/loltoml</p></li>
 </ul>
