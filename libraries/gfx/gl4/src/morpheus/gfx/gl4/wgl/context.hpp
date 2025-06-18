@@ -6,6 +6,7 @@
 #include <functional>
 #include <memory>
 #include <optional>
+#include <string>
 
 namespace morpheus::gfx::gl4::wgl
 {
