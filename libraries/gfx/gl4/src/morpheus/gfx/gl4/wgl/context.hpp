@@ -19,8 +19,6 @@ public:
 
     static Expected create(HWND const window, PIXELFORMATDESCRIPTOR const& pfd);
 
-    //explicit Context(HWND const window, PIXELFORMATDESCRIPTOR const& pfd);
-
     Context(Context const&) = delete;
     Context& operator=(Context const&) = delete;
 
@@ -36,7 +34,7 @@ private:
     /// Context initialised from the global default.
     Context();
 
-    Context(HWND const window, HDC const hdc, HGLRC const hglrc);
+    explicit Context(HWND const window, HDC const hdc, HGLRC const hglrc);
 
     /// \struct ReleaseResources
     ///     Allows std::unique_ptr handles to override the expect pointer type and to define a lambda to execute
