@@ -67,7 +67,7 @@ jobs:
       - name: Install build dependencies and IWYU
         run: |
           sudo apt update
-          sudo apt install -y clang llvm-dev cmake git ninja-build
+          sudo apt install -y clang llvm-dev cmake git ninja-build curl
           # Build and install IWYU
           git clone https://github.com/include-what-you-use/include-what-you-use.git
           cd include-what-you-use
