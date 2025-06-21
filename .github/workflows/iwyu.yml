@@ -104,7 +104,7 @@ jobs:
         shell: bash
         run: |
           conan install "${{github.workspace}}" --build missing
-  
+
       - name: Conan Preset
         shell: bash
         run: echo "CONAN_PRESET=conan-$(echo ${{env.BUILD_TYPE}} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
