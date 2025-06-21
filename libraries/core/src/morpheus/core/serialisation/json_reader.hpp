@@ -56,10 +56,10 @@ public:
     /// \param[in] stream Stream used to read in the json source.  This must outlive the reader as its held by reference.
     /// \param[in] validate If true, the json will be validated against the schema.  If false, no validation is performed.
     explicit JsonReader(OwnedStream stream, bool validate = true);
-    
+
     explicit JsonReader(JsonReader const& rhs);
 
-    /// Destructor for the JsonReader.    
+    /// Destructor for the JsonReader.
     ~JsonReader();
 
     /// \copydoc morpheus::serialisation::concepts::ReaderArchetype::beginComposite()

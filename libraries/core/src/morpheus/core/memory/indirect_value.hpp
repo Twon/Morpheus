@@ -227,8 +227,8 @@ struct indirect_value_base<T, CD, CD>
 };
 
 /// \struct indirect_value_base
-///     The default case for indirect value is the case where copier and deleter are the differen object.  In many cases 
-///     these will have no size and are thus marked [[no_unique_address]] to avoid any storage requirments
+///     The default case for indirect value is the case where copier and deleter are the different object.  In many cases
+///     these will have no size and are thus marked [[no_unique_address]] to avoid any storage requirements
 /// \tparam T The underlying value type.
 /// \tparam C The copier object.
 /// \tparam D The deleter object.
