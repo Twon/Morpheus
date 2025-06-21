@@ -1,0 +1,128 @@
+#
+# Copyright 2025 Antony Peacock
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
+# documentation files (the "Software"), to deal in the Software without restriction, including without limitation the
+# rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit
+# persons to whom the Software is furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all copies or substantial portions of the
+# Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+# WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+# COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+# OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+#
+
+name: Include What You Use
+
+on: workflow_dispatch
+
+env:
+  # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
+  BUILD_TYPE: Debug
+  COMPILER_TYPE: gcc
+  COMPILER_VERSION: 14
+  STDLIB: libstdc++11
+
+jobs:
+  build:
+    # The CMake configure and build commands are platform agnostic and should work equally
+    # well on Windows or Mac.  You can convert this to a matrix build if you need
+    # cross-platform coverage.
+    # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ "ubuntu-latest" ]
+
+    steps:
+      - uses: actions/checkout@v4.2.2
+
+      - name: Cache Conan data
+        uses: actions/cache@v4.2.2
+        env:
+          cache-name: cache-conan-data
+        with:
+          path: ${{github.workspace}}/conan_cache_save.tgz
+          key: ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.os }}-${{ env.BUILD_TYPE }}-${{ env.COMPILER_TYPE }}-${{ env.COMPILER_VERSION }}-${{ env.STDLIB }}
+          restore-keys: |
+            ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.os }}-${{ env.BUILD_TYPE }}-${{ env.COMPILER_TYPE }}-${{ env.COMPILER_VERSION }}-
+            ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.os }}-${{ env.BUILD_TYPE }}-${{ env.COMPILER_TYPE }}-
+            ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.os }}-${{ env.BUILD_TYPE }}-
+            ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.os }}-
+
+      - name: Install Latest GCC
+        if: matrix.settings.compiler.type == 'GCC'
+        uses: egor-tensin/setup-gcc@v1.3
+        with:
+          version: ${{ env.COMPILER_VERSION  }}
+          platform: x64
+
+      - name: Install Include What You Use
+        shell: bash
+        run: |
+          sudo apt update
+          sudo apt install include-what-you-use
+
+      - name: Set up Python
+        uses: actions/setup-python@v5.4.0
+        with:
+          python-version: '3.13'
+
+      - name: Install Python requirements
+        run: |
+          pip install -r ./requirements.txt
+
+      - name: Configure Conan
+        shell: bash
+        run: |
+          conan profile detect --force
+          sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.cppstd=.*/compiler.cppstd=20/' .conan2/profiles/default
+          sed -i.backup '/^\[settings\]$/,/^\[/ s/^build_type=.*/build_type=${{ env.BUILD_TYPE }}/' .conan2/profiles/default
+          sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler=.*/compiler=${{ env.COMPILER_TYPE }}/' .conan2/profiles/default
+          sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.version=.*/compiler.version=${{ env.COMPILER_VERSION }}/' .conan2/profiles/default
+          sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.libcxx=.*/compiler.libcxx=${{ env.STDLIB }}/' .conan2/profiles/default
+          sed -i.backup '1a mold*:build_type=Release' .conan2/profiles/default
+          sed -i.backup '1a onetbb*:build_type=Release' .conan2/profiles/default
+          sed -i.backup '1a mold*:compiler.libcxx=libstdc++11' .conan2/profiles/default
+          echo "tools.cmake.cmaketoolchain:generator = Ninja" >> .conan2/global.conf
+          echo "tools.system.package_manager:mode = install" >> .conan2/global.conf
+          echo "tools.system.package_manager:sudo = True" >> .conan2/global.conf
+          conan profile show -pr default
+
+      - name: Conan Cache Restore
+        shell: bash
+        run: |
+          if [ -f ./conan_cache_save.tgz ]; then
+              conan cache restore ./conan_cache_save.tgz
+          fi
+
+      - name: Configure Install
+        working-directory: ${{github.workspace}}
+        shell: bash
+        run: |
+          conan install "${{github.workspace}}" --build missing
+  
+      - name: Conan Preset
+        shell: bash
+        run: echo "CONAN_PRESET=conan-$(echo ${{env.BUILD_TYPE}} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+
+      - name: Configure CMake
+        # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
+        # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
+        run: |
+           source build/${{env.BUILD_TYPE}}/generators/conanbuild.sh
+           cmake --preset ${{ env.CONAN_PRESET }} -DIWYU_ENABLE=1
+
+      - name: Build
+        # Build your program with the given configuration
+        run: |
+           source build/${{env.BUILD_TYPE}}/generators/conanbuild.sh
+           cmake --build --preset ${{ env.CONAN_PRESET }}
+
+      - name: Conan Cache Save
+        run: |
+          conan cache clean
+          conan cache save "*/*:*"
