@@ -45,6 +45,7 @@ struct Container
     /// Move assignment operator
     constexpr Container& operator=(Container&&);
 
+    /// Spaceship operator
     constexpr auto operator<=>(Container const&) const = default;
 
     /// returns an iterator to the beginning

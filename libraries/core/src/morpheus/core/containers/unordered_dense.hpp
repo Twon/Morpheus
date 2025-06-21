@@ -13,8 +13,8 @@ namespace morpheus::containers
 ///     Defines a hasher for string which enable heterogeneous overloads as outlined at
 ///     <a href="https://github.com/martinus/unordered_dense?tab=readme-ov-file#324-heterogeneous-overloads-using-is_transparent ">unordered_dense</a>
 struct string_hash {
-    using is_transparent = void; // enable heterogeneous overloads
-    using is_avalanching = void; // mark class as high quality avalanching hash
+    using is_transparent = void; ///< Enable heterogeneous overloads
+    using is_avalanching = void; ///< Mark class as high quality avalanching hash
 
     [[nodiscard]] auto operator()(std::string_view str) const noexcept -> std::uint64_t {
         return ankerl::unordered_dense::hash<std::string_view>{}(str);

@@ -91,15 +91,21 @@ class direct_control_block : public control_block<T>
 public:
     using ControlBlockValue = typename control_block<T>::ControlBlockValue;
 
+    /// Constructs a direct control block with arguments forwarded to the underlying type.
     template <typename... Ts>
     constexpr explicit direct_control_block(Ts&&... ts)
     : mStorage(std::forward<Ts>(ts)...)
     {}
 
+    /// Clones the control block.
+    /// \return Returns a pointer to the cloned control block.
+    /// \note The cloned control block must be deleted by the caller.
     [[nodiscard]] constexpr direct_control_block* clone() const override { return new direct_control_block<T, U>(mStorage); }
 
+    /// Returns a pointer to the underlying type.
     [[nodiscard]] constexpr U* ptr() noexcept override { return &mStorage; }
 
+    /// Returns a pointer to the underlying type.
     [[nodiscard]] constexpr U const* ptr() const noexcept override { return &mStorage; }
 
 private:
@@ -224,7 +230,7 @@ public:
     template <class U>
     friend class polymorphic_value;
 
-    /// \defgroup Constructors
+    /// \defgroup Constructors Constructors of polymorphic_value
     ///@{
     /// Constructs an empty polymorphic value.
     constexpr polymorphic_value() noexcept = default;

@@ -16,8 +16,13 @@ namespace morpheus::gfx::gl4::wgl
 class Context
 {
 public:
+    /// Expected result type for the Context creation function.
     using Expected = exp_ns::expected<Context, std::string>;
 
+    /// Creates a new OpenGL context using the global default device context.
+    /// \param window The window to create the OpenGL context for.
+    /// \param pfd The pixel format descriptor to use for the OpenGL context.
+    /// \return Returns an expected containing the new OpenGL context or an error message.
     static Expected create(HWND const window, PIXELFORMATDESCRIPTOR const& pfd);
 
     Context(Context const&) = delete;
@@ -29,7 +34,10 @@ public:
     Context enable();
     void disable();
 
+    /// Gets the current OpenGL device context handle.
     auto getDC() const noexcept { return mDeviceContext.get(); }
+    
+    /// Gets the current OpenGL context handle.
     auto getGL() const noexcept { return mGLContext.get(); }
 private:
     /// Context initialised from the global default.

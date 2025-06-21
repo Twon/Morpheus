@@ -30,22 +30,22 @@ public:
     {
     }
 
-    /// \copydoc morpheus::serialisation::concepts::ReaderArchtype::isTextual()
+    /// \copydoc morpheus::serialisation::concepts::WriterArchetype::isTextual()
     static constexpr bool isTextual() noexcept { return false; }
 
-    /// \copydoc morpheus::serialisation::concepts::WriterArchtype::beginComposite()
+    /// \copydoc morpheus::serialisation::concepts::WriterArchetype::beginComposite()
     void beginComposite() noexcept {}
 
-    /// \copydoc morpheus::serialisation::concepts::WriterArchtype::endComposite()
+    /// \copydoc morpheus::serialisation::concepts::WriterArchetype::endComposite()
     void endComposite() noexcept {}
 
-    /// \copydoc morpheus::serialisation::concepts::WriterArchtype::beginValue(std::string_view const)
+    /// \copydoc morpheus::serialisation::concepts::WriterArchetype::beginValue(std::string_view const)
     void beginValue(std::string_view const) noexcept {}
 
-    /// \copydoc morpheus::serialisation::concepts::WriterArchtype::endValue()
+    /// \copydoc morpheus::serialisation::concepts::WriterArchetype::endValue()
     void endValue() noexcept {}
 
-    /// \copydoc morpheus::serialisation::concepts::WriterArchtype::beginSequence()
+    /// \copydoc morpheus::serialisation::concepts::WriterArchetype::beginSequence()
     void beginSequence(std::optional<std::size_t> size = std::nullopt)
     {
         if (size)
@@ -54,10 +54,10 @@ public:
             throwBinaryException("Sequence does not provide size.  This must be proided for binary serialisation.");
     }
 
-    /// \copydoc morpheus::serialisation::concepts::WriterArchtype::endSequence()
+    /// \copydoc morpheus::serialisation::concepts::WriterArchetype::endSequence()
     void endSequence() noexcept {}
 
-    /// \copydoc morpheus::serialisation::concepts::WriterArchtype::beginNullable(bool const)
+    /// \copydoc morpheus::serialisation::concepts::WriterArchetype::beginNullable(bool const)
     void beginNullable(bool const null)
     {
         write(null);
@@ -68,7 +68,7 @@ public:
 
     /// Write an integral or floating point type to the serialisation.
     /// \tparam T The type of the value to write.  Must be an integral or floating point type.
-    /// \param value The value to write to the serialisation.
+    /// \param[in] value The value to write to the serialisation.
     template <typename T>
     requires std::integral<T> or std::floating_point<T>
     void write(T const value)
