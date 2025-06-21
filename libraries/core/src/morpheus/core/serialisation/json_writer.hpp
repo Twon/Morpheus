@@ -21,35 +21,38 @@ namespace morpheus::serialisation
 class MORPHEUSCORE_EXPORT JsonWriter
 {
 public:
+    /// \copydoc morpheus::serialisation::concepts::WriterArchetype::canBeTextual()
     static constexpr bool canBeTextual() { return true; }
 
-    /// \copydoc morpheus::serialisation::concepts::WriterArchtype::isTextual()
+    /// \copydoc morpheus::serialisation::concepts::WriterArchetype::isTextual()
     static constexpr bool isTextual() { return true; }
 
+    /// Construct a JSON writer from an output stream.
+    /// \param[in] stream The output stream to write to. This must outlive the writer as it is held by reference.
     explicit JsonWriter(std::ostream& stream);
 
-    /// \copydoc morpheus::serialisation::concepts::WriterArchtype::beginComposite()
+    /// \copydoc morpheus::serialisation::concepts::WriterArchetype::beginComposite()
     void beginComposite();
 
-    /// \copydoc morpheus::serialisation::concepts::WriterArchtype::endComposite()
+    /// \copydoc morpheus::serialisation::concepts::WriterArchetype::endComposite()
     void endComposite();
 
-    /// \copydoc morpheus::serialisation::concepts::WriterArchtype::beginValue(std::string_view const)
+    /// \copydoc morpheus::serialisation::concepts::WriterArchetype::beginValue(std::string_view const)
     void beginValue(std::string_view const key);
 
-    /// \copydoc morpheus::serialisation::concepts::WriterArchtype::endValue()
+    /// \copydoc morpheus::serialisation::concepts::WriterArchetype::endValue()
     void endValue();
 
-    /// \copydoc morpheus::serialisation::concepts::WriterArchtype::beginSequence(std::optional<std::size_t>)
+    /// \copydoc morpheus::serialisation::concepts::WriterArchetype::beginSequence(std::optional<std::size_t>)
     void beginSequence(std::optional<std::size_t> size = std::nullopt);
 
-    /// \copydoc morpheus::serialisation::concepts::WriterArchtype::endSequence()
+    /// \copydoc morpheus::serialisation::concepts::WriterArchetype::endSequence()
     void endSequence();
 
-    /// \copydoc morpheus::serialisation::concepts::WriterArchtype::beginNullable(bool const)
+    /// \copydoc morpheus::serialisation::concepts::WriterArchetype::beginNullable(bool const)
     void beginNullable(bool const null);
 
-    /// \copydoc morpheus::serialisation::concepts::WriterArchtype::endNullable()
+    /// \copydoc morpheus::serialisation::concepts::WriterArchetype::endNullable()
     void endNullable();
 
     /// Write a boolean to the serialisation.
@@ -74,9 +77,9 @@ public:
     void write(float const value);
     /// Write a double to the serialisation.
     void write(double const value);
-    /// \copydoc morpheus::serialisation::concepts::WriterArchtype::write(std::string_view const)
+    /// \copydoc morpheus::serialisation::concepts::WriterArchetype::write(std::string_view const)
     void write(std::string_view const value);
-    /// \copydoc morpheus::serialisation::concepts::WriterArchtype::write(std::span<std::byte> const)
+    /// \copydoc morpheus::serialisation::concepts::WriterArchetype::write(std::span<std::byte> const)
     void write(std::span<std::byte const> const value);
     /// Write a string literal to the serialisation.
     template <std::size_t N> void write(const char(&str)[N]) { write(std::string_view(str, N-1)); }

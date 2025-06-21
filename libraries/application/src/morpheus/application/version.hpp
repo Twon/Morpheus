@@ -19,15 +19,24 @@ struct Version
 
 } // namespace morpheus::application
 
+/// Specialisation of the formatter for morpheus::application::Version to format it as a string.
 template <>
 struct morpheus::fmt_ns::formatter<morpheus::application::Version> : morpheus::fmt_ns::formatter<std::string>
 {
+    /// Parse the format specifier for morpheus::application::Version.
+    /// \tparam Context The type of the format context.
+    /// \param ctx The format parse context.
+    /// \return An iterator to the end of the parsed format specifier.
     template <typename Context>
     constexpr auto parse(Context& context)
     {
         return std::begin(context);
     }
 
+    /// Format the morpheus::application::Version as a string.
+    /// \tparam Context The type of the format context.
+    /// \param value The version value to format.
+    /// \param context The format context.
     template <typename Context>
     constexpr auto format(morpheus::application::Version const& value, Context& context) const
     {
@@ -35,9 +44,15 @@ struct morpheus::fmt_ns::formatter<morpheus::application::Version> : morpheus::f
     }
 };
 
+/// Specialisation of the scanner for morpheus::application::Version to scan it from a string.
 template <>
 struct morpheus::scan_ns::scanner<morpheus::application::Version> : morpheus::scan_ns::scanner<std::string>
 {
+    /// Scan for the version.
+    /// \tparam Context The type of the format context.
+    /// \param val The version value to populate.
+    /// \param ctx The scan context.
+    /// \return An expected iterator pointing to the end of the scanned version, or the scan error if it failed.
     template <typename Context>
     auto scan(morpheus::application::Version& val, Context& ctx) const -> morpheus::scan_ns::scan_expected<typename Context::iterator>
     {

@@ -1,6 +1,9 @@
 #pragma once
 
+#include "morpheus/core/serialisation/concepts/reader_archetype.hpp"
+
 #include <gmock/gmock.h>
+
 #include <cstdint>
 #include <cstddef>
 #include <optional>
@@ -20,24 +23,24 @@ public:
     /// \defgroup MockFunctions Mock Functions
     ///@{
 
-    /// \copydoc morpheus::serialisation::concepts::ReaderArchtype::isTextual()
+    /// \copydoc morpheus::serialisation::concepts::ReaderArchetype::isTextual()
     MOCK_METHOD(bool, isTextual, (), ());
 
-    /// \copydoc morpheus::serialisation::concepts::ReaderArchtype::beginComposite()
+    /// \copydoc morpheus::serialisation::concepts::ReaderArchetype::beginComposite()
     MOCK_METHOD(void, beginComposite, (), ());
-    /// \copydoc morpheus::serialisation::concepts::ReaderArchtype::endComposite()
+    /// \copydoc morpheus::serialisation::concepts::ReaderArchetype::endComposite()
     MOCK_METHOD(void, endComposite, (), ());
-    /// \copydoc morpheus::serialisation::concepts::ReaderArchtype::beginValue()
+    /// \copydoc morpheus::serialisation::concepts::ReaderArchetype::beginValue()
     MOCK_METHOD(void, beginValue, (std::string_view), ());
-    /// \copydoc morpheus::serialisation::concepts::ReaderArchtype::endValue()
+    /// \copydoc morpheus::serialisation::concepts::ReaderArchetype::endValue()
     MOCK_METHOD(void, endValue, (), ());
     /// Begin reading a sequence of values.
     MOCK_METHOD(std::optional<std::size_t>, beginSequence, (), ());
-    /// \copydoc morpheus::serialisation::concepts::ReaderArchtype::endSequence()
+    /// \copydoc morpheus::serialisation::concepts::ReaderArchetype::endSequence()
     MOCK_METHOD(void, endSequence, (), ());
     /// Begin reading a nullable value.
     MOCK_METHOD(bool, beginNullable, (), ());
-    /// \copydoc morpheus::serialisation::concepts::ReaderArchtype::endNullable()
+    /// \copydoc morpheus::serialisation::concepts::ReaderArchetype::endNullable()
     MOCK_METHOD(void, endNullable, (), ());
 
     /// Reads a boolean type from the serialisation.
