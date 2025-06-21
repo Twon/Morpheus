@@ -43,6 +43,10 @@ public:
     ReadSerialiser() noexcept(meta::concepts::DefaultNothrowConstructible<T>)
     {}
 
+    /// Constructs a ReadSerialiser with the provided arguments when the underlying reader supports construction
+    /// with those arguments.
+    /// \tparam Args The types of the arguments to forward to the reader's constructor.
+    /// \param args The arguments to forward to the reader's constructor.
     template<typename... Args>
     requires(std::is_constructible_v<ReaderType, Args...>)
     ReadSerialiser(Args&&... args) noexcept(meta::concepts::NothrowConstructible<ReaderType, Args...>)

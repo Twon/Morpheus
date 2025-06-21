@@ -16,7 +16,7 @@ namespace morpheus::meta::concepts
 ///         { t.ids() } -> RangeOver<[]<std::integral>()>;
 ///     }
 /// \endcode
-/// \notes
+/// \note
 ///     See [Lightning Talk: Higher-Order Template Metaprogramming with C++23 - Ed Catmur - CppCon 2023](https://www.youtube.com/watch?v=KENynEQoqCo)
 template <class T, auto C>
 concept Satisfies = requires { C.template operator()<T>(); };
@@ -33,7 +33,7 @@ concept Satisfies = requires { C.template operator()<T>(); };
 ///         { t.d() } -> SatisfiesAfter<std::remove_cvref, []<std::derived_from<B>>()>;
 ///     }
 /// \endcode
-/// \notes
+/// \note
 ///     See [Lightning Talk: Higher-Order Template Metaprogramming with C++23 - Ed Catmur - CppCon 2023](https://www.youtube.com/watch?v=KENynEQoqCo)
 template <class T, template <typename> class TT, auto C>
 concept SatisfiesAfter = Satisfies<typename TT<T>::type, C>;

@@ -77,7 +77,7 @@ class Morpheus(ConanFile):
      }
     requires = (
         "unordered_dense/4.5.0",
-        "boost/1.87.0",
+        "boost/1.88.0",
         "ctre/3.9.0",
         "magic_enum/0.9.7",
         "ms-gsl/4.1.0",
@@ -152,7 +152,7 @@ class Morpheus(ConanFile):
             self.tool_requires("cmake/4.0.1")
 
         if self.options.build_docs:
-            self.build_requires("doxygen/1.13.2")
+            self.build_requires("doxygen/1.14.0")
 
         if self.options.get_safe("link_with_mold", False):
             self.build_requires("mold/2.36.0")
