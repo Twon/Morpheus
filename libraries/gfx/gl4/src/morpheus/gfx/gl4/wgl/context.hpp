@@ -36,7 +36,7 @@ public:
 
     /// Gets the current OpenGL device context handle.
     auto getDC() const noexcept { return mDeviceContext.get(); }
-    
+
     /// Gets the current OpenGL context handle.
     auto getGL() const noexcept { return mGLContext.get(); }
 private:
