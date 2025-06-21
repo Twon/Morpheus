@@ -22,9 +22,9 @@ on: workflow_dispatch
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: Debug
-  COMPILER_TYPE: gcc
-  COMPILER_VERSION: 14
-  STDLIB: libstdc++11
+  COMPILER_TYPE: clang
+  COMPILER_VERSION: 19
+  STDLIB: libc++
 
 jobs:
   build:
@@ -53,19 +53,29 @@ jobs:
             ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.os }}-${{ env.BUILD_TYPE }}-
             ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.os }}-
 
-      - name: Install Latest GCC
-        if: matrix.settings.compiler.type == 'GCC'
-        uses: egor-tensin/setup-gcc@v1.3
+      - name: Install Clang
+        uses: egor-tensin/setup-clang@v1.4
         with:
-          version: ${{ env.COMPILER_VERSION  }}
+          version: ${{ env.COMPILER_VERSION }}
           platform: x64
 
-      - name: Install Include What You Use
+      - name: Install Libc++
         shell: bash
         run: |
-          sudo apt update
-          sudo apt install include-what-you-use
+          sudo apt install -y libc++-${{ env.COMPILER_VERSION }}-dev libc++abi-${{ env.COMPILER_VERSION }}-dev libunwind-${{env.COMPILER_VERSION }}-dev  
 
+      - name: Install build dependencies and IWYU
+        run: |
+          sudo apt update
+          sudo apt install -y clang llvm-dev cmake git ninja-build
+          # Build and install IWYU
+          git clone https://github.com/include-what-you-use/include-what-you-use.git
+          cd include-what-you-use
+          git checkout clang_19
+          cmake -S . -B build -G Ninja -DCMAKE_PREFIX_PATH=/usr/lib/llvm-19 -DCMAKE_BUILD_TYPE=Release
+          cmake --build build
+          cmake --install build
+  
       - name: Set up Python
         uses: actions/setup-python@v5.4.0
         with:
