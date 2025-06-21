@@ -1,7 +1,5 @@
 #pragma once
 
-#include <morpheus/core/base/platform.hpp>
-
 #include <compare>
 #include <cstdint>
 
@@ -55,7 +53,7 @@ public:
     [[nodiscard]] constexpr auto refreshRate() const noexcept { return mRefreshRate; }
 
     /// The three-way operator provides strong ordering of types.
-    [[nodiscard]] constexpr auto operator<=>(VideoMode const& rhs) const noexcept = default;
+    [[nodiscard]] constexpr auto operator<=>(VideoMode const& rhs) const noexcept -> std::strong_ordering = default;
 private:
     /// \name Data Members
     ///@{
