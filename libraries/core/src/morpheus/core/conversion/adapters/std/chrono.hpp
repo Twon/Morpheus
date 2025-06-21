@@ -22,12 +22,22 @@
 
 #if MORPHEUS_CPP_LIB_CHRONO_FORMATTING
 
+/// Specialisation of the formatter for std::chrono::day.
 template <>
 struct morpheus::fmt_ns::formatter<morpheus::date_ns::day>
 {
+    /// The presentation type for day formatting.
     char presentation = 'd';
+
+    /// Parse the format specifier for day.
+    /// \param ctx The format parse context.
+    /// \return An iterator to the end of the parsed format specifier.
     constexpr auto parse(format_parse_context& ctx) -> format_parse_context::iterator { return std::begin(ctx); }
 
+    /// Format the day as a string.
+    /// \param day The day to format.
+    /// \param ctx The format context.
+    /// \return An iterator to the end of the formatted output.
     auto format(morpheus::date_ns::day const& day, format_context& ctx) const -> format_context::iterator
     {
         using namespace std::literals;
@@ -35,9 +45,13 @@ struct morpheus::fmt_ns::formatter<morpheus::date_ns::day>
     }
 };
 
+/// Specialisation of the formatter for std::chrono::month.
 template <>
 struct morpheus::fmt_ns::formatter<morpheus::date_ns::month>
 {
+    /// Parse the format specifier for month.
+    /// \param ctx The format parse context.
+    /// \return An iterator to the end of the parsed format specifier.
     constexpr auto parse(format_parse_context& ctx) -> format_parse_context::iterator
     {
         auto pos = std::begin(ctx);
@@ -64,6 +78,11 @@ struct morpheus::fmt_ns::formatter<morpheus::date_ns::month>
         return pos;
     }
 
+    /// Format the month as a string.
+    /// \param month The month to format.
+    /// \param ctx The format context.
+    /// \return An iterator to the end of the formatted output.
+    /// \note If monthAsDecimal is true, the month is formatted as a decimal number (1-12), otherwise it is formatted as a three-letter abbreviation.
     auto format(morpheus::date_ns::month const& month, format_context& ctx) const -> format_context::iterator
     {
         using namespace std::literals;
@@ -77,11 +96,16 @@ struct morpheus::fmt_ns::formatter<morpheus::date_ns::month>
     static constexpr std::array<std::string_view, 12> months = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
 };
 
+/// Specialisation of the formatter for std::chrono::year.
 template <>
 struct morpheus::fmt_ns::formatter<morpheus::date_ns::year>
 {
+    /// Parse the format specifier for year.
+    /// \param ctx The format parse context.
+    /// \return An iterator to the end of the parsed format specifier.
     constexpr auto parse(format_parse_context& ctx) -> format_parse_context::iterator { return std::begin(ctx); }
 
+    /// Format the year as a string.
     auto format(morpheus::date_ns::year const& year, format_context& ctx) const -> format_context::iterator
     {
         using namespace std::literals;
@@ -89,9 +113,13 @@ struct morpheus::fmt_ns::formatter<morpheus::date_ns::year>
     }
 };
 
+/// Specialisation of the formatter for std::chrono::weekday.
 template <>
 struct morpheus::fmt_ns::formatter<morpheus::date_ns::weekday>
 {
+    /// Parse the format specifier for weekday.
+    /// \param ctx The format parse context.
+    /// \return An iterator to the end of the parsed format specifier.
     constexpr auto parse(format_parse_context& ctx) -> format_parse_context::iterator { return std::begin(ctx); }
 
     auto format(morpheus::date_ns::weekday const& day, format_context& ctx) const -> format_context::iterator
@@ -103,11 +131,19 @@ struct morpheus::fmt_ns::formatter<morpheus::date_ns::weekday>
     static constexpr std::array<std::string_view, 7> weekdays = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
 };
 
+/// Specialisation of the formatter for std::chrono::weekday_indexed.
 template <>
 struct morpheus::fmt_ns::formatter<morpheus::date_ns::weekday_indexed> : morpheus::fmt_ns::formatter<morpheus::date_ns::weekday>
 {
+    /// Parse the format specifier for weekday_indexed.
+    /// \param ctx The format parse context.
+    /// \return An iterator to the end of the parsed format specifier.
     constexpr auto parse(format_parse_context& ctx) -> format_parse_context::iterator { return std::begin(ctx); }
 
+    /// Format the weekday_indexed as a string.
+    /// \param day The weekday_indexed to format.
+    /// \param ctx The format context.
+    /// \return An iterator to the end of the formatted output.
     auto format(morpheus::date_ns::weekday_indexed const& day, format_context& ctx) const -> format_context::iterator
     {
         using namespace std::literals;
@@ -115,11 +151,19 @@ struct morpheus::fmt_ns::formatter<morpheus::date_ns::weekday_indexed> : morpheu
     }
 };
 
+/// Specialisation of the formatter for std::chrono::weekday_last.
 template <>
 struct morpheus::fmt_ns::formatter<morpheus::date_ns::weekday_last> : morpheus::fmt_ns::formatter<morpheus::date_ns::weekday>
 {
+    /// Parse the format specifier for weekday_last.
+    /// \param ctx The format parse context.
+    /// \return An iterator to the end of the parsed format specifier.
     constexpr auto parse(format_parse_context& ctx) -> format_parse_context::iterator { return std::begin(ctx); }
 
+    /// Format the weekday_last as a string.
+    /// \param day The weekday_last to format.
+    /// \param ctx The format context.
+    /// \return An iterator to the end of the formatted output.
     auto format(morpheus::date_ns::weekday_last const& day, format_context& ctx) const -> format_context::iterator
     {
         using namespace std::literals;
@@ -127,11 +171,19 @@ struct morpheus::fmt_ns::formatter<morpheus::date_ns::weekday_last> : morpheus::
     }
 };
 
+/// Specialisation of the formatter for std::chrono::month_day.
 template <>
 struct morpheus::fmt_ns::formatter<morpheus::date_ns::month_day> : morpheus::fmt_ns::formatter<morpheus::date_ns::month>
 {
+    /// Parse the format specifier for month_day.
+    /// \param ctx The format parse context.
+    /// \return An iterator to the end of the parsed format specifier.
     constexpr auto parse(format_parse_context& ctx) -> format_parse_context::iterator { return std::begin(ctx); }
 
+    /// Format the month_day as a string.
+    /// \param month_day The month_day to format.
+    /// \param ctx The format context.
+    /// \return An iterator to the end of the formatted output.
     auto format(morpheus::date_ns::month_day const& month_day, format_context& ctx) const -> format_context::iterator
     {
         using namespace std::literals;
@@ -139,11 +191,19 @@ struct morpheus::fmt_ns::formatter<morpheus::date_ns::month_day> : morpheus::fmt
     }
 };
 
+/// Specialisation of the formatter for std::chrono::month_day_last.
 template <>
 struct morpheus::fmt_ns::formatter<morpheus::date_ns::month_day_last> : morpheus::fmt_ns::formatter<morpheus::date_ns::month>
 {
+    /// Parse the format specifier for month_day_last.
+    /// \param ctx The format parse context.
+    /// \return An iterator to the end of the parsed format specifier.
     constexpr auto parse(format_parse_context& ctx) -> format_parse_context::iterator { return std::begin(ctx); }
 
+    /// Format the month_day_last as a string.
+    /// \param month_day The month_day_last to format.
+    /// \param ctx The format context.
+    /// \return An iterator to the end of the formatted output.
     auto format(morpheus::date_ns::month_day_last const& month_day, format_context& ctx) const -> format_context::iterator
     {
         using namespace std::literals;
@@ -151,11 +211,19 @@ struct morpheus::fmt_ns::formatter<morpheus::date_ns::month_day_last> : morpheus
     }
 };
 
+/// Specialisation of the formatter for std::chrono::year_month.
 template <>
 struct morpheus::fmt_ns::formatter<morpheus::date_ns::year_month> : morpheus::fmt_ns::formatter<morpheus::date_ns::month>
 {
+    /// Parse the format specifier for year_month.
+    /// \param ctx The format parse context.
+    /// \return An iterator to the end of the parsed format specifier.
     constexpr auto parse(format_parse_context& ctx) -> format_parse_context::iterator { return std::begin(ctx); }
 
+    /// Format the year_month as a string.
+    /// \param year_month The year_month to format.
+    /// \param ctx The format context.
+    /// \return An iterator to the end of the formatted output.
     auto format(morpheus::date_ns::year_month const& year_month, format_context& ctx) const -> format_context::iterator
     {
         using namespace std::literals;
@@ -163,11 +231,19 @@ struct morpheus::fmt_ns::formatter<morpheus::date_ns::year_month> : morpheus::fm
     }
 };
 
+/// Specialisation of the formatter for std::chrono::year_month_day.
 template <>
 struct morpheus::fmt_ns::formatter<morpheus::date_ns::year_month_day> : morpheus::fmt_ns::formatter<morpheus::date_ns::month>
 {
+    /// Parse the format specifier for year_month_day.
+    /// \param ctx The format parse context.
+    /// \return An iterator to the end of the parsed format specifier.
     constexpr auto parse(format_parse_context& ctx) -> format_parse_context::iterator { return std::begin(ctx); }
 
+    /// Format the year_month_day as a string.
+    /// \param year_month_day The year_month_day to format.
+    /// \param ctx The format context.
+    /// \return An iterator to the end of the formatted output.
     auto format(morpheus::date_ns::year_month_day const& year_month_day, format_context& ctx) const -> format_context::iterator
     {
         using namespace std::literals;
@@ -175,11 +251,19 @@ struct morpheus::fmt_ns::formatter<morpheus::date_ns::year_month_day> : morpheus
     }
 };
 
+/// Specialisation of the formatter for std::chrono::year_month_day_last.
 template <>
 struct morpheus::fmt_ns::formatter<morpheus::date_ns::year_month_day_last> : morpheus::fmt_ns::formatter<morpheus::date_ns::month>
 {
+    /// Parse the format specifier for year_month_day_last.
+    /// \param ctx The format parse context.
+    /// \return An iterator to the end of the parsed format specifier.
     constexpr auto parse(format_parse_context& ctx) -> format_parse_context::iterator { return std::begin(ctx); }
 
+    /// Format the year_month_day_last as a string.
+    /// \param year_month_day The year_month_day_last to format.
+    /// \param ctx The format context.
+    /// \return An iterator to the end of the formatted output.
     auto format(morpheus::date_ns::year_month_day_last const& year_month_day, format_context& ctx) const -> format_context::iterator
     {
         using namespace std::literals;
@@ -187,11 +271,19 @@ struct morpheus::fmt_ns::formatter<morpheus::date_ns::year_month_day_last> : mor
     }
 };
 
+/// Specialisation of the formatter for std::chrono::year_month_weekday.
 template <>
 struct morpheus::fmt_ns::formatter<morpheus::date_ns::year_month_weekday> : morpheus::fmt_ns::formatter<morpheus::date_ns::month>
 {
+    /// Parse the format specifier for year_month_weekday.
+    /// \param ctx The format parse context.
+    /// \return An iterator to the end of the parsed format specifier.
     constexpr auto parse(format_parse_context& ctx) -> format_parse_context::iterator { return std::begin(ctx); }
 
+    /// Format the year_month_weekday as a string.
+    /// \param year_month_weekday The year_month_weekday to format.
+    /// \param ctx The format context.
+    /// \return An iterator to the end of the formatted string.
     auto format(morpheus::date_ns::year_month_weekday const& year_month_weekday, format_context& ctx) const -> format_context::iterator
     {
         using namespace std::literals;
@@ -200,11 +292,19 @@ struct morpheus::fmt_ns::formatter<morpheus::date_ns::year_month_weekday> : morp
     }
 };
 
+/// Specialisation of the formatter for std::chrono::year_month_weekday_last.
 template <>
 struct morpheus::fmt_ns::formatter<morpheus::date_ns::year_month_weekday_last> : morpheus::fmt_ns::formatter<morpheus::date_ns::month>
 {
+    /// Parse the format specifier for year_month_weekday_last.
+    /// \param ctx The format parse context.
+    /// \return An iterator to the end of the parsed format specifier.
     constexpr auto parse(format_parse_context& ctx) -> format_parse_context::iterator { return std::begin(ctx); }
 
+    /// Format the year_month_weekday_last as a string.
+    /// \param year_month_weekday The year_month_weekday_last to format.
+    /// \param ctx The format context.
+    /// \return An iterator to the end of the formatted output.
     auto format(morpheus::date_ns::year_month_weekday_last const& year_month_weekday, format_context& ctx) const -> format_context::iterator
     {
         using namespace std::literals;
@@ -217,9 +317,15 @@ struct morpheus::fmt_ns::formatter<morpheus::date_ns::year_month_weekday_last> :
 namespace morpheus::conversion
 {
 
+/// A specialisation of the class template customisation point to provide conversion between
+/// std::chrono::duration and string representations.
 template <typename Rep, typename Period>
 struct StringConverter<std::chrono::duration<Rep, Period>>
 {
+    /// Convert a std::chrono::duration to its string representation.
+    /// \param value The std::chrono::duration to convert.
+    /// \return A string representation of the std::chrono::duration.
+    /// \note The string representation is the count of the duration in the specified period, followed by the period's unit (e.g., "5s", "10ms").
     static std::string toString(std::chrono::duration<Rep, Period> const value)
     {
         if constexpr (std::is_same_v<Period, std::micro>)
@@ -251,6 +357,10 @@ struct StringConverter<std::chrono::duration<Rep, Period>>
         }
     }
 
+    /// Convert a string representation to a std::chrono::duration.
+    /// \param value The string representation to convert.
+    /// \return An expected containing the std::chrono::duration if the conversion was successful, or an unexpected error if it failed.
+    /// \note The string representation should be in the format of a count followed by the period's unit (e.g., "5s", "10ms").
     static constexpr exp_ns::expected<std::chrono::duration<Rep, Period>, std::string_view> fromString(std::string_view const value)
     {
         constexpr auto matchString = []<ctll::fixed_string T>(auto const searchStr) -> exp_ns::expected<std::chrono::duration<Rep, Period>, std::string_view>
@@ -309,14 +419,23 @@ struct StringConverter<std::chrono::duration<Rep, Period>>
     }
 };
 
+/// A specialisation of the class template customisation point to provide conversion between time zone and
+/// string representations.
 template <>
 struct StringConverter<date_ns::time_zone>
 {
+    /// Convert a date_ns::time_zone to its string representation.
+    /// \param value The date_ns::time_zone to convert.
+    /// \return A string representation of the date_ns::time_zone, which is the name of the time zone.
     static std::string toString(date_ns::time_zone const& value)
     {
         return std::string(value.name());
     }
 
+    /// Convert a string representation to a date_ns::time_zone.
+    /// \param value The string representation to convert.
+    /// \return An expected containing the date_ns::time_zone if the conversion was successful, or an unexpected error if it failed.
+    /// \note The string representation should be the name of the time zone as defined in the IANA Time Zone Database.
     static exp_ns::expected<std::reference_wrapper<date_ns::time_zone const>, std::string> fromString(std::string_view const value)
     {
         try {

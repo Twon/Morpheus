@@ -13,10 +13,9 @@ struct BinarySearch;
 ///     To be used in a SFINAE context to detect if a parameter exists.
 /// \tparam Predicate
 ///     A boolean predicate traits to be tested across the value space limited by Begin and End
-/// \param Begin
-/// \param End
+/// \tparam Begin The beginning index of the range to search.
+/// \tparam End The end index of the range to search.
 /// \code
-///     std::void_t
 /// \endcode
 template <template<std::size_t> typename Predicate, std::size_t Begin, std::size_t End>
 struct BinarySearch : std::conditional_t<

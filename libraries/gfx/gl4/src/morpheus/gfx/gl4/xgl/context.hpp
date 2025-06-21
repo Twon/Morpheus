@@ -5,6 +5,8 @@
 namespace morpheus::gfx::gl4::xgl
 {
 
+/// \class Context
+///     The context class represents a rendering context for the OpenGL 4.x API on Linux.
 class Context {
 public:
     explicit Context();

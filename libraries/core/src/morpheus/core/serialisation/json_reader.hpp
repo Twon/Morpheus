@@ -4,6 +4,7 @@
 #include "morpheus/core/base/cold.hpp"
 #include "morpheus/core/functional/overload.hpp"
 #include "morpheus/core/memory/polymorphic_value.hpp"
+#include "morpheus/core/serialisation/concepts/reader_archetype.hpp"
 #include "morpheus/core/serialisation/exceptions.hpp"
 
 #include <boost/numeric/conversion/cast.hpp>
@@ -48,37 +49,41 @@ public:
 
     static constexpr bool canBeTextual() { return true; }
 
-    /// \copydoc morpheus::serialisation::concepts::ReaderArchtype::isTextual()
+    /// \copydoc morpheus::serialisation::concepts::ReaderArchetype::isTextual()
     static constexpr bool isTextual() { return true; }
 
     /// Json reader take in a stream of json to extract data members from.
     /// \param[in] stream Stream used to read in the json source.  This must outlive the reader as its held by reference.
+    /// \param[in] validate If true, the json will be validated against the schema.  If false, no validation is performed.
     explicit JsonReader(OwnedStream stream, bool validate = true);
+
     explicit JsonReader(JsonReader const& rhs);
+
+    /// Destructor for the JsonReader.
     ~JsonReader();
 
-    /// \copydoc morpheus::serialisation::concepts::ReaderArchtype::beginComposite()
+    /// \copydoc morpheus::serialisation::concepts::ReaderArchetype::beginComposite()
     void beginComposite();
 
-    /// \copydoc morpheus::serialisation::concepts::ReaderArchtype::endComposite()
+    /// \copydoc morpheus::serialisation::concepts::ReaderArchetype::endComposite()
     void endComposite();
 
-    /// \copydoc morpheus::serialisation::concepts::ReaderArchtype::beginValue()
+    /// \copydoc morpheus::serialisation::concepts::ReaderArchetype::beginValue()
     void beginValue(std::string_view const key);
 
-    /// \copydoc morpheus::serialisation::concepts::ReaderArchtype::endValue()
+    /// \copydoc morpheus::serialisation::concepts::ReaderArchetype::endValue()
     void endValue();
 
-    /// \copydoc morpheus::serialisation::concepts::ReaderArchtype::beginSequence()
+    /// \copydoc morpheus::serialisation::concepts::ReaderArchetype::beginSequence()
     std::optional<std::size_t> beginSequence();
 
-    /// \copydoc morpheus::serialisation::concepts::ReaderArchtype::endSequence()
+    /// \copydoc morpheus::serialisation::concepts::ReaderArchetype::endSequence()
     void endSequence();
 
-    /// \copydoc morpheus::serialisation::concepts::ReaderArchtype::beginNullable()
+    /// \copydoc morpheus::serialisation::concepts::ReaderArchetype::beginNullable()
     bool beginNullable();
 
-    /// \copydoc morpheus::serialisation::concepts::ReaderArchtype::endNullable()
+    /// \copydoc morpheus::serialisation::concepts::ReaderArchetype::endNullable()
     void endNullable();
 
     // clang-format off
@@ -136,6 +141,7 @@ public:
         return std::get<T>(*next);
     }
 
+    /// Read a blob of binary from the serialisation.
     template <typename T>
     requires std::is_same_v<T, std::vector<std::byte>>
     T read()
@@ -143,7 +149,6 @@ public:
         return {};
     }
     // clang-format on
-
 private:
     enum class Event : std::uint32_t
     {
