@@ -12,6 +12,9 @@ namespace morpheus::gfx::nvidia
 namespace nvapi
 {
 
+/// \class Driver
+///     A class that provides access to the NVIDIA NVAPI driver functions.
+///     This class loads the NVAPI library and provides access to its functions.
 class Driver
 {
     boost::dll::shared_library mNvapi;

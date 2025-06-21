@@ -46,13 +46,11 @@ struct UnorderdDenseSet<std::string> {
 
 }
 
-/// \using UnorderdMap
-///     Helper alias which ensure users get heterogeneous overloads where possible.
+/// Helper alias which ensure users get heterogeneous overloads where possible.
 template<typename K, typename V>
 using UnorderedMap = typename details::UnorderdDenseMap<K, V>::type;
 
-/// \using UnorderedSet
-///     Helper alias which ensure users get heterogeneous overloads where possible.
+/// Helper alias which ensure users get heterogeneous overloads where possible.
 template<typename V>
 using UnorderedSet = typename details::UnorderdDenseSet< V>::type;
 

@@ -63,9 +63,12 @@ public:
         write(null);
     }
 
-    /// \copydoc morpheus::serialisation::concepts::WriterArchtype::endNullable()
+    /// \copydoc morpheus::serialisation::concepts::WriterArchetype::endNullable()
     void endNullable() noexcept {}
 
+    /// Write an integral or floating point type to the serialisation.
+    /// \tparam T The type of the value to write.  Must be an integral or floating point type.
+    /// \param value The value to write to the serialisation.
     template <typename T>
     requires std::integral<T> or std::floating_point<T>
     void write(T const value)
@@ -77,7 +80,7 @@ public:
                                  writtenSize));
     }
 
-    /// \copydoc morpheus::serialisation::concepts::WriterArchtype::write(std::string_view const)
+    /// \copydoc morpheus::serialisation::concepts::WriterArchetype::write(std::string_view const)
     void write(std::string_view const value)
     {
         auto const length = value.size();
@@ -89,7 +92,7 @@ public:
                 fmt_ns::format("Error writing data to stream.  Attempted to write {} bytes, but only {} bytes were written.", value.size(), writtenSize));
     }
 
-    /// \copydoc morpheus::serialisation::concepts::WriterArchtype::write(std::span<std::byte> const)
+    /// \copydoc morpheus::serialisation::concepts::WriterArchetype::write(std::span<std::byte> const)
     void write(std::span<std::byte const> const value)
     {
         auto const length = value.size();
