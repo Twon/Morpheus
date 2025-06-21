@@ -89,20 +89,24 @@ jobs:
       - name: Configure Conan
         shell: bash
         run: |
-          conan profile detect --force
-          sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.cppstd=.*/compiler.cppstd=20/' .conan2/profiles/default
-          sed -i.backup '/^\[settings\]$/,/^\[/ s/^build_type=.*/build_type=${{ env.BUILD_TYPE }}/' .conan2/profiles/default
-          sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler=.*/compiler=${{ env.COMPILER_TYPE }}/' .conan2/profiles/default
-          sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.version=.*/compiler.version=${{ env.COMPILER_VERSION }}/' .conan2/profiles/default
-          sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.libcxx=.*/compiler.libcxx=${{ env.STDLIB }}/' .conan2/profiles/default
-          sed -i.backup '1a mold*:build_type=Release' .conan2/profiles/default
-          sed -i.backup '1a onetbb*:build_type=Release' .conan2/profiles/default
-          sed -i.backup '1a mold*:compiler.libcxx=libstdc++11' .conan2/profiles/default
-          echo "tools.cmake.cmaketoolchain:generator = Ninja" >> .conan2/global.conf
-          echo "tools.system.package_manager:mode = install" >> .conan2/global.conf
-          echo "tools.system.package_manager:sudo = True" >> .conan2/global.conf
-          echo "tools.build:compiler_executables={\"c\":\"clang-${{ env.COMPILER_VERSION }}\",\"cpp\":\"clang++-${{ env.COMPILER_VERSION }}\"}" >> .conan2/global.conf
-          conan profile show -pr default
+            conan profile detect --force
+            sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.cppstd=.*/compiler.cppstd=20/' .conan2/profiles/default
+            sed -i.backup '/^\[settings\]$/,/^\[/ s/^build_type=.*/build_type=${{ env.BUILD_TYPE }}/' .conan2/profiles/default
+            sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler=.*/compiler=${{ env.COMPILER_TYPE }}/' .conan2/profiles/default
+            sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.version=.*/compiler.version=${{ env.COMPILER_VERSION }}/' .conan2/profiles/default
+            sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.libcxx=.*/compiler.libcxx=${{ env.STDLIB }}/' .conan2/profiles/default
+            sed -i.backup '1a mold*:build_type=Release' .conan2/profiles/default
+            sed -i.backup '1a onetbb*:build_type=Release' .conan2/profiles/default
+            sed -i.backup '1a mold*:compiler.libcxx=libstdc++11' .conan2/profiles/default
+
+            cat >> .conan2/global.conf <<EOF
+tools.cmake.cmaketoolchain:generator = Ninja
+tools.system.package_manager:mode = install
+tools.system.package_manager:sudo = True
+tools.build:compiler_executables = {"c": "clang-${{ env.COMPILER_VERSION }}", "cpp": "clang++-${{ env.COMPILER_VERSION }}"}
+EOF
+
+            conan profile show -pr default
 
       - name: Conan Cache Restore
         shell: bash
