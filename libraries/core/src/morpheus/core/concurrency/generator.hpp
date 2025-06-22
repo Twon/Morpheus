@@ -24,8 +24,8 @@ struct Generator
     struct promise_type;
     using handle_type = coro_ns::coroutine_handle<promise_type>; ///< Handle to generator coroutines.
     using value_type = T;                                        ///< Value type from resulting generation.
-    using reference = std::conditional_t<std::is_reference_v<T>, T, const value_type&>;
-    using pointer = std::add_pointer_t<reference>;
+    using reference = std::conditional_t<std::is_reference_v<T>, T, const value_type&>; ///< Reference type to the value type.
+    using pointer = std::add_pointer_t<reference>; ///< Pointer type to the value type.
 
     Generator(handle_type h) : coro(h) {}
 

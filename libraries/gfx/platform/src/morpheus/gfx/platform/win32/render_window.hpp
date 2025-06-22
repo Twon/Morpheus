@@ -37,7 +37,7 @@ public:
     /// \copydoc gfx::RenderTarget::colourDepth()
     [[nodiscard]] std::uint16_t colourDepth() const noexcept { return gfx::RenderWindow::colourDepth(); }
 
-    /// \copydoc gfx::RenderTarget::refreshRate()
+    /// \copydoc gfx::RenderWindow::refreshRate()
     [[nodiscard]] std::uint16_t refreshRate() const noexcept { return gfx::RenderWindow::refreshRate(); }
 
     //    bool isHidden() const noexcept

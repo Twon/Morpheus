@@ -28,6 +28,8 @@ struct Config
 
     // Logfile name
     // Logfile timezone
+
+    /// Support registering command line options for the application configuration.
     void addOptions(boost::program_options::options_description& options);
 };
 

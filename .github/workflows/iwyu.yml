@@ -22,9 +22,9 @@ on: workflow_dispatch
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: Debug
-  COMPILER_TYPE: gcc
-  COMPILER_VERSION: 14
-  STDLIB: libstdc++11
+  COMPILER_TYPE: clang
+  COMPILER_VERSION: 19
+  STDLIB: libc++
 
 jobs:
   build:
@@ -53,23 +53,34 @@ jobs:
             ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.os }}-${{ env.BUILD_TYPE }}-
             ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.os }}-
 
-      - name: Install Latest GCC
-        if: matrix.settings.compiler.type == 'GCC'
-        uses: egor-tensin/setup-gcc@v1.3
-        with:
-          version: ${{ env.COMPILER_VERSION  }}
-          platform: x64
-
-      - name: Install Include What You Use
+      - name: Install Clang
         shell: bash
         run: |
+          wget https://apt.llvm.org/llvm.sh
+          chmod +x llvm.sh
+          sudo ./llvm.sh ${{ env.COMPILER_VERSION }} all
+
+      - name: Install Libc++
+        shell: bash
+        run: |
+          sudo apt install -y libc++-${{ env.COMPILER_VERSION }}-dev libc++abi-${{ env.COMPILER_VERSION }}-dev libunwind-${{env.COMPILER_VERSION }}-dev
+
+      - name: Install build dependencies and IWYU
+        run: |
           sudo apt update
-          sudo apt install include-what-you-use
+          sudo apt install -y clang llvm-dev cmake git ninja-build libcurl4-openssl-dev libedit-dev
+          # Build and install IWYU
+          git clone https://github.com/include-what-you-use/include-what-you-use.git
+          cd include-what-you-use
+          git checkout clang_${{ env.COMPILER_VERSION }}
+          cmake -S . -B build -G Ninja -DCMAKE_PREFIX_PATH=/usr/lib/llvm-${{ env.COMPILER_VERSION }} -DCMAKE_BUILD_TYPE=Release
+          cmake --build build
+          sudo cmake --install build
 
       - name: Set up Python
-        uses: actions/setup-python@v5.3.0
+        uses: actions/setup-python@v5.4.0
         with:
-          python-version: '3.11'
+          python-version: '3.13'
 
       - name: Install Python requirements
         run: |
@@ -78,21 +89,24 @@ jobs:
       - name: Configure Conan
         shell: bash
         run: |
-          conan profile detect --force
-          sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.cppstd=.*/compiler.cppstd=20/' .conan2/profiles/default
-          sed -i.backup '/^\[settings\]$/,/^\[/ s/^build_type=.*/build_type=${{ env.BUILD_TYPE }}/' .conan2/profiles/default
-          sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler=.*/compiler=${{ env.COMPILER_TYPE }}/' .conan2/profiles/default
-          sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.version=.*/compiler.version=${{ env.COMPILER_VERSION }}/' .conan2/profiles/default
-          sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.libcxx=.*/compiler.libcxx=${{ env.STDLIB }}/' .conan2/profiles/default
-          sed -i.backup '1a mold*:build_type=Release' .conan2/profiles/default
-          sed -i.backup '1a onetbb*:build_type=Release' .conan2/profiles/default
-          sed -i.backup '1a mold*:compiler.libcxx=libstdc++11' .conan2/profiles/default
+            conan profile detect --force
+            sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.cppstd=.*/compiler.cppstd=23/' .conan2/profiles/default
+            sed -i.backup '/^\[settings\]$/,/^\[/ s/^build_type=.*/build_type=${{ env.BUILD_TYPE }}/' .conan2/profiles/default
+            sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler=.*/compiler=${{ env.COMPILER_TYPE }}/' .conan2/profiles/default
+            sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.version=.*/compiler.version=${{ env.COMPILER_VERSION }}/' .conan2/profiles/default
+            sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.libcxx=.*/compiler.libcxx=${{ env.STDLIB }}/' .conan2/profiles/default
+            sed -i.backup '1a mold*:build_type=Release' .conan2/profiles/default
+            sed -i.backup '1a onetbb*:build_type=Release' .conan2/profiles/default
+            sed -i.backup '1a mold*:compiler.libcxx=libstdc++11' .conan2/profiles/default
 
-          echo "tools.cmake.cmaketoolchain:generator = Ninja" >> .conan2/global.conf
-          echo "tools.system.package_manager:mode = install" >> .conan2/global.conf
-          echo "tools.system.package_manager:sudo = True" >> .conan2/global.conf
+            cat >> .conan2/global.conf <<EOF
+            tools.cmake.cmaketoolchain:generator = Ninja
+            tools.system.package_manager:mode = install
+            tools.system.package_manager:sudo = True
+            tools.build:compiler_executables = {"c": "clang-$COMPILER_VERSION", "cpp": "clang++-$COMPILER_VERSION"}
+            EOF
 
-          conan profile show -pr default
+            conan profile show -pr default
 
       - name: Conan Cache Restore
         shell: bash
