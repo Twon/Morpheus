@@ -66,6 +66,8 @@ include(morpheus_add_tests)
 include(sanitisers)
 include(third_party)
 
+find_package(IWYU)
+
 enable_testing()
 
 #------------------------------------------------------------------------------------------------------------------------------------------
