@@ -9,7 +9,7 @@
 
 ## Build Instructions
 
-The build use CMake for build system generation and Conan 2 for dependency management.  Prerequisites for building are:
+The build uses CMake for build system generation and Conan 2 for dependency management.  Prerequisites for building are:
  - A supported C++ compiler
    * GCC, 11.x and later
    * Clang, 14.x and later

@@ -1,11 +1,12 @@
 #include "morpheus/core/base/assert_handler.hpp"
 #include "morpheus/core/base/debugging.hpp"
 #include "morpheus/core/conformance/format.hpp"
+#include "morpheus/core/conformance/source_location.hpp"
 #include "morpheus/core/conformance/stacktrace.hpp"
-#include "morpheus/core/conversion/adapters/std/stacktrace.hpp"
+#include "morpheus/core/conversion/adapters/std/stacktrace.hpp" // IWYU pragma: keep
 
-#include <iostream>
 #include <utility>
+#include <string>
 
 namespace morpheus
 {

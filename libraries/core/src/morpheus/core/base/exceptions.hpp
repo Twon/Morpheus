@@ -1,13 +1,12 @@
 
 #pragma once
 
-#include <morpheus/core/base/compiler.hpp>
-#include <morpheus/core/base/platform.hpp>
 #include <morpheus/core/base/cold.hpp>
 #include <morpheus/core/conformance/format.hpp> // IWYU pragma: export
 #include <morpheus/core/conformance/stacktrace.hpp> // IWYU pragma: export
 
-#include <boost/exception/all.hpp>
+#include <boost/exception/detail/error_info_impl.hpp>
+#include <boost/exception/info.hpp>
 
 #include <string_view>
 

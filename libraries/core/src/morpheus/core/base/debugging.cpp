@@ -1,9 +1,9 @@
 #include "morpheus/core/base/debugging.hpp"
+#include "morpheus/core/base/platform.hpp"
 #include "morpheus/core/base/prerequisites.hpp"
 
 #include <boost/test/debug.hpp>
 
-#include <cstdio>
 #include <iostream>
 
 namespace morpheus

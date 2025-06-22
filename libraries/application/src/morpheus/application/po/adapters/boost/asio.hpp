@@ -1,5 +1,6 @@
 #pragma once
 
+// IWYU pragma: always_keep
 #include <morpheus/core/base/prerequisites.hpp>
 
 #include <boost/algorithm/string.hpp>

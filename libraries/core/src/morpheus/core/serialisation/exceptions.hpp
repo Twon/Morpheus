@@ -1,9 +1,10 @@
 #pragma once
 
+#include "morpheus/core/base/export.hpp"
 #include "morpheus/core/base/cold.hpp"
-#include "morpheus/core/conformance/format.hpp"
 
 #include <stdexcept>
+#include <string>
 #include <string_view>
 
 namespace morpheus::serialisation
@@ -11,7 +12,7 @@ namespace morpheus::serialisation
 
 /// \class BinaryException
 ///     Exception type to be thrown for errors when parsing binary.
-class BinaryException : public std::runtime_error
+class MORPHEUSCORE_EXPORT BinaryException : public std::runtime_error
 {
 public:
     using std::runtime_error::runtime_error;
@@ -19,7 +20,7 @@ public:
 
 /// \class JsonException
 ///     Exception type to be thrown for errors when parsing JSON.
-class JsonException : public std::runtime_error
+class MORPHEUSCORE_EXPORT JsonException : public std::runtime_error
 {
 public:
     using std::runtime_error::runtime_error;

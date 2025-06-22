@@ -1,9 +1,10 @@
 #include "morpheus/core/conformance/source_location.hpp"
 #include "morpheus/core/conversion/adapters/std/source_location.hpp"
 
-#include <catch2/catch_all.hpp>
+#include <catch2/catch_test_macros.hpp>
 
 #include <chrono>
+#include <string>
 #include <sstream>
 
 namespace morpheus::conversion

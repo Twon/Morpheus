@@ -39,20 +39,27 @@ endmacro()
 #[=======================================================================[.rst:
 get_iwyu_version
 ------------------
+
 Overview
 ^^^^^^^^
+
 Gets the version of Include What You Use.
+
 .. code-block:: cmake
+
   get_iwyu_version(
       [EXECUTABLE <executable path>]
       [RESULT <version result>]
   )
+
   ``EXECUTABLE``
     The ``EXECUTABLE`` option is required to provide the path to the
     Include What You Use executable to query.
+
   ``RESULT``
     The name of the variable to store the version of Include What You Use
     to.
+
 #]=======================================================================]
 function(get_iwyu_version)
     set(options)
@@ -106,11 +113,15 @@ endmacro()
 #[=======================================================================[.rst:
 enable_iwyu
 ------------------
+
 Overview
 ^^^^^^^^
+
 Sets up the required configuration and enables usage of Include What You Use via
 CMake built in support.
+
 .. code-block:: cmake
+
   enable_iwyu(
       [REQUIRED]
       [QUIET]
@@ -127,36 +138,50 @@ CMake built in support.
       [MAX_LINE_LENGTH <length>]
       [KEEP <glob...>]
   )
+
   ``REQUIRED``
     The ``REQUIRED`` option causes an error to be raised if iwyu is not found.
+
   ``QUIET``
     The ``QUIET`` option disable logging of iwyu set up details within CMake.
+
   ``ERROR``
     Exit with N (default: 1) for iwyu violations.
+
   ``NO_DEFAULT_MAPPINGS``
     Do not add iwyu's default mappings.
+
   ``PCH_IN_CODE``
     Mark the first include in a translation unit as a precompiled header.  Use --pch_in_code to prevent IWYU from
     removing necessary PCH includes.  Though Clang forces PCHs to be listed as prefix headers, the PCH-in-code
     pattern can be used with GCC and is standard practice on MSVC (e.g. stdafx.h)
+
   ``TRANSITIVE_INCLUDES_ONLY``
     Do not suggest that a file add foo.h unless foo.h is already visible in the file's transitive includes.
+
   ``NO_COMMENTS``
     Do not add 'why' comments.
+
   ``NO_FORWARD_DECLARATIONS``
     Do not use forward declarations.
+
   ``CXX17_NAMESPACES``
     Suggests the more concise syntax introduced in C++17.
+
   ``QUOTED_INCLUDES_FIRST``
     When sorting includes, place quoted ones first.
+
   ``MAPPING_FILE``
     Gives iwyu a mapping file.
+
   ``MAX_LINE_LENGTH``
     Maximum line length for includes. Note that this only affects comments and alignment thereof,
     the maximum line length can still be exceeded with long file names (default: 80).
+
   ``KEEP``
     Tells iwyu to always keep these includes. This flag may be specified multiple times to specify multiple
     glob patterns.
+
 #]=======================================================================]
 function(enable_iwyu)
     set(options QUIET REQUIRED ERROR NO_DEFAULT_MAPPINGS PCH_IN_CODE TRANSITIVE_INCLUDES_ONLY NO_COMMENTS NO_FORWARD_DECLARATIONS CXX17_NAMESPACES QUOTED_INCLUDES_FIRST)

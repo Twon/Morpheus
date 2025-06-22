@@ -1,8 +1,10 @@
 #include "morpheus/containers/concepts/archetypes/reversible.hpp"
 #include "morpheus/core/containers/concepts/reversible.hpp"
 
-#include <catch2/catch_all.hpp>
+#include <catch2/catch_test_macros.hpp>
+#include <catch2/catch_template_test_macros.hpp>
 
+#include <cstdint>
 #include <array>
 #include <deque>
 #include <forward_list>

@@ -53,7 +53,7 @@ jobs:
             ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.os }}-${{ env.BUILD_TYPE }}-
             ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.os }}-
 
-      - name: Install LClang
+      - name: Install Clang
         shell: bash
         run: |
           wget https://apt.llvm.org/llvm.sh
