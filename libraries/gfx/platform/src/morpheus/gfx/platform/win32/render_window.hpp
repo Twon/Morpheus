@@ -9,9 +9,8 @@
 namespace morpheus::gfx::win32
 {
 
-/*! \class RenderWindow
-        A specialisation of the render window for the Windows platform based on the Win32 API.
- */
+/// \class RenderWindow
+///     A specialisation of the render window for the Windows platform based on the Win32 API.
 class RenderWindow : protected gfx::RenderWindow {
 public:
     using WindowHandle = HWND;
