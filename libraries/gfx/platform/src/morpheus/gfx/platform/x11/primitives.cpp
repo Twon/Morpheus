@@ -52,9 +52,7 @@ exp_ns::expected<DisplayPtr, std::string> makeDisplay()
     }
     return DisplayPtr(display);
 }
-// LCOV_EXCL_STOP
 
-// LCOV_EXCL_START
 exp_ns::expected<std::tuple<DisplayPtr, WindowPtr>, std::string> makeWindow(DisplayPtr&& display, WindowConfig const& config)
 {
     if (!display) {
@@ -76,9 +74,7 @@ exp_ns::expected<std::tuple<DisplayPtr, WindowPtr>, std::string> makeWindow(Disp
     WindowPtr windowPtr(window, detail::XDestroyWindowDispatch(display.get()));
     return std::tuple{std::move(display), std::move(windowPtr)};
 }
-// LCOV_EXCL_STOP
 
-// LCOV_EXCL_START
 exp_ns::expected<ScreenResourcePtr, std::string> makeScreenResource(::Display* display, ::Window window)
 {
     ::XRRScreenResources* resources = XRRGetScreenResources(display, window);

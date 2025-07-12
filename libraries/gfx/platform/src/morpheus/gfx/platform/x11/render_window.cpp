@@ -36,7 +36,7 @@ void test()
 
 } // namespace
 
-
+// LCOV_EXCL_START
 RenderWindow::RenderWindow(Config const& config, DisplayPtr&& display, WindowPtr&& window)
 : gfx::RenderWindow(config)
 , mDisplay(std::move(display))
@@ -48,7 +48,6 @@ RenderWindow::RenderWindow(Config const& config, DisplayPtr&& display, WindowPtr
 
 exp_ns::expected<RenderWindow, std::string> RenderWindow::create(RenderWindow::Config const& config)
 {
-    // LCOV_EXCL_START
     return makeDisplay().and_then(
         [&](DisplayPtr&& display) {
             return makeWindow(std::move(display), config).and_then(
@@ -59,8 +58,7 @@ exp_ns::expected<RenderWindow, std::string> RenderWindow::create(RenderWindow::C
             );
         }
     );
-    // LCOV_EXCL_STOP
 }
-
+// LCOV_EXCL_STOP
 
 } // namespace morpheus::gfx::x11
