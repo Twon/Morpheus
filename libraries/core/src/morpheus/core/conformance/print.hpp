@@ -19,7 +19,8 @@
         requires std::formattable<T, CharT> && (!fmt::formattable<T, CharT>)
         struct fmt::formatter<T, CharT>
         {
-            constexpr auto parse(format_parse_context& ctx)
+            template <typename Context>
+            constexpr auto parse(Context& ctx)
             {
                 return ctx.begin();
             }
