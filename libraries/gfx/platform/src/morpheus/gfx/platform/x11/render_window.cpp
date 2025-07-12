@@ -56,7 +56,7 @@ auto createDisplay()
 // //     }()
 // //   )
 // {
-// } 
+// }
 
 RenderWindow::RenderWindow(Config const& config, DisplayPtr&& display, WindowPtr&& window)
 : gfx::RenderWindow(config)

@@ -44,9 +44,9 @@ exp_ns::expected<std::tuple<DisplayPtr, WindowPtr>, std::string> makeWindow(Disp
     }
 
     ::Window window = XCreateSimpleWindow(
-        display.get(), DefaultRootWindow(display.get()), 
+        display.get(), DefaultRootWindow(display.get()),
         config.startX, config.startY,
-        config.width, config.height, 
+        config.width, config.height,
         1, BlackPixel(display.get(), 0), WhitePixel(display.get(), 0)
     );
 
