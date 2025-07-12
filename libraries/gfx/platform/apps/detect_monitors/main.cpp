@@ -7,7 +7,7 @@ using namespace morpheus::application::po;
 
 int main(int argc, char* argv[])
 {
-    for (auto monitor : morpheus::gfx::os::enumerateMonitors())
+    for (auto const& monitor : morpheus::gfx::os::enumerateMonitors())
     {
         print_ns::print("{}\n", monitor);
     }
