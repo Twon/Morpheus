@@ -8,21 +8,22 @@ namespace morpheus::gfx::x11
 TEST_CASE("Ensure move construction of a x11 render window", "[morpheus.gfx.x11.render_window.construct.move]")
 {
     RenderWindow::Config const config;
-    auto result = RenderWindow::create(config);
-    REQUIRE(result);
+    RenderWindow::create(config).and_then(
+        [&](auto&& window) -> exp_ns::expected<RenderWindow, std::string>
+        {
+            REQUIRE(!window.fullScreen());
+            REQUIRE(window.width() == config.width);
+            REQUIRE(window.height() == config.height);
+            REQUIRE(window.colourDepth() == config.colourDepth);
 
-    auto window(std::move(result).value());
-
-    REQUIRE(!window.fullScreen());
-    REQUIRE(window.width() == config.width);
-    REQUIRE(window.height() == config.height);
-    REQUIRE(window.colourDepth() == config.colourDepth);
-
-    RenderWindow newWindow(std::move(window));
-    REQUIRE(!newWindow.fullScreen());
-    REQUIRE(newWindow.width() == config.width);
-    REQUIRE(newWindow.height() == config.height);
-    REQUIRE(newWindow.colourDepth() == config.colourDepth);
+            RenderWindow newWindow(std::move(window));
+            REQUIRE(!newWindow.fullScreen());
+            REQUIRE(newWindow.width() == config.width);
+            REQUIRE(newWindow.height() == config.height);
+            REQUIRE(newWindow.colourDepth() == config.colourDepth);
+            return exp_ns::expected<RenderWindow, std::string>{std::move(newWindow)};
+        }
+    );
 }
 
 TEST_CASE("Ensure default construction of a x11 render window by defaulted config accessors", "[morpheus.gfx.x11.render_window]")
