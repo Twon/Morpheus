@@ -12,8 +12,8 @@ struct Coordinate
     int y;
 };
 
-template <>
-struct morpheus::fmt_ns::formatter<Coordinate> : morpheus::fmt_ns::formatter<std::string>
+template <typename CharT>
+struct morpheus::fmt_ns::formatter<Coordinate, CharT> : morpheus::fmt_ns::formatter<std::string, CharT>
 {
     template <typename Context>
     constexpr auto format(Coordinate const& value, Context& context) const
