@@ -1,5 +1,9 @@
 #include <morpheus/gfx/platform/x11/primitives.hpp>
 
+#include <string>
+
+using namespace std::literals;
+
 namespace morpheus::gfx::x11
 {
 
@@ -32,7 +36,7 @@ exp_ns::expected<DisplayPtr, std::string> makeDisplay()
 {
     ::Display* display = XOpenDisplay(nullptr);
     if (!display) {
-        return exp_ns::unexpected("Failed to create display!");
+        return exp_ns::unexpected("Failed to create display!"s);
     }
     return DisplayPtr(display);
 }
@@ -40,7 +44,7 @@ exp_ns::expected<DisplayPtr, std::string> makeDisplay()
 exp_ns::expected<std::tuple<DisplayPtr, WindowPtr>, std::string> makeWindow(DisplayPtr&& display, WindowConfig const& config)
 {
     if (!display) {
-        return exp_ns::unexpected("Display pointer is null!");
+        return exp_ns::unexpected("Display pointer is null!"s);
     }
 
     ::Window window = XCreateSimpleWindow(
@@ -51,7 +55,7 @@ exp_ns::expected<std::tuple<DisplayPtr, WindowPtr>, std::string> makeWindow(Disp
     );
 
     if (!window) {
-        return exp_ns::unexpected("Failed to create window!");
+        return exp_ns::unexpected("Failed to create window!"s);
     }
 
     XMapWindow(display.get(), window);
@@ -63,7 +67,7 @@ exp_ns::expected<ScreenResourcePtr, std::string> makeScreenResource(::Display* d
 {
     ::XRRScreenResources* resources = XRRGetScreenResources(display, window);
     if (!resources) {
-        return exp_ns::unexpected("Failed to get screen resources!");
+        return exp_ns::unexpected("Failed to get screen resources!"s);
     }
 
     return ScreenResourcePtr(resources, detail::XDestroyScreenResource());
