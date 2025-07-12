@@ -10,7 +10,7 @@
 namespace morpheus::gfx
 {
 
-namespace os = macos;
+namespace os = win32;
 
 } // namespace morpheus::gfx
 
