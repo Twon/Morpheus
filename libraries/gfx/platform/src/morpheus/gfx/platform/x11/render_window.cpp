@@ -34,29 +34,8 @@ void test()
 }
 */
 
-auto createDisplay()
-{
-    if (auto const display = XOpenDisplay(nullptr); display)
-        return display;
-    else
-        throwRuntimeException("Unable to open XDisplay");
-}
-
 } // namespace
 
-// RenderWindow::RenderWindow(Config const& config)
-// : gfx::RenderWindow(config)
-// , mDisplay(createDisplay())
-// // , mWindow(
-// //     [&]{
-// // 	    auto const screen = DefaultScreenOfDisplay(mDisplay.get());
-// // 	    auto const screenId = DefaultScreen(mDisplay.get());
-// //         return WindowPtr(XCreateSimpleWindow(mDisplay.get(), RootWindowOfScreen(screen), config.startX, config.startY, config.width, config.height, 1,
-// //                                      BlackPixel(mDisplay.get(), screenId), WhitePixel(mDisplay.get(), screenId)));
-// //     }()
-// //   )
-// {
-// }
 
 RenderWindow::RenderWindow(Config const& config, DisplayPtr&& display, WindowPtr&& window)
 : gfx::RenderWindow(config)

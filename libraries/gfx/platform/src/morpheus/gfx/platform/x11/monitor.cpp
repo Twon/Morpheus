@@ -6,6 +6,10 @@
 #include <X11/Xlib.h>
 #include <X11/extensions/Xrandr.h>
 
+#include <string>
+
+using namespace std::literals;
+
 namespace morpheus::gfx::x11
 {
 
@@ -22,7 +26,7 @@ concurrency::Generator<Monitor> enumerateMonitors() noexcept
             auto&& [display, root] = std::move(resources);
             auto screenRes = makeScreenResource(display.get(), root);
             if (!screenRes.has_value()) {
-                return exp_ns::unexpected("Failed to create screen resource!");
+                return exp_ns::unexpected("Failed to create screen resource!"s);
             }
             return std::tuple(std::move(display), std::move(root), std::move(screenRes).value());
         }
