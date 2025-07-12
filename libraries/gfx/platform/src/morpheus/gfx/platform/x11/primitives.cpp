@@ -1,0 +1,72 @@
+#include <morpheus/gfx/platform/x11/primitives.hpp>
+
+namespace morpheus::gfx::x11
+{
+
+namespace detail
+{
+void XCloseDisplayDispatch::operator()(::Display* display)
+{
+    XCloseDisplay(display);
+}
+
+XDestroyWindowDispatch::XDestroyWindowDispatch(::Display* display) noexcept
+:   mDisplay(display)
+{}
+
+void XDestroyWindowDispatch::operator()(typename XDestroyWindowDispatch::pointer window)
+{
+    XDestroyWindow(mDisplay, window);
+}
+
+void XDestroyScreenResource::operator()(typename XDestroyScreenResource::pointer screenResource)
+{
+    XRRFreeScreenResources(screenResource);
+}
+
+} // namespace detail
+
+
+
+exp_ns::expected<DisplayPtr, std::string> makeDisplay()
+{
+    ::Display* display = XOpenDisplay(nullptr);
+    if (!display) {
+        return exp_ns::unexpected("Failed to create display!");
+    }
+    return DisplayPtr(display);
+}
+
+exp_ns::expected<std::tuple<DisplayPtr, WindowPtr>, std::string> makeWindow(DisplayPtr&& display, WindowConfig const& config)
+{
+    if (!display) {
+        return exp_ns::unexpected("Display pointer is null!");
+    }
+
+    ::Window window = XCreateSimpleWindow(
+        display.get(), DefaultRootWindow(display.get()), 
+        config.startX, config.startY,
+        config.width, config.height, 
+        1, BlackPixel(display.get(), 0), WhitePixel(display.get(), 0)
+    );
+
+    if (!window) {
+        return exp_ns::unexpected("Failed to create window!");
+    }
+
+    XMapWindow(display.get(), window);
+    WindowPtr windowPtr(window, detail::XDestroyWindowDispatch(display.get()));
+    return std::tuple{std::move(display), std::move(windowPtr)};
+}
+
+exp_ns::expected<ScreenResourcePtr, std::string> makeScreenResource(::Display* display, ::Window window)
+{
+    ::XRRScreenResources* resources = XRRGetScreenResources(display, window);
+    if (!resources) {
+        return exp_ns::unexpected("Failed to get screen resources!");
+    }
+
+    return ScreenResourcePtr(resources, detail::XDestroyScreenResource());
+}
+
+} // namespace morpheus::gfx::x11

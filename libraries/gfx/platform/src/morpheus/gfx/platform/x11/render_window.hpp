@@ -1,5 +1,7 @@
 #pragma once
 
+#include <morpheus/core/conformance/expected.hpp>
+#include <morpheus/gfx/platform/x11/primitives.hpp>
 #include <morpheus/gfx/platform/render_window.hpp>
 
 #include <X11/Xlib.h>
@@ -10,36 +12,6 @@
 namespace morpheus::gfx::x11
 {
 
-struct XCloseDisplayDispatch
-{
-    auto operator()(::Display* display)
-    {
-        XCloseDisplay(display);
-    }
-};
-
-//using XCloseDisplayDispatch = decltype([](::Display* display){ XCloseDisplay(display); });
-using DisplayPtr = std::unique_ptr<::Display, XCloseDisplayDispatch>;
-
-struct XDestroyDisplayDispatch
-{
-    explicit XDestroyDisplayDispatch(::Display* display) noexcept
-    : mDisplay(display)
-    {}
-
-    using pointer = ::Window;
-
-    auto operator()(pointer window)
-    {
-        XDestroyWindow(mDisplay, window);
-    }
-
-private:
-    ::Display* mDisplay = nullptr;
-};
-
-using WindowPtr = std::unique_ptr<Window, XDestroyDisplayDispatch>;
-
 /*! \class RenderWindow
         A specialisation of the render window for the x11 platform on Linux.
  */
@@ -47,15 +19,17 @@ class RenderWindow : protected gfx::RenderWindow {
 public:
     using Config = gfx::RenderWindow::Config;
 
-    explicit RenderWindow(Config const& config = Config{}){}
+    // explicit RenderWindow(Config const& config = Config{});
 
     explicit RenderWindow(RenderWindow const&) = delete;
     RenderWindow& operator=(RenderWindow const&) = delete;
 
-    explicit RenderWindow(RenderWindow&&) noexcept = delete;
-    RenderWindow& operator=(RenderWindow&&) noexcept = delete;
+    explicit RenderWindow(RenderWindow&&) noexcept = default;
+    RenderWindow& operator=(RenderWindow&&) noexcept = default;
 
     ~RenderWindow() = default;
+
+    static exp_ns::expected<RenderWindow, std::string> create(Config const& config);
 
     //! The width in pixels of the render target.
     [[nodiscard]] std::uint16_t width() const noexcept { return gfx::RenderTarget::width(); }
@@ -83,6 +57,7 @@ public:
 
 
 private:
+    explicit RenderWindow(Config const& config, DisplayPtr&& display, WindowPtr&& window);
 
     /// \struct ReleaseResources
     ///     Allows std::unique_ptr handles to override the expect pointer type and to define a lambda to execute
@@ -106,8 +81,8 @@ private:
 
 
 //    // Requires std::experimental::unique_resource (or boost scope equivalent)
-//    DisplayPtr mDisplay;
-//    WindowPtr mWindow;
+    DisplayPtr mDisplay;
+    WindowPtr mWindow;
 };
 
 } // namespace morpheus::gfx::x11

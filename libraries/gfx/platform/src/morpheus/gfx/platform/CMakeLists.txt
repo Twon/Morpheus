@@ -21,6 +21,7 @@ target_sources(MorpheusGfxPlatform
             adapter.hpp
             image.hpp
             monitor.hpp
+            os.hpp
             pixel.hpp
             render_system.hpp
             render_target.hpp

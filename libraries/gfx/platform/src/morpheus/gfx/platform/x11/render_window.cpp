@@ -44,24 +44,42 @@ auto createDisplay()
 
 } // namespace
 
-/*/
-RenderWindow::RenderWindow(Config const& config)
+// RenderWindow::RenderWindow(Config const& config)
+// : gfx::RenderWindow(config)
+// , mDisplay(createDisplay())
+// // , mWindow(
+// //     [&]{
+// // 	    auto const screen = DefaultScreenOfDisplay(mDisplay.get());
+// // 	    auto const screenId = DefaultScreen(mDisplay.get());
+// //         return WindowPtr(XCreateSimpleWindow(mDisplay.get(), RootWindowOfScreen(screen), config.startX, config.startY, config.width, config.height, 1,
+// //                                      BlackPixel(mDisplay.get(), screenId), WhitePixel(mDisplay.get(), screenId)));
+// //     }()
+// //   )
+// {
+// } 
+
+RenderWindow::RenderWindow(Config const& config, DisplayPtr&& display, WindowPtr&& window)
 : gfx::RenderWindow(config)
-, mDisplay(createDisplay())
-, mWindow(
-    [&]{
-	    auto const screen = DefaultScreenOfDisplay(mDisplay.get());
-	    auto const screenId = DefaultScreen(mDisplay.get());
-        return WindowPtr(XCreateSimpleWindow(mDisplay.get(), RootWindowOfScreen(screen), config.startX, config.startY, config.width, config.height, 1,
-                                     BlackPixel(mDisplay.get(), screenId), WhitePixel(mDisplay.get(), screenId)));
-    }()
-  )
+, mDisplay(std::move(display))
+, mWindow(std::move(window))
 {
+    // Set the window name
+    XStoreName(mDisplay.get(), mWindow.get(), config.windowName.c_str());
 }
 
-RenderWindow::~RenderWindow()
+exp_ns::expected<RenderWindow, std::string> RenderWindow::create(RenderWindow::Config const& config)
 {
-
+    return makeDisplay().and_then(
+        [&](DisplayPtr&& display) {
+            return makeWindow(std::move(display), config).and_then(
+                [&](std::tuple<DisplayPtr, WindowPtr>&& resources) -> exp_ns::expected<RenderWindow, std::string> {
+                    auto&& [displayPtr, windowPtr] = std::move(resources);
+                    return exp_ns::expected<RenderWindow, std::string>(RenderWindow(config, std::move(displayPtr), std::move(windowPtr) ));
+                }
+            );
+        }
+    );
 }
-*/
+
+
 } // namespace morpheus::gfx::x11
