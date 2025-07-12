@@ -11,7 +11,7 @@ namespace detail
 {
 // LCOV_EXCL_START
 void XCloseDisplayDispatch::operator()(::Display* display)
-{   
+{
     if (display)
     {
         XCloseDisplay(display);
