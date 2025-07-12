@@ -28,6 +28,7 @@ morpheus_add_library(
 target_link_libraries(MorpheusConfig
     INTERFACE
         $<$<PLATFORM_ID:Linux>:dl>
+        $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>>:-stdlib=libc++>
 )
 
 target_compile_options(MorpheusConfig
@@ -36,4 +37,5 @@ target_compile_options(MorpheusConfig
         $<$<CXX_COMPILER_ID:MSVC>:${MSVC_WARNINGS}>
         $<$<CXX_COMPILER_ID:GNU>:${GCC_WARNINGS}>
         $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>>:${CLANG_WARNINGS}>
+        $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>>:-stdlib=libc++> # Clang defaults to libc++ explicit to avoid picking up the system header when GCC and Clang are installed.
 )
