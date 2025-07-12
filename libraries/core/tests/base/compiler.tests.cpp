@@ -9,7 +9,9 @@ namespace morpheus
 
 TEST_CASE("Explicitly check compiler feature flags requirements for language features", "[morpheus.base.compilers.features.language]")
 {
-    STATIC_REQUIRE(__cpp_consteval >= 201811L); // consteval support - immediate funcions.
+    STATIC_REQUIRE(__cpp_attributes >= 200809L); // attribute support.
+    STATIC_REQUIRE(__cpp_consteval >= 201811L); // consteval support - immediate functions.
+    STATIC_REQUIRE(__cpp_deduction_guides >= 201703L); // CTAD for class templates.
 }
 
 TEST_CASE("Explicitly check compiler feature flags requirements for library features", "[morpheus.base.compilers.features.library]")
