@@ -60,7 +60,7 @@ TEST_CASE("Ensure print is works with formatter customisations", "[morpheus.conf
 
             THEN("Expect the variables wrote to the stream in the specified order")
             {
-                REQUIRE(temp.contents() == "{50, 100}");
+                REQUIRE(temp.contents() == "{x=50,y=100}");
             }
         }
     }
