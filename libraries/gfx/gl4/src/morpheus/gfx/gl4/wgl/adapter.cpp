@@ -107,6 +107,9 @@ concurrency::Generator<Adapter> enumerateAdapters()
             continue;
 
         auto oldContext = context.value().enable();
+        if (!oldContext)
+            continue;
+
         std::string_view vendor = glGetStringView(GL_VENDOR);
         std::string_view renderer = glGetStringView(GL_RENDERER);
         std::string_view version = glGetStringView(GL_VERSION);
@@ -126,7 +129,9 @@ concurrency::Generator<Adapter> enumerateAdapters()
 				//m_uCurrentAdapter = static_cast<u32>( m_GraphicsAdapters.size() - 1 );
 			}
 		}
-		oldContext.enable();
+        auto restoredContext = oldContext.value().enable();
+        if (!restoredContext)
+            continue;
 	}
 }
 

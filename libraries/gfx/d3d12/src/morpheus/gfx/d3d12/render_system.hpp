@@ -12,7 +12,7 @@ namespace morpheus::gfx::d3d12
 class RenderSystem : public gfx::RenderSystem
 {
 public:
-
+    RenderSystem();
 
 private:
 };
