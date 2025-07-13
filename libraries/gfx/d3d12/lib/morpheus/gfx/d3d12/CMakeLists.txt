@@ -5,6 +5,7 @@ target_sources(MorpheusGfxD3D12
             adapter.hpp
             exceptions.hpp
             render_system.hpp
+            types.hpp
             type_mapping.hpp
             types.hpp
             verify.hpp
