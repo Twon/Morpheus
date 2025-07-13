@@ -15,6 +15,7 @@ namespace morpheus::gfx::x11
 /*! \class RenderWindow
         A specialisation of the render window for the x11 platform on Linux.
  */
+// LCOV_EXCL_START
 class RenderWindow : protected gfx::RenderWindow {
 public:
     using Config = gfx::RenderWindow::Config;
@@ -84,5 +85,6 @@ private:
     DisplayPtr mDisplay;
     WindowPtr mWindow;
 };
+// LCOV_EXCL_STOP
 
 } // namespace morpheus::gfx::x11
