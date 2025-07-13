@@ -7,7 +7,7 @@
 #endif
 
 // clang-format off
-#if (__cpp_lib_expected >= 202202L)
+#if (__cpp_lib_expected >= 202211L)
     namespace morpheus { namespace exp_ns = std; }
 #else
     #include <tl/expected.hpp> // IWYU pragma: export

@@ -3,9 +3,11 @@ target_sources(MorpheusGfxPlatform
         FILE_SET HEADERS
         FILES
             monitor.hpp
+            primitives.hpp
             render_window.hpp
     PRIVATE
         monitor.cpp
+        primitives.cpp
         render_window.cpp
 )
 
