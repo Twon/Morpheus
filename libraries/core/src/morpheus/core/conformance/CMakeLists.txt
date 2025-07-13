@@ -24,9 +24,9 @@ morpheus_conformance_check(
 
 morpheus_conformance_check(
     RESULT EXPECTED_SUPPORTED
-    MSVC_VERSION "19.33"
-    GNU_VERSION "12"
-    CLANG_VERSION "16"
+    MSVC_VERSION "19.36"
+    GNU_VERSION "13"
+    CLANG_VERSION "17"
     APPLECLANG_VERSION "15"
 )
 

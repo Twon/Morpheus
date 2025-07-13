@@ -111,8 +111,8 @@ class Morpheus(ConanFile):
         """ Does the current compiler version lack support for std::expected via the STL. """
         compiler = self.settings.compiler
         version = Version(self.settings.compiler.version)
-        std_support = (compiler == "msvc" and version >= 193) or (compiler == "gcc" and version >= Version("12")) or \
-                      (compiler == "clang" and version >= Version("16")) or (compiler == "apple-clang" and version >= Version("15"))
+        std_support = (compiler == "msvc" and version >= 193) or (compiler == "gcc" and version >= Version("13")) or \
+                      (compiler == "clang" and version >= Version("17")) or (compiler == "apple-clang" and version >= Version("15"))
         return not std_support
 
     @property
@@ -198,7 +198,7 @@ class Morpheus(ConanFile):
         return {
 #            "intel-cc": "??"
             "msvc": "16",
-            "gcc": "11",
+            "gcc": "12",
             "clang": "13",
             "apple-clang": "13"
         }
