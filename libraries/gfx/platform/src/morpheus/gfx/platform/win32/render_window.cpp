@@ -2,6 +2,7 @@
 #include <morpheus/core/base/debugging.hpp>
 #include <morpheus/core/base/verify.hpp>
 #include <morpheus/core/conformance/format.hpp>
+#include <morpheus/gfx/platform/win32/error.hpp>
 #include <morpheus/gfx/platform/win32/render_window.hpp>
 
 #include <boost/numeric/conversion/cast.hpp>
@@ -12,12 +13,14 @@ namespace morpheus::gfx::win32
 
 namespace {
 
-auto getModuleHandle()
+auto getModuleHandle() -> exp_ns::expected<HINSTANCE, std::string>
 {
 	HINSTANCE hinst = nullptr;
 	static const TCHAR findAddressFrom = TCHAR();
 	auto const result = GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT, &findAddressFrom, &hinst);
-	MORPHEUS_VERIFY(result);
+	if (!result){
+		return exp_ns::unexpected(GetLastErrorString(GetLastError()));
+	}
 	return hinst;
 }
 
@@ -320,6 +323,11 @@ RenderWindow& RenderWindow::operator=(RenderWindow&& rhs) noexcept
 RenderWindow::~RenderWindow()
 {
 	::UnregisterClass(mWindowName.c_str(), getModuleHandle());
+}
+
+exp_ns::expected<RenderWindow, std::string> RederWindow::create(Config const& config)
+{
+
 }
 
 bool RenderWindow::visible() const noexcept

@@ -1,7 +1,8 @@
 #pragma once
 
-#include <morpheus/gfx/platform/render_window.hpp>
 #include <morpheus/core/base/prerequisites.hpp>
+#include <morpheus/core/conformance/expected.hpp>
+#include <morpheus/gfx/platform/render_window.hpp>
 
 #include <wil/resource.h>
 #include <string>
@@ -26,6 +27,8 @@ public:
     RenderWindow& operator=(RenderWindow&&) noexcept;
 
     ~RenderWindow();
+
+    static exp_ns::expected<RenderWindow, std::string> create(Config const& config);
 
     /// \copydoc gfx::RenderTarget::width()
     [[nodiscard]] std::uint16_t width() const noexcept { return gfx::RenderWindow::width(); }
