@@ -6,7 +6,7 @@ using namespace morpheus;
 using namespace morpheus::application::po;
 
 // LCOV_EXCL_START
-int main(int /*argc*/, char* /*argv[]*/)
+int main(int /*argc*/, char*[] /*argv[]*/)
 {
     for (auto const& monitor : morpheus::gfx::os::enumerateMonitors())
     {
