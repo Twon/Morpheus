@@ -10,7 +10,7 @@ namespace morpheus::gfx::metal
  */
 class RenderSystem {
 public:
-    using Window = typename void;
+    using Window = void;
 
     RenderSystem(RenderSystem const&) = delete;
     RenderSystem& operator=(RenderSystem const&) = delete;
