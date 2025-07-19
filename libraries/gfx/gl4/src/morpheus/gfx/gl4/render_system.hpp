@@ -27,9 +27,9 @@ public:
     RenderSystem& operator=(RenderSystem&&) = default;
 
     /// Get the name of the underlying graphic API.
-    static [[nodiscard]] std::string_view getGraphicsApi() noexcept { return "Open GL 4"; }
+    [[nodiscard]] static std::string_view getGraphicsApi() noexcept { return "Open GL 4"; }
 
-    static [[nodiscard]] auto create() -> exp_ns::expected<RenderSystem, std::string>;
+    [[nodiscard]] static auto create() -> exp_ns::expected<RenderSystem, std::string>;
 
 private:
 };
