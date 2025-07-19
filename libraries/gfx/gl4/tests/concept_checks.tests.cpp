@@ -8,7 +8,7 @@ namespace morpheus::gfx::gl4
 
 TEST_CASE("Test the GL render system adheres to GFX concepts", "[morpheus.gfx.gl4.concept_checks]")
 {
-    STATIC_REQUIRE(concepts::RenderSystem<GL4Traits>);
+    STATIC_REQUIRE(concepts::RenderSystem<RenderSystem<GL4Traits>>);
 }
 
 } // namespace morpheus::gfx::gl4
