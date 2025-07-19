@@ -10,6 +10,7 @@ target_sources(MorpheusGfxPlatform
     PRIVATE
         error_codes.cpp
         error.cpp
+        error_codes.cpp
         monitor.cpp
         render_window.cpp
 )

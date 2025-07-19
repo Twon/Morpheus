@@ -67,6 +67,8 @@ public:
     auto getHandle() const noexcept { return mWindow.get(); }
 
 private:
+    RenderWindow() = default;
+
     friend LRESULT WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
     std::optional<HINSTANCE> mHInstance; /// HInstance of initiating module.
