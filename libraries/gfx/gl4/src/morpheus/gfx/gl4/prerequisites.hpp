@@ -2,6 +2,9 @@
 
 #include <morpheus/core/base/platform.hpp>
 
+#include <glbinding/gl/gl.h>
+#include <glbinding/glbinding.h>
+
 #include <GL/glew.h>
 
 #if (MORPHEUS_BUILD_PLATFORM==MORPHEUS_TARGET_PLATFORM_PC_WINDOWS)
