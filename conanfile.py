@@ -79,6 +79,7 @@ class Morpheus(ConanFile):
         "unordered_dense/4.5.0",
         "boost/1.88.0",
         "ctre/3.9.0",
+        "ftxui/6.0.2",
         "magic_enum/0.9.7",
         "ms-gsl/4.1.0",
         "rapidjson/cci.20230929",
@@ -168,6 +169,7 @@ class Morpheus(ConanFile):
         if self.options.get_safe("with_rs_opengl", False):
             self.requires("glbinding/3.3.0", transitive_headers=True)
             self.requires("glew/2.2.0", transitive_headers=True)
+            self.requires("khrplatform/cci.20200529", transitive_headers=True)
 
         if self.settings.os in ["Windows"]:
             self.requires("wil/1.0.240803.1", transitive_headers=True)

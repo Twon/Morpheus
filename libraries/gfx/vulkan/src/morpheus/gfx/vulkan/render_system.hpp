@@ -1,5 +1,6 @@
 #pragma once
 
+#include <morpheus/core/conformance/expected.hpp>
 #include <morpheus/gfx/platform/render_system.hpp>
 #include <morpheus/gfx/vulkan/adapter.hpp>
 #include <morpheus/gfx/vulkan/version.hpp>
@@ -19,6 +20,18 @@ namespace morpheus::gfx::vulkan
 class RenderSystem : public gfx::RenderSystem {
 public:
     RenderSystem(std::string_view const appName, std::string_view const engineName);
+
+    RenderSystem(RenderSystem const&) = delete;
+    RenderSystem& operator=(RenderSystem const&) = delete;
+
+    RenderSystem(RenderSystem&&) = default;
+    RenderSystem& operator=(RenderSystem&&) = default;
+
+    /// Get the name of the underlying graphic API.
+    static [[nodiscard]] auto getGraphicsApi() noexcept -> std::string_view { return "Vulkan"; }
+
+    static [[nodiscard]] auto create() -> exp_ns::expected<RenderSystem, std::string>;
+
 
     auto const& adapters() const { return mAdapters; }
 private:

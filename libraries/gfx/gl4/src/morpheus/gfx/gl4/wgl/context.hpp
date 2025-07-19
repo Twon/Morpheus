@@ -31,7 +31,7 @@ public:
     Context(Context&&) = default;
     Context& operator=(Context&&) = default;
 
-    Context enable();
+    Expected enable();
     void disable();
 
     /// Gets the current OpenGL device context handle.

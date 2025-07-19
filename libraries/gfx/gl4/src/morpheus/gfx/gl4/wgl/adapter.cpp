@@ -26,29 +26,29 @@ namespace
 
 auto getModuleHandle()
 {
-	HINSTANCE hinst = nullptr;
-	static const TCHAR findAddressFrom = TCHAR();
-	auto const result = GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT, &findAddressFrom, &hinst);
-	MORPHEUS_WGL_VERIFY(result);
-	return hinst;
+    HINSTANCE hinst = nullptr;
+    static const TCHAR findAddressFrom = TCHAR();
+    auto const result = GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT, &findAddressFrom, &hinst);
+    MORPHEUS_WGL_VERIFY(result);
+    return hinst;
 }
 
 auto pciIdFromDeviceId(std::string_view const deviceId)
 {
-	auto const pciIdStr = deviceId.substr(deviceId.find_first_not_of("PCI\\VEN_"), 4);
-	std::uint32_t pciId = 0;
-	std::stringstream ss;
-	ss << std::hex << pciIdStr;
-	ss >> pciId;
-	return pciId;
+    auto const pciIdStr = deviceId.substr(deviceId.find_first_not_of("PCI\\VEN_"), 4);
+    std::uint32_t pciId = 0;
+    std::stringstream ss;
+    ss << std::hex << pciIdStr;
+    ss >> pciId;
+    return pciId;
 }
 
 auto vendorFromDeviceId(std::string_view const deviceId)
 {
-	auto const pciId = pciIdFromDeviceId(deviceId);
-	auto const vendor = vendorFromPciId(pciId);
-	MORPHEUS_VERIFY(vendor);
-	return *vendor;
+    auto const pciId = pciIdFromDeviceId(deviceId);
+    auto const vendor = vendorFromPciId(pciId);
+    MORPHEUS_VERIFY(vendor);
+    return *vendor;
 }
 
 std::string_view glGetStringView(GLenum name)
@@ -61,46 +61,46 @@ std::string_view glGetStringView(GLenum name)
 
 LRESULT CALLBACK dummyWndProc(HWND hwnd, UINT umsg, WPARAM wp, LPARAM lp)
 {
-	return DefWindowProc(hwnd, umsg, wp, lp);
+    return DefWindowProc(hwnd, umsg, wp, lp);
 }
 
 concurrency::Generator<Adapter> enumerateAdapters()
 {
     auto displayDevice = DISPLAY_DEVICE{ .cb = sizeof(DISPLAY_DEVICE) };
 
-	HINSTANCE const hinst = getModuleHandle();
+    HINSTANCE const hinst = getModuleHandle();
 
-	LPCSTR const dummyText = "WglDummyWindow";
-	WNDCLASS dummyClass = { .style = CS_OWNDC,.lpfnWndProc = dummyWndProc, .hInstance = hinst, .lpszClassName = dummyText };
-	RegisterClass(&dummyClass);
+    LPCSTR const dummyText = "WglDummyWindow";
+    WNDCLASS dummyClass = { .style = CS_OWNDC,.lpfnWndProc = dummyWndProc, .hInstance = hinst, .lpszClassName = dummyText };
+    RegisterClass(&dummyClass);
 
-	HWND hwnd = CreateWindow(dummyText, dummyText, WS_POPUP | WS_CLIPCHILDREN, 0, 0, 32, 32, 0, 0,
-		hinst, 0);
+    HWND hwnd = CreateWindow(dummyText, dummyText, WS_POPUP | WS_CLIPCHILDREN, 0, 0, 32, 32, 0, 0,
+        hinst, 0);
 
-//	auto const hDC = GetDC(hwnd);
-//	auto const hResults = GetLastError();
+//    auto const hDC = GetDC(hwnd);
+//    auto const hResults = GetLastError();
 
-	for (DWORD dwCurrentDevice = 0; ; ++dwCurrentDevice)
-	{
-		if (!EnumDisplayDevices(NULL, dwCurrentDevice, &displayDevice, 0))
-			break;
+    for (DWORD dwCurrentDevice = 0; ; ++dwCurrentDevice)
+    {
+        if (!EnumDisplayDevices(NULL, dwCurrentDevice, &displayDevice, 0))
+            break;
 
-		PIXELFORMATDESCRIPTOR pfd =
-		{
-			.nSize = sizeof(PIXELFORMATDESCRIPTOR),
-			.nVersion = 1,
-			.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER,
-			.iPixelType = PFD_TYPE_RGBA, // The kind of framebuffer. RGBA or palette.
-			.cColorBits = 32, // Colour depth of the framebuffer.
-			.cDepthBits = 24, // Number of bits for the depthbuffer
-			.cStencilBits = 8, // Number of bits for the stencilbuffer
-			.cAuxBuffers = 0, // Number of Aux buffers in the framebuffer.
-			.iLayerType = PFD_MAIN_PLANE,
-		};
+        PIXELFORMATDESCRIPTOR pfd =
+        {
+            .nSize = sizeof(PIXELFORMATDESCRIPTOR),
+            .nVersion = 1,
+            .dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER,
+            .iPixelType = PFD_TYPE_RGBA, // The kind of framebuffer. RGBA or palette.
+            .cColorBits = 32, // Colour depth of the framebuffer.
+            .cDepthBits = 24, // Number of bits for the depthbuffer
+            .cStencilBits = 8, // Number of bits for the stencilbuffer
+            .cAuxBuffers = 0, // Number of Aux buffers in the framebuffer.
+            .iLayerType = PFD_MAIN_PLANE,
+        };
 
-//		auto const glContext = wglCreateContext(hDC);
-//		auto const hResult2 = GetLastError();
-//		auto const successful = wglMakeCurrent(hDC, glContext);
+//        auto const glContext = wglCreateContext(hDC);
+//        auto const hResult2 = GetLastError();
+//        auto const successful = wglMakeCurrent(hDC, glContext);
 
         auto context = Context::create(hwnd, pfd);
         if (!context)
@@ -114,25 +114,25 @@ concurrency::Generator<Adapter> enumerateAdapters()
         std::string_view renderer = glGetStringView(GL_RENDERER);
         std::string_view version = glGetStringView(GL_VERSION);
 
-		// If the device is attached to the desktop, i.e. a graphics card
-		if (displayDevice.StateFlags & DISPLAY_DEVICE_ATTACHED_TO_DESKTOP)
-		{
-			co_yield Adapter(
-				displayDevice.DeviceName,
-				displayDevice.DeviceString,
-				vendorFromDeviceId(displayDevice.DeviceID)
-			);
+        // If the device is attached to the desktop, i.e. a graphics card
+        if (displayDevice.StateFlags & DISPLAY_DEVICE_ATTACHED_TO_DESKTOP)
+        {
+            co_yield Adapter(
+                displayDevice.DeviceName,
+                displayDevice.DeviceString,
+                vendorFromDeviceId(displayDevice.DeviceID)
+            );
 
-			// Set the current display device to the the primary device
-			if (displayDevice.StateFlags & DISPLAY_DEVICE_PRIMARY_DEVICE)
-			{
-				//m_uCurrentAdapter = static_cast<u32>( m_GraphicsAdapters.size() - 1 );
-			}
-		}
+            // Set the current display device to the the primary device
+            if (displayDevice.StateFlags & DISPLAY_DEVICE_PRIMARY_DEVICE)
+            {
+                //m_uCurrentAdapter = static_cast<u32>( m_GraphicsAdapters.size() - 1 );
+            }
+        }
         auto restoredContext = oldContext.value().enable();
         if (!restoredContext)
             continue;
-	}
+    }
 }
 
 } // namespace morpheus::gfx::gl4::wgl

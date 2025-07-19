@@ -25,7 +25,7 @@ auto createDC(HWND const window) -> WGLExpected<HDC>
 
 WGLExpected<int> choosePixelFormat(HDC const hdc, PIXELFORMATDESCRIPTOR const& pfd)
 {
-    int format = ChoosePixelFormat(hdc, &pfd);
+    auto const format = ChoosePixelFormat(hdc, &pfd);
     if (format == 0)
         return std::unexpected(fmt_ns::format("Failed to choose pixel format: {}", getLastErrorMessage()));
     return format;
@@ -34,7 +34,9 @@ WGLExpected<int> choosePixelFormat(HDC const hdc, PIXELFORMATDESCRIPTOR const& p
 WGLExpected<void> setPixelFormat(HDC hdc, int format)
 {
     PIXELFORMATDESCRIPTOR pfd;
-    DescribePixelFormat(hdc, format, sizeof(pfd), &pfd);
+    if (!DescribePixelFormat(hdc, format, sizeof(pfd), &pfd))
+        return std::unexpected(fmt_ns::format("Failed to describe pixel format: {}", getLastErrorMessage()));
+
     if (!SetPixelFormat(hdc, format, &pfd))
         return std::unexpected(fmt_ns::format("Failed to set pixel format: {}", getLastErrorMessage()));
     return {};
@@ -80,11 +82,13 @@ Context::Context()
 ,   mGLContext(wglGetCurrentContext(), {[](){}})
 {}
 
-Context Context::enable()
+Context::Expected Context::enable()
 {
-    Context currentContext;
-    MORPHEUS_WGL_VERIFY(wglMakeCurrent(mDeviceContext.get(), mGLContext.get()));
-    return currentContext;
+    Context currenContext{};
+    if (!wglMakeCurrent(mDeviceContext.get(), mGLContext.get())) {
+        return std::unexpected(fmt_ns::format("Failed to make OpenGL context current: {}", getLastErrorMessage()));
+    }
+    return currenContext;
 }
 
 void Context::disable()

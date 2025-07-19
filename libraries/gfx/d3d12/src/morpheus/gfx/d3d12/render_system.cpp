@@ -1,11 +1,12 @@
 #include "morpheus/gfx/d3d12/adapter.hpp"
 #include "morpheus/gfx/d3d12/render_system.hpp"
-#include "morpheus/gfx/d3d12/types.hpp"
+
 
 #include <d3d12.h>
 
 #include <wrl/client.h>
 
+#include <utility>
 
 namespace morpheus::gfx::d3d12
 {
@@ -14,7 +15,7 @@ template <typename T>
 DXGIExpected<T> toDXGIExpected(HRESULT hr, T&& val)
 {
     if (SUCCEEDED(hr)) {
-        return std::forward<T>(val);
+        return std::move(val);
     }
     else {
         return exp_ns::unexpected(hr);
@@ -36,9 +37,10 @@ DXGIExpected<D3D12Device> createDevice(Adapter const& adapter)
     return toDXGIExpected(hr, std::move(device));
 }
 
-RenderSystem::RenderSystem()
+auto RenderSystem::create() -> exp_ns::expected<RenderSystem, std::string>
 {
-    //createDGXIFactory().and_then(
+    //createDGXIFactory().and_then();
+    return exp_ns::expected<RenderSystem, std::string>{RenderSystem{}};
 }
 
 } // namespace morpheus::gfx::d3d12

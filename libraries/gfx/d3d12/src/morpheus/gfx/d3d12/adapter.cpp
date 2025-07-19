@@ -111,8 +111,12 @@ concurrency::Generator<Adapter> enumerateAdapters()
     auto const dxgiFactory = throwOrUnwrap(createDXGIFactory());
 
     DXGIAdapter pDXGIAdapter;
-    for (UINT adapterId = 0; DXGI_ERROR_NOT_FOUND != dxgiFactory->EnumAdapters1(adapterId, &pDXGIAdapter); ++adapterId)
+    for (UINT adapterId = 0; ; ++adapterId)
     {
+        if (DXGI_ERROR_NOT_FOUND != dxgiFactory->EnumAdapters1(adapterId, &pDXGIAdapter)) {
+            break;
+        }
+
         // See if the adapter support the minimum level required by Direct 3D 12
         if (FAILED(D3D12CreateDevice(pDXGIAdapter.Get(), D3D_FEATURE_LEVEL_12_0, _uuidof(ID3D12Device), nullptr))) {
             continue;
