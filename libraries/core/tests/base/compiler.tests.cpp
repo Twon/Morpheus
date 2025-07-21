@@ -23,6 +23,7 @@ TEST_CASE("Explicitly check compiler feature flags requirements for library feat
     STATIC_REQUIRE(__cpp_lib_filesystem >= 201703L); // std::filesystem library.
     STATIC_REQUIRE(__cpp_lib_optional >= 201606L); // std::optional.
     STATIC_REQUIRE(__cpp_lib_string_view >= 201606L); // std::string_view.
+    STATIC_REQUIRE(__cpp_lib_span >= 202002L); // std::span.
 }
 
 } // namespace morpheus
