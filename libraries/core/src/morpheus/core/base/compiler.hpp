@@ -121,3 +121,7 @@
 
 #endif // !defined ( MORPHEUS_COMPILER )
 /// @}
+
+#if __cplusplus < 202302L
+#error "The Morpheus library requires C++23 or later."
+#endif
