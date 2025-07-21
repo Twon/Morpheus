@@ -136,21 +136,7 @@ jobs:
           - {
               name: "Visual Studio 2019",
               os: windows-latest,
-              compiler: { type: VISUAL, version: 16, conan: "mscv", cc: "cl", cxx: "cl", std: 20 },
-            }
-          - {
-              name: "MacOS Apple Clang 14",
-              os: macos-13,
-              compiler:
-                {
-                  type: APPLE_CLANG,
-                  version: "14.3.1",
-                  conan: "apple-clang",
-                  cc: "clang",
-                  cxx: "clang++",
-                  std: 20
-                },
-              lib: "libc++",
+              compiler: { type: VISUAL, version: 16, conan: "mscv", cc: "cl", cxx: "cl", std: 23 },
             }
           - {
               name: "MacOS Apple Clang 15",
@@ -162,7 +148,21 @@ jobs:
                   conan: "apple-clang",
                   cc: "clang",
                   cxx: "clang++",
-                  std: 20
+                  std: 23
+                },
+              lib: "libc++",
+            }
+          - {
+              name: "MacOS Apple Clang 16",
+              os: macos-14,
+              compiler:
+                {
+                  type: APPLE_CLANG,
+                  version: "16.3",
+                  conan: "apple-clang",
+                  cc: "clang",
+                  cxx: "clang++",
+                  std: 23
                 },
               lib: "libc++",
             }
