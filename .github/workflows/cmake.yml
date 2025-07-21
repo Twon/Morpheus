@@ -269,12 +269,6 @@ jobs:
               conan cache restore ./conan_cache_save.tgz
           fi
 
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
-        timeout-minutes: 15
-        with:
-          detached: true
-
       - name: Configure Install
         working-directory: ${{github.workspace}}
         shell: bash
