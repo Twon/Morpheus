@@ -1,9 +1,10 @@
 #pragma once
 
-#include <morpheus/gfx/d3d12/prerequisites.hpp>
-#include <morpheus/gfx/d3d12/video_mode_list.hpp>
 #include <morpheus/core/base/platform.hpp>
 #include <morpheus/core/concurrency/generator.hpp>
+#include <morpheus/gfx/d3d12/prerequisites.hpp>
+#include <morpheus/gfx/d3d12/types.hpp>
+#include <morpheus/gfx/d3d12/video_mode_list.hpp>
 #include <morpheus/gfx/platform/adapter.hpp>
 #include <morpheus/gfx/platform/vendor.hpp>
 
@@ -12,13 +13,8 @@
 namespace morpheus::gfx::d3d12
 {
 
-/*! \typedef DXGIAdapter
-        A RAII wrapper for the IDXGIAdapter4 interface.
- */
-using DXGIAdapter = Microsoft::WRL::ComPtr<IDXGIAdapter1>;
 
-
-/// \class adapter
+/// \class Adapter
 ///     Describes an available graphic devices on the target platform.
 ///
 class Adapter {
@@ -28,10 +24,10 @@ public:
 
     /// Default construction an empty adapter.
     constexpr Adapter() noexcept = default;
+
     /// Constructs an adapter with the specified parameters.
     /// \param[in] dxgiAdapter The DXGI adapter object.
     Adapter(DXGIAdapter dxgiAdapter);
-
     ///@}
 
     /// The DXGI adapter interface.

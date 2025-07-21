@@ -12,5 +12,6 @@ target_link_libraries(MorpheusGfxD3D12Tests
 target_sources(MorpheusGfxD3D12Tests
     PRIVATE
         adapter.tests.cpp
+        render_system.tests.cpp
         video_mode_list.tests.cpp
 )
