@@ -19,7 +19,7 @@ public:
     RenderSystem& operator=(RenderSystem&&) = default;
 
     /// Get the name of the underlying graphic API.
-    [[nodiscard]] static std::string_view getGraphicsApi() noexcept { return "Metal"; }
+    [[nodiscard]] static constexpr auto getGraphicsApi() noexcept -> std::string_view { return "Metal"; }
 
 private:
     class Implementation;

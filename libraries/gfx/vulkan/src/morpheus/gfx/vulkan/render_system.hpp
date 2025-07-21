@@ -28,7 +28,7 @@ public:
     RenderSystem& operator=(RenderSystem&&) = default;
 
     /// Get the name of the underlying graphic API.
-    [[nodiscard]] static auto getGraphicsApi() noexcept -> std::string_view { return "Vulkan"; }
+    [[nodiscard]] static constexpr auto getGraphicsApi() noexcept -> std::string_view { return "Vulkan"; }
 
     [[nodiscard]] static auto create() -> exp_ns::expected<RenderSystem, std::string>;
 

@@ -10,6 +10,8 @@
 namespace morpheus::gfx::d3d12
 {
 
+class Adapter;
+
 /// \class Rrender_system
 ///     Rendering system abstraction based upon the Microsoft DirectX 12 API.
 ///
@@ -24,9 +26,12 @@ public:
     RenderSystem& operator=(RenderSystem&&) = default;
 
     /// Get the name of the underlying graphic API.
-    [[nodiscard]] static std::string_view getGraphicsApi() noexcept { return "Direct X 12"; }
+    [[nodiscard]] static constexpr auto getGraphicsApi() noexcept -> std::string_view { return "Direct X 12"; }
 
-    [[nodiscard]] static auto create() -> exp_ns::expected<RenderSystem, std::string>;
+    /// Creates the D3D12 render system on the specified graphics adapter.
+    /// \param[in] adapter
+    ///     The graphics adapter to create the device on.
+    [[nodiscard]] static auto create(Adapter const& adapter) -> exp_ns::expected<RenderSystem, std::string>;
 
 private:
     RenderSystem() = default;

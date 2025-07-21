@@ -37,9 +37,14 @@ DXGIExpected<D3D12Device> createDevice(Adapter const& adapter)
     return toDXGIExpected(hr, std::move(device));
 }
 
-auto RenderSystem::create() -> exp_ns::expected<RenderSystem, std::string>
+auto RenderSystem::create(Adapter const& adapter) -> exp_ns::expected<RenderSystem, std::string>
 {
-    //createDGXIFactory().and_then();
+    //auto device = createDevice(adapter).and_then([](auto&& /*device*/)
+    //    {
+    //        return exp_ns::expected<RenderSystem, std::string>{RenderSystem{}};
+    //    }
+    //);
+    //return device;
     return exp_ns::expected<RenderSystem, std::string>{RenderSystem{}};
 }
 
