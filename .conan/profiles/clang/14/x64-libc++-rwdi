@@ -1,7 +1,0 @@
-include(../../default)
-include(../../arch/x64)
-include(../../config/rel-with-deb-info)
-include(../../os/current)
-include(../../packages/settings)
-include(compiler)
-include(../../cpp/20)
