@@ -60,23 +60,8 @@ public:
     /// Is this the primary monitor?
     [[nodiscard]] bool primary() const noexcept { return mPrimary; }
 
-#if defined(__cpp_lib_three_way_comparison) && (__cpp_lib_three_way_comparison >= 201907L)
     /// Compare two adapter objects.
     [[nodiscard]] auto operator<=>(Monitor const& rhs) const noexcept = default;
-#else
-    /// Compare two adapter objects.
-    [[nodiscard]] auto operator<=>(Monitor const& rhs) const noexcept
-    {
-        return std::tie(mName, mX, mY, mWidth, mHeight, mPrimary) <=> std::tie(rhs.mName, rhs.mX, rhs.mY, rhs.mWidth, rhs.mHeight, rhs.mPrimary);
-    }
-
-    [[nodiscard]] bool operator==(const Monitor& rhs) const noexcept
-    {
-        return std::tie(mName, mX, mY, mWidth, mHeight, mPrimary) == std::tie(rhs.mName, rhs.mX, rhs.mY, rhs.mWidth, rhs.mHeight, rhs.mPrimary);
-    }
-#endif
-
-
 
 private:
     /// \name Data Members

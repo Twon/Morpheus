@@ -27,26 +27,8 @@ public:
     /// The port of the endpoint.
     [[nodiscard]] auto port() const noexcept { return mPort; }
 
-#if defined(__cpp_lib_three_way_comparison) && (__cpp_lib_three_way_comparison >= 201907L)
     /// Compare two endpoint objects.
     [[nodiscard]] auto operator<=>(NamedEndpoint const& rhs) const noexcept = default;
-#else
-    /// Compare two endpoint objects.
-    /// \param rhs The NamedEndpoint to compare against.
-    /// \return A comparison result indicating the relative order of the NamedEndpoint objects.
-    [[nodiscard]] auto operator<=>(NamedEndpoint const& rhs) const noexcept
-    {
-        return std::tie(mName, mPort) <=> std::tie(rhs.mName, rhs.mPort);
-    }
-
-    /// Equality operator for NamedEndpoint.
-    /// \param rhs The NamedEndpoint to compare against.
-    /// \return True if the NamedEndpoint objects are equal, false otherwise.
-    [[nodiscard]] bool operator==(const NamedEndpoint& rhs) const noexcept
-    {
-        return std::tie(mName, mPort) == std::tie(rhs.mName, rhs.mPort);
-    }
-#endif
 
 private:
     std::string mName;
