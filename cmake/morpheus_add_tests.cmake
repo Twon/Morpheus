@@ -62,10 +62,13 @@ function(morpheus_add_tests)
         message(FATAL_ERROR "NAME parameter must be supplied")
     endif()
 
-    add_executable(${MORPHEUS_NAME})
-    if (MORPHEUS_ALIAS)
-        add_executable(${MORPHEUS_ALIAS} ALIAS ${MORPHEUS_NAME})
-    endif()
+    morpheus_add_target(
+        TYPE executable
+        NAME ${MORPHEUS_NAME}
+        ALIAS ${MORPHEUS_ALIAS}
+        FOLDER ${MORPHEUS_FOLDER}
+        NO_INSTALL
+    )
 
     if (NOT Catch2::Catch2)
         find_package(Catch2 3 REQUIRED)
@@ -82,24 +85,10 @@ function(morpheus_add_tests)
             ${CMAKE_CURRENT_BINARY_DIR}/main.cpp
     )
 
-    set_target_properties(${MORPHEUS_NAME}
-        PROPERTIES
-            ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
-            LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
-            RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
-    )
-
     add_test(
         NAME ${MORPHEUS_NAME}
         COMMAND ${MORPHEUS_NAME}
         WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
-
-    if (MORPHEUS_FOLDER)
-        set_target_properties(${MORPHEUS_NAME}
-            PROPERTIES
-                FOLDER ${MORPHEUS_FOLDER}
-        )
-    endif()
 
     if (MORPHEUS_LABELS)
         set_property(TEST ${MORPHEUS_NAME} PROPERTY LABELS ${MORPHEUS_LABELS})

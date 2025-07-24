@@ -76,8 +76,6 @@ public:
     }
 #endif
 
-
-
 private:
     /// \name Data Members
     ///@{
