@@ -195,7 +195,7 @@
     { "name": "clang17-x64-release", "displayName": "clang-17 x64 Release", "description": "clang17 for x64 (Release)", "inherits": [ "clang17", "release" ] },
     { "name": "clang17-x64-rwdi", "displayName": "clang-17 x64 RelWithDebInfo", "description": "clang17 for x64 (RelWithDebInfo)", "inherits": [ "clang17", "rwdi" ] },
     { "name": "clang17-x64-msr", "displayName": "clang-17 x64 MinSizeRel", "description": "clang17 for x64 (MinSizeRel)", "inherits": [ "clang17", "msr" ] },
-  
+
     { "name": "clang18-x64-debug", "displayName": "clang-18 x64 Debug", "description": "clang18 for x64 (Debug)", "inherits": [ "clang18", "debug" ] },
     { "name": "clang18-x64-release", "displayName": "clang-18 x64 Release", "description": "clang18 for x64 (Release)", "inherits": [ "clang18", "release" ] },
     { "name": "clang18-x64-rwdi", "displayName": "clang-18 x64 RelWithDebInfo", "description": "clang18 for x64 (RelWithDebInfo)", "inherits": [ "clang18", "rwdi" ] },
