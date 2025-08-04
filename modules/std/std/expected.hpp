@@ -12,7 +12,7 @@ using std::bad_expected_access;
 
 // in-place construction of unexpected values
 using std::unexpect_t;
-using std::unexpect;
+using std::unexpected;
 
 // [expected.expected], class template expected
 // [expected.void], partial specialization of expected for void types
