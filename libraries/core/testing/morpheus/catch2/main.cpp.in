@@ -4,7 +4,11 @@
 
 #include <morpheus/catch2/adapters/assert.hpp>
 #include <morpheus/catch2/adapters/gmock.hpp>
-#include <catch2/catch_all.hpp>
+
+#include <catch2/catch_config.hpp>
+#include <catch2/catch_session.hpp>
+
+#include <string>
 
 int main(int argc, char** argv)
 {

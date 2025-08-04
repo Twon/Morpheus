@@ -1,5 +1,6 @@
 #pragma once
 
+// IWYU pragma: always_keep
 #include <boost/lexical_cast.hpp>
 
 #include <filesystem>

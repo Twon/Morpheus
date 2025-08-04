@@ -1,11 +1,14 @@
+#include "morpheus/core/base/architecture.hpp"
+
+#if (MORPHEUS_PLATFORM_ARCHITECTURE == MORPHEUS_TARGET_ARCHITECTURE_X86) || (MORPHEUS_PLATFORM_ARCHITECTURE == MORPHEUS_TARGET_ARCHITECTURE_X64)
+
 #include "morpheus/core/conformance/ranges.hpp"
 #include "morpheus/core/cpu.hpp"
+
 #include <catch2/catch_all.hpp>
 #include <algorithm>
 #include <string>
 #include <vector>
-
-#if (MORPHEUS_PLATFORM_ARCHITECTURE == MORPHEUS_TARGET_ARCHITECTURE_X86) || (MORPHEUS_PLATFORM_ARCHITECTURE == MORPHEUS_TARGET_ARCHITECTURE_X64)
 
 namespace morpheus::test
 {

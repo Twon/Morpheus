@@ -5,14 +5,13 @@
 #include "morpheus/core/base/assert_handler.hpp"
 #include "morpheus/core/base/debugging.hpp"
 #include "morpheus/core/conformance/format.hpp"
+#include "morpheus/core/conformance/source_location.hpp"
 #include "morpheus/core/conformance/stacktrace.hpp"
-#include "morpheus/core/conversion/adapters/std/stacktrace.hpp"
-
+#include "morpheus/core/conversion/adapters/std/stacktrace.hpp" // IWYU pragma: keep
 
 //#if (MORPHEUS_MODULES_SUPPORT)
 //    import std;
 //#else
-    #include <iostream>
     #include <string_view>
     #include <utility>
 //#endif // #if (MORPHEUS_MODULES_SUPPORT)

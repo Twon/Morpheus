@@ -1,10 +1,13 @@
 #include "morpheus/application/application.hpp"
+#include "morpheus/application/po/config.hpp"
 #include "morpheus/logging.hpp"
-#include "morpheus/redirect_stream.hpp"
 
-#include <boost/program_options/options_description.hpp>
+#include <boost/log/trivial.hpp>
 
 #include <catch2/catch_test_macros.hpp>
+
+#include <array>
+#include <filesystem>
 
 namespace morpheus::application::po
 {

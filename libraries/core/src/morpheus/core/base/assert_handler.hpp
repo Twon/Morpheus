@@ -4,13 +4,11 @@
 //    import std;
 //#endif // #if (MORPHEUS_MODULES_SUPPORT)
 
-#include <morpheus/core/base/platform.hpp>
+#include <morpheus/core/base/export.hpp>
 #include <morpheus/core/conformance/source_location.hpp>
 
 //#if (!MORPHEUS_MODULES_SUPPORT)
-    #include <cstdint>
     #include <functional>
-    #include <string>
     #include <string_view>
 //#endif // #if (!MORPHEUS_MODULES_SUPPORT)
 
@@ -26,8 +24,7 @@ struct Assertion
     std::string_view message;        ///< Message with human readable description of the assertion.
 };
 
-/// \using AssertHandler
-///     Callback that defines custom behaviour when an assert is hit.
+/// Callback that defines custom behaviour when an assert is hit.
 using AssertHandler = std::function<bool(Assertion)>;
 
 /// Set a custom global assert handler.
@@ -40,8 +37,7 @@ MORPHEUSCORE_EXPORT AssertHandler setAssertHandler(AssertHandler handler);
 /// Access the globally enable assert handler.
 [[nodiscard]] MORPHEUSCORE_EXPORT AssertHandler const& getAssertHandler();
 
-/// \using AssertHaltHandler
-///     Callback that defines custom behaviour when an assert must halt the program.
+/// Callback that defines custom behaviour when an assert must halt the program.
 using AssertHaltHandler = std::function<void()>;
 
 /// Set a custom global assert halt handler.

@@ -1,5 +1,6 @@
 #pragma once
 
+// IWYU pragma: always_keep
 #include "morpheus/core/conformance/ranges.hpp"
 #include "morpheus/core/meta/concepts/string.hpp"
 #include "morpheus/core/serialisation/concepts/read_serialisable.hpp"
@@ -10,8 +11,7 @@
 namespace morpheus::serialisation::detail
 {
 
-/// \var isEnabledForRangeSerialisation
-///     To enable serialisation for any type meeting the concept of a range then enable serialisation by specialising and enabling this value.
+/// To enable serialisation for any type meeting the concept of a range then enable serialisation by specialising and enabling this value.
 template <typename T>
 inline constexpr bool isEnabledForRangeSerialisation = false;
 

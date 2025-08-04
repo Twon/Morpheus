@@ -1,4 +1,6 @@
 #include "morpheus/application/application.hpp"
+#include "morpheus/application/version.hpp"
+#include "morpheus/application/po/options.hpp"
 #include "morpheus/core/base/debugging.hpp"
 #include "morpheus/core/conformance/date.hpp"
 #include "morpheus/core/conformance/format.hpp"
@@ -6,9 +8,11 @@
 #include "morpheus/core/conversion/adapters/std/chrono.hpp"
 #include "morpheus/core/conversion/adapters/std/stacktrace.hpp"
 
-#include <boost/process/v1/environment.hpp>
-#include <boost/dll.hpp>
-#include <chrono>
+// #include <boost/process/v1/environment.hpp>
+// #include <boost/dll.hpp>
+
+#include <cstdlib>
+#include <exception>
 
 namespace morpheus::application
 {

@@ -1,5 +1,6 @@
 #pragma once
 
+// IWYU pragma: always_keep
 #include "morpheus/core/conformance/format.hpp"
 #include "morpheus/core/conformance/stacktrace.hpp"
 
@@ -10,7 +11,7 @@
 //#endif // #if (MORPHEUS_MODULES_SUPPORT)
 
 // clang-format off
-#if (__cpp_lib_formatters < 202302L)
+#if (__cpp_lib_stacktrace < 202011L) or (__cpp_lib_formatters < 202302L)
 
 template <typename Allocator>
 struct morpheus::fmt_ns::formatter<morpheus::st_ns::basic_stacktrace<Allocator>>

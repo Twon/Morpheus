@@ -38,9 +38,9 @@ concept CustomProgramOptions = requires(T& t, boost::program_options::options_de
 ///     Holds common help documentation information for applications.
 struct HelpDocumentation
 {
-    std::string_view name;
-    std::string_view synopsis;
-    std::optional<Version> version;
+    std::string_view name; ///< The name of the application, typically the executable name.
+    std::string_view synopsis; ///< A brief synopsis of the application, typically a one-liner describing its purpose.
+    std::optional<Version> version; ///< The version of the application, if available.
 };
 
 std::optional<int> parseProgramOptions(int argc, char const* const* argv, HelpDocumentation const& msgDetails, CustomProgramOptions auto&... options)

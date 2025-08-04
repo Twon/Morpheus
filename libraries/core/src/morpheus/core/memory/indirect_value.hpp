@@ -7,6 +7,8 @@
 #include "morpheus/core/meta/concepts/complete.hpp"
 #include "morpheus/core/meta/concepts/hashable.hpp"
 
+#include <boost/type_traits/copy_cv_ref.hpp>
+
 #include <concepts>
 #include <exception>
 #include <memory>
@@ -145,13 +147,13 @@ struct exchange_on_move_ptr
 template <typename T, typename C, typename D>
 struct indirect_value_base;
 
-/// \class indirect_value_base
+/// \struct indirect_value_base<T, CD, CD>
 ///     We must specialise to handle the case where copier and deleter are the same object and have no size.  In this
 ///     case this we have [[no_unique_address]] pointing to two objects of the same type which is not allowed by the
 ///     standard.  To support this we specialises away the unnecessary duplication of the object to avoid unnecessary
 ///     storage and in-doing so resolve the any issues around use of [[no_unique_address]]:
 ///     https://en.cppreference.com/w/cpp/language/attributes/no_unique_address
-/// \tparam T The underluing value type
+/// \tparam T The underlying value type
 /// \tparam CD The combined copier and deleter object
 template <typename T, typename CD>
 struct indirect_value_base<T, CD, CD>
@@ -164,8 +166,12 @@ struct indirect_value_base<T, CD, CD>
     [[no_unique_address]] CD mCopierDeleterCombined; ///< Functor customising the copying and deleting of the undelrying value.
 #endif
 
+    /// Default constructor.
     constexpr indirect_value_base() = default;
 
+    /// Constructs an indirect_value_base which owns takes ownership of the input t.
+    /// \param[in] t Pointer to the underlying value to be owned.
+    /// \param[in] cd Combined copier and deleter functor to customise how the underlying value is copied and deleted.
     constexpr explicit indirect_value_base(T* t, CD cd = CD())
     : mValue(t)
     , mCopierDeleterCombined(std::move(cd))
@@ -174,16 +180,16 @@ struct indirect_value_base<T, CD, CD>
 #if (__cpp_explicit_this_parameter >= 202110L)
     /// Access the copier.
     template <typename Self>
-    [[nodiscard]] constexpr std::copy_cvref_t<Self, auto> getC(this Self&& self)
+    [[nodiscard]] constexpr auto getC(this Self&& self) -> boost::copy_cv_ref_t<CD, decltype(self)>
     {
-        return std::forward_like<Self>(mCopierDeleterCombined);
+        return std::forward_like<decltype(self)>(self.mCopierDeleterCombined);
     }
 
     /// Access the deleter.
     template <typename Self>
-    [[nodiscard]] constexpr std::copy_cvref_t<Self, auto> getD(this Self&& self)
+    [[nodiscard]] constexpr auto getD(this Self&& self) -> boost::copy_cv_ref_t<CD, decltype(self)>
     {
-        return std::forward_like<Self>(mCopierDeleterCombined);
+        return std::forward_like<decltype(self)>(self.mCopierDeleterCombined);
     }
 #else
     /// Access the copier.
@@ -220,6 +226,12 @@ struct indirect_value_base<T, CD, CD>
     }
 };
 
+/// \struct indirect_value_base
+///     The default case for indirect value is the case where copier and deleter are the different object.  In many cases
+///     these will have no size and are thus marked [[no_unique_address]] to avoid any storage requirements
+/// \tparam T The underlying value type.
+/// \tparam C The copier object.
+/// \tparam D The deleter object.
 template <typename T, typename C, typename D>
 struct indirect_value_base
 {
@@ -232,6 +244,10 @@ struct indirect_value_base
     [[no_unique_address]] C mCopier;  ///< The copier functor to customise how the underlying value is copied.
     [[no_unique_address]] D mDeleter; ///< The deleter functor to customise how the underlying value is deleted.
 #endif
+
+    /// Default constructor.
+    /// \note Default constructor is noexcept if copier and deleter are both nothrow default constructible.
+    //constexpr indirect_value_base() noexcept(std::is_nothrow_default_constructible_v<C> && std::is_nothrow_default_constructible_v<D>) = default;
     constexpr indirect_value_base() = default;
 
     constexpr explicit indirect_value_base(T* t, C c = C(), D d = D())
@@ -243,16 +259,16 @@ struct indirect_value_base
 #if (__cpp_explicit_this_parameter >= 202110L)
     /// Access the copier.
     template <typename Self>
-    [[nodiscard]] constexpr std::copy_cvref_t<Self, auto> getC(this Self&& self)
+    [[nodiscard]] constexpr auto getC(this Self&& self) -> boost::copy_cv_ref_t<C, decltype(self)>
     {
-        return std::forward_like<Self>(mCopier);
+        return std::forward_like<decltype(self)>(self.mCopier);
     }
 
     /// Access the deleter.
     template <typename Self>
-    [[nodiscard]] constexpr std::copy_cvref_t<Self, auto> getD(this Self&& self)
+    [[nodiscard]] constexpr auto getD(this Self&& self) -> boost::copy_cv_ref_t<D, decltype(self)>
     {
-        return std::forward_like<Self>(mDeleter);
+        return std::forward_like<decltype(self)>(self.mDeleter);
     }
 #else
     /// Access the copier.
@@ -388,25 +404,25 @@ public:
 
     /// Accesses the contained value.
     template <typename Self>
-    [[nodiscard]] constexpr auto* operator->(this Self&& self) noexcept
+    [[nodiscard]] constexpr auto operator->(this Self&& self) noexcept -> boost::copy_cv_t<T*, decltype(self)>
     {
-        return (this->mValue);
+        return (self.mValue);
     }
 
     /// Dereferences pointer to the managed object.
     template <typename Self>
-    [[nodiscard]] constexpr std::copy_cvref_t<Self, T>&& operator*(this Self&& self) noexcept
+    [[nodiscard]] constexpr auto operator*(this Self&& self) noexcept -> boost::copy_cv_ref_t<T, decltype(self)>
     {
-        return *std::forward(self).mValue;
+        return std::forward_like<decltype(self)>(*self.mValue);
     }
 
     /// If *this contains a value, returns a reference to the contained value. Otherwise, throws a bad_indirect_value_access exception.
     template <typename Self>
-    [[nodiscard]] constexpr auto& value(this Self&& self)
+    [[nodiscard]] constexpr auto value(this Self&& self) -> boost::copy_cv_ref_t<T, decltype(self)>
     {
-        if (!this->mValue)
+        if (!self.mValue)
             throw bad_indirect_value_access();
-        return *(this->mValue);
+        return std::forward_like<decltype(self)>(*self.mValue);
     }
 #else
     /// Accesses the contained value.
@@ -523,10 +539,15 @@ constexpr auto allocate_indirect_value(std::allocator_arg_t, A& a, Ts&&... ts)
 
 } // namespace morpheus::memory
 
+/// Specialisation of std::hash for morpheus::memory::indirect_value.
 template <class T, class C, class D>
 requires morpheus::meta::concepts::IsHashable<T>
 struct std::hash<::morpheus::memory::indirect_value<T, C, D>>
 {
+    /// Computes the hash of the underlying value.
+    /// \param key The indirect_value to compute the hash for.
+    /// \return The hash of the underlying value, or 0 if the indirect_value is empty.
+    /// \note noexcept if the underlying value type is noexcept hashable.
     constexpr std::size_t operator()(const ::morpheus::memory::indirect_value<T, C, D>& key) const
         noexcept(noexcept(std::hash<typename ::morpheus::memory::indirect_value<T, C, D>::value_type>{}(*key)))
     {

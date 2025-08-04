@@ -1,4 +1,5 @@
 #include "morpheus/core/base/debugging.hpp"
+#include "morpheus/core/base/platform.hpp"
 #include "morpheus/core/base/prerequisites.hpp"
 
 #include <boost/test/debug.hpp>
@@ -6,7 +7,6 @@
 //#if (MORPHEUS_MODULES_SUPPORT)
 //    import std;
 //#else
-    #include <cstdio>
     #include <iostream>
 //#endif // #if (MORPHEUS_MODULES_SUPPORT)
 

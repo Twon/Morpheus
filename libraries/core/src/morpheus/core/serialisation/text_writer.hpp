@@ -9,11 +9,14 @@ namespace morpheus::serialisation
 class TextWriter
 {
 public:
+    /// \copydoc morpheus::serialisation::concepts::WriterArchetype::canBeTextual()
     static constexpr bool canBeTextual() { return true; }
 
-    /// \copydoc morpheus::serialisation::concepts::WriterArchtype::isTextual()
+    /// \copydoc morpheus::serialisation::concepts::WriterArchetype::isTextual()
     static constexpr bool isTextual() { return true; }
 
+    /// Construct a text writer from an output stream.
+    /// \param[in] stream The output stream to write to.  This must outlive the writer as its held by reference.
     explicit TextWriter(std::ostream& stream) noexcept : mStream(stream) {}
 
     /// \copydoc morpheus::serialisation::JsonWriter::write(bool)
@@ -39,10 +42,10 @@ public:
     /// \copydoc morpheus::serialisation::JsonWriter::write(double)
     void write(double value) {}
 
-    /// \copydoc morpheus::serialisation::concepts::WriterArchtype::write(std::string_view const)
+    /// \copydoc morpheus::serialisation::concepts::WriterArchetype::write(std::string_view const)
     void write(std::string_view const value) {}
-    /// \copydoc morpheus::serialisation::concepts::WriterArchtype::write(std::span<std::byte> const)
-    void write(std::span<std::bytes> const value) {}
+    /// \copydoc morpheus::serialisation::concepts::WriterArchetype::write(std::span<std::byte> const)
+    void write(std::span<std::bytes const> const value) {}
 
 private:
     std::ostream& mStream;

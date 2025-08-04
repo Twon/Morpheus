@@ -1,7 +1,7 @@
 #pragma once
 
 #include <morpheus/core/base/compiler.hpp>
-#include <morpheus/core/morpheuscore_export.h>
+#include <morpheus/core/base/export.hpp>
 
 //#if (MORPHEUS_MODULES_SUPPORT)
 //    import std;

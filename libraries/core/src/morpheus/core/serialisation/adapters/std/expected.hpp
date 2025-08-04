@@ -1,5 +1,6 @@
 #pragma once
 
+// IWYU pragma: always_keep
 #include "morpheus/core/conformance/expected.hpp"
 #include "morpheus/core/meta/is_specialisation.hpp"
 #include "morpheus/core/serialisation/concepts/read_serialisable.hpp"

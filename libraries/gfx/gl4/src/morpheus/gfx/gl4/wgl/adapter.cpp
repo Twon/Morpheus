@@ -51,6 +51,12 @@ auto vendorFromDeviceId(std::string_view const deviceId)
 	return *vendor;
 }
 
+std::string_view glGetStringView(GLenum name)
+{
+    const GLubyte* str = glGetString(name);
+    return str ? std::string_view(reinterpret_cast<const char*>(str)) : std::string_view{};
+}
+
 }
 
 LRESULT CALLBACK dummyWndProc(HWND hwnd, UINT umsg, WPARAM wp, LPARAM lp)
@@ -72,44 +78,38 @@ concurrency::Generator<Adapter> enumerateAdapters()
 		hinst, 0);
 
 //	auto const hDC = GetDC(hwnd);
-//	auto const hResults4 = GetLastError();
+//	auto const hResults = GetLastError();
 
 	for (DWORD dwCurrentDevice = 0; ; ++dwCurrentDevice)
 	{
 		if (!EnumDisplayDevices(NULL, dwCurrentDevice, &displayDevice, 0))
 			break;
 
-		//PIXELFORMATDESCRIPTOR pfd{ .nSize = sizeof(PIXELFORMATDESCRIPTOR), .nVersion = 1, .cColorBits = 24, .cDepthBits = 32 };
-		//pfd.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER;
-		//pfd.iPixelType = PFD_TYPE_RGBA;
-
 		PIXELFORMATDESCRIPTOR pfd =
 		{
-			sizeof(PIXELFORMATDESCRIPTOR),
-			1,
-			PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER,    // Flags
-			PFD_TYPE_RGBA,        // The kind of framebuffer. RGBA or palette.
-			32,                   // Colordepth of the framebuffer.
-			0, 0, 0, 0, 0, 0,
-			0,
-			0,
-			0,
-			0, 0, 0, 0,
-			24,                   // Number of bits for the depthbuffer
-			8,                    // Number of bits for the stencilbuffer
-			0,                    // Number of Aux buffers in the framebuffer.
-			PFD_MAIN_PLANE,
-			0,
-			0, 0, 0
+			.nSize = sizeof(PIXELFORMATDESCRIPTOR),
+			.nVersion = 1,
+			.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER,
+			.iPixelType = PFD_TYPE_RGBA, // The kind of framebuffer. RGBA or palette.
+			.cColorBits = 32, // Colour depth of the framebuffer.
+			.cDepthBits = 24, // Number of bits for the depthbuffer
+			.cStencilBits = 8, // Number of bits for the stencilbuffer
+			.cAuxBuffers = 0, // Number of Aux buffers in the framebuffer.
+			.iLayerType = PFD_MAIN_PLANE,
 		};
 
 //		auto const glContext = wglCreateContext(hDC);
 //		auto const hResult2 = GetLastError();
 //		auto const successful = wglMakeCurrent(hDC, glContext);
-		Context customContext(hwnd, pfd);
-		auto oldContext = customContext.enable();
-		//const GLubyte* vendor = glGetString(GL_VENDOR);
-		//const GLubyte* renderer = glGetString(GL_RENDERER);
+
+        auto context = Context::create(hwnd, pfd);
+        if (!context)
+            continue;
+
+        auto oldContext = context.value().enable();
+        std::string_view vendor = glGetStringView(GL_VENDOR);
+        std::string_view renderer = glGetStringView(GL_RENDERER);
+        std::string_view version = glGetStringView(GL_VERSION);
 
 		// If the device is attached to the desktop, i.e. a graphics card
 		if (displayDevice.StateFlags & DISPLAY_DEVICE_ATTACHED_TO_DESKTOP)

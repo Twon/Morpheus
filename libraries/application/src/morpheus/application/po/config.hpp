@@ -1,8 +1,9 @@
 #pragma once
 
-#include "morpheus/core/conformance/date.hpp"
+//#include "morpheus/core/conformance/date.hpp"
 
 #include <boost/log/trivial.hpp>
+
 #include <filesystem>
 
 namespace boost::program_options
@@ -27,6 +28,8 @@ struct Config
 
     // Logfile name
     // Logfile timezone
+
+    /// Support registering command line options for the application configuration.
     void addOptions(boost::program_options::options_description& options);
 };
 
