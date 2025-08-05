@@ -15,7 +15,7 @@ namespace morpheus
 
 using ExceptionInfo = boost::error_info<struct tag_stacktrace, st_ns::stacktrace>;
 
-/// \group Exception Helpers
+/// \defgroup Exception Helpers
 ///     Throwing of exceptions is moved to explicitly outlined functions to ensure code density around exception sites.
 ///     Additionally this allows to inform the compiler that exceptions are expected to be on the cold path to ensure
 ///     optimal code generation where exceptions are thrown.

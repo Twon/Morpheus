@@ -1,10 +1,13 @@
 #pragma once
 
-#include <morpheus/core/conformance/version.hpp>
-
-#if __has_include(<stacktrace>)
-    #include <stacktrace> // IWYU pragma: export
-#endif
+//#if (MORPHEUS_MODULES_SUPPORT)
+//    import std;
+//#else
+    #include <morpheus/core/conformance/version.hpp>
+    #if __has_include(<stacktrace>)
+        #include <stacktrace> // IWYU pragma: export
+    #endif
+//#endif // #if (MORPHEUS_MODULES_SUPPORT)
 
 // clang-format off
 #if (__cpp_lib_stacktrace >= 202011L)
