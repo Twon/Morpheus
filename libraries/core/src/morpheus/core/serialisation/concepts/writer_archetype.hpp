@@ -2,9 +2,9 @@
 
 #include "morpheus/core/serialisation/write_serialiser_decl.hpp"
 
+#include <concepts>
 #include <cstddef>
 #include <cstdint>
-#include <concepts>
 #include <optional>
 #include <span>
 #include <string_view>
@@ -47,7 +47,8 @@ struct WriterArchetype
     consteval void endNullable();
 
     /// Write any arithmetic type to the serialisation.
-    template <typename T> requires std::is_arithmetic_v<T>
+    template <typename T>
+    requires std::is_arithmetic_v<T>
     consteval void write(T const value);
 
     /// Write a string to the serialisation.
@@ -59,4 +60,4 @@ struct WriterArchetype
 
 using WriteSerialiserArchtype = serialisation::WriteSerialiser<WriterArchetype>;
 
-} // morpheus::serialisation::concepts
+} // namespace morpheus::serialisation::concepts

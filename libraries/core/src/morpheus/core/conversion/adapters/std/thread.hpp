@@ -2,7 +2,6 @@
 
 // IWYU pragma: always_keep
 #include "morpheus/core/conformance/format.hpp"
-#include "morpheus/core/conformance/format.hpp"
 
 #include <thread>
 
