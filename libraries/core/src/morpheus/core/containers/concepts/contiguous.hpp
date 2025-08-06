@@ -13,7 +13,7 @@ namespace morpheus::containers::concepts
 ///     <a href="https://eel.is/c++draft/container.requirements.general">[container.requirements.general]</a>, details at
 ///     <a href="https://en.cppreference.com/w/cpp/named_req/ContiguousContainer">ContiguousContainer</a>.
 template <typename T>
-concept Contiguous = StrictSequence<T> && requires(T t){
+concept Contiguous = StrictSequence<T> && requires(T t) {
     requires std::contiguous_iterator<typename T::iterator>;
     requires std::contiguous_iterator<typename T::const_iterator>;
 };

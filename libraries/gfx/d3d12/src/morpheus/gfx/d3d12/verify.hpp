@@ -1,7 +1,7 @@
 #pragma once
 
-#include <morpheus/gfx/d3d12/prerequisites.hpp>
 #include <morpheus/core/base/verify.hpp>
+#include <morpheus/gfx/d3d12/prerequisites.hpp>
 
 namespace morpheus::gfx::d3d12
 {
@@ -18,10 +18,12 @@ inline std::string getLastErrorMessage()
 /// \def MORPHEUS_D3D12_VERIFY
 ///
 ///
-#define MORPHEUS_D3D12_VERIFY(expr) \
-do { \
-    HRESULT const hr = expr; \
-    MORPHEUS_VERIFY_MSG(FAILED(hr), getLastErrorMessage()); \
-} while (0)
+#define MORPHEUS_D3D12_VERIFY(expr)                                                                                                                            \
+    do                                                                                                                                                         \
+    {                                                                                                                                                          \
+        HRESULT const hr = expr;                                                                                                                               \
+        MORPHEUS_VERIFY_MSG(FAILED(hr), getLastErrorMessage());                                                                                                \
+    }                                                                                                                                                          \
+    while (0)
 
 } // namespace morpheus::gfx::d3d12

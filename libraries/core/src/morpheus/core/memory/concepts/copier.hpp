@@ -11,9 +11,7 @@ namespace morpheus::memory::concepts
 template <typename T, typename C>
 concept Copier = requires(T t, C c) {
     typename T::deleter_type;
-    {
-        t(c)
-    } -> std::same_as<C*>;
+    { t(c) } -> std::same_as<C*>;
 };
 
 /// \struct default_copy

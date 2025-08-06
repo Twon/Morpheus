@@ -13,9 +13,7 @@ namespace morpheus::memory::concepts
 /// \tparam Arg The argument to ne destroyed.
 template <typename Callable, typename Arg>
 concept Deleter = requires(Callable&& c, Arg* a) {
-    {
-        std::forward<Callable>(c)(a)
-    } -> std::same_as<void>;
+    { std::forward<Callable>(c)(a) } -> std::same_as<void>;
 };
 
 /// \struct default_copy

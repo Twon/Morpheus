@@ -29,4 +29,4 @@ TEST_CASE("Ensure magic enum converts string to enums", "[morpheus.enum.from_str
     REQUIRE(magic_enum::enum_cast<TrafficLights>("Green") == TrafficLights::Green);
 }
 
-} // morpheus
+} // namespace morpheus
