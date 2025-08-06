@@ -5,7 +5,7 @@
         and version.
     @{
 */
-
+// clang-format off
 #if !defined(MORPHEUS_COMPILER)
 
     /*! \def MORPHEUS_CLANG_COMPILER
@@ -120,4 +120,5 @@
         (MORPHEUS_COMPILER == MORPHEUS_VISUALSTUDIO_COMPILER) || (MORPHEUS_INTEL_COMPILER_FOR_WINDOWS)
 
 #endif // !defined ( MORPHEUS_COMPILER )
+// clang-format on
 /// @}
