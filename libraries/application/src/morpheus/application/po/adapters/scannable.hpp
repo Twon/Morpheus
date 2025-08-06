@@ -14,7 +14,7 @@ namespace boost
 {
 
 template <class CharType, typename S>
-requires  morpheus::meta::concepts::Scannable<S, CharType>
+requires morpheus::meta::concepts::Scannable<S, CharType>
 void validate(boost::any& v, std::vector<std::basic_string<CharType>> const& values, S*, int)
 {
     namespace po = boost::program_options;
