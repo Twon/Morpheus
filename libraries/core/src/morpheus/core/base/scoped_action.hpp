@@ -29,7 +29,8 @@ class HoldReturnType;
 ///     Specialisation for entry action with a void return type.
 template <>
 class HoldReturnType<void>
-{};
+{
+};
 
 /// \class HoldReturnType
 ///     Holding type to own the return value of an entry action to a scoped action.
@@ -84,7 +85,7 @@ public:
     }
 
     constexpr ScopedAction(ScopedAction const&) = delete;
-    constexpr ScopedAction(ScopedAction &&) = delete;
+    constexpr ScopedAction(ScopedAction&&) = delete;
 
     constexpr ScopedAction operator=(ScopedAction const&) = delete;
     constexpr ScopedAction operator=(ScopedAction&&) = delete;

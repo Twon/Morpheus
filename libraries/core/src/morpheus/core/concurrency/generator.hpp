@@ -22,10 +22,10 @@ struct Generator
 {
 
     struct promise_type;
-    using handle_type = coro_ns::coroutine_handle<promise_type>; ///< Handle to generator coroutines.
-    using value_type = T;                                        ///< Value type from resulting generation.
+    using handle_type = coro_ns::coroutine_handle<promise_type>;                        ///< Handle to generator coroutines.
+    using value_type = T;                                                               ///< Value type from resulting generation.
     using reference = std::conditional_t<std::is_reference_v<T>, T, const value_type&>; ///< Reference type to the value type.
-    using pointer = std::add_pointer_t<reference>; ///< Pointer type to the value type.
+    using pointer = std::add_pointer_t<reference>;                                      ///< Pointer type to the value type.
 
     Generator(handle_type h) : coro(h) {}
 
@@ -57,7 +57,7 @@ struct Generator
 
         auto return_void() { return coro_ns::suspend_never{}; }
 
-        template<std::convertible_to<T> From>
+        template <std::convertible_to<T> From>
         auto yield_value(From&& from)
         {
             current_value = std::forward<From>(from);
@@ -75,8 +75,8 @@ struct Generator
     {
     public:
         using value_type = Generator::value_type; ///< Value type pointed to by the iterator.
-        using reference = Generator::reference; ///< Reference to the underlying value type pointed to by the iterator.
-        using pointer = Generator::pointer;     ///< Pointer to the underlying value type pointed to by the iterator.
+        using reference = Generator::reference;   ///< Reference to the underlying value type pointed to by the iterator.
+        using pointer = Generator::pointer;       ///< Pointer to the underlying value type pointed to by the iterator.
         using difference_type = std::ptrdiff_t;
         using iterator_category = std::input_iterator_tag;
 

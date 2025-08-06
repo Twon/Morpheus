@@ -28,4 +28,4 @@ TEST_CASE("Ensure scan is supported and working", "[morpheus.conformance.scan]")
     }
 }
 
-} // morpheus
+} // namespace morpheus

@@ -1,8 +1,8 @@
 #pragma once
 
+#include <concepts>
 #include <cstddef>
 #include <cstdint>
-#include <concepts>
 #include <optional>
 #include <span>
 #include <string_view>
@@ -14,8 +14,7 @@ namespace morpheus::serialisation::concepts
 /// \concept Writer
 ///     Constraints for a type capable of writing the fundamental serialisable types.
 template <typename T>
-concept Writer = requires(T t)
-{
+concept Writer = requires(T t) {
     { t.isTextual() } -> std::same_as<bool>;
 
     { t.beginSequence(std::optional<std::size_t>{}) } -> std::same_as<void>;
@@ -28,7 +27,7 @@ concept Writer = requires(T t)
     { t.endNullable() } -> std::same_as<void>;
 
     { t.write(bool{}) } -> std::same_as<void>;
-    { t.write(std::uint8_t{}) } ->std::same_as<void>;
+    { t.write(std::uint8_t{}) } -> std::same_as<void>;
     { t.write(std::int8_t{}) } -> std::same_as<void>;
     { t.write(std::uint16_t{}) } -> std::same_as<void>;
     { t.write(std::int16_t{}) } -> std::same_as<void>;
@@ -42,4 +41,4 @@ concept Writer = requires(T t)
     { t.write(std::span<std::byte>{}) } -> std::same_as<void>;
 };
 
-} // morpheus::serialisation::concepts
+} // namespace morpheus::serialisation::concepts

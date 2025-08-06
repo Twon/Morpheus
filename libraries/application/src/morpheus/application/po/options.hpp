@@ -18,8 +18,8 @@
     #pragma GCC diagnostic pop
 #endif // (MORPHEUS_COMPILER == MORPHEUS_GNUC_COMPILER)
 
-#include <iostream>
 #include <filesystem>
+#include <iostream>
 #include <optional>
 #include <span>
 
@@ -38,17 +38,17 @@ concept CustomProgramOptions = requires(T& t, boost::program_options::options_de
 ///     Holds common help documentation information for applications.
 struct HelpDocumentation
 {
-    std::string_view name; ///< The name of the application, typically the executable name.
-    std::string_view synopsis; ///< A brief synopsis of the application, typically a one-liner describing its purpose.
+    std::string_view name;          ///< The name of the application, typically the executable name.
+    std::string_view synopsis;      ///< A brief synopsis of the application, typically a one-liner describing its purpose.
     std::optional<Version> version; ///< The version of the application, if available.
 };
 
 std::optional<int> parseProgramOptions(int argc, char const* const* argv, HelpDocumentation const& msgDetails, CustomProgramOptions auto&... options)
 {
-    return parseProgramOptions(std::span<char const * const>{argv, static_cast<std::size_t>(argc)}, msgDetails, options...);
+    return parseProgramOptions(std::span<char const* const>{argv, static_cast<std::size_t>(argc)}, msgDetails, options...);
 }
 
-std::optional<int> parseProgramOptions(std::span<char const * const> parameters, HelpDocumentation const& msgDetails, CustomProgramOptions auto&... options)
+std::optional<int> parseProgramOptions(std::span<char const* const> parameters, HelpDocumentation const& msgDetails, CustomProgramOptions auto&... options)
 {
     namespace po = boost::program_options;
     try
@@ -93,6 +93,5 @@ std::optional<int> parseProgramOptions(std::span<char const * const> parameters,
     }
     return std::nullopt;
 }
-
 
 } // namespace morpheus::application::po

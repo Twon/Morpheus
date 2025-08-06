@@ -35,4 +35,4 @@ TEST_CASE("Meta is array allows the compile time detection of std::array special
     STATIC_REQUIRE(!meta::is_array_v<double>);
 }
 
-}
+} // namespace morpheus::meta

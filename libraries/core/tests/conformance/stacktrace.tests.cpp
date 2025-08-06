@@ -28,4 +28,4 @@ TEST_CASE("Ensure stacktrace is supported and working", "[morpheus.conformance.s
     }
 }
 
-}
+} // namespace morpheus

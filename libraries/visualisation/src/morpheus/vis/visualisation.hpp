@@ -12,9 +12,9 @@ namespace morpheus::vis
         The render system used by the visualisation.
  */
 template <gfx::concepts::RenderSystem R>
-class Visualisation {
+class Visualisation
+{
 public:
-
     Visualisation(Visualisation const&) = delete;
     Visualisation& operator=(Visualisation const&) = delete;
 

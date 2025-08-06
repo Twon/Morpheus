@@ -6,13 +6,13 @@
 
 #include <rapidjson/allocators.h>
 #include <rapidjson/encodings.h>
-#include <rapidjson/writer.h>
 #include <rapidjson/ostreamwrapper.h>
+#include <rapidjson/writer.h>
 
 #include <cstddef>
 #include <cstdint>
-#include <ostream>
 #include <optional>
+#include <ostream>
 #include <span>
 #include <string_view>
 
@@ -85,7 +85,11 @@ public:
     /// \copydoc morpheus::serialisation::concepts::WriterArchetype::write(std::span<std::byte> const)
     void write(std::span<std::byte const> const value);
     /// Write a string literal to the serialisation.
-    template <std::size_t N> void write(const char(&str)[N]) { write(std::string_view(str, N-1)); }
+    template <std::size_t N>
+    void write(const char (&str)[N])
+    {
+        write(std::string_view(str, N - 1));
+    }
 
 private:
     template<typename OutputStream>
@@ -101,5 +105,4 @@ private:
     RapidJsonWriter<rapidjson::OStreamWrapper> mJsonWriter;
 };
 
-
-}
+} // namespace morpheus::serialisation

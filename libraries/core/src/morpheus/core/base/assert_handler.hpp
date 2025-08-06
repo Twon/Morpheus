@@ -60,6 +60,4 @@ enum class MORPHEUSCORE_EXPORT AssertType
 MORPHEUSCORE_EXPORT void assertHandler(AssertType type, sl_ns::source_location const location, std::string_view const expr,
                                        std::string_view message = std::string_view());
 
-
-
 } // namespace morpheus

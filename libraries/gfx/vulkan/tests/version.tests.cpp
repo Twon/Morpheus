@@ -5,7 +5,8 @@
 
 #include <cstdint>
 
-namespace morpheus::gfx::vulkan {
+namespace morpheus::gfx::vulkan
+{
 
 TEST_CASE("Test construction of std::error_code object via make_error_code", "[vulkan.version]")
 {
@@ -20,4 +21,4 @@ TEST_CASE("Test construction of std::error_code object via make_error_code", "[v
     STATIC_REQUIRE(version.patch() == expectedPatch);
 }
 
-}
+} // namespace morpheus::gfx::vulkan

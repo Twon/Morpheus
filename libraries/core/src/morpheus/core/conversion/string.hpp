@@ -13,14 +13,14 @@ namespace morpheus::conversion
 ///     A class template the represents a customisation point to specialise to provide conversion between a type and
 ///     its string representation.
 /// \tparam T The type to convert to and from a string.
-template<typename T>
+template <typename T>
 struct StringConverter
 {
     /// A deleted constructor indicates a disabled string converter
     StringConverter() = delete;
 };
 
-template<typename T>
+template <typename T>
 concept StringConvertionEnabled = std::is_constructible_v<StringConverter<T>>;
 
 /// Convert a value of type T to its string representation.

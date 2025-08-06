@@ -18,4 +18,4 @@ namespace morpheus
 #endif
 }
 
-}
+} // namespace morpheus

@@ -34,7 +34,8 @@ using CpuidLeafs = std::vector<CpuidResults>;
 ///     This type stores information about the capabilities of the central processing unit of the current target
 ///     system.
 ///
-class MORPHEUSCORE_EXPORT Cpu {
+class MORPHEUSCORE_EXPORT Cpu
+{
 public:
     //! Default constructor.
     Cpu();
@@ -46,10 +47,10 @@ public:
     [[nodiscard]] auto const& getBrandId() const noexcept { return mBrandId; }
 
 private:
-    std::uint32_t mMaxLeaf;          //!< Maximum available leaf function for the cpuid instruction.
+    std::uint32_t mMaxLeaf;         //!< Maximum available leaf function for the cpuid instruction.
     std::uint32_t mMaxExtendedLeaf; //!< Maximum available extended leaf function for the cpuid instruction.
-    CpuidLeafs mLeafs;          //!< Cached results of executing the standard cpuid leaf functions.
-    CpuidLeafs mExtendedLeafs; //!< Cached results of executing the extended cpuid leaf functions.
+    CpuidLeafs mLeafs;              //!< Cached results of executing the standard cpuid leaf functions.
+    CpuidLeafs mExtendedLeafs;      //!< Cached results of executing the extended cpuid leaf functions.
     std::string mVendorId;
     std::string mBrandId;
 };

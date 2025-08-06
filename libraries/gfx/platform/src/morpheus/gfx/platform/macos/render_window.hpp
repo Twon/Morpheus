@@ -1,8 +1,8 @@
 
 #pragma once
 
-#include <morpheus/gfx/platform/render_window.hpp>
 #include <morpheus/core/base/prerequisites.hpp>
+#include <morpheus/gfx/platform/render_window.hpp>
 
 #include <string>
 
@@ -12,7 +12,8 @@ namespace morpheus::gfx::macos
 /*! \class RenderWindow
         A specialisation of the render window for the MacOS platform based on the Cocoa API.
  */
-class RenderWindow : protected gfx::RenderWindow {
+class RenderWindow : protected gfx::RenderWindow
+{
 public:
     using WindowHandle = void*;
     using Config = gfx::RenderWindow::Config;
@@ -60,7 +61,6 @@ public:
     auto getHandle() const noexcept { return mHandle; }
 
 private:
-
     WindowHandle mHandle;
 
     // Should we use a Windows controller subclass to enable unit testing?
