@@ -23,10 +23,7 @@ struct StringConverter<E>
     /// \param value The enum value to convert.
     /// \return A string representation of the enum value.
     /// \note The string representation is the name of the enum value as defined in the enum declaration.
-    static std::string toString(E const value)
-    {
-        return std::string(magic_enum::enum_name(value));
-    }
+    static std::string toString(E const value) { return std::string(magic_enum::enum_name(value)); }
 
     /// Convert a string representation to an enum value.
     /// \param value The string representation to convert.

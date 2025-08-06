@@ -15,7 +15,8 @@ namespace morpheus::application
 ///
 ///
 // template<typename T>
-class Application {
+class Application
+{
 public:
     ///
     /// \param[in] argc The number of command line arguments.
@@ -34,7 +35,7 @@ public:
     }
 
 private:
-    po::Config mConfig; /// Common application configuration
+    po::Config mConfig;             /// Common application configuration
     std::filesystem::path mLogPath; /// Path to application log file.
 };
 

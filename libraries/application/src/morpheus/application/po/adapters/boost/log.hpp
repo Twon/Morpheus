@@ -1,20 +1,21 @@
 #pragma once
 
 // IWYU pragma: always_keep
-#include <boost/any.hpp>
 #include <boost/algorithm/string.hpp>
+#include <boost/any.hpp>
 #include <boost/log/trivial.hpp>
 #include <boost/program_options.hpp>
 
 #include <string>
 #include <vector>
 
-
-namespace boost {
+namespace boost
+{
 
 BOOST_LOG_OPEN_NAMESPACE
 
-namespace trivial {
+namespace trivial
+{
 
 template <class CharType>
 void validate(boost::any& v, std::vector<std::basic_string<CharType>> const& values, severity_level*, int)
@@ -40,8 +41,8 @@ void validate(boost::any& v, std::vector<std::basic_string<CharType>> const& val
         throw po::validation_error(po::validation_error::invalid_option_value);
 }
 
-}
+} // namespace trivial
 
 BOOST_LOG_CLOSE_NAMESPACE
 
-} // namespace boost::log::trivial
+} // namespace boost

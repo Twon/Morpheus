@@ -8,14 +8,14 @@
     #include <morpheus/gfx/d3d12/render_system.hpp>
 #endif // #if (MORPHEUS_BUILD_PLATFORM == MORPHEUS_TARGET_PLATFORM_APPLE)
 
-#include <morpheus/gfx/gl4/traits.hpp>
 #include <morpheus/gfx/gl4/render_system.hpp>
+#include <morpheus/gfx/gl4/traits.hpp>
 #include <morpheus/gfx/vulkan/render_system.hpp>
 
+#include <boost/hana.hpp>
 #include <boost/hana/map.hpp>
 #include <boost/hana/pair.hpp>
 #include <boost/hana/tuple.hpp>
-#include <boost/hana.hpp>
 
 #include <cstdint>
 #include <type_traits>
@@ -66,7 +66,6 @@ public:
     void runTuiConfiguration();
 
 private:
-
     /// Returns a map of the available rendering systems to their respective underlying graphics APIs.
     ///
     static constexpr auto availableAPIs()
@@ -83,9 +82,9 @@ private:
         );
     }
 
-    //using APIMap = std::invoke_result_t<decltype(&RenderSystemFactory::availableAPIs)()>;
+    // using APIMap = std::invoke_result_t<decltype(&RenderSystemFactory::availableAPIs)()>;
 
-    //constexpr static auto renderSystemAPIs = availableAPIs();
+    // constexpr static auto renderSystemAPIs = availableAPIs();
 
     API mActiveApi = Vulkan;
 };

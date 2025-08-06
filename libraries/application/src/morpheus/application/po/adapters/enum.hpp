@@ -1,7 +1,7 @@
 #pragma once
 
-#include "morpheus/core/meta/concepts/enum.hpp"
 #include "morpheus/core/conversion/adapters/enum.hpp"
+#include "morpheus/core/meta/concepts/enum.hpp"
 
 #include <boost/any.hpp>
 #include <boost/program_options.hpp>

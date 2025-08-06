@@ -1,5 +1,5 @@
-#include "morpheus/application/po/options.hpp"
 #include "morpheus/application/po/adapters/std/chrono.hpp"
+#include "morpheus/application/po/options.hpp"
 #include "morpheus/application/version.hpp"
 #include "morpheus/core/conformance/date.hpp"
 #include "morpheus/core/serialisation/adapters/std/chrono.hpp"
@@ -14,8 +14,8 @@
 #include <functional>
 #include <optional>
 #include <ostream>
-#include <string_view>
 #include <string>
+#include <string_view>
 
 namespace morpheus::application::po
 {

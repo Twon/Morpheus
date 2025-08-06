@@ -15,4 +15,4 @@ concept WriteSerialiser = requires(Serialiser s) {
 template <typename Serialiser>
 concept NotWriteSerialiser = not WriteSerialiser<Serialiser>;
 
-} // morpheus::serialisation::concepts
+} // namespace morpheus::serialisation::concepts

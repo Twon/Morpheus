@@ -145,26 +145,25 @@ class Morpheus(ConanFile):
             self.options.rm_safe("with_rs_direct_x12")
 
     def build_requirements(self):
-        self.tool_requires("ninja/1.12.1")
-        self.test_requires("catch2/3.8.0")
+        self.tool_requires("ninja/1.13.1")
+        self.test_requires("catch2/3.9.0")
         self.test_requires("gtest/1.16.0")
 
-        if get_cmake_version() < Version("4.0.1"):
-            self.tool_requires("cmake/4.0.1")
+        if get_cmake_version() < Version("4.0.3"):
+            self.tool_requires("cmake/4.0.3")
 
         if self.options.build_docs:
             self.build_requires("doxygen/1.14.0")
 
         if self.options.get_safe("link_with_mold", False):
             self.build_requires("mold/2.36.0")
-            #self.build_requires("openssl/3.2.1", override=True)
 
     def requirements(self):
         if self.options.get_safe("with_rs_vulkan", False):
-            self.requires("vulkan-headers/1.3.239.0", transitive_headers=True)
+            self.requires("vulkan-headers/1.4.313.0", transitive_headers=True)
 
             if (self.settings.os in ["Macos", "iOS", "tvOS"]):
-                self.requires("moltenvk/1.2.2", transitive_headers=True)
+                self.requires("moltenvk/1.3.0", transitive_headers=True)
 
         if self.options.get_safe("with_rs_opengl", False):
             self.requires("glbinding/3.3.0", transitive_headers=True)
@@ -172,16 +171,16 @@ class Morpheus(ConanFile):
             self.requires("khrplatform/cci.20200529", transitive_headers=True)
 
         if self.settings.os in ["Windows"]:
-            self.requires("wil/1.0.240803.1", transitive_headers=True)
+            self.requires("wil/1.0.250325.1", transitive_headers=True)
 
         if self.useDate:
-            self.requires("date/3.0.3", transitive_headers=True)
+            self.requires("date/3.0.4", transitive_headers=True)
 
         if self.useExpected:
             self.requires("tl-expected/20190710", transitive_headers=True)
 
         if self.useFMT:
-            self.requires("fmt/11.1.4", transitive_headers=True)
+            self.requires("fmt/11.2.0", transitive_headers=True)
 
         if self.useRanges:
             self.requires("range-v3/0.12.0", transitive_headers=True)

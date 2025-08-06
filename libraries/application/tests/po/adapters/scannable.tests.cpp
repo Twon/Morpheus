@@ -1,5 +1,5 @@
-#include "morpheus/application/po/options.hpp"
 #include "morpheus/application/po/adapters/scannable.hpp"
+#include "morpheus/application/po/options.hpp"
 #include "morpheus/application/version.hpp"
 #include "morpheus/core/conformance/scan.hpp"
 #include "morpheus/logging.hpp"
@@ -70,7 +70,7 @@ TEST_CASE_METHOD(LoggingFixture, "Test parsing of scannable as options", "[morph
             return location.coordinates;
         };
 
-        REQUIRE(getCoordinates("[1, 97]") == Coordinates {1.0, 97.0});
+        REQUIRE(getCoordinates("[1, 97]") == Coordinates{1.0, 97.0});
     }
     SECTION("Ensure invalid value parse correctly")
     {

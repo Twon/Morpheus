@@ -19,9 +19,9 @@ public:
 
     Window(Window const&) = delete;
     Window& operator=(Window const&) = delete;
+
 private:
     Context mGLContext;
 };
-
 
 } // namespace morpheus::gfx::gl4::wgl

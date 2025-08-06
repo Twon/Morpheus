@@ -5,8 +5,8 @@
 #include "morpheus/core/serialisation/concepts/writer_archetype.hpp"
 #include "morpheus/core/serialisation/exceptions.hpp"
 
-#include <cstdint>
 #include <cstddef>
+#include <cstdint>
 #include <iosfwd>
 #include <optional>
 #include <span>
@@ -76,8 +76,8 @@ public:
         // https://stackoverflow.com/questions/24482028/why-is-stdstreamsize-defined-as-signed-rather-than-unsigned
         auto const writtenSize = static_cast<std::size_t>(mOutStream.rdbuf()->sputn(reinterpret_cast<const char*>(&value), sizeof(value)));
         if (writtenSize != sizeof(value))
-            throwBinaryException(fmt_ns::format("Error writing data to stream.  Attempted to write {} bytes, but only {} bytes were written.", sizeof(value),
-                                 writtenSize));
+            throwBinaryException(
+                fmt_ns::format("Error writing data to stream.  Attempted to write {} bytes, but only {} bytes were written.", sizeof(value), writtenSize));
     }
 
     /// \copydoc morpheus::serialisation::concepts::WriterArchetype::write(std::string_view const)
@@ -100,8 +100,8 @@ public:
 
         auto const writtenSize = static_cast<std::size_t>(mOutStream.rdbuf()->sputn(reinterpret_cast<const char*>(value.data()), value.size()));
         if (writtenSize != value.size())
-            throwBinaryException(fmt_ns::format("Error writing data to stream.  Attempted to write {} bytes, but only {} bytes were written.", value.size(),
-                                 writtenSize));
+            throwBinaryException(
+                fmt_ns::format("Error writing data to stream.  Attempted to write {} bytes, but only {} bytes were written.", value.size(), writtenSize));
     }
 
     /// Write a string literal to the serialisation.

@@ -51,4 +51,4 @@ private:
     std::ostream& mStream;
 };
 
-}
+} // namespace morpheus::serialisation

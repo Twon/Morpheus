@@ -14,15 +14,16 @@ TEMPLATE_TEST_CASE("Verify unordered dense map aliases work correctly", "[morphe
 
     for (auto const& value : values)
     {
-        auto const asTestType = [](auto const v) {
-           if constexpr (std::is_same_v<TestType, std::string>)
-           {
-               return std::to_string(v);
-           }
-           else
-           {
-               return v;
-           }
+        auto const asTestType = [](auto const v)
+        {
+            if constexpr (std::is_same_v<TestType, std::string>)
+            {
+                return std::to_string(v);
+            }
+            else
+            {
+                return v;
+            }
         };
 
         auto const key = asTestType(value);
@@ -38,15 +39,16 @@ TEMPLATE_TEST_CASE("Verify unordered dense set aliases work correctly", "[morphe
 
     for (auto const& value : values)
     {
-        auto const asTestType = [](auto const v) {
-           if constexpr (std::is_same_v<TestType, std::string>)
-           {
-               return std::to_string(v);
-           }
-           else
-           {
-               return v;
-           }
+        auto const asTestType = [](auto const v)
+        {
+            if constexpr (std::is_same_v<TestType, std::string>)
+            {
+                return std::to_string(v);
+            }
+            else
+            {
+                return v;
+            }
         };
 
         auto const key = asTestType(value);
@@ -55,4 +57,4 @@ TEMPLATE_TEST_CASE("Verify unordered dense set aliases work correctly", "[morphe
     }
 }
 
-} // namespace morpheus::containers
+} // namespace morpheus::containers::concepts

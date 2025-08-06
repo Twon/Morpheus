@@ -4,12 +4,12 @@
 
 #include <gmock/gmock.h>
 
-#include <cstdint>
 #include <cstddef>
+#include <cstdint>
 #include <optional>
 #include <span>
-#include <string_view>
 #include <string>
+#include <string_view>
 #include <vector>
 
 namespace morpheus::serialisation::mock
@@ -70,14 +70,15 @@ public:
     /// Reads a std::string type from the serialisation.
     MOCK_METHOD(std::string, read, (std::string), ());
     /// Reads a string literal type from the serialisation.
-    MOCK_METHOD(std::string, read, (char const * const), ());
+    MOCK_METHOD(std::string, read, (char const* const), ());
     /// Reads a blob of bytes from the serialisation.
     MOCK_METHOD(std::vector<std::byte>, read, (std::vector<std::byte>), ());
     ///@}
 
     /// Template wrapper around read which dispatches to the correct concrete read method based on the type T.
-    template<typename T>
-    T read() requires requires(Reader r) { r.read(T{}); }
+    template <typename T>
+    T read()
+    requires requires(Reader r) { r.read(T{}); }
     {
         return read(T{});
     }

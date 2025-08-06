@@ -1,5 +1,5 @@
-#include "morpheus/application/po/options.hpp"
 #include "morpheus/application/po/adapters/std/optional.hpp" // IWYU pragma: keep
+#include "morpheus/application/po/options.hpp"
 #include "morpheus/application/version.hpp"
 #include "morpheus/logging.hpp"
 

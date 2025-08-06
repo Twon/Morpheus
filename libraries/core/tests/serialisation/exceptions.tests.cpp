@@ -19,7 +19,6 @@ TEST_CASE("Serialisatoin exception helpers", "[morpheus.serialisation.exception.
     REQUIRE_THROWS_AS(throwJsonException("Tesst Json exception"), JsonException);
 }
 
-
 } // namespace morpheus::serialisation
 
 #if (MORPHEUS_COMPILER == MORPHEUS_VISUALSTUDIO_COMPILER)

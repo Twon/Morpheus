@@ -6,8 +6,8 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/any.hpp>
 #include <boost/asio/ip/tcp.hpp>
-#include <boost/system/error_code.hpp>
 #include <boost/program_options.hpp>
+#include <boost/system/error_code.hpp>
 
 #include <string>
 #include <vector>
