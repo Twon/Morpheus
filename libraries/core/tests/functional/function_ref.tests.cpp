@@ -16,7 +16,10 @@ TEST_CASE("Propagate constness and noexceptness to function_ref", "[morpheus.fun
     STATIC_REQUIRE(std::is_nothrow_move_assignable_v<ConcreteFunctionRef>);
 }
 
-void testFunction() { SUCCEED(); }
+void testFunction()
+{
+    SUCCEED();
+}
 
 TEST_CASE("Verify construction of function_ref", "[morpheus.functional.function_ref]")
 {
@@ -37,38 +40,35 @@ TEST_CASE("Verify construction of function_ref", "[morpheus.functional.function_
         {
             bool mRequiredData = true;
 
-            void function(int, int)
-            {
-                SUCCEED();
-            }
+            void function(int, int) { SUCCEED(); }
         };
         WHEN("Constructing a function reference to the function")
         {
             TestForInvocable instance;
-            func_ref_ns::function_ref<void(int, int)> functionView = { func_ref_ns::nontype<&TestForInvocable::function>, instance };
+            func_ref_ns::function_ref<void(int, int)> functionView = {func_ref_ns::nontype<&TestForInvocable::function>, instance};
             THEN("Expect the function to be invocable by the function ref")
             {
                 functionView(0, 1);
             }
         }
     }
-/*    GIVEN("A class member function and class instance")
-    {
-        auto const lambda = [](int, int){ SUCCEED(); }
-
-        WHEN("Constructing a function reference to the function")
+    /*    GIVEN("A class member function and class instance")
         {
-            TestForInvocable instance;
-            func_ref_ns::function_ref<void(int, int)> functionView = { func_ref_ns::nontype<&TestForInvocable::function>, instance };
-            THEN("Expect the function to be invocable by the function ref")
+            auto const lambda = [](int, int){ SUCCEED(); }
+
+            WHEN("Constructing a function reference to the function")
             {
-                functionView(0, 1);
+                TestForInvocable instance;
+                func_ref_ns::function_ref<void(int, int)> functionView = { func_ref_ns::nontype<&TestForInvocable::function>, instance };
+                THEN("Expect the function to be invocable by the function ref")
+                {
+                    functionView(0, 1);
+                }
             }
         }
-    }
-*/
-//    auto const lambda = [](){};
-//    func_ref_ns::function_ref<void()> lambdaView = lambda;
+    */
+    //    auto const lambda = [](){};
+    //    func_ref_ns::function_ref<void()> lambdaView = lambda;
 }
 
-} // morpheus::functional
+} // namespace morpheus::functional

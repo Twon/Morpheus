@@ -17,7 +17,9 @@ public:
 
     /// Construct a text writer from an output stream.
     /// \param[in] stream The output stream to write to.  This must outlive the writer as its held by reference.
-    explicit TextWriter(std::ostream& stream) noexcept : mStream(stream) {}
+    explicit TextWriter(std::ostream& stream) noexcept
+        : mStream(stream)
+    {}
 
     /// \copydoc morpheus::serialisation::JsonWriter::write(bool)
     void write(bool value) {}

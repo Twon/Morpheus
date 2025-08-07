@@ -46,7 +46,7 @@ std::vector<char> serialise(auto const& value)
 /// \tparam Size The size of the static buffer.
 /// \param[in] value The value to be serialised.
 /// \return The binary blob containing the serialised form of the input value.
-template<std::size_t Size>
+template <std::size_t Size>
 std::array<char, Size> serialiseWithLimitedSpace(auto const& value)
 {
     using namespace boost::iostreams;

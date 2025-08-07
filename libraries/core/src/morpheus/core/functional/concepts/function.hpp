@@ -11,7 +11,7 @@ namespace morpheus::functional::concepts
 ///     <a href="https://eel.is/c++draft/func.require">[func.require]</a>, details at
 ///     <a href="https://en.cppreference.com/w/cpp/named_req/FunctionObject">FunctionObject</a>.
 template <typename T, typename... Args>
-concept Function = requires(T t){
+concept Function = requires(T t) {
     requires std::is_object_v<T>;
     requires std::invocable<T, Args...>;
 };

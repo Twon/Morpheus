@@ -17,8 +17,8 @@ class NamedEndpoint
 {
 public:
     NamedEndpoint(std::string_view const name, std::uint16_t const port)
-    : mName(name)
-    , mPort(port)
+        : mName(name)
+        , mPort(port)
     {}
 
     /// The name of the endpoint, typically a hostname or IP address.
@@ -34,18 +34,12 @@ public:
     /// Compare two endpoint objects.
     /// \param rhs The NamedEndpoint to compare against.
     /// \return A comparison result indicating the relative order of the NamedEndpoint objects.
-    [[nodiscard]] auto operator<=>(NamedEndpoint const& rhs) const noexcept
-    {
-        return std::tie(mName, mPort) <=> std::tie(rhs.mName, rhs.mPort);
-    }
+    [[nodiscard]] auto operator<=>(NamedEndpoint const& rhs) const noexcept { return std::tie(mName, mPort) <=> std::tie(rhs.mName, rhs.mPort); }
 
     /// Equality operator for NamedEndpoint.
     /// \param rhs The NamedEndpoint to compare against.
     /// \return True if the NamedEndpoint objects are equal, false otherwise.
-    [[nodiscard]] bool operator==(const NamedEndpoint& rhs) const noexcept
-    {
-        return std::tie(mName, mPort) == std::tie(rhs.mName, rhs.mPort);
-    }
+    [[nodiscard]] bool operator==(const NamedEndpoint& rhs) const noexcept { return std::tie(mName, mPort) == std::tie(rhs.mName, rhs.mPort); }
 #endif
 
 private:

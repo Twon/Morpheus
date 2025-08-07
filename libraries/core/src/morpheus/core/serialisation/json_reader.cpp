@@ -129,13 +129,12 @@ struct JsonExtracter : rapidjson::BaseReaderHandler<rapidjson::UTF8<>, JsonExtra
     JsonReader::EventValue mCurrent; ///< Current json event.
 };
 
-
-
 JsonReader::EventValue JsonReader::getNext()
 {
     using namespace rapidjson;
     mJsonReader.IterativeParseNext<kParseCommentsFlag | kParseNanAndInfFlag | kParseValidateEncodingFlag>(mStream, *mExtractor);
-    if (mJsonReader.HasParseError()) {
+    if (mJsonReader.HasParseError())
+    {
         rapidjson::ParseErrorCode const c = mJsonReader.GetParseErrorCode();
         size_t const o = mJsonReader.GetErrorOffset();
         throwJsonException(fmt_ns::format("Parse error at offset {}, error {}", o, magic_enum::enum_name(c)));
@@ -144,19 +143,19 @@ JsonReader::EventValue JsonReader::getNext()
 }
 
 JsonReader::JsonReader(OwnedStream stream, bool validate)
-: mSourceStream(std::move(stream))
-, mStream(*mSourceStream)
-, mExtractor(std::make_unique<JsonExtracter>())
-, mValidate(validate)
+    : mSourceStream(std::move(stream))
+    , mStream(*mSourceStream)
+    , mExtractor(std::make_unique<JsonExtracter>())
+    , mValidate(validate)
 {
     mJsonReader.IterativeParseInit();
 }
 
 JsonReader::JsonReader(JsonReader const& rhs)
-: mSourceStream(rhs.mSourceStream)
-, mStream(*mSourceStream)
-, mExtractor(std::make_unique<JsonExtracter>())
-, mValidate(rhs.mValidate)
+    : mSourceStream(rhs.mSourceStream)
+    , mStream(*mSourceStream)
+    , mExtractor(std::make_unique<JsonExtracter>())
+    , mValidate(rhs.mValidate)
 {
     mJsonReader.IterativeParseInit();
 }

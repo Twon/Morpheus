@@ -1,8 +1,8 @@
 #pragma once
 
 #include <morpheus/core/conformance/expected.hpp>
-#include <morpheus/gfx/platform/x11/primitives.hpp>
 #include <morpheus/gfx/platform/render_window.hpp>
+#include <morpheus/gfx/platform/x11/primitives.hpp>
 
 #include <X11/Xlib.h>
 
@@ -16,7 +16,8 @@ namespace morpheus::gfx::x11
         A specialisation of the render window for the x11 platform on Linux.
  */
 // LCOV_EXCL_START
-class RenderWindow : protected gfx::RenderWindow {
+class RenderWindow : protected gfx::RenderWindow
+{
 public:
     using Config = gfx::RenderWindow::Config;
 
@@ -54,8 +55,7 @@ public:
     //    void isFocus(bool const focus) const noexcept
     //    void isVisible(bool const visible) const noexcept
 
-//    void resize();
-
+    //    void resize();
 
 private:
     explicit RenderWindow(Config const& config, DisplayPtr&& display, WindowPtr&& window);
@@ -63,7 +63,7 @@ private:
     /// \struct ReleaseResources
     ///     Allows std::unique_ptr handles to override the expect pointer type and to define a lambda to execute
     ///     clean-up.
-    template<typename T>
+    template <typename T>
     struct ReleaseResources
     {
         using pointer = T;
@@ -76,12 +76,10 @@ private:
     /// \note
     ///     Depending on the resource definition operator*() and operator->() may not make sense for the type and fail
     ///     to compile. In such cases default to using the get() method instead.
-    template<typename T>
+    template <typename T>
     using ResourceWrapper = std::unique_ptr<T, ReleaseResources<T>>;
 
-
-
-//    // Requires std::experimental::unique_resource (or boost scope equivalent)
+    //    // Requires std::experimental::unique_resource (or boost scope equivalent)
     DisplayPtr mDisplay;
     WindowPtr mWindow;
 };

@@ -2,18 +2,18 @@
 
 #include "morpheus/containers/concepts/archetypes/container.hpp"
 
-#include <cstddef>
 #include <compare>
+#include <cstddef>
 #include <iterator>
 
 namespace morpheus::containers::concepts::archetypes
 {
 
 // Pull range access functions into scope.
-using std::rbegin;
-using std::rend;
 using std::crbegin;
 using std::crend;
+using std::rbegin;
+using std::rend;
 
 struct Reversible : Container
 {

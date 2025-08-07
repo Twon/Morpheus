@@ -22,7 +22,6 @@ struct morpheus::fmt_ns::formatter<Coordinate, CharT> : morpheus::fmt_ns::format
     }
 };
 
-
 namespace morpheus
 {
 
@@ -66,4 +65,4 @@ TEST_CASE("Ensure print is works with formatter customisations", "[morpheus.conf
     }
 }
 
-} // morpheus
+} // namespace morpheus

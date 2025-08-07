@@ -12,8 +12,8 @@
 #include <cstdint>
 #include <iostream>
 #include <optional>
-#include <string_view>
 #include <string>
+#include <string_view>
 #include <utility>
 
 namespace morpheus::application::po
@@ -87,7 +87,7 @@ TEST_CASE_METHOD(LoggingFixture, "Ensure options parsing of native types works",
         }
         WHEN("Parsing invalid parameters because the first parameter is not a program name")
         {
-            std::array const cliOptions = { "--first-name", "John", "--surname", "Doe", "--age", "42", "--year-of-birth", "1980", "--alive", "true" };
+            std::array const cliOptions = {"--first-name", "John", "--surname", "Doe", "--age", "42", "--year-of-birth", "1980", "--alive", "true"};
             // RedirectStream captureErrors(std::cerr); Capture error logging
             auto const result = parseProgramOptions(static_cast<int>(cliOptions.size()), cliOptions.data(), HelpDocumentation{}, person);
             THEN("Expect no error results and valid values extracted")
@@ -97,7 +97,7 @@ TEST_CASE_METHOD(LoggingFixture, "Ensure options parsing of native types works",
         }
         WHEN("Requesting the help text is displayed")
         {
-            std::array const cliOptions = { "dummyProgram.exe", "-h" };
+            std::array const cliOptions = {"dummyProgram.exe", "-h"};
             auto findOption = captureOutput(cliOptions, HelpDocumentation{}, person);
             THEN("Expect output to be successfully prints to screen")
             {
@@ -111,9 +111,9 @@ TEST_CASE_METHOD(LoggingFixture, "Ensure options parsing of native types works",
         }
         WHEN("Requesting the help text is displayed when providing a version")
         {
-            std::array const cliOptions = { "dummyProgram.exe", "-h" };
+            std::array const cliOptions = {"dummyProgram.exe", "-h"};
             HelpDocumentation helpWithVersion;
-            helpWithVersion.version = Version{ 1, 0, 0 };
+            helpWithVersion.version = Version{1, 0, 0};
             auto findOption = captureOutput(cliOptions, helpWithVersion, person);
             THEN("Expect output to be successfully prints to screen with version option")
             {
@@ -128,7 +128,7 @@ TEST_CASE_METHOD(LoggingFixture, "Ensure options parsing of native types works",
         }
         WHEN("Requesting the help text is displayed with multiple options objects")
         {
-            std::array const cliOptions = { "dummyProgram.exe", "-h" };
+            std::array const cliOptions = {"dummyProgram.exe", "-h"};
 
             struct Extra
             {

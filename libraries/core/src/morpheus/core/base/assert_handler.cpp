@@ -5,8 +5,8 @@
 #include "morpheus/core/conformance/stacktrace.hpp"
 #include "morpheus/core/conversion/adapters/std/stacktrace.hpp" // IWYU pragma: keep
 
-#include <utility>
 #include <string>
+#include <utility>
 
 namespace morpheus
 {
@@ -59,4 +59,4 @@ void assertHandler(AssertType type, sl_ns::source_location const location, std::
     }
 }
 
-}
+} // namespace morpheus

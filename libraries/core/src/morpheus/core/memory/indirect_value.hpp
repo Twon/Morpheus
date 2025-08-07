@@ -37,11 +37,13 @@ constexpr T* allocate_object(A& a, Args&&... args)
     using t_traits = std::allocator_traits<t_allocator>;
     t_allocator t_alloc(a);
     T* mem = t_traits::allocate(t_alloc, 1);
-    try {
+    try
+    {
         t_traits::construct(t_alloc, mem, std::forward<Args>(args)...);
         return mem;
     }
-    catch (...) {
+    catch (...)
+    {
         t_traits::deallocate(t_alloc, mem, 1);
         throw;
     }
@@ -68,7 +70,7 @@ struct allocator_delete
 
     /// Construct with an allocator.
     constexpr allocator_delete(A& a)
-    : alloc(a)
+        : alloc(a)
     {}
 
     /// Delete the input via the underlying allocator.
@@ -92,7 +94,9 @@ struct allocator_copy
     A alloc;
 
     /// Construct with an allocator.
-    constexpr allocator_copy(A& a) : alloc(a) {}
+    constexpr allocator_copy(A& a)
+        : alloc(a)
+    {}
 
     /// Create a copy of the input via the underlying allocator.
     constexpr value_type* operator()(value_type const& t) const { return detail::allocate_object<value_type>(alloc, t); }
@@ -108,14 +112,18 @@ struct exchange_on_move_ptr
     constexpr exchange_on_move_ptr() noexcept = default;
 
     /// Initialise the underlying pointer from the input.
-    constexpr exchange_on_move_ptr(T* p) noexcept : ptr(p) {}
+    constexpr exchange_on_move_ptr(T* p) noexcept
+        : ptr(p)
+    {}
 
     /// Default copy construction of the underlying pointer.
     constexpr exchange_on_move_ptr(exchange_on_move_ptr const&) noexcept = default;
 
     /// Move construction, exchanges the underlying pointers.
     /// \note Resulting right hand side is null after the move.
-    constexpr exchange_on_move_ptr(exchange_on_move_ptr&& rhs) noexcept : ptr(std::exchange(rhs.ptr, nullptr)) {}
+    constexpr exchange_on_move_ptr(exchange_on_move_ptr&& rhs) noexcept
+        : ptr(std::exchange(rhs.ptr, nullptr))
+    {}
 
     /// Default copy assignment of the underlying pointer.
     constexpr exchange_on_move_ptr& operator=(exchange_on_move_ptr const&) noexcept = default;
@@ -173,8 +181,8 @@ struct indirect_value_base<T, CD, CD>
     /// \param[in] t Pointer to the underlying value to be owned.
     /// \param[in] cd Combined copier and deleter functor to customise how the underlying value is copied and deleted.
     constexpr explicit indirect_value_base(T* t, CD cd = CD())
-    : mValue(t)
-    , mCopierDeleterCombined(std::move(cd))
+        : mValue(t)
+        , mCopierDeleterCombined(std::move(cd))
     {}
 
 #if (__cpp_explicit_this_parameter >= 202110L)
@@ -247,13 +255,13 @@ struct indirect_value_base
 
     /// Default constructor.
     /// \note Default constructor is noexcept if copier and deleter are both nothrow default constructible.
-    //constexpr indirect_value_base() noexcept(std::is_nothrow_default_constructible_v<C> && std::is_nothrow_default_constructible_v<D>) = default;
+    // constexpr indirect_value_base() noexcept(std::is_nothrow_default_constructible_v<C> && std::is_nothrow_default_constructible_v<D>) = default;
     constexpr indirect_value_base() = default;
 
     constexpr explicit indirect_value_base(T* t, C c = C(), D d = D())
-    : mValue(t)
-    , mCopier(std::move(c))
-    , mDeleter(std::move(d))
+        : mValue(t)
+        , mCopier(std::move(c))
+        , mDeleter(std::move(d))
     {}
 
 #if (__cpp_explicit_this_parameter >= 202110L)
@@ -297,7 +305,7 @@ struct indirect_value_base
 #endif
 
     /// Swaps the indirectly owned objects.
-    constexpr void swap(indirect_value_base& rhs) noexcept(std::is_nothrow_swappable_v<C>&& std::is_nothrow_swappable_v<D>)
+    constexpr void swap(indirect_value_base& rhs) noexcept(std::is_nothrow_swappable_v<C> && std::is_nothrow_swappable_v<D>)
     {
         using std::swap;
         swap(mValue, rhs.mValue);
@@ -326,7 +334,8 @@ public:
     using deleter_type = Deleter; ///< Deleter object customising deleting of underlying value
 
     /// Constructs an empty indirect_value.
-    constexpr indirect_value() noexcept(std::is_nothrow_default_constructible_v<copier_type>&& std::is_nothrow_default_constructible_v<deleter_type>) = default;
+    constexpr indirect_value() noexcept(std::is_nothrow_default_constructible_v<copier_type> &&
+                                        std::is_nothrow_default_constructible_v<deleter_type>) = default;
 
     /// Inplace construction of the indirect value.
     /// \note Conditionally enabled only when the input parameters match the requires parameter of the underlying types
@@ -334,32 +343,33 @@ public:
     /// \param[in] ts Forwarded parameters to underlying types constructor.
     template <class... Ts>
     requires(std::is_constructible_v<T, Ts...>)
-    constexpr explicit indirect_value(std::in_place_t, Ts&&... ts) : base_type{new T(std::forward<Ts>(ts)...)}
+    constexpr explicit indirect_value(std::in_place_t, Ts&&... ts)
+        : base_type{new T(std::forward<Ts>(ts)...)}
     {}
 
     /// Constructs a indirect_value which owns takes ownership of the input t. The copier and deleter are default constructed.
     /// \note If t is null, creates an empty object.
-    constexpr explicit indirect_value(T* t) noexcept(
-        std::is_nothrow_default_constructible_v<copier_type>&& std::is_nothrow_default_constructible_v<deleter_type>)
+    constexpr explicit indirect_value(T* t) noexcept(std::is_nothrow_default_constructible_v<copier_type> &&
+                                                     std::is_nothrow_default_constructible_v<deleter_type>)
     requires(std::is_default_constructible_v<copier_type> && not std::is_pointer_v<copier_type> && std::is_default_constructible_v<deleter_type> &&
              not std::is_pointer_v<deleter_type>)
-    : base_type{t}
+        : base_type{t}
     {}
 
     /// Constructs a indirect_value which owns takes ownership of the input t. The copier is moved from c and deleter is default constructed.
     /// \note If t is null, creates an empty object.
-    constexpr explicit indirect_value(T* t, copier_type c) noexcept(
-        std::is_nothrow_move_constructible_v<copier_type>&& std::is_nothrow_default_constructible_v<deleter_type>)
+    constexpr explicit indirect_value(T* t, copier_type c) noexcept(std::is_nothrow_move_constructible_v<copier_type> &&
+                                                                    std::is_nothrow_default_constructible_v<deleter_type>)
     requires(std::is_move_constructible_v<copier_type> && std::is_default_constructible_v<deleter_type> && not std::is_pointer_v<deleter_type>)
-    : base_type{t, std::move(c)}
+        : base_type{t, std::move(c)}
     {}
 
     /// Constructs a indirect_value which owns takes ownership of the input t. The copier is moved from c and deleter is moved from d.
     /// \note If t is null, creates an empty object.
-    constexpr explicit indirect_value(T* t, copier_type c, deleter_type d) noexcept(
-        std::is_nothrow_move_constructible_v<copier_type>&& std::is_nothrow_move_constructible_v<deleter_type>)
+    constexpr explicit indirect_value(T* t, copier_type c, deleter_type d) noexcept(std::is_nothrow_move_constructible_v<copier_type> &&
+                                                                                    std::is_nothrow_move_constructible_v<deleter_type>)
     requires(std::is_move_constructible_v<copier_type> && std::is_move_constructible_v<deleter_type>)
-    : base_type{t, std::move(c), std::move(d)}
+        : base_type{t, std::move(c), std::move(d)}
     {}
 
     constexpr ~indirect_value() { reset(); }
@@ -367,16 +377,16 @@ public:
     /// Copy constructor.
     /// \pre IsComplete<T> is false or std::is_copy_constructible_v<T> is true
     constexpr indirect_value(indirect_value const& i)
-    // requires(!meta::concepts::IsComplete<T> or std::is_copy_constructible_v<T>)
-    : base_type(i)
+        // requires(!meta::concepts::IsComplete<T> or std::is_copy_constructible_v<T>)
+        : base_type(i)
     {
         this->mValue = i.make_raw_copy();
     }
 
     /// Move constructor.
-    constexpr indirect_value(indirect_value&& i) noexcept(
-        std::is_nothrow_move_constructible_v<copier_type>&& std::is_nothrow_move_constructible_v<deleter_type>)
-    : base_type(std::move(i))
+    constexpr indirect_value(indirect_value&& i) noexcept(std::is_nothrow_move_constructible_v<copier_type> &&
+                                                          std::is_nothrow_move_constructible_v<deleter_type>)
+        : base_type(std::move(i))
     {}
 
     /// Copy assignment, assigns contents via the underlying copier
@@ -390,10 +400,11 @@ public:
     }
 
     /// Move assignment, assigns contents via moving from the right hand side to the left hand side.
-    constexpr indirect_value&
-    operator=(indirect_value&& i) noexcept(std::is_nothrow_move_assignable_v<copier_type>&& std::is_nothrow_move_assignable_v<deleter_type>)
+    constexpr indirect_value& operator=(indirect_value&& i) noexcept(std::is_nothrow_move_assignable_v<copier_type> &&
+                                                                     std::is_nothrow_move_assignable_v<deleter_type>)
     {
-        if (this != &i) {
+        if (this != &i)
+        {
             reset();
             base_type::operator=(std::move(i));
         }
@@ -509,7 +520,8 @@ private:
 
     constexpr void reset() noexcept
     {
-        if (has_value()) {
+        if (has_value())
+        {
             this->getD()(exchange(this->mValue, nullptr));
         }
     }
@@ -528,10 +540,12 @@ template <class T, class A = std::allocator<T>, class... Ts>
 constexpr auto allocate_indirect_value(std::allocator_arg_t, A& a, Ts&&... ts)
 {
     auto* u = detail::allocate_object<T>(a, std::forward<Ts>(ts)...);
-    try {
+    try
+    {
         return indirect_value<T, detail::allocator_copy<A>, detail::allocator_delete<A>>(u, {a}, {a});
     }
-    catch (...) {
+    catch (...)
+    {
         detail::deallocate_object(a, u);
         throw;
     }

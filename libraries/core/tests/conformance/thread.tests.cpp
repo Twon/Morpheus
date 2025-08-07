@@ -2,9 +2,10 @@
 #include "morpheus/core/conversion/adapters/std/thread.hpp"
 
 #include <catch2/catch_test_macros.hpp>
-#include <thread>
+
 #include <sstream>
 #include <string>
+#include <thread>
 
 namespace morpheus
 {
@@ -30,4 +31,4 @@ TEST_CASE("Ensure std::thread::id format specialisation is supported and working
     }
 }
 
-}
+} // namespace morpheus

@@ -13,7 +13,8 @@ TEST_CASE("Check concepts for read serialisation", "[morpheus.serialisation.read
     STATIC_REQUIRE(concepts::Reader<concepts::ReaderArchetype>);
 }
 
-TEST_CASE("Ensure read serialiser are default constructible where the underlying reader supports it", "[morpheus.serialisation.read_serialiser.default_construction]")
+TEST_CASE("Ensure read serialiser are default constructible where the underlying reader supports it",
+          "[morpheus.serialisation.read_serialiser.default_construction]")
 {
     GIVEN("A default constructible reader")
     {
@@ -47,7 +48,8 @@ TEST_CASE("Ensure read serialiser are default constructible where the underlying
     }
 }
 
-TEST_CASE("Ensure read serialiser are forward constructible where the underlying reader supports it", "[morpheus.serialisation.read_serialiser.forwarding_construction]")
+TEST_CASE("Ensure read serialiser are forward constructible where the underlying reader supports it",
+          "[morpheus.serialisation.read_serialiser.forwarding_construction]")
 {
     GIVEN("A reader with multiple constructors")
     {
@@ -55,7 +57,7 @@ TEST_CASE("Ensure read serialiser are forward constructible where the underlying
         {
             MultiConstructorReader() = delete;
             MultiConstructorReader(int, bool) {}
-            MultiConstructorReader(int, bool, int, bool){}
+            MultiConstructorReader(int, bool, int, bool) {}
         };
 
         STATIC_REQUIRE(std::is_constructible_v<MultiConstructorReader, int, bool>);

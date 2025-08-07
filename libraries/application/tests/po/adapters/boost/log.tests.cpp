@@ -46,7 +46,7 @@ TEST_CASE_METHOD(BoostLogFixture, "Test parsing of boost log types as program op
         auto getLogLevel = [](std::string_view param)
         {
             Logging logging{};
-            std::array cliOptions = { "dummyProgram.exe", "--log-level", param.data() };
+            std::array cliOptions = {"dummyProgram.exe", "--log-level", param.data()};
             auto const result = parseProgramOptions(static_cast<int>(cliOptions.size()), cliOptions.data(), HelpDocumentation{}, logging);
             REQUIRE(!result);
             return logging.logLevel;
@@ -73,7 +73,7 @@ TEST_CASE_METHOD(BoostLogFixture, "Test parsing of boost log types as program op
     }
     SECTION("Ensure invalid value parse correctly")
     {
-        std::array cliOptions = { "dummyProgram.exe", "--log-level", "invalid"};
+        std::array cliOptions = {"dummyProgram.exe", "--log-level", "invalid"};
         Logging logging;
         auto const result = parseProgramOptions(static_cast<int>(cliOptions.size()), cliOptions.data(), HelpDocumentation{}, logging);
         REQUIRE(result);

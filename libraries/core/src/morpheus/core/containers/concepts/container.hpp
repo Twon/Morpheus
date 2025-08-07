@@ -11,7 +11,7 @@ namespace morpheus::containers::concepts
 ///     Concept capturing the requirements for a container as outline in the standard at
 ///     <a href="https://eel.is/c++draft/container.requirements">[container.requirements]</a>, details at
 ///     <a href="https://en.cppreference.com/w/cpp/named_req/Container">Container</a>.
-template<typename C>
+template <typename C>
 concept Container = requires(C c) {
     typename C::value_type;
     typename C::reference;

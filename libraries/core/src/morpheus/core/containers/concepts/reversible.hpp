@@ -14,7 +14,7 @@ namespace morpheus::containers::concepts
 ///     <a href="https://eel.is/c++draft/container.rev.reqmts">[container.rev.reqmts]</a>, details at
 ///     <a href="https://en.cppreference.com/w/cpp/named_req/ReversibleContainer">ReversibleContainer</a>.
 template <typename T>
-concept Reversible = Container<T> && requires(T t){
+concept Reversible = Container<T> && requires(T t) {
     typename T::reverse_iterator;
     typename T::const_reverse_iterator;
     requires std::same_as<typename T::reverse_iterator, std::reverse_iterator<typename T::iterator>>;

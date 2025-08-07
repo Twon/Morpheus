@@ -20,7 +20,7 @@ void tryCatch(std::invocable auto f)
     {
         BOOST_LOG_TRIVIAL(error) << "Exception caught: " << ex.what() << std::endl << st_ns::stacktrace::current();
     }
-    catch(...)
+    catch (...)
     {
         BOOST_LOG_TRIVIAL(error) << "Unknown exception!\n" << st_ns::stacktrace::current();
     }

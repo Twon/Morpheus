@@ -40,7 +40,10 @@ TEST_CASE("Verify serialisation of std::expected", "[morpheus.serialisation.expe
             EXPECT_CALL(serialiser.writer(), endValue()).Times(1);
             EXPECT_CALL(serialiser.writer(), endComposite()).Times(1);
 
-            WHEN("Serialising the std::expected") { serialiser.serialise(value); }
+            WHEN("Serialising the std::expected")
+            {
+                serialiser.serialise(value);
+            }
         }
     }
     GIVEN("An std::expected holding an error")
@@ -61,7 +64,10 @@ TEST_CASE("Verify serialisation of std::expected", "[morpheus.serialisation.expe
             EXPECT_CALL(serialiser.writer(), endValue()).Times(1);
             EXPECT_CALL(serialiser.writer(), endComposite()).Times(1);
 
-            WHEN("Serialising the std::expected") { serialiser.serialise(value); }
+            WHEN("Serialising the std::expected")
+            {
+                serialiser.serialise(value);
+            }
         }
     }
 }

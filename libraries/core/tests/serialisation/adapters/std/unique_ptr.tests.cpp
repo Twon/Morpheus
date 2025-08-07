@@ -94,4 +94,4 @@ TEST_CASE("Verify deserialisation of std::unique_ptr", "[morpheus.serialisation.
     }
 }
 
-} // morpheus::serialisation
+} // namespace morpheus::serialisation
