@@ -72,6 +72,6 @@ struct deserialise_fn
 namespace defaults = detail::defaults;
 
 // global customisation point objects serialisation::serialise() and serialisation::deserialise()
-inline detail::serialise_fn constexpr serialise{};
-inline detail::deserialise_fn constexpr deserialise{};
+inline constexpr detail::serialise_fn serialise{};
+inline constexpr detail::deserialise_fn deserialise{};
 } // namespace morpheus::serialisation

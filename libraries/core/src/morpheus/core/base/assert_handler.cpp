@@ -31,10 +31,7 @@ AssertHandler setAssertHandler(AssertHandler handler)
     return gAssertHandler;
 }
 
-AssertHaltHandler gAssertHaltHandler = []()
-{
-    breakpoint();
-};
+AssertHaltHandler gAssertHaltHandler = []() { breakpoint(); };
 
 AssertHaltHandler setAssertHaltHandler(AssertHaltHandler handler)
 {
@@ -43,7 +40,10 @@ AssertHaltHandler setAssertHaltHandler(AssertHaltHandler handler)
     return previousHaltHandler;
 }
 
-[[nodiscard]] AssertHaltHandler const& getAssertHaltHandler() { return gAssertHaltHandler; }
+[[nodiscard]] AssertHaltHandler const& getAssertHaltHandler()
+{
+    return gAssertHaltHandler;
+}
 
 void assertHandler(AssertType type, sl_ns::source_location const location, std::string_view const expr, std::string_view message)
 {
@@ -54,7 +54,7 @@ void assertHandler(AssertType type, sl_ns::source_location const location, std::
     }
     else
     {
-        getAssertHandler()(Assertion{ location, expr, message });
+        getAssertHandler()(Assertion{location, expr, message});
         getAssertHaltHandler()();
     }
 }

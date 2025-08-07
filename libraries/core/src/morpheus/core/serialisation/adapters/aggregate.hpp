@@ -36,7 +36,7 @@ template <concepts::WriteSerialiser Serialiser, SerialisableAggregate AggregateT
 void serialise(Serialiser& s, AggregateType const& value)
 {
     s.writer().beginSequence(boost::pfr::tuple_size<AggregateType>::value);
-    boost::pfr::for_each_field(value, [&](const auto& field) { s.serialise(field); });
+    boost::pfr::for_each_field(value, [&](auto const& field) { s.serialise(field); });
     s.writer().endSequence();
 }
 

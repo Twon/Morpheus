@@ -86,7 +86,7 @@ public:
     void write(std::span<std::byte const> const value);
     /// Write a string literal to the serialisation.
     template <std::size_t N>
-    void write(const char (&str)[N])
+    void write(char const (&str)[N])
     {
         write(std::string_view(str, N - 1));
     }

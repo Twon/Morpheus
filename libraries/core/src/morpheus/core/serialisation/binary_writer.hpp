@@ -70,7 +70,7 @@ public:
     void write(T const value)
     {
         // https://stackoverflow.com/questions/24482028/why-is-stdstreamsize-defined-as-signed-rather-than-unsigned
-        auto const writtenSize = static_cast<std::size_t>(mOutStream.rdbuf()->sputn(reinterpret_cast<const char*>(&value), sizeof(value)));
+        auto const writtenSize = static_cast<std::size_t>(mOutStream.rdbuf()->sputn(reinterpret_cast<char const*>(&value), sizeof(value)));
         if (writtenSize != sizeof(value))
             throwBinaryException(
                 fmt_ns::format("Error writing data to stream.  Attempted to write {} bytes, but only {} bytes were written.", sizeof(value), writtenSize));
@@ -94,7 +94,7 @@ public:
         auto const length = value.size();
         write(length);
 
-        auto const writtenSize = static_cast<std::size_t>(mOutStream.rdbuf()->sputn(reinterpret_cast<const char*>(value.data()), value.size()));
+        auto const writtenSize = static_cast<std::size_t>(mOutStream.rdbuf()->sputn(reinterpret_cast<char const*>(value.data()), value.size()));
         if (writtenSize != value.size())
             throwBinaryException(
                 fmt_ns::format("Error writing data to stream.  Attempted to write {} bytes, but only {} bytes were written.", value.size(), writtenSize));
@@ -102,7 +102,7 @@ public:
 
     /// Write a string literal to the serialisation.
     template <std::size_t N>
-    void write(const char (&str)[N])
+    void write(char const (&str)[N])
     {
         write(std::string_view(str, N - 1));
     }

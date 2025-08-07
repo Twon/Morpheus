@@ -1,7 +1,7 @@
 #pragma once
 
-#include <cstddef>
 #include <compare>
+#include <cstddef>
 #include <iterator>
 
 namespace morpheus::containers::concepts::archetypes
@@ -9,11 +9,11 @@ namespace morpheus::containers::concepts::archetypes
 
 // Pull range access functions into scope.
 using std::begin;
-using std::end;
 using std::cbegin;
 using std::cend;
-using std::size;
 using std::empty;
+using std::end;
+using std::size;
 
 struct Container
 {
@@ -26,7 +26,7 @@ struct Container
     /// The iterator type of the container.
     using iterator = int*;
     /// The const iterator type of the container.
-    using const_iterator = int const *;
+    using const_iterator = int const*;
     /// The difference type of the container.
     using difference_type = std::ptrdiff_t;
     /// The size type of the container.
