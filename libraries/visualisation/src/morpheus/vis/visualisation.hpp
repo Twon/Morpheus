@@ -25,9 +25,7 @@ public:
     exp_ns::expected<Visualisation, std::string> create(R&& renderSystem);
 
     /// Register program options
-    void addOptions(boost::program_options::options_description& )
-    {
-    }
+    void addOptions(boost::program_options::options_description&) {}
 
 private:
     Visualisation(R&& renderSystem, typename R::Window&& window);

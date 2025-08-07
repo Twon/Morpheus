@@ -13,24 +13,20 @@ struct RedirectStream
 {
     /// Redirect stream to string stream on construction.
     RedirectStream(std::ostream& stream)
-    :   mStream(stream)
-    ,   mPrevious(mStream.rdbuf(mStringStream.rdbuf()))
-    { }
+        : mStream(stream)
+        , mPrevious(mStream.rdbuf(mStringStream.rdbuf()))
+    {}
 
     /// The output captured by the stream.
     auto getOutput() const { return mStringStream.str(); }
 
     /// Restore previous stream state on destruction.
-    ~RedirectStream()
-    {
-        mStream.rdbuf(mPrevious);
-    }
+    ~RedirectStream() { mStream.rdbuf(mPrevious); }
 
 private:
     std::ostream& mStream;
     std::stringstream mStringStream;
     std::streambuf* mPrevious;
 };
-
 
 } // namespace morpheus

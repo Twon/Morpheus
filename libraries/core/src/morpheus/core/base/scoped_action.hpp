@@ -29,8 +29,7 @@ class HoldReturnType;
 ///     Specialisation for entry action with a void return type.
 template <>
 class HoldReturnType<void>
-{
-};
+{};
 
 /// \class HoldReturnType
 ///     Holding type to own the return value of an entry action to a scoped action.
@@ -76,7 +75,8 @@ template <std::invocable EntryAction, std::invocable ExitAction>
 class [[nodiscard, maybe_unused]] ScopedAction : public detail::HoldReturnType<std::invoke_result_t<EntryAction>>
 {
 public:
-    constexpr ScopedAction(EntryAction onEntry, ExitAction onExit) : mAction(std::move(onExit))
+    constexpr ScopedAction(EntryAction onEntry, ExitAction onExit)
+        : mAction(std::move(onExit))
     {
         if constexpr (std::is_same_v<std::invoke_result_t<EntryAction>, void>)
             onEntry();

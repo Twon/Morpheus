@@ -8,8 +8,8 @@
 #include "morpheus/core/serialisation/adapters/std/unique_ptr.hpp"
 #include "morpheus/core/serialisation/adapters/std/variant.hpp"
 #include "morpheus/core/serialisation/adapters/std/vector.hpp"
-#include "morpheus/core/serialisation/read_serialiser.hpp"
 #include "morpheus/core/serialisation/exceptions.hpp"
+#include "morpheus/core/serialisation/read_serialiser.hpp"
 #include "morpheus/core/serialisation/serialisers.hpp"
 
 #include "morpheus/serialisation/helpers.hpp"
@@ -23,7 +23,6 @@
 #include <string>
 #include <string_view>
 #include <vector>
-
 
 using namespace Catch;
 
@@ -43,7 +42,8 @@ TEST_CASE("Binary reader handles error cases gracefully", "[morpheus.serialisati
         REQUIRE(ranges::equal(testing::deserialiseWithSpanStream<std::vector<std::byte>>(testing::serialise(std::span{bytes})), std::span{bytes}));
 
         REQUIRE_THROWS_AS(testing::deserialiseWithSpanStream<std::int64_t>(testing::makeCharArray(0x64, 0x00, 0x00, 0x00)), BinaryException);
-        REQUIRE_THROWS_AS(testing::deserialiseWithSpanStream<std::string>(testing::makeCharArray(0x64, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00)), BinaryException);
+        REQUIRE_THROWS_AS(testing::deserialiseWithSpanStream<std::string>(testing::makeCharArray(0x64, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00)),
+                          BinaryException);
         REQUIRE_THROWS_AS(testing::deserialiseWithSpanStream<std::vector<std::byte>>(testing::makeCharArray(0x64, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00)),
                           BinaryException);
     }

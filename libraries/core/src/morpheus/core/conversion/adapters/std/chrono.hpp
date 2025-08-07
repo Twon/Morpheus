@@ -15,11 +15,11 @@
 /// \def MORPHEUS_CPP_LIB_CHRONO_FORMATTING
 ///   Ensures that std::format support for std::chrono is implemented as specified in
 ///  https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2018/p0355r7.html
-#define MORPHEUS_CPP_LIB_CHRONO_FORMATTING \
-            (((MORPHEUS_COMPILER == MORPHEUS_VISUALSTUDIO_COMPILER) && (__cpp_lib_chrono < 201907L)) || \
-             ((MORPHEUS_COMPILER == MORPHEUS_GNUC_COMPILER) && (MORPHEUS_COMP_VER < 140000000)) || \
-             ((MORPHEUS_COMPILER == MORPHEUS_CLANG_COMPILER) && (MORPHEUS_COMP_VER < 200000000)) || \
-             ((MORPHEUS_COMPILER == MORPHEUS_APPLE_CLANG_COMPILER) && (MORPHEUS_COMP_VER < 150000000)))
+#define MORPHEUS_CPP_LIB_CHRONO_FORMATTING                                                                                                                     \
+    (((MORPHEUS_COMPILER == MORPHEUS_VISUALSTUDIO_COMPILER) && (__cpp_lib_chrono < 201907L)) ||                                                                \
+     ((MORPHEUS_COMPILER == MORPHEUS_GNUC_COMPILER) && (MORPHEUS_COMP_VER < 140000000)) ||                                                                     \
+     ((MORPHEUS_COMPILER == MORPHEUS_CLANG_COMPILER) && (MORPHEUS_COMP_VER < 200000000)) ||                                                                    \
+     ((MORPHEUS_COMPILER == MORPHEUS_APPLE_CLANG_COMPILER) && (MORPHEUS_COMP_VER < 150000000)))
 
 #if MORPHEUS_CPP_LIB_CHRONO_FORMATTING
 
@@ -56,10 +56,12 @@ struct morpheus::fmt_ns::formatter<morpheus::date_ns::month>
     constexpr auto parse(format_parse_context& ctx) -> format_parse_context::iterator
     {
         auto pos = std::begin(ctx);
-        while (pos != std::end(ctx) && *pos != '}') {
+        while (pos != std::end(ctx) && *pos != '}')
+        {
             auto c = *pos;
-            if (c != '%') {
-                ++pos; // LCOV_EXCL_LINE
+            if (c != '%')
+            {
+                ++pos;    // LCOV_EXCL_LINE
                 continue; // LCOV_EXCL_LINE
             }
 
@@ -68,7 +70,8 @@ struct morpheus::fmt_ns::formatter<morpheus::date_ns::month>
                 throw morpheus::fmt_ns::format_error("Invalid format"); // LCOV_EXCL_LINE
 
             c = *pos;
-            switch (c) {
+            switch (c)
+            {
             case 'm':
                 monthAsDecimal = true;
                 break;
@@ -87,7 +90,8 @@ struct morpheus::fmt_ns::formatter<morpheus::date_ns::month>
     auto format(morpheus::date_ns::month const& month, format_context& ctx) const -> format_context::iterator
     {
         using namespace std::literals;
-        if (monthAsDecimal) {
+        if (monthAsDecimal)
+        {
             return morpheus::fmt_ns::format_to(ctx.out(), "{}"sv, static_cast<unsigned>(month));
         }
         return morpheus::fmt_ns::format_to(ctx.out(), "{}"sv, months[static_cast<unsigned>(month) - 1]);
@@ -353,7 +357,8 @@ struct StringConverter<std::chrono::duration<Rep, Period>>
         {
             return fmt_ns::format("{}m", value.count());
         }
-        else {
+        else
+        {
             return fmt_ns::format("{}", value);
         }
     }
@@ -366,10 +371,12 @@ struct StringConverter<std::chrono::duration<Rep, Period>>
     {
         constexpr auto matchString = []<ctll::fixed_string T>(auto const searchStr) -> exp_ns::expected<std::chrono::duration<Rep, Period>, std::string_view>
         {
-            if (auto m = ctre::match<T>(searchStr)) {
+            if (auto m = ctre::match<T>(searchStr))
+            {
                 return std::chrono::duration<Rep, Period>(std::stoi(std::string(m.template get<1>().to_view())));
             }
-            else {
+            else
+            {
                 return exp_ns::unexpected(std::string_view{"Unable to parse std::chrono::duration"});
             }
         };
@@ -414,7 +421,8 @@ struct StringConverter<std::chrono::duration<Rep, Period>>
         {
             return matchString.template operator()<ctll::fixed_string("(\\d+)y")>(value);
         }
-        else {
+        else
+        {
             return matchString.template operator()<ctll::fixed_string("(\\d+)")>(value);
         }
     }
@@ -428,10 +436,7 @@ struct StringConverter<date_ns::time_zone>
     /// Convert a date_ns::time_zone to its string representation.
     /// \param value The date_ns::time_zone to convert.
     /// \return A string representation of the date_ns::time_zone, which is the name of the time zone.
-    static std::string toString(date_ns::time_zone const& value)
-    {
-        return std::string(value.name());
-    }
+    static std::string toString(date_ns::time_zone const& value) { return std::string(value.name()); }
 
     /// Convert a string representation to a date_ns::time_zone.
     /// \param value The string representation to convert.
@@ -439,14 +444,16 @@ struct StringConverter<date_ns::time_zone>
     /// \note The string representation should be the name of the time zone as defined in the IANA Time Zone Database.
     static exp_ns::expected<std::reference_wrapper<date_ns::time_zone const>, std::string> fromString(std::string_view const value)
     {
-        try {
+        try
+        {
             auto const timezone = date_ns::get_tzdb().locate_zone(value);
             return std::cref(*timezone);
         }
-        catch(std::runtime_error const& e) {
+        catch (std::runtime_error const& e)
+        {
             return exp_ns::unexpected(fmt_ns::format("Unable to locate timezone, encountered error: {}", e.what()));
         }
     }
 };
 
-}
+} // namespace morpheus::conversion

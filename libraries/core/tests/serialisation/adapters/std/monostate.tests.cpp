@@ -1,6 +1,6 @@
 #include "morpheus/core/serialisation/adapters/std/monostate.hpp"
-#include "morpheus/core/serialisation/mock/serialisers.hpp"
 #include "morpheus/core/serialisation/mock/reader.hpp"
+#include "morpheus/core/serialisation/mock/serialisers.hpp"
 #include "morpheus/core/serialisation/mock/writer.hpp"
 #include "morpheus/core/serialisation/read_serialiser.hpp"
 #include "morpheus/core/serialisation/write_serialiser.hpp"
@@ -28,7 +28,10 @@ TEST_CASE("Verify serialisation of std::monostate", "[morpheus.serialisation.mon
             EXPECT_CALL(serialiser.writer(), beginComposite()).Times(1);
             EXPECT_CALL(serialiser.writer(), endComposite()).Times(1);
 
-            WHEN("Serialising a std::monostate") { serialiser.serialise(value); }
+            WHEN("Serialising a std::monostate")
+            {
+                serialiser.serialise(value);
+            }
         }
     }
 }
@@ -43,7 +46,10 @@ TEST_CASE("Verify deserialisation of std::monostate", "[morpheus.serialisation.m
             EXPECT_CALL(serialiser.reader(), beginComposite()).Times(1);
             EXPECT_CALL(serialiser.reader(), endComposite()).Times(1);
 
-            WHEN("Deserialising a std::monostate") { [[maybe_unused]] auto const value = serialiser.deserialise<std::monostate>(); }
+            WHEN("Deserialising a std::monostate")
+            {
+                [[maybe_unused]] auto const value = serialiser.deserialise<std::monostate>();
+            }
         }
     }
 }

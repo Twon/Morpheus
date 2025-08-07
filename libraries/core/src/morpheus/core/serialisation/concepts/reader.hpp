@@ -1,8 +1,8 @@
 #pragma once
 
+#include <concepts>
 #include <cstddef>
 #include <cstdint>
-#include <concepts>
 #include <optional>
 #include <span>
 #include <string>
@@ -16,8 +16,7 @@ namespace morpheus::serialisation::concepts
 /// \concept Reader
 ///     Constraints for a type capable of reading the fundamental serialisable types.
 template <typename T>
-concept Reader = requires(T t)
-{
+concept Reader = requires(T t) {
     { t.isTextual() } -> std::same_as<bool>;
 
     { t.beginComposite() } -> std::same_as<void>;
@@ -44,4 +43,4 @@ concept Reader = requires(T t)
     { t.template read<std::vector<std::byte>>() } -> std::same_as<std::vector<std::byte>>;
 };
 
-} // morpheus::serialisation::concepts
+} // namespace morpheus::serialisation::concepts

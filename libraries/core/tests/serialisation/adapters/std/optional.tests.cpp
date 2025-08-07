@@ -94,4 +94,4 @@ TEST_CASE("Verify deserialisation of std::optional", "[morpheus.serialisation.op
     }
 }
 
-} // morpheus::serialisation
+} // namespace morpheus::serialisation

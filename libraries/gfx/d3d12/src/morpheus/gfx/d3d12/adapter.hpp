@@ -17,7 +17,8 @@ namespace morpheus::gfx::d3d12
 /// \class Adapter
 ///     Describes an available graphic devices on the target platform.
 ///
-class Adapter {
+class Adapter
+{
 public:
     /// \name Life cycle
     ///@{
@@ -47,6 +48,7 @@ public:
 
     /// \copydoc morpheus::gfx::Adapter::operator<=>()
     [[nodiscard]] constexpr auto operator<=>(Adapter const& rhs) const noexcept = default;
+
 private:
     /// \name Data Members
     ///@{

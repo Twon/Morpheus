@@ -3,15 +3,13 @@
 #include <morpheus/gfx/gl4/wgl/context.hpp>
 #include <morpheus/gfx/gl4/wgl/verify.hpp>
 
-
-
 namespace morpheus::gfx::gl4::wgl
 {
 
 namespace
 {
 
-template<typename T>
+template <typename T>
 using WGLExpected = exp_ns::expected<T, std::string>;
 
 auto createDC(HWND const window) -> WGLExpected<HDC>
@@ -50,7 +48,7 @@ WGLExpected<HGLRC> createGLContext(HDC hdc)
         return std::unexpected(fmt_ns::format("Failed to create OpenGL context: {}", getLastErrorMessage()));
 }
 
-}
+} // namespace
 
 Context::Expected Context::create(HWND const window, PIXELFORMATDESCRIPTOR const& pfd)
 {
@@ -71,15 +69,14 @@ Context::Expected Context::create(HWND const window, PIXELFORMATDESCRIPTOR const
 }
 
 Context::Context(HWND const window, HDC const hdc, HGLRC const hglrc)
-:   mOwningWindow(window)
-,   mDeviceContext(hdc, { [this]() { MORPHEUS_WGL_VERIFY(ReleaseDC(*mOwningWindow, mDeviceContext.get())); } })
-,   mGLContext(hglrc, { [this]() { MORPHEUS_WGL_VERIFY(wglDeleteContext(mGLContext.get())); } })
-{
-}
+    : mOwningWindow(window)
+    , mDeviceContext(hdc, {[this]() { MORPHEUS_WGL_VERIFY(ReleaseDC(*mOwningWindow, mDeviceContext.get())); }})
+    , mGLContext(hglrc, {[this]() { MORPHEUS_WGL_VERIFY(wglDeleteContext(mGLContext.get())); }})
+{}
 
 Context::Context()
-:   mDeviceContext(wglGetCurrentDC(), {[](){}})
-,   mGLContext(wglGetCurrentContext(), {[](){}})
+    : mDeviceContext(wglGetCurrentDC(), {[]() {}})
+    , mGLContext(wglGetCurrentContext(), {[]() {}})
 {}
 
 Context::Expected Context::enable()

@@ -1,5 +1,5 @@
-#include "morpheus/application/po/options.hpp"
 #include "morpheus/application/po/adapters/enum.hpp" // IWYU pragma: keep
+#include "morpheus/application/po/options.hpp"
 #include "morpheus/application/version.hpp"
 #include "morpheus/logging.hpp"
 
@@ -43,7 +43,7 @@ TEST_CASE_METHOD(LoggingFixture, "Test parsing of enums as options", "[morpheus.
     {
         auto getDrink = [](std::string_view param)
         {
-            Preferences  preferences{};
+            Preferences preferences{};
             std::array cliOptions = {"dummyProgram.exe", "--drink", param.data()};
             auto const result = parseProgramOptions(static_cast<int>(cliOptions.size()), cliOptions.data(), HelpDocumentation{}, preferences);
             REQUIRE(!result);
@@ -57,7 +57,7 @@ TEST_CASE_METHOD(LoggingFixture, "Test parsing of enums as options", "[morpheus.
     }
     SECTION("Ensure invalid value parse correctly")
     {
-        std::array cliOptions = {"dummyProgram.exe", "--drink", "invalid" };
+        std::array cliOptions = {"dummyProgram.exe", "--drink", "invalid"};
         Preferences preferences{};
         auto const result = parseProgramOptions(static_cast<int>(cliOptions.size()), cliOptions.data(), HelpDocumentation{}, preferences);
         REQUIRE(result);

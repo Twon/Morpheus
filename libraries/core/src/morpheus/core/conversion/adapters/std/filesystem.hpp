@@ -10,8 +10,7 @@ namespace boost
 {
 
 template <>
-inline std::filesystem::path
-lexical_cast<std::filesystem::path, std::basic_string<char>>(const std::basic_string<char>& arg)
+inline std::filesystem::path lexical_cast<std::filesystem::path, std::basic_string<char>>(const std::basic_string<char>& arg)
 {
     return std::filesystem::path(arg);
 }

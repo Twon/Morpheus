@@ -11,7 +11,7 @@ namespace morpheus::application
 
 TEST_CASE("Ensure format is supported for versions", "[morpheus.application.version.fmt]")
 {
-    Version latest{.major=1, .minor=0, .patch=99};
+    Version latest{.major = 1, .minor = 0, .patch = 99};
     REQUIRE(fmt_ns::format("{}", latest) == "{major=1,minor=0,patch=99}");
 }
 
@@ -39,4 +39,4 @@ TEST_CASE("Ensure scan is supported and working for custom versions", "[morpheus
     }
 }
 
-} // morpheus::application
+} // namespace morpheus::application

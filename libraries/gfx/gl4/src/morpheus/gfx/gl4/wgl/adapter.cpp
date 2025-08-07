@@ -1,7 +1,7 @@
+#include <morpheus/gfx/gl4/prerequisites.hpp>
 #include <morpheus/gfx/gl4/wgl/adapter.hpp>
 #include <morpheus/gfx/gl4/wgl/context.hpp>
 #include <morpheus/gfx/gl4/wgl/verify.hpp>
-#include <morpheus/gfx/gl4/prerequisites.hpp>
 
 #include <regex>
 #include <sstream>
@@ -19,7 +19,6 @@ namespace morpheus::gfx::gl4::wgl
 static constexpr std::string_view vendorAMD = "PCI\\VEN_1002&";
 static constexpr std::string_view vendorNvidia = "PCI\\VEN_10DE&";
 static constexpr std::string_view vendorIntel = "PCI\\VEN_8086&";
-
 
 namespace
 {
@@ -57,7 +56,7 @@ std::string_view glGetStringView(GLenum name)
     return str ? std::string_view(reinterpret_cast<const char*>(str)) : std::string_view{};
 }
 
-}
+} // namespace
 
 LRESULT CALLBACK dummyWndProc(HWND hwnd, UINT umsg, WPARAM wp, LPARAM lp)
 {
@@ -66,21 +65,27 @@ LRESULT CALLBACK dummyWndProc(HWND hwnd, UINT umsg, WPARAM wp, LPARAM lp)
 
 concurrency::Generator<Adapter> enumerateAdapters()
 {
-    auto displayDevice = DISPLAY_DEVICE{ .cb = sizeof(DISPLAY_DEVICE) };
+    auto displayDevice = DISPLAY_DEVICE{.cb = sizeof(DISPLAY_DEVICE)};
 
     HINSTANCE const hinst = getModuleHandle();
 
     LPCSTR const dummyText = "WglDummyWindow";
     WNDCLASS dummyClass = { .style = CS_OWNDC,.lpfnWndProc = dummyWndProc, .hInstance = hinst, .lpszClassName = dummyText };
     RegisterClass(&dummyClass);
+    LPCSTR const dummyText = "WglDummyWindow";
+    WNDCLASS dummyClass = {.style = CS_OWNDC, .lpfnWndProc = dummyWndProc, .hInstance = hinst, .lpszClassName = dummyText};
+    RegisterClass(&dummyClass);
 
-    HWND hwnd = CreateWindow(dummyText, dummyText, WS_POPUP | WS_CLIPCHILDREN, 0, 0, 32, 32, 0, 0,
-        hinst, 0);
+    HWND hwnd = CreateWindow(dummyText, dummyText, WS_POPUP | WS_CLIPCHILDREN, 0, 0, 32, 32, 0, 0, hinst, 0);
 
 //    auto const hDC = GetDC(hwnd);
 //    auto const hResults = GetLastError();
 
     for (DWORD dwCurrentDevice = 0; ; ++dwCurrentDevice)
+    {
+        if (!EnumDisplayDevices(NULL, dwCurrentDevice, &displayDevice, 0))
+            break;
+    for (DWORD dwCurrentDevice = 0;; ++dwCurrentDevice)
     {
         if (!EnumDisplayDevices(NULL, dwCurrentDevice, &displayDevice, 0))
             break;
@@ -117,21 +122,15 @@ concurrency::Generator<Adapter> enumerateAdapters()
         // If the device is attached to the desktop, i.e. a graphics card
         if (displayDevice.StateFlags & DISPLAY_DEVICE_ATTACHED_TO_DESKTOP)
         {
-            co_yield Adapter(
-                displayDevice.DeviceName,
-                displayDevice.DeviceString,
-                vendorFromDeviceId(displayDevice.DeviceID)
-            );
+            co_yield Adapter(displayDevice.DeviceName, displayDevice.DeviceString, vendorFromDeviceId(displayDevice.DeviceID));
 
             // Set the current display device to the the primary device
             if (displayDevice.StateFlags & DISPLAY_DEVICE_PRIMARY_DEVICE)
             {
-                //m_uCurrentAdapter = static_cast<u32>( m_GraphicsAdapters.size() - 1 );
+                // m_uCurrentAdapter = static_cast<u32>( m_GraphicsAdapters.size() - 1 );
             }
         }
-        auto restoredContext = oldContext.value().enable();
-        if (!restoredContext)
-            continue;
+        oldContext.enable();
     }
 }
 

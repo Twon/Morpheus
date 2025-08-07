@@ -26,9 +26,8 @@ class BinaryWriter
 {
 public:
     BinaryWriter(std::ostream& outStream) noexcept
-    : mOutStream(outStream)
-    {
-    }
+        : mOutStream(outStream)
+    {}
 
     /// \copydoc morpheus::serialisation::concepts::WriterArchetype::isTextual()
     static constexpr bool isTextual() noexcept { return false; }
@@ -58,10 +57,7 @@ public:
     void endSequence() noexcept {}
 
     /// \copydoc morpheus::serialisation::concepts::WriterArchetype::beginNullable(bool const)
-    void beginNullable(bool const null)
-    {
-        write(null);
-    }
+    void beginNullable(bool const null) { write(null); }
 
     /// \copydoc morpheus::serialisation::concepts::WriterArchetype::endNullable()
     void endNullable() noexcept {}

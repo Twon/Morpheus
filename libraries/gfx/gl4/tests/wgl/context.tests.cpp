@@ -3,7 +3,6 @@
 
 #include <catch2/catch_all.hpp>
 
-
 namespace morpheus::gfx::gl4::wgl
 {
 

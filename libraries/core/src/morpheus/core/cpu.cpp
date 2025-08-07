@@ -2,16 +2,18 @@
 
 #if (MORPHEUS_PLATFORM_ARCHITECTURE == MORPHEUS_TARGET_ARCHITECTURE_X86) || (MORPHEUS_PLATFORM_ARCHITECTURE == MORPHEUS_TARGET_ARCHITECTURE_X64)
 
+// clang-format off
 #include "morpheus/core/cpu.hpp"
 
 #if (MORPHEUS_IS_GCC_COMPATIBLE_COMPILER)
-#include <cpuid.h>
+    #include <cpuid.h>
 #elif (MORPHEUS_IS_VISUALSTUDIO_COMPATIBLE_COMPILER)
-#include <intrin.h>
+    #include <intrin.h>
 #endif
 
 #include <algorithm>
 #include <cstring>
+// clang-format on
 
 namespace morpheus
 {
@@ -115,14 +117,13 @@ auto query_brand_id(CpuidLeafs const& cached_leafs)
 //---------------------------------------------------------------------------------------------------------------------
 
 Cpu::Cpu()
-:   mMaxLeaf(get_max_leaf_function())
-,   mMaxExtendedLeaf(get_max_extended_leaf_function())
-,   mLeafs(query_leaf_functions(mMaxLeaf))
-,   mExtendedLeafs(query_extended_leaf_functions(mMaxExtendedLeaf))
-,   mVendorId(query_vendor_id(mLeafs))
-,   mBrandId(query_brand_id(mLeafs))
-{
-}
+    : mMaxLeaf(get_max_leaf_function())
+    , mMaxExtendedLeaf(get_max_extended_leaf_function())
+    , mLeafs(query_leaf_functions(mMaxLeaf))
+    , mExtendedLeafs(query_extended_leaf_functions(mMaxExtendedLeaf))
+    , mVendorId(query_vendor_id(mLeafs))
+    , mBrandId(query_brand_id(mLeafs))
+{}
 
 //---------------------------------------------------------------------------------------------------------------------
 

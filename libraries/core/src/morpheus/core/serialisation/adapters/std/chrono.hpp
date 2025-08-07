@@ -41,10 +41,12 @@ void serialise(Serialiser& serialiser, std::chrono::duration<Rep, Period> const&
 template <concepts::ReadSerialiser Serialiser, IsStdChronoDuration T>
 T deserialise(Serialiser& serialiser)
 {
-    if (serialiser.reader().isTextual()) {
+    if (serialiser.reader().isTextual())
+    {
         return conversion::fromString<T>(serialiser.template deserialise<std::string>()).value();
     }
-    else {
+    else
+    {
         return T{serialiser.template deserialise<typename T::rep>()};
     }
 }

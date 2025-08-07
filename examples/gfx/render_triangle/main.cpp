@@ -24,21 +24,21 @@ public:
 
     void Run()
     {
-        while ( true )
+        while (true)
         {
-//          #pragma FREEDOM_TODO( "Hide message pump behind Freedom operating system abstraction")
+            //			#pragma FREEDOM_TODO( "Hide message pump behind Freedom operating system abstraction")
 
             ::MSG msg;
-            ::ZeroMemory( &msg, sizeof(msg) );
+            ::ZeroMemory(&msg, sizeof(msg));
 
             // While there is messages in the queue pump them
             // till the message queue until it is empty
-            while (::PeekMessage( &msg, NULL, 0, 0, PM_NOREMOVE ) )
+            while (::PeekMessage(&msg, NULL, 0, 0, PM_NOREMOVE))
             {
-                if( ::GetMessage( &msg, NULL, 0, 0 ) )
+                if (::GetMessage(&msg, NULL, 0, 0))
                 {
-                    ::TranslateMessage( &msg );
-                    ::DispatchMessage( &msg );
+                    ::TranslateMessage(&msg);
+                    ::DispatchMessage(&msg);
                 }
             }
         }
@@ -48,7 +48,7 @@ protected:
     win32::RenderWindow window;
 };
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
     //const std::vector<std::string> renders = {
     //    "Direct X 12",

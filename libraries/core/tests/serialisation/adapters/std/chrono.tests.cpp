@@ -1,6 +1,6 @@
+#include "morpheus/core/serialisation/adapters/std/chrono.hpp"
 #include "morpheus/core/base/compiler.hpp"
 #include "morpheus/core/conformance/date.hpp"
-#include "morpheus/core/serialisation/adapters/std/chrono.hpp"
 #include "morpheus/core/serialisation/mock/reader.hpp"
 #include "morpheus/core/serialisation/mock/serialisers.hpp"
 #include "morpheus/core/serialisation/mock/writer.hpp"
@@ -35,7 +35,10 @@ TEST_CASE("Verify serialisation of std::chrono::duration", "[morpheus.serialisat
             EXPECT_CALL(serialiser.writer(), isTextual()).WillOnce(Return(true));
             EXPECT_CALL(serialiser.writer(), write(Matcher<std::string_view>(Eq("7d")))).Times(1);
 
-            WHEN("Serialising the std::expected") { serialiser.serialise(value); }
+            WHEN("Serialising the std::expected")
+            {
+                serialiser.serialise(value);
+            }
         }
     }
     GIVEN("An std::chrono::duration when outputting not outputting to text")
@@ -54,7 +57,10 @@ TEST_CASE("Verify serialisation of std::chrono::duration", "[morpheus.serialisat
             EXPECT_CALL(serialiser.writer(), write(Matcher<std::chrono::days::rep>(Eq(value.count())))).Times(1);
 #endif // (MORPHEUS_IS_CLANG_COMPILER)
 
-            WHEN("Serialising the std::expected") { serialiser.serialise(value); }
+            WHEN("Serialising the std::expected")
+            {
+                serialiser.serialise(value);
+            }
         }
     }
 }

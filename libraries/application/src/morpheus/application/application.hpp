@@ -29,10 +29,7 @@ public:
     /// Path to application log file.
     std::filesystem::path getLogPath() const noexcept { return mLogPath; }
 
-    void run()
-    {
-
-    }
+    void run() {}
 
 private:
     po::Config mConfig;             /// Common application configuration

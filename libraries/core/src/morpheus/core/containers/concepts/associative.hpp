@@ -1,7 +1,7 @@
 #pragma once
 
-#include "morpheus/core/containers/concepts/detail/return_types.hpp"
 #include "morpheus/core/containers/concepts/allocator_aware.hpp"
+#include "morpheus/core/containers/concepts/detail/return_types.hpp"
 
 #include <concepts>
 #include <initializer_list>
@@ -16,9 +16,8 @@ namespace morpheus::containers::concepts
 template <typename T>
 concept Associative = AllocatorAware<T> && requires(T t, typename T::value_type v, typename T::key_type k, typename T::size_type s, typename T::iterator i,
                                                     typename T::const_iterator ci, typename T::key_compare c, typename T::node_type n,
-                                                    std::initializer_list<typename T::value_type> il)
-{
-    requires (std::default_initializable<typename T::key_compare>) and (std::copy_constructible<typename T::key_compare>);
+                                                    std::initializer_list<typename T::value_type> il) {
+    requires(std::default_initializable<typename T::key_compare>) and (std::copy_constructible<typename T::key_compare>);
     { T(c) };
     { T(i, i, c) };
     { T(i, i) };

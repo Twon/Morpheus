@@ -38,7 +38,8 @@ struct control_block_deleter
     template <class T>
     constexpr void operator()(T* t) const noexcept
     {
-        if (t != nullptr) {
+        if (t != nullptr)
+        {
             t->destroy();
         }
     }
@@ -94,7 +95,7 @@ public:
     /// Constructs a direct control block with arguments forwarded to the underlying type.
     template <typename... Ts>
     constexpr explicit direct_control_block(Ts&&... ts)
-    : mStorage(std::forward<Ts>(ts)...)
+        : mStorage(std::forward<Ts>(ts)...)
     {}
 
     /// Clones the control block.
@@ -119,7 +120,7 @@ public:
     using ControlBlockValue = typename control_block<T>::ControlBlockValue;
 
     constexpr explicit pointer_control_block(U* u, C c, D d)
-    : mIndirect(u, std::move(c), std::move(d))
+        : mIndirect(u, std::move(c), std::move(d))
     {}
 
     [[nodiscard]] constexpr pointer_control_block* clone() const override { return new pointer_control_block(*this); }
@@ -140,7 +141,7 @@ public:
     using DelegatedControlBlockValue = indirect_value<detail::control_block<U>, detail::control_block_copier, detail::control_block_deleter>;
 
     constexpr explicit delegating_control_block(DelegatedControlBlockValue cb)
-    : mDelegate(std::move(cb))
+        : mDelegate(std::move(cb))
     {}
 
     [[nodiscard]] constexpr delegating_control_block* clone() const override
@@ -161,7 +162,7 @@ template <typename A>
 struct allocator_wrapper : A
 {
     constexpr allocator_wrapper(A& a)
-    : A(a)
+        : A(a)
     {}
 
     constexpr const A& get_allocator() const { return static_cast<const A&>(*this); }
@@ -174,8 +175,8 @@ class allocated_pointer_control_block : public control_block<T>, allocator_wrapp
 
 public:
     constexpr explicit allocated_pointer_control_block(U* u, A a)
-    : allocator_wrapper<A>(a)
-    , mValue(u)
+        : allocator_wrapper<A>(a)
+        , mValue(u)
     {}
 
     constexpr ~allocated_pointer_control_block() { detail::deallocate_object(this->get_allocator(), mValue); }
@@ -185,7 +186,8 @@ public:
         MORPHEUS_ASSERT(mValue);
 
         auto* cloned_ptr = detail::allocate_object<U>(this->get_allocator(), *mValue);
-        try {
+        try
+        {
             return detail::allocate_object<allocated_pointer_control_block>(this->get_allocator(), cloned_ptr, this->get_allocator());
         }
         catch (...) {
@@ -240,14 +242,14 @@ public:
 
     /// Copy construction.
     constexpr polymorphic_value(const polymorphic_value& p)
-    : mControlBlock(p.mControlBlock)
-    , mValue((mControlBlock) ? mControlBlock->ptr() : nullptr)
+        : mControlBlock(p.mControlBlock)
+        , mValue((mControlBlock) ? mControlBlock->ptr() : nullptr)
     {}
 
     /// Move construction.
     constexpr explicit polymorphic_value(polymorphic_value&& p)
-    : mControlBlock(std::move(p.mControlBlock))
-    , mValue(std::move(p.mValue))
+        : mControlBlock(std::move(p.mControlBlock))
+        , mValue(std::move(p.mValue))
     {}
 
     //    template <class U>
@@ -255,15 +257,17 @@ public:
     //    {}
 
     template <class U, class C = default_copy<U>, class D = typename copier_traits<C>::deleter_type>
+    requires std::is_convertible_v<U*, T*>
     constexpr explicit polymorphic_value(U* u, C c = C(), D d = D())
-        requires std::is_convertible_v<U*, T*>
     {
-        if (!u) {
+        if (!u)
+        {
             return;
         }
 
-        if constexpr(std::is_same_v<D, std::default_delete<U>> and std::is_same_v<C, default_copy<U>>)
-            if (typeid(*u) != typeid(U)) {
+        if constexpr (std::is_same_v<D, std::default_delete<U>> and std::is_same_v<C, default_copy<U>>)
+            if (typeid(*u) != typeid(U))
+            {
                 throw bad_polymorphic_value_construction();
             }
 
@@ -272,10 +276,10 @@ public:
     }
 
     template <class U, class A>
+    requires std::is_convertible_v<U*, T*>
     constexpr polymorphic_value(U* u, std::allocator_arg_t, const A& alloc)
-        requires std::is_convertible_v<U*, T*>
     {
-        if (!u) {
+        if (!u){
             return;
         }
 
@@ -287,24 +291,24 @@ public:
     }
 
     template <class U>
+    requires(!std::is_same_v<T, U> and std::is_convertible_v<U*, T*>)
     constexpr explicit polymorphic_value(const polymorphic_value<U>& rhs)
-        requires(!std::is_same_v<T, U> and std::is_convertible_v<U*, T*>)
-    : mControlBlock(new detail::delegating_control_block<T, U>(rhs.mControlBlock))
-    , mValue(mControlBlock->ptr())
+        : mControlBlock(new detail::delegating_control_block<T, U>(rhs.mControlBlock))
+        , mValue(mControlBlock->ptr())
     {}
 
     template <class U>
+    requires(!std::is_same_v<T, U> and std::is_convertible_v<U*, T*>)
     constexpr explicit polymorphic_value(const polymorphic_value<U>&& rhs)
-        requires(!std::is_same_v<T, U> and std::is_convertible_v<U*, T*>)
-    : mControlBlock(new detail::delegating_control_block<T, U>(std::move(rhs.mControlBlock)))
-    , mValue(std::move(rhs.mValue))
+        : mControlBlock(new detail::delegating_control_block<T, U>(std::move(rhs.mControlBlock)))
+        , mValue(std::move(rhs.mValue))
     {}
 
     template <class U, class... Ts>
+    requires(std::is_convertible_v<std::decay_t<U>*, T*> and !is_polymorphic_value_v<std::decay_t<U>>)
     constexpr explicit polymorphic_value(std::in_place_type_t<U>, Ts&&... ts)
-        requires(std::is_convertible_v<std::decay_t<U>*, T*> and !is_polymorphic_value_v<std::decay_t<U>>)
-    : mControlBlock(new detail::direct_control_block<T, U>(std::forward<Ts>(ts)...))
-    , mValue(mControlBlock->ptr())
+        : mControlBlock(new detail::direct_control_block<T, U>(std::forward<Ts>(ts)...))
+        , mValue(mControlBlock->ptr())
     {}
 
     ///@}
@@ -315,7 +319,8 @@ public:
     // constexpr polymorphic_value& operator=(polymorphic_value const& p) = default;
     constexpr polymorphic_value& operator=(polymorphic_value const& p)
     {
-        if (std::addressof(p) == this) {
+        if (std::addressof(p) == this)
+        {
             return *this;
         }
 
@@ -327,7 +332,8 @@ public:
     // constexpr polymorphic_value& operator=(polymorphic_value&& p) noexcept = default;
     constexpr polymorphic_value& operator=(polymorphic_value&& p) noexcept
     {
-        if (std::addressof(p) == this) {
+        if (std::addressof(p) == this)
+        {
             return *this;
         }
 
@@ -340,7 +346,10 @@ public:
 #if (__cpp_explicit_this_parameter >= 202110L)
 
     template <typename Self>
-    [[nodiscard]] constexpr T* operator->(this Self&& self) noexcept { return (self.mValue); }
+    [[nodiscard]] constexpr T* operator->(this Self&& self) noexcept
+    {
+        return (self.mValue);
+    }
 
     /// Dereferences pointer to the managed object.
     template <typename Self>
@@ -411,13 +420,13 @@ constexpr polymorphic_value<T> allocate_polymorphic_value(std::allocator_arg_t, 
 {
     polymorphic_value<T> p;
     auto* u = detail::allocate_object<U>(a, std::forward<Ts>(ts)...);
-    try {
-        p.mControlBlock = typename polymorphic_value<T>::ControlBlock(
-             detail::allocate_object<
-                 detail::allocated_pointer_control_block<T, U, A>>(a, u, a));
-       } catch (...) {
-       detail::deallocate_object(a, u);
-       throw;
+    try
+    {
+        p.mControlBlock = typename polymorphic_value<T>::ControlBlock(detail::allocate_object<detail::allocated_pointer_control_block<T, U, A>>(a, u, a));
+    }
+    catch (...) {
+        detail::deallocate_object(a, u);
+        throw;
     }
     p.mValue = p.mControlBlock->ptr();
     return p;
