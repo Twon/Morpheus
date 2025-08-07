@@ -190,8 +190,7 @@ public:
         {
             return detail::allocate_object<allocated_pointer_control_block>(this->get_allocator(), cloned_ptr, this->get_allocator());
         }
-        catch (...)
-        {
+        catch (...) {
             detail::deallocate_object(this->get_allocator(), cloned_ptr);
             throw;
         }
@@ -280,8 +279,7 @@ public:
     requires std::is_convertible_v<U*, T*>
     constexpr polymorphic_value(U* u, std::allocator_arg_t, const A& alloc)
     {
-        if (!u)
-        {
+        if (!u){
             return;
         }
 
@@ -426,8 +424,7 @@ constexpr polymorphic_value<T> allocate_polymorphic_value(std::allocator_arg_t, 
     {
         p.mControlBlock = typename polymorphic_value<T>::ControlBlock(detail::allocate_object<detail::allocated_pointer_control_block<T, U, A>>(a, u, a));
     }
-    catch (...)
-    {
+    catch (...) {
         detail::deallocate_object(a, u);
         throw;
     }
