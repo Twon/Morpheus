@@ -14,7 +14,7 @@ public:
     /*! Queries a short form descriptive name for the category.
         \return Short form name of the category.
      */
-    const char* name() const noexcept override final { return "vulkan_error_category"; }
+    char const* name() const noexcept override final { return "vulkan_error_category"; }
 
     /*! Queries an error string describing the error.
         \return The error message.
@@ -100,7 +100,7 @@ public:
         }
     }
 
-    static const vulkan_error_category& getSingleInstance() noexcept { return mSingleInstance; }
+    static vulkan_error_category const& getSingleInstance() noexcept { return mSingleInstance; }
 
 private:
     static vulkan_error_category mSingleInstance;
@@ -110,7 +110,7 @@ vulkan_error_category vulkan_error_category::mSingleInstance;
 
 } // namespace details
 
-const details::vulkan_error_category& vulkan_error_category() noexcept
+details::vulkan_error_category const& vulkan_error_category() noexcept
 {
     return details::vulkan_error_category::getSingleInstance();
 }

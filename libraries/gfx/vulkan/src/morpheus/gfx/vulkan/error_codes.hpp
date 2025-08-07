@@ -1,24 +1,26 @@
 #pragma once
 
 #include <vulkan/vulkan.hpp>
+
 #include <system_error>
 
 namespace std
 {
-    template <> struct is_error_code_enum<VkResult> : true_type {};
-}
+template <>
+struct is_error_code_enum<VkResult> : true_type{};
+} // namespace std
 
 namespace morpheus::gfx::vulkan
 {
 
 namespace details
 {
-    class vulkan_error_category;
+class vulkan_error_category;
 }
 
 /// Retrieve the one instance of the Vulkan error category
 /// \return The one instance of the Vulkan error category.
-const details::vulkan_error_category& vulkan_error_category() noexcept;
+details::vulkan_error_category const& vulkan_error_category() noexcept;
 
 } // namespace morpheus::gfx::vulkan
 

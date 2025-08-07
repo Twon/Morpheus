@@ -24,7 +24,7 @@ public:
 
     /// Ruturns an explanatory string.
     /// \return Return an implementation defined null terminated byte string.
-    constexpr const char* what() const noexcept override { return "Dynamic and static type mismatch in polymorphic_value construction"; }
+    constexpr char const* what() const noexcept override { return "Dynamic and static type mismatch in polymorphic_value construction"; }
 };
 
 namespace detail
@@ -165,7 +165,7 @@ struct allocator_wrapper : A
         : A(a)
     {}
 
-    constexpr const A& get_allocator() const { return static_cast<const A&>(*this); }
+    constexpr A const& get_allocator() const { return static_cast<A const&>(*this); }
 };
 
 template <class T, class U, class A>
@@ -190,7 +190,8 @@ public:
         {
             return detail::allocate_object<allocated_pointer_control_block>(this->get_allocator(), cloned_ptr, this->get_allocator());
         }
-        catch (...) {
+        catch (...)
+        {
             detail::deallocate_object(this->get_allocator(), cloned_ptr);
             throw;
         }
@@ -241,7 +242,7 @@ public:
     constexpr polymorphic_value(nullptr_t) noexcept {}
 
     /// Copy construction.
-    constexpr polymorphic_value(const polymorphic_value& p)
+    constexpr polymorphic_value(polymorphic_value const& p)
         : mControlBlock(p.mControlBlock)
         , mValue((mControlBlock) ? mControlBlock->ptr() : nullptr)
     {}
@@ -277,9 +278,10 @@ public:
 
     template <class U, class A>
     requires std::is_convertible_v<U*, T*>
-    constexpr polymorphic_value(U* u, std::allocator_arg_t, const A& alloc)
+    constexpr polymorphic_value(U* u, std::allocator_arg_t, A const& alloc)
     {
-        if (!u){
+        if (!u)
+        {
             return;
         }
 
@@ -292,14 +294,14 @@ public:
 
     template <class U>
     requires(!std::is_same_v<T, U> and std::is_convertible_v<U*, T*>)
-    constexpr explicit polymorphic_value(const polymorphic_value<U>& rhs)
+    constexpr explicit polymorphic_value(polymorphic_value<U> const& rhs)
         : mControlBlock(new detail::delegating_control_block<T, U>(rhs.mControlBlock))
         , mValue(mControlBlock->ptr())
     {}
 
     template <class U>
     requires(!std::is_same_v<T, U> and std::is_convertible_v<U*, T*>)
-    constexpr explicit polymorphic_value(const polymorphic_value<U>&& rhs)
+    constexpr explicit polymorphic_value(polymorphic_value<U> const&& rhs)
         : mControlBlock(new detail::delegating_control_block<T, U>(std::move(rhs.mControlBlock)))
         , mValue(std::move(rhs.mValue))
     {}
@@ -363,19 +365,19 @@ public:
     [[nodiscard]] constexpr T* operator->() noexcept { return this->mValue; }
 
     /// Accesses the contained value.
-    [[nodiscard]] constexpr const T* operator->() const noexcept { return this->mValue; }
+    [[nodiscard]] constexpr T const* operator->() const noexcept { return this->mValue; }
 
     /// Dereferences pointer to the managed object.
     [[nodiscard]] constexpr T& operator*() & noexcept { return *(this->mValue); }
 
     /// Dereferences pointer to the managed object.
-    [[nodiscard]] constexpr const T& operator*() const& noexcept { return *(this->mValue); }
+    [[nodiscard]] constexpr T const& operator*() const& noexcept { return *(this->mValue); }
 
     /// Dereferences pointer to the managed object.
     [[nodiscard]] constexpr T&& operator*() && noexcept { return std::move(*(this->mValue)); }
 
     /// Dereferences pointer to the managed object.
-    [[nodiscard]] constexpr const T&& operator*() const&& noexcept { return std::move(*(this->mValue)); }
+    [[nodiscard]] constexpr T const&& operator*() const&& noexcept { return std::move(*(this->mValue)); }
 
 #endif // (__cpp_explicit_this_parameter >= 202110)
 
@@ -424,7 +426,8 @@ constexpr polymorphic_value<T> allocate_polymorphic_value(std::allocator_arg_t, 
     {
         p.mControlBlock = typename polymorphic_value<T>::ControlBlock(detail::allocate_object<detail::allocated_pointer_control_block<T, U, A>>(a, u, a));
     }
-    catch (...) {
+    catch (...)
+    {
         detail::deallocate_object(a, u);
         throw;
     }
