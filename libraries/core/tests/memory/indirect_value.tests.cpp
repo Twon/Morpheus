@@ -106,6 +106,10 @@ TEST_CASE("Default construction for indirect_value", "[morpheus.memory.indirect_
             REQUIRE(b.operator->() != nullptr);
             REQUIRE(*b == b_value);
 
+            auto const& constant_b = b;
+            REQUIRE(constant_b.operator->() != nullptr);
+            REQUIRE(*constant_b == b_value);
+
             THEN("Ensure a copy occurs but no delete occurs")
             {
                 a = b;
