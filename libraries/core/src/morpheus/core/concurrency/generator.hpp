@@ -27,7 +27,9 @@ struct Generator
     using reference = std::conditional_t<std::is_reference_v<T>, T, const value_type&>; ///< Reference type to the value type.
     using pointer = std::add_pointer_t<reference>;                                      ///< Pointer type to the value type.
 
-    Generator(handle_type h) : coro(h) {}
+    Generator(handle_type h)
+        : coro(h)
+    {}
 
     /// Destroys the generator.
     ~Generator()
@@ -39,7 +41,9 @@ struct Generator
     Generator(const Generator&) = delete;
     Generator& operator=(const Generator&) = delete;
 
-    Generator(Generator&& rhs) noexcept : coro(std::exchange(rhs.coro, {})) {}
+    Generator(Generator&& rhs) noexcept
+        : coro(std::exchange(rhs.coro, {}))
+    {}
 
     Generator& operator=(Generator&& rhs) noexcept
     {
@@ -84,7 +88,9 @@ struct Generator
         iterator(iterator const& rhs) noexcept = default;
         iterator& operator=(iterator const& other) noexcept = default;
 
-        iterator(iterator&& rhs) noexcept : handle(std::exchange(rhs.handle, {})) {}
+        iterator(iterator&& rhs) noexcept
+            : handle(std::exchange(rhs.handle, {}))
+        {}
 
         iterator& operator=(iterator&& other) noexcept
         {
@@ -114,7 +120,9 @@ struct Generator
     private:
         friend Generator;
 
-        explicit iterator(coro_ns::coroutine_handle<promise_type> h) noexcept : handle(h) {}
+        explicit iterator(coro_ns::coroutine_handle<promise_type> h) noexcept
+            : handle(h)
+        {}
 
         coro_ns::coroutine_handle<promise_type> handle;
     };

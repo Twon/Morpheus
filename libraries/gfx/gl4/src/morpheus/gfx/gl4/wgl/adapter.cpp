@@ -1,7 +1,7 @@
+#include <morpheus/gfx/gl4/prerequisites.hpp>
 #include <morpheus/gfx/gl4/wgl/adapter.hpp>
 #include <morpheus/gfx/gl4/wgl/context.hpp>
 #include <morpheus/gfx/gl4/wgl/verify.hpp>
-#include <morpheus/gfx/gl4/prerequisites.hpp>
 
 #include <regex>
 #include <sstream>
@@ -20,35 +20,34 @@ static constexpr std::string_view vendorAMD = "PCI\\VEN_1002&";
 static constexpr std::string_view vendorNvidia = "PCI\\VEN_10DE&";
 static constexpr std::string_view vendorIntel = "PCI\\VEN_8086&";
 
-
 namespace
 {
 
 auto getModuleHandle()
 {
-	HINSTANCE hinst = nullptr;
-	static const TCHAR findAddressFrom = TCHAR();
-	auto const result = GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT, &findAddressFrom, &hinst);
-	MORPHEUS_WGL_VERIFY(result);
-	return hinst;
+    HINSTANCE hinst = nullptr;
+    static const TCHAR findAddressFrom = TCHAR();
+    auto const result = GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT, &findAddressFrom, &hinst);
+    MORPHEUS_WGL_VERIFY(result);
+    return hinst;
 }
 
 auto pciIdFromDeviceId(std::string_view const deviceId)
 {
-	auto const pciIdStr = deviceId.substr(deviceId.find_first_not_of("PCI\\VEN_"), 4);
-	std::uint32_t pciId = 0;
-	std::stringstream ss;
-	ss << std::hex << pciIdStr;
-	ss >> pciId;
-	return pciId;
+    auto const pciIdStr = deviceId.substr(deviceId.find_first_not_of("PCI\\VEN_"), 4);
+    std::uint32_t pciId = 0;
+    std::stringstream ss;
+    ss << std::hex << pciIdStr;
+    ss >> pciId;
+    return pciId;
 }
 
 auto vendorFromDeviceId(std::string_view const deviceId)
 {
-	auto const pciId = pciIdFromDeviceId(deviceId);
-	auto const vendor = vendorFromPciId(pciId);
-	MORPHEUS_VERIFY(vendor);
-	return *vendor;
+    auto const pciId = pciIdFromDeviceId(deviceId);
+    auto const vendor = vendorFromPciId(pciId);
+    MORPHEUS_VERIFY(vendor);
+    return *vendor;
 }
 
 std::string_view glGetStringView(GLenum name)
@@ -57,33 +56,32 @@ std::string_view glGetStringView(GLenum name)
     return str ? std::string_view(reinterpret_cast<const char*>(str)) : std::string_view{};
 }
 
-}
+} // namespace
 
 LRESULT CALLBACK dummyWndProc(HWND hwnd, UINT umsg, WPARAM wp, LPARAM lp)
 {
-	return DefWindowProc(hwnd, umsg, wp, lp);
+    return DefWindowProc(hwnd, umsg, wp, lp);
 }
 
 concurrency::Generator<Adapter> enumerateAdapters()
 {
-    auto displayDevice = DISPLAY_DEVICE{ .cb = sizeof(DISPLAY_DEVICE) };
+    auto displayDevice = DISPLAY_DEVICE{.cb = sizeof(DISPLAY_DEVICE)};
 
-	HINSTANCE const hinst = getModuleHandle();
+    HINSTANCE const hinst = getModuleHandle();
 
-	LPCSTR const dummyText = "WglDummyWindow";
-	WNDCLASS dummyClass = { .style = CS_OWNDC,.lpfnWndProc = dummyWndProc, .hInstance = hinst, .lpszClassName = dummyText };
-	RegisterClass(&dummyClass);
+    LPCSTR const dummyText = "WglDummyWindow";
+    WNDCLASS dummyClass = {.style = CS_OWNDC, .lpfnWndProc = dummyWndProc, .hInstance = hinst, .lpszClassName = dummyText};
+    RegisterClass(&dummyClass);
 
-	HWND hwnd = CreateWindow(dummyText, dummyText, WS_POPUP | WS_CLIPCHILDREN, 0, 0, 32, 32, 0, 0,
-		hinst, 0);
+    HWND hwnd = CreateWindow(dummyText, dummyText, WS_POPUP | WS_CLIPCHILDREN, 0, 0, 32, 32, 0, 0, hinst, 0);
 
-//	auto const hDC = GetDC(hwnd);
-//	auto const hResults = GetLastError();
+    //	auto const hDC = GetDC(hwnd);
+    //	auto const hResults = GetLastError();
 
-	for (DWORD dwCurrentDevice = 0; ; ++dwCurrentDevice)
-	{
-		if (!EnumDisplayDevices(NULL, dwCurrentDevice, &displayDevice, 0))
-			break;
+    for (DWORD dwCurrentDevice = 0;; ++dwCurrentDevice)
+    {
+        if (!EnumDisplayDevices(NULL, dwCurrentDevice, &displayDevice, 0))
+            break;
 
 		PIXELFORMATDESCRIPTOR pfd =
 		{
@@ -98,9 +96,9 @@ concurrency::Generator<Adapter> enumerateAdapters()
 			.iLayerType = PFD_MAIN_PLANE,
 		};
 
-//		auto const glContext = wglCreateContext(hDC);
-//		auto const hResult2 = GetLastError();
-//		auto const successful = wglMakeCurrent(hDC, glContext);
+        //		auto const glContext = wglCreateContext(hDC);
+        //		auto const hResult2 = GetLastError();
+        //		auto const successful = wglMakeCurrent(hDC, glContext);
 
         auto context = Context::create(hwnd, pfd);
         if (!context)
@@ -111,23 +109,19 @@ concurrency::Generator<Adapter> enumerateAdapters()
         std::string_view renderer = glGetStringView(GL_RENDERER);
         std::string_view version = glGetStringView(GL_VERSION);
 
-		// If the device is attached to the desktop, i.e. a graphics card
-		if (displayDevice.StateFlags & DISPLAY_DEVICE_ATTACHED_TO_DESKTOP)
-		{
-			co_yield Adapter(
-				displayDevice.DeviceName,
-				displayDevice.DeviceString,
-				vendorFromDeviceId(displayDevice.DeviceID)
-			);
+        // If the device is attached to the desktop, i.e. a graphics card
+        if (displayDevice.StateFlags & DISPLAY_DEVICE_ATTACHED_TO_DESKTOP)
+        {
+            co_yield Adapter(displayDevice.DeviceName, displayDevice.DeviceString, vendorFromDeviceId(displayDevice.DeviceID));
 
-			// Set the current display device to the the primary device
-			if (displayDevice.StateFlags & DISPLAY_DEVICE_PRIMARY_DEVICE)
-			{
-				//m_uCurrentAdapter = static_cast<u32>( m_GraphicsAdapters.size() - 1 );
-			}
-		}
-		oldContext.enable();
-	}
+            // Set the current display device to the the primary device
+            if (displayDevice.StateFlags & DISPLAY_DEVICE_PRIMARY_DEVICE)
+            {
+                // m_uCurrentAdapter = static_cast<u32>( m_GraphicsAdapters.size() - 1 );
+            }
+        }
+        oldContext.enable();
+    }
 }
 
 } // namespace morpheus::gfx::gl4::wgl

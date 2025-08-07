@@ -35,9 +35,10 @@ using namespace Catch;
 namespace morpheus::serialisation
 {
 
-namespace test {
+namespace test
+{
 
-template<class T>
+template <class T>
 std::string serialise(T const& value)
 {
     std::ostringstream oss;
@@ -47,11 +48,12 @@ std::string serialise(T const& value)
 }
 
 #if (__cpp_lib_to_chars >= 201611L)
-template<typename T> requires std::is_floating_point_v<T>
+template <typename T>
+requires std::is_floating_point_v<T>
 T toFloatingPoint(std::string_view value)
 {
     T result = 0;
-    auto [ptr, ec] { std::from_chars(value.data(), value.data() + value.size(), result) };
+    auto [ptr, ec]{std::from_chars(value.data(), value.data() + value.size(), result)};
 
     if (ec != std::errc())
     {
@@ -61,10 +63,10 @@ T toFloatingPoint(std::string_view value)
 }
 #endif // (__cpp_lib_to_chars >= 201611L)
 
-}
+} // namespace test
 
-TEMPLATE_TEST_CASE("Json writer can write single native types to underlying text representation", "[morpheus.serialisation.json_writer.native]",
-    bool, std::int8_t, std::uint8_t, std::int16_t, std::uint16_t, std::int32_t, std::uint32_t, std::int64_t, std::uint64_t, float, double)
+TEMPLATE_TEST_CASE("Json writer can write single native types to underlying text representation", "[morpheus.serialisation.json_writer.native]", bool,
+                   std::int8_t, std::uint8_t, std::int16_t, std::uint16_t, std::int32_t, std::uint32_t, std::int64_t, std::uint64_t, float, double)
 {
     if constexpr (std::is_integral_v<TestType>)
     {
@@ -100,7 +102,7 @@ TEST_CASE("Json writer can write simple composite types to underlying text repre
     GIVEN("A Json writer")
     {
         std::ostringstream strStream;
-        JsonWriter writer{ strStream };
+        JsonWriter writer{strStream};
 
         WHEN("Writing an empty composite")
         {
@@ -166,7 +168,7 @@ TEST_CASE("Json writer can write simple sequence types to underlying text repres
     GIVEN("A Json writer")
     {
         std::ostringstream strStream;
-        JsonWriter writer{ strStream };
+        JsonWriter writer{strStream};
 
         WHEN("Writing an simple value")
         {
@@ -221,7 +223,7 @@ struct Example
     std::string c = "Example";
 };
 
-template<>
+template <>
 inline constexpr bool delegateAggregateSerialisation<Example> = true;
 
 struct Example2
@@ -231,7 +233,7 @@ struct Example2
     bool c = true;
 };
 
-template<>
+template <>
 inline constexpr bool delegateAggregateSerialisation<Example2> = true;
 
 TEST_CASE("Json writer can write simple aggregates types to underlying text representation", "[morpheus.serialisation.json_writer.aggregate]")
@@ -266,16 +268,16 @@ TEST_CASE("Json writer can write std types to underlying text representation", "
 {
     SECTION("Chrono types")
     {
-       REQUIRE(test::serialise(std::chrono::nanoseconds{123}) == R"("123ns")");
-       REQUIRE(test::serialise(std::chrono::microseconds{456}) == R"("456us")");
-       REQUIRE(test::serialise(std::chrono::milliseconds{789}) == R"("789ms")");
-       REQUIRE(test::serialise(std::chrono::seconds{123}) == R"("123s")");
-       REQUIRE(test::serialise(std::chrono::minutes{58}) == R"("58min")");
-       REQUIRE(test::serialise(std::chrono::hours{24}) == R"("24h")");
-       REQUIRE(test::serialise(std::chrono::days{8}) == R"("8d")");
-       REQUIRE(test::serialise(std::chrono::weeks{12}) == R"("12w")");
-       REQUIRE(test::serialise(std::chrono::years{100}) == R"("100y")");
-       REQUIRE(test::serialise(std::chrono::months{12}) == R"("12m")");
+        REQUIRE(test::serialise(std::chrono::nanoseconds{123}) == R"("123ns")");
+        REQUIRE(test::serialise(std::chrono::microseconds{456}) == R"("456us")");
+        REQUIRE(test::serialise(std::chrono::milliseconds{789}) == R"("789ms")");
+        REQUIRE(test::serialise(std::chrono::seconds{123}) == R"("123s")");
+        REQUIRE(test::serialise(std::chrono::minutes{58}) == R"("58min")");
+        REQUIRE(test::serialise(std::chrono::hours{24}) == R"("24h")");
+        REQUIRE(test::serialise(std::chrono::days{8}) == R"("8d")");
+        REQUIRE(test::serialise(std::chrono::weeks{12}) == R"("12w")");
+        REQUIRE(test::serialise(std::chrono::years{100}) == R"("100y")");
+        REQUIRE(test::serialise(std::chrono::months{12}) == R"("12m")");
     }
     REQUIRE(test::serialise(std::monostate{}) == R"({})");
     REQUIRE(test::serialise(std::optional<int>{100}) == R"(100)");
@@ -285,7 +287,7 @@ TEST_CASE("Json writer can write std types to underlying text representation", "
     REQUIRE(test::serialise(std::tuple<int, bool, std::string>{75, true, "Example"}) == R"([75,true,"Example"])");
     REQUIRE(test::serialise(std::make_unique<int>(123)) == R"(123)");
     REQUIRE(test::serialise(std::variant<int, bool, std::string>{true}) == R"({"type":"bool","value":true})");
-    REQUIRE(test::serialise(std::vector<int>{1,2,3,4,5}) == R"([1,2,3,4,5])");
+    REQUIRE(test::serialise(std::vector<int>{1, 2, 3, 4, 5}) == R"([1,2,3,4,5])");
 }
 
 } // namespace morpheus::serialisation

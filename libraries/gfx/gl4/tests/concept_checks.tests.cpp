@@ -1,6 +1,7 @@
 #include <morpheus/gfx/gl4/render_system.hpp>
 #include <morpheus/gfx/gl4/traits.hpp>
 #include <morpheus/gfx/platform/concepts/render_system.hpp>
+
 #include <catch2/catch_all.hpp>
 
 namespace morpheus::gfx::gl4
