@@ -1,6 +1,7 @@
 find_package(OpenGL REQUIRED COMPONENTS OpenGL)
 find_package(GLEW REQUIRED)
 find_package(glbinding REQUIRED glbinding glbinding-aux)
+find_package(khrplatform REQUIRED)
 
 if (NOT ${OPENGL_FOUND})
     message("OpenGL not found on the system.  Unable to support OpenGL based render system.")
@@ -23,8 +24,8 @@ target_link_libraries(MorpheusGfxGL4
         morpheus::gfx::platform
         OpenGL::GL
         GLEW::GLEW
-    PRIVATE
-#        glbinding::glbinding
+        glbinding::glbinding
+        khrplatform::khrplatform
 )
 
 set_target_properties(MorpheusGfxGL4

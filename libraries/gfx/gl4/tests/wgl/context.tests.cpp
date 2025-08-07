@@ -19,8 +19,8 @@ TEST_CASE("Create a WGL Context", "[morpheus.gfx.gl4.wgl.context]")
                                                  .cDepthBits = 24,
                                                  .cStencilBits = 8,
                                                  .iLayerType = PFD_MAIN_PLANE};
-        win32::RenderWindow window;
-        auto context = Context::create(window.getHandle(), pxlFmtDescriptor);
+        auto window = win32::RenderWindow::create();
+        auto context = Context::create(window.value().getHandle(), pxlFmtDescriptor);
         REQUIRE(context);
 
         wglMakeCurrent(nullptr, nullptr);
@@ -30,13 +30,14 @@ TEST_CASE("Create a WGL Context", "[morpheus.gfx.gl4.wgl.context]")
         WHEN("enabling the context")
         {
             auto globalContext = context.value().enable();
+            REQUIRE(globalContext);
 
             THEN("expect the context to be set as active and the global context for the thread to be returned")
             {
                 REQUIRE(context.value().getDC() == wglGetCurrentDC());
                 REQUIRE(context.value().getGL() == wglGetCurrentContext());
-                REQUIRE(globalContext.getDC() == globalDC);
-                REQUIRE(globalContext.getGL() == globalGL);
+                REQUIRE(globalContext.value().getDC() == globalDC);
+                REQUIRE(globalContext.value().getGL() == globalGL);
 
                 AND_WHEN("disabling the context")
                 {

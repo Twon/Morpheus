@@ -54,7 +54,7 @@ struct morpheus::scan_ns::scanner<morpheus::application::Version> : morpheus::sc
     /// \param ctx The scan context.
     /// \return An expected iterator pointing to the end of the scanned version, or the scan error if it failed.
     template <typename Context>
-    auto scan(morpheus::application::Version& val, Context& ctx) const -> morpheus::scan_ns::scan_expected<typename Context::iterator>
+    constexpr auto scan(morpheus::application::Version& val, Context& ctx) const -> morpheus::scan_ns::scan_expected<typename Context::iterator>
     {
         return morpheus::scan_ns::scan<std::uint16_t, std::uint16_t, std::uint16_t>(ctx.range(), "{{major={},minor={},patch={}}}")
             .transform(

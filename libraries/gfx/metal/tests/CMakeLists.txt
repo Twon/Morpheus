@@ -11,6 +11,7 @@ target_link_libraries(MorpheusGfxMetalTests
 target_sources(MorpheusGfxMetalTests
     PRIVATE
         adapter.tests.cpp
+        render_system.tests.cpp
         video_mode.tests.cpp
 )
 
