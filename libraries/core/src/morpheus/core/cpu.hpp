@@ -4,18 +4,20 @@
 #include "morpheus/core/base/compiler.hpp"
 
 #if (MORPHEUS_COMPILER == MORPHEUS_VISUALSTUDIO_COMPILER)
-#pragma warning(push)
-#pragma warning(disable : 4251)
+    #pragma warning(push)
+    #pragma warning(disable : 4251)
 #endif // (MORPHEUS_COMPILER == MORPHEUS_VISUALSTUDIO_COMPILER)
 
 #if (MORPHEUS_PLATFORM_ARCHITECTURE == MORPHEUS_TARGET_ARCHITECTURE_X86) || (MORPHEUS_PLATFORM_ARCHITECTURE == MORPHEUS_TARGET_ARCHITECTURE_X64)
 
+// clang-format off
 #include "morpheus/core/base/export.hpp"
 
 #include <array>
 #include <cstdint>
 #include <string>
 #include <vector>
+// clang-format on
 
 namespace morpheus
 {
@@ -60,5 +62,5 @@ private:
 #endif // (MORPHEUS_PLATFORM_ARCHITECTURE == MORPHEUS_TARGET_ARCHITECTURE_X86) || (MORPHEUS_PLATFORM_ARCHITECTURE == MORPHEUS_TARGET_ARCHITECTURE_X64)
 
 #if (MORPHEUS_COMPILER == MORPHEUS_VISUALSTUDIO_COMPILER)
-#pragma warning(pop)
+    #pragma warning(pop)
 #endif // (MORPHEUS_COMPILER == MORPHEUS_VISUALSTUDIO_COMPILER)
