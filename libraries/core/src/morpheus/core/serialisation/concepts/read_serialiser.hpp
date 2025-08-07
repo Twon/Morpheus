@@ -16,4 +16,4 @@ concept ReadSerialiser = requires(Serialiser s) {
 template <typename Serialiser>
 concept NotReadSerialiser = not ReadSerialiser<Serialiser>;
 
-} // morpheus::serialisation::concepts
+} // namespace morpheus::serialisation::concepts

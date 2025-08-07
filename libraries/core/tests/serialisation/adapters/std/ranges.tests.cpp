@@ -7,7 +7,7 @@
 #include "morpheus/core/serialisation/adapters/std/set.hpp"
 #include "morpheus/core/serialisation/adapters/std/unordered_set.hpp"
 #include "morpheus/core/serialisation/adapters/std/vector.hpp"
-//#include "morpheus/core/serialisation/mock/reader.hpp"
+// #include "morpheus/core/serialisation/mock/reader.hpp"
 #include "morpheus/core/serialisation/mock/serialisers.hpp"
 #include "morpheus/core/serialisation/mock/writer.hpp"
 #include "morpheus/core/serialisation/write_serialiser.hpp"
@@ -47,7 +47,10 @@ TEMPLATE_TEST_CASE("Verify serialisation of sequence containers std::ranges", "[
             ranges::for_each(container, [&serialiser](auto const& element) { EXPECT_CALL(serialiser.writer(), write(Matcher<int>(Eq(element)))).Times(1); });
             EXPECT_CALL(serialiser.writer(), endSequence()).Times(1);
 
-            WHEN("Serialising the std::expected") { serialiser.serialise(container); }
+            WHEN("Serialising the std::expected")
+            {
+                serialiser.serialise(container);
+            }
         }
     }
 }
