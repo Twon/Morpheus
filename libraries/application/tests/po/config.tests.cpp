@@ -36,4 +36,4 @@ TEST_CASE("Ensure options parsing of standard application config", "[morpheus.ap
     }
 }
 
-}
+} // namespace morpheus::application::po
