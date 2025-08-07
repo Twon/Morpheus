@@ -2,7 +2,6 @@
 
 #include <catch2/catch_test_macros.hpp>
 
-
 namespace morpheus::gfx
 {
 
@@ -151,4 +150,4 @@ TEST_CASE("Ensure format is supported for monitors", "[morpheus.gfx.monitor.fmt]
     REQUIRE(fmt_ns::format("{}", monitor) == "{name=Main Display,{x=100,y=200},{width=600,height=800},primary=true}");
 }
 
-}
+} // namespace morpheus::gfx

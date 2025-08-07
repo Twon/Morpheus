@@ -17,19 +17,18 @@ class TempFile
 {
 public:
     TempFile()
-    : mFile(
-          []
-          {
+        : mFile(
+              []
+              {
 #if MORPHEUS_IS_VISUALSTUDIO_COMPATIBLE_COMPILER
-              std::FILE* file = nullptr;
-              MORPHEUS_VERIFY(tmpfile_s(&file) == 0);
-              return file;
+                  std::FILE* file = nullptr;
+                  MORPHEUS_VERIFY(tmpfile_s(&file) == 0);
+                  return file;
 #else
-              return std::tmpfile();
+                  return std::tmpfile();
 #endif
-          }())
-    {
-    }
+              }())
+    {}
 
     ~TempFile()
     {
@@ -49,6 +48,7 @@ public:
         std::fseek(mFile, 0, SEEK_END);
         return contents;
     }
+
 private:
     std::string mPath;
     std::FILE* mFile;

@@ -28,7 +28,7 @@ class BinaryReader
 {
 public:
     BinaryReader(std::istream& inStream)
-    : mInStream(inStream)
+        : mInStream(inStream)
     {}
 
     /// \copydoc morpheus::serialisation::concepts::ReaderArchetype::isTextual()
@@ -47,19 +47,13 @@ public:
     void endValue() noexcept {}
 
     /// \copydoc morpheus::serialisation::concepts::ReaderArchetype::beginSequence()
-    std::optional<std::size_t> beginSequence()
-    {
-        return read<std::size_t>();
-    }
+    std::optional<std::size_t> beginSequence() { return read<std::size_t>(); }
 
     /// \copydoc morpheus::serialisation::concepts::ReaderArchetype::endSequence()
     void endSequence() noexcept {}
 
     /// \copydoc morpheus::serialisation::concepts::ReaderArchetype::beginNullable()
-    bool beginNullable()
-    {
-        return read<bool>();
-    }
+    bool beginNullable() { return read<bool>(); }
 
     /// \copydoc morpheus::serialisation::concepts::ReaderArchetype::endNullable()
     void endNullable() noexcept {}

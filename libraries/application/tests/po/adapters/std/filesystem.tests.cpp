@@ -12,8 +12,8 @@
 #include <array>
 #include <filesystem>
 #include <optional>
-#include <string_view>
 #include <string>
+#include <string_view>
 
 namespace morpheus::application::po
 {
@@ -39,12 +39,11 @@ TEST_CASE_METHOD(LoggingFixture, "Test parsing of std filesystem path as options
         auto getPath = [](std::string_view param)
         {
             Filesystem filesystem{};
-            std::array cliOptions = { "dummyProgram.exe", "--path", param.data() };
+            std::array cliOptions = {"dummyProgram.exe", "--path", param.data()};
             auto const result = parseProgramOptions(static_cast<int>(cliOptions.size()), cliOptions.data(), HelpDocumentation{}, filesystem);
             REQUIRE(!result);
             return filesystem.path;
         };
-
 
         auto const exeLocation = boost::dll::program_location().parent_path();
         REQUIRE(getPath(".") == std::filesystem::path("."));
@@ -57,7 +56,6 @@ TEST_CASE_METHOD(LoggingFixture, "Test parsing of std filesystem path as options
         // https://github.com/boostorg/program_options/issues/69
         REQUIRE(getPath("/home/user/path with spaces/.") == std::filesystem::path("/home/user/path with spaces/."));
     }
-
 }
 
 } // namespace morpheus::application::po

@@ -1,6 +1,6 @@
 #include "morpheus/application/application.hpp"
-#include "morpheus/application/version.hpp"
 #include "morpheus/application/po/options.hpp"
+#include "morpheus/application/version.hpp"
 #include "morpheus/core/base/debugging.hpp"
 #include "morpheus/core/conformance/date.hpp"
 #include "morpheus/core/conformance/format.hpp"
@@ -23,11 +23,12 @@ namespace
 /// \brief Override the default termination handler to print the call stack before exiting the program to aid debugging.
 void terminationHandler()
 {
-    try{
+    try
+    {
         debugPrint(fmt_ns::format("{}", MORPHEUS_CURRENT_STACKTRACE));
     }
-    catch(...){
-
+    catch (...)
+    {
     }
     std::abort();
 }
@@ -48,14 +49,15 @@ void terminationHandler()
 } // namespace
 
 Application::Application(int argc, char const* const* argv)
-: mConfig(
-      [&]
-      {
-          po::Config config;
-          if (auto invalid = parseProgramOptions(argc, argv, po::HelpDocumentation{}, config)) {
-          }
-          return config;
-      }())
+    : mConfig(
+          [&]
+          {
+              po::Config config;
+              if (auto invalid = parseProgramOptions(argc, argv, po::HelpDocumentation{}, config))
+              {
+              }
+              return config;
+          }())
 //`: mLogName(getDefaultApplicationLogName())
 {
     std::set_terminate(terminationHandler);

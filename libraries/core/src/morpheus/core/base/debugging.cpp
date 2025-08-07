@@ -24,7 +24,10 @@ void breakpoint_if_debugging() noexcept
         breakpoint();
 }
 
-bool is_debugger_present() noexcept { return boost::debug::under_debugger(); }
+bool is_debugger_present() noexcept
+{
+    return boost::debug::under_debugger();
+}
 
 void debugPrint(std::string_view const message)
 {
