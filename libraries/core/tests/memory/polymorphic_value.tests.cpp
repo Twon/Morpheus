@@ -979,12 +979,13 @@ struct tracking_allocator
 };
 } // namespace
 
-
 struct UnconstructableDerivedType : DerivedType
 {
     UnconstructableDerivedType() { throw std::runtime_error("Construction failed"); }
     UnconstructableDerivedType(UnconstructableDerivedType const&) { throw std::runtime_error("Construction failed"); }
-    UnconstructableDerivedType(int value) : DerivedType(value) {}
+    UnconstructableDerivedType(int value)
+        : DerivedType(value)
+    {}
 };
 
 TEST_CASE("Allocator used to construct control block")
@@ -1008,7 +1009,7 @@ TEST_CASE("Allocator used to construct control block")
         CHECK(allocs == 1);
         CHECK(deallocs == 2);
     }
-    SECTION("When constuction fails")
+    SECTION("When construction fails")
     {
         unsigned allocs = 0;
         unsigned deallocs = 0;
@@ -1024,9 +1025,7 @@ TEST_CASE("Allocator used to construct control block")
             CHECK(allocs == 1);
             CHECK(deallocs == 0);
 
-            REQUIRE_THROWS_AS([&p1] {
-                auto p2(p1);
-            }(), std::runtime_error);
+            REQUIRE_THROWS_AS([&p1] { auto p2(p1); }(), std::runtime_error);
         }
         CHECK(allocs == 2);
         CHECK(deallocs == 3);
