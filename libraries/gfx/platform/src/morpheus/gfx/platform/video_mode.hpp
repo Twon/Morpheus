@@ -9,7 +9,8 @@ namespace morpheus::gfx
 /// \class VideoMode
 ///     A video mode describes a mode of available settings for an graphics adapter.
 ///
-class VideoMode {
+class VideoMode
+{
 public:
     /// \name Life cycle
     ///@{
@@ -39,7 +40,6 @@ public:
     }
     ///@}
 
-
     /// The width in pixels of the render target.
     [[nodiscard]] constexpr auto width() const noexcept { return mWidth; }
 
@@ -54,6 +54,7 @@ public:
 
     /// The three-way operator provides strong ordering of types.
     [[nodiscard]] constexpr auto operator<=>(VideoMode const& rhs) const noexcept -> std::strong_ordering = default;
+
 private:
     /// \name Data Members
     ///@{

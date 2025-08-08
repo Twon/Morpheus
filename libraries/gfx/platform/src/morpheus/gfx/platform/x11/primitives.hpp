@@ -14,7 +14,8 @@
 namespace morpheus::gfx::x11
 {
 
-namespace detail {
+namespace detail
+{
 
 /// \struct XCloseDisplayDispatch
 ///     A functor to close an X11 display.
@@ -32,6 +33,7 @@ struct XDestroyWindowDispatch
     using pointer = ::Window;
 
     void operator()(pointer window);
+
 private:
     ::Display* mDisplay = nullptr;
 };
@@ -42,7 +44,6 @@ struct XDestroyScreenResource
 
     void operator()(pointer screenResource);
 };
-
 
 } // namespace detail
 

@@ -10,10 +10,9 @@ namespace morpheus::gfx
         API and supports the creation of all graphics primitives needed to access the functionality
         of the hardware.
  */
-class RenderSystem {
+class RenderSystem
+{
 public:
-
-
     /// \name Life cycle
     ///@{
     /*!

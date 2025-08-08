@@ -1,7 +1,7 @@
-#include <morpheus/gfx/vulkan/adapter.hpp>
-#include <morpheus/gfx/vulkan/video_mode.hpp>
 #include <morpheus/gfx/platform/concepts/adapter.hpp>
 #include <morpheus/gfx/platform/concepts/video_mode.hpp>
+#include <morpheus/gfx/vulkan/adapter.hpp>
+#include <morpheus/gfx/vulkan/video_mode.hpp>
 
 #include <catch2/catch_test_macros.hpp>
 
