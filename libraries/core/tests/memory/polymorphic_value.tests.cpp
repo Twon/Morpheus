@@ -979,24 +979,58 @@ struct tracking_allocator
 };
 } // namespace
 
+
+struct UnconstructableDerivedType : DerivedType
+{
+    UnconstructableDerivedType() { throw std::runtime_error("Construction failed"); }
+    UnconstructableDerivedType(UnconstructableDerivedType const&) { throw std::runtime_error("Construction failed"); }
+    UnconstructableDerivedType(int value) : DerivedType(value) {}
+};
+
 TEST_CASE("Allocator used to construct control block")
 {
-    unsigned allocs = 0;
-    unsigned deallocs = 0;
-
-    tracking_allocator<DerivedType> alloc(&allocs, &deallocs);
-    std::allocator<DerivedType> default_allocator{};
-    auto mem = default_allocator.allocate(1);
-    unsigned const value = 42;
-    new (mem) DerivedType(value);
-
+    SECTION("When construction is successful")
     {
-        polymorphic_value<DerivedType> p(mem, std::allocator_arg_t{}, alloc);
+        unsigned allocs = 0;
+        unsigned deallocs = 0;
+
+        tracking_allocator<DerivedType> alloc(&allocs, &deallocs);
+        std::allocator<DerivedType> default_allocator{};
+        auto mem = default_allocator.allocate(1);
+        unsigned const value = 42;
+        new (mem) DerivedType(value);
+
+        {
+            polymorphic_value<DerivedType> p(mem, std::allocator_arg_t{}, alloc);
+            CHECK(allocs == 1);
+            CHECK(deallocs == 0);
+        }
         CHECK(allocs == 1);
-        CHECK(deallocs == 0);
+        CHECK(deallocs == 2);
     }
-    CHECK(allocs == 1);
-    CHECK(deallocs == 2);
+    SECTION("When constuction fails")
+    {
+        unsigned allocs = 0;
+        unsigned deallocs = 0;
+
+        tracking_allocator<UnconstructableDerivedType> alloc(&allocs, &deallocs);
+        std::allocator<UnconstructableDerivedType> default_allocator{};
+        auto mem = default_allocator.allocate(1);
+        unsigned const value = 42;
+        new (mem) UnconstructableDerivedType(value);
+
+        {
+            polymorphic_value<UnconstructableDerivedType> p1(mem, std::allocator_arg_t{}, alloc);
+            CHECK(allocs == 1);
+            CHECK(deallocs == 0);
+
+            REQUIRE_THROWS_AS([&p1] {
+                auto p2(p1);
+            }(), std::runtime_error);
+        }
+        CHECK(allocs == 2);
+        CHECK(deallocs == 3);
+    }
 }
 
 TEST_CASE("Copying object with allocator allocates")
