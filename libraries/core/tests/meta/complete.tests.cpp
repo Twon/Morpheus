@@ -8,7 +8,8 @@ namespace morpheus::meta
 
 class IncompleteType;
 
-class CompleteEmptyType {};
+class CompleteEmptyType
+{};
 
 struct CompleteType
 {

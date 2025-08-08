@@ -24,17 +24,15 @@ void WindowConfig::addOptions(boost::program_options::options_description& optio
     // clang-format on
 }
 
-
 //---------------------------------------------------------------------------------------------------------------------
 
 RenderWindow::RenderWindow(Config const& config)
-:   RenderTarget(config.width, config.height, config.colourDepth)
-,   mStartX(config.startX)
-,   mStartY(config.startY)
-,   mWindowName(config.windowName)
-,   mFullScreen(config.fullScreen)
-{
-}
+    : RenderTarget(config.width, config.height, config.colourDepth)
+    , mStartX(config.startX)
+    , mStartY(config.startY)
+    , mWindowName(config.windowName)
+    , mFullScreen(config.fullScreen)
+{}
 
 //---------------------------------------------------------------------------------------------------------------------
 

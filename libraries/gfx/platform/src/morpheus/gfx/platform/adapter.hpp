@@ -14,8 +14,9 @@ namespace morpheus::gfx
 /// \class Adapter
 ///     Describes an available graphic adapter on the target platform.
 ///
-template<std::regular IdType>
-class Adapter {
+template <std::regular IdType>
+class Adapter
+{
 public:
     /// \name Life cycle
     ///@{
@@ -46,6 +47,7 @@ public:
 
     /// Compare two adapter objects.
     [[nodiscard]] constexpr auto operator<=>(Adapter const& rhs) const noexcept -> std::strong_ordering = default;
+
 private:
     /// \name Data Members
     ///@{

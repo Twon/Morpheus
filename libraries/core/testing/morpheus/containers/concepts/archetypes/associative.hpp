@@ -14,7 +14,7 @@ namespace morpheus::containers::concepts::archetypes
 namespace detail
 {
 
-template<bool M = false>
+template <bool M = false>
 struct Multi
 {
     struct insert_return_type {};
@@ -22,14 +22,13 @@ struct Multi
     constexpr auto operator<=>(Multi const&) const = default;
 };
 
-template<>
+template <>
 struct Multi<true>
 {
     constexpr auto operator<=>(Multi const&) const = default;
 };
 
-
-template<bool M = false>
+template <bool M = false>
 struct Mapped
 {
     /// The value type of the container.
@@ -43,13 +42,13 @@ struct Mapped
     constexpr auto operator<=>(Mapped const&) const = default;
 };
 
-template<>
+template <>
 struct Mapped<true>
 {
     /// The mapped type of the container.
     using mapped_type = int;
     /// The value type of the container.
-    using value_type = std::pair<const int, mapped_type>;
+    using value_type = std::pair<int const, mapped_type>;
     /// The key type of the container.
     using key_type = typename value_type::first_type;
     /// The allocator type of the container.
@@ -59,9 +58,9 @@ struct Mapped<true>
     constexpr auto operator<=>(Mapped const&) const = default;
 };
 
-} // namespace morpheus::containers::concepts::archetypes::detail
+} // namespace detail
 
-template<bool multi = false, bool mapped = false>
+template <bool multi = false, bool mapped = false>
 struct Associative : AllocatorAware, detail::Multi<multi>, detail::Mapped<mapped>
 {
     /// The value type of the container.

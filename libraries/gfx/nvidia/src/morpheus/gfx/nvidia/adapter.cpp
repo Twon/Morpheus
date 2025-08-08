@@ -1,9 +1,10 @@
+#include <morpheus/core/base/verify.hpp>
 #include <morpheus/gfx/nvidia/adapter.hpp>
 #include <morpheus/gfx/nvidia/driver.hpp>
 #include <morpheus/gfx/platform/vendor.hpp>
-#include <morpheus/core/base/verify.hpp>
 
 #include <windows.h>
+
 #include <array>
 
 namespace morpheus::gfx::nvidia::nvapi

@@ -44,7 +44,7 @@ TEST_CASE("Test construction of std::error_code object via make_error_code", "[v
         VK_ERROR_INVALID_DEVICE_ADDRESS_EXT,
         VK_ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT,
     };
-    for (const auto result_code : vkUniqueResults)
+    for (auto const result_code : vkUniqueResults)
     {
         std::error_code error_code = make_error_code(result_code);
         REQUIRE(error_code.value() == result_code);

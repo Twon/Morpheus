@@ -8,9 +8,9 @@ namespace morpheus::gfx
 /// \class RenderTarget
 ///     A render target defined a canvas onto which a render system can draw to.
 ///
-class RenderTarget {
+class RenderTarget
+{
 public:
-
     /// \name Life cycle
     ///@{
     /*! Constructs a render target with the specified parameters.
@@ -27,8 +27,6 @@ public:
         std::uint16_t const colourDepth
     );
     ///@}
-
-
 
     //! The width in pixels of the render target.
     [[nodiscard]] std::uint16_t width() const noexcept { return mWidth; }

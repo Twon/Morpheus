@@ -13,7 +13,8 @@ namespace morpheus::gfx
 /// \class Monitor
 ///     Describes an available monitor on the system.
 ///
-class Monitor {
+class Monitor
+{
 public:
     using Pixels = std::uint32_t;
     using PixelDiff = std::int32_t;
@@ -70,7 +71,7 @@ public:
         return std::tie(mName, mX, mY, mWidth, mHeight, mPrimary) <=> std::tie(rhs.mName, rhs.mX, rhs.mY, rhs.mWidth, rhs.mHeight, rhs.mPrimary);
     }
 
-    [[nodiscard]] bool operator==(const Monitor& rhs) const noexcept
+    [[nodiscard]] bool operator==(Monitor const& rhs) const noexcept
     {
         return std::tie(mName, mX, mY, mWidth, mHeight, mPrimary) == std::tie(rhs.mName, rhs.mX, rhs.mY, rhs.mWidth, rhs.mHeight, rhs.mPrimary);
     }
@@ -79,11 +80,11 @@ public:
 private:
     /// \name Data Members
     ///@{
-    std::string mName; //!< The name of the monitor
-    PixelDiff mX = 0; //!< Left origin of the monitor in pixels, relative to the global virtual screen coordinate space.
-    PixelDiff mY = 0; //!< Top origin of the monitor in pixels, relative to the global virtual screen coordinate space.
-    Pixels mWidth = 0; //!< The width in pixels of the screen
-    Pixels mHeight = 0; //!< The height in pixels of the screen
+    std::string mName;     //!< The name of the monitor
+    PixelDiff mX = 0;      //!< Left origin of the monitor in pixels, relative to the global virtual screen coordinate space.
+    PixelDiff mY = 0;      //!< Top origin of the monitor in pixels, relative to the global virtual screen coordinate space.
+    Pixels mWidth = 0;     //!< The width in pixels of the screen
+    Pixels mHeight = 0;    //!< The height in pixels of the screen
     bool mPrimary = false; //!< Is this the primary monitor?
     ///@}
 };
@@ -102,7 +103,7 @@ struct morpheus::fmt_ns::formatter<morpheus::gfx::Monitor> : morpheus::fmt_ns::f
     template <typename Context>
     constexpr auto format(morpheus::gfx::Monitor const& value, Context& context) const
     {
-        return morpheus::fmt_ns::format_to(context.out(), "{{name={},{{x={},y={}}},{{width={},height={}}},primary={}}}",
-            value.name(), value.startX(), value.startY(), value.width(), value.height(), value.primary());
+        return morpheus::fmt_ns::format_to(context.out(), "{{name={},{{x={},y={}}},{{width={},height={}}},primary={}}}", value.name(), value.startX(),
+                                           value.startY(), value.width(), value.height(), value.primary());
     }
 };
