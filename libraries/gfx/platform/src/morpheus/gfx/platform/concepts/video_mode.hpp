@@ -7,8 +7,7 @@ namespace morpheus::gfx::concepts
 {
 
 template <typename T>
-concept VideoMode = requires(T t)
-{
+concept VideoMode = requires(T t) {
     { t.width() } -> std::convertible_to<std::uint32_t>;
     { t.height() } -> std::convertible_to<std::uint32_t>;
     { t.colourDepth() } -> std::convertible_to<std::uint32_t>;

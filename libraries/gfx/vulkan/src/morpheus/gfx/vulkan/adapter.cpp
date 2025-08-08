@@ -6,9 +6,8 @@ namespace morpheus::gfx::vulkan
 {
 
 Adapter::Adapter(vk::raii::PhysicalDevice&& physicalDevice)
-:   mPhysicalDevice(std::move(physicalDevice))
-{
-}
+    : mPhysicalDevice(std::move(physicalDevice))
+{}
 
 [[nodiscard]] Vendor Adapter::vendor() const noexcept
 {

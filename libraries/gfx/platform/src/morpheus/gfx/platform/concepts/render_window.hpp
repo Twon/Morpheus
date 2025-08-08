@@ -9,8 +9,7 @@ namespace morpheus::gfx::concepts
 /// \concept RenderWindow
 ///
 template <typename T>
-concept RenderWindow = requires(T t)
-{
+concept RenderWindow = requires(T t) {
     typename T::WindowHandle;
     { t.width() } -> std::convertible_to<std::uint32_t>;
     { t.height() } -> std::convertible_to<std::uint32_t>;

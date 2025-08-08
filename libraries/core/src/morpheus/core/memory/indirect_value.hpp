@@ -24,7 +24,7 @@ class bad_indirect_value_access : public std::exception
 {
 public:
     /// Message describing the error.
-    const char* what() const noexcept override { return "bad_indirect_value_access"; }
+    char const* what() const noexcept override { return "bad_indirect_value_access"; }
 };
 
 namespace detail
@@ -440,19 +440,19 @@ public:
     [[nodiscard]] constexpr T* operator->() noexcept { return this->mValue; }
 
     /// Accesses the contained value.
-    [[nodiscard]] constexpr const T* operator->() const noexcept { return this->mValue; }
+    [[nodiscard]] constexpr T const* operator->() const noexcept { return this->mValue; }
 
     /// Dereferences pointer to the managed object.
     [[nodiscard]] constexpr T& operator*() & noexcept { return *(this->mValue); }
 
     /// Dereferences pointer to the managed object.
-    [[nodiscard]] constexpr const T& operator*() const& noexcept { return *(this->mValue); }
+    [[nodiscard]] constexpr T const& operator*() const& noexcept { return *(this->mValue); }
 
     /// Dereferences pointer to the managed object.
     [[nodiscard]] constexpr T&& operator*() && noexcept { return std::move(*(this->mValue)); }
 
     /// Dereferences pointer to the managed object.
-    [[nodiscard]] constexpr const T&& operator*() const&& noexcept { return std::move(*(this->mValue)); }
+    [[nodiscard]] constexpr T const&& operator*() const&& noexcept { return std::move(*(this->mValue)); }
 
     /// If *this contains a value, returns a reference to the contained value. Otherwise, throws a bad_indirect_value_access exception.
     [[nodiscard]] constexpr T& value() &
@@ -471,7 +471,7 @@ public:
     }
 
     /// If *this contains a value, returns a reference to the contained value. Otherwise, throws a bad_indirect_value_access exception.
-    [[nodiscard]] constexpr const T& value() const&
+    [[nodiscard]] constexpr T const& value() const&
     {
         if (!this->mValue)
             throw bad_indirect_value_access();
@@ -479,7 +479,7 @@ public:
     }
 
     /// If *this contains a value, returns a reference to the contained value. Otherwise, throws a bad_indirect_value_access exception.
-    [[nodiscard]] constexpr const T&& value() const&&
+    [[nodiscard]] constexpr T const&& value() const&&
     {
         if (!this->mValue)
             throw bad_indirect_value_access();
@@ -497,13 +497,13 @@ public:
     constexpr copier_type& get_copier() noexcept { return this->getC(); }
 
     /// Access the copier.
-    constexpr const copier_type& get_copier() const noexcept { return this->getC(); }
+    constexpr copier_type const& get_copier() const noexcept { return this->getC(); }
 
     /// Access the deleter.
     constexpr deleter_type& get_deleter() noexcept { return this->getD(); }
 
     /// Access the deleter.
-    constexpr const deleter_type& get_deleter() const noexcept { return this->getD(); }
+    constexpr deleter_type const& get_deleter() const noexcept { return this->getD(); }
 
     /// Swaps the indirectly owned objects.
     constexpr void swap(indirect_value& rhs) noexcept(std::is_nothrow_swappable_v<base_type>) { this->base_type::swap(static_cast<base_type&>(rhs)); }
@@ -562,7 +562,7 @@ struct std::hash<::morpheus::memory::indirect_value<T, C, D>>
     /// \param key The indirect_value to compute the hash for.
     /// \return The hash of the underlying value, or 0 if the indirect_value is empty.
     /// \note noexcept if the underlying value type is noexcept hashable.
-    constexpr std::size_t operator()(const ::morpheus::memory::indirect_value<T, C, D>& key) const
+    constexpr std::size_t operator()(::morpheus::memory::indirect_value<T, C, D> const& key) const
         noexcept(noexcept(std::hash<typename ::morpheus::memory::indirect_value<T, C, D>::value_type>{}(*key)))
     {
         return key ? std::hash<typename ::morpheus::memory::indirect_value<T, C, D>::value_type>{}(*key) : 0;

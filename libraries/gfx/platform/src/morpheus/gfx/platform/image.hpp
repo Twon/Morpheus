@@ -1,7 +1,7 @@
 #pragma once
 
-#include <cstdint>
 #include <cstddef>
+#include <cstdint>
 #include <vector>
 
 namespace morpheus::gfx
@@ -9,7 +9,8 @@ namespace morpheus::gfx
 
 /// \class Image
 ///     The image abstracts the loading and saving of image files in CPU space.
-class Image {
+class Image
+{
 public:
     /// \name Life cycle
     ///@{
@@ -43,10 +44,10 @@ private:
 
     /// \name Data Members
     ///@{
-    std::uint32_t mWidth = 0; ///< The width in pixels of the render target.
-    std::uint32_t mHeight = 0; ///< The height in pixels of the render target.
+    std::uint32_t mWidth = 0;       ///< The width in pixels of the render target.
+    std::uint32_t mHeight = 0;      ///< The height in pixels of the render target.
     std::uint32_t mColourDepth = 0; ///< The colour depth of the pixels of the render target.
-    ImageData mData; /// Buffer of raw image data.
+    ImageData mData;                /// Buffer of raw image data.
     ///@}
 };
 

@@ -26,30 +26,30 @@ struct ProvidesThrowingHash
 template <>
 struct std::hash<ProvidesThrowingHash>
 {
-    size_t operator()(const ProvidesThrowingHash&) const { return 0; }
+    size_t operator()(ProvidesThrowingHash const&) const { return 0; }
 };
 
 namespace morpheus::memory
 {
 
-
-
 TEST_CASE("Ensure that indirect_value uses the minimum space requirements", "[morpheus.memory.indirect_value.sizeof]")
 {
     STATIC_REQUIRE(sizeof(indirect_value<int>) == sizeof(int*));
 
-    struct CopyDeleteHybrid {  // Same type for copy and delete
+    struct CopyDeleteHybrid
+    { // Same type for copy and delete
         void operator()(int* p) { delete p; }
-        int* operator()(const int& s) { return new int(s); }
+        int* operator()(int const& s) { return new int(s); }
     };
 
-    STATIC_REQUIRE( sizeof(indirect_value<int, CopyDeleteHybrid, CopyDeleteHybrid>) == sizeof(int*));
+    STATIC_REQUIRE(sizeof(indirect_value<int, CopyDeleteHybrid, CopyDeleteHybrid>) == sizeof(int*));
 }
 
 template <typename T>
-class copy_counter {
+class copy_counter
+{
 public:
-    T* operator()(const T& rhs) const
+    T* operator()(T const& rhs) const
     {
         ++call_count;
         return default_copy<T>().operator()(rhs);
@@ -58,7 +58,8 @@ public:
 };
 
 template <typename T>
-class delete_counter {
+class delete_counter
+{
 public:
     void operator()(T* rhs) const
     {
@@ -70,7 +71,7 @@ public:
 
 TEST_CASE("Default construction for indirect_value", "[morpheus.memory.indirect_value.constructor.default]")
 {
-    GIVEN("An indirect_value value")  // The ability to track internal copies and deletes of the default constructor")
+    GIVEN("An indirect_value value") // The ability to track internal copies and deletes of the default constructor")
     {
         WHEN("Default-constructed")
         {
@@ -94,16 +95,20 @@ TEST_CASE("Default construction for indirect_value", "[morpheus.memory.indirect_
             }
         }
     }
-    GIVEN("An indirect_value value")  //"The ability to track internal copies and deletes of the default constructor")
+    GIVEN("An indirect_value value") //"The ability to track internal copies and deletes of the default constructor")
     {
         WHEN("We create a default constructed indirect_value then copy assign it to an in-place-constructed indirect_value")
         {
             indirect_value<int, copy_counter<int>, delete_counter<int>> a{};
             constexpr int b_value = 10;
-            indirect_value<int, copy_counter<int>, delete_counter<int>> b{std::in_place, b_value };
+            indirect_value<int, copy_counter<int>, delete_counter<int>> b{std::in_place, b_value};
             REQUIRE(a.operator->() == nullptr);
             REQUIRE(b.operator->() != nullptr);
             REQUIRE(*b == b_value);
+
+            auto const& constant_b = b;
+            REQUIRE(constant_b.operator->() != nullptr);
+            REQUIRE(*constant_b == b_value);
 
             THEN("Ensure a copy occurs but no delete occurs")
             {
@@ -124,18 +129,18 @@ TEST_CASE("Default construction for indirect_value", "[morpheus.memory.indirect_
     }
 }
 
-TEST_CASE("Element wise initialisation construction for indirect_value","[morpheus.memory.indirect_value.constructor.element_wise]")
+TEST_CASE("Element wise initialisation construction for indirect_value", "[morpheus.memory.indirect_value.constructor.element_wise]")
 {
     GIVEN("The ability to track internal copies and deletes")
     {
         size_t copy_count = 0, delete_count = 0;
-        const auto copy_counter = [&copy_count](const auto& rhs)
+        auto const copy_counter = [&copy_count](auto const& rhs)
         {
             ++copy_count;
             return default_copy<std::remove_cvref_t<std::remove_pointer_t<decltype(rhs)>>>().operator()(rhs);
         };
 
-        const auto delete_counter = [&delete_count](auto* rhs)
+        auto const delete_counter = [&delete_count](auto* rhs)
         {
             ++delete_count;
             std::default_delete<std::remove_cvref_t<std::remove_pointer_t<decltype(rhs)>>>().operator()(rhs);
@@ -143,7 +148,7 @@ TEST_CASE("Element wise initialisation construction for indirect_value","[morphe
 
         WHEN("Constructing objects of indirect_value")
         {
-            indirect_value<int, decltype(copy_counter), decltype(delete_counter)> a{new int(0), copy_counter, delete_counter };
+            indirect_value<int, decltype(copy_counter), decltype(delete_counter)> a{new int(0), copy_counter, delete_counter};
             REQUIRE(a.operator->() != nullptr);
 
             THEN("Ensure that no copies or deleted happen in the basic construction of a value")
@@ -159,7 +164,7 @@ TEST_CASE("Element wise initialisation construction for indirect_value","[morphe
     }
 }
 
-TEST_CASE("Copy construction for indirect_value of a primitive type","[morpheus.memory.indirect_value.constructor.copy.primitive]")
+TEST_CASE("Copy construction for indirect_value of a primitive type", "[morpheus.memory.indirect_value.constructor.copy.primitive]")
 {
     GIVEN("A value-initialised indirect_value value")
     {
@@ -169,7 +174,7 @@ TEST_CASE("Copy construction for indirect_value of a primitive type","[morpheus.
 
         WHEN("Taking a copy of the value-initialised indirect_value value")
         {
-            indirect_value<int> copy_of_a{ a };
+            indirect_value<int> copy_of_a{a};
             THEN("The copy is a deep copy of the original value")
             {
                 REQUIRE(*copy_of_a == a_value);
@@ -236,7 +241,7 @@ TEST_CASE("Copy assignment for indirect_value of a primitive type", "[morpheus.m
     }
 }
 
-TEST_CASE("Move construction for indirect_value of a primitive type","[morpheus.memory.indirect_value.constructor.move.primitive]")
+TEST_CASE("Move construction for indirect_value of a primitive type", "[morpheus.memory.indirect_value.constructor.move.primitive]")
 {
     GIVEN("A value-initalised indirect_value value")
     {
@@ -246,7 +251,7 @@ TEST_CASE("Move construction for indirect_value of a primitive type","[morpheus.
         WHEN("Constructing a new object via moving the original value")
         {
             int const* const location_of_a = a.operator->();
-            indirect_value<int> b{ std::move(a) };
+            indirect_value<int> b{std::move(a)};
 
             THEN("The constructed object steals the contents of original value leaving it in a null state")
             {
@@ -258,7 +263,7 @@ TEST_CASE("Move construction for indirect_value of a primitive type","[morpheus.
     }
 }
 
-TEST_CASE("Move assignment for indirect_value of a primitive type","[morpheus.memory.indirect_value.assignment.move.primitive]")
+TEST_CASE("Move assignment for indirect_value of a primitive type", "[morpheus.memory.indirect_value.assignment.move.primitive]")
 {
     GIVEN("A two value-initialised indirect_value values")
     {
@@ -296,7 +301,7 @@ TEST_CASE("Operator bool for indirect_value", "[operator.bool]")
             THEN("Then when it is assigned a valid value for operator bool should return true")
             {
                 constexpr int b_value = 10;
-                a = indirect_value<int>{ std::in_place, b_value };
+                a = indirect_value<int>{std::in_place, b_value};
                 REQUIRE(a.operator->() != nullptr);
                 REQUIRE(*a == b_value);
                 REQUIRE(a);
@@ -306,7 +311,7 @@ TEST_CASE("Operator bool for indirect_value", "[operator.bool]")
     GIVEN("A pointer-initialised indirect_value value")
     {
         constexpr int value_a = 7;
-        indirect_value<int> a{ new int(value_a) };
+        indirect_value<int> a{new int(value_a)};
 
         WHEN("We expect the operator bool to return true as the internal pointer owns an instance")
         {
@@ -329,8 +334,8 @@ TEST_CASE("Swap overload for indirect_value", "[morpheus.memory.indirect_value.s
     {
         constexpr int a_value = 5;
         constexpr int b_value = 10;
-        indirect_value<int> a{ std::in_place, a_value };
-        indirect_value<int> b{ std::in_place, b_value };
+        indirect_value<int> a{std::in_place, a_value};
+        indirect_value<int> b{std::in_place, b_value};
 
         WHEN("The contents are swap")
         {
@@ -350,8 +355,8 @@ TEST_CASE("Swap overload for indirect_value", "[morpheus.memory.indirect_value.s
 
         constexpr int a_value = 5;
         constexpr int b_value = 10;
-        indirect_value<int, decltype(+default_copy_lambda_a), std::default_delete<int>> a{ new int(a_value), default_copy_lambda_a };
-        indirect_value<int, decltype(+default_copy_lambda_b), std::default_delete<int>> b{ new int(b_value), default_copy_lambda_b };
+        indirect_value<int, decltype(+default_copy_lambda_a), std::default_delete<int>> a{new int(a_value), default_copy_lambda_a};
+        indirect_value<int, decltype(+default_copy_lambda_b), std::default_delete<int>> b{new int(b_value), default_copy_lambda_b};
 
         THEN("Confirm sized base class is used and its size requirements meet our expectations")
         {
@@ -387,8 +392,8 @@ TEST_CASE("Swap overload for indirect_value", "[morpheus.memory.indirect_value.s
     }
 }
 
-TEMPLATE_TEST_CASE("Noexcept of observers", "[morpheus.memory.indirect_value.noexcept]", indirect_value<int>&, const indirect_value<int>&,
-                                                                                         indirect_value<int>&&, const indirect_value<int>&&)
+TEMPLATE_TEST_CASE("Noexcept of observers", "[morpheus.memory.indirect_value.noexcept]", indirect_value<int>&, indirect_value<int> const&,
+                   indirect_value<int>&&, indirect_value<int> const&&)
 {
     using T = TestType;
     STATIC_REQUIRE(noexcept(std::declval<T>().operator->()));
@@ -415,13 +420,12 @@ inline constexpr bool same_ref_qualifiers<T&&, U&&> = true;
 template <class T, class U>
 inline constexpr bool same_const_and_ref_qualifiers = same_ref_qualifiers<T, U> && same_const_qualifiers<T, U>;
 
-TEMPLATE_TEST_CASE("Ref- and const-qualifier of observers", "[morpheus.memory.indirect_value.ref_constness]",
-    indirect_value<int>&, const indirect_value<int>&,
-    indirect_value<int>&&, const indirect_value<int>&&)
+TEMPLATE_TEST_CASE("Ref- and const-qualifier of observers", "[morpheus.memory.indirect_value.ref_constness]", indirect_value<int>&, indirect_value<int> const&,
+                   indirect_value<int>&&, indirect_value<int> const&&)
 {
     using T = TestType;
 
-    STATIC_REQUIRE(same_const_and_ref_qualifiers<T,decltype(std::declval<T>().operator*())>);
+    STATIC_REQUIRE(same_const_and_ref_qualifiers<T, decltype(std::declval<T>().operator*())>);
     STATIC_REQUIRE(same_const_and_ref_qualifiers<T, decltype(std::declval<T>().value())>);
     STATIC_REQUIRE(std::is_same_v<bool, decltype(std::declval<T>().operator bool())>);
     STATIC_REQUIRE(std::is_same_v<bool, decltype(std::declval<T>().has_value())>);
@@ -434,10 +438,12 @@ TEST_CASE("Test properties of bad_indirect_value_access", "[morpheus.memory.indi
     bad_indirect_value_access ex;
     // check that we can throw a bad_indirect_value_access and catch
     // it as const std::exception&.
-    try {
+    try
+    {
         throw ex;
     }
-    catch (const std::exception& e) {
+    catch (std::exception const& e)
+    {
         // Use std::string_view to get the correct behavior of operator==.
         std::string_view what = e.what();
         REQUIRE(what == ex.what());
@@ -450,9 +456,8 @@ TEST_CASE("Test properties of bad_indirect_value_access", "[morpheus.memory.indi
     STATIC_REQUIRE(noexcept(ex.what()));
 }
 
-TEMPLATE_TEST_CASE("Calling value on empty indirect_value will throw", "[morpheus.memory.indirect_value.access]",
-    indirect_value<int>&, const indirect_value<int>&,
-    indirect_value<int>&&, const indirect_value<int>&&)
+TEMPLATE_TEST_CASE("Calling value on empty indirect_value will throw", "[morpheus.memory.indirect_value.access]", indirect_value<int>&,
+                   indirect_value<int> const&, indirect_value<int>&&, indirect_value<int> const&&)
 {
     GIVEN("An empty indirect_value")
     {
@@ -465,9 +470,8 @@ TEMPLATE_TEST_CASE("Calling value on empty indirect_value will throw", "[morpheu
     }
 }
 
-TEMPLATE_TEST_CASE("Calling value on an enganged indirect_value will not throw", "[morpheus.memory.indirect_value.access.no_exceptions]",
-    indirect_value<int>&, const indirect_value<int>&,
-    indirect_value<int>&&, const indirect_value<int>&&)
+TEMPLATE_TEST_CASE("Calling value on an enganged indirect_value will not throw", "[morpheus.memory.indirect_value.access.no_exceptions]", indirect_value<int>&,
+                   indirect_value<int> const&, indirect_value<int>&&, indirect_value<int> const&&)
 {
     GIVEN("An enganged indirect_value")
     {
@@ -500,7 +504,7 @@ TEST_CASE("get_copier returns modifiable lvalue reference", "[morpheus.memory.in
         {
             iv.get_copier().name = "Modified";
             REQUIRE(iv.get_copier().name == "Modified");
-            SelfAssign(iv, iv);  // Force invocation of copier
+            SelfAssign(iv, iv); // Force invocation of copier
         }
     }
 }
@@ -528,7 +532,8 @@ TEST_CASE("get_deleter returns modifiable lvalue reference", "[morpheus.memory.i
     }
 }
 
-struct stats {
+struct stats
+{
     inline static int default_ctor_count = 0;
     inline static int copy_ctor_count = 0;
     inline static int move_ctor_count = 0;
@@ -538,30 +543,35 @@ struct stats {
     inline static int delete_operator_count = 0;
 
     stats() { ++default_ctor_count; }
-    stats(const stats&) { ++copy_ctor_count; }
+    stats(stats const&) { ++copy_ctor_count; }
     stats(stats&&) noexcept { ++move_ctor_count; }
-    stats& operator=(const stats&) {
+    stats& operator=(stats const&)
+    {
         ++copy_assign_count;
         return *this;
     }
-    stats& operator=(stats&&) noexcept {
+    stats& operator=(stats&&) noexcept
+    {
         ++move_assign_count;
         return *this;
     }
 
     template <class T>
-    T* operator()(const T& t) const {
+    T* operator()(T const& t) const
+    {
         ++copy_operator_count;
         return new T(t);
     }
 
     template <class T>
-    void operator()(T* p) const {
+    void operator()(T* p) const
+    {
         delete p;
         ++delete_operator_count;
     }
 
-    static void reset() {
+    static void reset()
+    {
         default_ctor_count = 0;
         copy_ctor_count = 0;
         move_ctor_count = 0;
@@ -572,17 +582,20 @@ struct stats {
     }
 };
 
-struct EmptyNo_FinalNo : stats {
+struct EmptyNo_FinalNo : stats
+{
     char data{};
 };
-struct EmptyNo_FinalYes final : stats {
+struct EmptyNo_FinalYes final : stats
+{
     char data{};
 };
 struct EmptyYes_FinalNo : stats {};
 struct EmptyYes_FinalYes final : stats {};
 
 template <class C, class D>
-void TestCopyAndDeleteStats() {
+void TestCopyAndDeleteStats()
+{
     using IV = indirect_value<int, C, D>;
 
     // Tests with an empty IV
@@ -592,8 +605,8 @@ void TestCopyAndDeleteStats() {
         IV empty;
         auto copyConstructFromEmpty = empty;
     }
-    REQUIRE(stats::default_ctor_count == (IsCombinedCopierAndDeleter ? 1: 2)); // Combined copier and deleters should only initialise once.
-    REQUIRE(stats::copy_ctor_count == (IsCombinedCopierAndDeleter ? 1 : 2)); // Combined copier and deleters should only require one copy.
+    REQUIRE(stats::default_ctor_count == (IsCombinedCopierAndDeleter ? 1 : 2)); // Combined copier and deleters should only initialise once.
+    REQUIRE(stats::copy_ctor_count == (IsCombinedCopierAndDeleter ? 1 : 2));    // Combined copier and deleters should only require one copy.
     REQUIRE(stats::move_ctor_count == 0);
     REQUIRE(stats::copy_assign_count == 0);
     REQUIRE(stats::move_assign_count == 0);
@@ -718,8 +731,8 @@ void TestCopyAndDeleteStats() {
         auto copyConstructFromEngaged = engaged;
     }
     REQUIRE(stats::default_ctor_count == (IsCombinedCopierAndDeleter ? 1 : 2)); // Combined copier and deleters should only initialise once.
-    REQUIRE(stats::copy_ctor_count == (IsCombinedCopierAndDeleter ? 1 : 2)); // Combined copier and deleters should only initialise once.
-    REQUIRE(stats::move_ctor_count == (IsCombinedCopierAndDeleter ? 1 : 2)); // One during initial construction.
+    REQUIRE(stats::copy_ctor_count == (IsCombinedCopierAndDeleter ? 1 : 2));    // Combined copier and deleters should only initialise once.
+    REQUIRE(stats::move_ctor_count == (IsCombinedCopierAndDeleter ? 1 : 2));    // One during initial construction.
     REQUIRE(stats::copy_assign_count == 0);
     REQUIRE(stats::move_assign_count == 0);
     REQUIRE(stats::copy_operator_count == 1);
@@ -902,7 +915,8 @@ TEST_CASE("Protection against reentrancy", "[TODO]") {
     }
 }*/
 
-TEST_CASE("Self assign an indirect_value", "[TODO]") {
+TEST_CASE("Self assign an indirect_value", "[TODO]")
+{
     {
         stats::reset();
         indirect_value<int, stats, stats> empty;
@@ -929,35 +943,39 @@ TEST_CASE("Self assign an indirect_value", "[TODO]") {
     REQUIRE(stats::delete_operator_count == stats::copy_operator_count + 1);
 }
 
-struct CopyConstructorThrows {
+struct CopyConstructorThrows
+{
     CopyConstructorThrows() = default;
-    CopyConstructorThrows(const CopyConstructorThrows&) { throw 0; }
+    CopyConstructorThrows(CopyConstructorThrows const&) { throw 0; }
     int id{};
 };
 
-struct CopyWithID : default_copy<CopyConstructorThrows> {
+struct CopyWithID : default_copy<CopyConstructorThrows>
+{
     int id{};
 };
 
-struct DeleteWithID : std::default_delete<CopyConstructorThrows> {
+struct DeleteWithID : std::default_delete<CopyConstructorThrows>
+{
     int id{};
 };
 
-TEST_CASE("Throwing copy constructor", "[TODO]") {
-    GIVEN("Two engaged indirect_value values") {
-        indirect_value<CopyConstructorThrows, CopyWithID, DeleteWithID> iv(
-            std::in_place);
+TEST_CASE("Throwing copy constructor", "[TODO]")
+{
+    GIVEN("Two engaged indirect_value values")
+    {
+        indirect_value<CopyConstructorThrows, CopyWithID, DeleteWithID> iv(std::in_place);
         iv->id = 1;
         iv.get_copier().id = 10;
         iv.get_deleter().id = 100;
 
-        indirect_value<CopyConstructorThrows, CopyWithID, DeleteWithID> other(
-            std::in_place);
+        indirect_value<CopyConstructorThrows, CopyWithID, DeleteWithID> other(std::in_place);
         other->id = 2;
         other.get_copier().id = 20;
         other.get_deleter().id = 200;
 
-        THEN("A throwing copy constructor should not change the objects") {
+        THEN("A throwing copy constructor should not change the objects")
+        {
             REQUIRE_THROWS_AS(iv = other, int);
 
             REQUIRE(iv->id == 1);
@@ -970,34 +988,38 @@ TEST_CASE("Throwing copy constructor", "[TODO]") {
     }
 }
 
-struct CopierWithCallback {
+struct CopierWithCallback
+{
     std::function<void()> callback;
 
     CopierWithCallback() = default;
     // Intentionally don't copy callback
-    CopierWithCallback(const CopierWithCallback&) {}
-    CopierWithCallback& operator=(const CopierWithCallback&) { return *this; }
+    CopierWithCallback(CopierWithCallback const&) {}
+    CopierWithCallback& operator=(CopierWithCallback const&) { return *this; }
 
     template <class T>
-    T* operator()(const T& t) const {
+    T* operator()(T const& t) const
+    {
         REQUIRE(callback);
         callback();
         return new T(t);
     }
 };
 template <>
-struct copier_traits<CopierWithCallback> {
+struct copier_traits<CopierWithCallback>
+{
     using deleter_type = std::default_delete<int>;
 };
 
-TEST_CASE("Use source copier when copying", "[TODO]") {
-    GIVEN("An engaged indirect_value with CopierWithCallback") {
+TEST_CASE("Use source copier when copying", "[TODO]")
+{
+    GIVEN("An engaged indirect_value with CopierWithCallback")
+    {
         indirect_value<int, CopierWithCallback> engagedSource(std::in_place);
         int copyCounter = 0;
-        engagedSource.get_copier().callback = [&copyCounter]() mutable {
-            ++copyCounter;
-        };
-        THEN("Coping will call engagedSources copier") {
+        engagedSource.get_copier().callback = [&copyCounter]() mutable { ++copyCounter; };
+        THEN("Coping will call engagedSources copier")
+        {
             REQUIRE(copyCounter == 0);
             indirect_value<int, CopierWithCallback> copy(engagedSource);
             REQUIRE(copyCounter == 1);
@@ -1043,52 +1065,65 @@ TEST_CASE("Working with an incomplete type", "[morpheus.memory.indirect_value.co
     }
 }
 
+namespace
+{
+template <typename T>
+struct tracking_allocator
+{
+    unsigned* alloc_counter;
+    unsigned* dealloc_counter;
 
-namespace {
-    template <typename T>
-    struct tracking_allocator {
-        unsigned* alloc_counter;
-        unsigned* dealloc_counter;
+    explicit tracking_allocator(unsigned* a, unsigned* d) noexcept
+        : alloc_counter(a)
+        , dealloc_counter(d)
+    {}
 
-        explicit tracking_allocator(unsigned* a, unsigned* d) noexcept
-            : alloc_counter(a), dealloc_counter(d) {}
+    template <typename U>
+    explicit tracking_allocator(tracking_allocator<U> const& other) noexcept
+        : alloc_counter(other.alloc_counter)
+        , dealloc_counter(other.dealloc_counter)
+    {}
 
-        template <typename U>
-        explicit tracking_allocator(tracking_allocator<U> const& other) noexcept
-            : alloc_counter(other.alloc_counter),
-            dealloc_counter(other.dealloc_counter) {}
+    using value_type = T;
 
-        using value_type = T;
-
-        template <typename Other>
-        struct rebind {
-            using other = tracking_allocator<Other>;
-        };
-
-        constexpr T* allocate(std::size_t n) {
-            ++* alloc_counter;
-            std::allocator<T> default_allocator{}; // LCOV_EXCL_LINE
-            return default_allocator.allocate(n);
-        }
-        constexpr void deallocate(T* p, std::size_t n) {
-            ++* dealloc_counter;
-            std::allocator<T> default_allocator{};
-            default_allocator.deallocate(p, n);
-        }
+    template <typename Other>
+    struct rebind
+    {
+        using other = tracking_allocator<Other>;
     };
-}  // namespace
 
-struct CompositeType {
+    constexpr T* allocate(std::size_t n)
+    {
+        ++*alloc_counter;
+        std::allocator<T> default_allocator{}; // LCOV_EXCL_LINE
+        return default_allocator.allocate(n);
+    }
+    constexpr void deallocate(T* p, std::size_t n)
+    {
+        ++*dealloc_counter;
+        std::allocator<T> default_allocator{};
+        default_allocator.deallocate(p, n);
+    }
+};
+} // namespace
+
+struct CompositeType
+{
     int value_ = 0;
 
     CompositeType() { ++object_count; }
 
-    CompositeType(const CompositeType& d) {
+    CompositeType(CompositeType const& d)
+    {
         value_ = d.value_;
         ++object_count;
     }
 
-    CompositeType(int v) : value_(v) { ++object_count; }
+    CompositeType(int v)
+        : value_(v)
+    {
+        ++object_count;
+    }
 
     ~CompositeType() { --object_count; }
 
@@ -1156,18 +1191,16 @@ struct IsHashable : std::false_type
 {};
 
 template <class T>
-struct IsHashable<T, std::void_t<decltype(std::hash<T>{}(std::declval<const T&>()))>> : std::true_type
+struct IsHashable<T, std::void_t<decltype(std::hash<T>{}(std::declval<T const&>()))>> : std::true_type
 {
-    static constexpr bool IsNoexcept = noexcept(std::hash<T>{}(std::declval<const T&>()));
+    static constexpr bool IsNoexcept = noexcept(std::hash<T>{}(std::declval<T const&>()));
 };
-
-
 
 TEST_CASE("std::hash customisation for indirect_value", "[morpheus.memory.indirect_value.std_hash]")
 {
     GIVEN("An empty indirect")
     {
-        const indirect_value<int> empty;
+        indirect_value<int> const empty;
 
         THEN("The hash should be zero")
         {
@@ -1178,12 +1211,12 @@ TEST_CASE("std::hash customisation for indirect_value", "[morpheus.memory.indire
 
     GIVEN("A non-empty indirect")
     {
-        const indirect_value<int> nonEmpty(std::in_place, 55);
+        indirect_value<int> const nonEmpty(std::in_place, 55);
 
         THEN("The hash values should be equal")
         {
-            const std::size_t intHash = std::hash<int>{}(*nonEmpty);
-            const std::size_t indirectValueHash = std::hash<indirect_value<int>>{}(nonEmpty);
+            std::size_t const intHash = std::hash<int>{}(*nonEmpty);
+            std::size_t const indirectValueHash = std::hash<indirect_value<int>>{}(nonEmpty);
             REQUIRE(intHash == indirectValueHash);
         }
     }
@@ -1203,4 +1236,4 @@ TEST_CASE("std::hash customisation for indirect_value", "[morpheus.memory.indire
     }
 }
 
-} // morpheus::memory
+} // namespace morpheus::memory

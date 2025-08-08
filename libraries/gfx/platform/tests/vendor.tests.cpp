@@ -21,4 +21,4 @@ TEST_CASE("Ensure image accessors", "[morpheus.gfx.vendor.vendorFromPciId]")
     }
 }
 
-}
+} // namespace morpheus::gfx

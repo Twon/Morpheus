@@ -39,7 +39,7 @@ public:
     /// Equality operator for NamedEndpoint.
     /// \param rhs The NamedEndpoint to compare against.
     /// \return True if the NamedEndpoint objects are equal, false otherwise.
-    [[nodiscard]] bool operator==(const NamedEndpoint& rhs) const noexcept { return std::tie(mName, mPort) == std::tie(rhs.mName, rhs.mPort); }
+    [[nodiscard]] bool operator==(NamedEndpoint const& rhs) const noexcept { return std::tie(mName, mPort) == std::tie(rhs.mName, rhs.mPort); }
 #endif
 
 private:
