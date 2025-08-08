@@ -49,6 +49,21 @@ public:
 
     [[nodiscard]] auto const& name() const noexcept { return mWindowName; }
 
+    //! The width in pixels of the render window.
+    [[nodiscard]] std::uint16_t width() const noexcept { return RenderTarget::width(); }
+
+    //! The height in pixels of the render window.
+    [[nodiscard]] std::uint16_t height() const noexcept { return RenderTarget::height(); }
+
+    //! The colour depth of the pixels of the render window.
+    [[nodiscard]] std::uint16_t colourDepth() const noexcept { return RenderTarget::colourDepth(); }
+
+    //! The location of the start pixel in the X-coordinate screen space of the render window.
+    [[nodiscard]] std::uint16_t startX() const noexcept { return mStartX; }
+
+    //! The location of the start pixel in the Y-coordinate screen space of the render window.
+    [[nodiscard]] std::uint16_t startY() const noexcept { return mStartY; }
+
     //    bool isHidden() const noexcept
     //    bool isFocus() const noexcept
 
