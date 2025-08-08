@@ -1,6 +1,6 @@
+#include "morpheus/gfx/platform/render_window.hpp"
 #include "morpheus/application/po/options.hpp"
 #include "morpheus/application/version.hpp"
-#include "morpheus/gfx/platform/render_window.hpp"
 #include "morpheus/logging.hpp"
 
 #include <catch2/catch_test_macros.hpp>
@@ -39,5 +39,21 @@ TEST_CASE_METHOD(LoggingFixture, "Test parsing of WindowConfig options", "[morph
     REQUIRE(config.fullScreen == true);
     REQUIRE(config.visible == true);
 }
+
+TEST_CASE_METHOD(LoggingFixture, "Test construction of a render window via a config", "[morpheus.gfx.window_config.add_options]")
+{
+    WindowConfig config;
+    RenderWindow window(config);
+
+    REQUIRE(window.name() == "MorpheusWindow");
+    REQUIRE(window.width() == 800);
+    REQUIRE(window.height() == 600);
+    REQUIRE(window.colourDepth() == 32);
+    REQUIRE(window.startX() == 0);
+    REQUIRE(window.startY() == 0);
+    REQUIRE(window.fullScreen() == false);
+}
+
+
 
 } // namespace morpheus::gfx
