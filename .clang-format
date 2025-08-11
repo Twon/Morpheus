@@ -53,7 +53,7 @@ AlwaysBreakTemplateDeclarations: Yes
 #   - __capability
 # BinPackArguments: false
 # BinPackParameters: false
-# BitFieldColonSpacing: Both
+BitFieldColonSpacing: Both
 BraceWrapping:
   AfterCaseLabel:  true
   AfterClass:      true
@@ -175,15 +175,15 @@ QualifierOrder:
   - type
   - const
   - volatile
-# ReferenceAlignment: Pointer
-# ReflowComments:  true
-# RemoveBracesLLVM: false
+ReferenceAlignment: Pointer
+ReflowComments:  true
+RemoveBracesLLVM: false
 RemoveEmptyLinesInUnwrappedLines: true
 RemoveParentheses: Leave
 # RemoveSemicolon: false
 RequiresClausePosition: OwnLine
 RequiresExpressionIndentation: OuterScope
-# SeparateDefinitionBlocks: Leave
+SeparateDefinitionBlocks: Leave
 ShortNamespaceLines: 1
 SortIncludes:    CaseSensitive
 SortUsingDeclarations: LexicographicNumeric

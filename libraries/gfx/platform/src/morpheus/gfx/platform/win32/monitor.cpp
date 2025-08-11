@@ -7,7 +7,8 @@
 namespace morpheus::gfx::win32
 {
 
-BOOL CALLBACK MonitorEnumProc(HMONITOR hMon, HDC, LPRECT, LPARAM lParam) {
+BOOL CALLBACK MonitorEnumProc(HMONITOR hMon, HDC, LPRECT, LPARAM lParam)
+{
     // LCOV_EXCL_START
     std::vector<Monitor>* monitors = reinterpret_cast<std::vector<Monitor>*>(lParam);
     MONITORINFOEX info{};
@@ -31,7 +32,8 @@ concurrency::Generator<Monitor> enumerateMonitors() noexcept
     // LCOV_EXCL_START
     std::vector<Monitor> result;
     EnumDisplayMonitors(nullptr, nullptr, MonitorEnumProc, reinterpret_cast<LPARAM>(&result));
-    for (const auto& monitor : result) {
+    for (auto const& monitor : result)
+    {
         co_yield monitor;
     }
     // LCOV_EXCL_STOP

@@ -6,7 +6,7 @@
 namespace morpheus::meta
 {
 
-template <template<std::size_t> typename Predicate, std::size_t Begin, std::size_t End>
+template <template <std::size_t> typename Predicate, std::size_t Begin, std::size_t End>
 struct BinarySearch;
 
 /// \struct BinarySearch
@@ -17,7 +17,7 @@ struct BinarySearch;
 /// \tparam End The end index of the range to search.
 /// \code
 /// \endcode
-template <template<std::size_t> typename Predicate, std::size_t Begin, std::size_t End>
+template <template <std::size_t> typename Predicate, std::size_t Begin, std::size_t End>
 struct BinarySearch : std::conditional_t<
     ((End - Begin) <= 1),
     std::integral_constant<std::size_t, Begin>,
@@ -28,29 +28,21 @@ struct BinarySearch : std::conditional_t<
     >
 >{};
 
-template<template<std::size_t> typename Predicate, std::size_t Begin, std::size_t End>
+template <template <std::size_t> typename Predicate, std::size_t Begin, std::size_t End>
 constexpr std::size_t BinarySearch_v = BinarySearch<Predicate, Begin, End>::value;
 
-
-
-
-template <template<std::size_t> typename Predicate,
-    std::size_t Beg, std::size_t End>
+template <template <std::size_t> typename Predicate, std::size_t Beg, std::size_t End>
 struct binary_search;
-template <template<std::size_t> typename Predicate,
-    std::size_t Beg, std::size_t End>
+template <template <std::size_t> typename Predicate, std::size_t Beg, std::size_t End>
 using binary_search_base =
     std::conditional_t<(End - Beg <= 1),
     std::integral_constant<std::size_t, Beg>,
     std::conditional_t<Predicate<(Beg + End) / 2>::value,
         binary_search<Predicate, (Beg + End) / 2, End>,
         binary_search<Predicate, Beg, (Beg + End) / 2>>>;
-template <template<std::size_t> typename Predicate,
-    std::size_t Beg, std::size_t End>
+template <template <std::size_t> typename Predicate, std::size_t Beg, std::size_t End>
 struct binary_search : binary_search_base<Predicate, Beg, End> {};
-template <template<std::size_t> typename Predicate,
-    std::size_t Beg, std::size_t End>
-constexpr std::size_t binary_search_v
-    = binary_search<Predicate, Beg, End>::value;
+template <template <std::size_t> typename Predicate, std::size_t Beg, std::size_t End>
+constexpr std::size_t binary_search_v = binary_search<Predicate, Beg, End>::value;
 
 } // namespace morpheus::meta

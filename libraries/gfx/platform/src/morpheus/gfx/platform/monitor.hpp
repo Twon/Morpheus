@@ -33,14 +33,13 @@ public:
         Pixels const height,
         bool const primary = false
     )   noexcept
-    :   mName(name)
-    ,   mX(x)
-    ,   mY(y)
-    ,   mWidth(width)
-    ,   mHeight(height)
-    ,   mPrimary(primary)
-    {
-    }
+        : mName(name)
+        , mX(x)
+        , mY(y)
+        , mWidth(width)
+        , mHeight(height)
+        , mPrimary(primary)
+    {}
     ///@}
 
     /// Access the adapter name.

@@ -1,17 +1,18 @@
 #include <catch2/catch_all.hpp>
-#include <gtest/gtest.h>
 #include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
 #include <cstddef>
 
 namespace morpheus
 {
 
-namespace {
+namespace
+{
 
 struct Listener : public testing::EmptyTestEventListener
 {
-    void OnTestPartResult(const testing::TestPartResult& result) override
+    void OnTestPartResult(testing::TestPartResult const& result) override
     {
         ::Catch::SourceLineInfo const sourceLineInfo(
             result.file_name() ? result.file_name() : "unknown",
@@ -29,7 +30,7 @@ struct Listener : public testing::EmptyTestEventListener
     }
 };
 
-}
+} // namespace
 
 void enableGmockAdapter(char* argv[])
 {

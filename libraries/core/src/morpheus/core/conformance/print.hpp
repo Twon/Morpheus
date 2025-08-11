@@ -2,11 +2,11 @@
 
 #include <morpheus/core/conformance/version.hpp>
 
+// clang-format off
 #if __has_include(<print>)
     #include <print> // IWYU pragma: export
 #endif // #if __has_include(<print>)
 
-// clang-format off
 #if (__cpp_lib_print >= 202207L && (__cpp_lib_format >= 201907L)) // Clang 18 support for std::print but has a incomplete implementation of std::format, just use FMT in this case.
     namespace morpheus { namespace print_ns = std; }
 #else
