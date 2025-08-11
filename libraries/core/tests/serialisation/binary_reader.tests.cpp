@@ -31,8 +31,8 @@ namespace morpheus::serialisation
 
 TEST_CASE("Binary reader handles error cases gracefully", "[morpheus.serialisation.binary_reader.error_handling]")
 {
-    auto constexpr bytes = testing::makeBytes(0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00);
-    auto constexpr string = std::string_view{"String longer than 4-bytes"};
+    constexpr auto bytes = testing::makeBytes(0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00);
+    constexpr auto string = std::string_view{"String longer than 4-bytes"};
 
 #if (__cpp_lib_spanstream >= 202106L)
     SECTION("Serialise via spanstream to test failure condition when the the underling stream runs out of memory while writing but does not throw an exception")

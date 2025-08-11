@@ -10,7 +10,8 @@ namespace morpheus::gfx::metal
 /*! \class Adapter
         Describes an available graphic devices on the target platform.
  */
-class Adapter {
+class Adapter
+{
 public:
     /// \name Life cycle
     ///@{
@@ -35,6 +36,7 @@ public:
     Adapter& operator=(Adapter&& rhs) noexcept;
     Adapter& operator=(Adapter const& rhs);
     ~Adapter();
+
 private:
     struct Implementation;
 

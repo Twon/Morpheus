@@ -10,11 +10,10 @@ Image::Image(
     std::uint32_t const height,
     std::uint32_t const colourDepth
 )
-:   mWidth(width),
-    mHeight(height),
-    mColourDepth(colourDepth)
-{
-}
+    : mWidth(width)
+    , mHeight(height)
+    , mColourDepth(colourDepth)
+{}
 
 //---------------------------------------------------------------------------------------------------------------------
 

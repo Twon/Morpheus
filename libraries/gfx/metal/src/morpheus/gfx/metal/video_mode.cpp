@@ -10,11 +10,10 @@ video_mode::video_mode(
     const std::uint32_t height,
     const std::uint32_t colourDepth
 )
-:   mWidth(width),
-    mHeight(height),
-    mColourDepth(colourDepth)
-{
-}
+    : mWidth(width)
+    , mHeight(height)
+    , mColourDepth(colourDepth)
+{}
 
 //---------------------------------------------------------------------------------------------------------------------
 

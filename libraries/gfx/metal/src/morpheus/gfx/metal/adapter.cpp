@@ -5,7 +5,7 @@ namespace morpheus::gfx::metal
 
 class Adapter::Implementation
 {
-//    implementation() = default;
+    //    implementation() = default;
 };
 
 Adapter::Adapter() = default;
@@ -22,8 +22,7 @@ Adapter::Adapter(
     std::uint32_t const /*height*/,
     std::uint32_t const /*colourDepth*/
 )
-{
-}
+{}
 
 //---------------------------------------------------------------------------------------------------------------------
 
