@@ -1,7 +1,7 @@
+#include "morpheus/core/meta/aggregate.hpp"
 #include "morpheus/core/meta/concepts/aggregate.hpp"
 #include "morpheus/core/meta/concepts/aggregate_constructible.hpp"
 #include "morpheus/core/meta/detail/any.hpp"
-#include "morpheus/core/meta/aggregate.hpp"
 
 #include <catch2/catch_all.hpp>
 
@@ -23,8 +23,8 @@ struct AggregateWithArray
 
 TEST_CASE("Aggregate allows constraining a type to being an aggregate", "[morpheus.meta.aggregate.fieldsCount]")
 {
-//    STATIC_REQUIRE(fieldsCount<SimpleAggregate>() == 3);
-//    STATIC_REQUIRE(fieldsCount<AggregateWithArray>() == 2);
+    //    STATIC_REQUIRE(fieldsCount<SimpleAggregate>() == 3);
+    //    STATIC_REQUIRE(fieldsCount<AggregateWithArray>() == 2);
 }
 
 struct TestAggregate
@@ -45,7 +45,8 @@ TEST_CASE("Aggregate allows constraining a type to being an aggregate", "[morphe
     STATIC_REQUIRE(!concepts::Aggregate<TestNonAggregate>);
 }
 
-TEST_CASE("Aggregate constructable allows constraining a type to being an aggregate and constructable from a given set of parameter types", "[morpheus.meta.concept.aggregate_constructable]")
+TEST_CASE("Aggregate constructable allows constraining a type to being an aggregate and constructable from a given set of parameter types",
+          "[morpheus.meta.concept.aggregate_constructable]")
 {
 #if (__cpp_aggregate_paren_init >= 201902L)
     STATIC_REQUIRE(concepts::AggregateConstructable<TestAggregate, int>);

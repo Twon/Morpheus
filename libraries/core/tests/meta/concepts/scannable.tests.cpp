@@ -1,3 +1,4 @@
+#include "morpheus/core/meta/concepts/scannable.hpp"
 #include "morpheus/core/conformance/ranges.hpp"
 #include "morpheus/core/conformance/scan.hpp"
 #include "morpheus/core/meta/concepts/scannable.hpp"
@@ -27,7 +28,6 @@ struct morpheus::scan_ns::scanner<ScannableType> : morpheus::scan_ns::scanner<st
                 });
     }
 };
-
 
 namespace morpheus::meta::concepts
 {
