@@ -29,11 +29,10 @@ public:
         std::string_view const name,
         Vendor const vendor
     )   noexcept(noexcept(std::is_nothrow_move_assignable_v<IdType>))
-    :   mAdapterId(adapterId)
-    ,   mName(name)
-    ,   mVendor(vendor)
-    {
-    }
+        : mAdapterId(adapterId)
+        , mName(name)
+        , mVendor(vendor)
+    {}
     ///@}
 
     /// Access the adapter Id.

@@ -14,15 +14,14 @@ namespace morpheus::gfx::concepts
         of the hardware.
  */
 template <typename T>
-concept RenderSystem = requires(T t)
-{
+concept RenderSystem = requires(T t) {
     typename T::Window;
 
-//    requires !meta::Copyable<T>;
-//    { t.adapters() } -> AdapterRange;
+    //    requires !meta::Copyable<T>;
+    //    { t.adapters() } -> AdapterRange;
 
-//    { t.beginFrame() } -> std::same_as<void>;
-//    { t.endFrame() } -> std::same_as<void>;
+    //    { t.beginFrame() } -> std::same_as<void>;
+    //    { t.endFrame() } -> std::same_as<void>;
 };
 
 } // namespace morpheus::gfx::concepts

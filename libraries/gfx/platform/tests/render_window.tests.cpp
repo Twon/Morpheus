@@ -15,6 +15,7 @@ namespace morpheus::gfx
 
 TEST_CASE_METHOD(LoggingFixture, "Test parsing of WindowConfig options", "[morpheus.gfx.window_config.add_options]")
 {
+    // clang-format off
     std::array cliOptions = {
         "dummyProgram.exe",
         "--window-name", "Test Window",
@@ -26,8 +27,9 @@ TEST_CASE_METHOD(LoggingFixture, "Test parsing of WindowConfig options", "[morph
         "--full-screen", "true",
         "--visible", "true"
     };
+    // clang-format on
     WindowConfig config;
-    auto const result = application::po::parseProgramOptions(static_cast<int>(cliOptions.size()), cliOptions.data(), application::po::HelpDocumentation{}, config);
+    auto const result = application::po::parseProgramOptions(std::span(cliOptions), application::po::HelpDocumentation{}, config);
     REQUIRE(!result);
 
     REQUIRE(config.windowName == "Test Window");
@@ -53,7 +55,5 @@ TEST_CASE_METHOD(LoggingFixture, "Test construction of a render window via a con
     REQUIRE(window.startY() == 0);
     REQUIRE(window.fullScreen() == false);
 }
-
-
 
 } // namespace morpheus::gfx

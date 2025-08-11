@@ -32,12 +32,11 @@ public:
         std::uint16_t const colourDepth,
         std::uint16_t const refreshRate
     ) noexcept
-    :   mWidth(width),
-        mHeight(height),
-        mColourDepth(colourDepth),
-        mRefreshRate(refreshRate)
-    {
-    }
+        : mWidth(width)
+        , mHeight(height)
+        , mColourDepth(colourDepth)
+        , mRefreshRate(refreshRate)
+    {}
     ///@}
 
     /// The width in pixels of the render target.
