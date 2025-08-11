@@ -63,8 +63,8 @@ TEST_CASE("Meta Traits allows applying traits as a concept", "[morpheus.meta.con
         struct ConstructibleTest
         {
             ConstructibleTest(int a, int b)
-            : a_(a)
-            , b_(b)
+                : a_(a)
+                , b_(b)
             {}
 
             int a_;

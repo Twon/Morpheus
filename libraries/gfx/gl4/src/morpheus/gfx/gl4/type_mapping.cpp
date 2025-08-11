@@ -6,15 +6,14 @@ namespace morpheus::gfx::gl4
 //---------------------------------------------------------------------------------------------------------------------
 
 TypeMapping::TypeMapping(
-//    const std::uint32_t width,
-//    const std::uint32_t height,
-//    const std::uint32_t colourDepth
+    //    const std::uint32_t width,
+    //    const std::uint32_t height,
+    //    const std::uint32_t colourDepth
 )
 //:   mWidth(width),
 //    mHeight(height),
 //    mColourDepth(colourDepth)
-{
-}
+{}
 
 //---------------------------------------------------------------------------------------------------------------------
 

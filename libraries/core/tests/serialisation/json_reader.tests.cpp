@@ -39,7 +39,8 @@ using namespace Catch;
 namespace morpheus::serialisation
 {
 
-namespace test {
+namespace test
+{
 
 struct ISteamCopier
 {
@@ -58,7 +59,7 @@ struct ISteamCopier
     }
 };
 
-template<typename T>
+template <typename T>
 T deserialise(std::string_view const value, bool const validate = true)
 {
     using namespace memory;
@@ -78,8 +79,8 @@ auto readerFromString(std::string_view const value)
 
 } // namespace test
 
-TEMPLATE_TEST_CASE("Json writer can write single native types to underlying text representation", "[morpheus.serialisation.json_reader.native]",
-    bool, std::int8_t, std::uint8_t, std::int16_t, std::uint16_t, std::int32_t, std::uint32_t, std::int64_t, std::uint64_t, float, double)
+TEMPLATE_TEST_CASE("Json writer can write single native types to underlying text representation", "[morpheus.serialisation.json_reader.native]", bool,
+                   std::int8_t, std::uint8_t, std::int16_t, std::uint16_t, std::int32_t, std::uint32_t, std::int64_t, std::uint64_t, float, double)
 {
     if constexpr (std::is_integral_v<TestType>)
     {
@@ -114,7 +115,10 @@ TEST_CASE("Create and then copy a reader and read from the copied stream", "[mor
             JsonReader reader = test::readerFromString(str);
             JsonReader copiedReader(reader);
 
-            THEN("Expect an empty composite in the json document") { REQUIRE("value" == copiedReader.read<std::string>()); }
+            THEN("Expect an empty composite in the json document")
+            {
+                REQUIRE("value" == copiedReader.read<std::string>());
+            }
         }
     }
 }
@@ -127,7 +131,7 @@ TEST_CASE("Json reader providess basic reader functionality", "[morpheus.seriali
 
         WHEN("Read an single value from the stream")
         {
-            JsonReader reader =  test::readerFromString(str);
+            JsonReader reader = test::readerFromString(str);
 
             THEN("Expect an empty composite in the json document")
             {
@@ -141,7 +145,7 @@ TEST_CASE("Json reader providess basic reader functionality", "[morpheus.seriali
 
         WHEN("Read an empty composite from the stream")
         {
-            JsonReader reader =  test::readerFromString(str);
+            JsonReader reader = test::readerFromString(str);
 
             THEN("Expect an empty composite in the json document")
             {
@@ -156,7 +160,7 @@ TEST_CASE("Json reader providess basic reader functionality", "[morpheus.seriali
 
         WHEN("Read a composite of key pair from the stream")
         {
-            JsonReader reader =  test::readerFromString(str);
+            JsonReader reader = test::readerFromString(str);
 
             THEN("Expect an empty composite in the json document")
             {
@@ -174,7 +178,7 @@ TEST_CASE("Json reader providess basic reader functionality", "[morpheus.seriali
 
         WHEN("Read a composite of key to null pair from the stream")
         {
-            JsonReader reader =  test::readerFromString(str);
+            JsonReader reader = test::readerFromString(str);
 
             THEN("Expect an empty composite in the json document")
             {
@@ -196,7 +200,7 @@ struct SimpleComposite
     float third = 0.0f;
     std::string forth;
 
-    template<concepts::ReadSerialiser Serialiser>
+    template <concepts::ReadSerialiser Serialiser>
     void deserialise(Serialiser& s)
     {
         first = s.template deserialise<decltype(first)>("first");
@@ -211,14 +215,13 @@ struct ComplexComposite
     SimpleComposite first;
     float second = 0.0f;
 
-    template<concepts::ReadSerialiser Serialiser>
+    template <concepts::ReadSerialiser Serialiser>
     void deserialise(Serialiser& s)
     {
         first = s.template deserialise<decltype(first)>("first");
         second = s.template deserialise<decltype(second)>("second");
     }
 };
-
 
 TEST_CASE("Json reader can read simple composite types from underlying test representation", "[morpheus.serialisation.json_reader.composite]")
 {
@@ -350,7 +353,7 @@ TEST_CASE("Json reader can read std types from underlying text representation", 
     REQUIRE(test::deserialise<std::pair<int, bool>>(R"([50,true])") == std::pair<int, bool>{50, true});
     REQUIRE(test::deserialise<std::string>(R"("Hello")") == std::string("Hello"));
     REQUIRE(test::deserialise<std::tuple<int, bool, std::string>>(R"([75,true,"Example"])") == std::tuple<int, bool, std::string>{75, true, "Example"});
-//    REQUIRE(test::deserialise<std::variant<int, bool, std::string>>(R"({"type":"bool","value":true})") == std::variant<int, bool, std::string>{true});
+    //    REQUIRE(test::deserialise<std::variant<int, bool, std::string>>(R"({"type":"bool","value":true})") == std::variant<int, bool, std::string>{true});
     REQUIRE(*test::deserialise<std::unique_ptr<int>>(R"(50)") == 50);
 }
 

@@ -59,12 +59,8 @@ exp_ns::expected<std::tuple<DisplayPtr, WindowPtr>, std::string> makeWindow(Disp
         return exp_ns::unexpected("Display pointer is null!"s);
     }
 
-    ::Window window = XCreateSimpleWindow(
-        display.get(), DefaultRootWindow(display.get()),
-        config.startX, config.startY,
-        config.width, config.height,
-        1, BlackPixel(display.get(), 0), WhitePixel(display.get(), 0)
-    );
+    ::Window window = XCreateSimpleWindow(display.get(), DefaultRootWindow(display.get()), config.startX, config.startY, config.width, config.height, 1,
+                                          BlackPixel(display.get(), 0), WhitePixel(display.get(), 0));
 
     if (!window)
     {
