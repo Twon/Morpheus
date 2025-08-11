@@ -15,10 +15,10 @@
 /// \def MORPHEUS_CPP_LIB_CHRONO_FORMATTING
 ///   Ensures that std::format support for std::chrono is implemented as specified in
 ///  https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2018/p0355r7.html
-#define MORPHEUS_CPP_LIB_CHRONO_FORMATTING                                                                                                                     \
-    (((MORPHEUS_COMPILER == MORPHEUS_VISUALSTUDIO_COMPILER) && (__cpp_lib_chrono < 201907L)) ||                                                                \
-     ((MORPHEUS_COMPILER == MORPHEUS_GNUC_COMPILER) && (MORPHEUS_COMP_VER < 140000000)) ||                                                                     \
-     ((MORPHEUS_COMPILER == MORPHEUS_CLANG_COMPILER) && (MORPHEUS_COMP_VER < 200000000)) ||                                                                    \
+#define MORPHEUS_CPP_LIB_CHRONO_FORMATTING                                                      \
+    (((MORPHEUS_COMPILER == MORPHEUS_VISUALSTUDIO_COMPILER) && (__cpp_lib_chrono < 201907L)) || \
+     ((MORPHEUS_COMPILER == MORPHEUS_GNUC_COMPILER) && (MORPHEUS_COMP_VER < 140000000)) ||      \
+     ((MORPHEUS_COMPILER == MORPHEUS_CLANG_COMPILER) && (MORPHEUS_COMP_VER < 200000000)) ||     \
      ((MORPHEUS_COMPILER == MORPHEUS_APPLE_CLANG_COMPILER) && (MORPHEUS_COMP_VER < 150000000)))
 
 #if MORPHEUS_CPP_LIB_CHRONO_FORMATTING

@@ -2,12 +2,12 @@
 
 #include <morpheus/core/base/assert_handler.hpp>
 
-#define MORPHEUS_VERIFY_HANDLER(type, expr, msg)                                                                                                               \
-    do                                                                                                                                                         \
-    {                                                                                                                                                          \
-        if ((!static_cast<bool>(expr))) [[unlikely]]                                                                                                           \
-            assertHandler(type, MORPHEUS_CURRENT_LOCATION, #expr, msg);                                                                                        \
-    }                                                                                                                                                          \
+#define MORPHEUS_VERIFY_HANDLER(type, expr, msg)                        \
+    do                                                                  \
+    {                                                                   \
+        if ((!static_cast<bool>(expr))) [[unlikely]]                    \
+            assertHandler(type, MORPHEUS_CURRENT_LOCATION, #expr, msg); \
+    }                                                                   \
     while (0)
 
 /// \def MORPHEUS_VERIFY
