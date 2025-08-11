@@ -45,7 +45,7 @@ TEST_CASE_METHOD(LoggingFixture, "Test parsing of enums as options", "[morpheus.
         {
             Preferences preferences{};
             std::array cliOptions = {"dummyProgram.exe", "--drink", param.data()};
-            auto const result = parseProgramOptions(static_cast<int>(cliOptions.size()), cliOptions.data(), HelpDocumentation{}, preferences);
+            auto const result = parseProgramOptions(cliOptions, HelpDocumentation{}, preferences);
             REQUIRE(!result);
             return preferences.drink;
         };
@@ -59,7 +59,7 @@ TEST_CASE_METHOD(LoggingFixture, "Test parsing of enums as options", "[morpheus.
     {
         std::array cliOptions = {"dummyProgram.exe", "--drink", "invalid"};
         Preferences preferences{};
-        auto const result = parseProgramOptions(static_cast<int>(cliOptions.size()), cliOptions.data(), HelpDocumentation{}, preferences);
+        auto const result = parseProgramOptions(cliOptions, HelpDocumentation{}, preferences);
         REQUIRE(result);
     }
 }

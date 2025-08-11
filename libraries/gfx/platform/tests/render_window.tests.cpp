@@ -29,7 +29,7 @@ TEST_CASE_METHOD(LoggingFixture, "Test parsing of WindowConfig options", "[morph
     };
     // clang-format on
     WindowConfig config;
-    auto const result = application::po::parseProgramOptions(std::span(cliOptions), application::po::HelpDocumentation{}, config);
+    auto const result = application::po::parseProgramOptions(cliOptions, application::po::HelpDocumentation{}, config);
     REQUIRE(!result);
 
     REQUIRE(config.windowName == "Test Window");

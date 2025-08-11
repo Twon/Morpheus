@@ -40,7 +40,7 @@ TEST_CASE_METHOD(LoggingFixture, "Test parsing of std filesystem path as options
         {
             Filesystem filesystem{};
             std::array cliOptions = {"dummyProgram.exe", "--path", param.data()};
-            auto const result = parseProgramOptions(static_cast<int>(cliOptions.size()), cliOptions.data(), HelpDocumentation{}, filesystem);
+            auto const result = parseProgramOptions(cliOptions, HelpDocumentation{}, filesystem);
             REQUIRE(!result);
             return filesystem.path;
         };

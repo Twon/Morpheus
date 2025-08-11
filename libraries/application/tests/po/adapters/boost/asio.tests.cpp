@@ -49,7 +49,7 @@ TEST_CASE_METHOD(BoostLogFixture, "Test parsing of boost asio address as program
         {
             Address address{};
             std::array cliOptions = {"dummyProgram.exe", "--address", param.data()};
-            auto const result = parseProgramOptions(static_cast<int>(cliOptions.size()), cliOptions.data(), HelpDocumentation{}, address);
+            auto const result = parseProgramOptions(cliOptions, HelpDocumentation{}, address);
             REQUIRE(!result);
             return address.ipAddress;
         };
@@ -64,7 +64,7 @@ TEST_CASE_METHOD(BoostLogFixture, "Test parsing of boost asio address as program
     {
         std::array cliOptions = {"dummyProgram.exe", "--address", "invalid"};
         Address address;
-        auto const result = parseProgramOptions(static_cast<int>(cliOptions.size()), cliOptions.data(), HelpDocumentation{}, address);
+        auto const result = parseProgramOptions(cliOptions, HelpDocumentation{}, address);
         REQUIRE(result);
     }
 }
