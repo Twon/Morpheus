@@ -13,7 +13,8 @@ BOOL CALLBACK MonitorEnumProc(HMONITOR hMon, HDC, LPRECT, LPARAM lParam)
     std::vector<Monitor>* monitors = reinterpret_cast<std::vector<Monitor>*>(lParam);
     MONITORINFOEX info{};
     info.cbSize = sizeof(info);
-     if (GetMonitorInfo(hMon, &info)) {
+    if (GetMonitorInfo(hMon, &info))
+    {
         monitors->emplace_back(Monitor{
             info.szDevice,
             static_cast<Monitor::PixelDiff>(info.rcMonitor.left),
