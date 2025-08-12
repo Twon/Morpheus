@@ -23,14 +23,15 @@ namespace
 /// \brief Override the default termination handler to print the call stack before exiting the program to aid debugging.
 void terminationHandler()
 {
+    // LCOV_EXCL_START
     try
     {
         debugPrint(fmt_ns::format("{}", MORPHEUS_CURRENT_STACKTRACE));
     }
     catch (...)
-    {
-    }
+    {}
     std::abort();
+    // LCOV_EXCL_STOP
 }
 
 /// Standardises all application logs to common log name format of <program name>-<process id>-<yeah-month-day>.log
@@ -54,8 +55,7 @@ Application::Application(int argc, char const* const* argv)
           {
               po::Config config;
               if (auto invalid = parseProgramOptions(argc, argv, po::HelpDocumentation{}, config))
-              {
-              }
+              {}
               return config;
           }())
 //`: mLogName(getDefaultApplicationLogName())

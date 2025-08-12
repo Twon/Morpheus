@@ -7,10 +7,9 @@
 using namespace morpheus;
 using namespace morpheus::gfx::macos;
 
-int main(int argc, const char* argv[])
+int main(int argc, char const* argv[])
 {
-    // NSLog (@"Window name: %@\nWidth: %ld\nHeight: %ld\nColour Depth: %ld\n", windowName, static_cast<long>(width), static_cast<long>(height), static_cast<long>(colourDepth));
-    for (const auto& monitors : enumerateMonitors())
+    for (auto const& monitors : enumerateMonitors())
     {
         fmt_ns::print("Monitor: {}\n", monitors);
         std::cout.flush(); // Ensure it's not buffered

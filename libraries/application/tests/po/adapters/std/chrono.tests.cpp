@@ -43,7 +43,7 @@ TEST_CASE_METHOD(LoggingFixture, "Test parsing of std chrono duration", "[morphe
         {
             ChronoDuration<Duration> durationOptions{};
             std::array cliOptions = {"dummyProgram.exe", "--duration", param.data()};
-            auto const result = parseProgramOptions(static_cast<int>(cliOptions.size()), cliOptions.data(), HelpDocumentation{}, durationOptions);
+            auto const result = parseProgramOptions(cliOptions, HelpDocumentation{}, durationOptions);
             REQUIRE(!result);
             return durationOptions.duration;
         };
@@ -62,7 +62,7 @@ TEST_CASE_METHOD(LoggingFixture, "Test parsing of std chrono duration", "[morphe
     {
         std::array cliOptions = {"dummyProgram.exe", "--duration", "invalid"};
         ChronoDuration<std::chrono::nanoseconds> durationOptions{};
-        auto const result = parseProgramOptions(static_cast<int>(cliOptions.size()), cliOptions.data(), HelpDocumentation{}, durationOptions);
+        auto const result = parseProgramOptions(cliOptions, HelpDocumentation{}, durationOptions);
         REQUIRE(result);
     }
 }
@@ -89,7 +89,7 @@ TEST_CASE_METHOD(LoggingFixture, "Test parsing of std chrono time_zone", "[morph
         {
             TimeZone timezoneOptions{};
             std::array cliOptions = {"dummyProgram.exe", "--timezone", param.data()};
-            auto const result = parseProgramOptions(static_cast<int>(cliOptions.size()), cliOptions.data(), HelpDocumentation{}, timezoneOptions);
+            auto const result = parseProgramOptions(cliOptions, HelpDocumentation{}, timezoneOptions);
             REQUIRE(!result);
             return timezoneOptions.timezone;
         };
@@ -103,7 +103,7 @@ TEST_CASE_METHOD(LoggingFixture, "Test parsing of std chrono time_zone", "[morph
     {
         std::array cliOptions = {"dummyProgram.exe", "--timezone", "invalid"};
         TimeZone timezoneOptions{};
-        auto const result = parseProgramOptions(static_cast<int>(cliOptions.size()), cliOptions.data(), HelpDocumentation{}, timezoneOptions);
+        auto const result = parseProgramOptions(cliOptions, HelpDocumentation{}, timezoneOptions);
         REQUIRE(result);
     }
 }

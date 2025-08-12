@@ -1,17 +1,18 @@
 #pragma once
 
-#include <morpheus/gfx/platform/render_window.hpp>
 #include <morpheus/core/base/prerequisites.hpp>
+#include <morpheus/gfx/platform/render_window.hpp>
 
-#include <wil/resource.h>
 #include <string>
+#include <wil/resource.h>
 
 namespace morpheus::gfx::win32
 {
 
 /// \class RenderWindow
 ///     A specialisation of the render window for the Windows platform based on the Win32 API.
-class RenderWindow : protected gfx::RenderWindow {
+class RenderWindow : protected gfx::RenderWindow
+{
 public:
     using WindowHandle = HWND;
     using Config = gfx::RenderWindow::Config;

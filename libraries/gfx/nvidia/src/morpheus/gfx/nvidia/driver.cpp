@@ -1,5 +1,5 @@
-#include <morpheus/gfx/nvidia/driver.hpp>
 #include <morpheus/core/base/architecture.hpp>
+#include <morpheus/gfx/nvidia/driver.hpp>
 
 namespace morpheus::gfx::nvidia
 {
@@ -9,10 +9,10 @@ namespace nvapi
 
 using namespace std::literals;
 
-#if (MORPHEUS_PLATFORM_ARCHITECTURE	== MORPHEUS_TARGET_ARCHITECTURE_X86)
-    std::string nvapiLibarayPath = "nvapi.dll"s;
+#if (MORPHEUS_PLATFORM_ARCHITECTURE == MORPHEUS_TARGET_ARCHITECTURE_X86)
+std::string nvapiLibarayPath = "nvapi.dll"s;
 #else
-    std::string nvapiLibarayPath = "nvapi64.dll"s;
+std::string nvapiLibarayPath = "nvapi64.dll"s;
 #endif
 
 constexpr std::uint32_t offset_NvAPI_Initialize = 0x0150E828UL;
@@ -22,7 +22,6 @@ constexpr std::uint32_t offset_NvAPI_EnumPhysicalGPUs = 0xE5AC921FUL;
 constexpr std::uint32_t offset_NvAPI_GPU_GetFullName = 0xCEEE8E9FUL;
 constexpr std::uint32_t offset_NvAPI_GPU_GetAdapterIdFromPhysicalGpu = 0x0FF07FDEUL;
 constexpr std::uint32_t offset_NvAPI_GPU_GetAllDisplayIds = 0x785210A2UL;
-
 
 /* https://github.com/jp7677/dxvk-nvapi/blob/30b6afaac1b4a844818c1740838396c53627ddfd/inc/nvapi_interface.h
 { "NvAPI_Initialize", 0x0150e828 },
@@ -453,15 +452,16 @@ constexpr std::uint32_t offset_NvAPI_GPU_GetAllDisplayIds = 0x785210A2UL;
 */
 
 Driver::Driver()
-:   mNvapi(nvapiLibarayPath, boost::dll::load_mode::search_system_folders)
-,   NvAPI_QueryInterface(mNvapi.get<NvAPI_QueryInterface_Signature>("nvapi_QueryInterface"))
-,   NvAPI_Initialize(reinterpret_cast<NvAPI_Initialize_t>(NvAPI_QueryInterface(offset_NvAPI_Initialize)))
-,   NvAPI_Unload(reinterpret_cast<NvAPI_Unload_t>(NvAPI_QueryInterface(offset_NvAPI_Unload)))
-,   NvAPI_GetErrorMessage(reinterpret_cast<NvAPI_GetErrorMessage_t>(NvAPI_QueryInterface(offset_NvAPI_GetErrorMessage)))
-,   NvAPI_EnumPhysicalGPUs(reinterpret_cast<NvAPI_EnumPhysicalGPUs_t>(NvAPI_QueryInterface(offset_NvAPI_EnumPhysicalGPUs)))
-,   NvAPI_GPU_GetFullName(reinterpret_cast<NvAPI_GPU_GetFullName_t>(NvAPI_QueryInterface(offset_NvAPI_GPU_GetFullName)))
-,   NvAPI_GPU_GetAdapterIdFromPhysicalGpu(reinterpret_cast<NvAPI_GPU_GetAdapterIdFromPhysicalGpu_t>(NvAPI_QueryInterface(offset_NvAPI_GPU_GetAdapterIdFromPhysicalGpu)))
-,   NvAPI_GPU_GetAllDisplayIds(reinterpret_cast<NvAPI_GPU_GetAllDisplayIds_t>(NvAPI_QueryInterface(offset_NvAPI_GPU_GetAllDisplayIds)))
+    : mNvapi(nvapiLibarayPath, boost::dll::load_mode::search_system_folders)
+    , NvAPI_QueryInterface(mNvapi.get<NvAPI_QueryInterface_Signature>("nvapi_QueryInterface"))
+    , NvAPI_Initialize(reinterpret_cast<NvAPI_Initialize_t>(NvAPI_QueryInterface(offset_NvAPI_Initialize)))
+    , NvAPI_Unload(reinterpret_cast<NvAPI_Unload_t>(NvAPI_QueryInterface(offset_NvAPI_Unload)))
+    , NvAPI_GetErrorMessage(reinterpret_cast<NvAPI_GetErrorMessage_t>(NvAPI_QueryInterface(offset_NvAPI_GetErrorMessage)))
+    , NvAPI_EnumPhysicalGPUs(reinterpret_cast<NvAPI_EnumPhysicalGPUs_t>(NvAPI_QueryInterface(offset_NvAPI_EnumPhysicalGPUs)))
+    , NvAPI_GPU_GetFullName(reinterpret_cast<NvAPI_GPU_GetFullName_t>(NvAPI_QueryInterface(offset_NvAPI_GPU_GetFullName)))
+    , NvAPI_GPU_GetAdapterIdFromPhysicalGpu(
+          reinterpret_cast<NvAPI_GPU_GetAdapterIdFromPhysicalGpu_t>(NvAPI_QueryInterface(offset_NvAPI_GPU_GetAdapterIdFromPhysicalGpu)))
+    , NvAPI_GPU_GetAllDisplayIds(reinterpret_cast<NvAPI_GPU_GetAllDisplayIds_t>(NvAPI_QueryInterface(offset_NvAPI_GPU_GetAllDisplayIds)))
 {
     NvAPI_Initialize();
 }
@@ -471,6 +471,6 @@ Driver::~Driver()
     NvAPI_Unload();
 }
 
-}
+} // namespace nvapi
 
 } // namespace morpheus::gfx::nvidia

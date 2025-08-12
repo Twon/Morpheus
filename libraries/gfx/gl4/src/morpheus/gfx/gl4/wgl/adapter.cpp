@@ -8,9 +8,9 @@
 
 // https://stackoverflow.com/questions/16823372/forcing-machine-to-use-dedicated-graphics-card
 #ifdef _WIN32
-#include <windows.h>
-//extern "C" __declspec(dllexport) DWORD NvOptimusEnablement = 0x00000001;
-//extern "C" __declspec(dllexport) DWORD AmdPowerXpressRequestHighPerformance = 0x00000001;
+    #include <windows.h>
+// extern "C" __declspec(dllexport) DWORD NvOptimusEnablement = 0x00000001;
+// extern "C" __declspec(dllexport) DWORD AmdPowerXpressRequestHighPerformance = 0x00000001;
 #endif
 
 namespace morpheus::gfx::gl4::wgl
@@ -52,8 +52,8 @@ auto vendorFromDeviceId(std::string_view const deviceId)
 
 std::string_view glGetStringView(GLenum name)
 {
-    const GLubyte* str = glGetString(name);
-    return str ? std::string_view(reinterpret_cast<const char*>(str)) : std::string_view{};
+    GLubyte const* str = glGetString(name);
+    return str ? std::string_view(reinterpret_cast<char const*>(str)) : std::string_view{};
 }
 
 } // namespace
@@ -83,18 +83,17 @@ concurrency::Generator<Adapter> enumerateAdapters()
         if (!EnumDisplayDevices(NULL, dwCurrentDevice, &displayDevice, 0))
             break;
 
-		PIXELFORMATDESCRIPTOR pfd =
-		{
-			.nSize = sizeof(PIXELFORMATDESCRIPTOR),
-			.nVersion = 1,
-			.dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER,
-			.iPixelType = PFD_TYPE_RGBA, // The kind of framebuffer. RGBA or palette.
-			.cColorBits = 32, // Colour depth of the framebuffer.
-			.cDepthBits = 24, // Number of bits for the depthbuffer
-			.cStencilBits = 8, // Number of bits for the stencilbuffer
-			.cAuxBuffers = 0, // Number of Aux buffers in the framebuffer.
-			.iLayerType = PFD_MAIN_PLANE,
-		};
+        PIXELFORMATDESCRIPTOR pfd = {
+            .nSize = sizeof(PIXELFORMATDESCRIPTOR),
+            .nVersion = 1,
+            .dwFlags = PFD_DRAW_TO_WINDOW | PFD_SUPPORT_OPENGL | PFD_DOUBLEBUFFER,
+            .iPixelType = PFD_TYPE_RGBA, // The kind of framebuffer. RGBA or palette.
+            .cColorBits = 32,            // Colour depth of the framebuffer.
+            .cDepthBits = 24,            // Number of bits for the depthbuffer
+            .cStencilBits = 8,           // Number of bits for the stencilbuffer
+            .cAuxBuffers = 0,            // Number of Aux buffers in the framebuffer.
+            .iLayerType = PFD_MAIN_PLANE,
+        };
 
         //		auto const glContext = wglCreateContext(hDC);
         //		auto const hResult2 = GetLastError();

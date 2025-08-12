@@ -169,7 +169,9 @@ struct allocator_wrapper : A
 };
 
 template <class T, class U, class A>
-class allocated_pointer_control_block : public control_block<T>, allocator_wrapper<A>
+class allocated_pointer_control_block
+    : public control_block<T>
+    , allocator_wrapper<A>
 {
     U* mValue;
 

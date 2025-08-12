@@ -2,6 +2,7 @@
 #include <morpheus/gfx/platform/macos/monitor.hpp>
 
 #include <CoreGraphics/CoreGraphics.h>
+
 #include <vector>
 
 namespace morpheus::gfx::macos
@@ -15,18 +16,17 @@ concurrency::Generator<Monitor> enumerateMonitors() noexcept
     std::vector<CGDirectDisplayID> displays(displayCount);
     CGGetActiveDisplayList(displayCount, displays.data(), &displayCount);
 
-    for (const auto& id : displays) {
+    for (auto const& id : displays)
+    {
         CGRect bounds = CGDisplayBounds(id);
-        const bool isPrimary = CGDisplayIsMain(id);
+        bool const isPrimary = CGDisplayIsMain(id);
 
-        co_yield Monitor{
-            "Display " + std::to_string(id),
-            static_cast<Monitor::PixelDiff>(bounds.origin.x),
-            static_cast<Monitor::PixelDiff>(bounds.origin.y),
-            static_cast<Monitor::Pixels>(bounds.size.width),
-            static_cast<Monitor::Pixels>(bounds.size.height),
-            isPrimary
-        };
+        co_yield Monitor{"Display " + std::to_string(id),
+                         static_cast<Monitor::PixelDiff>(bounds.origin.x),
+                         static_cast<Monitor::PixelDiff>(bounds.origin.y),
+                         static_cast<Monitor::Pixels>(bounds.size.width),
+                         static_cast<Monitor::Pixels>(bounds.size.height),
+                         isPrimary};
     }
     // LCOV_EXCL_STOP
 }

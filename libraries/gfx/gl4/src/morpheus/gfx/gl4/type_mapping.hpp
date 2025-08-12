@@ -6,7 +6,8 @@ namespace morpheus::gfx::gl4
 /*! \class TypeMapping
         Provides helper methods for mapping from native types to the underlying rendering API.
  */
-class TypeMapping {
+class TypeMapping
+{
 public:
     /// \name Life cycle
     ///@{
@@ -19,16 +20,13 @@ public:
              The colour depth of the pixels of the render target.
      */
     TypeMapping(
- //       const std::uint32_t width,
- //       const std::uint32_t height,
- //       const std::uint32_t colourDepth
+        //       const std::uint32_t width,
+        //       const std::uint32_t height,
+        //       const std::uint32_t colourDepth
     );
     ///@}
 
-
-
 private:
-
 };
 
 } // namespace morpheus::gfx::gl4

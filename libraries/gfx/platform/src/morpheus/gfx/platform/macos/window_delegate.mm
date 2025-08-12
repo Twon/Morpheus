@@ -4,12 +4,8 @@
 #import <Foundation/Foundation.h>
 
 @implementation WindowDelegate
-- (void) windowDidMiniaturize: (NSNotification *)notification
-{
-
-}
-- (void) windowDidDeminiaturize: (NSNotification *)notification
-{
-
-}
+- (void)windowDidMiniaturize:(NSNotification*)notification
+{}
+- (void)windowDidDeminiaturize:(NSNotification*)notification
+{}
 @end

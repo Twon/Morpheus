@@ -26,18 +26,12 @@ public:
         \param[in] refreshRate
              The refresh rate of the video mode.
      */
-    constexpr VideoMode(
-        std::uint16_t const width,
-        std::uint16_t const height,
-        std::uint16_t const colourDepth,
-        std::uint16_t const refreshRate
-    ) noexcept
-    :   mWidth(width),
-        mHeight(height),
-        mColourDepth(colourDepth),
-        mRefreshRate(refreshRate)
-    {
-    }
+    constexpr VideoMode(std::uint16_t const width, std::uint16_t const height, std::uint16_t const colourDepth, std::uint16_t const refreshRate) noexcept
+        : mWidth(width)
+        , mHeight(height)
+        , mColourDepth(colourDepth)
+        , mRefreshRate(refreshRate)
+    {}
     ///@}
 
     /// The width in pixels of the render target.

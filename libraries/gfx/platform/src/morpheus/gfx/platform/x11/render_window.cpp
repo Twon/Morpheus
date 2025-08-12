@@ -38,9 +38,9 @@ void test()
 
 // LCOV_EXCL_START
 RenderWindow::RenderWindow(Config const& config, DisplayPtr&& display, WindowPtr&& window)
-: gfx::RenderWindow(config)
-, mDisplay(std::move(display))
-, mWindow(std::move(window))
+    : gfx::RenderWindow(config)
+    , mDisplay(std::move(display))
+    , mWindow(std::move(window))
 {
     // Set the window name
     XStoreName(mDisplay.get(), mWindow.get(), config.windowName.c_str());
@@ -49,15 +49,16 @@ RenderWindow::RenderWindow(Config const& config, DisplayPtr&& display, WindowPtr
 exp_ns::expected<RenderWindow, std::string> RenderWindow::create(RenderWindow::Config const& config)
 {
     return makeDisplay().and_then(
-        [&](DisplayPtr&& display) {
-            return makeWindow(std::move(display), config).and_then(
-                [&](std::tuple<DisplayPtr, WindowPtr>&& resources) -> exp_ns::expected<RenderWindow, std::string> {
-                    auto&& [displayPtr, windowPtr] = std::move(resources);
-                    return exp_ns::expected<RenderWindow, std::string>(RenderWindow(config, std::move(displayPtr), std::move(windowPtr) ));
-                }
-            );
-        }
-    );
+        [&](DisplayPtr&& display)
+        {
+            return makeWindow(std::move(display), config)
+                .and_then(
+                    [&](std::tuple<DisplayPtr, WindowPtr>&& resources) -> exp_ns::expected<RenderWindow, std::string>
+                    {
+                        auto&& [displayPtr, windowPtr] = std::move(resources);
+                        return exp_ns::expected<RenderWindow, std::string>(RenderWindow(config, std::move(displayPtr), std::move(windowPtr)));
+                    });
+        });
 }
 // LCOV_EXCL_STOP
 

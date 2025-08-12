@@ -15,10 +15,10 @@
 /// \def MORPHEUS_CPP_LIB_CHRONO_FORMATTING
 ///   Ensures that std::format support for std::chrono is implemented as specified in
 ///  https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2018/p0355r7.html
-#define MORPHEUS_CPP_LIB_CHRONO_FORMATTING                                                                                                                     \
-    (((MORPHEUS_COMPILER == MORPHEUS_VISUALSTUDIO_COMPILER) && (__cpp_lib_chrono < 201907L)) ||                                                                \
-     ((MORPHEUS_COMPILER == MORPHEUS_GNUC_COMPILER) && (MORPHEUS_COMP_VER < 140000000)) ||                                                                     \
-     ((MORPHEUS_COMPILER == MORPHEUS_CLANG_COMPILER) && (MORPHEUS_COMP_VER < 200000000)) ||                                                                    \
+#define MORPHEUS_CPP_LIB_CHRONO_FORMATTING                                                      \
+    (((MORPHEUS_COMPILER == MORPHEUS_VISUALSTUDIO_COMPILER) && (__cpp_lib_chrono < 201907L)) || \
+     ((MORPHEUS_COMPILER == MORPHEUS_GNUC_COMPILER) && (MORPHEUS_COMP_VER < 140000000)) ||      \
+     ((MORPHEUS_COMPILER == MORPHEUS_CLANG_COMPILER) && (MORPHEUS_COMP_VER < 200000000)) ||     \
      ((MORPHEUS_COMPILER == MORPHEUS_APPLE_CLANG_COMPILER) && (MORPHEUS_COMP_VER < 150000000)))
 
 #if MORPHEUS_CPP_LIB_CHRONO_FORMATTING
@@ -292,7 +292,10 @@ struct morpheus::fmt_ns::formatter<morpheus::date_ns::year_month_weekday> : morp
     auto format(morpheus::date_ns::year_month_weekday const& year_month_weekday, format_context& ctx) const -> format_context::iterator
     {
         using namespace std::literals;
-        return morpheus::fmt_ns::format_to(ctx.out(), "{}/{}/{}"sv, year_month_weekday.year(), months[static_cast<unsigned>(year_month_weekday.month()) - 1],
+        return morpheus::fmt_ns::format_to(ctx.out(),
+                                           "{}/{}/{}"sv,
+                                           year_month_weekday.year(),
+                                           months[static_cast<unsigned>(year_month_weekday.month()) - 1],
                                            year_month_weekday.weekday_indexed());
     }
 };

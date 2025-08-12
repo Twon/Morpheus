@@ -392,8 +392,12 @@ TEST_CASE("Swap overload for indirect_value", "[morpheus.memory.indirect_value.s
     }
 }
 
-TEMPLATE_TEST_CASE("Noexcept of observers", "[morpheus.memory.indirect_value.noexcept]", indirect_value<int>&, indirect_value<int> const&,
-                   indirect_value<int>&&, indirect_value<int> const&&)
+TEMPLATE_TEST_CASE("Noexcept of observers",
+                   "[morpheus.memory.indirect_value.noexcept]",
+                   indirect_value<int>&,
+                   indirect_value<int> const&,
+                   indirect_value<int>&&,
+                   indirect_value<int> const&&)
 {
     using T = TestType;
     STATIC_REQUIRE(noexcept(std::declval<T>().operator->()));
@@ -420,8 +424,12 @@ inline constexpr bool same_ref_qualifiers<T&&, U&&> = true;
 template <class T, class U>
 inline constexpr bool same_const_and_ref_qualifiers = same_ref_qualifiers<T, U> && same_const_qualifiers<T, U>;
 
-TEMPLATE_TEST_CASE("Ref- and const-qualifier of observers", "[morpheus.memory.indirect_value.ref_constness]", indirect_value<int>&, indirect_value<int> const&,
-                   indirect_value<int>&&, indirect_value<int> const&&)
+TEMPLATE_TEST_CASE("Ref- and const-qualifier of observers",
+                   "[morpheus.memory.indirect_value.ref_constness]",
+                   indirect_value<int>&,
+                   indirect_value<int> const&,
+                   indirect_value<int>&&,
+                   indirect_value<int> const&&)
 {
     using T = TestType;
 
@@ -456,8 +464,12 @@ TEST_CASE("Test properties of bad_indirect_value_access", "[morpheus.memory.indi
     STATIC_REQUIRE(noexcept(ex.what()));
 }
 
-TEMPLATE_TEST_CASE("Calling value on empty indirect_value will throw", "[morpheus.memory.indirect_value.access]", indirect_value<int>&,
-                   indirect_value<int> const&, indirect_value<int>&&, indirect_value<int> const&&)
+TEMPLATE_TEST_CASE("Calling value on empty indirect_value will throw",
+                   "[morpheus.memory.indirect_value.access]",
+                   indirect_value<int>&,
+                   indirect_value<int> const&,
+                   indirect_value<int>&&,
+                   indirect_value<int> const&&)
 {
     GIVEN("An empty indirect_value")
     {
@@ -470,8 +482,12 @@ TEMPLATE_TEST_CASE("Calling value on empty indirect_value will throw", "[morpheu
     }
 }
 
-TEMPLATE_TEST_CASE("Calling value on an enganged indirect_value will not throw", "[morpheus.memory.indirect_value.access.no_exceptions]", indirect_value<int>&,
-                   indirect_value<int> const&, indirect_value<int>&&, indirect_value<int> const&&)
+TEMPLATE_TEST_CASE("Calling value on an enganged indirect_value will not throw",
+                   "[morpheus.memory.indirect_value.access.no_exceptions]",
+                   indirect_value<int>&,
+                   indirect_value<int> const&,
+                   indirect_value<int>&&,
+                   indirect_value<int> const&&)
 {
     GIVEN("An enganged indirect_value")
     {
@@ -590,8 +606,10 @@ struct EmptyNo_FinalYes final : stats
 {
     char data{};
 };
-struct EmptyYes_FinalNo : stats {};
-struct EmptyYes_FinalYes final : stats {};
+struct EmptyYes_FinalNo : stats
+{};
+struct EmptyYes_FinalYes final : stats
+{};
 
 template <class C, class D>
 void TestCopyAndDeleteStats()
@@ -634,8 +652,9 @@ void TestCopyAndDeleteStats()
     }
     REQUIRE(stats::default_ctor_count == (IsCombinedCopierAndDeleter ? 2 : 4)); // Combined copier and deleters should require half the initialisations.
     REQUIRE(stats::copy_ctor_count == (IsCombinedCopierAndDeleter ? 1 : 2)); // Combined copier and deleters should only require one copy during copy-swap idom.
-    REQUIRE(stats::move_ctor_count == (IsCombinedCopierAndDeleter ? 1 : 2)); // Combined copier and deleters should only require one move during the swap of copy-swap idom.
-    REQUIRE(stats::copy_assign_count == 0); // No internal copy assignment happens, is copy construct then move via the copy-swap idom
+    REQUIRE(stats::move_ctor_count ==
+            (IsCombinedCopierAndDeleter ? 1 : 2)); // Combined copier and deleters should only require one move during the swap of copy-swap idom.
+    REQUIRE(stats::copy_assign_count == 0);        // No internal copy assignment happens, is copy construct then move via the copy-swap idom
     REQUIRE(stats::move_assign_count == (IsCombinedCopierAndDeleter ? 2 : 4)); // Copy swap idom results in 2 move assignments in default std::swap.
     REQUIRE(stats::copy_operator_count == 0);
     REQUIRE(stats::delete_operator_count == 0);
@@ -662,7 +681,10 @@ void TestCopyAndDeleteStats()
     }
     REQUIRE(stats::default_ctor_count == (IsCombinedCopierAndDeleter ? 2 : 4)); // Combined copier and deleters should require half the initialisations.
     REQUIRE(stats::copy_ctor_count == (IsCombinedCopierAndDeleter ? 1 : 2)); // Combined copier and deleters should only require one copy during copy-swap idom.
-    REQUIRE(stats::move_ctor_count == (IsCombinedCopierAndDeleter ? 2 : 4)); // Combined copier and deleters should only require one move during the swap of copy-swap idom and one for initialisation.
+    REQUIRE(stats::move_ctor_count ==
+            (IsCombinedCopierAndDeleter
+                 ? 2
+                 : 4)); // Combined copier and deleters should only require one move during the swap of copy-swap idom and one for initialisation.
     REQUIRE(stats::copy_assign_count == 0); // No internal copy assignment happens, is copy construct then move via the copy-swap ido
     REQUIRE(stats::move_assign_count == (IsCombinedCopierAndDeleter ? 2 : 4)); // Copy swap idom results in 2 move assignments in default std::swap.
     REQUIRE(stats::copy_operator_count == 0);
@@ -689,7 +711,10 @@ void TestCopyAndDeleteStats()
     }
     REQUIRE(stats::default_ctor_count == (IsCombinedCopierAndDeleter ? 1 : 2)); // Combined copier and deleters should only initialise once.
     REQUIRE(stats::copy_ctor_count == (IsCombinedCopierAndDeleter ? 1 : 2)); // Combined copier and deleters should only require one copy during copy-swap idom.
-    REQUIRE(stats::move_ctor_count == (IsCombinedCopierAndDeleter ? 1 : 2)); // Combined copier and deleters should only require one move during the swap of copy-swap idom and one for initialisation.
+    REQUIRE(stats::move_ctor_count ==
+            (IsCombinedCopierAndDeleter
+                 ? 1
+                 : 2)); // Combined copier and deleters should only require one move during the swap of copy-swap idom and one for initialisation.
     // Depending on how you implement the protection against self assign
     REQUIRE((stats::copy_assign_count == 0 || stats::copy_assign_count == 2));
     REQUIRE(stats::move_assign_count == (IsCombinedCopierAndDeleter ? 2 : 4)); // Copy swap idom results in 2 move assignments in default std::swap.
@@ -759,7 +784,10 @@ void TestCopyAndDeleteStats()
     }
     REQUIRE(stats::default_ctor_count == (IsCombinedCopierAndDeleter ? 2 : 4)); // Combined copier and deleters should require half the initialisations.
     REQUIRE(stats::copy_ctor_count == (IsCombinedCopierAndDeleter ? 1 : 2)); // Combined copier and deleters should only require one copy during copy-swap idom.
-    REQUIRE(stats::move_ctor_count == (IsCombinedCopierAndDeleter ? 2 : 4)); // Combined copier and deleters should only require one move during the swap of copy-swap idom and one during initial constructions.
+    REQUIRE(stats::move_ctor_count ==
+            (IsCombinedCopierAndDeleter
+                 ? 2
+                 : 4)); // Combined copier and deleters should only require one move during the swap of copy-swap idom and one during initial constructions.
     REQUIRE(stats::copy_assign_count == 0); // No internal copy assignment happens, is copy construct then move via the copy-swap idom
     REQUIRE(stats::move_assign_count == (IsCombinedCopierAndDeleter ? 2 : 4)); // Copy swap idom results in 2 move assignments in default std::swap.
     REQUIRE(stats::copy_operator_count == 1);
@@ -787,7 +815,10 @@ void TestCopyAndDeleteStats()
     }
     REQUIRE(stats::default_ctor_count == (IsCombinedCopierAndDeleter ? 2 : 4)); // Combined copier and deleters should require half the initialisations.
     REQUIRE(stats::copy_ctor_count == (IsCombinedCopierAndDeleter ? 1 : 2)); // Combined copier and deleters should only require one copy during copy-swap idom.
-    REQUIRE(stats::move_ctor_count == (IsCombinedCopierAndDeleter ? 3 : 6)); // 2 during construction and then 1 when combined copier and deleters should only require one move during the swap of copy-swap idom.
+    REQUIRE(stats::move_ctor_count ==
+            (IsCombinedCopierAndDeleter
+                 ? 3
+                 : 6)); // 2 during construction and then 1 when combined copier and deleters should only require one move during the swap of copy-swap idom.
     REQUIRE(stats::copy_assign_count == 0); // No internal copy assignment happens, is copy construct then move via the copy-swap idom
     REQUIRE(stats::move_assign_count == (IsCombinedCopierAndDeleter ? 2 : 4)); // Copy swap idom results in 2 move assignments in default std::swap.
     REQUIRE(stats::copy_operator_count == 1);
@@ -814,7 +845,8 @@ void TestCopyAndDeleteStats()
     }
     REQUIRE(stats::default_ctor_count == (IsCombinedCopierAndDeleter ? 1 : 2)); // Combined copier and deleters should only initialise once.
     REQUIRE(stats::copy_ctor_count == (IsCombinedCopierAndDeleter ? 1 : 2)); // Combined copier and deleters should only require one copy during copy-swap idom.
-    REQUIRE(stats::move_ctor_count == (IsCombinedCopierAndDeleter ? 2 : 4)); // Combined copier and deleters should only require one move during the swap of copy-swap idom.
+    REQUIRE(stats::move_ctor_count ==
+            (IsCombinedCopierAndDeleter ? 2 : 4)); // Combined copier and deleters should only require one move during the swap of copy-swap idom.
     // Depending on how you implement the protection against self assign
     REQUIRE((stats::copy_assign_count == 0 || stats::copy_assign_count == 2));
     REQUIRE(stats::move_assign_count == (IsCombinedCopierAndDeleter ? 2 : 4)); // Copy swap idom results in 2 move assignments in default std::swap.

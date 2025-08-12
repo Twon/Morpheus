@@ -12,7 +12,7 @@ namespace morpheus::gfx
 enum class pixel_format : std::int32_t
 {
     UNKNOWN,
-//    VK_FORMAT_R8_UNORM
+    //    VK_FORMAT_R8_UNORM
 
     //! Specifies a one-component, 8-bit signed integer format that has a 8-byte red channel.
     R8_SINT,
@@ -26,11 +26,11 @@ enum class pixel_format : std::int32_t
     //! Specifies a one-component, 8-bit unsigned normalised format that has a 8-byte red channel.
     R8_UNORM,
 
- //     DXGI_FORMAT_R8_TYPELESS,
- // DXGI_FORMAT_R8_UNORM,
- // DXGI_FORMAT_R8_UINT,
- // DXGI_FORMAT_R8_SNORM,
- // DXGI_FORMAT_R8_SINT,
+    //     DXGI_FORMAT_R8_TYPELESS,
+    // DXGI_FORMAT_R8_UNORM,
+    // DXGI_FORMAT_R8_UINT,
+    // DXGI_FORMAT_R8_SNORM,
+    // DXGI_FORMAT_R8_SINT,
 
     /// 8-bit luminance only.
     L8,

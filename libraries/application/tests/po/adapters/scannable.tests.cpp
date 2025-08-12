@@ -65,7 +65,7 @@ TEST_CASE_METHOD(LoggingFixture, "Test parsing of scannable as options", "[morph
         {
             Location location{};
             std::array cliOptions = {"dummyProgram.exe", "--coordinates", param.data()};
-            auto const result = parseProgramOptions(static_cast<int>(cliOptions.size()), cliOptions.data(), HelpDocumentation{}, location);
+            auto const result = parseProgramOptions(cliOptions, HelpDocumentation{}, location);
             REQUIRE(!result);
             return location.coordinates;
         };
@@ -76,7 +76,7 @@ TEST_CASE_METHOD(LoggingFixture, "Test parsing of scannable as options", "[morph
     {
         std::array cliOptions = {"dummyProgram.exe", "--coordinates", "invalid"};
         Location location{};
-        auto const result = parseProgramOptions(static_cast<int>(cliOptions.size()), cliOptions.data(), HelpDocumentation{}, location);
+        auto const result = parseProgramOptions(cliOptions, HelpDocumentation{}, location);
         REQUIRE(result);
     }
 }

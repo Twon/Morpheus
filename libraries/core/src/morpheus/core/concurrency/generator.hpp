@@ -24,7 +24,7 @@ struct Generator
     struct promise_type;
     using handle_type = coro_ns::coroutine_handle<promise_type>;                        ///< Handle to generator coroutines.
     using value_type = T;                                                               ///< Value type from resulting generation.
-    using reference = std::conditional_t<std::is_reference_v<T>, T, const value_type&>; ///< Reference type to the value type.
+    using reference = std::conditional_t<std::is_reference_v<T>, T, value_type const&>; ///< Reference type to the value type.
     using pointer = std::add_pointer_t<reference>;                                      ///< Pointer type to the value type.
 
     Generator(handle_type h)
@@ -38,8 +38,8 @@ struct Generator
             coro.destroy();
     }
 
-    Generator(const Generator&) = delete;
-    Generator& operator=(const Generator&) = delete;
+    Generator(Generator const&) = delete;
+    Generator& operator=(Generator const&) = delete;
 
     Generator(Generator&& rhs) noexcept
         : coro(std::exchange(rhs.coro, {}))

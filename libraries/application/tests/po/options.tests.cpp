@@ -50,16 +50,10 @@ auto captureOutput(ranges::contiguous_range auto const& cliOptions, HelpDocument
 
     auto const findOption = [stdOut = std::move(output)](std::string const optionText)
     {
-        auto linesView = stdOut | ranges::views::split('\n') | ranges::views::transform([](auto&& rng) {
-            return std::string_view(&*rng.begin(), ranges::distance(rng));
-        });
+        auto linesView =
+            stdOut | ranges::views::split('\n') | ranges::views::transform([](auto&& rng) { return std::string_view(&*rng.begin(), ranges::distance(rng)); });
 
-        return ranges::find_if(linesView,
-            [optionText](auto const line)
-            {
-                return line.contains(optionText);
-            }
-        ) != linesView.end();
+        return ranges::find_if(linesView, [optionText](auto const line) { return line.contains(optionText); }) != linesView.end();
     };
     return findOption;
 }
@@ -72,8 +66,9 @@ TEST_CASE_METHOD(LoggingFixture, "Ensure options parsing of native types works",
 
         WHEN("Parsing valid parameters")
         {
-            std::array const cliOptions = { "dummyProgram.exe", "--first-name", "John", "--surname", "Doe", "--age", "42", "--year-of-birth", "1980", "--alive", "true" };
-            auto const result = parseProgramOptions(static_cast<int>(cliOptions.size()), cliOptions.data(), HelpDocumentation{}, person);
+            std::array const cliOptions = {
+                "dummyProgram.exe", "--first-name", "John", "--surname", "Doe", "--age", "42", "--year-of-birth", "1980", "--alive", "true"};
+            auto const result = parseProgramOptions(cliOptions, HelpDocumentation{}, person);
 
             THEN("Expect no error results and valid values extracted")
             {
@@ -89,7 +84,7 @@ TEST_CASE_METHOD(LoggingFixture, "Ensure options parsing of native types works",
         {
             std::array const cliOptions = {"--first-name", "John", "--surname", "Doe", "--age", "42", "--year-of-birth", "1980", "--alive", "true"};
             // RedirectStream captureErrors(std::cerr); Capture error logging
-            auto const result = parseProgramOptions(static_cast<int>(cliOptions.size()), cliOptions.data(), HelpDocumentation{}, person);
+            auto const result = parseProgramOptions(cliOptions, HelpDocumentation{}, person);
             THEN("Expect no error results and valid values extracted")
             {
                 REQUIRE(result);

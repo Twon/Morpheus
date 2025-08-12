@@ -1,5 +1,5 @@
-#include "morpheus/core/serialisation/write_serialiser.hpp"
 #include "morpheus/core/serialisation/concepts/writer_archetype.hpp"
+#include "morpheus/core/serialisation/write_serialiser.hpp"
 
 #include <catch2/catch_test_macros.hpp>
 

@@ -18,8 +18,7 @@ auto calculatePixedlFormatDescriptor(Window::Config const& config)
         .cAlphaBits = static_cast<BYTE>((config.colourDepth > 16) ? 8 : 0),
         .cDepthBits = 24,
         .cStencilBits = 8,
-        .iLayerType = PFD_MAIN_PLANE
-    };
+        .iLayerType = PFD_MAIN_PLANE};
     return pxlFmtDescriptor;
 }
 
