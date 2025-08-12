@@ -62,7 +62,10 @@ struct Mapped<true>
 } // namespace detail
 
 template <bool multi = false, bool mapped = false>
-struct Associative : AllocatorAware, detail::Multi<multi>, detail::Mapped<mapped>
+struct Associative
+    : AllocatorAware
+    , detail::Multi<multi>
+    , detail::Mapped<mapped>
 {
     /// The value type of the container.
     using value_type = typename detail::Mapped<mapped>::value_type;

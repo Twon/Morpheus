@@ -18,11 +18,12 @@ struct BinarySearch;
 /// \code
 /// \endcode
 template <template <std::size_t> typename Predicate, std::size_t Begin, std::size_t End>
-struct BinarySearch : std::conditional_t<((End - Begin) <= 1),
-                                         std::integral_constant<std::size_t, Begin>,
-                                         std::conditional_t<Predicate<(Begin + End) / 2>::value,
-                                                            BinarySearch<Predicate, (Begin + End) / 2, End>,
-                                                            BinarySearch<Predicate, Begin, (Begin + End) / 2>>>
+struct BinarySearch
+    : std::conditional_t<((End - Begin) <= 1),
+                         std::integral_constant<std::size_t, Begin>,
+                         std::conditional_t<Predicate<(Begin + End) / 2>::value,
+                                            BinarySearch<Predicate, (Begin + End) / 2, End>,
+                                            BinarySearch<Predicate, Begin, (Begin + End) / 2>>>
 {};
 
 template <template <std::size_t> typename Predicate, std::size_t Begin, std::size_t End>

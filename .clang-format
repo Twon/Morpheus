@@ -81,13 +81,12 @@ BreakArrays:     true
 BreakBeforeBinaryOperators: None
 BreakBeforeConceptDeclarations: Always
 BreakBeforeBraces: Custom
-# BreakBeforeInlineASMColon: OnlyMultiline
+BreakBeforeInlineASMColon: OnlyMultiline
 # BreakBeforeTemplateCloser: true # Clang-21
 BreakBeforeTernaryOperators: true
 BreakConstructorInitializers: BeforeComma
-# BreakInheritanceList: BeforeColon
-# BreakStringLiterals: true
-# # Please update .markdownlint.yaml if this line is to be updated
+BreakInheritanceList: BeforeComma
+BreakStringLiterals: true
 ColumnLimit:     160
 CommentPragmas:  '^ IWYU pragma:'
 CompactNamespaces: false
@@ -111,8 +110,8 @@ IncludeCategories:
   - Regex:           '.*'
     Priority:        0
     CaseSensitive:   true
-# IncludeIsMainRegex: '$'
-# IncludeIsMainSourceRegex: ''
+IncludeIsMainRegex: '$'
+IncludeIsMainSourceRegex: ''
 IndentAccessModifiers: false
 IndentCaseBlocks: false
 IndentCaseLabels: false
@@ -121,45 +120,34 @@ IndentGotoLabels: true
 IndentPPDirectives: BeforeHash
 IndentRequiresClause: false
 IndentWidth:     4
-# IndentWrappedFunctionNames: false
+IndentWrappedFunctionNames: false
 InsertBraces:    false
 InsertNewlineAtEOF: true
-# InsertTrailingCommas: None
-# IntegerLiteralSeparator:
-#   Binary:          0
-#   BinaryMinDigits: 0
-#   Decimal:         0
-#   DecimalMinDigits: 0
-#   Hex:             0
-#   HexMinDigits:    0
-# JavaScriptQuotes: Leave
-# JavaScriptWrapImports: true
-# KeepEmptyLinesAtTheStartOfBlocks: true
-# KeepEmptyLinesAtEOF: false
-# LambdaBodyIndentation: Signature
-# LineEnding:      DeriveLF
-# MacroBlockBegin: ''
-# MacroBlockEnd:   ''
-# MaxEmptyLinesToKeep: 1
-# NamespaceIndentation: None
-# ObjCBinPackProtocolList: Auto
-# ObjCBlockIndentWidth: 4
-# ObjCBreakBeforeNestedBlockParam: true
-# ObjCSpaceAfterProperty: false
-# ObjCSpaceBeforeProtocolList: true
-PackConstructorInitializers: Never
-# PenaltyBreakAssignment: 2
-# PenaltyBreakBeforeFirstCallParameter: 19
-# PenaltyBreakComment: 300
-# PenaltyBreakFirstLessLess: 120
-# PenaltyBreakOpenParenthesis: 0
-# PenaltyBreakString: 1000
-# PenaltyBreakTemplateDeclaration: 10
-# PenaltyExcessCharacter: 1000000
-# PenaltyIndentedWhitespace: 0
-# PenaltyReturnTypeOnItsOwnLine: 60
+InsertTrailingCommas: None
+IntegerLiteralSeparator:
+  Binary:          0
+  BinaryMinDigits: 0
+  Decimal:         0
+  DecimalMinDigits: 0
+  Hex:             0
+  HexMinDigits:    0
+KeepEmptyLinesAtTheStartOfBlocks: true
+KeepEmptyLinesAtEOF: false
+LambdaBodyIndentation: Signature
+LineEnding:      DeriveLF
+MacroBlockBegin: ''
+MacroBlockEnd:   ''
+MaxEmptyLinesToKeep: 1
+NamespaceIndentation: None
+PenaltyBreakFirstLessLess: 120
+PenaltyBreakOpenParenthesis: 0
+PenaltyBreakString: 1000
+PenaltyBreakTemplateDeclaration: 10
+PenaltyExcessCharacter: 1000000
+PenaltyIndentedWhitespace: 0
+PenaltyReturnTypeOnItsOwnLine: 60
 PointerAlignment: Left
-# PPIndentWidth:   -1
+PPIndentWidth:   -1
 QualifierAlignment: Custom
 QualifierOrder:
   - inline
@@ -235,10 +223,6 @@ UseTab:          Never
 #WrapNamespaceBodyWithEmptyLinesStyle: Always # Clang-20
 ---
 Language: ObjC
-ObjCBlockIndentWidth: 4
-ObjCSpaceBeforeProtocolList: false
-IndentWidth: 4
-
 BraceWrapping:
   AfterCaseLabel:  true
   AfterClass:      true
@@ -259,6 +243,12 @@ BraceWrapping:
   SplitEmptyRecord: false
   SplitEmptyNamespace: false
 BreakBeforeBraces: Custom
+IndentWidth: 4
+ObjCBinPackProtocolList: Auto
+ObjCBlockIndentWidth: 4
+ObjCBreakBeforeNestedBlockParam: true
+ObjCSpaceAfterProperty: false
+ObjCSpaceBeforeProtocolList: false
 PointerAlignment: Left
 QualifierAlignment: Custom
 QualifierOrder:

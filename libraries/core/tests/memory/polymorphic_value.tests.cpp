@@ -697,7 +697,9 @@ struct IntermediateBaseB : virtual Base
     int b_ = 101;
 };
 
-struct MultiplyDerived : IntermediateBaseA, IntermediateBaseB
+struct MultiplyDerived
+    : IntermediateBaseA
+    , IntermediateBaseB
 {
     int value_ = 0;
 
