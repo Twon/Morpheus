@@ -17,10 +17,7 @@ Adapter::~Adapter() = default;
 
 //---------------------------------------------------------------------------------------------------------------------
 
-Adapter::Adapter(
-    std::uint32_t const /*width*/,
-    std::uint32_t const /*height*/,
-    std::uint32_t const /*colourDepth*/
+Adapter::Adapter(std::uint32_t const /*width*/, std::uint32_t const /*height*/, std::uint32_t const /*colourDepth*/
 )
 {}
 

@@ -15,9 +15,17 @@ namespace morpheus::containers::concepts
 ///     <a href="https://eel.is/c++draft/unord.req">[unord.req]</a>, details at
 ///     <a href="https://en.cppreference.com/w/cpp/named_req/UnorderedAssociativeContainer">UnorderedAssociativeContainerr</a>.
 template <typename T>
-concept Unordered = AllocatorAware<T> && requires(T t, typename T::value_type v, typename T::key_type k, typename T::size_type s, typename T::iterator i,
-                                                  typename T::const_iterator ci, typename T::hasher h, typename T::key_equal e, typename T::local_iterator l,
-                                                  typename T::node_type n, std::initializer_list<typename T::value_type> il) {
+concept Unordered = AllocatorAware<T> && requires(T t,
+                                                  typename T::value_type v,
+                                                  typename T::key_type k,
+                                                  typename T::size_type s,
+                                                  typename T::iterator i,
+                                                  typename T::const_iterator ci,
+                                                  typename T::hasher h,
+                                                  typename T::key_equal e,
+                                                  typename T::local_iterator l,
+                                                  typename T::node_type n,
+                                                  std::initializer_list<typename T::value_type> il) {
     requires functional::concepts::Hash<typename T::hasher, typename T::key_type>;
     requires(std::default_initializable<typename T::key_equal>) && (std::copy_constructible<typename T::key_equal>);
     { T(s, h, e) };

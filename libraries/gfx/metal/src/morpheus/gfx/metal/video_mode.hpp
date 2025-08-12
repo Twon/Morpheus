@@ -21,11 +21,7 @@ public:
         \param[in] colourDepth
              The colour depth of the pixels of the render target.
      */
-    video_mode(
-        const std::uint32_t width,
-        const std::uint32_t height,
-        const std::uint32_t colourDepth
-    );
+    video_mode(std::uint32_t const width, std::uint32_t const height, std::uint32_t const colourDepth);
     ///@}
 
     //! The width in pixels of the render target.

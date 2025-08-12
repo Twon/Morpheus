@@ -53,9 +53,11 @@ using NvAPI_GPU_GetBoardInfo_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NV_
 using NvAPI_GPU_GetArchInfo_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NV_GPU_ARCH_INFO*);
 using NvAPI_I2CRead_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle hPhysicalGpu, NV_I2C_INFO* pI2cInfo);
 using NvAPI_I2CWrite_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle hPhysicalGpu, NV_I2C_INFO* pI2cInfo);
-using NvAPI_GPU_WorkstationFeatureSetup_t = NvAPI_Status(__cdecl*)(__in NvPhysicalGpuHandle hPhysicalGpu, __in NvU32 featureEnableMask,
+using NvAPI_GPU_WorkstationFeatureSetup_t = NvAPI_Status(__cdecl*)(__in NvPhysicalGpuHandle hPhysicalGpu,
+                                                                   __in NvU32 featureEnableMask,
                                                                    __in NvU32 featureDisableMask);
-using NvAPI_GPU_WorkstationFeatureQuery_t = NvAPI_Status(__cdecl*)(__in NvPhysicalGpuHandle hPhysicalGpu, __out_opt NvU32* pConfiguredFeatureMask,
+using NvAPI_GPU_WorkstationFeatureQuery_t = NvAPI_Status(__cdecl*)(__in NvPhysicalGpuHandle hPhysicalGpu,
+                                                                   __out_opt NvU32* pConfiguredFeatureMask,
                                                                    __out_opt NvU32* pConsistentFeatureMask);
 using NvAPI_GPU_GetHDCPSupportStatus_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NV_GPU_GET_HDCP_SUPPORT_STATUS* pGetHDCPSupportStatus);
 using NvAPI_GPU_GetTachReading_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NvU32*);
@@ -69,10 +71,14 @@ using NvAPI_GPU_SetScanoutIntensity_t = NvAPI_Status(__cdecl*)(NvU32, NV_SCANOUT
 using NvAPI_GPU_GetScanoutIntensityState_t = NvAPI_Status(__cdecl*)(NvU32, NV_SCANOUT_INTENSITY_STATE_DATA*);
 using NvAPI_GPU_SetScanoutWarping_t = NvAPI_Status(__cdecl*)(NvU32, NV_SCANOUT_WARPING_DATA*, int*, int*);
 using NvAPI_GPU_GetScanoutWarpingState_t = NvAPI_Status(__cdecl*)(NvU32, NV_SCANOUT_WARPING_STATE_DATA*);
-using NvAPI_GPU_SetScanoutCompositionParameter_t = NvAPI_Status(__cdecl*)(NvU32, NV_GPU_SCANOUT_COMPOSITION_PARAMETER,
-                                                                          NV_GPU_SCANOUT_COMPOSITION_PARAMETER_VALUE, float*);
-using NvAPI_GPU_GetScanoutCompositionParameter_t = NvAPI_Status(__cdecl*)(NvU32, NV_GPU_SCANOUT_COMPOSITION_PARAMETER,
-                                                                          NV_GPU_SCANOUT_COMPOSITION_PARAMETER_VALUE*, float*);
+using NvAPI_GPU_SetScanoutCompositionParameter_t = NvAPI_Status(__cdecl*)(NvU32,
+                                                                          NV_GPU_SCANOUT_COMPOSITION_PARAMETER,
+                                                                          NV_GPU_SCANOUT_COMPOSITION_PARAMETER_VALUE,
+                                                                          float*);
+using NvAPI_GPU_GetScanoutCompositionParameter_t = NvAPI_Status(__cdecl*)(NvU32,
+                                                                          NV_GPU_SCANOUT_COMPOSITION_PARAMETER,
+                                                                          NV_GPU_SCANOUT_COMPOSITION_PARAMETER_VALUE*,
+                                                                          float*);
 using NvAPI_GPU_GetScanoutConfiguration_t = NvAPI_Status(__cdecl*)(NvU32, NvSBox*, NvSBox*);
 using NvAPI_GPU_GetScanoutConfigurationEx_t = NvAPI_Status(__cdecl*)(NvU32, NV_SCANOUT_INFORMATION*);
 using NvAPI_GPU_GetAdapterIdFromPhysicalGpu_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, void*);

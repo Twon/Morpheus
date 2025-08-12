@@ -79,8 +79,19 @@ auto readerFromString(std::string_view const value)
 
 } // namespace test
 
-TEMPLATE_TEST_CASE("Json writer can write single native types to underlying text representation", "[morpheus.serialisation.json_reader.native]", bool,
-                   std::int8_t, std::uint8_t, std::int16_t, std::uint16_t, std::int32_t, std::uint32_t, std::int64_t, std::uint64_t, float, double)
+TEMPLATE_TEST_CASE("Json writer can write single native types to underlying text representation",
+                   "[morpheus.serialisation.json_reader.native]",
+                   bool,
+                   std::int8_t,
+                   std::uint8_t,
+                   std::int16_t,
+                   std::uint16_t,
+                   std::int32_t,
+                   std::uint32_t,
+                   std::int64_t,
+                   std::uint64_t,
+                   float,
+                   double)
 {
     if constexpr (std::is_integral_v<TestType>)
     {

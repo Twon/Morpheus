@@ -23,11 +23,7 @@ public:
         \param[in] colourDepth
              The colour depth of the pixels of the render target.
      */
-    Adapter(
-        std::uint32_t const width,
-        std::uint32_t const height,
-        std::uint32_t const colourDepth
-    );
+    Adapter(std::uint32_t const width, std::uint32_t const height, std::uint32_t const colourDepth);
     ///@}
 
     Adapter();

@@ -26,13 +26,7 @@ public:
 
     /// Constructs an adapter from name and id.
     explicit Monitor(
-        std::string_view const name,
-        PixelDiff const x,
-        PixelDiff const y,
-        Pixels const width,
-        Pixels const height,
-        bool const primary = false
-    )   noexcept
+        std::string_view const name, PixelDiff const x, PixelDiff const y, Pixels const width, Pixels const height, bool const primary = false) noexcept
         : mName(name)
         , mX(x)
         , mY(y)

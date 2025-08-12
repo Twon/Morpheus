@@ -22,11 +22,7 @@ public:
     ///      The height in pixels of the render target.
     /// \param[in] colourDepth
     ///      The colour depth of the pixels of the render target.
-    explicit Image(
-        std::uint32_t const width,
-        std::uint32_t const height,
-        std::uint32_t const colourDepth
-    );
+    explicit Image(std::uint32_t const width, std::uint32_t const height, std::uint32_t const colourDepth);
     ///@}
 
     /// The width in pixels of the render target.

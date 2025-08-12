@@ -32,8 +32,14 @@ namespace morpheus::serialisation
 using namespace ::testing;
 using namespace std::literals::string_view_literals;
 
-TEMPLATE_TEST_CASE("Verify serialisation of sequence containers std::ranges", "[morpheus.serialisation.ranges.serialise.sequence_containers]",
-                   (std::array<int, 5>), std::deque<int>, std::list<int>, std::set<int>, std::unordered_set<int>, std::vector<int>)
+TEMPLATE_TEST_CASE("Verify serialisation of sequence containers std::ranges",
+                   "[morpheus.serialisation.ranges.serialise.sequence_containers]",
+                   (std::array<int, 5>),
+                   std::deque<int>,
+                   std::list<int>,
+                   std::set<int>,
+                   std::unordered_set<int>,
+                   std::vector<int>)
 {
     GIVEN("A range of values")
     {
