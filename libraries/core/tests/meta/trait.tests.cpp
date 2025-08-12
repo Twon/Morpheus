@@ -30,7 +30,8 @@ TEST_CASE("Meta Traits allows applying traits as a concept", "[morpheus.meta.con
     }
     SECTION("std::is_enum Test")
     {
-        struct EmptyTest {};
+        struct EmptyTest
+        {};
         struct NonEmptyTest
         {
             int a;
@@ -52,8 +53,10 @@ TEST_CASE("Meta Traits allows applying traits as a concept", "[morpheus.meta.con
     }
     SECTION("std::is_final Test")
     {
-        struct FinalTest final {};
-        struct NonFinalTest {};
+        struct FinalTest final
+        {};
+        struct NonFinalTest
+        {};
 
         STATIC_REQUIRE(meta::concepts::Trait<FinalTest, std::is_final>);
         STATIC_REQUIRE(!meta::concepts::Trait<NonFinalTest, std::is_final>);

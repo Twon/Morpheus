@@ -17,7 +17,8 @@ namespace detail
 template <bool M = false>
 struct Multi
 {
-    struct insert_return_type {};
+    struct insert_return_type
+    {};
 
     constexpr auto operator<=>(Multi const&) const = default;
 };
@@ -73,7 +74,8 @@ struct Associative : AllocatorAware, detail::Multi<multi>, detail::Mapped<mapped
     using key_compare = std::less<int>;
     /// The value comparison type of the container.
     using value_compare = key_compare;
-    struct node_type{};
+    struct node_type
+    {};
 
     using InsertReturnType = std::conditional_t<multi, iterator, std::pair<iterator, bool>>;
 

@@ -16,7 +16,8 @@ namespace detail
 template <bool M = false>
 struct Multi
 {
-    struct insert_return_type {};
+    struct insert_return_type
+    {};
 
     constexpr auto operator<=>(Multi const&) const = default;
 };
@@ -67,8 +68,10 @@ struct Unordered : public AllocatorAware, detail::Multi<multi>, detail::Mapped<m
     using allocator_type = typename detail::Mapped<mapped>::allocator_type;
     using hasher = std::hash<int>;
     using key_equal = std::equal_to<int>;
-    struct node_type{};
-    struct local_iterator{};
+    struct node_type
+    {};
+    struct local_iterator
+    {};
     using const_local_iterator = local_iterator const;
 
     using InsertReturnType = std::conditional_t<multi, iterator, std::pair<iterator, bool>>;

@@ -7,7 +7,8 @@
 namespace std
 {
 template <>
-struct is_error_code_enum<VkResult> : true_type{};
+struct is_error_code_enum<VkResult> : true_type
+{};
 } // namespace std
 
 namespace morpheus::gfx::vulkan

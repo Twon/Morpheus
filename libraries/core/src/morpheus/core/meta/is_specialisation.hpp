@@ -21,10 +21,12 @@ inline constexpr bool is_specialisation_of_v< Template<Args...> > = true;
 */
 
 template <template <typename...> class Template, typename T>
-struct is_specialisation_of : std::false_type {};
+struct is_specialisation_of : std::false_type
+{};
 
 template <template <typename...> class Template, typename... T>
-struct is_specialisation_of<Template, Template<T...>> : std::true_type {};
+struct is_specialisation_of<Template, Template<T...>> : std::true_type
+{};
 
 /// \var is_specialisation_of_v
 ///     Provides a meta functions for testing if a type is a specialisation of a given template type.

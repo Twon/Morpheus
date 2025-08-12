@@ -11,15 +11,16 @@
 #include <unordered_set>
 #include <vector>
 
-
 namespace morpheus::meta
 {
 
 template <typename T>
-class TestTemplateWith1Param {};
+class TestTemplateWith1Param
+{};
 
 template <typename T1, typename T2>
-class TestTemplateWith2Param {};
+class TestTemplateWith2Param
+{};
 
 template <typename T>
 inline constexpr bool isVector = meta::IsSpecialisationOf<std::vector, T>;

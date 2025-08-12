@@ -590,8 +590,10 @@ struct EmptyNo_FinalYes final : stats
 {
     char data{};
 };
-struct EmptyYes_FinalNo : stats {};
-struct EmptyYes_FinalYes final : stats {};
+struct EmptyYes_FinalNo : stats
+{};
+struct EmptyYes_FinalYes final : stats
+{};
 
 template <class C, class D>
 void TestCopyAndDeleteStats()
