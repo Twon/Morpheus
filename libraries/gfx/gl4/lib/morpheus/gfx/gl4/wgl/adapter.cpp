@@ -126,6 +126,5 @@ concurrency::Generator<Adapter> enumerateAdapters()
         if (!restoredContext)
             continue;
     }
-}
 
 } // namespace morpheus::gfx::gl4::wgl

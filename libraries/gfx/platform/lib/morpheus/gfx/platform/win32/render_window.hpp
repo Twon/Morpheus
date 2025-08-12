@@ -8,6 +8,7 @@
 
 #include <optional>
 #include <string>
+#include <wil/resource.h>
 
 namespace morpheus::gfx::win32
 {

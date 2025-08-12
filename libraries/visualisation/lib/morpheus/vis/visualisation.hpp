@@ -48,7 +48,6 @@ Visualisation<R>::Visualisation(RenderSystemType&& renderSystem, WindowType&& wi
 template <gfx::concepts::RenderSystem R>
 auto Visualisation<R>::create(RenderSystemType&& renderSystem) -> conf::exp::expected<Visualisation<R>, std::string>
 {
-
     return {
         Visualisation<R>{std::move(renderSystem), {}}
     };

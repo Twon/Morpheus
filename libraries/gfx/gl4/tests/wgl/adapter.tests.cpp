@@ -110,6 +110,7 @@ auto adapterName(DISPLAYCONFIG_PATH_INFO const& path) -> exp_ns::expected<DISPLA
 
 exp_ns::expected<DisplayConfig, std::string> getCurrentDisplayConfig()
 {
+    // clang-format off
     return getDisplayConfigBufferSizes()
         .and_then([](auto counts) -> exp_ns::expected<DisplayConfig, std::string>
                   { return std::apply([](auto&&... args) { return DisplayConfig(std::forward<decltype(args)>(args)...); }, std::move(counts)); })
