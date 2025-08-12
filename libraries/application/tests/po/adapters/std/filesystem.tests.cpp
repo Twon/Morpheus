@@ -49,7 +49,8 @@ TEST_CASE_METHOD(LoggingFixture, "Test parsing of std filesystem path as options
         REQUIRE(getPath(".") == std::filesystem::path("."));
         REQUIRE(getPath("..") == std::filesystem::path(".."));
         REQUIRE(getPath(exeLocation.string()) == exeLocation);
-        REQUIRE(getPath((exeLocation / ".").lexically_normal().string()) != exeLocation); // Not the same, depends on context: https://stackoverflow.com/questions/42952605/boostfilesystempathlexically-normal-is-this-incorrect-behavior
+        // Not the same, depends on context: https://stackoverflow.com/questions/42952605/boostfilesystempathlexically-normal-is-this-incorrect-behavior
+        REQUIRE(getPath((exeLocation / ".").lexically_normal().string()) != exeLocation);
         if (exeLocation.has_parent_path())
             REQUIRE(getPath((exeLocation / "..").lexically_normal().string()) == exeLocation.parent_path());
 

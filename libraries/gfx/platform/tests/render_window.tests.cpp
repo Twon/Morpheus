@@ -1,6 +1,6 @@
-#include "morpheus/gfx/platform/render_window.hpp"
 #include "morpheus/application/po/options.hpp"
 #include "morpheus/application/version.hpp"
+#include "morpheus/gfx/platform/render_window.hpp"
 #include "morpheus/logging.hpp"
 
 #include <catch2/catch_test_macros.hpp>

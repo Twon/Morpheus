@@ -58,7 +58,7 @@ TEST_CASE("Verify deserialisation of std::tuple", "[morpheus.serialisation.tuple
     {
         using namespace std::literals::string_literals;
         using ExpectedTuple = std::tuple<std::string, std::int64_t, bool, double>;
-        const ExpectedTuple expectedValues("value"s, 10, true, 1.0);
+        ExpectedTuple const expectedValues("value"s, 10, true, 1.0);
 
         THEN("Expect the following sequence of operations on the underlying reader")
         {

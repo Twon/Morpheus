@@ -1,8 +1,8 @@
 #include <morpheus/core/base/debugging.hpp>
 #include <morpheus/core/conformance/format.hpp>
-
 #include <morpheus/gfx/nvidia/adapter.hpp>
 #include <morpheus/gfx/nvidia/driver.hpp>
+
 #include <catch2/catch_all.hpp>
 
 #include <array>
@@ -15,7 +15,7 @@ TEST_CASE("Create an adapter mode list", "[morpheus.core.gfx.nvidia.adapter_list
     auto adapters = enumerateAdapters();
     for (auto const& adapter : adapters)
     {
-        //debugPrint(fmt_ns::format("Graphics adapter is {}:id({}):vendor({})\n", adapter.name(), adapter.id(), adapter.vendor()));
+        // debugPrint(fmt_ns::format("Graphics adapter is {}:id({}):vendor({})\n", adapter.name(), adapter.id(), adapter.vendor()));
         debugPrint(fmt_ns::format("Graphics adapter is {}:id({})\n", adapter.name(), adapter.id()));
     }
 }
@@ -23,8 +23,8 @@ TEST_CASE("Create an adapter mode list", "[morpheus.core.gfx.nvidia.adapter_list
 TEST_CASE("Concept checks for NVidia adapters", "[morpheus.gfx.gl.wgl.adapter.concepts]")
 {
     //    STATIC_REQUIRE(concepts::VideoMode<VideoMode>);
-        //STATIC_REQUIRE(requires(Adapter t) { { t.getName() } -> std::convertible_to<std::string_view>; });
-        //STATIC_REQUIRE(requires(Adapter t) { { t.getVideoModes() } -> morpheus::gfx::concepts::VideoModeRange; });
+    // STATIC_REQUIRE(requires(Adapter t) { { t.getName() } -> std::convertible_to<std::string_view>; });
+    // STATIC_REQUIRE(requires(Adapter t) { { t.getVideoModes() } -> morpheus::gfx::concepts::VideoModeRange; });
 
     //    STATIC_REQUIRE(gfx::concepts::Adapter<Adapter>);
 }
@@ -59,9 +59,9 @@ TEST_CASE("Query NVidia graphic adapters", "[morpheus.core.gfx.adapter_list]")
         auto const NvAPI_QueryInterface = reinterpret_cast<NvAPI_QueryInterface_t>(address);
         auto const NvAPI_InitializeRaw = reinterpret_cast<NvAPI_Initialize_t>(NvAPI_QueryInterface(offset_NvAPI_Initialize));*/
 
-
     //    using NvAPI_QueryInterface_t =  void* (__cdecl *)(std::uint32_t offset);
-    //    auto const& nvapi_QueryInterface = boost::dll::import_alias<NvAPI_QueryInterface_t>("nvapi64.dll", "nvapi_QueryInterface", boost::dll::load_mode::search_system_folders);
+    //    auto const& nvapi_QueryInterface = boost::dll::import_alias<NvAPI_QueryInterface_t>("nvapi64.dll", "nvapi_QueryInterface",
+    //    boost::dll::load_mode::search_system_folders);
     auto const nvapi_QueryInterface = nvapi.get<NvAPI_QueryInterface_t>("nvapi_QueryInterface");
     //    REQUIRE(nvapi_QueryInterface);
     /*

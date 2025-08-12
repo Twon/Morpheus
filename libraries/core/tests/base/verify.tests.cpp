@@ -1,6 +1,6 @@
 #include <morpheus/catch2/adapters/assert.hpp>
-#include <morpheus/core/base/verify.hpp>
 #include <morpheus/core/base/scoped_action.hpp>
+#include <morpheus/core/base/verify.hpp>
 #include <morpheus/redirect_stream.hpp>
 
 #include <catch2/catch_test_macros.hpp>
@@ -51,4 +51,4 @@ TEST_CASE("Ensure assert functionality responds to appropriate defines", "[morph
     REQUIRE(haltFired);
 }
 
-} // morpheus
+} // namespace morpheus

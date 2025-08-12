@@ -1,96 +1,100 @@
 #pragma once
 
-#include <sal.h>
 #include <nvapi.h>
+#include <sal.h>
 
 namespace morpheus::gfx::nvidia::nvapi
 {
-    using NvAPI_QueryInterface_Signature = void* (__cdecl)(NvU32 offset);
-    using NvAPI_QueryInterface_t = void* (__cdecl*)(NvU32 offset);
-    using NvAPI_Initialize_t = NvAPI_Status(__cdecl*)();
-    using NvAPI_Unload_t = NvAPI_Status(__cdecl*)();
-    using NvAPI_GetErrorMessage_t = NvAPI_Status(__cdecl*)(NvAPI_Status nr, NvAPI_ShortString szDesc);
-    using NvAPI_GetInterfaceVersionString_t = NvAPI_Status(__cdecl*)(NvAPI_ShortString szDesc);
-    using NvAPI_GetInterfaceVersionStringEx_t = NvAPI_Status(__cdecl*)(NvAPI_ShortString szDesc);
-    using NvAPI_GPU_GetEDID_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NvU32, NV_EDID*);
-    using NvAPI_OGL_ExpertModeSet_t = NvAPI_Status(__cdecl*)(NvU32, NvU32, NvU32, NVAPI_OGLEXPERT_CALLBACK*);
-    using NvAPI_OGL_ExpertModeGet_t = NvAPI_Status(__cdecl*)(NvU32*, NvU32*, NvU32*, NVAPI_OGLEXPERT_CALLBACK*);
-    using NvAPI_OGL_ExpertModeDefaultsSet_t = NvAPI_Status(__cdecl*)(NvU32, NvU32, NvU32);
-    using NvAPI_OGL_ExpertModeDefaultsGet_t = NvAPI_Status(__cdecl*)(NvU32*, NvU32*, NvU32*);
-    using NvAPI_EnumPhysicalGPUs_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle*, NvU32*);
-    using NvAPI_EnumTCCPhysicalGPUs_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle*, NvU32*);
-    using NvAPI_EnumLogicalGPUs_t = NvAPI_Status(__cdecl*)(NvLogicalGpuHandle*, NvU32*);
-    using NvAPI_GetPhysicalGPUsFromDisplay_t = NvAPI_Status(__cdecl*)(NvDisplayHandle, NvPhysicalGpuHandle*, NvU32*);
-    using NvAPI_GetPhysicalGPUFromUnAttachedDisplay_t = NvAPI_Status(__cdecl*)(NvUnAttachedDisplayHandle, NvPhysicalGpuHandle*);
-    using NvAPI_GetLogicalGPUFromDisplay_t = NvAPI_Status(__cdecl*)(NvDisplayHandle, NvLogicalGpuHandle*);
-    using NvAPI_GetLogicalGPUFromPhysicalGPU_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NvLogicalGpuHandle*);
-    using NvAPI_GetPhysicalGPUsFromLogicalGPU_t = NvAPI_Status(__cdecl*)(NvLogicalGpuHandle, NvPhysicalGpuHandle, NvU32*);
-    using NvAPI_GetPhysicalGPUFromGPUID_t = NvAPI_Status(__cdecl*)(NvU32, NvPhysicalGpuHandle*);
-    using NvAPI_GetGPUIDfromPhysicalGPU_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NvU32*);
-    using NvAPI_GPU_GetShaderSubPipeCount_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NvU32*);
-    using NvAPI_GPU_GetGpuCoreCount_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NvU32*);
-    using NvAPI_GPU_GetConnectedDisplayIds_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NV_GPU_DISPLAYIDS*, NvU32*, NvU32);
-    using NvAPI_GPU_GetAllDisplayIds_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NV_GPU_DISPLAYIDS*, NvU32*);
-    using NvAPI_GPU_GetSystemType_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NV_SYSTEM_TYPE*);
-    using NvAPI_GPU_GetActiveOutputs_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NvU32*);
-    using NvAPI_GPU_SetEDID_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NvU32, NV_EDID*);
-    using NvAPI_GPU_GetOutputType_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NvU32, NV_GPU_OUTPUT_TYPE*);
-    using NvAPI_GPU_ValidateOutputCombination_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NvU32);
-    using NvAPI_GPU_GetFullName_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NvAPI_ShortString);
-    using NvAPI_GPU_GetPCIIdentifiers_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NvU32*, NvU32*, NvU32*, NvU32*);
-    using NvAPI_GPU_GetGPUType_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NV_GPU_TYPE*);
-    using NvAPI_GPU_GetBusType_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NV_GPU_BUS_TYPE*);
-    using NvAPI_GPU_GetBusId_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NvU32*);
-    using NvAPI_GPU_GetBusSlotId_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NvU32*);
-    using NvAPI_GPU_GetIRQ_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NvU32*);
-    using NvAPI_GPU_GetVbiosRevision_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NvU32*);
-    using NvAPI_GPU_GetVbiosOEMRevision_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NvU32);
-    using NvAPI_GPU_GetVbiosVersionString_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NvAPI_ShortString);
-    using NvAPI_GPU_GetCurrentPCIEDownstreamWidth_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NvU32*);
-    using NvAPI_GPU_GetPhysicalFrameBufferSize_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NvU32*);
-    using NvAPI_GPU_GetVirtualFrameBufferSize_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NvU32*);
-    using NvAPI_GPU_GetBoardInfo_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NV_BOARD_INFO*);
-    using NvAPI_GPU_GetArchInfo_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NV_GPU_ARCH_INFO*);
-    using NvAPI_I2CRead_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle hPhysicalGpu, NV_I2C_INFO* pI2cInfo);
-    using NvAPI_I2CWrite_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle hPhysicalGpu, NV_I2C_INFO* pI2cInfo);
-    using NvAPI_GPU_WorkstationFeatureSetup_t = NvAPI_Status(__cdecl*)(__in NvPhysicalGpuHandle hPhysicalGpu, __in NvU32 featureEnableMask, __in NvU32 featureDisableMask);
-    using NvAPI_GPU_WorkstationFeatureQuery_t = NvAPI_Status(__cdecl*)(__in NvPhysicalGpuHandle hPhysicalGpu, __out_opt NvU32* pConfiguredFeatureMask, __out_opt NvU32* pConsistentFeatureMask);
-    using NvAPI_GPU_GetHDCPSupportStatus_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NV_GPU_GET_HDCP_SUPPORT_STATUS* pGetHDCPSupportStatus);
-    using NvAPI_GPU_GetTachReading_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NvU32*);
-    using NvAPI_GPU_GetECCStatusInfo_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NV_GPU_ECC_STATUS_INFO*);
-    using NvAPI_GPU_GetECCErrorInfo_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NV_GPU_ECC_ERROR_INFO*);
-    using NvAPI_GPU_ResetECCErrorInfo_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NvU8, NvU8);
-    using NvAPI_GPU_GetECCConfigurationInfo_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NV_GPU_ECC_CONFIGURATION_INFO*);
-    using NvAPI_GPU_SetECCConfiguration_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NvU8, NvU8);
-    using NvAPI_GPU_QueryWorkstationFeatureSupport_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NV_GPU_WORKSTATION_FEATURE_TYPE);
-    using NvAPI_GPU_SetScanoutIntensity_t = NvAPI_Status(__cdecl*)(NvU32, NV_SCANOUT_INTENSITY_DATA*, int*);
-    using NvAPI_GPU_GetScanoutIntensityState_t = NvAPI_Status(__cdecl*)(NvU32, NV_SCANOUT_INTENSITY_STATE_DATA*);
-    using NvAPI_GPU_SetScanoutWarping_t = NvAPI_Status(__cdecl*)(NvU32, NV_SCANOUT_WARPING_DATA*, int*, int*);
-    using NvAPI_GPU_GetScanoutWarpingState_t = NvAPI_Status(__cdecl*)(NvU32, NV_SCANOUT_WARPING_STATE_DATA*);
-    using NvAPI_GPU_SetScanoutCompositionParameter_t = NvAPI_Status(__cdecl*)(NvU32, NV_GPU_SCANOUT_COMPOSITION_PARAMETER,NV_GPU_SCANOUT_COMPOSITION_PARAMETER_VALUE, float*);
-    using NvAPI_GPU_GetScanoutCompositionParameter_t = NvAPI_Status(__cdecl*)(NvU32, NV_GPU_SCANOUT_COMPOSITION_PARAMETER, NV_GPU_SCANOUT_COMPOSITION_PARAMETER_VALUE*, float*);
-    using NvAPI_GPU_GetScanoutConfiguration_t = NvAPI_Status(__cdecl*)(NvU32, NvSBox*, NvSBox*);
-    using NvAPI_GPU_GetScanoutConfigurationEx_t = NvAPI_Status(__cdecl*)(NvU32, NV_SCANOUT_INFORMATION*);
-    using NvAPI_GPU_GetAdapterIdFromPhysicalGpu_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, void*);
-    using NvAPI_GPU_GetVirtualizationInfo_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NV_GPU_VIRTUALIZATION_INFO*);
-    using NvAPI_GPU_GetLogicalGpuInfo_t = NvAPI_Status(__cdecl*)(NvLogicalGpuHandle, NV_LOGICAL_GPU_DATA*);
-    using NvAPI_GPU_GetLicensableFeatures_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NV_LICENSABLE_FEATURES*);
-    using NvAPI_GPU_GetVRReadyData_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NV_GPU_VR_READY*);
-    using NvAPI_GPU_GetPerfDecreaseInfo_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NvU32*);
-    using NvAPI_GPU_GetPstates20_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NV_GPU_PERF_PSTATES20_INFO*);
-    using NvAPI_GPU_GetCurrentPstate_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NV_GPU_PERF_PSTATE_ID*);
-    using NvAPI_GPU_GetDynamicPstatesInfoEx_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NV_GPU_DYNAMIC_PSTATES_INFO_EX*);
-    using NvAPI_GPU_GetThermalSettings_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NvU32, NV_GPU_THERMAL_SETTINGS*);
-    using NvAPI_GPU_GetAllClockFrequencies_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NV_GPU_CLOCK_FREQUENCIES*);
-    using NvAPI_GPU_QueryIlluminationSupport_t = NvAPI_Status(__cdecl*)(NV_GPU_QUERY_ILLUMINATION_SUPPORT_PARM*);
-    using NvAPI_GPU_GetIllumination_t = NvAPI_Status(__cdecl*)(NV_GPU_GET_ILLUMINATION_PARM*);
-    using NvAPI_GPU_SetIllumination_t = NvAPI_Status(__cdecl*)(NV_GPU_SET_ILLUMINATION_PARM*);
-    using NvAPI_GPU_ClientIllumDevicesGetInfo_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NV_GPU_CLIENT_ILLUM_DEVICE_INFO_PARAMS*);
-    using NvAPI_GPU_ClientIllumDevicesGetControl_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NV_GPU_CLIENT_ILLUM_DEVICE_CONTROL_PARAMS*);
-    using NvAPI_GPU_ClientIllumDevicesSetControl_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NV_GPU_CLIENT_ILLUM_DEVICE_CONTROL_PARAMS*);
-    using NvAPI_GPU_ClientIllumZonesGetInfo_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NV_GPU_CLIENT_ILLUM_ZONE_INFO_PARAMS*);
-    using NvAPI_GPU_ClientIllumZonesGetControl_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NV_GPU_CLIENT_ILLUM_ZONE_CONTROL_PARAMS*);
-    using NvAPI_GPU_ClientIllumZonesSetControl_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NV_GPU_CLIENT_ILLUM_ZONE_CONTROL_PARAMS*);
+using NvAPI_QueryInterface_Signature = void*(__cdecl)(NvU32 offset);
+using NvAPI_QueryInterface_t = void*(__cdecl*)(NvU32 offset);
+using NvAPI_Initialize_t = NvAPI_Status(__cdecl*)();
+using NvAPI_Unload_t = NvAPI_Status(__cdecl*)();
+using NvAPI_GetErrorMessage_t = NvAPI_Status(__cdecl*)(NvAPI_Status nr, NvAPI_ShortString szDesc);
+using NvAPI_GetInterfaceVersionString_t = NvAPI_Status(__cdecl*)(NvAPI_ShortString szDesc);
+using NvAPI_GetInterfaceVersionStringEx_t = NvAPI_Status(__cdecl*)(NvAPI_ShortString szDesc);
+using NvAPI_GPU_GetEDID_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NvU32, NV_EDID*);
+using NvAPI_OGL_ExpertModeSet_t = NvAPI_Status(__cdecl*)(NvU32, NvU32, NvU32, NVAPI_OGLEXPERT_CALLBACK*);
+using NvAPI_OGL_ExpertModeGet_t = NvAPI_Status(__cdecl*)(NvU32*, NvU32*, NvU32*, NVAPI_OGLEXPERT_CALLBACK*);
+using NvAPI_OGL_ExpertModeDefaultsSet_t = NvAPI_Status(__cdecl*)(NvU32, NvU32, NvU32);
+using NvAPI_OGL_ExpertModeDefaultsGet_t = NvAPI_Status(__cdecl*)(NvU32*, NvU32*, NvU32*);
+using NvAPI_EnumPhysicalGPUs_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle*, NvU32*);
+using NvAPI_EnumTCCPhysicalGPUs_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle*, NvU32*);
+using NvAPI_EnumLogicalGPUs_t = NvAPI_Status(__cdecl*)(NvLogicalGpuHandle*, NvU32*);
+using NvAPI_GetPhysicalGPUsFromDisplay_t = NvAPI_Status(__cdecl*)(NvDisplayHandle, NvPhysicalGpuHandle*, NvU32*);
+using NvAPI_GetPhysicalGPUFromUnAttachedDisplay_t = NvAPI_Status(__cdecl*)(NvUnAttachedDisplayHandle, NvPhysicalGpuHandle*);
+using NvAPI_GetLogicalGPUFromDisplay_t = NvAPI_Status(__cdecl*)(NvDisplayHandle, NvLogicalGpuHandle*);
+using NvAPI_GetLogicalGPUFromPhysicalGPU_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NvLogicalGpuHandle*);
+using NvAPI_GetPhysicalGPUsFromLogicalGPU_t = NvAPI_Status(__cdecl*)(NvLogicalGpuHandle, NvPhysicalGpuHandle, NvU32*);
+using NvAPI_GetPhysicalGPUFromGPUID_t = NvAPI_Status(__cdecl*)(NvU32, NvPhysicalGpuHandle*);
+using NvAPI_GetGPUIDfromPhysicalGPU_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NvU32*);
+using NvAPI_GPU_GetShaderSubPipeCount_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NvU32*);
+using NvAPI_GPU_GetGpuCoreCount_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NvU32*);
+using NvAPI_GPU_GetConnectedDisplayIds_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NV_GPU_DISPLAYIDS*, NvU32*, NvU32);
+using NvAPI_GPU_GetAllDisplayIds_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NV_GPU_DISPLAYIDS*, NvU32*);
+using NvAPI_GPU_GetSystemType_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NV_SYSTEM_TYPE*);
+using NvAPI_GPU_GetActiveOutputs_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NvU32*);
+using NvAPI_GPU_SetEDID_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NvU32, NV_EDID*);
+using NvAPI_GPU_GetOutputType_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NvU32, NV_GPU_OUTPUT_TYPE*);
+using NvAPI_GPU_ValidateOutputCombination_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NvU32);
+using NvAPI_GPU_GetFullName_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NvAPI_ShortString);
+using NvAPI_GPU_GetPCIIdentifiers_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NvU32*, NvU32*, NvU32*, NvU32*);
+using NvAPI_GPU_GetGPUType_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NV_GPU_TYPE*);
+using NvAPI_GPU_GetBusType_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NV_GPU_BUS_TYPE*);
+using NvAPI_GPU_GetBusId_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NvU32*);
+using NvAPI_GPU_GetBusSlotId_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NvU32*);
+using NvAPI_GPU_GetIRQ_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NvU32*);
+using NvAPI_GPU_GetVbiosRevision_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NvU32*);
+using NvAPI_GPU_GetVbiosOEMRevision_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NvU32);
+using NvAPI_GPU_GetVbiosVersionString_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NvAPI_ShortString);
+using NvAPI_GPU_GetCurrentPCIEDownstreamWidth_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NvU32*);
+using NvAPI_GPU_GetPhysicalFrameBufferSize_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NvU32*);
+using NvAPI_GPU_GetVirtualFrameBufferSize_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NvU32*);
+using NvAPI_GPU_GetBoardInfo_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NV_BOARD_INFO*);
+using NvAPI_GPU_GetArchInfo_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NV_GPU_ARCH_INFO*);
+using NvAPI_I2CRead_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle hPhysicalGpu, NV_I2C_INFO* pI2cInfo);
+using NvAPI_I2CWrite_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle hPhysicalGpu, NV_I2C_INFO* pI2cInfo);
+using NvAPI_GPU_WorkstationFeatureSetup_t = NvAPI_Status(__cdecl*)(__in NvPhysicalGpuHandle hPhysicalGpu, __in NvU32 featureEnableMask,
+                                                                   __in NvU32 featureDisableMask);
+using NvAPI_GPU_WorkstationFeatureQuery_t = NvAPI_Status(__cdecl*)(__in NvPhysicalGpuHandle hPhysicalGpu, __out_opt NvU32* pConfiguredFeatureMask,
+                                                                   __out_opt NvU32* pConsistentFeatureMask);
+using NvAPI_GPU_GetHDCPSupportStatus_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NV_GPU_GET_HDCP_SUPPORT_STATUS* pGetHDCPSupportStatus);
+using NvAPI_GPU_GetTachReading_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NvU32*);
+using NvAPI_GPU_GetECCStatusInfo_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NV_GPU_ECC_STATUS_INFO*);
+using NvAPI_GPU_GetECCErrorInfo_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NV_GPU_ECC_ERROR_INFO*);
+using NvAPI_GPU_ResetECCErrorInfo_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NvU8, NvU8);
+using NvAPI_GPU_GetECCConfigurationInfo_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NV_GPU_ECC_CONFIGURATION_INFO*);
+using NvAPI_GPU_SetECCConfiguration_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NvU8, NvU8);
+using NvAPI_GPU_QueryWorkstationFeatureSupport_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NV_GPU_WORKSTATION_FEATURE_TYPE);
+using NvAPI_GPU_SetScanoutIntensity_t = NvAPI_Status(__cdecl*)(NvU32, NV_SCANOUT_INTENSITY_DATA*, int*);
+using NvAPI_GPU_GetScanoutIntensityState_t = NvAPI_Status(__cdecl*)(NvU32, NV_SCANOUT_INTENSITY_STATE_DATA*);
+using NvAPI_GPU_SetScanoutWarping_t = NvAPI_Status(__cdecl*)(NvU32, NV_SCANOUT_WARPING_DATA*, int*, int*);
+using NvAPI_GPU_GetScanoutWarpingState_t = NvAPI_Status(__cdecl*)(NvU32, NV_SCANOUT_WARPING_STATE_DATA*);
+using NvAPI_GPU_SetScanoutCompositionParameter_t = NvAPI_Status(__cdecl*)(NvU32, NV_GPU_SCANOUT_COMPOSITION_PARAMETER,
+                                                                          NV_GPU_SCANOUT_COMPOSITION_PARAMETER_VALUE, float*);
+using NvAPI_GPU_GetScanoutCompositionParameter_t = NvAPI_Status(__cdecl*)(NvU32, NV_GPU_SCANOUT_COMPOSITION_PARAMETER,
+                                                                          NV_GPU_SCANOUT_COMPOSITION_PARAMETER_VALUE*, float*);
+using NvAPI_GPU_GetScanoutConfiguration_t = NvAPI_Status(__cdecl*)(NvU32, NvSBox*, NvSBox*);
+using NvAPI_GPU_GetScanoutConfigurationEx_t = NvAPI_Status(__cdecl*)(NvU32, NV_SCANOUT_INFORMATION*);
+using NvAPI_GPU_GetAdapterIdFromPhysicalGpu_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, void*);
+using NvAPI_GPU_GetVirtualizationInfo_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NV_GPU_VIRTUALIZATION_INFO*);
+using NvAPI_GPU_GetLogicalGpuInfo_t = NvAPI_Status(__cdecl*)(NvLogicalGpuHandle, NV_LOGICAL_GPU_DATA*);
+using NvAPI_GPU_GetLicensableFeatures_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NV_LICENSABLE_FEATURES*);
+using NvAPI_GPU_GetVRReadyData_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NV_GPU_VR_READY*);
+using NvAPI_GPU_GetPerfDecreaseInfo_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NvU32*);
+using NvAPI_GPU_GetPstates20_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NV_GPU_PERF_PSTATES20_INFO*);
+using NvAPI_GPU_GetCurrentPstate_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NV_GPU_PERF_PSTATE_ID*);
+using NvAPI_GPU_GetDynamicPstatesInfoEx_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NV_GPU_DYNAMIC_PSTATES_INFO_EX*);
+using NvAPI_GPU_GetThermalSettings_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NvU32, NV_GPU_THERMAL_SETTINGS*);
+using NvAPI_GPU_GetAllClockFrequencies_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NV_GPU_CLOCK_FREQUENCIES*);
+using NvAPI_GPU_QueryIlluminationSupport_t = NvAPI_Status(__cdecl*)(NV_GPU_QUERY_ILLUMINATION_SUPPORT_PARM*);
+using NvAPI_GPU_GetIllumination_t = NvAPI_Status(__cdecl*)(NV_GPU_GET_ILLUMINATION_PARM*);
+using NvAPI_GPU_SetIllumination_t = NvAPI_Status(__cdecl*)(NV_GPU_SET_ILLUMINATION_PARM*);
+using NvAPI_GPU_ClientIllumDevicesGetInfo_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NV_GPU_CLIENT_ILLUM_DEVICE_INFO_PARAMS*);
+using NvAPI_GPU_ClientIllumDevicesGetControl_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NV_GPU_CLIENT_ILLUM_DEVICE_CONTROL_PARAMS*);
+using NvAPI_GPU_ClientIllumDevicesSetControl_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NV_GPU_CLIENT_ILLUM_DEVICE_CONTROL_PARAMS*);
+using NvAPI_GPU_ClientIllumZonesGetInfo_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NV_GPU_CLIENT_ILLUM_ZONE_INFO_PARAMS*);
+using NvAPI_GPU_ClientIllumZonesGetControl_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NV_GPU_CLIENT_ILLUM_ZONE_CONTROL_PARAMS*);
+using NvAPI_GPU_ClientIllumZonesSetControl_t = NvAPI_Status(__cdecl*)(NvPhysicalGpuHandle, NV_GPU_CLIENT_ILLUM_ZONE_CONTROL_PARAMS*);
 
 /*
 
@@ -118,33 +122,31 @@ namespace morpheus::gfx::nvidia::nvapi
     NVAPI_INTERFACE NvAPI_Disp_HdrColorControl(__in NvU32 displayId, __inout NV_HDR_COLOR_DATA* pHdrColorData);
     NVAPI_INTERFACE NvAPI_DISP_GetTiming(__in NvU32 displayId, __in NV_TIMING_INPUT* timingInput, __out NV_TIMING* pTiming);
     NVAPI_INTERFACE NvAPI_DISP_GetMonitorCapabilities(__in NvU32 displayId, __inout NV_MONITOR_CAPABILITIES* pMonitorCapabilities);
-    NVAPI_INTERFACE NvAPI_DISP_GetMonitorColorCapabilities(__in NvU32 displayId, __inout_ecount_part_opt(*pColorCapsCount, *pColorCapsCount) NV_MONITOR_COLOR_CAPS* pMonitorColorCapabilities, __inout NvU32* pColorCapsCount);
-    NVAPI_INTERFACE NvAPI_DISP_EnumCustomDisplay(__in NvU32 displayId, __in NvU32 index, __inout NV_CUSTOM_DISPLAY* pCustDisp);
-    NVAPI_INTERFACE NvAPI_DISP_TryCustomDisplay(__in_ecount(count) NvU32* pDisplayIds, __in NvU32 count, __in_ecount(count) NV_CUSTOM_DISPLAY* pCustDisp);
-    NVAPI_INTERFACE NvAPI_DISP_DeleteCustomDisplay(__in_ecount(count) NvU32* pDisplayIds, __in NvU32 count, __in NV_CUSTOM_DISPLAY* pCustDisp);
-    NVAPI_INTERFACE NvAPI_DISP_SaveCustomDisplay(__in_ecount(count) NvU32* pDisplayIds, __in NvU32 count, __in NvU32 isThisOutputIdOnly, __in NvU32 isThisMonitorIdOnly);
-    NVAPI_INTERFACE NvAPI_DISP_RevertCustomDisplayTrial(__in_ecount(count) NvU32* pDisplayIds, __in NvU32 count);
-    NVAPI_INTERFACE NvAPI_GetSupportedViews(NvDisplayHandle hNvDisplay, NV_TARGET_VIEW_MODE* pTargetViews, NvU32* pViewCount);
-    NVAPI_INTERFACE NvAPI_DISP_GetDisplayIdByDisplayName(const char* displayName, NvU32* displayId);
-    NVAPI_INTERFACE NvAPI_DISP_GetDisplayConfig(__inout NvU32* pathInfoCount, __out_ecount_full_opt(*pathInfoCount) NV_DISPLAYCONFIG_PATH_INFO* pathInfo);
-    NVAPI_INTERFACE NvAPI_DISP_SetDisplayConfig(__in NvU32 pathInfoCount, __in_ecount(pathInfoCount) NV_DISPLAYCONFIG_PATH_INFO* pathInfo, __in NvU32 flags);
-    NVAPI_INTERFACE NvAPI_DISP_GetAdaptiveSyncData(__in NvU32 displayId, __inout NV_GET_ADAPTIVE_SYNC_DATA* pAdaptiveSyncData);
-    NVAPI_INTERFACE NvAPI_DISP_SetAdaptiveSyncData(__in NvU32 displayId, __in NV_SET_ADAPTIVE_SYNC_DATA* pAdaptiveSyncData);
-    NVAPI_INTERFACE NvAPI_DISP_GetVirtualRefreshRateData(__in NvU32 displayId, __inout NV_GET_VIRTUAL_REFRESH_RATE_DATA* pVirtualRefreshRateData);
-    NVAPI_INTERFACE NvAPI_DISP_SetVirtualRefreshRateData(__in NvU32 displayId, __in NV_SET_VIRTUAL_REFRESH_RATE_DATA* pVirtualRefreshRateData);
-    NVAPI_INTERFACE NvAPI_DISP_SetPreferredStereoDisplay(__in NV_SET_PREFERRED_STEREO_DISPLAY* pPreferredStereoDisplay);
-    NVAPI_INTERFACE NvAPI_DISP_GetPreferredStereoDisplay(__inout NV_GET_PREFERRED_STEREO_DISPLAY* pPreferredStereoDisplay);
-    NVAPI_INTERFACE NvAPI_DISP_GetNvManagedDedicatedDisplays(__inout NvU32* pDedicatedDisplayCount, __inout NV_MANAGED_DEDICATED_DISPLAY_INFO* pDedicatedDisplays);
-    NVAPI_INTERFACE NvAPI_DISP_AcquireDedicatedDisplay(__in NvU32 displayId, __inout NvU64* pDisplaySourceHandle);
-    NVAPI_INTERFACE NvAPI_DISP_ReleaseDedicatedDisplay(__in NvU32 displayId);
-    NVAPI_INTERFACE NvAPI_Mosaic_GetSupportedTopoInfo(NV_MOSAIC_SUPPORTED_TOPO_INFO* pSupportedTopoInfo, NV_MOSAIC_TOPO_TYPE type);
-    NVAPI_INTERFACE NvAPI_Mosaic_GetTopoGroup(NV_MOSAIC_TOPO_BRIEF* pTopoBrief, NV_MOSAIC_TOPO_GROUP* pTopoGroup);
-    NVAPI_INTERFACE NvAPI_Mosaic_GetOverlapLimits(NV_MOSAIC_TOPO_BRIEF* pTopoBrief, NV_MOSAIC_DISPLAY_SETTING* pDisplaySetting, NvS32* pMinOverlapX, NvS32* pMaxOverlapX, NvS32* pMinOverlapY, NvS32* pMaxOverlapY);
-    NVAPI_INTERFACE NvAPI_Mosaic_SetCurrentTopo(NV_MOSAIC_TOPO_BRIEF* pTopoBrief, NV_MOSAIC_DISPLAY_SETTING* pDisplaySetting, NvS32 overlapX, NvS32 overlapY, NvU32 enable);
-    NVAPI_INTERFACE NvAPI_Mosaic_GetCurrentTopo(NV_MOSAIC_TOPO_BRIEF* pTopoBrief, NV_MOSAIC_DISPLAY_SETTING* pDisplaySetting, NvS32* pOverlapX, NvS32* pOverlapY);
-    NVAPI_INTERFACE NvAPI_Mosaic_EnableCurrentTopo(NvU32 enable);
-    NVAPI_INTERFACE NvAPI_Mosaic_SetDisplayGrids(__in_ecount(gridCount) NV_MOSAIC_GRID_TOPO* pGridTopologies, __in NvU32 gridCount, __in NvU32 setTopoFlags);
-    NVAPI_INTERFACE NvAPI_Mosaic_ValidateDisplayGrids(__in NvU32 setTopoFlags,
+    NVAPI_INTERFACE NvAPI_DISP_GetMonitorColorCapabilities(__in NvU32 displayId, __inout_ecount_part_opt(*pColorCapsCount, *pColorCapsCount)
+NV_MONITOR_COLOR_CAPS* pMonitorColorCapabilities, __inout NvU32* pColorCapsCount); NVAPI_INTERFACE NvAPI_DISP_EnumCustomDisplay(__in NvU32 displayId, __in NvU32
+index, __inout NV_CUSTOM_DISPLAY* pCustDisp); NVAPI_INTERFACE NvAPI_DISP_TryCustomDisplay(__in_ecount(count) NvU32* pDisplayIds, __in NvU32 count,
+__in_ecount(count) NV_CUSTOM_DISPLAY* pCustDisp); NVAPI_INTERFACE NvAPI_DISP_DeleteCustomDisplay(__in_ecount(count) NvU32* pDisplayIds, __in NvU32 count, __in
+NV_CUSTOM_DISPLAY* pCustDisp); NVAPI_INTERFACE NvAPI_DISP_SaveCustomDisplay(__in_ecount(count) NvU32* pDisplayIds, __in NvU32 count, __in NvU32
+isThisOutputIdOnly, __in NvU32 isThisMonitorIdOnly); NVAPI_INTERFACE NvAPI_DISP_RevertCustomDisplayTrial(__in_ecount(count) NvU32* pDisplayIds, __in NvU32
+count); NVAPI_INTERFACE NvAPI_GetSupportedViews(NvDisplayHandle hNvDisplay, NV_TARGET_VIEW_MODE* pTargetViews, NvU32* pViewCount); NVAPI_INTERFACE
+NvAPI_DISP_GetDisplayIdByDisplayName(const char* displayName, NvU32* displayId); NVAPI_INTERFACE NvAPI_DISP_GetDisplayConfig(__inout NvU32* pathInfoCount,
+__out_ecount_full_opt(*pathInfoCount) NV_DISPLAYCONFIG_PATH_INFO* pathInfo); NVAPI_INTERFACE NvAPI_DISP_SetDisplayConfig(__in NvU32 pathInfoCount,
+__in_ecount(pathInfoCount) NV_DISPLAYCONFIG_PATH_INFO* pathInfo, __in NvU32 flags); NVAPI_INTERFACE NvAPI_DISP_GetAdaptiveSyncData(__in NvU32 displayId, __inout
+NV_GET_ADAPTIVE_SYNC_DATA* pAdaptiveSyncData); NVAPI_INTERFACE NvAPI_DISP_SetAdaptiveSyncData(__in NvU32 displayId, __in NV_SET_ADAPTIVE_SYNC_DATA*
+pAdaptiveSyncData); NVAPI_INTERFACE NvAPI_DISP_GetVirtualRefreshRateData(__in NvU32 displayId, __inout NV_GET_VIRTUAL_REFRESH_RATE_DATA*
+pVirtualRefreshRateData); NVAPI_INTERFACE NvAPI_DISP_SetVirtualRefreshRateData(__in NvU32 displayId, __in NV_SET_VIRTUAL_REFRESH_RATE_DATA*
+pVirtualRefreshRateData); NVAPI_INTERFACE NvAPI_DISP_SetPreferredStereoDisplay(__in NV_SET_PREFERRED_STEREO_DISPLAY* pPreferredStereoDisplay); NVAPI_INTERFACE
+NvAPI_DISP_GetPreferredStereoDisplay(__inout NV_GET_PREFERRED_STEREO_DISPLAY* pPreferredStereoDisplay); NVAPI_INTERFACE
+NvAPI_DISP_GetNvManagedDedicatedDisplays(__inout NvU32* pDedicatedDisplayCount, __inout NV_MANAGED_DEDICATED_DISPLAY_INFO* pDedicatedDisplays); NVAPI_INTERFACE
+NvAPI_DISP_AcquireDedicatedDisplay(__in NvU32 displayId, __inout NvU64* pDisplaySourceHandle); NVAPI_INTERFACE NvAPI_DISP_ReleaseDedicatedDisplay(__in NvU32
+displayId); NVAPI_INTERFACE NvAPI_Mosaic_GetSupportedTopoInfo(NV_MOSAIC_SUPPORTED_TOPO_INFO* pSupportedTopoInfo, NV_MOSAIC_TOPO_TYPE type); NVAPI_INTERFACE
+NvAPI_Mosaic_GetTopoGroup(NV_MOSAIC_TOPO_BRIEF* pTopoBrief, NV_MOSAIC_TOPO_GROUP* pTopoGroup); NVAPI_INTERFACE
+NvAPI_Mosaic_GetOverlapLimits(NV_MOSAIC_TOPO_BRIEF* pTopoBrief, NV_MOSAIC_DISPLAY_SETTING* pDisplaySetting, NvS32* pMinOverlapX, NvS32* pMaxOverlapX, NvS32*
+pMinOverlapY, NvS32* pMaxOverlapY); NVAPI_INTERFACE NvAPI_Mosaic_SetCurrentTopo(NV_MOSAIC_TOPO_BRIEF* pTopoBrief, NV_MOSAIC_DISPLAY_SETTING* pDisplaySetting,
+NvS32 overlapX, NvS32 overlapY, NvU32 enable); NVAPI_INTERFACE NvAPI_Mosaic_GetCurrentTopo(NV_MOSAIC_TOPO_BRIEF* pTopoBrief, NV_MOSAIC_DISPLAY_SETTING*
+pDisplaySetting, NvS32* pOverlapX, NvS32* pOverlapY); NVAPI_INTERFACE NvAPI_Mosaic_EnableCurrentTopo(NvU32 enable); NVAPI_INTERFACE
+NvAPI_Mosaic_SetDisplayGrids(__in_ecount(gridCount) NV_MOSAIC_GRID_TOPO* pGridTopologies, __in NvU32 gridCount, __in NvU32 setTopoFlags); NVAPI_INTERFACE
+NvAPI_Mosaic_ValidateDisplayGrids(__in NvU32 setTopoFlags,
         __in_ecount(gridCount) NV_MOSAIC_GRID_TOPO* pGridTopologies,
         __inout_ecount_full(gridCount) NV_MOSAIC_DISPLAY_TOPO_STATUS* pTopoStatus,
         __in NvU32 gridCount);
@@ -159,23 +161,18 @@ namespace morpheus::gfx::nvidia::nvapi
     NVAPI_INTERFACE NvAPI_EnableCurrentMosaicTopology(NvU32 enable);
     NVAPI_INTERFACE NvAPI_GSync_EnumSyncDevices(__out NvGSyncDeviceHandle nvGSyncHandles[NVAPI_MAX_GSYNC_DEVICES], __out NvU32* gsyncCount);
     NVAPI_INTERFACE NvAPI_GSync_QueryCapabilities(__in NvGSyncDeviceHandle hNvGSyncDevice, __inout NV_GSYNC_CAPABILITIES* pNvGSyncCapabilities);
-    NVAPI_INTERFACE NvAPI_GSync_GetTopology(__in NvGSyncDeviceHandle hNvGSyncDevice, __inout_opt NvU32* gsyncGpuCount, __inout_ecount_part_opt(*gsyncGpuCount, *gsyncGpuCount) NV_GSYNC_GPU* gsyncGPUs,
+    NVAPI_INTERFACE NvAPI_GSync_GetTopology(__in NvGSyncDeviceHandle hNvGSyncDevice, __inout_opt NvU32* gsyncGpuCount, __inout_ecount_part_opt(*gsyncGpuCount,
+*gsyncGpuCount) NV_GSYNC_GPU* gsyncGPUs,
         __inout_opt NvU32* gsyncDisplayCount, __inout_ecount_part_opt(*gsyncDisplayCount, *gsyncDisplayCount) NV_GSYNC_DISPLAY* gsyncDisplays);
-    NVAPI_INTERFACE NvAPI_GSync_SetSyncStateSettings(__in NvU32 gsyncDisplayCount, __in_ecount(gsyncDisplayCount) NV_GSYNC_DISPLAY* pGsyncDisplays, __in NvU32 flags);
-    NVAPI_INTERFACE NvAPI_GSync_GetControlParameters(__in NvGSyncDeviceHandle hNvGSyncDevice, __inout NV_GSYNC_CONTROL_PARAMS* pGsyncControls);
+    NVAPI_INTERFACE NvAPI_GSync_SetSyncStateSettings(__in NvU32 gsyncDisplayCount, __in_ecount(gsyncDisplayCount) NV_GSYNC_DISPLAY* pGsyncDisplays, __in NvU32
+flags); NVAPI_INTERFACE NvAPI_GSync_GetControlParameters(__in NvGSyncDeviceHandle hNvGSyncDevice, __inout NV_GSYNC_CONTROL_PARAMS* pGsyncControls);
     NVAPI_INTERFACE NvAPI_GSync_SetControlParameters(__in NvGSyncDeviceHandle hNvGSyncDevice, __inout NV_GSYNC_CONTROL_PARAMS* pGsyncControls);
-    NVAPI_INTERFACE NvAPI_GSync_AdjustSyncDelay(__in NvGSyncDeviceHandle hNvGSyncDevice, __in NVAPI_GSYNC_DELAY_TYPE delayType, __inout NV_GSYNC_DELAY* pGsyncDelay, __out_opt NvU32* syncSteps);
-    NVAPI_INTERFACE NvAPI_GSync_GetSyncStatus(__in NvGSyncDeviceHandle hNvGSyncDevice, __in NvPhysicalGpuHandle hPhysicalGpu, __inout NV_GSYNC_STATUS* status);
-    NVAPI_INTERFACE NvAPI_GSync_GetStatusParameters(NvGSyncDeviceHandle hNvGSyncDevice, NV_GSYNC_STATUS_PARAMS* pStatusParams);
-#if defined(_D3D9_H_)
-    NVAPI_INTERFACE NvAPI_D3D9_RegisterResource(IDirect3DResource9* pResource);
-    NVAPI_INTERFACE NvAPI_D3D9_UnregisterResource(IDirect3DResource9* pResource);
-    NVAPI_INTERFACE NvAPI_D3D9_AliasSurfaceAsTexture(IDirect3DDevice9* pDev,
-        IDirect3DSurface9* pSurface,
-        IDirect3DTexture9** ppTexture,
-        DWORD dwFlag);
-    NVAPI_INTERFACE NvAPI_D3D9_StretchRectEx(IDirect3DDevice9* pDevice,
-        IDirect3DResource9* pSourceResource,
+    NVAPI_INTERFACE NvAPI_GSync_AdjustSyncDelay(__in NvGSyncDeviceHandle hNvGSyncDevice, __in NVAPI_GSYNC_DELAY_TYPE delayType, __inout NV_GSYNC_DELAY*
+pGsyncDelay, __out_opt NvU32* syncSteps); NVAPI_INTERFACE NvAPI_GSync_GetSyncStatus(__in NvGSyncDeviceHandle hNvGSyncDevice, __in NvPhysicalGpuHandle
+hPhysicalGpu, __inout NV_GSYNC_STATUS* status); NVAPI_INTERFACE NvAPI_GSync_GetStatusParameters(NvGSyncDeviceHandle hNvGSyncDevice, NV_GSYNC_STATUS_PARAMS*
+pStatusParams); #if defined(_D3D9_H_) NVAPI_INTERFACE NvAPI_D3D9_RegisterResource(IDirect3DResource9* pResource); NVAPI_INTERFACE
+NvAPI_D3D9_UnregisterResource(IDirect3DResource9* pResource); NVAPI_INTERFACE NvAPI_D3D9_AliasSurfaceAsTexture(IDirect3DDevice9* pDev, IDirect3DSurface9*
+pSurface, IDirect3DTexture9** ppTexture, DWORD dwFlag); NVAPI_INTERFACE NvAPI_D3D9_StretchRectEx(IDirect3DDevice9* pDevice, IDirect3DResource9* pSourceResource,
         CONST RECT* pSourceRect,
         IDirect3DResource9* pDestResource,
         CONST RECT* pDestRect,
@@ -303,7 +300,8 @@ namespace morpheus::gfx::nvidia::nvapi
         __out NV_PRESENT_BARRIER_FRAME_STATISTICS* pFrameStats);
 
 #if defined(__cplusplus) && defined(__d3d12_h__)
-    NVAPI_INTERFACE NvAPI_D3D12_CreateDDisplayPresentBarrierClient(__in ID3D12Device* pDevice, __in NvU32 sourceId, __out NvPresentBarrierClientHandle* pPresentBarrierClient);
+    NVAPI_INTERFACE NvAPI_D3D12_CreateDDisplayPresentBarrierClient(__in ID3D12Device* pDevice, __in NvU32 sourceId, __out NvPresentBarrierClientHandle*
+pPresentBarrierClient);
 #endif // defined(__cplusplus) && defined(__d3d12_h__)
 
 

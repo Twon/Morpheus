@@ -1,5 +1,5 @@
-#include "morpheus/core/conformance/stacktrace.hpp"
 #include "morpheus/core/conformance/format.hpp"
+#include "morpheus/core/conformance/stacktrace.hpp"
 #include "morpheus/core/conversion/adapters/std/stacktrace.hpp"
 
 #include <catch2/catch_test_macros.hpp>

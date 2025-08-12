@@ -3,8 +3,9 @@
 #include <morpheus/gfx/nvidia/functions.hpp>
 
 #include <boost/dll/shared_library.hpp>
-#include <string_view>
 #include <nvapi.h>
+
+#include <string_view>
 
 namespace morpheus::gfx::nvidia
 {
@@ -20,7 +21,6 @@ class Driver
     boost::dll::shared_library mNvapi;
 
 public:
-
     Driver();
     ~Driver();
 
@@ -29,7 +29,6 @@ public:
 
     Driver(Driver&&) = delete;
     Driver& operator=(Driver&&) = delete;
-
 
     NvAPI_QueryInterface_t NvAPI_QueryInterface;
     NvAPI_Initialize_t NvAPI_Initialize;
@@ -41,6 +40,6 @@ public:
     NvAPI_GPU_GetAllDisplayIds_t NvAPI_GPU_GetAllDisplayIds;
 };
 
-}
+} // namespace nvapi
 
 } // namespace morpheus::gfx::nvidia
