@@ -1,8 +1,8 @@
 ---
 Language: Cpp
-#BasedOnStyle: none
+BasedOnStyle: none
 AccessModifierOffset: -4
-# AlignAfterOpenBracket: Align
+AlignAfterOpenBracket: Align
 AlignArrayOfStructures: Right
 # AlignConsecutiveAssignments:
 #   Enabled:         true
@@ -39,7 +39,7 @@ AlignTrailingComments:
   Kind:            Always
   OverEmptyLines:  0
 AllowAllArgumentsOnNextLine: true
-# AllowAllParametersOfDeclarationOnNextLine: true
+AllowAllParametersOfDeclarationOnNextLine: true
 AllowBreakBeforeNoexceptSpecifier: Never
 AllowShortBlocksOnASingleLine: Empty
 AllowShortCaseLabelsOnASingleLine: false
@@ -61,44 +61,44 @@ BraceWrapping:
   AfterClass:      true
   AfterControlStatement: Always
   AfterEnum:       true
-#   AfterExternBlock: false
+  AfterExternBlock: false
   AfterFunction:   true
   AfterNamespace:  true
-#   AfterObjCDeclaration: false
+  AfterObjCDeclaration: false
   AfterStruct:     true
   AfterUnion:      true
   BeforeCatch:     true
   BeforeElse:      true
   BeforeLambdaBody: true
   BeforeWhile:     true
-#   IndentBraces:    false
+  IndentBraces:    false
   SplitEmptyFunction: false
   SplitEmptyRecord: false
   SplitEmptyNamespace: false
 BreakAfterAttributes: Never
 BreakAfterReturnType: Automatic
-# BreakArrays:     true
+BreakArrays:     true
 BreakBeforeBinaryOperators: None
 BreakBeforeConceptDeclarations: Always
 BreakBeforeBraces: Custom
 # BreakBeforeInlineASMColon: OnlyMultiline
 # BreakBeforeTemplateCloser: true # Clang-21
-# BreakBeforeTernaryOperators: true
+BreakBeforeTernaryOperators: true
 BreakConstructorInitializers: BeforeComma
 # BreakInheritanceList: BeforeColon
 # BreakStringLiterals: true
 # # Please update .markdownlint.yaml if this line is to be updated
 ColumnLimit:     160
-# CommentPragmas:  '^ IWYU pragma:'
-# CompactNamespaces: false
+CommentPragmas:  '^ IWYU pragma:'
+CompactNamespaces: false
 ConstructorInitializerIndentWidth: 4
-# ContinuationIndentWidth: 4
-# Cpp11BracedListStyle: true
-# DerivePointerAlignment: false
-# DisableFormat:   false
-# EmptyLineAfterAccessModifier: Never
-# EmptyLineBeforeAccessModifier: LogicalBlock
-# ExperimentalAutoDetectBinPacking: false
+ContinuationIndentWidth: 4
+Cpp11BracedListStyle: true
+DerivePointerAlignment: false
+DisableFormat:   false
+EmptyLineAfterAccessModifier: Never
+EmptyLineBeforeAccessModifier: LogicalBlock
+ExperimentalAutoDetectBinPacking: false
 FixNamespaceComments: true
 # ForEachMacros:
 #   - foreach
@@ -113,16 +113,16 @@ IncludeCategories:
     CaseSensitive:   true
 # IncludeIsMainRegex: '$'
 # IncludeIsMainSourceRegex: ''
-# IndentAccessModifiers: false
-# IndentCaseBlocks: false
-# IndentCaseLabels: false
-# IndentExternBlock: AfterExternBlock
-# IndentGotoLabels: true
+IndentAccessModifiers: false
+IndentCaseBlocks: false
+IndentCaseLabels: false
+IndentExternBlock: AfterExternBlock
+IndentGotoLabels: true
 IndentPPDirectives: BeforeHash
 IndentRequiresClause: false
 IndentWidth:     4
 # IndentWrappedFunctionNames: false
-# InsertBraces:    false
+InsertBraces:    false
 InsertNewlineAtEOF: true
 # InsertTrailingCommas: None
 # IntegerLiteralSeparator:
@@ -173,7 +173,7 @@ ReflowComments:  true
 RemoveBracesLLVM: false
 RemoveEmptyLinesInUnwrappedLines: true
 RemoveParentheses: Leave
-# RemoveSemicolon: false
+RemoveSemicolon: false
 RequiresClausePosition: OwnLine
 RequiresExpressionIndentation: OuterScope
 SeparateDefinitionBlocks: Leave
@@ -188,16 +188,16 @@ SpaceAroundPointerQualifiers: Default
 SpaceBeforeAssignmentOperators: true
 SpaceBeforeCaseColon: false
 SpaceBeforeCpp11BracedList: false
-# SpaceBeforeCtorInitializerColon: true
-# SpaceBeforeInheritanceColon: true
-# SpaceBeforeJsonColon: false
+SpaceBeforeCtorInitializerColon: true
+SpaceBeforeInheritanceColon: true
+SpaceBeforeJsonColon: false
 SpaceBeforeParens: Custom
 SpaceBeforeParensOptions:
   AfterControlStatements: true
-#   AfterForeachMacros: true
+  AfterForeachMacros: true
   AfterFunctionDefinitionName: false
   AfterFunctionDeclarationName: false
-#   AfterIfMacros:   true
+  AfterIfMacros:   true
   AfterOverloadedOperator: false
   AfterRequiresInClause: false
   AfterRequiresInExpression: false
@@ -238,4 +238,34 @@ Language: ObjC
 ObjCBlockIndentWidth: 4
 ObjCSpaceBeforeProtocolList: false
 IndentWidth: 4
+
+BraceWrapping:
+  AfterCaseLabel:  true
+  AfterClass:      true
+  AfterControlStatement: Always
+  AfterEnum:       true
+  AfterExternBlock: false
+  AfterFunction:   true
+  AfterNamespace:  true
+  AfterObjCDeclaration: false
+  AfterStruct:     true
+  AfterUnion:      true
+  BeforeCatch:     true
+  BeforeElse:      true
+  BeforeLambdaBody: true
+  BeforeWhile:     true
+  IndentBraces:    false
+  SplitEmptyFunction: false
+  SplitEmptyRecord: false
+  SplitEmptyNamespace: false
+BreakBeforeBraces: Custom
+PointerAlignment: Left
+QualifierAlignment: Custom
+QualifierOrder:
+  - inline
+  - static
+  - constexpr
+  - type
+  - const
+  - volatile
 ...

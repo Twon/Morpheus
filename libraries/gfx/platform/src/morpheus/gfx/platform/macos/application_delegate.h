@@ -4,7 +4,7 @@
 
 @interface ApplicationDelegate : NSResponder<NSApplicationDelegate>
 
-- (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)sender;
+- (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication*)sender;
 
-- (void)applicationWillFinishLaunching:(NSNotification *)notification;
+- (void)applicationWillFinishLaunching:(NSNotification*)notification;
 @end
