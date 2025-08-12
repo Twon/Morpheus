@@ -15,14 +15,12 @@ BOOL CALLBACK MonitorEnumProc(HMONITOR hMon, HDC, LPRECT, LPARAM lParam)
     info.cbSize = sizeof(info);
     if (GetMonitorInfo(hMon, &info))
     {
-        monitors->emplace_back(Monitor{
-            info.szDevice,
-            static_cast<Monitor::PixelDiff>(info.rcMonitor.left),
-            static_cast<Monitor::PixelDiff>(info.rcMonitor.top),
-            static_cast<Monitor::Pixels>(info.rcMonitor.right - info.rcMonitor.left),
-            static_cast<Monitor::Pixels>(info.rcMonitor.bottom - info.rcMonitor.top),
-            (info.dwFlags & MONITORINFOF_PRIMARY) != 0
-        });
+        monitors->emplace_back(Monitor{info.szDevice,
+                                       static_cast<Monitor::PixelDiff>(info.rcMonitor.left),
+                                       static_cast<Monitor::PixelDiff>(info.rcMonitor.top),
+                                       static_cast<Monitor::Pixels>(info.rcMonitor.right - info.rcMonitor.left),
+                                       static_cast<Monitor::Pixels>(info.rcMonitor.bottom - info.rcMonitor.top),
+                                       (info.dwFlags & MONITORINFOF_PRIMARY) != 0});
     }
     return TRUE;
     // LCOV_EXCL_STOP

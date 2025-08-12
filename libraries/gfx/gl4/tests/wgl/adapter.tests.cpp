@@ -148,8 +148,8 @@ TEST_CASE("Create an adapter mode list", "[morpheus.core.gfx.gl.wgl.adapter_list
         if (!pCurrentPath)
             return; // failure. tried everything, apparently no source is connected to our target
 
-        LONG rc = SetDisplayConfig(pathInfo.size(), pathInfo.data(), modeInfo.size(), modeInfo.data(),
-                                   SDC_VALIDATE | SDC_USE_SUPPLIED_DISPLAY_CONFIG | SDC_ALLOW_CHANGES);
+        LONG rc = SetDisplayConfig(
+            pathInfo.size(), pathInfo.data(), modeInfo.size(), modeInfo.data(), SDC_VALIDATE | SDC_USE_SUPPLIED_DISPLAY_CONFIG | SDC_ALLOW_CHANGES);
 
         if (rc != ERROR_SUCCESS)
         {

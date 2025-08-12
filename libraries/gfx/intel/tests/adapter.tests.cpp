@@ -500,10 +500,12 @@ ctl_result_t CtlSharpnessTest(ctl_display_output_handle_t hDisplayOutput)
                     printf(" sharpnessCaps.pFilterProperty[%d].FilterType = %d\n", i, SharpnessCaps.pFilterProperty[i].FilterType);
                     printf(" sharpnessCaps.pFilterProperty[%d].FilterDetails.min_possible_"
                            "value = %f\n",
-                           i, SharpnessCaps.pFilterProperty[i].FilterDetails.min_possible_value);
+                           i,
+                           SharpnessCaps.pFilterProperty[i].FilterDetails.min_possible_value);
                     printf(" sharpnessCaps.pFilterProperty[%d].FilterDetails.max_possible_"
                            "value = %f\n",
-                           i, SharpnessCaps.pFilterProperty[i].FilterDetails.max_possible_value);
+                           i,
+                           SharpnessCaps.pFilterProperty[i].FilterDetails.max_possible_value);
                     printf(" sharpnessCaps.pFilterProperty[%d].FilterDetails.step_size = %f\n", i, SharpnessCaps.pFilterProperty[i].FilterDetails.step_size);
                 }
                 free(SharpnessCaps.pFilterProperty);
@@ -936,7 +938,11 @@ void PrintAdapterProperties(ctl_device_adapter_properties_t StDeviceAdapterPrope
     char DriverVersion[25] = "";
     LARGE_INTEGER LIDriverVersion;
     LIDriverVersion.QuadPart = StDeviceAdapterProperties.driver_version;
-    sprintf(DriverVersion, "%d.%d.%d.%d", HIWORD(LIDriverVersion.HighPart), LOWORD(LIDriverVersion.HighPart), HIWORD(LIDriverVersion.LowPart),
+    sprintf(DriverVersion,
+            "%d.%d.%d.%d",
+            HIWORD(LIDriverVersion.HighPart),
+            LOWORD(LIDriverVersion.HighPart),
+            HIWORD(LIDriverVersion.LowPart),
             LOWORD(LIDriverVersion.LowPart));
 
     printf("Intel Graphics Driver Version : %s\n", DriverVersion);

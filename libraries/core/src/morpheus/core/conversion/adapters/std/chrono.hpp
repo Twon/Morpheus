@@ -292,7 +292,10 @@ struct morpheus::fmt_ns::formatter<morpheus::date_ns::year_month_weekday> : morp
     auto format(morpheus::date_ns::year_month_weekday const& year_month_weekday, format_context& ctx) const -> format_context::iterator
     {
         using namespace std::literals;
-        return morpheus::fmt_ns::format_to(ctx.out(), "{}/{}/{}"sv, year_month_weekday.year(), months[static_cast<unsigned>(year_month_weekday.month()) - 1],
+        return morpheus::fmt_ns::format_to(ctx.out(),
+                                           "{}/{}/{}"sv,
+                                           year_month_weekday.year(),
+                                           months[static_cast<unsigned>(year_month_weekday.month()) - 1],
                                            year_month_weekday.weekday_indexed());
     }
 };

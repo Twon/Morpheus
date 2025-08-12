@@ -52,10 +52,12 @@ concurrency::Generator<Monitor> enumerateMonitors() noexcept
             XRRCrtcInfo* crtc = XRRGetCrtcInfo(display.get(), resources.get(), output->crtc);
             if (crtc)
             {
-                co_yield Monitor{output->name, static_cast<Monitor::PixelDiff>(crtc->x), static_cast<Monitor::PixelDiff>(crtc->y),
-                                 static_cast<Monitor::Pixels>(crtc->width), static_cast<Monitor::Pixels>(crtc->height),
+                co_yield Monitor{output->name,
+                                 static_cast<Monitor::PixelDiff>(crtc->x),
+                                 static_cast<Monitor::PixelDiff>(crtc->y),
+                                 static_cast<Monitor::Pixels>(crtc->width),
+                                 static_cast<Monitor::Pixels>(crtc->height),
                                  // X11 allows for there to be no primary monitor set, in which case we just the monitor as coordinates (0, 0) as primary.
-
                                  (primary == 0) ? crtc->x == 0 && crtc->y == 0 : (resources->outputs[i] == primary)};
                 XRRFreeCrtcInfo(crtc);
             }

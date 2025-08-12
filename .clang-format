@@ -38,6 +38,7 @@ AlignOperands:   Align
 AlignTrailingComments:
   Kind:            Always
   OverEmptyLines:  0
+AllowAllArgumentsOnNextLine: true
 # AllowAllParametersOfDeclarationOnNextLine: true
 AllowBreakBeforeNoexceptSpecifier: Never
 AllowShortBlocksOnASingleLine: Empty
@@ -52,7 +53,7 @@ AlwaysBreakBeforeMultilineStrings: false
 AlwaysBreakTemplateDeclarations: Yes
 # AttributeMacros:
 #   - __capability
-# BinPackArguments: false
+BinPackArguments: false
 BinPackParameters: OnePerLine
 BitFieldColonSpacing: Both
 BraceWrapping:

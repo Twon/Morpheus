@@ -267,8 +267,17 @@ auto createWindow(RenderWindow* thisWindow, RenderWindow::Config& config)
     ::RegisterClass(&wcex);
 
     // Create the window using the WS_OVERLAPPEDWINDOW style
-    auto const window = ::CreateWindow(config.windowName.c_str(), config.windowName.c_str(), windowStyle, config.startX, config.startY, config.width,
-                                       config.height, nullptr, nullptr, hInstance, thisWindow);
+    auto const window = ::CreateWindow(config.windowName.c_str(),
+                                       config.windowName.c_str(),
+                                       windowStyle,
+                                       config.startX,
+                                       config.startY,
+                                       config.width,
+                                       config.height,
+                                       nullptr,
+                                       nullptr,
+                                       hInstance,
+                                       thisWindow);
     MORPHEUS_VERIFY(window);
     return window;
 }

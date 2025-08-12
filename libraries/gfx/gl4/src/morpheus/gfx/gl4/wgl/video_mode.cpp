@@ -23,14 +23,13 @@ concurrency::Generator<VideoMode> enumerateVideoModes(Adapter const& adapter)
             continue;
         }
 
-		co_yield VideoMode(
-			static_cast<std::uint16_t>(devMode.dmPelsWidth),
-			static_cast<std::uint16_t>(devMode.dmPelsHeight),
-			static_cast<std::uint16_t>(devMode.dmBitsPerPel),
-			static_cast<std::uint16_t>(devMode.dmDisplayFrequency)/*,
-			((32 == DevMode.dmBitsPerPel) ? PF_X8R8G8B8 : PF_R5G6B5)*/
-		);
-	}
+        co_yield VideoMode(static_cast<std::uint16_t>(devMode.dmPelsWidth),
+                           static_cast<std::uint16_t>(devMode.dmPelsHeight),
+                           static_cast<std::uint16_t>(devMode.dmBitsPerPel),
+                           static_cast<std::uint16_t>(devMode.dmDisplayFrequency) /*,
+                            ((32 == DevMode.dmBitsPerPel) ? PF_X8R8G8B8 : PF_R5G6B5)*/
+        );
+    }
 }
 
 } // namespace morpheus::gfx::gl4::wgl
