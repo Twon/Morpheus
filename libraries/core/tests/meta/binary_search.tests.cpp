@@ -17,10 +17,12 @@ struct FindValueByIndex : std::bool_constant<TestValues[Index] == Value>
 };
 
 template <std::size_t Index>
-struct TestPredicate : FindValueByIndex<Index, 7> {};
+struct TestPredicate : FindValueByIndex<Index, 7>
+{};
 
 template <std::size_t Index>
-struct TestPredicate2 : std::conditional_t<Index == 7, std::true_type, std::false_type> {};
+struct TestPredicate2 : std::conditional_t<Index == 7, std::true_type, std::false_type>
+{};
 
 TEST_CASE("Meta binary_search allows the compile time search of a predicate", "[morpheus.meta.binary_search]")
 {

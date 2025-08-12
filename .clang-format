@@ -1,6 +1,6 @@
 ---
 Language: Cpp
-#BasedOnStyle: none
+BasedOnStyle: none
 AccessModifierOffset: -4
 # AlignAfterOpenBracket: Align
 AlignArrayOfStructures: Right
@@ -53,7 +53,7 @@ AlwaysBreakTemplateDeclarations: Yes
 # AttributeMacros:
 #   - __capability
 # BinPackArguments: false
-# BinPackParameters: false
+BinPackParameters: AlwaysOnePerLine
 BitFieldColonSpacing: Both
 BraceWrapping:
   AfterCaseLabel:  true

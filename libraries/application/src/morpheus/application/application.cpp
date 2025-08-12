@@ -28,8 +28,7 @@ void terminationHandler()
         debugPrint(fmt_ns::format("{}", MORPHEUS_CURRENT_STACKTRACE));
     }
     catch (...)
-    {
-    }
+    {}
     std::abort();
 }
 
@@ -54,8 +53,7 @@ Application::Application(int argc, char const* const* argv)
           {
               po::Config config;
               if (auto invalid = parseProgramOptions(argc, argv, po::HelpDocumentation{}, config))
-              {
-              }
+              {}
               return config;
           }())
 //`: mLogName(getDefaultApplicationLogName())
