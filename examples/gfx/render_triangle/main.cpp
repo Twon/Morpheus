@@ -16,11 +16,9 @@ public:
     using Application::Application;
 
     RenderTriange(int argc, char const* const* argv)
-    :   Application(argc, argv)
-    ,   window(std::move(win32::RenderWindow::create(win32::RenderWindow::Config{})).value())
-    {
-
-    }
+        : Application(argc, argv)
+        , window(std::move(win32::RenderWindow::create(win32::RenderWindow::Config{})).value())
+    {}
 
     void Run()
     {
@@ -50,32 +48,32 @@ protected:
 
 int main(int argc, char* argv[])
 {
-    //const std::vector<std::string> renders = {
-    //    "Direct X 12",
-    //    "OpenGL 4",
-    //    "Vulkan"
-    //};
+    // const std::vector<std::string> renders = {
+    //     "Direct X 12",
+    //     "OpenGL 4",
+    //     "Vulkan"
+    // };
 
-    //int selectedRenders = 0;
-    //ftxui::Component compiler = ftxui::Radiobox(&renders, &selectedRenders);
+    // int selectedRenders = 0;
+    // ftxui::Component compiler = ftxui::Radiobox(&renders, &selectedRenders);
 
-    //auto screen = ftxui::ScreenInteractive::Fullscreen();
+    // auto screen = ftxui::ScreenInteractive::Fullscreen();
     ////auto testComponent = ftxui::Renderer([]() { return ftxui::text("test Component"); });
-    //auto testComponent = ftxui::Renderer(compiler, [&]() {
-    //    auto rendererWin = ftxui::window(ftxui::text("Renderer"), compiler->Render() | ftxui::vscroll_indicator | ftxui::frame);
-    //    return rendererWin;
-    //});
-    //screen.Loop(testComponent);
+    // auto testComponent = ftxui::Renderer(compiler, [&]() {
+    //     auto rendererWin = ftxui::window(ftxui::text("Renderer"), compiler->Render() | ftxui::vscroll_indicator | ftxui::frame);
+    //     return rendererWin;
+    // });
+    // screen.Loop(testComponent);
 
     morpheus::vis::RenderSystemFactory factory;
     factory.runTuiConfiguration();
 
-    //tryCatch(
-    //    [&]
-    //    {
-    //        RenderTriange example(argc, argv);
-    //        example.Run();
-    //    });
+    // tryCatch(
+    //     [&]
+    //     {
+    //         RenderTriange example(argc, argv);
+    //         example.Run();
+    //     });
 
     //    render_system_factory renderer_factory;
 }

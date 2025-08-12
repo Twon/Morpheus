@@ -25,12 +25,12 @@ TEST_CASE("Create a vulkan render system", "[morpheus.gfx.vulkan.render_system]"
     VkResult res = vkEnumerateInstanceVersion(&version);
     INFO("The Vulkan version is " << VK_VERSION_MAJOR(version) <<"."<< VK_VERSION_MINOR(version) <<"."<< VK_VERSION_PATCH(version));
 
-    uint32_t instance_layer_count = 0;
-    res = vkEnumerateInstanceLayerProperties(&instance_layer_count, nullptr);
+        uint32_t instance_layer_count = 0;
+        res = vkEnumerateInstanceLayerProperties(&instance_layer_count, nullptr);
 
-    INFO("Found " << instance_layer_count << " layers in Vulkan instance.");
-    std::vector<VkLayerProperties> layers(instance_layer_count);
-    res = vkEnumerateInstanceLayerProperties(&instance_layer_count, layers.data());
+        INFO("Found " << instance_layer_count << " layers in Vulkan instance.");
+        std::vector<VkLayerProperties> layers(instance_layer_count);
+        res = vkEnumerateInstanceLayerProperties(&instance_layer_count, layers.data());
 
     std::vector<char const *> layer_names(instance_layer_count);
     std::transform(layers.begin(), layers.end(), layer_names.begin(), [](const auto& element) { return element.layerName;});
@@ -45,8 +45,8 @@ TEST_CASE("Create a vulkan render system", "[morpheus.gfx.vulkan.render_system]"
 //    instance_extensions = layer_props.instance_extensions.data();
 //    res = vkEnumerateInstanceExtensionProperties(layer_name, &instance_extension_count, instance_extensions);
     CHECK(true);
-    char const * const appName = "My Vulkan Test Case";
-    char const * const engineName = "My Vulkan Test Case Engine";
+    char const* const appName = "My Vulkan Test Case";
+    char const* const engineName = "My Vulkan Test Case Engine";
     vk::raii::Context context;
     vk::ApplicationInfo applicationInfo(appName, 1, engineName, 1, VK_API_VERSION_1_1);
     vk::InstanceCreateInfo instanceCreateInfo({}, &applicationInfo);
@@ -62,15 +62,13 @@ TEST_CASE("Create a vulkan render system", "[morpheus.gfx.vulkan.render_system]"
         CHECK(true);
         //    auto const displayProperties = device.getDisplayPropertiesKHR();
         //    INFO("The num physical devices displays is " << displayProperties.size());
-
     }
-//    std::vector<VkPhysicalDeviceProperties> devices_properties(gpu_count);
-//    res = vkEnumeratePhysicalDevices(instance, &gpu_count, devices.data());
-//    vkGetPhysicalDeviceProperties(devices[0], &devices_properties[0]);
+    //    std::vector<VkPhysicalDeviceProperties> devices_properties(gpu_count);
+    //    res = vkEnumeratePhysicalDevices(instance, &gpu_count, devices.data());
+    //    vkGetPhysicalDeviceProperties(devices[0], &devices_properties[0]);
 
-
-//    INFO("The result is " << res)
-//    CHECK(!res);
-//    CHECK(gpu_count > 0);
+    //    INFO("The result is " << res)
+    //    CHECK(!res);
+    //    CHECK(gpu_count > 0);
 }
 */

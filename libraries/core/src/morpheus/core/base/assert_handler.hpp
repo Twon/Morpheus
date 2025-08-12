@@ -57,7 +57,7 @@ enum class MORPHEUSCORE_EXPORT AssertType
 /// \param[in] location The source file location where the assert originated.
 /// \param[in] expr String representation of the condition.
 /// \param[in] message An optional message describing the assert.
-MORPHEUSCORE_EXPORT void assertHandler(AssertType type, sl_ns::source_location const location, std::string_view const expr,
-                                       std::string_view message = std::string_view());
+MORPHEUSCORE_EXPORT void
+assertHandler(AssertType type, sl_ns::source_location const location, std::string_view const expr, std::string_view message = std::string_view());
 
 } // namespace morpheus

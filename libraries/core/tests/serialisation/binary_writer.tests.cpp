@@ -28,8 +28,8 @@ namespace morpheus::serialisation
 
 TEST_CASE("Binary writer handles error cases gracefully", "[morpheus.serialisation.binary_writer.error_handling]")
 {
-    auto constexpr bytes = testing::makeBytes(0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00);
-    auto constexpr string = std::string_view{"String longer than 4-bytes"};
+    constexpr auto bytes = testing::makeBytes(0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00);
+    constexpr auto string = std::string_view{"String longer than 4-bytes"};
 
 #if (__cpp_lib_spanstream >= 202106L)
     SECTION("Serialise via spanstream to test failure condition when the the underling stream runs out of memory while writing but does not throw an exception")
@@ -74,12 +74,12 @@ TEST_CASE("Binary writer can write std types to underlying text representation",
         REQUIRE(test::serialisationRoundtrip(std::chrono::years{100}) == std::chrono::years{100});
         REQUIRE(test::serialisationRoundtrip(std::chrono::months{12}) == std::chrono::months{12});*/
     }
-/*    REQUIRE(test::serialisationRoundtrip(std::monostate{}) == std::monostate{});
-    REQUIRE(test::serialisationRoundtrip(std::optional<int>{100}) == std::optional<int>{100});
-    REQUIRE(test::serialisationRoundtrip(std::optional<int>{}) == std::optional<int>{});
-    REQUIRE(test::serialisationRoundtrip(std::pair<int, bool>{50, true}) == std::pair<int, bool>{50, true});
-    REQUIRE(*test::serialisationRoundtrip(std::make_unique<int>(123)) == 123);
-    */
+    /*    REQUIRE(test::serialisationRoundtrip(std::monostate{}) == std::monostate{});
+        REQUIRE(test::serialisationRoundtrip(std::optional<int>{100}) == std::optional<int>{100});
+        REQUIRE(test::serialisationRoundtrip(std::optional<int>{}) == std::optional<int>{});
+        REQUIRE(test::serialisationRoundtrip(std::pair<int, bool>{50, true}) == std::pair<int, bool>{50, true});
+        REQUIRE(*test::serialisationRoundtrip(std::make_unique<int>(123)) == 123);
+        */
     /*  REQUIRE(test::serialise(std::variant<int, bool, std::string>{true}) == R"({"type":"bool","value":true})");
         REQUIRE(test::serialise(std::vector<int>{1, 2, 3, 4, 5}) == R"([1,2,3,4,5])");
     */

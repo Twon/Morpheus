@@ -1,4 +1,4 @@
-#include "morpheus/application/po/adapters/boost/log.hpp" // IWYU pragma: keep
+#include "morpheus/application/po/adapters/boost/log.hpp"      // IWYU pragma: keep
 #include "morpheus/application/po/adapters/std/filesystem.hpp" // IWYU pragma: keep
 #include "morpheus/application/po/config.hpp"
 
@@ -20,10 +20,8 @@ void Config::addOptions(boost::program_options::options_description& options)
 //        ("logfile-timezone", po::value(&logFileTimeZone)->required(), "Width in pixels of the window.");
     // clang-format on
 
-
-//    std::filesystem::path logFilePath;
-//    date_ns::time_zone logFileTimeZone;
-
+    //    std::filesystem::path logFilePath;
+    //    date_ns::time_zone logFileTimeZone;
 }
 
 } // namespace morpheus::application::po

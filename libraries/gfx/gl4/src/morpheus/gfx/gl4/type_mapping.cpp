@@ -4,18 +4,17 @@ namespace morpheus::gfx::gl4
 {
 
 //---------------------------------------------------------------------------------------------------------------------
-
+// LCOV_EXCL_START
 TypeMapping::TypeMapping(
-//    const std::uint32_t width,
-//    const std::uint32_t height,
-//    const std::uint32_t colourDepth
+    //    const std::uint32_t width,
+    //    const std::uint32_t height,
+    //    const std::uint32_t colourDepth
 )
 //:   mWidth(width),
 //    mHeight(height),
 //    mColourDepth(colourDepth)
-{
-}
-
+{}
+// LCOV_EXCL_STOP
 //---------------------------------------------------------------------------------------------------------------------
 
 } // namespace morpheus::gfx::gl4

@@ -4,7 +4,5 @@
 
 namespace morpheus::vis
 {
-TEST_CASE("A place holder test", "[vis.placeholder]")
-{
-}
-}
+TEST_CASE("A place holder test", "[vis.placeholder]") {}
+} // namespace morpheus::vis

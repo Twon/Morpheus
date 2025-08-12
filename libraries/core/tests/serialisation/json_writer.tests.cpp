@@ -1,4 +1,3 @@
-#include "morpheus/core/serialisation/json_writer.hpp"
 #include "morpheus/core/conformance/format.hpp"
 #include "morpheus/core/serialisation/adapters/aggregate.hpp"
 #include "morpheus/core/serialisation/adapters/std/chrono.hpp"
@@ -9,6 +8,7 @@
 #include "morpheus/core/serialisation/adapters/std/unique_ptr.hpp"
 #include "morpheus/core/serialisation/adapters/std/variant.hpp"
 #include "morpheus/core/serialisation/adapters/std/vector.hpp"
+#include "morpheus/core/serialisation/json_writer.hpp"
 #include "morpheus/core/serialisation/serialisers.hpp"
 #include "morpheus/core/serialisation/write_serialiser.hpp"
 
@@ -65,8 +65,19 @@ T toFloatingPoint(std::string_view value)
 
 } // namespace test
 
-TEMPLATE_TEST_CASE("Json writer can write single native types to underlying text representation", "[morpheus.serialisation.json_writer.native]", bool,
-                   std::int8_t, std::uint8_t, std::int16_t, std::uint16_t, std::int32_t, std::uint32_t, std::int64_t, std::uint64_t, float, double)
+TEMPLATE_TEST_CASE("Json writer can write single native types to underlying text representation",
+                   "[morpheus.serialisation.json_writer.native]",
+                   bool,
+                   std::int8_t,
+                   std::uint8_t,
+                   std::int16_t,
+                   std::uint16_t,
+                   std::int32_t,
+                   std::uint32_t,
+                   std::int64_t,
+                   std::uint64_t,
+                   float,
+                   double)
 {
     if constexpr (std::is_integral_v<TestType>)
     {
@@ -91,8 +102,10 @@ TEMPLATE_TEST_CASE("Json writer can write single native types to underlying text
 #if (__cpp_lib_to_chars >= 201611L)
         // RapidJson outputs "1.401298464324817e-45" vs "1e-45" for float, but SetMaxDecimalPlaces() would effect all non-scientific values so we compare
         // against the underling value not string representation.
-//        REQUIRE(test::toFloatingPoint<TestType>(test::serialise(std::numeric_limits<TestType>::denorm_min())) == Approx(std::numeric_limits<TestType>::denorm_min()));
-//        REQUIRE(test::toFloatingPoint<TestType>(test::serialise(std::numeric_limits<TestType>::denorm_min())) == Approx(std::numeric_limits<TestType>::denorm_min()));
+//        REQUIRE(test::toFloatingPoint<TestType>(test::serialise(std::numeric_limits<TestType>::denorm_min())) ==
+//        Approx(std::numeric_limits<TestType>::denorm_min()));
+//        REQUIRE(test::toFloatingPoint<TestType>(test::serialise(std::numeric_limits<TestType>::denorm_min())) ==
+//        Approx(std::numeric_limits<TestType>::denorm_min()));
 #endif // (__cpp_lib_to_chars >= 201611L)
     }
 }

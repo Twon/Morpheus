@@ -8,13 +8,15 @@
 
 #include <optional>
 #include <string>
+#include <wil/resource.h>
 
 namespace morpheus::gfx::win32
 {
 
 /// \class RenderWindow
 ///     A specialisation of the render window for the Windows platform based on the Win32 API.
-class RenderWindow : protected gfx::RenderWindow {
+class RenderWindow : protected gfx::RenderWindow
+{
 public:
     using WindowHandle = HWND;
     using Config = gfx::RenderWindow::Config;
@@ -69,7 +71,7 @@ private:
     friend LRESULT WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
     std::optional<HINSTANCE> mHInstance; /// HInstance of initiating module.
-    wil::unique_hwnd mWindow; /// OS window handle.
+    wil::unique_hwnd mWindow;            /// OS window handle.
 };
 
 } // namespace morpheus::gfx::win32

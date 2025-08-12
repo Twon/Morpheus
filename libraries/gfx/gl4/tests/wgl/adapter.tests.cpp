@@ -1,36 +1,32 @@
 #include <morpheus/gfx/gl4/wgl/adapter.hpp>
 #include <morpheus/gfx/platform/concepts/adapter.hpp>
 #include <morpheus/gfx/platform/win32/error.hpp>
+
 #include <catch2/catch_all.hpp>
-
-
-
 
 #include <morpheus/core/conformance/expected.hpp>
 
 #include <algorithm>
 #include <vector>
 
-
-#include <windows.h>
 #include <cfgmgr32.h>
+#include <windows.h>
 #if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP | WINAPI_PARTITION_SYSTEM)
-//#error "Missing define"
+// #error "Missing define"
 #endif
 
 #include <devpkey.h>
 #include <setupapi.h>
 
-#include <initguid.h>
 #include <devpkey.h>
+#include <initguid.h>
 
 #include <Cfgmgr32.h>
 #include <Wiaintfc.h>
 
 #include <devguid.h>
-#include <winioctl.h>
 #include <rpc.h>
-
+#include <winioctl.h>
 
 /*
 #include <CL/cl.h>
@@ -39,9 +35,9 @@
 #include <string.h>
 */
 #ifdef _WIN32
-#include <windows.h>
-//extern "C" __declspec(dllexport) DWORD NvOptimusEnablement = 0x00000001;
-//extern "C" __declspec(dllexport) DWORD AmdPowerXpressRequestHighPerformance = 0x00000001;
+    #include <windows.h>
+// extern "C" __declspec(dllexport) DWORD NvOptimusEnablement = 0x00000001;
+// extern "C" __declspec(dllexport) DWORD AmdPowerXpressRequestHighPerformance = 0x00000001;
 extern "C" __declspec(dllexport) DWORD NvOptimusEnablement = 0x00000000;
 extern "C" __declspec(dllexport) DWORD AmdPowerXpressRequestHighPerformance = 0x00000000;
 #endif
@@ -59,10 +55,13 @@ auto getDisplayConfigBufferSizes() -> exp_ns::expected<std::pair<UINT32, UINT32>
 {
     UINT32 pathCount = 0, modeCount = 0;
     auto const result = GetDisplayConfigBufferSizes(QDC_ONLY_ACTIVE_PATHS, &pathCount, &modeCount);
-    if (result != ERROR_SUCCESS) {
+    if (result != ERROR_SUCCESS)
+    {
         return exp_ns::unexpected(win32::GetLastErrorString(result));
     }
-    return {std::pair{pathCount, modeCount}};
+    return {
+        std::pair{pathCount, modeCount}
+    };
 }
 
 auto queryDisplayConfig(DisplayConfig config) -> exp_ns::expected<DisplayConfig, std::string>
@@ -84,7 +83,8 @@ auto targetDeviceName(DISPLAYCONFIG_PATH_INFO const& path) -> exp_ns::expected<D
     targetName.header.adapterId = path.sourceInfo.adapterId;
     targetName.header.id = path.sourceInfo.id;
     auto const result = DisplayConfigGetDeviceInfo(&targetName.header);
-    if (result != ERROR_SUCCESS) {
+    if (result != ERROR_SUCCESS)
+    {
         return exp_ns::unexpected(win32::GetLastErrorString(result));
     }
     return targetName;
@@ -98,17 +98,18 @@ auto adapterName(DISPLAYCONFIG_PATH_INFO const& path) -> exp_ns::expected<DISPLA
     adapterName.header.adapterId = path.sourceInfo.adapterId;
     adapterName.header.id = 0;
     auto const result = DisplayConfigGetDeviceInfo(&adapterName.header);
-    if (result != ERROR_SUCCESS) {
+    if (result != ERROR_SUCCESS)
+    {
         return exp_ns::unexpected(win32::GetLastErrorString(result));
     }
     return adapterName;
 }
 
-}
-// namespace
+} // namespace
 
 exp_ns::expected<DisplayConfig, std::string> getCurrentDisplayConfig()
 {
+    // clang-format off
     return getDisplayConfigBufferSizes()
         .and_then([](auto counts) -> exp_ns::expected<DisplayConfig, std::string>
             {
@@ -121,12 +122,14 @@ exp_ns::expected<DisplayConfig, std::string> getCurrentDisplayConfig()
             })
         .and_then([](auto config)
             { return queryDisplayConfig(std::move(config)); });
+    // clang-format on
 }
 
 auto getTargetDevicesNames(DisplayConfig const& config) -> exp_ns::expected<std::vector<DISPLAYCONFIG_TARGET_DEVICE_NAME>, std::string>
 {
     auto& [paths, modes] = config;
 
+    // clang-format off
     auto r = paths | std::ranges::views::transform([](auto const& path)
         {
             //auto targetDeviceName = targetDeviceName(path);
@@ -149,26 +152,27 @@ auto getTargetDevicesNames(DisplayConfig const& config) -> exp_ns::expected<std:
             result.value().push_back(element.value());
             return std::move(result);
         });
+    // clang-format on
 
     return result;
 }
 
 TEST_CASE("Create an adapter mode list", "[morpheus.core.gfx.gl.wgl.adapter_list]")
 {
-//    DISPLAYCONFIG_ADAPTER_NAME adapter{ {DISPLAYCONFIG_DEVICE_INFO_GET_ADAPTER_NAME , sizeof(DISPLAYCONFIG_ADAPTER_NAME)} };
-//    MORPHEUS_VERIFY(DisplayConfigGetDeviceInfo(adapter.header) == ERROR_SUCCESS);
+    //    DISPLAYCONFIG_ADAPTER_NAME adapter{ {DISPLAYCONFIG_DEVICE_INFO_GET_ADAPTER_NAME , sizeof(DISPLAYCONFIG_ADAPTER_NAME)} };
+    //    MORPHEUS_VERIFY(DisplayConfigGetDeviceInfo(adapter.header) == ERROR_SUCCESS);
 
     LUID targetAdapter; // the LUID of the target we want to find the source for
-    ULONG targetId = 0;  // the id of the target we want to find the source for
+    ULONG targetId = 0; // the id of the target we want to find the source for
 
     DISPLAYCONFIG_ADAPTER_NAME adapterName = {};
-    adapterName.header.adapterId = LUID{68511,0}, //path.targetInfo.adapterId;
+    adapterName.header.adapterId = LUID{68511, 0}; // path.targetInfo.adapterId;
     adapterName.header.type = DISPLAYCONFIG_DEVICE_INFO_GET_ADAPTER_NAME;
     adapterName.header.size = sizeof(adapterName);
     auto result2 = DisplayConfigGetDeviceInfo(&adapterName.header);
 
     DISPLAYCONFIG_ADAPTER_NAME adapterName2 = {};
-    adapterName2.header.adapterId = LUID{69333,0}, //path.targetInfo.adapterId;
+    adapterName2.header.adapterId = LUID{69333, 0}; // path.targetInfo.adapterId;
     adapterName2.header.type = DISPLAYCONFIG_DEVICE_INFO_GET_ADAPTER_NAME;
     adapterName2.header.size = sizeof(adapterName2);
     auto result3 = DisplayConfigGetDeviceInfo(&adapterName2.header);
@@ -177,12 +181,11 @@ TEST_CASE("Create an adapter mode list", "[morpheus.core.gfx.gl.wgl.adapter_list
     ULONG PropertySize = 0;
     ULONG SomeValue = 0;
 
-
-    SP_DEVICE_INTERFACE_DATA interfaceData = { 0 };
+    SP_DEVICE_INTERFACE_DATA interfaceData = {0};
     interfaceData.cbSize = sizeof(SP_DEVICE_INTERFACE_DATA);
 
-//    HDEVINFO deviceInfoSet = SetupDiCreateDeviceInfoList(NULL, NULL);
-//    SetupDiOpenDeviceInterface(deviceInfoSet, adapterName.adapterDevicePath, 0, &interfaceData);
+    //    HDEVINFO deviceInfoSet = SetupDiCreateDeviceInfoList(NULL, NULL);
+    //    SetupDiOpenDeviceInterface(deviceInfoSet, adapterName.adapterDevicePath, 0, &interfaceData);
     /*
     PropertySize = sizeof(SomeValue);
     auto cr = CM_Get_DevNode_PropertyW(DevInst,
@@ -194,23 +197,19 @@ TEST_CASE("Create an adapter mode list", "[morpheus.core.gfx.gl.wgl.adapter_list
 */
     DISPLAYCONFIG_PATH_SOURCE_INFO* pSource = NULL; // will contain the answer
 
-    auto result = getCurrentDisplayConfig()
-        .and_then([](DisplayConfig const& config) { return getTargetDevicesNames(config); });
-
+    auto result = getCurrentDisplayConfig().and_then([](DisplayConfig const& config) { return getTargetDevicesNames(config); });
 
     auto result4 = getCurrentDisplayConfig();
     REQUIRE(result4);
 
     auto& [pathInfo, modeInfo] = result4.value();
 
-
-
-    for (UINT32 tryEnable = 0;; ++tryEnable) {
+    for (UINT32 tryEnable = 0;; ++tryEnable)
+    {
         DISPLAYCONFIG_PATH_INFO* pCurrentPath = NULL;
         for (UINT32 i = 0, j = 0; i < pathInfo.size(); ++i)
         {
-            if (pathInfo[i].targetInfo.targetAvailable &&
-                !memcmp(&pathInfo[i].targetInfo.adapterId, &targetAdapter, sizeof(LUID)) &&
+            if (pathInfo[i].targetInfo.targetAvailable && !memcmp(&pathInfo[i].targetInfo.adapterId, &targetAdapter, sizeof(LUID)) &&
                 pathInfo[i].targetInfo.id == targetId)
             {
                 pathInfo[i].targetInfo.statusFlags |= DISPLAYCONFIG_TARGET_IN_USE;
@@ -236,8 +235,8 @@ TEST_CASE("Create an adapter mode list", "[morpheus.core.gfx.gl.wgl.adapter_list
         if (!pCurrentPath)
             return; // failure. tried everything, apparently no source is connected to our target
 
-        LONG rc = SetDisplayConfig(pathInfo.size(), pathInfo.data(), modeInfo.size(), modeInfo.data(),
-                    SDC_VALIDATE | SDC_USE_SUPPLIED_DISPLAY_CONFIG | SDC_ALLOW_CHANGES);
+        LONG rc = SetDisplayConfig(
+            pathInfo.size(), pathInfo.data(), modeInfo.size(), modeInfo.data(), SDC_VALIDATE | SDC_USE_SUPPLIED_DISPLAY_CONFIG | SDC_ALLOW_CHANGES);
 
         if (rc != ERROR_SUCCESS)
         {
@@ -251,24 +250,24 @@ TEST_CASE("Create an adapter mode list", "[morpheus.core.gfx.gl.wgl.adapter_list
             break; // success!
         }
     }
-    //Note: pSource is pointing to the source relevant to the relevant source now!
-    //You just need to copy off whatever you need.
+    // Note: pSource is pointing to the source relevant to the relevant source now!
+    // You just need to copy off whatever you need.
 }
 
 TEST_CASE("Concept checks for WGL adapters", "[morpheus.gfx.gl.wgl.adapter.concepts]")
 {
-//    STATIC_REQUIRE(concepts::VideoMode<VideoMode>);
-    //STATIC_REQUIRE(requires(Adapter t) { { t.getName() } -> std::convertible_to<std::string_view>; });
-    //STATIC_REQUIRE(requires(Adapter t) { { t.getVideoModes() } -> morpheus::gfx::concepts::VideoModeRange; });
+    //    STATIC_REQUIRE(concepts::VideoMode<VideoMode>);
+    // STATIC_REQUIRE(requires(Adapter t) { { t.getName() } -> std::convertible_to<std::string_view>; });
+    // STATIC_REQUIRE(requires(Adapter t) { { t.getVideoModes() } -> morpheus::gfx::concepts::VideoModeRange; });
 
-//    STATIC_REQUIRE(gfx::concepts::Adapter<Adapter>);
+    //    STATIC_REQUIRE(gfx::concepts::Adapter<Adapter>);
 }
 
 TEST_CASE("Iterates over the adapters in the list", "[morpheus.core.gfx.gl.wgl.adapter_list]")
 {
     GIVEN("An adapter list")
     {
-        //adapter_list adapters;
+        // adapter_list adapters;
         THEN("Loop over all adapters using native for loop syntax")
         {
             for (auto& adapter : enumerateAdapters())
@@ -277,7 +276,6 @@ TEST_CASE("Iterates over the adapters in the list", "[morpheus.core.gfx.gl.wgl.a
             }
         }
     }
-
 }
 
 /*

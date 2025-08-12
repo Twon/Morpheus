@@ -9,28 +9,32 @@ namespace morpheus::gfx::win32
 
 struct [[nodiscard]] ErrorCode
 {
-  constexpr explicit ErrorCode(DWORD const e) noexcept : error(e) {}
-  DWORD error;
+    constexpr explicit ErrorCode(DWORD const e) noexcept
+        : error(e)
+    {}
+    DWORD error;
 };
 
 } // namespace morpheus::gfx::win32
 
 namespace std
 {
-    template <> struct is_error_code_enum<morpheus::gfx::win32::ErrorCode> : true_type {};
-}
+template <>
+struct is_error_code_enum<morpheus::gfx::win32::ErrorCode> : true_type
+{};
+} // namespace std
 
 namespace morpheus::gfx::win32
 {
 
 namespace details
 {
-    class ErrorCategory;
+class ErrorCategory;
 }
 
 /// Retrieve the one instance of the Win32 error category
 /// \return The one instance of the Win32 error category.
-const details::ErrorCategory& ErrorCategory() noexcept;
+details::ErrorCategory const& ErrorCategory() noexcept;
 
 } // namespace morpheus::gfx::win32
 

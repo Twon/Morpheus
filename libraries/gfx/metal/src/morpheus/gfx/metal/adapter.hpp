@@ -10,7 +10,8 @@ namespace morpheus::gfx::metal
 /*! \class Adapter
         Describes an available graphic devices on the target platform.
  */
-class Adapter {
+class Adapter
+{
 public:
     /// \name Life cycle
     ///@{
@@ -22,11 +23,7 @@ public:
         \param[in] colourDepth
              The colour depth of the pixels of the render target.
      */
-    Adapter(
-        std::uint32_t const width,
-        std::uint32_t const height,
-        std::uint32_t const colourDepth
-    );
+    Adapter(std::uint32_t const width, std::uint32_t const height, std::uint32_t const colourDepth);
     ///@}
 
     Adapter();
@@ -35,6 +32,7 @@ public:
     Adapter& operator=(Adapter&& rhs) noexcept;
     Adapter& operator=(Adapter const& rhs);
     ~Adapter();
+
 private:
     struct Implementation;
 

@@ -13,7 +13,6 @@
 namespace morpheus::gfx::d3d12
 {
 
-
 /// \class Adapter
 ///     Describes an available graphic devices on the target platform.
 ///

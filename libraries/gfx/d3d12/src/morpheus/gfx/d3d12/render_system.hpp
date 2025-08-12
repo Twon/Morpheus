@@ -1,11 +1,11 @@
 #pragma once
 
-#include <morpheus/gfx/platform/render_system.hpp>
 #include <morpheus/gfx/d3d12/prerequisites.hpp>
 #include <morpheus/gfx/d3d12/types.hpp>
+#include <morpheus/gfx/platform/render_system.hpp>
 
-#include <string_view>
 #include <string>
+#include <string_view>
 
 namespace morpheus::gfx::d3d12
 {
@@ -18,7 +18,6 @@ class Adapter;
 class RenderSystem : public gfx::RenderSystem
 {
 public:
-
     RenderSystem(RenderSystem const&) = delete;
     RenderSystem& operator=(RenderSystem const&) = delete;
 

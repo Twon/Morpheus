@@ -52,6 +52,7 @@ WGLExpected<HGLRC> createGLContext(HDC hdc)
 
 Context::Expected Context::create(HWND const window, PIXELFORMATDESCRIPTOR const& pfd)
 {
+    // clang-format off
     return createDC(window)
         .and_then([&](HDC const hdc)
             { return choosePixelFormat(hdc, pfd)
@@ -66,6 +67,7 @@ Context::Expected Context::create(HWND const window, PIXELFORMATDESCRIPTOR const
                     return Context(window, hdc, hglrc);
                 });
         });
+    // clang-format on
 }
 
 Context::Context(HWND const window, HDC const hdc, HGLRC const hglrc)
@@ -82,7 +84,8 @@ Context::Context()
 Context::Expected Context::enable()
 {
     Context currenContext{};
-    if (!wglMakeCurrent(mDeviceContext.get(), mGLContext.get())) {
+    if (!wglMakeCurrent(mDeviceContext.get(), mGLContext.get()))
+    {
         return std::unexpected(fmt_ns::format("Failed to make OpenGL context current: {}", getLastErrorMessage()));
     }
     return currenContext;

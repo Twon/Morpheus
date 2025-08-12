@@ -33,7 +33,6 @@ public:
 
     [[nodiscard]] static auto create() -> exp_ns::expected<RenderSystem, std::string>;
 
-
     auto const& adapters() const { return mAdapters; }
 
 private:

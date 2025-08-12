@@ -17,17 +17,14 @@ public:
     /*! Queries a short form descriptive name for the category.
         \return Short form name of the category.
      */
-    const char* name() const noexcept override final { return "Win32::ErrorCategory"; }
+    char const* name() const noexcept override final { return "Win32::ErrorCategory"; }
 
     /*! Queries an error string describing the error.
         \return The error message.
      */
-    std::string message(int c) const override final
-    {
-        return GetLastErrorString(static_cast<DWORD>(c));
-    }
+    std::string message(int c) const override final { return GetLastErrorString(static_cast<DWORD>(c)); }
 
-    static const ErrorCategory& getSingleInstance() noexcept { return mSingleInstance; }
+    static ErrorCategory const& getSingleInstance() noexcept { return mSingleInstance; }
 
 private:
     static ErrorCategory mSingleInstance;
@@ -37,7 +34,10 @@ ErrorCategory ErrorCategory::mSingleInstance;
 
 } // namespace details
 
-const details::ErrorCategory& ErrorCategory() noexcept { return details::ErrorCategory::getSingleInstance(); }
+details::ErrorCategory const& ErrorCategory() noexcept
+{
+    return details::ErrorCategory::getSingleInstance();
+}
 
 } // namespace morpheus::gfx::win32
 

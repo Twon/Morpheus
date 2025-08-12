@@ -18,12 +18,12 @@ inline std::string getLastErrorMessage()
 /// \def MORPHEUS_D3D12_VERIFY
 ///
 ///
-#define MORPHEUS_D3D12_VERIFY(expr)                                                                                                                            \
-    do                                                                                                                                                         \
-    {                                                                                                                                                          \
-        HRESULT const hr = expr;                                                                                                                               \
-        MORPHEUS_VERIFY_MSG(FAILED(hr), getLastErrorMessage());                                                                                                \
-    }                                                                                                                                                          \
+#define MORPHEUS_D3D12_VERIFY(expr)                             \
+    do                                                          \
+    {                                                           \
+        HRESULT const hr = expr;                                \
+        MORPHEUS_VERIFY_MSG(FAILED(hr), getLastErrorMessage()); \
+    }                                                           \
     while (0)
 
 } // namespace morpheus::gfx::d3d12

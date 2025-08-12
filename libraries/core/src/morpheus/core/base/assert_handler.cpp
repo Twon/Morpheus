@@ -13,10 +13,16 @@ namespace morpheus
 
 AssertHandler gAssertHandler = [](Assertion assertion)
 {
-    auto const debugMessage = fmt_ns::format("{}({}): assertion[{}]: {}\nBacktrace:{}\n", assertion.location.file_name(), assertion.location.line(),
-                                             assertion.expression, assertion.message, MORPHEUS_CURRENT_STACKTRACE);
+    // LCOV_EXCL_START
+    auto const debugMessage = fmt_ns::format("{}({}): assertion[{}]: {}\nBacktrace:{}\n",
+                                             assertion.location.file_name(),
+                                             assertion.location.line(),
+                                             assertion.expression,
+                                             assertion.message,
+                                             MORPHEUS_CURRENT_STACKTRACE);
     debugPrint(debugMessage);
     return true;
+    // LCOV_EXCL_STOP
 };
 
 AssertHandler setAssertHandler(AssertHandler handler)

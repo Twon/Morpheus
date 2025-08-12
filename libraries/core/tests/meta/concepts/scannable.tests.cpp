@@ -28,7 +28,6 @@ struct morpheus::scan_ns::scanner<ScannableType> : morpheus::scan_ns::scanner<st
     }
 };
 
-
 namespace morpheus::meta::concepts
 {
 

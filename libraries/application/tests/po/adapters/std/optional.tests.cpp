@@ -35,7 +35,7 @@ TEST_CASE_METHOD(LoggingFixture, "Test parsing of std optional wrapped type", "[
     {
         std::array cliOptions = {"dummyProgram.exe", "--text"};
         OptionalConfig options{};
-        auto const result = parseProgramOptions(static_cast<int>(cliOptions.size()), cliOptions.data(), HelpDocumentation{}, options);
+        auto const result = parseProgramOptions(cliOptions, HelpDocumentation{}, options);
         REQUIRE(result);
         REQUIRE(!options.text);
     }
@@ -43,7 +43,7 @@ TEST_CASE_METHOD(LoggingFixture, "Test parsing of std optional wrapped type", "[
     {
         std::array cliOptions = {"dummyProgram.exe", "--text", "valid"};
         OptionalConfig options{};
-        auto const result = parseProgramOptions(static_cast<int>(cliOptions.size()), cliOptions.data(), HelpDocumentation{}, options);
+        auto const result = parseProgramOptions(cliOptions, HelpDocumentation{}, options);
         REQUIRE(!result);
         REQUIRE(*options.text == "valid");
     }

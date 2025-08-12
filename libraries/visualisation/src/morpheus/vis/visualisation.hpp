@@ -36,15 +36,12 @@ private:
 
 template <gfx::concepts::RenderSystem R>
 Visualisation<R>::Visualisation(R&& renderSystem, typename R::Window&& window)
-:   mRenderSystem(std::move(renderSystem))
-,   mWindow(std::move(window))
-{
-}
+    : mRenderSystem(std::move(renderSystem))
+    , mWindow(std::move(window))
+{}
 
 template <gfx::concepts::RenderSystem R>
 exp_ns::expected<Visualisation<R>, std::string> Visualisation<R>::create(R&& renderSystem)
-{
-
-}
+{}
 
 } // namespace morpheus::vis

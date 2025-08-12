@@ -24,16 +24,11 @@ public:
     constexpr explicit Adapter() noexcept = default;
 
     /// Constructs an adapter from name and id.
-    constexpr explicit Adapter(
-        IdType adapterId,
-        std::string_view const name,
-        Vendor const vendor
-    )   noexcept(noexcept(std::is_nothrow_move_assignable_v<IdType>))
-    :   mAdapterId(adapterId)
-    ,   mName(name)
-    ,   mVendor(vendor)
-    {
-    }
+    constexpr explicit Adapter(IdType adapterId, std::string_view const name, Vendor const vendor) noexcept(noexcept(std::is_nothrow_move_assignable_v<IdType>))
+        : mAdapterId(adapterId)
+        , mName(name)
+        , mVendor(vendor)
+    {}
     ///@}
 
     /// Access the adapter Id.
