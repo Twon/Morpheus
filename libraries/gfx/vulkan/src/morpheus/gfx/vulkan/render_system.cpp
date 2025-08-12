@@ -18,7 +18,6 @@ namespace
 
 //---------------------------------------------------------------------------------------------------------------------
 // LCOV_EXCL_START
-
 RenderSystem::RenderSystem(std::string_view const appName, std::string_view const engineName)
     : mInstance(
           [&]
