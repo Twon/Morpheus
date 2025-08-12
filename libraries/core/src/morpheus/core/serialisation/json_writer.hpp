@@ -92,6 +92,7 @@ public:
     }
 
 private:
+    // clang-format off
     template<typename OutputStream>
     using RapidJsonWriter = rapidjson::Writer<
         OutputStream,
@@ -100,6 +101,7 @@ private:
         rapidjson::CrtAllocator,
         (rapidjson::kWriteDefaultFlags | rapidjson::kWriteNanAndInfFlag)
     >;
+    // clang-format on
 
     rapidjson::OStreamWrapper mStream;
     RapidJsonWriter<rapidjson::OStreamWrapper> mJsonWriter;

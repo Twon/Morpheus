@@ -652,8 +652,9 @@ void TestCopyAndDeleteStats()
     }
     REQUIRE(stats::default_ctor_count == (IsCombinedCopierAndDeleter ? 2 : 4)); // Combined copier and deleters should require half the initialisations.
     REQUIRE(stats::copy_ctor_count == (IsCombinedCopierAndDeleter ? 1 : 2)); // Combined copier and deleters should only require one copy during copy-swap idom.
-    REQUIRE(stats::move_ctor_count == (IsCombinedCopierAndDeleter ? 1 : 2)); // Combined copier and deleters should only require one move during the swap of copy-swap idom.
-    REQUIRE(stats::copy_assign_count == 0); // No internal copy assignment happens, is copy construct then move via the copy-swap idom
+    REQUIRE(stats::move_ctor_count ==
+            (IsCombinedCopierAndDeleter ? 1 : 2)); // Combined copier and deleters should only require one move during the swap of copy-swap idom.
+    REQUIRE(stats::copy_assign_count == 0);        // No internal copy assignment happens, is copy construct then move via the copy-swap idom
     REQUIRE(stats::move_assign_count == (IsCombinedCopierAndDeleter ? 2 : 4)); // Copy swap idom results in 2 move assignments in default std::swap.
     REQUIRE(stats::copy_operator_count == 0);
     REQUIRE(stats::delete_operator_count == 0);
@@ -680,7 +681,10 @@ void TestCopyAndDeleteStats()
     }
     REQUIRE(stats::default_ctor_count == (IsCombinedCopierAndDeleter ? 2 : 4)); // Combined copier and deleters should require half the initialisations.
     REQUIRE(stats::copy_ctor_count == (IsCombinedCopierAndDeleter ? 1 : 2)); // Combined copier and deleters should only require one copy during copy-swap idom.
-    REQUIRE(stats::move_ctor_count == (IsCombinedCopierAndDeleter ? 2 : 4)); // Combined copier and deleters should only require one move during the swap of copy-swap idom and one for initialisation.
+    REQUIRE(stats::move_ctor_count ==
+            (IsCombinedCopierAndDeleter
+                 ? 2
+                 : 4)); // Combined copier and deleters should only require one move during the swap of copy-swap idom and one for initialisation.
     REQUIRE(stats::copy_assign_count == 0); // No internal copy assignment happens, is copy construct then move via the copy-swap ido
     REQUIRE(stats::move_assign_count == (IsCombinedCopierAndDeleter ? 2 : 4)); // Copy swap idom results in 2 move assignments in default std::swap.
     REQUIRE(stats::copy_operator_count == 0);
@@ -707,7 +711,10 @@ void TestCopyAndDeleteStats()
     }
     REQUIRE(stats::default_ctor_count == (IsCombinedCopierAndDeleter ? 1 : 2)); // Combined copier and deleters should only initialise once.
     REQUIRE(stats::copy_ctor_count == (IsCombinedCopierAndDeleter ? 1 : 2)); // Combined copier and deleters should only require one copy during copy-swap idom.
-    REQUIRE(stats::move_ctor_count == (IsCombinedCopierAndDeleter ? 1 : 2)); // Combined copier and deleters should only require one move during the swap of copy-swap idom and one for initialisation.
+    REQUIRE(stats::move_ctor_count ==
+            (IsCombinedCopierAndDeleter
+                 ? 1
+                 : 2)); // Combined copier and deleters should only require one move during the swap of copy-swap idom and one for initialisation.
     // Depending on how you implement the protection against self assign
     REQUIRE((stats::copy_assign_count == 0 || stats::copy_assign_count == 2));
     REQUIRE(stats::move_assign_count == (IsCombinedCopierAndDeleter ? 2 : 4)); // Copy swap idom results in 2 move assignments in default std::swap.
@@ -777,7 +784,10 @@ void TestCopyAndDeleteStats()
     }
     REQUIRE(stats::default_ctor_count == (IsCombinedCopierAndDeleter ? 2 : 4)); // Combined copier and deleters should require half the initialisations.
     REQUIRE(stats::copy_ctor_count == (IsCombinedCopierAndDeleter ? 1 : 2)); // Combined copier and deleters should only require one copy during copy-swap idom.
-    REQUIRE(stats::move_ctor_count == (IsCombinedCopierAndDeleter ? 2 : 4)); // Combined copier and deleters should only require one move during the swap of copy-swap idom and one during initial constructions.
+    REQUIRE(stats::move_ctor_count ==
+            (IsCombinedCopierAndDeleter
+                 ? 2
+                 : 4)); // Combined copier and deleters should only require one move during the swap of copy-swap idom and one during initial constructions.
     REQUIRE(stats::copy_assign_count == 0); // No internal copy assignment happens, is copy construct then move via the copy-swap idom
     REQUIRE(stats::move_assign_count == (IsCombinedCopierAndDeleter ? 2 : 4)); // Copy swap idom results in 2 move assignments in default std::swap.
     REQUIRE(stats::copy_operator_count == 1);
@@ -805,7 +815,10 @@ void TestCopyAndDeleteStats()
     }
     REQUIRE(stats::default_ctor_count == (IsCombinedCopierAndDeleter ? 2 : 4)); // Combined copier and deleters should require half the initialisations.
     REQUIRE(stats::copy_ctor_count == (IsCombinedCopierAndDeleter ? 1 : 2)); // Combined copier and deleters should only require one copy during copy-swap idom.
-    REQUIRE(stats::move_ctor_count == (IsCombinedCopierAndDeleter ? 3 : 6)); // 2 during construction and then 1 when combined copier and deleters should only require one move during the swap of copy-swap idom.
+    REQUIRE(stats::move_ctor_count ==
+            (IsCombinedCopierAndDeleter
+                 ? 3
+                 : 6)); // 2 during construction and then 1 when combined copier and deleters should only require one move during the swap of copy-swap idom.
     REQUIRE(stats::copy_assign_count == 0); // No internal copy assignment happens, is copy construct then move via the copy-swap idom
     REQUIRE(stats::move_assign_count == (IsCombinedCopierAndDeleter ? 2 : 4)); // Copy swap idom results in 2 move assignments in default std::swap.
     REQUIRE(stats::copy_operator_count == 1);

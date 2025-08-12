@@ -31,14 +31,7 @@ TEST_CASE("Ensure assert functionality responds to appropriate defines", "[morph
 
     bool haltFired = false;
     auto const currentHaltHandler = getAssertHaltHandler();
-    auto const onHaltEntry = [&]
-    {
-        setAssertHaltHandler(
-            [&]()
-            {
-                haltFired = true;
-            });
-    };
+    auto const onHaltEntry = [&] { setAssertHaltHandler([&]() { haltFired = true; }); };
 
     auto const onHaltExit = [&]() { setAssertHaltHandler(currentHaltHandler); };
     ScopedAction const restoreAssertHaltHandler(onHaltEntry, onHaltExit);
