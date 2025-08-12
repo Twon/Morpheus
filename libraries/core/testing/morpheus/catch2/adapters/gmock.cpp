@@ -14,6 +14,7 @@ struct Listener : public testing::EmptyTestEventListener
 {
     void OnTestPartResult(testing::TestPartResult const& result) override
     {
+        // LCOV_EXCL_START
         ::Catch::SourceLineInfo const sourceLineInfo(result.file_name() ? result.file_name() : "unknown",
                                                      (result.line_number() == -1) ? 0 : static_cast<std::size_t>(result.line_number()));
 
@@ -24,6 +25,7 @@ struct Listener : public testing::EmptyTestEventListener
         if (not result.skipped())
             assertion.handleMessage(resultType, result.message());
         assertion.complete();
+        // LCOV_EXCL_STOP
     }
 };
 
