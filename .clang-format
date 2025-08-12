@@ -1,6 +1,6 @@
 ---
 Language: Cpp
-BasedOnStyle: none
+#BasedOnStyle: none
 AccessModifierOffset: -4
 # AlignAfterOpenBracket: Align
 AlignArrayOfStructures: Right
@@ -53,7 +53,7 @@ AlwaysBreakTemplateDeclarations: Yes
 # AttributeMacros:
 #   - __capability
 # BinPackArguments: false
-BinPackParameters: AlwaysOnePerLine
+BinPackParameters: OnePerLine
 BitFieldColonSpacing: Both
 BraceWrapping:
   AfterCaseLabel:  true
@@ -122,7 +122,7 @@ IndentRequiresClause: false
 IndentWidth:     4
 # IndentWrappedFunctionNames: false
 # InsertBraces:    false
-# InsertNewlineAtEOF: false
+InsertNewlineAtEOF: true
 # InsertTrailingCommas: None
 # IntegerLiteralSeparator:
 #   Binary:          0

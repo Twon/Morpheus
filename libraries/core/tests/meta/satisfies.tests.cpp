@@ -13,9 +13,10 @@ template <typename T, auto C>
 concept RangeOver = std::ranges::range<T> and concepts::Satisfies<std::ranges::range_value_t<T>, C>;
 
 template <typename T>
-concept HasRangeOfIds = requires(T t)
-{
-    { t.ids() } -> RangeOver<[]<std::integral>{}>;
+concept HasRangeOfIds = requires(T t) {
+    {
+        t.ids()
+    } -> RangeOver<[]<std::integral> {}>;
 };
 
 /* GCC 12 barfs on use of this technique:
