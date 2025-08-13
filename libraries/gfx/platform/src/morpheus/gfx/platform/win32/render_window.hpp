@@ -1,8 +1,12 @@
 #pragma once
 
 #include <morpheus/core/base/prerequisites.hpp>
+#include <morpheus/core/conformance/expected.hpp>
 #include <morpheus/gfx/platform/render_window.hpp>
 
+#include <wil/resource.h>
+
+#include <optional>
 #include <string>
 #include <wil/resource.h>
 
@@ -17,9 +21,6 @@ public:
     using WindowHandle = HWND;
     using Config = gfx::RenderWindow::Config;
 
-    explicit RenderWindow(Config const config = Config{});
-    explicit RenderWindow(WindowHandle const window);
-
     explicit RenderWindow(RenderWindow const&) = delete;
     RenderWindow& operator=(RenderWindow const&) = delete;
 
@@ -27,6 +28,13 @@ public:
     RenderWindow& operator=(RenderWindow&&) noexcept;
 
     ~RenderWindow();
+
+    /// Creates a render window or returns an error if creation failed.
+    /// \param[in] config
+    ///     The setting to configure the window with.
+    /// \return
+    ///     An expected of the newly created window, or an error if creation failed.
+    static exp_ns::expected<RenderWindow, std::string> create(Config const& config = Config{});
 
     /// \copydoc gfx::RenderTarget::width()
     [[nodiscard]] std::uint16_t width() const noexcept { return gfx::RenderWindow::width(); }
@@ -58,9 +66,12 @@ public:
     auto getHandle() const noexcept { return mWindow.get(); }
 
 private:
+    RenderWindow() = default;
+
     friend LRESULT WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
-    wil::unique_hwnd mWindow; /// OS window handle
+    std::optional<HINSTANCE> mHInstance; /// HInstance of initiating module.
+    wil::unique_hwnd mWindow;            /// OS window handle.
 };
 
 } // namespace morpheus::gfx::win32

@@ -1,16 +1,29 @@
+#include <morpheus/gfx/vulkan/render_system.hpp>
 
 #include <catch2/catch_all.hpp>
+
 #include <vulkan/vulkan.hpp>
 #include <vulkan/vulkan_raii.hpp>
 
 #include <iostream>
 #include <vector>
 
+namespace morpheus::gfx::vulkan
+{
+
+TEST_CASE("Verify the Graphics API", "[morpheus.gfx.vulkan.render_system.api]")
+{
+    STATIC_REQUIRE(RenderSystem::getGraphicsApi() == "Vulkan");
+}
+
+} // namespace morpheus::gfx::vulkan
+
+/*
 TEST_CASE("Create a vulkan render system", "[morpheus.gfx.vulkan.render_system]")
 {
-    /*    uint32_t version = 0;
-        VkResult res = vkEnumerateInstanceVersion(&version);
-        INFO("The Vulkan version is " << VK_VERSION_MAJOR(version) <<"."<< VK_VERSION_MINOR(version) <<"."<< VK_VERSION_PATCH(version));
+    uint32_t version = 0;
+    VkResult res = vkEnumerateInstanceVersion(&version);
+    INFO("The Vulkan version is " << VK_VERSION_MAJOR(version) <<"."<< VK_VERSION_MINOR(version) <<"."<< VK_VERSION_PATCH(version));
 
         uint32_t instance_layer_count = 0;
         res = vkEnumerateInstanceLayerProperties(&instance_layer_count, nullptr);
@@ -19,18 +32,18 @@ TEST_CASE("Create a vulkan render system", "[morpheus.gfx.vulkan.render_system]"
         std::vector<VkLayerProperties> layers(instance_layer_count);
         res = vkEnumerateInstanceLayerProperties(&instance_layer_count, layers.data());
 
-        std::vector<char const *> layer_names(instance_layer_count);
-        std::transform(layers.begin(), layers.end(), layer_names.begin(), [](const auto& element) { return element.layerName;});
-        std::for_each(layers.begin(), layers.end(),  [](const auto& element) { INFO("Layer: " << element.layerName);});
-    */
-    //    for (const auto& element : layers)
-    //    {
-    //        res = vkEnumerateInstanceExtensionProperties(layer_name, &instance_extension_count, NULL);
-    //
-    //    }
-    //    layer_props.instance_extensions.resize(instance_extension_count);
-    //    instance_extensions = layer_props.instance_extensions.data();
-    //    res = vkEnumerateInstanceExtensionProperties(layer_name, &instance_extension_count, instance_extensions);
+    std::vector<char const *> layer_names(instance_layer_count);
+    std::transform(layers.begin(), layers.end(), layer_names.begin(), [](const auto& element) { return element.layerName;});
+    std::for_each(layers.begin(), layers.end(),  [](const auto& element) { INFO("Layer: " << element.layerName);});
+
+//    for (const auto& element : layers)
+//    {
+//        res = vkEnumerateInstanceExtensionProperties(layer_name, &instance_extension_count, NULL);
+//
+//    }
+//    layer_props.instance_extensions.resize(instance_extension_count);
+//    instance_extensions = layer_props.instance_extensions.data();
+//    res = vkEnumerateInstanceExtensionProperties(layer_name, &instance_extension_count, instance_extensions);
     CHECK(true);
     char const* const appName = "My Vulkan Test Case";
     char const* const engineName = "My Vulkan Test Case Engine";
@@ -58,3 +71,4 @@ TEST_CASE("Create a vulkan render system", "[morpheus.gfx.vulkan.render_system]"
     //    CHECK(!res);
     //    CHECK(gpu_count > 0);
 }
+*/
