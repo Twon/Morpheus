@@ -122,7 +122,9 @@ concurrency::Generator<Adapter> enumerateAdapters()
                 // m_uCurrentAdapter = static_cast<u32>( m_GraphicsAdapters.size() - 1 );
             }
         }
-        oldContext.enable();
+        auto restoredContext = oldContext.value().enable();
+        if (!restoredContext)
+            continue;
     }
 
 } // namespace morpheus::gfx::gl4::wgl
