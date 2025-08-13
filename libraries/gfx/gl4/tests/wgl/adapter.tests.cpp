@@ -51,6 +51,9 @@ using PathInfoArray = std::vector<DISPLAYCONFIG_PATH_INFO>;
 using ModeInfoArray = std::vector<DISPLAYCONFIG_MODE_INFO>;
 using DisplayConfig = std::pair<PathInfoArray, ModeInfoArray>;
 
+/// Path mapping an output monitor to the graphic adapter mapped to it.
+using Path = std::pair<DISPLAYCONFIG_TARGET_DEVICE_NAME, DISPLAYCONFIG_ADAPTER_NAME>;
+
 auto getDisplayConfigBufferSizes() -> exp_ns::expected<std::pair<UINT32, UINT32>, std::string>
 {
     UINT32 pathCount = 0, modeCount = 0;
@@ -80,8 +83,8 @@ auto targetDeviceName(DISPLAYCONFIG_PATH_INFO const& path) -> exp_ns::expected<D
     DISPLAYCONFIG_TARGET_DEVICE_NAME targetName = {};
     targetName.header.type = DISPLAYCONFIG_DEVICE_INFO_GET_TARGET_NAME;
     targetName.header.size = sizeof(targetName);
-    targetName.header.adapterId = path.sourceInfo.adapterId;
-    targetName.header.id = path.sourceInfo.id;
+    targetName.header.adapterId = path.targetInfo.adapterId;
+    targetName.header.id = path.targetInfo.id;
     auto const result = DisplayConfigGetDeviceInfo(&targetName.header);
     if (result != ERROR_SUCCESS)
     {
@@ -125,31 +128,32 @@ exp_ns::expected<DisplayConfig, std::string> getCurrentDisplayConfig()
     // clang-format on
 }
 
-auto getTargetDevicesNames(DisplayConfig const& config) -> exp_ns::expected<std::vector<DISPLAYCONFIG_TARGET_DEVICE_NAME>, std::string>
+auto getDevicesPaths(DisplayConfig const& config) -> exp_ns::expected<std::vector<Path>, std::string>
 {
-    auto& [paths, modes] = config;
+    auto& [paths, _] = config;
 
     // clang-format off
     auto r = paths | std::ranges::views::transform([](auto const& path)
         {
-            //auto targetDeviceName = targetDeviceName(path);
-            //auto adapterName = adapterName(path);
-
-            return targetDeviceName(path);
+            return std::pair{targetDeviceName(path), adapterName(path)};
         });
 
-    auto const result = std::ranges::fold_left(std::move(r), exp_ns::expected<std::vector<DISPLAYCONFIG_TARGET_DEVICE_NAME>, std::string>{},
-        [](auto&& result, auto element) -> exp_ns::expected<std::vector<DISPLAYCONFIG_TARGET_DEVICE_NAME>, std::string>
+    auto const result = std::ranges::fold_left(std::move(r), exp_ns::expected<std::vector<Path>, std::string>{},
+        [](auto&& result, auto element) -> exp_ns::expected<std::vector<Path>, std::string>
         {
             if (!result) {
                 return exp_ns::unexpected(result.error());
             }
 
-            if (!element) {
-                return exp_ns::unexpected(element.error());
+            if (!element.first) {
+                return exp_ns::unexpected(element.first.error());
             }
 
-            result.value().push_back(element.value());
+            if (!element.second) {
+                return exp_ns::unexpected(element.second.error());
+            }
+
+            result.value().push_back(Path{std::move(element).first.value(), std::move(element).second.value()});
             return std::move(result);
         });
     // clang-format on
@@ -197,7 +201,7 @@ TEST_CASE("Create an adapter mode list", "[morpheus.core.gfx.gl.wgl.adapter_list
 */
     DISPLAYCONFIG_PATH_SOURCE_INFO* pSource = NULL; // will contain the answer
 
-    auto result = getCurrentDisplayConfig().and_then([](DisplayConfig const& config) { return getTargetDevicesNames(config); });
+    auto result = getCurrentDisplayConfig().and_then([](DisplayConfig const& config) { return getDevicesPaths(config); });
 
     auto result4 = getCurrentDisplayConfig();
     REQUIRE(result4);
