@@ -8,9 +8,9 @@
 
 // clang-format off
 #if (__cpp_lib_expected >= 202211L)
-    namespace morpheus { namespace exp_ns = std; }
+    namespace morpheus::conf { namespace exp = ::std; }
 #else
     #include <tl/expected.hpp> // IWYU pragma: export
-    namespace morpheus { namespace exp_ns = tl; }
+    namespace morpheus::conf { namespace exp = ::tl; }
 #endif
 // clang-format on

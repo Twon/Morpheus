@@ -8,10 +8,10 @@
 
 // clang-format off
 #if (__cpp_lib_chrono >= 201907L )
-    namespace morpheus { namespace date_ns = std::chrono; }
+    namespace morpheus::conf { namespace date = ::std::chrono; }
 #else
     #include <date/date.h> // IWYU pragma: export
     #include <date/tz.h> // IWYU pragma: export
-    namespace morpheus { namespace date_ns = date; }
+    namespace morpheus::conf { namespace date = ::date; }
 #endif
 // clang-format on

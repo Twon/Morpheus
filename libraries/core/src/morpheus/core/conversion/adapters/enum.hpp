@@ -28,13 +28,13 @@ struct StringConverter<E>
     /// Convert a string representation to an enum value.
     /// \param value The string representation to convert.
     /// \return An expected containing the enum value if the conversion was successful, or an unexpected error if it failed.
-    static constexpr exp_ns::expected<E, std::string> fromString(std::string_view const value)
+    static constexpr conf::exp::expected<E, std::string> fromString(std::string_view const value)
     {
         auto const enumValue = magic_enum::enum_cast<E>(value, magic_enum::case_insensitive);
         if (enumValue.has_value())
             return enumValue.value();
         else
-            return exp_ns::unexpected(fmt_ns::format("Unable to convert {} to underlying enum", value));
+            return conf::exp::unexpected(conf::fmt::format("Unable to convert {} to underlying enum", value));
     }
 };
 

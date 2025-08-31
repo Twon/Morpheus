@@ -26,7 +26,7 @@ TEST_CASE("Ensure generator iterators meet required concepts", "[morpheus.concur
 
     STATIC_REQUIRE(std::weakly_incrementable<Generator<int>::iterator>);
     STATIC_REQUIRE(std::semiregular<Generator<int>::iterator>);
-    STATIC_REQUIRE(ranges::range<Generator<int>>);
+    STATIC_REQUIRE(conf::ranges::range<Generator<int>>);
 }
 
 TEST_CASE("Test a simple integrer based coroutine", "[morpheus.concurrency.generator]")
@@ -39,8 +39,8 @@ TEST_CASE("Test a simple integrer based coroutine", "[morpheus.concurrency.gener
         }
     };
 
-    auto const expectedRange = ranges::views::iota(0, 5) | ranges::views::transform([](auto x) { return x * 5; });
-    REQUIRE(ranges::equal(generateSequence(0, 25, 5), expectedRange));
+    auto const expectedRange = conf::ranges::views::iota(0, 5) | conf::ranges::views::transform([](auto x) { return x * 5; });
+    REQUIRE(conf::ranges::equal(generateSequence(0, 25, 5), expectedRange));
 }
 
 } // namespace morpheus::concurrency

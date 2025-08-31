@@ -28,13 +28,13 @@ void validate(boost::any& v, std::vector<std::basic_string<CharType>> const& val
 }
 
 template <class CharType>
-void validate(boost::any& v, std::vector<std::basic_string<CharType>> const& values, std::reference_wrapper<morpheus::date_ns::time_zone const>*, int)
+void validate(boost::any& v, std::vector<std::basic_string<CharType>> const& values, std::reference_wrapper<morpheus::conf::date::time_zone const>*, int)
 {
     namespace po = boost::program_options;
     po::validators::check_first_occurrence(v);
     auto const& s = po::validators::get_single_string(values);
 
-    auto const duration = morpheus::conversion::fromString<morpheus::date_ns::time_zone>(s);
+    auto const duration = morpheus::conversion::fromString<morpheus::conf::date::time_zone>(s);
     if (duration)
         v = duration.value();
     else

@@ -9,6 +9,6 @@
 // clang-format off
 #include <utility>
 #include <scn/scan.h> // IWYU pragma: export
-namespace morpheus { namespace scan_ns = scn; }
+namespace morpheus::conf { namespace scan = ::scn; }
 
 // clang-format on

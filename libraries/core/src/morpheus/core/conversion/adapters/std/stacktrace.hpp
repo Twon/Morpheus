@@ -10,13 +10,13 @@
 #if (__cpp_lib_stacktrace < 202011L) or (__cpp_lib_formatters < 202302L)
 
 template <typename Allocator>
-struct morpheus::fmt_ns::formatter<morpheus::st_ns::basic_stacktrace<Allocator>>
+struct morpheus::conf::fmt::formatter<morpheus::conf::st::basic_stacktrace<Allocator>>
 {
-    constexpr auto parse(morpheus::fmt_ns::format_parse_context& ctx) { return std::begin(ctx); }
+    constexpr auto parse(morpheus::conf::fmt::format_parse_context& ctx) { return std::begin(ctx); }
 
-    constexpr auto format(morpheus::st_ns::basic_stacktrace<Allocator> const& st, morpheus::fmt_ns::format_context& ctx) const
+    constexpr auto format(morpheus::conf::st::basic_stacktrace<Allocator> const& st, morpheus::conf::fmt::format_context& ctx) const
     {
-        return morpheus::fmt_ns::format_to(ctx.out(), "{}", to_string(st));
+        return morpheus::conf::fmt::format_to(ctx.out(), "{}", to_string(st));
     }
 };
 

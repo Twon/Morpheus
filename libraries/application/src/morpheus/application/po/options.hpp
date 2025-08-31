@@ -53,8 +53,8 @@ std::optional<int> parseProgramOptions(std::span<char const* const> parameters, 
     namespace po = boost::program_options;
     try
     {
-        auto const version = (msgDetails.version) ? fmt_ns::format("version {}", *msgDetails.version) : std::string();
-        po::options_description desc(fmt_ns::format("{}\n{} \n\nUsage: ", boost::dll::program_location().stem().string(), version));
+        auto const version = (msgDetails.version) ? conf::fmt::format("version {}", *msgDetails.version) : std::string();
+        po::options_description desc(conf::fmt::format("{}\n{} \n\nUsage: ", boost::dll::program_location().stem().string(), version));
 
         desc.add_options()("help,h", "Display the application help message.");
 
@@ -74,8 +74,8 @@ std::optional<int> parseProgramOptions(std::span<char const* const> parameters, 
 
         if (msgDetails.version && vm.count("version"))
         {
-            auto const output = fmt_ns::format("{} {}", boost::dll::program_location().stem().string(), *msgDetails.version);
-            print_ns::print("{}", output);
+            auto const output = conf::fmt::format("{} {}", boost::dll::program_location().stem().string(), *msgDetails.version);
+            conf::print::print("{}", output);
             return 1;
         }
 

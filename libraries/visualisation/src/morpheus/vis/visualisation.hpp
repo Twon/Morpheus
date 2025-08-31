@@ -22,7 +22,7 @@ public:
     Visualisation(Visualisation&&) = default;
     Visualisation& operator=(Visualisation&&) = default;
 
-    exp_ns::expected<Visualisation, std::string> create(R&& renderSystem);
+    conf::exp::expected<Visualisation, std::string> create(R&& renderSystem);
 
     /// Register program options
     void addOptions(boost::program_options::options_description&) {}
@@ -41,7 +41,7 @@ Visualisation<R>::Visualisation(R&& renderSystem, typename R::Window&& window)
 {}
 
 template <gfx::concepts::RenderSystem R>
-exp_ns::expected<Visualisation<R>, std::string> Visualisation<R>::create(R&& renderSystem)
+conf::exp::expected<Visualisation<R>, std::string> Visualisation<R>::create(R&& renderSystem)
 {}
 
 } // namespace morpheus::vis

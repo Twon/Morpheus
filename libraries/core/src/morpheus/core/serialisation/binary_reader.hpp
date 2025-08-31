@@ -66,8 +66,7 @@ public:
         T value = {};
         auto const readSize = static_cast<std::size_t>(mInStream.rdbuf()->sgetn(reinterpret_cast<char*>(&value), sizeof(value)));
         if (readSize != sizeof(value))
-            throwBinaryException(
-                fmt_ns::format("Error reading data from stream.  Attempted to read {} bytes, but only {} bytes were read.", sizeof(value), readSize));
+            throwBinaryException("Error reading data from stream.  Attempted to read {} bytes, but only {} bytes were read.", sizeof(value), readSize);
         return value;
     }
 
@@ -77,12 +76,11 @@ public:
     requires std::is_same_v<T, std::string>
     T read()
     {
-        std::size_t length = read<std::size_t>();
+        std::size_t const length = read<std::size_t>();
         T value(length, '\0');
         auto const readSize = static_cast<std::size_t>(mInStream.rdbuf()->sgetn(value.data(), value.size()));
         if (readSize != value.size())
-            throwBinaryException(
-                fmt_ns::format("Error reading data from stream.  Attempted to read {} bytes, but only {} bytes were read.", value.size(), readSize));
+            throwBinaryException("Error reading data from stream.  Attempted to read {} bytes, but only {} bytes were read.", value.size(), readSize);
         return value;
     }
 
@@ -91,12 +89,11 @@ public:
     requires std::is_same_v<T, std::vector<std::byte>>
     T read()
     {
-        std::size_t length = read<std::size_t>();
+        std::size_t const length = read<std::size_t>();
         T value(length);
         auto const readSize = static_cast<std::size_t>(mInStream.rdbuf()->sgetn(reinterpret_cast<char*>(value.data()), value.size()));
         if (readSize != value.size())
-            throwBinaryException(
-                fmt_ns::format("Error reading data from stream.  Attempted to read {} bytes, but only {} bytes were read.", value.size(), readSize));
+            throwBinaryException("Error reading data from stream.  Attempted to read {} bytes, but only {} bytes were read.", value.size(), readSize);
         return value;
     }
     // clang-format on

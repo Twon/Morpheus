@@ -69,7 +69,7 @@ TEST_CASE_METHOD(LoggingFixture, "Test parsing of std chrono duration", "[morphe
 
 struct TimeZone
 {
-    std::reference_wrapper<date_ns::time_zone const> timezone = *date_ns::get_tzdb().current_zone();
+    std::reference_wrapper<conf::date::time_zone const> timezone = *conf::date::get_tzdb().current_zone();
 
     void addOptions(boost::program_options::options_description& options)
     {
@@ -94,10 +94,10 @@ TEST_CASE_METHOD(LoggingFixture, "Test parsing of std chrono time_zone", "[morph
             return timezoneOptions.timezone;
         };
 
-        REQUIRE(getTimezone("Australia/Sydney") == *date_ns::get_tzdb().locate_zone("Australia/Sydney"));
-        REQUIRE(getTimezone("Brazil/East") == *date_ns::get_tzdb().locate_zone("Brazil/East"));
-        REQUIRE(getTimezone("Canada/Eastern") == *date_ns::get_tzdb().locate_zone("Canada/Eastern"));
-        REQUIRE(getTimezone("US/Central") == *date_ns::get_tzdb().locate_zone("US/Central"));
+        REQUIRE(getTimezone("Australia/Sydney") == *conf::date::get_tzdb().locate_zone("Australia/Sydney"));
+        REQUIRE(getTimezone("Brazil/East") == *conf::date::get_tzdb().locate_zone("Brazil/East"));
+        REQUIRE(getTimezone("Canada/Eastern") == *conf::date::get_tzdb().locate_zone("Canada/Eastern"));
+        REQUIRE(getTimezone("US/Central") == *conf::date::get_tzdb().locate_zone("US/Central"));
     }
     SECTION("Ensure invalid value parse correctly")
     {

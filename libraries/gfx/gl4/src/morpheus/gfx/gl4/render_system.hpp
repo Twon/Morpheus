@@ -29,7 +29,7 @@ public:
     /// Get the name of the underlying graphic API.
     [[nodiscard]] static constexpr auto getGraphicsApi() noexcept -> std::string_view { return "Open GL 4"; }
 
-    [[nodiscard]] static auto create() -> exp_ns::expected<RenderSystem, std::string>;
+    [[nodiscard]] static auto create() -> conf::exp::expected<RenderSystem, std::string>;
 
 private:
 };

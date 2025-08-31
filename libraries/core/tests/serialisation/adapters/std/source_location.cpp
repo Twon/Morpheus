@@ -21,7 +21,7 @@ TEST_CASE("Verify serialisation of std::source_location", "[morpheus.serialisati
 {
     GIVEN("A std::source_location holding a value")
     {
-        sl_ns::source_location location = MORPHEUS_CURRENT_LOCATION;
+        conf::sl::source_location location = MORPHEUS_CURRENT_LOCATION;
 
         THEN("Expect the following sequence of operations on the underlying writer")
         {

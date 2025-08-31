@@ -10,7 +10,7 @@ int main(int /*argc*/, char*[] /*argv[]*/)
 {
     for (auto const& monitor : morpheus::gfx::os::enumerateMonitors())
     {
-        print_ns::print("{}\n", monitor);
+        conf::print::print("{}\n", monitor);
     }
 }
 // LCOV_EXCL_STOP

@@ -31,7 +31,7 @@ public:
     /// Get the name of the underlying graphic API.
     [[nodiscard]] static constexpr auto getGraphicsApi() noexcept -> std::string_view { return "Vulkan"; }
 
-    [[nodiscard]] static auto create() -> exp_ns::expected<RenderSystem, std::string>;
+    [[nodiscard]] static auto create() -> conf::exp::expected<RenderSystem, std::string>;
 
     auto const& adapters() const { return mAdapters; }
 

@@ -21,13 +21,13 @@ inline constexpr bool isEnabledForRangeSerialisation = false;
 ///   Rather than special case ignoring strings an potentially other types the user must opt in by specialising \ref isEnabledForRangeSerialisation
 ///   for types that should be included for range support.
 template <typename T>
-concept IsRange = ranges::range<T> and isEnabledForRangeSerialisation<T>;
+concept IsRange = conf::ranges::range<T> and isEnabledForRangeSerialisation<T>;
 
 template <concepts::WriteSerialiser Serialiser>
 void serialise(Serialiser& serialiser, IsRange auto const& range)
 {
-    serialiser.writer().beginSequence(ranges::size(range));
-    ranges::for_each(range, [&serialiser](auto const& element) { serialiser.serialise(element); });
+    serialiser.writer().beginSequence(conf::ranges::size(range));
+    conf::ranges::for_each(range, [&serialiser](auto const& element) { serialiser.serialise(element); });
     serialiser.writer().endSequence();
 }
 

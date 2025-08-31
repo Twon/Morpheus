@@ -96,12 +96,12 @@ TEMPLATE_TEST_CASE("Json writer can write single native types to underlying text
     if constexpr (std::is_integral_v<TestType>)
     {
         using Limits = std::numeric_limits<TestType>;
-        REQUIRE(test::deserialise<TestType>(fmt_ns::format("{}", Limits::min())) == Limits::min());
-        REQUIRE(test::deserialise<TestType>(fmt_ns::format("{}", Limits::lowest())) == Limits::lowest());
-        REQUIRE(test::deserialise<TestType>(fmt_ns::format("{}", Limits::max())) == Limits::max());
+        REQUIRE(test::deserialise<TestType>(conf::fmt::format("{}", Limits::min())) == Limits::min());
+        REQUIRE(test::deserialise<TestType>(conf::fmt::format("{}", Limits::lowest())) == Limits::lowest());
+        REQUIRE(test::deserialise<TestType>(conf::fmt::format("{}", Limits::max())) == Limits::max());
 
         if constexpr (not std::is_same_v<TestType, bool>)
-            REQUIRE(test::deserialise<TestType>(fmt_ns::format("{}", Limits::radix)) == Limits::radix);
+            REQUIRE(test::deserialise<TestType>(conf::fmt::format("{}", Limits::radix)) == Limits::radix);
     }
     else if constexpr (std::is_floating_point_v<TestType>)
     {
