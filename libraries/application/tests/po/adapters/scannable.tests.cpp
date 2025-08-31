@@ -25,12 +25,12 @@ struct Coordinates
 };
 
 template <>
-struct morpheus::scan_ns::scanner<Coordinates> : morpheus::scan_ns::scanner<std::string>
+struct morpheus::conf::scan::scanner<Coordinates> : morpheus::conf::scan::scanner<std::string>
 {
     template <typename Context>
-    auto scan(Coordinates& val, Context& ctx) const -> morpheus::scan_ns::scan_expected<typename Context::iterator>
+    auto scan(Coordinates& val, Context& ctx) const -> morpheus::conf::scan::scan_expected<typename Context::iterator>
     {
-        return morpheus::scan_ns::scan<int, double>(ctx.range(), "[{}, {}]")
+        return morpheus::conf::scan::scan<int, double>(ctx.range(), "[{}, {}]")
             .transform(
                 [&val](auto const& result)
                 {

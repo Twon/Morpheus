@@ -21,6 +21,6 @@ concept Adapter = requires(T t) {
 };
 
 template <typename T>
-concept AdapterRange = Adapter<ranges::range_value_t<T>>;
+concept AdapterRange = Adapter<conf::ranges::range_value_t<T>>;
 
 } // namespace morpheus::gfx::concepts

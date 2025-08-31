@@ -49,8 +49,9 @@ TEMPLATE_TEST_CASE("Verify serialisation of sequence containers std::ranges",
         {
             InSequence seq;
             MockedWriteSerialiser serialiser;
-            EXPECT_CALL(serialiser.writer(), beginSequence(std::optional(ranges::size(container)))).Times(1);
-            ranges::for_each(container, [&serialiser](auto const& element) { EXPECT_CALL(serialiser.writer(), write(Matcher<int>(Eq(element)))).Times(1); });
+            EXPECT_CALL(serialiser.writer(), beginSequence(std::optional(conf::ranges::size(container)))).Times(1);
+            conf::ranges::for_each(container,
+                                   [&serialiser](auto const& element) { EXPECT_CALL(serialiser.writer(), write(Matcher<int>(Eq(element)))).Times(1); });
             EXPECT_CALL(serialiser.writer(), endSequence()).Times(1);
 
             WHEN("Serialising the std::expected")

@@ -26,7 +26,7 @@ void terminationHandler()
     // LCOV_EXCL_START
     try
     {
-        debugPrint(fmt_ns::format("{}", MORPHEUS_CURRENT_STACKTRACE));
+        debugPrint(conf::fmt::format("{}", MORPHEUS_CURRENT_STACKTRACE));
     }
     catch (...)
     {}

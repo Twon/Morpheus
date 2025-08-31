@@ -8,7 +8,7 @@
 
 // clang-format off
 #if (__cpp_lib_format >= 201907L)
-    namespace morpheus { namespace fmt_ns = std; }
+    namespace morpheus::conf { namespace fmt = ::std; }
 #else
     #if (MORPHEUS_COMPILER == MORPHEUS_GNUC_COMPILER)
         #pragma GCC diagnostic push
@@ -18,7 +18,7 @@
     #include <fmt/format.h> // IWYU pragma: export
     #include <fmt/chrono.h> // IWYU pragma: export
     #include <fmt/ostream.h> // IWYU pragma: export
-    namespace morpheus { namespace fmt_ns = fmt; }
+    namespace morpheus::conf { namespace fmt = ::fmt; }
 
     #if (MORPHEUS_COMPILER == MORPHEUS_GNUC_COMPILER)
         #pragma GCC diagnostic pop

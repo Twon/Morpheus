@@ -19,19 +19,19 @@ concurrency::Generator<Monitor> enumerateMonitors() noexcept
     auto gfxPimitives =
         makeDisplay()
             .and_then(
-                [](DisplayPtr&& display) -> exp_ns::expected<std::tuple<DisplayPtr, Window>, std::string>
+                [](DisplayPtr&& display) -> conf::exp::expected<std::tuple<DisplayPtr, Window>, std::string>
                 {
                     auto window = DefaultRootWindow(display.get());
                     return std::tuple{std::move(display), std::move(window)};
                 })
             .and_then(
-                [](std::tuple<DisplayPtr, Window>&& resources) -> exp_ns::expected<std::tuple<DisplayPtr, Window, ScreenResourcePtr>, std::string>
+                [](std::tuple<DisplayPtr, Window>&& resources) -> conf::exp::expected<std::tuple<DisplayPtr, Window, ScreenResourcePtr>, std::string>
                 {
                     auto&& [display, root] = std::move(resources);
                     auto screenRes = makeScreenResource(display.get(), root);
                     if (!screenRes.has_value())
                     {
-                        return exp_ns::unexpected("Failed to create screen resource!"s);
+                        return conf::exp::unexpected("Failed to create screen resource!"s);
                     }
                     return std::tuple(std::move(display), std::move(root), std::move(screenRes).value());
                 });

@@ -14,12 +14,12 @@ namespace morpheus
 AssertHandler gAssertHandler = [](Assertion assertion)
 {
     // LCOV_EXCL_START
-    auto const debugMessage = fmt_ns::format("{}({}): assertion[{}]: {}\nBacktrace:{}\n",
-                                             assertion.location.file_name(),
-                                             assertion.location.line(),
-                                             assertion.expression,
-                                             assertion.message,
-                                             MORPHEUS_CURRENT_STACKTRACE);
+    auto const debugMessage = conf::fmt::format("{}({}): assertion[{}]: {}\nBacktrace:{}\n",
+                                                assertion.location.file_name(),
+                                                assertion.location.line(),
+                                                assertion.expression,
+                                                assertion.message,
+                                                MORPHEUS_CURRENT_STACKTRACE);
     debugPrint(debugMessage);
     return true;
     // LCOV_EXCL_STOP
@@ -51,7 +51,7 @@ AssertHaltHandler setAssertHaltHandler(AssertHaltHandler handler)
     return gAssertHaltHandler;
 }
 
-void assertHandler(AssertType type, sl_ns::source_location const location, std::string_view const expr, std::string_view message)
+void assertHandler(AssertType type, conf::sl::source_location const location, std::string_view const expr, std::string_view message)
 {
     if (type == AssertType::Assert)
     {

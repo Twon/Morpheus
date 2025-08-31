@@ -15,7 +15,7 @@ TEST_CASE("Ensure image accessors", "[morpheus.gfx.vendor.vendorFromPciId]")
 {
     constexpr auto vendors = magic_enum::enum_values<Vendor>();
 
-    for (auto const& vendor : ranges::drop_view{vendors, 1})
+    for (auto const& vendor : conf::ranges::drop_view{vendors, 1})
     {
         REQUIRE(vendorFromPciId(std::to_underlying(vendor)) == vendor);
     }

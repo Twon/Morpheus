@@ -40,9 +40,9 @@ struct TypeListNames<std::variant<T...>>
     /// Find the index within the types of a std::variant for a given type name.
     static consteval std::string_view findIndex(std::string_view const name)
     {
-        auto const entry = ranges::find(typeNames, name);
+        auto const entry = conf::ranges::find(typeNames, name);
         if (entry == typeNames.end())
-            throw std::out_of_range(fmt_ns::format("{} is not a valid type name.", name));
+            throw std::out_of_range(conf::fmt::format("{} is not a valid type name.", name));
         return std::distance(typeNames.begin(), entry);
     }
 

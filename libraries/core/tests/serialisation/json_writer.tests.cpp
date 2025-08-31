@@ -81,10 +81,10 @@ TEMPLATE_TEST_CASE("Json writer can write single native types to underlying text
 {
     if constexpr (std::is_integral_v<TestType>)
     {
-        REQUIRE(test::serialise(std::numeric_limits<TestType>::min()) == fmt_ns::format("{}", std::numeric_limits<TestType>::min()));
-        REQUIRE(test::serialise(std::numeric_limits<TestType>::lowest()) == fmt_ns::format("{}", std::numeric_limits<TestType>::lowest()));
-        REQUIRE(test::serialise(std::numeric_limits<TestType>::max()) == fmt_ns::format("{}", std::numeric_limits<TestType>::max()));
-        REQUIRE(test::serialise(std::numeric_limits<TestType>::radix) == fmt_ns::format("{}", std::numeric_limits<TestType>::radix));
+        REQUIRE(test::serialise(std::numeric_limits<TestType>::min()) == conf::fmt::format("{}", std::numeric_limits<TestType>::min()));
+        REQUIRE(test::serialise(std::numeric_limits<TestType>::lowest()) == conf::fmt::format("{}", std::numeric_limits<TestType>::lowest()));
+        REQUIRE(test::serialise(std::numeric_limits<TestType>::max()) == conf::fmt::format("{}", std::numeric_limits<TestType>::max()));
+        REQUIRE(test::serialise(std::numeric_limits<TestType>::radix) == conf::fmt::format("{}", std::numeric_limits<TestType>::radix));
     }
     else if constexpr (std::is_floating_point_v<TestType>)
     {

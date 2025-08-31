@@ -11,7 +11,7 @@
 
     #include <algorithm> // IWYU pragma: export
     #include <iterator> // IWYU pragma: export
-    namespace morpheus { namespace ranges = std::ranges; }
+    namespace morpheus::conf { namespace ranges = ::std::ranges; }
 
     namespace std::ranges
     {
@@ -26,7 +26,7 @@
     #include <range/v3/range/access.hpp> // IWYU pragma: export
     #include <range/v3/view.hpp> // IWYU pragma: export
 
-    namespace morpheus { namespace ranges = ::ranges; }
+    namespace morpheus::conf { namespace ranges = ::ranges; }
 
 #endif // (__cpp_lib_ranges >= 202202L)
 // clang-format on

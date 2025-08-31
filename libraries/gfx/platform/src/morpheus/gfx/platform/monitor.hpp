@@ -85,7 +85,7 @@ private:
 } // namespace morpheus::gfx
 
 template <>
-struct morpheus::fmt_ns::formatter<morpheus::gfx::Monitor> : morpheus::fmt_ns::formatter<std::string>
+struct morpheus::conf::fmt::formatter<morpheus::gfx::Monitor> : morpheus::conf::fmt::formatter<std::string>
 {
     template <typename Context>
     constexpr auto parse(Context& context)
@@ -96,13 +96,13 @@ struct morpheus::fmt_ns::formatter<morpheus::gfx::Monitor> : morpheus::fmt_ns::f
     template <typename Context>
     constexpr auto format(morpheus::gfx::Monitor const& value, Context& context) const
     {
-        return morpheus::fmt_ns::format_to(context.out(),
-                                           "{{name={},{{x={},y={}}},{{width={},height={}}},primary={}}}",
-                                           value.name(),
-                                           value.startX(),
-                                           value.startY(),
-                                           value.width(),
-                                           value.height(),
-                                           value.primary());
+        return morpheus::conf::fmt::format_to(context.out(),
+                                              "{{name={},{{x={},y={}}},{{width={},height={}}},primary={}}}",
+                                              value.name(),
+                                              value.startX(),
+                                              value.startY(),
+                                              value.width(),
+                                              value.height(),
+                                              value.primary());
     }
 };

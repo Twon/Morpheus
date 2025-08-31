@@ -12,7 +12,7 @@ namespace morpheus::application
 TEST_CASE("Ensure format is supported for versions", "[morpheus.application.version.fmt]")
 {
     Version latest{.major = 1, .minor = 0, .patch = 99};
-    REQUIRE(fmt_ns::format("{}", latest) == "{major=1,minor=0,patch=99}");
+    REQUIRE(conf::fmt::format("{}", latest) == "{major=1,minor=0,patch=99}");
 }
 
 TEST_CASE("Ensure scan is supported and working for custom versions", "[morpheus.application.version.scan]")
@@ -24,7 +24,7 @@ TEST_CASE("Ensure scan is supported and working for custom versions", "[morpheus
 
         WHEN("Using std::scan to the coordinate via a customisation point")
         {
-            auto result = scan_ns::scan<Version>(input, "{}");
+            auto result = conf::scan::scan<Version>(input, "{}");
 
             REQUIRE(result);
             auto [version] = result->values();

@@ -10,7 +10,7 @@ TEST_CASE("Ensure move construction of a x11 render window", "[morpheus.gfx.x11.
     RenderWindow::Config const config;
     RenderWindow::create(config).and_then(
         // LCOV_EXCL_START
-        [&](auto&& window) -> exp_ns::expected<RenderWindow, std::string>
+        [&](auto&& window) -> conf::exp::expected<RenderWindow, std::string>
         {
             // The window will not get created on CI as they have no monitors attached so code coverage is disabled.
             REQUIRE(!window.fullScreen());
@@ -23,7 +23,7 @@ TEST_CASE("Ensure move construction of a x11 render window", "[morpheus.gfx.x11.
             REQUIRE(newWindow.width() == config.width);
             REQUIRE(newWindow.height() == config.height);
             REQUIRE(newWindow.colourDepth() == config.colourDepth);
-            return exp_ns::expected<RenderWindow, std::string>{std::move(newWindow)};
+            return conf::exp::expected<RenderWindow, std::string>{std::move(newWindow)};
         }
         // LCOV_EXCL_STOP
     );

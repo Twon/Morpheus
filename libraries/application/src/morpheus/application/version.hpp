@@ -21,7 +21,7 @@ struct Version
 
 /// Specialisation of the formatter for morpheus::application::Version to format it as a string.
 template <>
-struct morpheus::fmt_ns::formatter<morpheus::application::Version> : morpheus::fmt_ns::formatter<std::string>
+struct morpheus::conf::fmt::formatter<morpheus::application::Version> : morpheus::conf::fmt::formatter<std::string>
 {
     /// Parse the format specifier for morpheus::application::Version.
     /// \tparam Context The type of the format context.
@@ -40,13 +40,13 @@ struct morpheus::fmt_ns::formatter<morpheus::application::Version> : morpheus::f
     template <typename Context>
     constexpr auto format(morpheus::application::Version const& value, Context& context) const
     {
-        return morpheus::fmt_ns::format_to(context.out(), "{{major={},minor={},patch={}}}", value.major, value.minor, value.patch);
+        return morpheus::conf::fmt::format_to(context.out(), "{{major={},minor={},patch={}}}", value.major, value.minor, value.patch);
     }
 };
 
 /// Specialisation of the scanner for morpheus::application::Version to scan it from a string.
 template <>
-struct morpheus::scan_ns::scanner<morpheus::application::Version> : morpheus::scan_ns::scanner<std::string>
+struct morpheus::conf::scan::scanner<morpheus::application::Version> : morpheus::conf::scan::scanner<std::string>
 {
     /// Scan for the version.
     /// \tparam Context The type of the format context.
@@ -54,9 +54,9 @@ struct morpheus::scan_ns::scanner<morpheus::application::Version> : morpheus::sc
     /// \param ctx The scan context.
     /// \return An expected iterator pointing to the end of the scanned version, or the scan error if it failed.
     template <typename Context>
-    auto scan(morpheus::application::Version& val, Context& ctx) const -> morpheus::scan_ns::scan_expected<typename Context::iterator>
+    auto scan(morpheus::application::Version& val, Context& ctx) const -> morpheus::conf::scan::scan_expected<typename Context::iterator>
     {
-        return morpheus::scan_ns::scan<std::uint16_t, std::uint16_t, std::uint16_t>(ctx.range(), "{{major={},minor={},patch={}}}")
+        return morpheus::conf::scan::scan<std::uint16_t, std::uint16_t, std::uint16_t>(ctx.range(), "{{major={},minor={},patch={}}}")
             .transform(
                 [&val](auto const& result)
                 {

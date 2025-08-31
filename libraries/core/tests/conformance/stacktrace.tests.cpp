@@ -18,7 +18,7 @@ TEST_CASE("Ensure stacktrace is supported and working", "[morpheus.conformance.s
         WHEN("Using std::format to write to a string")
         {
             // Ensure time zones work
-            auto const output = fmt_ns::format("{}", st);
+            auto const output = conf::fmt::format("{}", st);
 
             THEN("Expect the variables wrote to the stream in the specified order")
             {

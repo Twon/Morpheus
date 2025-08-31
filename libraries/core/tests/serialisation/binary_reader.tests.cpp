@@ -52,7 +52,7 @@ TEST_CASE("Binary reader handles error cases gracefully", "[morpheus.serialisati
     {
         REQUIRE(testing::deserialiseWithIoStream<std::int64_t>(testing::makeCharArray(0x64, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00)) == std::int64_t{100});
         REQUIRE(testing::deserialiseWithIoStream<std::string>(testing::serialise(string)) == string);
-        REQUIRE(ranges::equal(testing::deserialiseWithIoStream<std::vector<std::byte>>(testing::serialise(std::span{bytes})), std::span{bytes}));
+        REQUIRE(conf::ranges::equal(testing::deserialiseWithIoStream<std::vector<std::byte>>(testing::serialise(std::span{bytes})), std::span{bytes}));
 
         REQUIRE_THROWS_AS(testing::deserialiseWithIoStream<std::int64_t>(testing::makeCharArray(0x64, 0x00, 0x00, 0x00)), BinaryException);
         REQUIRE_THROWS_AS(testing::deserialiseWithIoStream<std::string>(testing::makeCharArray(0x64, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00)),

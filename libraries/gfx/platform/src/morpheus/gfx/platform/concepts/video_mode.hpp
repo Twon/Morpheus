@@ -1,6 +1,7 @@
 #pragma once
 
 #include "morpheus/core/conformance/ranges.hpp"
+
 #include <concepts>
 
 namespace morpheus::gfx::concepts
@@ -15,6 +16,6 @@ concept VideoMode = requires(T t) {
 };
 
 template <typename T>
-concept VideoModeRange = VideoMode<ranges::range_value_t<T>>;
+concept VideoModeRange = VideoMode<conf::ranges::range_value_t<T>>;
 
 } // namespace morpheus::gfx::concepts

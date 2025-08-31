@@ -9,15 +9,15 @@
 // clang-format off
 #if (__cpp_lib_source_location >= 201907L)
 
-    namespace morpheus { namespace sl_ns = std; }
+    namespace morpheus::conf { namespace sl = ::std; }
 
-    #define MORPHEUS_CURRENT_LOCATION ::morpheus::sl_ns::source_location::current()
+    #define MORPHEUS_CURRENT_LOCATION ::morpheus::conf::sl::source_location::current()
 
 #else
 
     #include <boost/assert/source_location.hpp> // IWYU pragma: export
 
-    namespace morpheus{ namespace sl_ns = boost; }
+    namespace morpheus::conf { namespace sl = ::boost; }
 
     #define MORPHEUS_CURRENT_LOCATION BOOST_CURRENT_LOCATION
 
