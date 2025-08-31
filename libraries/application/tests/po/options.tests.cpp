@@ -41,19 +41,19 @@ struct Person
     }
 };
 
-auto captureOutput(ranges::contiguous_range auto const& cliOptions, HelpDocumentation msgDetails, CustomProgramOptions auto&... options)
+auto captureOutput(conf::ranges::contiguous_range auto const& cliOptions, HelpDocumentation msgDetails, CustomProgramOptions auto&... options)
 {
     RedirectStream captureStream(std::cout);
-    auto const result = parseProgramOptions(static_cast<int>(ranges::size(cliOptions)), ranges::data(cliOptions), msgDetails, options...);
+    auto const result = parseProgramOptions(static_cast<int>(conf::ranges::size(cliOptions)), conf::ranges::data(cliOptions), msgDetails, options...);
     REQUIRE(result);
     auto const output = captureStream.getOutput();
 
     auto const findOption = [stdOut = std::move(output)](std::string const optionText)
     {
-        auto linesView =
-            stdOut | ranges::views::split('\n') | ranges::views::transform([](auto&& rng) { return std::string_view(&*rng.begin(), ranges::distance(rng)); });
+        auto linesView = stdOut | conf::ranges::views::split('\n') |
+                         conf::ranges::views::transform([](auto&& rng) { return std::string_view(&*rng.begin(), conf::ranges::distance(rng)); });
 
-        return ranges::find_if(linesView, [optionText](auto const line) { return line.contains(optionText); }) != linesView.end();
+        return conf::ranges::find_if(linesView, [optionText](auto const line) { return line.contains(optionText); }) != linesView.end();
     };
     return findOption;
 }

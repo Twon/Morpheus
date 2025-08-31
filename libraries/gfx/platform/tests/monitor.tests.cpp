@@ -147,7 +147,7 @@ TEST_CASE("Ensure image accessors", "[morpheus.gfx.monitor.comparison]")
 TEST_CASE("Ensure format is supported for monitors", "[morpheus.gfx.monitor.fmt]")
 {
     Monitor monitor("Main Display", 100, 200, 600, 800, true);
-    REQUIRE(fmt_ns::format("{}", monitor) == "{name=Main Display,{x=100,y=200},{width=600,height=800},primary=true}");
+    REQUIRE(conf::fmt::format("{}", monitor) == "{name=Main Display,{x=100,y=200},{width=600,height=800},primary=true}");
 }
 
 } // namespace morpheus::gfx

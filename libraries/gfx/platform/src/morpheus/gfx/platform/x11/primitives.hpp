@@ -53,18 +53,18 @@ using ScreenResourcePtr = std::unique_ptr<::XRRScreenResources, detail::XDestroy
 
 /// Creates a display for the X11 platform.
 /// \return An expected containing the display pointer or an error message.
-exp_ns::expected<DisplayPtr, std::string> makeDisplay();
+conf::exp::expected<DisplayPtr, std::string> makeDisplay();
 
 /// Creates a window for the X11 platform.
 /// \param display The display pointer.
 /// \param config The configuration for the window.
 /// \return An expected containing a tuple of the display pointer and the window pointer, or an error message.
-exp_ns::expected<std::tuple<DisplayPtr, WindowPtr>, std::string> makeWindow(DisplayPtr&& display, WindowConfig const& config);
+conf::exp::expected<std::tuple<DisplayPtr, WindowPtr>, std::string> makeWindow(DisplayPtr&& display, WindowConfig const& config);
 
 /// Creates a screen resource for the X11 platform.
 /// \param display The display pointer.
 /// \param window The window.
 /// \return An expected containing the screen resource pointer or an error message.
-exp_ns::expected<ScreenResourcePtr, std::string> makeScreenResource(::Display* display, ::Window window);
+conf::exp::expected<ScreenResourcePtr, std::string> makeScreenResource(::Display* display, ::Window window);
 
 } // namespace morpheus::gfx::x11

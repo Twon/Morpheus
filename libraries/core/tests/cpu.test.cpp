@@ -38,8 +38,8 @@ TEST_CASE("Cpu can be queried for processor info", "[morpheus.core.cpu]")
 
     std::vector<std::string> const expectedVirtualMachineVendors{"bhyve bhyve ", "KVMKVMKVM", "Microsoft Hv", " lrpepyh vr", "VMwareVMware", "XenVMMXenVMM"};
 
-    bool const isValidCpu = ranges::find(expected_cpu_vendors, processor.getVendorId()) != expected_cpu_vendors.end();
-    bool const isValidVirtualMachine = ranges::find(expectedVirtualMachineVendors, processor.getVendorId()) != expectedVirtualMachineVendors.end();
+    bool const isValidCpu = conf::ranges::find(expected_cpu_vendors, processor.getVendorId()) != expected_cpu_vendors.end();
+    bool const isValidVirtualMachine = conf::ranges::find(expectedVirtualMachineVendors, processor.getVendorId()) != expectedVirtualMachineVendors.end();
 
     REQUIRE((isValidCpu || isValidVirtualMachine));
     // REQUIRE(processor.getVendorId().size() == 64);

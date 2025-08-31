@@ -21,7 +21,7 @@ void validate(boost::any& v, std::vector<std::basic_string<CharType>> const& val
     po::validators::check_first_occurrence(v);
     auto const& s = po::validators::get_single_string(values);
 
-    auto const result = morpheus::scan_ns::scan<S>(s, "{}");
+    auto const result = morpheus::conf::scan::scan<S>(s, "{}");
     if (result)
         v = result.value().value();
     else

@@ -6,9 +6,9 @@
 #endif
 
 #if ( __cpp_lib_bit_cast >= 201806L )
-    namespace morpheus { namespace bit_ns = std; }
+    namespace morpheus::conf { namespace bit = ::std; }
 #else
-    namespace morpheus {
+    namespace morpheus::conf {
         namespace core::bit
         {
             template<class To, class From>
@@ -26,7 +26,7 @@
                 return dst;
             }
         }
-        namespace bit_ns = core::bit;
+        namespace bit = core::bit;
     }
 #endif
 // clang-format on

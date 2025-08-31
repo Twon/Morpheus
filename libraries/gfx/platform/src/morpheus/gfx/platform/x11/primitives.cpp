@@ -42,21 +42,21 @@ void XDestroyScreenResource::operator()(typename XDestroyScreenResource::pointer
 } // namespace detail
 
 // LCOV_EXCL_START
-exp_ns::expected<DisplayPtr, std::string> makeDisplay()
+conf::exp::expected<DisplayPtr, std::string> makeDisplay()
 {
     ::Display* display = XOpenDisplay(nullptr);
     if (!display)
     {
-        return exp_ns::unexpected("Failed to create display!"s);
+        return conf::exp::unexpected("Failed to create display!"s);
     }
     return DisplayPtr(display);
 }
 
-exp_ns::expected<std::tuple<DisplayPtr, WindowPtr>, std::string> makeWindow(DisplayPtr&& display, WindowConfig const& config)
+conf::exp::expected<std::tuple<DisplayPtr, WindowPtr>, std::string> makeWindow(DisplayPtr&& display, WindowConfig const& config)
 {
     if (!display)
     {
-        return exp_ns::unexpected("Display pointer is null!"s);
+        return conf::exp::unexpected("Display pointer is null!"s);
     }
 
     ::Window window = XCreateSimpleWindow(display.get(),
@@ -71,7 +71,7 @@ exp_ns::expected<std::tuple<DisplayPtr, WindowPtr>, std::string> makeWindow(Disp
 
     if (!window)
     {
-        return exp_ns::unexpected("Failed to create window!"s);
+        return conf::exp::unexpected("Failed to create window!"s);
     }
 
     XMapWindow(display.get(), window);
@@ -79,12 +79,12 @@ exp_ns::expected<std::tuple<DisplayPtr, WindowPtr>, std::string> makeWindow(Disp
     return std::tuple{std::move(display), std::move(windowPtr)};
 }
 
-exp_ns::expected<ScreenResourcePtr, std::string> makeScreenResource(::Display* display, ::Window window)
+conf::exp::expected<ScreenResourcePtr, std::string> makeScreenResource(::Display* display, ::Window window)
 {
     ::XRRScreenResources* resources = XRRGetScreenResources(display, window);
     if (!resources)
     {
-        return exp_ns::unexpected("Failed to get screen resources!"s);
+        return conf::exp::unexpected("Failed to get screen resources!"s);
     }
 
     return ScreenResourcePtr(resources, detail::XDestroyScreenResource());

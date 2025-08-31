@@ -9,7 +9,7 @@ namespace morpheus::serialisation::detail
 {
 
 template <concepts::WriteSerialiser Serialiser>
-void serialise(Serialiser& serialiser, sl_ns::source_location const& value)
+void serialise(Serialiser& serialiser, conf::sl::source_location const& value)
 {
     serialiser.writer().beginComposite();
     serialiser.serialise("file_name", value.file_name());

@@ -25,7 +25,7 @@ TEST_CASE("Verify serialisation of std::expected", "[morpheus.serialisation.expe
     GIVEN("A std::expected holding a value")
     {
         constexpr std::int64_t actualValue = 10;
-        auto const value = exp_ns::expected<std::int64_t, std::string>(actualValue);
+        auto const value = conf::exp::expected<std::int64_t, std::string>(actualValue);
 
         THEN("Expect the following sequence of operations on the underlying writer")
         {
@@ -49,7 +49,7 @@ TEST_CASE("Verify serialisation of std::expected", "[morpheus.serialisation.expe
     GIVEN("An std::expected holding an error")
     {
         std::string const actualValue = "This string is an error";
-        auto const value = exp_ns::expected<std::int64_t, std::string>(exp_ns::unexpected(actualValue));
+        auto const value = conf::exp::expected<std::int64_t, std::string>(conf::exp::unexpected(actualValue));
 
         THEN("Expect the following sequence of operations on the underlying writer")
         {
@@ -92,7 +92,7 @@ TEST_CASE("Verify deserialisation of std::expected", "[morpheus.serialisation.ex
             EXPECT_CALL(serialiser.reader(), endComposite()).Times(1);
             WHEN("Deserialising the std::expected")
             {
-                using ExpectedType = exp_ns::expected<std::int64_t, std::string>;
+                using ExpectedType = conf::exp::expected<std::int64_t, std::string>;
                 auto const expected = serialiser.deserialise<ExpectedType>();
                 REQUIRE(expected.value() == actualValue);
             }
@@ -117,7 +117,7 @@ TEST_CASE("Verify deserialisation of std::expected", "[morpheus.serialisation.ex
 
             WHEN("Deserialising the std::expected")
             {
-                using ExpectedType = exp_ns::expected<std::int64_t, std::string>;
+                using ExpectedType = conf::exp::expected<std::int64_t, std::string>;
                 auto const expected = serialiser.deserialise<ExpectedType>();
                 REQUIRE(expected.error() == actualValue);
             }

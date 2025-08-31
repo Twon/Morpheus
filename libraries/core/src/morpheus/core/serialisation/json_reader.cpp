@@ -17,7 +17,7 @@ namespace
 void checkExpectedEvent(auto const event, auto const expected)
 {
     if (event != expected)
-        throwJsonException(fmt_ns::format("{} expected, but {} encountered", magic_enum::enum_name(expected), magic_enum::enum_name(event)));
+        throwJsonException("{} expected, but {} encountered", magic_enum::enum_name(expected), magic_enum::enum_name(event));
 }
 
 } // namespace
@@ -137,7 +137,7 @@ JsonReader::EventValue JsonReader::getNext()
     {
         rapidjson::ParseErrorCode const c = mJsonReader.GetParseErrorCode();
         size_t const o = mJsonReader.GetErrorOffset();
-        throwJsonException(fmt_ns::format("Parse error at offset {}, error {}", o, magic_enum::enum_name(c)));
+        throwJsonException("Parse error at offset {}, error {}", o, magic_enum::enum_name(c));
     }
     return mExtractor->mCurrent;
 }
@@ -187,7 +187,7 @@ void JsonReader::beginValue(std::string_view const key)
         throwJsonException("Unexpected empty composite");
 
     if (std::get<std::string>(*next) != key)
-        throwJsonException(fmt_ns::format("Expected key {} does not match actual key {}", key, std::get<std::string>(*next)));
+        throwJsonException("Expected key {} does not match actual key {}", key, std::get<std::string>(*next));
 }
 
 void JsonReader::endValue()

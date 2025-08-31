@@ -16,7 +16,7 @@ TEST_CASE("Ensure scan is supported and working", "[morpheus.conformance.scan]")
 
         WHEN("Using std::scan to read from input")
         {
-            auto result = scan_ns::scan<int, int>(input, "{} {}");
+            auto result = conf::scan::scan<int, int>(input, "{} {}");
             auto [a, b] = result->values();
 
             THEN("Expect the variables wrote to the stream in the specified order")

@@ -19,7 +19,7 @@ Adapter::Adapter(vk::raii::PhysicalDevice&& physicalDevice)
 AdapterList enumerateAdapters(vk::raii::Instance const& instance)
 {
     AdapterList adapters;
-    ranges::move(instance.enumeratePhysicalDevices(), ranges::back_inserter(adapters));
+    conf::ranges::move(instance.enumeratePhysicalDevices(), conf::ranges::back_inserter(adapters));
     return adapters;
 }
 

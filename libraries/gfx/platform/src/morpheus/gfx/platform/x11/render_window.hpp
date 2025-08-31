@@ -31,7 +31,7 @@ public:
 
     ~RenderWindow() = default;
 
-    static exp_ns::expected<RenderWindow, std::string> create(Config const& config);
+    static conf::exp::expected<RenderWindow, std::string> create(Config const& config);
 
     //! The width in pixels of the render target.
     [[nodiscard]] std::uint16_t width() const noexcept { return gfx::RenderTarget::width(); }

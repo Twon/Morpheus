@@ -20,7 +20,7 @@ TEST_CASE("Verify std::format specialisation for std::source_location", "[morphe
         return str.str();
     }();
 
-    REQUIRE(fmt_ns::format("{}", currentLocation) == expected);
+    REQUIRE(conf::fmt::format("{}", currentLocation) == expected);
 }
 
 } // namespace morpheus::conversion
