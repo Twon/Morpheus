@@ -43,7 +43,7 @@ concept Associative = AllocatorAware<T> && requires(T t,
     { t.insert(ci, v) } -> std::same_as<typename T::iterator>;
     { t.insert(i, i) } -> std::same_as<void>;
 #if (__cpp_lib_containers_ranges >= 202202L)
-    { t.insert_range(ranges::subrange<typename T::iterator>{}) } -> std::same_as<void>;
+    { t.insert_range(conf::ranges::subrange<typename T::iterator>{}) } -> std::same_as<void>;
 #endif // (__cpp_lib_containers_ranges >= 202202L)
     { t.insert(il) } -> std::same_as<void>;
     { t.insert(std::move(n)) } -> detail::InsertNodeHandleReturnType<T>;
