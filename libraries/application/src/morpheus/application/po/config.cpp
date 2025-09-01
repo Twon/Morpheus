@@ -21,7 +21,7 @@ void Config::addOptions(boost::program_options::options_description& options)
     // clang-format on
 
     //    std::filesystem::path logFilePath;
-    //    date_ns::time_zone logFileTimeZone;
+    //    conf::date::time_zone logFileTimeZone;
 }
 
 } // namespace morpheus::application::po

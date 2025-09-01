@@ -15,8 +15,8 @@ TEST_CASE("Create an adapter mode list", "[morpheus.core.gfx.nvidia.adapter_list
     auto adapters = enumerateAdapters();
     for (auto const& adapter : adapters)
     {
-        // debugPrint(fmt_ns::format("Graphics adapter is {}:id({}):vendor({})\n", adapter.name(), adapter.id(), adapter.vendor()));
-        debugPrint(fmt_ns::format("Graphics adapter is {}:id({})\n", adapter.name(), adapter.id()));
+        // debugPrint(conf::fmt::format("Graphics adapter is {}:id({}):vendor({})\n", adapter.name(), adapter.id(), adapter.vendor()));
+        debugPrint(conf::fmt::format("Graphics adapter is {}:id({})\n", adapter.name(), adapter.id()));
     }
 }
 

@@ -24,7 +24,7 @@ concept Sequence =
         { T(s, v) };
         { T(i, i) };
 #if (__cpp_lib_containers_ranges >= 202202L)
-        { T(std::from_range, ranges::subrange<typename T::iterator>{}) };
+        { T(std::from_range, conf::ranges::subrange<typename T::iterator>{}) };
 #endif // (__cpp_lib_containers_ranges >= 202202L)
         { T(il) };
         { t = il };
@@ -33,7 +33,7 @@ concept Sequence =
         { t.insert(i, s, v) } -> std::same_as<typename T::iterator>;
         { t.insert(i, i, i) } -> std::same_as<typename T::iterator>;
 #if (__cpp_lib_containers_ranges >= 202202L)
-        { t.insert_range(i, ranges::subrange<typename T::iterator>{}) } -> std::same_as<typename T::iterator>;
+        { t.insert_range(i, conf::ranges::subrange<typename T::iterator>{}) } -> std::same_as<typename T::iterator>;
 #endif // (__cpp_lib_containers_ranges >= 202202L)
         { t.insert(i, il) } -> std::same_as<typename T::iterator>;
         { t.erase(i) } -> std::same_as<typename T::iterator>;
@@ -41,7 +41,7 @@ concept Sequence =
         { t.clear() } -> std::same_as<void>;
         { t.assign(i, i) } -> std::same_as<void>;
 #if (__cpp_lib_containers_ranges >= 202202L)
-        { t.assign_range(ranges::subrange<typename T::iterator>{}) } -> std::same_as<void>;
+        { t.assign_range(conf::ranges::subrange<typename T::iterator>{}) } -> std::same_as<void>;
 #endif // (__cpp_lib_containers_ranges >= 202202L)
         { t.assign(il) } -> std::same_as<void>;
         { t.assign(s, v) } -> std::same_as<void>;

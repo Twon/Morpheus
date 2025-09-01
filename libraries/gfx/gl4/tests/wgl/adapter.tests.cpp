@@ -44,7 +44,7 @@ using PathInfoArray = std::vector<DISPLAYCONFIG_PATH_INFO>;
 using ModeInfoArray = std::vector<DISPLAYCONFIG_MODE_INFO>;
 using DisplayConfig = std::pair<PathInfoArray, ModeInfoArray>;
 
-exp_ns::expected<DisplayConfig, HRESULT> getCurrentDisplayConfig()
+conf::exp::expected<DisplayConfig, HRESULT> getCurrentDisplayConfig()
 {
     PathInfoArray pathInfo;
     ModeInfoArray modeInfo;
@@ -67,7 +67,7 @@ exp_ns::expected<DisplayConfig, HRESULT> getCurrentDisplayConfig()
         }
 
         if (rc != ERROR_INSUFFICIENT_BUFFER)
-            return exp_ns::unexpected(rc);
+            return conf::exp::unexpected(rc);
     }
     return DisplayConfig{std::move(pathInfo), std::move(modeInfo)};
 }

@@ -9,14 +9,14 @@
 
 #if (__cpp_lib_function_ref >= 202202L)
 
-namespace morpheus
+namespace morpheus::conf
 {
-namespace func_ref_ns = std;
+namespace func_ref = std;
 }
 
 #else
 
-namespace morpheus::func_ref_ns
+namespace morpheus::conf::func_ref
 {
 
 /// \struct nontype_t
@@ -226,5 +226,5 @@ function_ref(nontype_t<f>) -> function_ref<std::remove_pointer_t<decltype(f)>>;
     function_ref(F) -> function_ref<see below>;
 */
 
-} // namespace morpheus::func_ref_ns
+} // namespace morpheus::conf::func_ref
 #endif
