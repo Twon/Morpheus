@@ -34,7 +34,7 @@ public:
     ///     The setting to configure the window with.
     /// \return
     ///     An expected of the newly created window, or an error if creation failed.
-    static exp_ns::expected<RenderWindow, std::string> create(Config const& config = Config{});
+    static conf::exp::expected<RenderWindow, std::string> create(Config const& config = Config{});
 
     /// \copydoc gfx::RenderTarget::width()
     [[nodiscard]] std::uint16_t width() const noexcept { return gfx::RenderWindow::width(); }

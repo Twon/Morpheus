@@ -17,12 +17,12 @@ std::string WStringToString(std::wstring const& wstr);
 template <typename T>
 auto makeExpected(T&& value)
 {
-    return exp_ns::expected<std::decay_t<T>, std::string>{std::forward<T>(value)};
+    return conf::exp::expected<std::decay_t<T>, std::string>{std::forward<T>(value)};
 }
 
 inline auto makeUnexpected()
 {
-    return exp_ns::unexpected(GetLastErrorString(GetLastError()));
+    return conf::exp::unexpected(GetLastErrorString(GetLastError()));
 }
 
 } // namespace morpheus::gfx::win32

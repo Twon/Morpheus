@@ -15,14 +15,14 @@ namespace morpheus::gfx::win32
 namespace
 {
 
-auto getModuleHandle() -> exp_ns::expected<HINSTANCE, std::string>
+auto getModuleHandle() -> conf::exp::expected<HINSTANCE, std::string>
 {
     HINSTANCE hinst = nullptr;
     static const TCHAR findAddressFrom = TCHAR();
     auto const result = GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT, &findAddressFrom, &hinst);
     if (!result)
     {
-        return exp_ns::unexpected(GetLastErrorString(GetLastError()));
+        return conf::exp::unexpected(GetLastErrorString(GetLastError()));
     }
     return hinst;
 }
@@ -210,7 +210,7 @@ LRESULT WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     return ::DefWindowProc(hWnd, message, wParam, lParam);
 }
 
-auto adjustWindowConfig(RenderWindow::Config& config) -> exp_ns::expected<DWORD, std::string>
+auto adjustWindowConfig(RenderWindow::Config& config) -> conf::exp::expected<DWORD, std::string>
 {
     // The style of the window depends select setting of our window.
     DWORD dwWindowStyle = (config.visible) ? WS_VISIBLE : 0;
@@ -240,7 +240,7 @@ auto adjustWindowConfig(RenderWindow::Config& config) -> exp_ns::expected<DWORD,
         RECT WndRect = {0, 0, config.width, config.height};
         if (!::AdjustWindowRect(&WndRect, dwWindowStyle, false))
         {
-            return exp_ns::unexpected(GetLastErrorString(GetLastError()));
+            return conf::exp::unexpected(GetLastErrorString(GetLastError()));
         }
         config.width = std::min<std::int16_t>(static_cast<std::int16_t>(WndRect.right - WndRect.left), screenWidth);
         config.height = std::min<std::int16_t>(static_cast<std::int16_t>(WndRect.bottom - WndRect.top), screenHeight);
@@ -336,22 +336,22 @@ RenderWindow::~RenderWindow()
     ::UnregisterClass(mWindowName.c_str(), getModuleHandle().value());
 }
 
-exp_ns::expected<RenderWindow, std::string> RenderWindow::create(Config const& config)
+conf::exp::expected<RenderWindow, std::string> RenderWindow::create(Config const& config)
 {
     // clang-format off
     RenderWindow thisWindow;
     auto requestedCfg = config;
     auto components = adjustWindowConfig(requestedCfg).and_then(
-        [](DWORD dwStyle) -> exp_ns::expected<std::tuple<DWORD, HINSTANCE>, std::string>
+        [](DWORD dwStyle) -> conf::exp::expected<std::tuple<DWORD, HINSTANCE>, std::string>
         {
             auto handle = getModuleHandle();
             if (!handle) {
-                return exp_ns::unexpected(handle.error());
+                return conf::exp::unexpected(handle.error());
             }
             return makeExpected(std::tuple{dwStyle, handle.value()});
         }
     ).and_then(
-        [&](auto&& pair) -> exp_ns::expected<std::tuple<DWORD, HINSTANCE>, std::string>
+        [&](auto&& pair) -> conf::exp::expected<std::tuple<DWORD, HINSTANCE>, std::string>
         {
             auto [dwStyle, hInstance] = pair;
             // Next default values for new objects
@@ -368,7 +368,7 @@ exp_ns::expected<RenderWindow, std::string> RenderWindow::create(Config const& c
             return makeExpected(std::tuple{dwStyle, hInstance});
         }
     ).and_then(
-        [&config = requestedCfg, &thisWindow](auto&& pair)  -> exp_ns::expected<std::tuple<HINSTANCE, HWND>, std::string>
+        [&config = requestedCfg, &thisWindow](auto&& pair)  -> conf::exp::expected<std::tuple<HINSTANCE, HWND>, std::string>
         {
             auto [dwStyle, hInstance] = pair;
             auto const window = ::CreateWindow( config.windowName.c_str(), config.windowName.c_str(), dwStyle,
@@ -384,13 +384,13 @@ exp_ns::expected<RenderWindow, std::string> RenderWindow::create(Config const& c
 
     if (!components)
     {
-        return exp_ns::unexpected(components.error());
+        return conf::exp::unexpected(components.error());
     }
 
     auto [hInstance, hWnd] = components.value();
     thisWindow.mHInstance = hInstance;
     thisWindow.mWindow.reset(hWnd);
-    return exp_ns::expected<RenderWindow, std::string>(std::move(thisWindow));
+    return conf::exp::expected<RenderWindow, std::string>(std::move(thisWindow));
 }
 
 bool RenderWindow::visible() const noexcept

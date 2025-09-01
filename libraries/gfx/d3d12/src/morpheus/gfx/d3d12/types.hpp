@@ -14,7 +14,7 @@ namespace morpheus::gfx::d3d12
 ///     An alias for an expected which take any value type, but returns an unexpected HRESULT type.
 ///
 template <typename T>
-using DXGIExpected = exp_ns::expected<T, HRESULT>;
+using DXGIExpected = conf::exp::expected<T, HRESULT>;
 
 /// \using DXGIFactory
 ///     A RAII wrapper for the IDXGIFactory6 interface.

@@ -19,7 +19,7 @@ DXGIExpected<T> toDXGIExpected(HRESULT hr, T&& val)
     }
     else
     {
-        return exp_ns::unexpected(hr);
+        return conf::exp::unexpected(hr);
     }
 }
 
@@ -37,15 +37,15 @@ DXGIExpected<D3D12Device> createDevice(Adapter const& adapter)
     return toDXGIExpected(hr, std::move(device));
 }
 
-auto RenderSystem::create(Adapter const& adapter) -> exp_ns::expected<RenderSystem, std::string>
+auto RenderSystem::create(Adapter const& adapter) -> conf::exp::expected<RenderSystem, std::string>
 {
     // auto device = createDevice(adapter).and_then([](auto&& /*device*/)
     //     {
-    //         return exp_ns::expected<RenderSystem, std::string>{RenderSystem{}};
+    //         return conf::exp::expected<RenderSystem, std::string>{RenderSystem{}};
     //     }
     //);
     // return device;
-    return exp_ns::expected<RenderSystem, std::string>{RenderSystem{}};
+    return conf::exp::expected<RenderSystem, std::string>{RenderSystem{}};
 }
 
 } // namespace morpheus::gfx::d3d12

@@ -32,10 +32,10 @@ public:
 /// \param[in] args
 ///     Arguments to be fed into the formatted message output
 template <class... Args>
-[[noreturn]] MORPHEUS_FUNCTION_COLD void throwD3D12Exception(fmt_ns::format_string<Args...> fmt, Args&&... args)
+[[noreturn]] MORPHEUS_FUNCTION_COLD void throwD3D12Exception(conf::fmt::format_string<Args...> fmt, Args&&... args)
 {
     // Defect report https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2023/p2905r2.html resolves make_format_args to only accept l-values.
-    throwD3D12Exception(fmt_ns::vformat(fmt.get(), fmt_ns::make_format_args(args...)));
+    throwD3D12Exception(conf::fmt::vformat(fmt.get(), conf::fmt::make_format_args(args...)));
 }
 /// @}
 

@@ -43,7 +43,7 @@ auto createDXGIFactory() -> DXGIExpected<DXGIFactory>
     DXGIFactory dxgiFactory;
     HRESULT hr = CreateDXGIFactory1(IID_PPV_ARGS(&dxgiFactory));
     if (FAILED(hr))
-        return exp_ns::unexpected(hr);
+        return conf::exp::unexpected(hr);
     return dxgiFactory;
 }
 
@@ -52,7 +52,7 @@ auto getAdapterDescription(DXGIAdapter const& adapter) -> DXGIExpected<DXGI_ADAP
     DXGI_ADAPTER_DESC1 desc{};
     HRESULT hr = adapter->GetDesc1(&desc);
     if (FAILED(hr))
-        return exp_ns::unexpected(hr);
+        return conf::exp::unexpected(hr);
     return desc;
 }
 

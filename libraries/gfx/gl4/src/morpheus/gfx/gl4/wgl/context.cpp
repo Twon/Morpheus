@@ -33,7 +33,7 @@ WGLExpected<void> setPixelFormat(HDC hdc, int format)
 {
     PIXELFORMATDESCRIPTOR pfd;
     if (!DescribePixelFormat(hdc, format, sizeof(pfd), &pfd))
-        return std::unexpected(fmt_ns::format("Failed to describe pixel format: {}", getLastErrorMessage()));
+        return conf::exp::unexpected(conf::fmt::format("Failed to describe pixel format: {}", getLastErrorMessage()));
 
     if (!SetPixelFormat(hdc, format, &pfd))
         return conf::exp::unexpected(conf::fmt::format("Failed to set pixel format: {}", getLastErrorMessage()));
@@ -86,7 +86,7 @@ Context::Expected Context::enable()
     Context currenContext{};
     if (!wglMakeCurrent(mDeviceContext.get(), mGLContext.get()))
     {
-        return std::unexpected(fmt_ns::format("Failed to make OpenGL context current: {}", getLastErrorMessage()));
+        return conf::exp::unexpected(conf::fmt::format("Failed to make OpenGL context current: {}", getLastErrorMessage()));
     }
     return currenContext;
 }
