@@ -21,10 +21,8 @@ constexpr auto curry(F&& f, Args&&... args) -> decltype(auto)
         return std::invoke(std::forward<F>(f), std::forward<Args>(args)...);
     else
     {
-        return [f = std::forward<F>(f), ...args = std::forward<Args>(args)]<typename Self, typename... As>(this Self&& self, As&&... as) -> decltype(auto)
-        {
-            return curry(std::forward_like<Self>(f), std::forward_like<Self>(args)..., std::forward<As>(as)...);
-        };
+        return [f = std::forward<F>(f), ... args = std::forward<Args>(args)]<typename Self, typename... As>(this Self&& self, As&&... as) -> decltype(auto)
+        { return curry(std::forward_like<Self>(f), std::forward_like<Self>(args)..., std::forward<As>(as)...); };
     }
 }
 
