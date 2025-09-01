@@ -22,7 +22,7 @@ struct Generator
 {
 
     struct promise_type;
-    using handle_type = coro::coroutine_handle<promise_type>;                        ///< Handle to generator coroutines.
+    using handle_type = coro::coroutine_handle<promise_type>;                           ///< Handle to generator coroutines.
     using value_type = T;                                                               ///< Value type from resulting generation.
     using reference = std::conditional_t<std::is_reference_v<T>, T, value_type const&>; ///< Reference type to the value type.
     using pointer = std::add_pointer_t<reference>;                                      ///< Pointer type to the value type.
