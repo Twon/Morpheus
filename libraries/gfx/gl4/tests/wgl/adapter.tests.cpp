@@ -115,9 +115,18 @@ conf::exp::expected<DisplayConfig, std::string> getCurrentDisplayConfig()
 {
     // clang-format off
     return getDisplayConfigBufferSizes()
-        .and_then([](auto counts) -> exp_ns::expected<DisplayConfig, std::string>
-                  { return std::apply([](auto&&... args) { return DisplayConfig(std::forward<decltype(args)>(args)...); }, std::move(counts)); })
-        .and_then([](auto config) { return queryDisplayConfig(std::move(config)); });
+        .and_then([](auto counts) -> conf::exp::expected<DisplayConfig, std::string>
+            {
+                return std::apply([](auto&&... args)
+                    {
+                        return DisplayConfig(std::forward<decltype(args)>(args)...);
+                    },
+                    std::move(counts)
+                );
+            })
+        .and_then([](auto config)
+            { return queryDisplayConfig(std::move(config)); });
+    // clang-format on
 }
 
 auto getDevicesPaths(DisplayConfig const& config) -> conf::exp::expected<std::vector<Path>, std::string>
