@@ -116,7 +116,7 @@ conf::exp::expected<DisplayConfig, std::string> getCurrentDisplayConfig()
     return getDisplayConfigBufferSizes()
         .and_then([](auto counts) -> conf::exp::expected<DisplayConfig, std::string>
             {
-                return std::apply([](auto&&... args):
+                return std::apply([](auto&&... args)
                     {
                         return DisplayConfig(std::forward<decltype(args)>(args)...);
                     },
