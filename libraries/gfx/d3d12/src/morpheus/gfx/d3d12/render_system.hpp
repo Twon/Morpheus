@@ -30,7 +30,7 @@ public:
     /// Creates the D3D12 render system on the specified graphics adapter.
     /// \param[in] adapter
     ///     The graphics adapter to create the device on.
-    [[nodiscard]] static auto create(Adapter const& adapter) -> exp_ns::expected<RenderSystem, std::string>;
+    [[nodiscard]] static auto create(Adapter const& adapter) -> conf::exp::expected<RenderSystem, std::string>;
 
 private:
     RenderSystem() = default;
