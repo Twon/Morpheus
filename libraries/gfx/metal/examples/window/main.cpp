@@ -11,7 +11,7 @@ int main(int argc, char const* argv[])
 {
     for (auto const& monitors : enumerateMonitors())
     {
-        fmt_ns::print("Monitor: {}\n", monitors);
+        conf::print::print("Monitor: {}\n", monitors);
         std::cout.flush(); // Ensure it's not buffered
     }
 
