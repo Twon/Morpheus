@@ -3,6 +3,7 @@
 #include <morpheus/core/conformance/format.hpp>
 
 #include <vulkan/vulkan.hpp>
+
 #include <cstdint>
 
 namespace morpheus::gfx::vulkan
@@ -14,7 +15,9 @@ class Version
 {
 public:
     /// Construct a Vulkan version from the packed version number:
-    constexpr explicit Version(std::uint32_t const version) noexcept : mVersion(version) {}
+    constexpr explicit Version(std::uint32_t const version) noexcept
+        : mVersion(version)
+    {}
 
     /// The Vulkan API variant number.
     constexpr std::uint32_t variant() const noexcept { return VK_API_VERSION_VARIANT(mVersion); }
@@ -34,9 +37,8 @@ private:
 
 } // namespace morpheus::gfx::vulkan
 
-
 template <>
-struct morpheus::fmt_ns::formatter<morpheus::gfx::vulkan::Version>
+struct morpheus::conf::fmt::formatter<morpheus::gfx::vulkan::Version>
 {
     template <typename Context>
     constexpr auto parse(Context& context)
@@ -47,7 +49,7 @@ struct morpheus::fmt_ns::formatter<morpheus::gfx::vulkan::Version>
     template <typename Context>
     constexpr auto format(morpheus::gfx::vulkan::Version const& value, Context& context) const
     {
-        return morpheus::fmt_ns::format_to(context.out(), "{{variant={},major={},minor={},patch={}}}", value.variant(), value.major(), value.minor(),
-                                           value.patch());
+        return morpheus::conf::fmt::format_to(
+            context.out(), "{{variant={},major={},minor={},patch={}}}", value.variant(), value.major(), value.minor(), value.patch());
     }
 };

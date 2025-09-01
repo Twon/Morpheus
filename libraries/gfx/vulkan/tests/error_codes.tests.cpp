@@ -1,13 +1,16 @@
 #include "morpheus/gfx/vulkan/error_codes.hpp"
 
-#include <catch2/catch_all.hpp>
-#include <string_view>
+#include <catch2/catch_test_macros.hpp>
+#include <vulkan/vulkan_core.h>
+
 #include <array>
+#include <string>
+#include <string_view>
+#include <system_error>
 
 TEST_CASE("Test construction of std::error_code object via make_error_code", "[vulkan.error_code.make_error_code]")
 {
-    constexpr std::array<VkResult, 32> vkUniqueResults =
-    {
+    constexpr std::array<VkResult, 32> vkUniqueResults = {
         VK_SUCCESS,
         VK_NOT_READY,
         VK_TIMEOUT,
@@ -29,7 +32,7 @@ TEST_CASE("Test construction of std::error_code object via make_error_code", "[v
         VK_ERROR_OUT_OF_POOL_MEMORY,
         VK_ERROR_INVALID_EXTERNAL_HANDLE,
         VK_ERROR_SURFACE_LOST_KHR,
-        VK_ERROR_NATIVE_WINDOW_IN_USE_KHR ,
+        VK_ERROR_NATIVE_WINDOW_IN_USE_KHR,
         VK_SUBOPTIMAL_KHR,
         VK_ERROR_OUT_OF_DATE_KHR,
         VK_ERROR_INCOMPATIBLE_DISPLAY_KHR,
@@ -41,12 +44,11 @@ TEST_CASE("Test construction of std::error_code object via make_error_code", "[v
         VK_ERROR_INVALID_DEVICE_ADDRESS_EXT,
         VK_ERROR_FULL_SCREEN_EXCLUSIVE_MODE_LOST_EXT,
     };
-    for (const auto result_code : vkUniqueResults)
+    for (auto const result_code : vkUniqueResults)
     {
         std::error_code error_code = make_error_code(result_code);
-        INFO("Testing VkResult enum: " << error_code);
-        REQUIRE( error_code.value() == result_code);
-        REQUIRE( std::string_view(error_code.category().name()) == std::string_view("vulkan_error_category"));
-        REQUIRE( error_code.message() != "unknown" );
+        REQUIRE(error_code.value() == result_code);
+        REQUIRE(std::string_view(error_code.category().name()) == std::string_view("vulkan_error_category"));
+        REQUIRE(error_code.message() != "unknown");
     }
 }

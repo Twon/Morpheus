@@ -1,14 +1,15 @@
 #pragma once
 
+// IWYU pragma: always_keep
 #include "morpheus/core/conformance/source_location.hpp"
-#include "morpheus/core/serialisation/concepts/write_serialiser.hpp"
 #include "morpheus/core/serialisation/concepts/write_serialisable.hpp"
+#include "morpheus/core/serialisation/concepts/write_serialiser.hpp"
 
 namespace morpheus::serialisation::detail
 {
 
-template<concepts::WriteSerialiser Serialiser>
-void serialise(Serialiser& serialiser, sl_ns::source_location const& value)
+template <concepts::WriteSerialiser Serialiser>
+void serialise(Serialiser& serialiser, conf::sl::source_location const& value)
 {
     serialiser.writer().beginComposite();
     serialiser.serialise("file_name", value.file_name());
@@ -18,4 +19,4 @@ void serialise(Serialiser& serialiser, sl_ns::source_location const& value)
     serialiser.writer().endComposite();
 }
 
-} // morpheus::serialisation::detail
+} // namespace morpheus::serialisation::detail

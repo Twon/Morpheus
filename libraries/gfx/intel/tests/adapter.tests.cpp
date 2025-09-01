@@ -1,4 +1,5 @@
 #include <morpheus/gfx/intel/adapter.hpp>
+
 #include <catch2/catch_all.hpp>
 
 /*
@@ -33,7 +34,6 @@ TEST_CASE("Iterates over the adapters in the list", "[morpheus.core.gfx.gl.wgl.a
 } // namespace morpheus::gfx::intel::win32
 */
 
-
 //===========================================================================
 //
 // Copyright (c) Intel Corporation (2021-2022)
@@ -60,8 +60,8 @@ TEST_CASE("Iterates over the adapters in the list", "[morpheus.core.gfx.gl.wgl.a
 #pragma once
 
 #include <iostream>
-#include <windows.h>
 #include <stdio.h>
+#include <windows.h>
 
 #include "igcl_api.h"
 
@@ -103,9 +103,9 @@ TEST_CASE("Iterates over the adapters in the list", "[morpheus.core.gfx.gl.wgl.a
         STORE_AND_RESET_ERROR(Result);                                      \
     }
 
- /***************************************************************
-  * @brief Method to get 3D feature name
-  ***************************************************************/
+/***************************************************************
+ * @brief Method to get 3D feature name
+ ***************************************************************/
 inline char const* Get3DFeatureName(ctl_3d_feature_t FeatureType)
 {
     switch (FeatureType)
@@ -144,7 +144,6 @@ inline char const* Get3DFeatureName(ctl_3d_feature_t FeatureType)
 /***************************************************************
  * @brief
  * Helper function/macros
- * @param
  * @return char*
  ***************************************************************/
 inline char const* GetProfileTypeName(ctl_3d_tier_type_flags_t Flag)
@@ -162,7 +161,6 @@ inline char const* GetProfileTypeName(ctl_3d_tier_type_flags_t Flag)
 /***************************************************************
  * @brief
  * Helper function/macros
- * @param
  * @return char*
  ***************************************************************/
 inline char const* GetProfileTierName(ctl_3d_tier_profile_flags_t Flags)
@@ -183,7 +181,6 @@ inline char const* GetProfileTierName(ctl_3d_tier_profile_flags_t Flags)
  * @brief Method to print 3d feature support across UMD in a generic way
  *
  * place_holder_for_Detailed_desc
- * @param
  * @return
  ***************************************************************/
 inline void Print3DFeatureSupport(ctl_3d_feature_details_t* pFeatureDetails)
@@ -191,9 +188,7 @@ inline void Print3DFeatureSupport(ctl_3d_feature_details_t* pFeatureDetails)
     ctl_3d_feature_misc_flags_t FeatureSupport;
     FeatureSupport = pFeatureDetails->FeatureMiscSupport;
     if (CTL_3D_FEATURE_MISC_FLAG_DX11 & FeatureSupport)
-    {
-        printf("  pFeatureDetails->FeatureMiscSupport = CTL_3D_FEATURE_MISC_FLAG_DX11\n");
-    }
+    {}
     if (CTL_3D_FEATURE_MISC_FLAG_DX12 & FeatureSupport)
     {
         printf("  pFeatureDetails->FeatureMiscSupport = CTL_3D_FEATURE_MISC_FLAG_DX12\n");
@@ -213,7 +208,6 @@ inline void Print3DFeatureSupport(ctl_3d_feature_details_t* pFeatureDetails)
  * @brief Method to print 3d feature details struct in a generic way
  *
  * place_holder_for_Detailed_desc
- * @param
  * @return
  ***************************************************************/
 inline void Print3DFeatureDetail(ctl_3d_feature_details_t* pFeatureDetails)
@@ -339,8 +333,6 @@ inline void Print3DFeatureDetail(ctl_3d_feature_details_t* pFeatureDetails)
     }
 }
 
-
-
 //===========================================================================
 // Copyright (C) 2022 Intel Corporation
 //
@@ -357,23 +349,23 @@ inline void Print3DFeatureDetail(ctl_3d_feature_details_t* pFeatureDetails)
  */
 
 #define _CRTDBG_MAP_ALLOC
+#include <cassert>
+#include <conio.h>
 #include <crtdbg.h>
 #include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
 #include <windows.h>
-#include <conio.h>
-#include <cassert>
 
 #include "igcl_api.h"
 
- // To call Level0 directly
- // #include "ze_ddi.h"
+// To call Level0 directly
+// #include "ze_ddi.h"
 
- /***************************************************************
-  * @brief Global result value
-  ***************************************************************/
-    ctl_result_t GResult = CTL_RESULT_SUCCESS;
+/***************************************************************
+ * @brief Global result value
+ ***************************************************************/
+ctl_result_t GResult = CTL_RESULT_SUCCESS;
 #define STORE_RESET_ERROR(result)     \
     if (result != CTL_RESULT_SUCCESS) \
         GResult = result;             \
@@ -384,7 +376,6 @@ inline void Print3DFeatureDetail(ctl_3d_feature_details_t* pFeatureDetails)
 /***************************************************************
  * @brief
  * place_holder_for_Detailed_desc
- * @param
  * @return
  ***************************************************************/
 ctl_result_t CtlLevel0HandleTest(ctl_device_adapter_handle_t hDevices)
@@ -408,11 +399,12 @@ ctl_result_t CtlLevel0HandleTest(ctl_device_adapter_handle_t hDevices)
     // Try to get a level0 function using getprocaddress()
     if (hLevel0Loader)
     {
-        ze_pfnDeviceGetModuleProperties_t pfnDeviceGetModuleProperties = (ze_pfnDeviceGetModuleProperties_t)GetProcAddress(hLevel0Loader, "zeDeviceGetModuleProperties");
+        ze_pfnDeviceGetModuleProperties_t pfnDeviceGetModuleProperties =
+            (ze_pfnDeviceGetModuleProperties_t)GetProcAddress(hLevel0Loader, "zeDeviceGetModuleProperties");
         if (pfnDeviceGetModuleProperties)
         {
             std::cout << "Success: Obtained level0 zeDeviceGetModuleProperties "
-                "function\n";
+                         "function\n";
 
             if (Ze_device != NULL)
             {
@@ -438,13 +430,13 @@ ctl_result_t CtlLevel0HandleTest(ctl_device_adapter_handle_t hDevices)
         if (pfnDeviceGetModuleProperties)
         {
             std::cout << "Error: Able to get zeDeviceGetModuleProperties() "
-                "even after FreeLibrary in app! Need investigation on "
-                "why level0 didn't unload - Negative testing!\n";
+                         "even after FreeLibrary in app! Need investigation on "
+                         "why level0 didn't unload - Negative testing!\n";
         }
         else
         {
             std::cout << "Success: After FreeLibrary() not able to get "
-                "function from Level0, we are ok\n";
+                         "function from Level0, we are ok\n";
         }
     }
     else
@@ -458,15 +450,14 @@ ctl_result_t CtlLevel0HandleTest(ctl_device_adapter_handle_t hDevices)
 /***************************************************************
  * @brief
  * Sharpness interface usage model
- * @param
  * @return
  ***************************************************************/
 ctl_result_t CtlSharpnessTest(ctl_display_output_handle_t hDisplayOutput)
 {
     ctl_result_t Result = CTL_RESULT_SUCCESS;
-    ctl_sharpness_settings_t SetSharpness = { 0 };
-    ctl_sharpness_settings_t GetSharpness = { 0 };
-    ctl_sharpness_caps_t SharpnessCaps = { 0 };
+    ctl_sharpness_settings_t SetSharpness = {0};
+    ctl_sharpness_settings_t GetSharpness = {0};
+    ctl_sharpness_caps_t SharpnessCaps = {0};
 
     SetSharpness.Size = sizeof(ctl_sharpness_settings_t);
     GetSharpness.Size = sizeof(ctl_sharpness_settings_t);
@@ -489,13 +480,14 @@ ctl_result_t CtlSharpnessTest(ctl_display_output_handle_t hDisplayOutput)
         else
         {
             printf("ctlGetSharpnessCaps returned success\n");
-            SharpnessCaps.pFilterProperty = (ctl_sharpness_filter_properties_t*)malloc(SharpnessCaps.NumFilterTypes * sizeof(ctl_sharpness_filter_properties_t));
+            SharpnessCaps.pFilterProperty =
+                (ctl_sharpness_filter_properties_t*)malloc(SharpnessCaps.NumFilterTypes * sizeof(ctl_sharpness_filter_properties_t));
             Result = ctlGetSharpnessCaps(hDisplayOutput, &SharpnessCaps);
             if (Result != CTL_RESULT_SUCCESS)
             {
                 printf("ctlGetSharpnessCaps when called to get caps after malloc "
-                    "returned failure code: 0x%X\n",
-                    Result);
+                       "returned failure code: 0x%X\n",
+                       Result);
                 free(SharpnessCaps.pFilterProperty);
                 return Result;
             }
@@ -507,18 +499,21 @@ ctl_result_t CtlSharpnessTest(ctl_display_output_handle_t hDisplayOutput)
                 {
                     printf(" sharpnessCaps.pFilterProperty[%d].FilterType = %d\n", i, SharpnessCaps.pFilterProperty[i].FilterType);
                     printf(" sharpnessCaps.pFilterProperty[%d].FilterDetails.min_possible_"
-                        "value = %f\n",
-                        i, SharpnessCaps.pFilterProperty[i].FilterDetails.min_possible_value);
+                           "value = %f\n",
+                           i,
+                           SharpnessCaps.pFilterProperty[i].FilterDetails.min_possible_value);
                     printf(" sharpnessCaps.pFilterProperty[%d].FilterDetails.max_possible_"
-                        "value = %f\n",
-                        i, SharpnessCaps.pFilterProperty[i].FilterDetails.max_possible_value);
+                           "value = %f\n",
+                           i,
+                           SharpnessCaps.pFilterProperty[i].FilterDetails.max_possible_value);
                     printf(" sharpnessCaps.pFilterProperty[%d].FilterDetails.step_size = %f\n", i, SharpnessCaps.pFilterProperty[i].FilterDetails.step_size);
                 }
                 free(SharpnessCaps.pFilterProperty);
             }
         }
     }
-    if (Result == CTL_RESULT_SUCCESS && SharpnessCaps.SupportedFilterFlags == CTL_SHARPNESS_FILTER_TYPE_FLAG_NON_ADAPTIVE) // This Check is to be revisited when we have Adaptive Support
+    if (Result == CTL_RESULT_SUCCESS &&
+        SharpnessCaps.SupportedFilterFlags == CTL_SHARPNESS_FILTER_TYPE_FLAG_NON_ADAPTIVE) // This Check is to be revisited when we have Adaptive Support
     {
         // SetSharpness
         if (NULL != hDisplayOutput)
@@ -528,8 +523,8 @@ ctl_result_t CtlSharpnessTest(ctl_display_output_handle_t hDisplayOutput)
             if (Result != CTL_RESULT_SUCCESS)
             {
                 printf("ctlSetCurrentSharpness returned failure code: "
-                    "0x%X\n",
-                    Result);
+                       "0x%X\n",
+                       Result);
                 return Result;
             }
             else
@@ -549,8 +544,8 @@ ctl_result_t CtlSharpnessTest(ctl_display_output_handle_t hDisplayOutput)
             if (Result != CTL_RESULT_SUCCESS)
             {
                 printf("ctlGetCurrentSharpness returned failure code: "
-                    "0x%X\n",
-                    Result);
+                       "0x%X\n",
+                       Result);
                 return Result;
             }
             else
@@ -623,13 +618,12 @@ inline bool Get3DCustomStruct(ctl_3d_feature_getset_t* p3DGetSetArgs)
 /***************************************************************
  * @brief
  * Various gaming feature get/set usage model
- * @param
  * @return
  ***************************************************************/
 ctl_result_t CtlGet3DGlobalTest(ctl_device_adapter_handle_t hDevices)
 {
     ctl_result_t Result = CTL_RESULT_SUCCESS;
-    ctl_3d_feature_caps_t FeatureCaps3D = { 0 };
+    ctl_3d_feature_caps_t FeatureCaps3D = {0};
 
     FeatureCaps3D.Size = sizeof(ctl_3d_feature_caps_t);
     Result = ctlGetSupported3DCapabilities(hDevices, &FeatureCaps3D);
@@ -654,7 +648,7 @@ ctl_result_t CtlGet3DGlobalTest(ctl_device_adapter_handle_t hDevices)
                     FeatureCaps3D.pFeatureDetails[i].pCustomValue = malloc(FeatureCaps3D.pFeatureDetails[i].CustomValueSize);
 
                     // fill up a single caps struct call to get the capability of a custom feature
-                    ctl_3d_feature_caps_t Temp = { 0 };
+                    ctl_3d_feature_caps_t Temp = {0};
                     Temp.NumSupportedFeatures = 1;
                     Temp.pFeatureDetails = &FeatureCaps3D.pFeatureDetails[i];
                     Temp.Size = sizeof(ctl_3d_feature_caps_t);
@@ -666,7 +660,7 @@ ctl_result_t CtlGet3DGlobalTest(ctl_device_adapter_handle_t hDevices)
 
                 // try a get call with a huge app name
                 printf("Calling ctlGetSet3DFeature()\n");
-                ctl_3d_feature_getset_t Feature3D = { 0 };
+                ctl_3d_feature_getset_t Feature3D = {0};
                 Feature3D.bSet = false;
                 Feature3D.FeatureType = FeatureCaps3D.pFeatureDetails[i].FeatureType;
                 Feature3D.Size = sizeof(Feature3D);
@@ -713,7 +707,6 @@ ctl_result_t CtlGet3DGlobalTest(ctl_device_adapter_handle_t hDevices)
 /***************************************************************
  * @brief CtlGetDisplayPropertiesTest
  * Display properties test
- * @param
  * @return
  ***************************************************************/
 ctl_result_t CtlGetDisplayPropertiesTest(ctl_display_output_handle_t hDisplayOutput, ctl_display_properties_t* pStdisplayproperties)
@@ -729,8 +722,8 @@ ctl_result_t CtlGetDisplayPropertiesTest(ctl_display_output_handle_t hDisplayOut
         if (Result != CTL_RESULT_SUCCESS)
         {
             printf("ctlGetDisplayOutputProperties returned failure code: "
-                "0x%X\n",
-                Result);
+                   "0x%X\n",
+                   Result);
             STORE_RESET_ERROR(Result);
         }
         else
@@ -751,10 +744,10 @@ ctl_result_t CtlGetDisplayPropertiesTest(ctl_display_output_handle_t hDisplayOut
 /***************************************************************
  * @brief
  * Encoder properties test
- * @param
  * @return
  ***************************************************************/
-ctl_result_t CtlGetDisplayEncoderPropertiesTest(ctl_display_output_handle_t hDisplayOutput, ctl_adapter_display_encoder_properties_t* pStdisplayencoderproperties)
+ctl_result_t CtlGetDisplayEncoderPropertiesTest(ctl_display_output_handle_t hDisplayOutput,
+                                                ctl_adapter_display_encoder_properties_t* pStdisplayencoderproperties)
 {
     ctl_result_t Result = CTL_RESULT_SUCCESS;
 
@@ -765,8 +758,8 @@ ctl_result_t CtlGetDisplayEncoderPropertiesTest(ctl_display_output_handle_t hDis
         if (Result != CTL_RESULT_SUCCESS)
         {
             printf("ctlGetAdaperDisplayEncoderProperties returned failure code: "
-                "0x%X\n",
-                Result);
+                   "0x%X\n",
+                   Result);
             STORE_RESET_ERROR(Result);
         }
         else
@@ -780,7 +773,6 @@ ctl_result_t CtlGetDisplayEncoderPropertiesTest(ctl_display_output_handle_t hDis
 /***************************************************************
  * @brief
  * Example function which shows how to wait on property changes
- * @param
  * @return
  ***************************************************************/
 bool QuiteEventThread = false;
@@ -788,7 +780,7 @@ DWORD WINAPI CtlEventThread(LPVOID ThreadParameterPtr)
 {
     ctl_result_t Result = CTL_RESULT_SUCCESS;
 
-    ctl_wait_property_change_args_t Args = { 0 };
+    ctl_wait_property_change_args_t Args = {0};
 
     printf("CtlEventThread: Entering thread\n");
 
@@ -803,7 +795,8 @@ DWORD WINAPI CtlEventThread(LPVOID ThreadParameterPtr)
         Result = ctlWaitForPropertyChange((ctl_device_adapter_handle_t)ThreadParameterPtr, &Args); // blocking call
         if (CTL_RESULT_ERROR_WAIT_TIMEOUT == Result)
             continue;
-    } while (false == QuiteEventThread);
+    }
+    while (false == QuiteEventThread);
 
     printf("CtlEventThread: ctlWaitForPropertyChange() unblocked return value = %d\n", Result);
     printf("CtlEventThread: Exiting thread\n");
@@ -814,7 +807,6 @@ DWORD WINAPI CtlEventThread(LPVOID ThreadParameterPtr)
 /***************************************************************
  * @brief
  * Example function which shows how to wait on property changes
- * @param
  * @return
  ***************************************************************/
 ctl_result_t CtlTestEvents(ctl_device_adapter_handle_t hAdapter)
@@ -862,7 +854,7 @@ ctl_result_t CtlTestEvents(ctl_device_adapter_handle_t hAdapter)
             }
             else
             {
-                ctl_wait_property_change_args_t Args = { 0 };
+                ctl_wait_property_change_args_t Args = {0};
 
                 Args.PropertyType = CTL_PROPERTY_TYPE_FLAG_MEDIA | CTL_PROPERTY_TYPE_FLAG_DISPLAY | CTL_PROPERTY_TYPE_FLAG_3D;
                 Args.Size = sizeof(Args);
@@ -880,7 +872,7 @@ ctl_result_t CtlTestEvents(ctl_device_adapter_handle_t hAdapter)
             printf("Trying a 3D set call & restoring it (overrall 2 set calls)...\n");
 
             // try setting various parameters, or just the app once more
-            ctl_3d_feature_getset_t Feature3D = { 0 };
+            ctl_3d_feature_getset_t Feature3D = {0};
             Feature3D.bSet = true;
             Feature3D.FeatureType = CTL_3D_FEATURE_ANISOTROPIC;
             Feature3D.Size = sizeof(Feature3D);
@@ -891,7 +883,7 @@ ctl_result_t CtlTestEvents(ctl_device_adapter_handle_t hAdapter)
 
             if (Result == CTL_RESULT_SUCCESS)
             {
-                ctl_3d_feature_getset_t Feature3D = { 0 };
+                ctl_3d_feature_getset_t Feature3D = {0};
                 Feature3D.bSet = true;
                 Feature3D.FeatureType = CTL_3D_FEATURE_ANISOTROPIC;
                 Feature3D.Size = sizeof(Feature3D);
@@ -921,7 +913,8 @@ ctl_result_t CtlTestEvents(ctl_device_adapter_handle_t hAdapter)
                 break; // exit from loop
             }
         }
-    } while (true);
+    }
+    while (true);
 
     if (SpawnThread && ThreadHandle)
     {
@@ -938,7 +931,6 @@ ctl_result_t CtlTestEvents(ctl_device_adapter_handle_t hAdapter)
 /***************************************************************
  * @brief
  * Print driver version info
- * @param
  * @return
  ***************************************************************/
 void PrintAdapterProperties(ctl_device_adapter_properties_t StDeviceAdapterProperties)
@@ -946,7 +938,12 @@ void PrintAdapterProperties(ctl_device_adapter_properties_t StDeviceAdapterPrope
     char DriverVersion[25] = "";
     LARGE_INTEGER LIDriverVersion;
     LIDriverVersion.QuadPart = StDeviceAdapterProperties.driver_version;
-    sprintf(DriverVersion, "%d.%d.%d.%d", HIWORD(LIDriverVersion.HighPart), LOWORD(LIDriverVersion.HighPart), HIWORD(LIDriverVersion.LowPart), LOWORD(LIDriverVersion.LowPart));
+    sprintf(DriverVersion,
+            "%d.%d.%d.%d",
+            HIWORD(LIDriverVersion.HighPart),
+            LOWORD(LIDriverVersion.HighPart),
+            HIWORD(LIDriverVersion.LowPart),
+            LOWORD(LIDriverVersion.LowPart));
 
     printf("Intel Graphics Driver Version : %s\n", DriverVersion);
     printf("Intel Adapter Name: %s\n", StDeviceAdapterProperties.name);
@@ -957,14 +954,14 @@ void PrintAdapterProperties(ctl_device_adapter_properties_t StDeviceAdapterPrope
     printf("num_eus_per_sub_slice: %d\n", StDeviceAdapterProperties.num_eus_per_sub_slice);
     printf("num_slices: %d\n", StDeviceAdapterProperties.num_slices);
     printf("num_sub_slices_per_slice: %d\n", StDeviceAdapterProperties.num_sub_slices_per_slice);
-    printf("Graphics HW type: %s\n", StDeviceAdapterProperties.graphics_adapter_properties & CTL_ADAPTER_PROPERTIES_FLAG_INTEGRATED ? "Integrated" : "External GFX");
+    printf("Graphics HW type: %s\n",
+           StDeviceAdapterProperties.graphics_adapter_properties & CTL_ADAPTER_PROPERTIES_FLAG_INTEGRATED ? "Integrated" : "External GFX");
 }
 
 /***************************************************************
  * @brief
  * To test an additional caller which will do it's own ctlInit
  * ctlEnumerate etc.
- * @param
  * @return
  ***************************************************************/
 ctl_result_t CtlTestAdditionalCaller(void)
@@ -1034,7 +1031,7 @@ void PrintDetailsFromSysman(ctl_device_adapter_handle_t hDevice)
 
         for (uint32_t i = 0; i < FrequencyHandlerCount; i++)
         {
-            ctl_freq_properties_t freqProperties = { 0 };
+            ctl_freq_properties_t freqProperties = {0};
             freqProperties.Size = sizeof(ctl_freq_properties_t);
             res = ctlFrequencyGetProperties(pFrequencyHandle[i], &freqProperties);
 
@@ -1057,7 +1054,6 @@ void PrintDetailsFromSysman(ctl_device_adapter_handle_t hDevice)
  * @brief Main Function
  *
  * place_holder_for_Detailed_desc
- * @param
  * @return
  ***************************************************************/
 int main()
@@ -1065,7 +1061,7 @@ int main()
     ctl_result_t Result = CTL_RESULT_SUCCESS;
     ctl_device_adapter_handle_t* hDevices = nullptr;
     ctl_display_output_handle_t* hDisplayOutput = nullptr;
-    ctl_device_adapter_properties_t StDeviceAdapterProperties = { 0 };
+    ctl_device_adapter_properties_t StDeviceAdapterProperties = {0};
     // Get a handle to the DLL module.
     uint32_t Adapter_count = 0;
     uint32_t Display_count = 0;
@@ -1083,8 +1079,8 @@ int main()
     // Init App UID appropriately
     ZeroMemory(&CtlInitArgs.ApplicationUID, sizeof(ctl_application_id_t));
 
-//    ctl_runtime_path_args_t runtimeArgs{ .pRuntimePath = L"C:\\Windows\\SysWOW64\\"};
-//    ctlSetRuntimePath(&runtimeArgs);
+    //    ctl_runtime_path_args_t runtimeArgs{ .pRuntimePath = L"C:\\Windows\\SysWOW64\\"};
+    //    ctlSetRuntimePath(&runtimeArgs);
 
     Result = ctlInit(&CtlInitArgs, &hAPIHandle);
 

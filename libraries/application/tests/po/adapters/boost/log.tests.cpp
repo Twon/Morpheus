@@ -1,12 +1,17 @@
 #include "morpheus/application/po/adapters/boost/log.hpp"
 #include "morpheus/application/po/options.hpp"
-#include "morpheus/core/conformance/ranges.hpp"
 #include "morpheus/logging.hpp"
 #include "morpheus/redirect_stream.hpp"
 
 #include <boost/log/trivial.hpp>
+#include <boost/program_options/options_description.hpp>
+#include <boost/program_options/value_semantic.hpp>
 #include <catch2/catch_test_macros.hpp>
+
+#include <array>
 #include <iostream>
+#include <optional>
+#include <string_view>
 
 namespace morpheus::application::po
 {
@@ -41,8 +46,8 @@ TEST_CASE_METHOD(BoostLogFixture, "Test parsing of boost log types as program op
         auto getLogLevel = [](std::string_view param)
         {
             Logging logging{};
-            std::array cliOptions = { "dummyProgram.exe", "--log-level", param.data() };
-            auto const result = parseProgramOptions(static_cast<int>(cliOptions.size()), cliOptions.data(), HelpDocumentation{}, logging);
+            std::array cliOptions = {"dummyProgram.exe", "--log-level", param.data()};
+            auto const result = parseProgramOptions(cliOptions, HelpDocumentation{}, logging);
             REQUIRE(!result);
             return logging.logLevel;
         };
@@ -68,9 +73,9 @@ TEST_CASE_METHOD(BoostLogFixture, "Test parsing of boost log types as program op
     }
     SECTION("Ensure invalid value parse correctly")
     {
-        std::array cliOptions = { "dummyProgram.exe", "--log-level", "invalid"};
+        std::array cliOptions = {"dummyProgram.exe", "--log-level", "invalid"};
         Logging logging;
-        auto const result = parseProgramOptions(static_cast<int>(cliOptions.size()), cliOptions.data(), HelpDocumentation{}, logging);
+        auto const result = parseProgramOptions(cliOptions, HelpDocumentation{}, logging);
         REQUIRE(result);
     }
 }

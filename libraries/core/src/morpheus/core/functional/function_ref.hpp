@@ -9,14 +9,14 @@
 
 #if (__cpp_lib_function_ref >= 202202L)
 
-namespace morpheus
+namespace morpheus::conf
 {
-namespace func_ref_ns = std;
+namespace func_ref = std;
 }
 
 #else
 
-namespace morpheus::func_ref_ns
+namespace morpheus::conf::func_ref
 {
 
 /// \struct nontype_t
@@ -98,49 +98,49 @@ public:
     template <class F>
     function_ref(F* f) noexcept
     requires std::is_function_v<F> and isInvokableWith<F>
-    : mInvoke([](Storage storage, Args... args) noexcept(isNoexcept) { return invoke(function_ref::get<F>(storage), std::forward<Args>(args)...); })
-    , mStorage(f)
+        : mInvoke([](Storage storage, Args... args) noexcept(isNoexcept) { return invoke(function_ref::get<F>(storage), std::forward<Args>(args)...); })
+        , mStorage(f)
     {}
 
     template <auto F>
     constexpr function_ref(nontype_t<F>) noexcept
-    : mInvoke([](Storage, Args... args) noexcept(isNoexcept) { return invoke(F, std::forward<Args>(args)...); })
+        : mInvoke([](Storage, Args... args) noexcept(isNoexcept) { return invoke(F, std::forward<Args>(args)...); })
     {}
 
     template <auto F, class T>
     constexpr function_ref(nontype_t<F>, T& object) noexcept
-        requires isInvokableWith<decltype(F), T&>
-    : mInvoke(
-          [](Storage storage, Args... args) noexcept(isNoexcept) -> Return
-          {
-              auto& objectStorage = *function_ref::get<constness<T>>(storage);
-              return invoke(F, objectStorage, std::forward<Args>(args)...);
-          })
-    , mStorage(std::addressof(object))
+    requires isInvokableWith<decltype(F), T&>
+        : mInvoke(
+              [](Storage storage, Args... args) noexcept(isNoexcept) -> Return
+              {
+                  auto& objectStorage = *function_ref::get<constness<T>>(storage);
+                  return invoke(F, objectStorage, std::forward<Args>(args)...);
+              })
+        , mStorage(std::addressof(object))
     {}
 
     template <auto F, class T>
     constexpr function_ref(nontype_t<F>, constness<T> const* object) noexcept
-        requires isInvokableWith<decltype(F), constness<T> const*>
-    : mInvoke(
-          [](Storage storage, Args... args) noexcept(isNoexcept) -> Return
-          {
-              constness<T>& objectStorage = *function_ref::get<T>(storage);
-              return invoke(F, objectStorage, std::forward<Args>(args)...);
-          })
-    , mStorage(std::addressof(object))
+    requires isInvokableWith<decltype(F), constness<T> const*>
+        : mInvoke(
+              [](Storage storage, Args... args) noexcept(isNoexcept) -> Return
+              {
+                  constness<T>& objectStorage = *function_ref::get<T>(storage);
+                  return invoke(F, objectStorage, std::forward<Args>(args)...);
+              })
+        , mStorage(std::addressof(object))
     {}
 
     template <class F, class T = std::remove_reference_t<F>>
     constexpr function_ref(F&& f) noexcept
-        requires(not std::is_same_v<F, function_ref> and not std::is_member_pointer_v<F> and isInvokableWith<F, constness<T>>)
-    : mInvoke(
-          [](Storage storage, Args... args) noexcept(isNoexcept) -> Return
-          {
-              constness<T>& objectStorage = *function_ref::get<T>(storage);
-              return invoke(objectStorage, std::forward<Args>(args)...);
-          })
-    , mStorage(std::addressof(f))
+    requires(not std::is_same_v<F, function_ref> and not std::is_member_pointer_v<F> and isInvokableWith<F, constness<T>>)
+        : mInvoke(
+              [](Storage storage, Args... args) noexcept(isNoexcept) -> Return
+              {
+                  constness<T>& objectStorage = *function_ref::get<T>(storage);
+                  return invoke(objectStorage, std::forward<Args>(args)...);
+              })
+        , mStorage(std::addressof(f))
     {}
 
     template <typename F, class T = std::remove_reference_t<F>>
@@ -167,17 +167,20 @@ private:
 
         template <class T>
         requires std::is_object_v<T>
-        constexpr explicit Storage(T* t) noexcept : p(t)
+        constexpr explicit Storage(T* t) noexcept
+            : p(t)
         {}
 
         template <class T>
         requires std::is_object_v<T>
-        constexpr explicit Storage(T const* t) noexcept : cp(t)
+        constexpr explicit Storage(T const* t) noexcept
+            : cp(t)
         {}
 
         template <class F>
         requires std::is_function_v<F>
-        constexpr explicit Storage(F* f) noexcept : fp(f)
+        constexpr explicit Storage(F* f) noexcept
+            : fp(f)
         {}
     };
 
@@ -223,5 +226,5 @@ function_ref(nontype_t<f>) -> function_ref<std::remove_pointer_t<decltype(f)>>;
     function_ref(F) -> function_ref<see below>;
 */
 
-} // namespace morpheus::func_ref_ns
+} // namespace morpheus::conf::func_ref
 #endif

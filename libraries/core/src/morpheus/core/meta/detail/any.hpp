@@ -8,7 +8,6 @@ namespace morpheus::meta::detail
 /// \struct Any
 ///     To be used in a SFINAE context to detect if a parameter exists.
 /// \code
-///     std::void_t<
 /// \endcode
 struct Any
 {

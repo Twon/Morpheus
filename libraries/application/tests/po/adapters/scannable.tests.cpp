@@ -1,12 +1,18 @@
-#include "morpheus/application/application.hpp"
 #include "morpheus/application/po/adapters/scannable.hpp"
+#include "morpheus/application/po/options.hpp"
+#include "morpheus/application/version.hpp"
+#include "morpheus/core/conformance/scan.hpp"
 #include "morpheus/logging.hpp"
 
+#include <boost/program_options/options_description.hpp>
+#include <boost/program_options/value_semantic.hpp>
 #include <catch2/catch_test_macros.hpp>
 
 #include <array>
 #include <compare>
 #include <cstdint>
+#include <optional>
+#include <string>
 #include <string_view>
 #include <tuple>
 
@@ -19,12 +25,12 @@ struct Coordinates
 };
 
 template <>
-struct morpheus::scan_ns::scanner<Coordinates> : morpheus::scan_ns::scanner<std::string>
+struct morpheus::conf::scan::scanner<Coordinates> : morpheus::conf::scan::scanner<std::string>
 {
     template <typename Context>
-    auto scan(Coordinates& val, Context& ctx) const -> morpheus::scan_ns::scan_expected<typename Context::iterator>
+    auto scan(Coordinates& val, Context& ctx) const -> morpheus::conf::scan::scan_expected<typename Context::iterator>
     {
-        return morpheus::scan_ns::scan<int, double>(ctx.range(), "[{}, {}]")
+        return morpheus::conf::scan::scan<int, double>(ctx.range(), "[{}, {}]")
             .transform(
                 [&val](auto const& result)
                 {
@@ -59,18 +65,18 @@ TEST_CASE_METHOD(LoggingFixture, "Test parsing of scannable as options", "[morph
         {
             Location location{};
             std::array cliOptions = {"dummyProgram.exe", "--coordinates", param.data()};
-            auto const result = parseProgramOptions(static_cast<int>(cliOptions.size()), cliOptions.data(), HelpDocumentation{}, location);
+            auto const result = parseProgramOptions(cliOptions, HelpDocumentation{}, location);
             REQUIRE(!result);
             return location.coordinates;
         };
 
-        REQUIRE(getCoordinates("[1, 97]") == Coordinates {1.0, 97.0});
+        REQUIRE(getCoordinates("[1, 97]") == Coordinates{1.0, 97.0});
     }
     SECTION("Ensure invalid value parse correctly")
     {
         std::array cliOptions = {"dummyProgram.exe", "--coordinates", "invalid"};
         Location location{};
-        auto const result = parseProgramOptions(static_cast<int>(cliOptions.size()), cliOptions.data(), HelpDocumentation{}, location);
+        auto const result = parseProgramOptions(cliOptions, HelpDocumentation{}, location);
         REQUIRE(result);
     }
 }

@@ -1,14 +1,13 @@
-#include "morpheus/gfx/vulkan/adapter.hpp"
 #include "morpheus/core/base/assert.hpp"
 #include "morpheus/core/conformance/ranges.hpp"
+#include "morpheus/gfx/vulkan/adapter.hpp"
 
 namespace morpheus::gfx::vulkan
 {
 
 Adapter::Adapter(vk::raii::PhysicalDevice&& physicalDevice)
-:   mPhysicalDevice(std::move(physicalDevice))
-{
-}
+    : mPhysicalDevice(std::move(physicalDevice))
+{}
 
 [[nodiscard]] Vendor Adapter::vendor() const noexcept
 {
@@ -20,7 +19,7 @@ Adapter::Adapter(vk::raii::PhysicalDevice&& physicalDevice)
 AdapterList enumerateAdapters(vk::raii::Instance const& instance)
 {
     AdapterList adapters;
-    ranges::move(instance.enumeratePhysicalDevices(), ranges::back_inserter(adapters));
+    conf::ranges::move(instance.enumeratePhysicalDevices(), conf::ranges::back_inserter(adapters));
     return adapters;
 }
 

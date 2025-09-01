@@ -18,29 +18,20 @@ auto calculatePixedlFormatDescriptor(Window::Config const& config)
         .cAlphaBits = static_cast<BYTE>((config.colourDepth > 16) ? 8 : 0),
         .cDepthBits = 24,
         .cStencilBits = 8,
-        .iLayerType = PFD_MAIN_PLANE
-    };
+        .iLayerType = PFD_MAIN_PLANE};
     return pxlFmtDescriptor;
 }
 
-}
+} // namespace
 
 Window::Window(Config const& config)
-:   gfx::win32::RenderWindow(config)
-,   mGLContext(getHandle(), calculatePixedlFormatDescriptor(config))
-{
-}
+    : gfx::win32::RenderWindow(config)
+    , mGLContext(getHandle(), calculatePixedlFormatDescriptor(config))
+{}
 
 Window::Window(HWND const window)
-:   gfx::win32::RenderWindow(window)
-,   mGLContext(
-        getHandle(),
-        []()
-        {
-            return ::PIXELFORMATDESCRIPTOR {};
-        }()
-    )
-{
-}
+    : gfx::win32::RenderWindow(window)
+    , mGLContext(getHandle(), []() { return ::PIXELFORMATDESCRIPTOR{}; }())
+{}
 
 } // namespace morpheus::gfx::gl4::wgl

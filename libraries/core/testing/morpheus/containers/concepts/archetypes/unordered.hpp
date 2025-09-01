@@ -13,56 +13,72 @@ namespace morpheus::containers::concepts::archetypes
 namespace detail
 {
 
-template<bool M = false>
+template <bool M = false>
 struct Multi
 {
-    struct insert_return_type {};
+    struct insert_return_type
+    {};
 
     constexpr auto operator<=>(Multi const&) const = default;
 };
 
-template<>
+template <>
 struct Multi<true>
 {
     constexpr auto operator<=>(Multi const&) const = default;
 };
 
-
-template<bool M = false>
+template <bool M = false>
 struct Mapped
 {
+    /// The value type of the container.
     using value_type = int;
+    /// The key type of the container.
     using key_type = value_type;
+    /// The allocator type of the container.
     using allocator_type = std::allocator<value_type>;
 
     constexpr auto operator<=>(Mapped const&) const = default;
 };
 
-template<>
+template <>
 struct Mapped<true>
 {
+    /// The mapped type of the container.
     using mapped_type = int;
-    using value_type = std::pair<const int, mapped_type>;
+    /// The value type of the container.
+    using value_type = std::pair<int const, mapped_type>;
+    /// The key type of the container.
     using key_type = typename value_type::first_type;
+    /// The allocator type of the container.
     using allocator_type = std::allocator<value_type>;
     constexpr auto operator<=>(Mapped const&) const = default;
 };
 
-} // namespace morpheus::containers::concepts::archetypes::detail
+} // namespace detail
 
-template<bool multi = false, bool mapped = false>
-struct Unordered : public AllocatorAware, detail::Multi<multi>, detail::Mapped<mapped>
+template <bool multi = false, bool mapped = false>
+struct Unordered
+    : public AllocatorAware
+    , detail::Multi<multi>
+    , detail::Mapped<mapped>
 {
+    /// The value type of the container.
     using value_type = typename detail::Mapped<mapped>::value_type;
+    /// The key type of the container.
     using key_type = typename detail::Mapped<mapped>::key_type;
+    /// The allocator type of the container.
     using allocator_type = typename detail::Mapped<mapped>::allocator_type;
     using hasher = std::hash<int>;
     using key_equal = std::equal_to<int>;
-    struct node_type{};
-    struct local_iterator{};
+    struct node_type
+    {};
+    struct local_iterator
+    {};
     using const_local_iterator = local_iterator const;
 
     using InsertReturnType = std::conditional_t<multi, iterator, std::pair<iterator, bool>>;
+    /// @cond INTERNAL
     using InsertNodeHandleReturnType = std::invoke_result_t<decltype([]
     {
         if constexpr (requires { requires requires {typename detail::Multi<multi>::insert_return_type; }; })
@@ -74,6 +90,7 @@ struct Unordered : public AllocatorAware, detail::Multi<multi>, detail::Mapped<m
             return typename AllocatorAware::iterator{};
         }
     })>;
+    /// @endcond
 
     using BoundReturnType = std::conditional_t<multi, iterator, std::pair<iterator, iterator>>;
     using BoundConstReturnType = std::conditional_t<multi, const_iterator, std::pair<const_iterator, const_iterator>>;
@@ -90,12 +107,12 @@ struct Unordered : public AllocatorAware, detail::Multi<multi>, detail::Mapped<m
     constexpr Unordered(iterator, iterator, size_type, hasher const&);
     constexpr Unordered(iterator, iterator, size_type);
     constexpr Unordered(iterator, iterator);
-    //constexpr Unordered(iterator, iterator, key_compare const&);
+    // constexpr Unordered(iterator, iterator, key_compare const&);
 #if (__cpp_lib_containers_ranges >= 202202L)
-    constexpr Unordered(std::from_range_t, ranges::range auto, size_type, hasher const&, key_equal const&);
-    constexpr Unordered(std::from_range_t, ranges::range auto, size_type, hasher const&);
-    constexpr Unordered(std::from_range_t, ranges::range auto, size_type);
-    constexpr Unordered(std::from_range_t, ranges::range auto);
+    constexpr Unordered(std::from_range_t, conf::ranges::range auto, size_type, hasher const&, key_equal const&);
+    constexpr Unordered(std::from_range_t, conf::ranges::range auto, size_type, hasher const&);
+    constexpr Unordered(std::from_range_t, conf::ranges::range auto, size_type);
+    constexpr Unordered(std::from_range_t, conf::ranges::range auto);
 #endif // (__cpp_lib_containers_ranges >= 202202L)
     constexpr Unordered(std::initializer_list<value_type>, size_type, hasher const&, key_equal const&);
     constexpr Unordered(std::initializer_list<value_type>, size_type, hasher const&);
@@ -119,7 +136,7 @@ struct Unordered : public AllocatorAware, detail::Multi<multi>, detail::Mapped<m
     constexpr iterator insert(const_iterator, value_type);
     constexpr void insert(const_iterator, const_iterator);
 #if (__cpp_lib_containers_ranges >= 202202L)
-    constexpr void insert_range(ranges::range auto);
+    constexpr void insert_range(conf::ranges::range auto);
 #endif // (__cpp_lib_containers_ranges >= 202202L)
     constexpr void insert(std::initializer_list<value_type>);
     constexpr InsertNodeHandleReturnType insert(node_type&&);
@@ -164,8 +181,6 @@ struct Unordered : public AllocatorAware, detail::Multi<multi>, detail::Mapped<m
     constexpr void reserve(size_type);
 
     constexpr auto operator<=>(Unordered const&) const = default;
-
-
 };
 
 } // namespace morpheus::containers::concepts::archetypes

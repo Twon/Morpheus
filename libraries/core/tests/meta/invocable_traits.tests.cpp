@@ -1,6 +1,6 @@
 #include <morpheus/core/meta/invocable_traits.hpp>
 
-#include <catch2/catch_all.hpp>
+#include <catch2/catch_test_macros.hpp>
 
 namespace morpheus::meta
 {
@@ -32,7 +32,7 @@ struct TestForMutable
 
 TEST_CASE("Meta is const invocable the compile time detection of const invocable types", "[morpheus.meta.is_const_invocable]")
 {
-    auto const constInvocable = [](){};
+    auto const constInvocable = []() {};
     auto const mutableInvocable = []() mutable {};
     STATIC_REQUIRE(meta::IsConstInvocable<TestForConstness>);
     STATIC_REQUIRE(meta::IsConstInvocable<TestForConstness, int, bool>);

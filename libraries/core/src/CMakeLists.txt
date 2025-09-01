@@ -11,28 +11,32 @@ target_include_directories(MorpheusCore
         $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
 )
 
+
+find_package(ctre REQUIRED)
+find_package(magic_enum REQUIRED)
+find_package(Microsoft.GSL REQUIRED)
+find_package(unordered_dense REQUIRED)
+
 target_link_libraries(MorpheusCore
     PUBLIC
-        morpheus::config
         Boost::headers
         Boost::log
         ctre::ctre
         magic_enum::magic_enum
+        morpheus::config
+        unordered_dense::unordered_dense
 )
 
 add_subdirectory(morpheus/core)
 
 target_compile_definitions(MorpheusCore
     PUBLIC
-#         MORPHEUS_SHARED_BUILD=1
-#         MORPHEUS_DLL_EXPORTS=1
-        BOOST_USE_WINAPI_VERSION=BOOST_WINAPI_NTDDI_WIN10
+        $<$<PLATFORM_ID:Windows>:BOOST_USE_WINAPI_VERSION=BOOST_WINAPI_NTDDI_WIN10>
 )
 
 target_compile_options(MorpheusCore
     PRIVATE
-#        -enable-hosted-libstdcxx
-	    $<$<CXX_COMPILER_ID:MSVC>:/wd4251> # class 'foo' needs to have dll-interface to be used by clients of class 'bar'
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4251> # class 'foo' needs to have dll-interface to be used by clients of class 'bar'
 )
 get_target_property(SOURCES_FILES MorpheusCore SOURCES)
 source_group(TREE ${CMAKE_CURRENT_LIST_DIR} FILES ${SOURCES_FILES})
@@ -40,8 +44,10 @@ source_group(TREE ${CMAKE_CURRENT_LIST_DIR} FILES ${SOURCES_FILES})
 set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 set(CMAKE_VISIBILITY_INLINES_HIDDEN 1)
 include(GenerateExportHeader)
-generate_export_header(MorpheusCore)
-configure_file(${CMAKE_CURRENT_BINARY_DIR}/morpheuscore_export.h ${CMAKE_CURRENT_BINARY_DIR}/morpheus/core/morpheuscore_export.h COPYONLY)
+generate_export_header(MorpheusCore
+    EXPORT_FILE_NAME export.hpp
+)
+configure_file(${CMAKE_CURRENT_BINARY_DIR}/export.hpp ${CMAKE_CURRENT_BINARY_DIR}/morpheus/core/base/export.hpp COPYONLY)
 
 install(TARGETS MorpheusCore
         PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/core
@@ -49,7 +55,7 @@ install(TARGETS MorpheusCore
 
 install(
     FILES
-        ${CMAKE_CURRENT_BINARY_DIR}/morpheus/core/morpheuscore_export.h
+        ${CMAKE_CURRENT_BINARY_DIR}/morpheus/core/base/export.hpp
     DESTINATION
-        ${CMAKE_INSTALL_INCLUDEDIR}/morpheus/core/
+        ${CMAKE_INSTALL_INCLUDEDIR}/morpheus/core/base/
 )

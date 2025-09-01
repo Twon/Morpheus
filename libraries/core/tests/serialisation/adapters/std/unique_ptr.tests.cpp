@@ -2,10 +2,14 @@
 #include "morpheus/core/serialisation/mock/reader.hpp"
 #include "morpheus/core/serialisation/mock/serialisers.hpp"
 #include "morpheus/core/serialisation/mock/writer.hpp"
+#include "morpheus/core/serialisation/read_serialiser.hpp"
+#include "morpheus/core/serialisation/write_serialiser.hpp"
 
-#include <catch2/catch_all.hpp>
+#include <catch2/catch_test_macros.hpp>
 #include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
+#include <cstdint>
 #include <memory>
 
 namespace morpheus::serialisation
@@ -90,4 +94,4 @@ TEST_CASE("Verify deserialisation of std::unique_ptr", "[morpheus.serialisation.
     }
 }
 
-} // morpheus::serialisation
+} // namespace morpheus::serialisation

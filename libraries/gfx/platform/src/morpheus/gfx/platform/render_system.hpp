@@ -1,8 +1,5 @@
 #pragma once
 
-#include <morpheus/core/base/platform.hpp>
-#include <string>
-
 namespace morpheus::gfx
 {
 
@@ -13,10 +10,9 @@ namespace morpheus::gfx
         API and supports the creation of all graphics primitives needed to access the functionality
         of the hardware.
  */
-class RenderSystem {
+class RenderSystem
+{
 public:
-
-
     /// \name Life cycle
     ///@{
     /*!
@@ -27,8 +23,8 @@ public:
 
     /// \name Life cycle
     ///@{
-    void beginFrame(){}
-    void endFrame(){}
+    void beginFrame() {}
+    void endFrame() {}
     ///@}
 
 private:

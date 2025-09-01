@@ -1,10 +1,11 @@
 #pragma once
 
+// IWYU pragma: always_keep
 #include "morpheus/core/meta/is_specialisation.hpp"
-#include "morpheus/core/serialisation/concepts/read_serialiser.hpp"
 #include "morpheus/core/serialisation/concepts/read_serialisable.hpp"
-#include "morpheus/core/serialisation/concepts/write_serialiser.hpp"
+#include "morpheus/core/serialisation/concepts/read_serialiser.hpp"
 #include "morpheus/core/serialisation/concepts/write_serialisable.hpp"
+#include "morpheus/core/serialisation/concepts/write_serialiser.hpp"
 #include <memory>
 
 namespace morpheus::serialisation::detail
@@ -13,7 +14,7 @@ namespace morpheus::serialisation::detail
 template <typename T>
 concept IsStdUniquePtr = meta::IsSpecialisationOf<std::unique_ptr, T>;
 
-template<concepts::WriteSerialiser Serialiser, concepts::WriteSerialisable T>
+template <concepts::WriteSerialiser Serialiser, concepts::WriteSerialisable T>
 void serialise(Serialiser& serialiser, std::unique_ptr<T> const& value)
 {
     serialiser.writer().beginNullable(!value);
@@ -22,7 +23,7 @@ void serialise(Serialiser& serialiser, std::unique_ptr<T> const& value)
     serialiser.writer().endNullable();
 }
 
-template<concepts::ReadSerialiser Serialiser, IsStdUniquePtr T>
+template <concepts::ReadSerialiser Serialiser, IsStdUniquePtr T>
 T deserialise(Serialiser& serialiser)
 {
     auto const nullable = makeScopedNullable(serialiser.reader());
@@ -32,4 +33,4 @@ T deserialise(Serialiser& serialiser)
         return std::make_unique<typename T::element_type>(serialiser.template deserialise<typename T::element_type>());
 }
 
-} // morpheus::serialisation
+} // namespace morpheus::serialisation::detail

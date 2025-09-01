@@ -1,13 +1,14 @@
 #pragma once
 
+// IWYU pragma: always_keep
 #include "morpheus/core/base/assert.hpp"
 #include "morpheus/core/conformance/format.hpp"
 #include "morpheus/core/conformance/ranges.hpp"
 #include "morpheus/core/meta/is_specialisation.hpp"
-#include "morpheus/core/serialisation/concepts/read_serialiser.hpp"
 #include "morpheus/core/serialisation/concepts/read_serialisable.hpp"
-#include "morpheus/core/serialisation/concepts/write_serialiser.hpp"
+#include "morpheus/core/serialisation/concepts/read_serialiser.hpp"
 #include "morpheus/core/serialisation/concepts/write_serialisable.hpp"
+#include "morpheus/core/serialisation/concepts/write_serialiser.hpp"
 
 #include <boost/type_index.hpp>
 
@@ -39,17 +40,17 @@ struct TypeListNames<std::variant<T...>>
     /// Find the index within the types of a std::variant for a given type name.
     static consteval std::string_view findIndex(std::string_view const name)
     {
-        auto const entry = ranges::find(typeNames, name);
+        auto const entry = conf::ranges::find(typeNames, name);
         if (entry == typeNames.end())
-            throw std::out_of_range(fmt_ns::format("{} is not a valid type name.", name));
+            throw std::out_of_range(conf::fmt::format("{} is not a valid type name.", name));
         return std::distance(typeNames.begin(), entry);
     }
 
     /// Names for the available types of a given std::variant.
-    inline static std::array<std::string, sizeof...(T)> typeNames{ boost::typeindex::type_id<T>().pretty_name()...};
+    inline static std::array<std::string, sizeof...(T)> typeNames{boost::typeindex::type_id<T>().pretty_name()...};
 };
 
-template<concepts::WriteSerialiser Serialiser, concepts::WriteSerialisable... T>
+template <concepts::WriteSerialiser Serialiser, concepts::WriteSerialisable... T>
 void serialise(Serialiser& serialiser, std::variant<T...> const& value)
 {
     serialiser.writer().beginComposite();
@@ -71,13 +72,14 @@ void serialise(Serialiser& serialiser, std::variant<T...> const& value)
     serialiser.writer().endComposite();
 }
 
-template<concepts::ReadSerialiser Serialiser, IsStdVariant T>
+template <concepts::ReadSerialiser Serialiser, IsStdVariant T>
 T deserialise(Serialiser& serialiser)
 {
     auto const scope = makeScopedComposite(serialiser.reader());
     auto const index = [&serialiser]
     {
-        if (serialiser.reader().isTextual()) {
+        if (serialiser.reader().isTextual())
+        {
             auto const type = serialiser.template deserialise<std::string>("type");
             return TypeListNames<T>::findIndex(type);
         }
@@ -86,12 +88,12 @@ T deserialise(Serialiser& serialiser)
     }();
     [&serialiser]<std::size_t... Indexes>(std::index_sequence<Indexes...>)
     {
-//        static_assert((!std::is_reference_v<std::tuple_element_t<Indexes, T>> || ...));
+        //        static_assert((!std::is_reference_v<std::tuple_element_t<Indexes, T>> || ...));
 
-        return T{ serialiser.template deserialise<std::tuple_element_t<Indexes, T>>()... };
+        return T{serialiser.template deserialise<std::tuple_element_t<Indexes, T>>()...};
     }(std::make_index_sequence<std::variant_size_v<T>>());
 
     return T{};
 }
 
-} // morpheus::serialisation
+} // namespace morpheus::serialisation::detail

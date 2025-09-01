@@ -2,7 +2,7 @@
 
 #include <cstdint>
 #include <morpheus/core/base/compiler.hpp>
-#include <morpheus/core/morpheuscore_export.h>
+#include <morpheus/core/base/export.hpp>
 
 /*! \defgroup Platform Morpheus Supported Platforms
         The platform group of macros allow for compile time detection of the current platform.
@@ -10,6 +10,7 @@
     \def MORPHEUS_BUILD_PLATFORM
         Macro describing the current build platform of the build.
 */
+// clang-format off
 #if !defined(MORPHEUS_BUILD_PLATFORM)
 
     /*! \def MORPHEUS_TARGET_PLATFORM_PC_WINDOWS
@@ -46,12 +47,12 @@
 
     #endif
 #endif
+// clang-format on
 /// @}
 
 /*! \def MORPHEUS_COMPILER_DEAD_CODE_ELIMINATION
         Macro present when dead code elimination is enabled in the build.
 */
-#if (MORPHEUS_IS_GCC_COMPATIBLE_COMPILER && __OPTIMIZE__) ||                                                           \
-    (MORPHEUS_IS_VISUALSTUDIO_COMPATIBLE_COMPILER && !defined __MSVC_RUNTIME_CHECKS && defined NDEBUG)
+#if (MORPHEUS_IS_GCC_COMPATIBLE_COMPILER && __OPTIMIZE__) || (MORPHEUS_IS_VISUALSTUDIO_COMPATIBLE_COMPILER && !defined __MSVC_RUNTIME_CHECKS && defined NDEBUG)
     #define MORPHEUS_COMPILER_DEAD_CODE_ELIMINATION
 #endif

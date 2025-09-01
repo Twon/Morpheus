@@ -46,19 +46,24 @@ struct ReaderArchetype
     /// End reading a nullable value.
     consteval void endNullable();
 
+    // Work around for Doxygen duplicate symbols bug, this is now fixed in Doyxgn 1.14.0:
+    // https://github.com/doxygen/doxygen/commit/64d0cb7f695b2ebe63131c06b7762c1f75212c28
     /// Read any arithmetic type from the serialisation.
-    template <typename T> requires std::is_arithmetic_v<T>
-    T read();
+    template <typename T>
+    requires std::is_arithmetic_v<T>
+    consteval T read();
 
     /// Read a string from the serialisation.
-    template <typename T> requires std::is_same_v<T, std::string>
+    template <typename T>
+    requires std::is_same_v<T, std::string>
     consteval T read();
 
     /// Read a blob of binary from the serialisation.
-    template <typename T> requires std::is_same_v<T, std::vector<std::byte>>
+    template <typename T>
+    requires std::is_same_v<T, std::vector<std::byte>>
     consteval T read();
 };
 
 using ReadSerialiserArchetype = serialisation::ReadSerialiser<ReaderArchetype>;
 
-} // morpheus::serialisation::concepts
+} // namespace morpheus::serialisation::concepts

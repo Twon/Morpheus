@@ -1,11 +1,20 @@
 #include "morpheus/application/po/adapters/boost/asio.hpp"
 #include "morpheus/application/po/options.hpp"
-#include "morpheus/core/conformance/ranges.hpp"
+#include "morpheus/application/version.hpp"
 #include "morpheus/logging.hpp"
 #include "morpheus/redirect_stream.hpp"
 
+#include <boost/asio/ip/address.hpp>
+#include <boost/asio/ip/address_v4.hpp>
+#include <boost/asio/ip/address_v6.hpp>
+#include <boost/program_options/options_description.hpp>
+#include <boost/program_options/value_semantic.hpp>
 #include <catch2/catch_test_macros.hpp>
+
+#include <array>
 #include <iostream>
+#include <optional>
+#include <string_view>
 
 namespace morpheus::application::po
 {
@@ -40,7 +49,7 @@ TEST_CASE_METHOD(BoostLogFixture, "Test parsing of boost asio address as program
         {
             Address address{};
             std::array cliOptions = {"dummyProgram.exe", "--address", param.data()};
-            auto const result = parseProgramOptions(static_cast<int>(cliOptions.size()), cliOptions.data(), HelpDocumentation{}, address);
+            auto const result = parseProgramOptions(cliOptions, HelpDocumentation{}, address);
             REQUIRE(!result);
             return address.ipAddress;
         };
@@ -55,7 +64,7 @@ TEST_CASE_METHOD(BoostLogFixture, "Test parsing of boost asio address as program
     {
         std::array cliOptions = {"dummyProgram.exe", "--address", "invalid"};
         Address address;
-        auto const result = parseProgramOptions(static_cast<int>(cliOptions.size()), cliOptions.data(), HelpDocumentation{}, address);
+        auto const result = parseProgramOptions(cliOptions, HelpDocumentation{}, address);
         REQUIRE(result);
     }
 }

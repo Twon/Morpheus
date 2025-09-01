@@ -1,11 +1,14 @@
-#include "morpheus/application/application.hpp"
-#include "morpheus/application/po/adapters/std/optional.hpp"
+#include "morpheus/application/po/adapters/std/optional.hpp" // IWYU pragma: keep
+#include "morpheus/application/po/options.hpp"
+#include "morpheus/application/version.hpp"
 #include "morpheus/logging.hpp"
 
 #include <catch2/catch_test_macros.hpp>
 
-#include <boost/program_options.hpp>
+#include <boost/program_options/options_description.hpp>
+#include <boost/program_options/value_semantic.hpp>
 
+#include <array>
 #include <optional>
 #include <string>
 
@@ -32,7 +35,7 @@ TEST_CASE_METHOD(LoggingFixture, "Test parsing of std optional wrapped type", "[
     {
         std::array cliOptions = {"dummyProgram.exe", "--text"};
         OptionalConfig options{};
-        auto const result = parseProgramOptions(static_cast<int>(cliOptions.size()), cliOptions.data(), HelpDocumentation{}, options);
+        auto const result = parseProgramOptions(cliOptions, HelpDocumentation{}, options);
         REQUIRE(result);
         REQUIRE(!options.text);
     }
@@ -40,7 +43,7 @@ TEST_CASE_METHOD(LoggingFixture, "Test parsing of std optional wrapped type", "[
     {
         std::array cliOptions = {"dummyProgram.exe", "--text", "valid"};
         OptionalConfig options{};
-        auto const result = parseProgramOptions(static_cast<int>(cliOptions.size()), cliOptions.data(), HelpDocumentation{}, options);
+        auto const result = parseProgramOptions(cliOptions, HelpDocumentation{}, options);
         REQUIRE(!result);
         REQUIRE(*options.text == "valid");
     }

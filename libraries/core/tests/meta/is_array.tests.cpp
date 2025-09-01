@@ -1,7 +1,6 @@
-#include "morpheus/core/meta/concepts/string.hpp"
 #include "morpheus/core/meta/is_array.hpp"
 
-#include <catch2/catch_all.hpp>
+#include <catch2/catch_test_macros.hpp>
 
 #include <array>
 #include <cstdint>
@@ -36,4 +35,4 @@ TEST_CASE("Meta is array allows the compile time detection of std::array special
     STATIC_REQUIRE(!meta::is_array_v<double>);
 }
 
-}
+} // namespace morpheus::meta

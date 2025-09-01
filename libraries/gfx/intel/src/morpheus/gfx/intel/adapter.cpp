@@ -1,9 +1,9 @@
-#include <morpheus/gfx/platform/vendor.hpp>
-#include <morpheus/gfx/intel/adapter.hpp>
 #include <morpheus/core/base/verify.hpp>
+#include <morpheus/gfx/intel/adapter.hpp>
+#include <morpheus/gfx/platform/vendor.hpp>
 
-#include <igcl_api.h>
 #include <Windows.h>
+#include <igcl_api.h>
 #include <vector>
 
 namespace morpheus::gfx::intel::win32
@@ -11,12 +11,10 @@ namespace morpheus::gfx::intel::win32
 
 concurrency::Generator<Adapter> enumerateAdapters()
 {
-    ctl_init_args_t ctlInitArgs{
-        .Size = sizeof(ctl_init_args_t),
-        .Version = 0,
-        .AppVersion = CTL_MAKE_VERSION(CTL_IMPL_MAJOR_VERSION, CTL_IMPL_MINOR_VERSION),
-        .flags = CTL_INIT_FLAG_USE_LEVEL_ZERO
-    };
+    ctl_init_args_t ctlInitArgs{.Size = sizeof(ctl_init_args_t),
+                                .Version = 0,
+                                .AppVersion = CTL_MAKE_VERSION(CTL_IMPL_MAJOR_VERSION, CTL_IMPL_MINOR_VERSION),
+                                .flags = CTL_INIT_FLAG_USE_LEVEL_ZERO};
     ZeroMemory(&ctlInitArgs.ApplicationUID, sizeof(ctl_application_id_t));
     ctl_api_handle_t hAPIHandle = nullptr;
 
@@ -30,18 +28,9 @@ concurrency::Generator<Adapter> enumerateAdapters()
     for (auto const& device : devices)
     {
         LUID adapterID{};
-        ctl_device_adapter_properties_t properties{
-            .Size=sizeof(properties),
-            .Version=0,
-            .pDeviceID=&adapterID,
-            .device_id_size = sizeof(LUID)
-        };
+        ctl_device_adapter_properties_t properties{.Size = sizeof(properties), .Version = 0, .pDeviceID = &adapterID, .device_id_size = sizeof(LUID)};
         MORPHEUS_VERIFY(ctlGetDeviceProperties(device, &properties) == CTL_RESULT_SUCCESS);
-        co_yield Adapter(
-            adapterID.LowPart,
-            properties.name,
-            *vendorFromPciId(properties.pci_vendor_id)
-        );
+        co_yield Adapter(adapterID.LowPart, properties.name, *vendorFromPciId(properties.pci_vendor_id));
     }
 }
 

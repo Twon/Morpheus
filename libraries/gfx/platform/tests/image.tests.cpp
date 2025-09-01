@@ -2,10 +2,8 @@
 
 #include <catch2/catch_test_macros.hpp>
 
-
 namespace morpheus::gfx
 {
-
 
 TEST_CASE("Ensure image accessors", "[morpheus.gfx.image]")
 {
@@ -15,4 +13,4 @@ TEST_CASE("Ensure image accessors", "[morpheus.gfx.image]")
     REQUIRE(image.colourDepth() == 32);
 }
 
-}
+} // namespace morpheus::gfx

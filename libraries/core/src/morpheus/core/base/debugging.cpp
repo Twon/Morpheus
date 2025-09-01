@@ -1,9 +1,9 @@
 #include "morpheus/core/base/debugging.hpp"
+#include "morpheus/core/base/platform.hpp"
 #include "morpheus/core/base/prerequisites.hpp"
 
 #include <boost/test/debug.hpp>
 
-#include <cstdio>
 #include <iostream>
 
 namespace morpheus
@@ -21,10 +21,15 @@ void breakpoint() noexcept
 void breakpoint_if_debugging() noexcept
 {
     if (is_debugger_present())
+    {
         breakpoint();
+    }
 }
 
-bool is_debugger_present() noexcept { return boost::debug::under_debugger(); }
+bool is_debugger_present() noexcept
+{
+    return boost::debug::under_debugger(); // LCOV_EXCL_LINE
+}
 
 void debugPrint(std::string_view const message)
 {

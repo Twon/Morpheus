@@ -36,14 +36,9 @@ commonly associated attributes.
       [ALIAS <alias>]
       [FOLDER <folder>]
       [INTERFACE]
+      [NO_INSTALL]
   )
    -- Generates targets with default build directories and install options.
-
-  ``TYPE``
-    The ``TYPE`` option is required to provide the type of target to create.
-
-  ``NAME``
-    The ``NAME`` option is required to provide the internal name for the library.
 
   ``ALIAS``
     The ``ALIAS`` option is required to provide the external name for the library.
@@ -55,9 +50,18 @@ commonly associated attributes.
     The ``INTERFACE`` option is only applicable for library targets and specifies
     the library is an interface library.
 
+  ``NAME``
+    The ``NAME`` option is required to provide the internal name for the library.
+
+  ``NO_INSTALL``
+    The ``NO_INSTALL`` option disables the target supporting the install step.
+
+  ``TYPE``
+    The ``TYPE`` option is required to provide the type of target to create.
+
 #]=======================================================================]
 function(morpheus_add_target)
-    set(options INTERFACE)
+    set(options NO_INSTALL INTERFACE)
     set(oneValueArgs TYPE NAME ALIAS FOLDER)
     set(multiValueArgs)
     cmake_parse_arguments(MORPHEUS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
@@ -83,6 +87,9 @@ function(morpheus_add_target)
     if(${MORPHEUS_INTERFACE})
         set(isInterface "INTERFACE")
     endif()
+    if(${MORPHEUS_NO_INSTALL})
+        set(noInstall "NO_INSTALL")
+    endif()
 
     if (MORPHEUS_TYPE STREQUAL executable)
         add_executable(${MORPHEUS_NAME})
@@ -98,6 +105,7 @@ function(morpheus_add_target)
         NAME ${MORPHEUS_NAME}
         FOLDER ${MORPHEUS_FOLDER}
         ${isInterface}
+        ${noInstall}
     )
 
 endfunction()
@@ -120,15 +128,22 @@ commonly associated attributes.
   )
    -- Generates targets with default build directories and install options.
 
-  ``NAME``
-    The ``NAME`` option is required to provide the internal name for the library.
-
   ``FOLDER``
     The ``FOLDER`` option provides a folder location for the target within an IDE.
 
+  ``INTERFACE``
+    The ``INTERFACE`` option is only applicable for library targets and specifies
+    the library is an interface library.
+
+  ``NAME``
+    The ``NAME`` option is required to provide the internal name for the library.
+
+  ``NO_INSTALL``
+    The ``NO_INSTALL`` option disables the target supporting the install step.
+
 #]=======================================================================]
 function(morpheus_add_target_properties)
-    set(options INTERFACE)
+    set(options NO_INSTALL INTERFACE)
     set(oneValueArgs NAME FOLDER)
     set(multiValueArgs)
     cmake_parse_arguments(MORPHEUS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
@@ -161,12 +176,14 @@ function(morpheus_add_target_properties)
     # Create an empty header set here so that the subsequent install step finds it.
     target_sources(${MORPHEUS_NAME} ${scope} FILE_SET HEADERS FILES)
 
-    install(TARGETS ${MORPHEUS_NAME}
-            EXPORT morpheus-export-set
-            FILE_SET HEADERS
-            INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-            RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-            ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-            LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    )
+    if (NOT ${MORPHEUS_NO_INSTALL})
+        install(TARGETS ${MORPHEUS_NAME}
+                EXPORT morpheus-export-set
+                FILE_SET HEADERS
+                INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+                RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+                ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+                LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        )
+    endif()
 endfunction()

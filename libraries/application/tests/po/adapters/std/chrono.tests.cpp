@@ -1,13 +1,21 @@
-#include "morpheus/application/application.hpp"
 #include "morpheus/application/po/adapters/std/chrono.hpp"
+#include "morpheus/application/po/options.hpp"
+#include "morpheus/application/version.hpp"
+#include "morpheus/core/conformance/date.hpp"
 #include "morpheus/core/serialisation/adapters/std/chrono.hpp"
 #include "morpheus/logging.hpp"
 
-#include <boost/program_options.hpp>
-
+#include <boost/program_options/options_description.hpp>
+#include <boost/program_options/value_semantic.hpp>
 #include <catch2/catch_test_macros.hpp>
 
+#include <array>
 #include <chrono>
+#include <functional>
+#include <optional>
+#include <ostream>
+#include <string>
+#include <string_view>
 
 namespace morpheus::application::po
 {
@@ -35,7 +43,7 @@ TEST_CASE_METHOD(LoggingFixture, "Test parsing of std chrono duration", "[morphe
         {
             ChronoDuration<Duration> durationOptions{};
             std::array cliOptions = {"dummyProgram.exe", "--duration", param.data()};
-            auto const result = parseProgramOptions(static_cast<int>(cliOptions.size()), cliOptions.data(), HelpDocumentation{}, durationOptions);
+            auto const result = parseProgramOptions(cliOptions, HelpDocumentation{}, durationOptions);
             REQUIRE(!result);
             return durationOptions.duration;
         };
@@ -54,14 +62,14 @@ TEST_CASE_METHOD(LoggingFixture, "Test parsing of std chrono duration", "[morphe
     {
         std::array cliOptions = {"dummyProgram.exe", "--duration", "invalid"};
         ChronoDuration<std::chrono::nanoseconds> durationOptions{};
-        auto const result = parseProgramOptions(static_cast<int>(cliOptions.size()), cliOptions.data(), HelpDocumentation{}, durationOptions);
+        auto const result = parseProgramOptions(cliOptions, HelpDocumentation{}, durationOptions);
         REQUIRE(result);
     }
 }
 
 struct TimeZone
 {
-    std::reference_wrapper<date_ns::time_zone const> timezone = *date_ns::get_tzdb().current_zone();
+    std::reference_wrapper<conf::date::time_zone const> timezone = *conf::date::get_tzdb().current_zone();
 
     void addOptions(boost::program_options::options_description& options)
     {
@@ -81,21 +89,21 @@ TEST_CASE_METHOD(LoggingFixture, "Test parsing of std chrono time_zone", "[morph
         {
             TimeZone timezoneOptions{};
             std::array cliOptions = {"dummyProgram.exe", "--timezone", param.data()};
-            auto const result = parseProgramOptions(static_cast<int>(cliOptions.size()), cliOptions.data(), HelpDocumentation{}, timezoneOptions);
+            auto const result = parseProgramOptions(cliOptions, HelpDocumentation{}, timezoneOptions);
             REQUIRE(!result);
             return timezoneOptions.timezone;
         };
 
-        REQUIRE(getTimezone("Australia/Sydney") == *date_ns::get_tzdb().locate_zone("Australia/Sydney"));
-        REQUIRE(getTimezone("Brazil/East") == *date_ns::get_tzdb().locate_zone("Brazil/East"));
-        REQUIRE(getTimezone("Canada/Eastern") == *date_ns::get_tzdb().locate_zone("Canada/Eastern"));
-        REQUIRE(getTimezone("US/Central") == *date_ns::get_tzdb().locate_zone("US/Central"));
+        REQUIRE(getTimezone("Australia/Sydney") == *conf::date::get_tzdb().locate_zone("Australia/Sydney"));
+        REQUIRE(getTimezone("Brazil/East") == *conf::date::get_tzdb().locate_zone("Brazil/East"));
+        REQUIRE(getTimezone("Canada/Eastern") == *conf::date::get_tzdb().locate_zone("Canada/Eastern"));
+        REQUIRE(getTimezone("US/Central") == *conf::date::get_tzdb().locate_zone("US/Central"));
     }
     SECTION("Ensure invalid value parse correctly")
     {
         std::array cliOptions = {"dummyProgram.exe", "--timezone", "invalid"};
         TimeZone timezoneOptions{};
-        auto const result = parseProgramOptions(static_cast<int>(cliOptions.size()), cliOptions.data(), HelpDocumentation{}, timezoneOptions);
+        auto const result = parseProgramOptions(cliOptions, HelpDocumentation{}, timezoneOptions);
         REQUIRE(result);
     }
 }

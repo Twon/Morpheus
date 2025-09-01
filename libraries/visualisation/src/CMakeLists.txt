@@ -10,9 +10,14 @@ target_include_directories(MorpheusVisualisation
 )
 
 target_link_libraries(MorpheusVisualisation
-	PUBLIC
-		morpheus::core
+    PUBLIC
+        morpheus::application
+        morpheus::core
+        morpheus::gfx::gl4
         morpheus::gfx::platform
+        morpheus::gfx::vulkan
+        $<$<BOOL:${MORPHEUS_RENDER_SYSTEM_DIRECT_X12}>:morpheus::gfx::d3d12>
+        $<$<BOOL:${MORPHEUS_RENDER_SYSTEM_METAL}>:morpheus::gfx::metal>
 )
 
 set_target_properties(MorpheusVisualisation

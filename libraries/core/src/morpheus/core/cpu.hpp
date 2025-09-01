@@ -1,20 +1,23 @@
 #pragma once
 
-#include <morpheus/core/base/architecture.hpp>
-#include <morpheus/core/base/platform.hpp>
+#include "morpheus/core/base/architecture.hpp"
+#include "morpheus/core/base/compiler.hpp"
+
+#if (MORPHEUS_COMPILER == MORPHEUS_VISUALSTUDIO_COMPILER)
+    #pragma warning(push)
+    #pragma warning(disable : 4251)
+#endif // (MORPHEUS_COMPILER == MORPHEUS_VISUALSTUDIO_COMPILER)
+
+#if (MORPHEUS_PLATFORM_ARCHITECTURE == MORPHEUS_TARGET_ARCHITECTURE_X86) || (MORPHEUS_PLATFORM_ARCHITECTURE == MORPHEUS_TARGET_ARCHITECTURE_X64)
+
+// clang-format off
+#include "morpheus/core/base/export.hpp"
 
 #include <array>
 #include <cstdint>
 #include <string>
 #include <vector>
-
-#if (MORPHEUS_COMPILER == MORPHEUS_VISUALSTUDIO_COMPILER)
-#pragma warning(push)
-#pragma warning(disable : 4251)
-#endif // (MORPHEUS_COMPILER == MORPHEUS_VISUALSTUDIO_COMPILER)
-
-
-#if (MORPHEUS_PLATFORM_ARCHITECTURE == MORPHEUS_TARGET_ARCHITECTURE_X86) || (MORPHEUS_PLATFORM_ARCHITECTURE == MORPHEUS_TARGET_ARCHITECTURE_X64)
+// clang-format on
 
 namespace morpheus
 {
@@ -33,7 +36,8 @@ using CpuidLeafs = std::vector<CpuidResults>;
 ///     This type stores information about the capabilities of the central processing unit of the current target
 ///     system.
 ///
-class MORPHEUSCORE_EXPORT Cpu {
+class MORPHEUSCORE_EXPORT Cpu
+{
 public:
     //! Default constructor.
     Cpu();
@@ -45,10 +49,10 @@ public:
     [[nodiscard]] auto const& getBrandId() const noexcept { return mBrandId; }
 
 private:
-    std::uint32_t mMaxLeaf;          //!< Maximum available leaf function for the cpuid instruction.
+    std::uint32_t mMaxLeaf;         //!< Maximum available leaf function for the cpuid instruction.
     std::uint32_t mMaxExtendedLeaf; //!< Maximum available extended leaf function for the cpuid instruction.
-    CpuidLeafs mLeafs;          //!< Cached results of executing the standard cpuid leaf functions.
-    CpuidLeafs mExtendedLeafs; //!< Cached results of executing the extended cpuid leaf functions.
+    CpuidLeafs mLeafs;              //!< Cached results of executing the standard cpuid leaf functions.
+    CpuidLeafs mExtendedLeafs;      //!< Cached results of executing the extended cpuid leaf functions.
     std::string mVendorId;
     std::string mBrandId;
 };
@@ -58,5 +62,5 @@ private:
 #endif // (MORPHEUS_PLATFORM_ARCHITECTURE == MORPHEUS_TARGET_ARCHITECTURE_X86) || (MORPHEUS_PLATFORM_ARCHITECTURE == MORPHEUS_TARGET_ARCHITECTURE_X64)
 
 #if (MORPHEUS_COMPILER == MORPHEUS_VISUALSTUDIO_COMPILER)
-#pragma warning(pop)
+    #pragma warning(pop)
 #endif // (MORPHEUS_COMPILER == MORPHEUS_VISUALSTUDIO_COMPILER)

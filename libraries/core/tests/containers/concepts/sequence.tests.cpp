@@ -1,7 +1,8 @@
 #include "morpheus/containers/concepts/archetypes/sequence.hpp"
 #include "morpheus/core/containers/concepts/sequence.hpp"
 
-#include <catch2/catch_all.hpp>
+#include <catch2/catch_template_test_macros.hpp>
+#include <catch2/catch_test_macros.hpp>
 
 #include <array>
 #include <deque>
@@ -13,7 +14,19 @@
 namespace morpheus::containers::concepts
 {
 
-TEMPLATE_TEST_CASE("Verify sequence containers concepts", "[morpheus.containers.concepts.sequence]", bool, std::int8_t, std::uint8_t, std::int16_t, std::uint16_t, std::int32_t, std::uint32_t, std::int64_t, std::uint64_t, float, double)
+TEMPLATE_TEST_CASE("Verify sequence containers concepts",
+                   "[morpheus.containers.concepts.sequence]",
+                   bool,
+                   std::int8_t,
+                   std::uint8_t,
+                   std::int16_t,
+                   std::uint16_t,
+                   std::int32_t,
+                   std::uint32_t,
+                   std::int64_t,
+                   std::uint64_t,
+                   float,
+                   double)
 {
     SECTION("Archetype test")
     {
@@ -39,4 +52,4 @@ TEMPLATE_TEST_CASE("Verify sequence containers concepts", "[morpheus.containers.
     }
 }
 
-}
+} // namespace morpheus::containers::concepts

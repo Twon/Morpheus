@@ -2,6 +2,10 @@
 add_subdirectory(concepts)
 #add_subdirectory(generic)
 
+if(APPLE)
+    add_subdirectory(macos)
+endif(APPLE)
+
 if(WIN32)
     add_subdirectory(win32)
 endif(WIN32)
@@ -16,6 +20,8 @@ target_sources(MorpheusGfxPlatform
         FILES
             adapter.hpp
             image.hpp
+            monitor.hpp
+            os.hpp
             pixel.hpp
             render_system.hpp
             render_target.hpp

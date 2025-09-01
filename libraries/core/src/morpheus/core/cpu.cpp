@@ -1,16 +1,19 @@
-#include "morpheus/core/base/platform.hpp"
-#include <morpheus/core/cpu.hpp>
+#include "morpheus/core/base/architecture.hpp"
 
 #if (MORPHEUS_PLATFORM_ARCHITECTURE == MORPHEUS_TARGET_ARCHITECTURE_X86) || (MORPHEUS_PLATFORM_ARCHITECTURE == MORPHEUS_TARGET_ARCHITECTURE_X64)
 
+// clang-format off
+#include "morpheus/core/cpu.hpp"
+
 #if (MORPHEUS_IS_GCC_COMPATIBLE_COMPILER)
-#include <cpuid.h>
+    #include <cpuid.h>
 #elif (MORPHEUS_IS_VISUALSTUDIO_COMPATIBLE_COMPILER)
-#include <intrin.h>
+    #include <intrin.h>
 #endif
 
 #include <algorithm>
 #include <cstring>
+// clang-format on
 
 namespace morpheus
 {
@@ -32,6 +35,7 @@ constexpr std::uint32_t extended_leaf_range_mask = ~extended_leaf_range_start;
  */
 auto cpuid(std::uint32_t const leaf, std::uint32_t const subleaf = 0)
 {
+    // clang-format off
     CpuidResults results;
 #if (MORPHEUS_IS_GCC_COMPATIBLE_COMPILER)
     __get_cpuid(leaf, &results[0], &results[1], &results[2], &results[3]);
@@ -43,6 +47,7 @@ auto cpuid(std::uint32_t const leaf, std::uint32_t const subleaf = 0)
     results[2] = static_cast<std::uint32_t>(result_leaf[2]);
     results[3] = static_cast<std::uint32_t>(result_leaf[3]);
 #endif
+    // clang-format on
     return results;
 }
 
@@ -62,7 +67,7 @@ auto get_max_extended_leaf_function()
 
 //---------------------------------------------------------------------------------------------------------------------
 
-auto query_leaf_functions(const std::uint32_t max_leaf)
+auto query_leaf_functions(std::uint32_t const max_leaf)
 {
     CpuidLeafs results(max_leaf);
     std::uint32_t current_leaf = 0;
@@ -72,7 +77,7 @@ auto query_leaf_functions(const std::uint32_t max_leaf)
 
 //---------------------------------------------------------------------------------------------------------------------
 
-auto query_extended_leaf_functions(const std::uint32_t max_extended_leaf)
+auto query_extended_leaf_functions(std::uint32_t const max_extended_leaf)
 {
     CpuidLeafs results(extended_leaf_range_mask & max_extended_leaf);
     std::uint32_t current_leaf = 0;
@@ -114,14 +119,13 @@ auto query_brand_id(CpuidLeafs const& cached_leafs)
 //---------------------------------------------------------------------------------------------------------------------
 
 Cpu::Cpu()
-:   mMaxLeaf(get_max_leaf_function())
-,   mMaxExtendedLeaf(get_max_extended_leaf_function())
-,   mLeafs(query_leaf_functions(mMaxLeaf))
-,   mExtendedLeafs(query_extended_leaf_functions(mMaxExtendedLeaf))
-,   mVendorId(query_vendor_id(mLeafs))
-,   mBrandId(query_brand_id(mLeafs))
-{
-}
+    : mMaxLeaf(get_max_leaf_function())
+    , mMaxExtendedLeaf(get_max_extended_leaf_function())
+    , mLeafs(query_leaf_functions(mMaxLeaf))
+    , mExtendedLeafs(query_extended_leaf_functions(mMaxExtendedLeaf))
+    , mVendorId(query_vendor_id(mLeafs))
+    , mBrandId(query_brand_id(mLeafs))
+{}
 
 //---------------------------------------------------------------------------------------------------------------------
 

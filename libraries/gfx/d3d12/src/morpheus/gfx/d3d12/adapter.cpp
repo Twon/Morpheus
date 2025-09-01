@@ -27,16 +27,16 @@ auto createDXGIFactory()
     return dxgiFactory;
 }
 
-auto getAdapterDescription(const DXGIAdapter& adapter)
+auto getAdapterDescription(DXGIAdapter const& adapter)
 {
     DXGI_ADAPTER_DESC1 desc{};
     MORPHEUS_D3D12_VERIFY(adapter->GetDesc1(&desc));
     return desc;
 }
 
-auto getOutputModes(const DXGIOutput& output)
+auto getOutputModes(DXGIOutput const& output)
 {
-	UINT numModes = 0;
+    UINT numModes = 0;
     MORPHEUS_D3D12_VERIFY(output->GetDisplayModeList(DXGI_FORMAT_R8G8B8A8_UNORM, 0, &numModes, nullptr));
 
     std::vector<DXGI_MODE_DESC> displayModes(numModes);
@@ -44,7 +44,7 @@ auto getOutputModes(const DXGIOutput& output)
     return displayModes;
 }
 
-auto getOutputModes(const DXGIAdapter& adapter)
+auto getOutputModes(DXGIAdapter const& adapter)
 {
     DXGIOutput output;
     std::vector<DXGI_MODE_DESC> displayModes;
@@ -52,25 +52,18 @@ auto getOutputModes(const DXGIAdapter& adapter)
     for (UINT outputCount = 0; DXGI_ERROR_NOT_FOUND != adapter->EnumOutputs(outputCount, &output); ++outputCount)
     {
         auto outputDisplayModes = getOutputModes(output);
-        displayModes.insert(
-            displayModes.end(),
-            std::make_move_iterator(outputDisplayModes.begin()),
-            std::make_move_iterator(outputDisplayModes.end())
-        );
+        displayModes.insert(displayModes.end(), std::make_move_iterator(outputDisplayModes.begin()), std::make_move_iterator(outputDisplayModes.end()));
     }
 
     return displayModes;
 }
 
-}
+} // namespace
 
-Adapter::Adapter(
-    DXGIAdapter dxgiAdapter
-)
-:   mDxgiAdapter(std::move(dxgiAdapter))
-,   mDescription(getAdapterDescription(mDxgiAdapter))
-{
-}
+Adapter::Adapter(DXGIAdapter dxgiAdapter)
+    : mDxgiAdapter(std::move(dxgiAdapter))
+    , mDescription(getAdapterDescription(mDxgiAdapter))
+{}
 
 [[nodiscard]] Vendor Adapter::vendor() const noexcept
 {
@@ -86,9 +79,9 @@ concurrency::Generator<Adapter> enumerateAdapters()
     for (UINT adapterId = 0; DXGI_ERROR_NOT_FOUND != dxgiFactory->EnumAdapters1(adapterId, &pDXGIAdapter); ++adapterId)
     {
         // Ignore software adapters
-//        if (graphics_adapter.dxgi_description.Flags & DXGI_ADAPTER_FLAG_SOFTWARE) {
-//            continue;
-//        }
+        // if (graphics_adapter.dxgi_description.Flags & DXGI_ADAPTER_FLAG_SOFTWARE) {
+        //     continue;
+        // }
 
         co_yield Adapter(pDXGIAdapter);
     }

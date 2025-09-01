@@ -3,7 +3,6 @@
 
 #include <catch2/catch_all.hpp>
 
-
 namespace morpheus::gfx::gl4::wgl
 {
 
@@ -21,7 +20,8 @@ TEST_CASE("Create a WGL Context", "[morpheus.gfx.gl4.wgl.context]")
                                                  .cStencilBits = 8,
                                                  .iLayerType = PFD_MAIN_PLANE};
         win32::RenderWindow window;
-        Context context(window.getHandle(), pxlFmtDescriptor);
+        auto context = Context::create(window.getHandle(), pxlFmtDescriptor);
+        REQUIRE(context);
 
         wglMakeCurrent(nullptr, nullptr);
         auto const globalDC = wglGetCurrentDC();
@@ -29,18 +29,18 @@ TEST_CASE("Create a WGL Context", "[morpheus.gfx.gl4.wgl.context]")
 
         WHEN("enabling the context")
         {
-            auto globalContext = context.enable();
+            auto globalContext = context.value().enable();
 
             THEN("expect the context to be set as active and the global context for the thread to be returned")
             {
-                REQUIRE(context.getDC() == wglGetCurrentDC());
-                REQUIRE(context.getGL() == wglGetCurrentContext());
+                REQUIRE(context.value().getDC() == wglGetCurrentDC());
+                REQUIRE(context.value().getGL() == wglGetCurrentContext());
                 REQUIRE(globalContext.getDC() == globalDC);
                 REQUIRE(globalContext.getGL() == globalGL);
 
                 AND_WHEN("disabling the context")
                 {
-                    context.disable();
+                    context.value().disable();
 
                     THEN("expect the global context to be restored")
                     {

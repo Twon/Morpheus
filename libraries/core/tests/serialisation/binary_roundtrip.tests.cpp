@@ -12,7 +12,14 @@
 
 #include "morpheus/serialisation/helpers.hpp"
 
-#include <catch2/catch_all.hpp>
+#include <catch2/catch_test_macros.hpp>
+
+#include <chrono>
+#include <memory>
+#include <optional>
+#include <string>
+#include <utility>
+#include <variant>
 
 using namespace Catch;
 
@@ -41,10 +48,10 @@ TEST_CASE("Binary serialisation can roundtrip standard library types to binary a
     REQUIRE(roundtrip(std::pair<int, bool>{50, true}) == std::pair<int, bool>{50, true});
     REQUIRE(roundtrip(std::string("Hello")) == std::string("Hello"));
     REQUIRE(*roundtrip(std::make_unique<int>(123)) == 123);
-    //REQUIRE(roundtrip(std::vector<int>{1, 2, 3, 4, 5}) == std::vector<int>{1, 2, 3, 4, 5});
+    // REQUIRE(roundtrip(std::vector<int>{1, 2, 3, 4, 5}) == std::vector<int>{1, 2, 3, 4, 5});
 
     /*  REQUIRE(test::serialise(std::variant<int, bool, std::string>{true}) == R"({"type":"bool","value":true})");
-    */
+     */
 }
 
 } // namespace morpheus::serialisation

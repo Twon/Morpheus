@@ -40,9 +40,9 @@ public:
 #if (__cpp_explicit_this_parameter >= 202110L)
     /// Access the returned value of the entry action on beginning of the managed scope.
     template <typename Self>
-    [[nodiscard]] std::copy_cvref_t<Self, auto> value(this Self&& self)
+    [[nodiscard]] auto&& value(this Self&& self)
     {
-        return mEntryReturnValue;
+        return std::forward_like<decltype(self)>(self.mEntryReturnValue);
     }
 #else
     /// Access the returned value of the entry action on beginning of the managed scope.
@@ -75,7 +75,8 @@ template <std::invocable EntryAction, std::invocable ExitAction>
 class [[nodiscard, maybe_unused]] ScopedAction : public detail::HoldReturnType<std::invoke_result_t<EntryAction>>
 {
 public:
-    constexpr ScopedAction(EntryAction onEntry, ExitAction onExit) : mAction(std::move(onExit))
+    constexpr ScopedAction(EntryAction onEntry, ExitAction onExit)
+        : mAction(std::move(onExit))
     {
         if constexpr (std::is_same_v<std::invoke_result_t<EntryAction>, void>)
             onEntry();
@@ -84,7 +85,7 @@ public:
     }
 
     constexpr ScopedAction(ScopedAction const&) = delete;
-    constexpr ScopedAction(ScopedAction &&) = delete;
+    constexpr ScopedAction(ScopedAction&&) = delete;
 
     constexpr ScopedAction operator=(ScopedAction const&) = delete;
     constexpr ScopedAction operator=(ScopedAction&&) = delete;

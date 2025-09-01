@@ -1,8 +1,10 @@
+#include "morpheus/core/conformance/expected.hpp"
 #include "morpheus/core/conversion/adapters/enum.hpp"
+#include "morpheus/core/conversion/string.hpp"
 
-#include <catch2/catch_all.hpp>
+#include <catch2/catch_test_macros.hpp>
 
-#include <chrono>
+#include <cstdint>
 
 namespace morpheus::conversion
 {

@@ -1,7 +1,6 @@
 #pragma once
 
 #include "morpheus/application/po/config.hpp"
-#include "morpheus/application/po/options.hpp"
 
 #include <filesystem>
 
@@ -16,7 +15,8 @@ namespace morpheus::application
 ///
 ///
 // template<typename T>
-class Application {
+class Application
+{
 public:
     ///
     /// \param[in] argc The number of command line arguments.
@@ -29,13 +29,10 @@ public:
     /// Path to application log file.
     std::filesystem::path getLogPath() const noexcept { return mLogPath; }
 
-    void run()
-    {
-
-    }
+    void run() {}
 
 private:
-    po::Config mConfig; /// Common application configuration
+    po::Config mConfig;             /// Common application configuration
     std::filesystem::path mLogPath; /// Path to application log file.
 };
 

@@ -18,8 +18,8 @@
     #pragma GCC diagnostic pop
 #endif // (MORPHEUS_COMPILER == MORPHEUS_GNUC_COMPILER)
 
-#include <iostream>
 #include <filesystem>
+#include <iostream>
 #include <optional>
 #include <span>
 
@@ -38,23 +38,23 @@ concept CustomProgramOptions = requires(T& t, boost::program_options::options_de
 ///     Holds common help documentation information for applications.
 struct HelpDocumentation
 {
-    std::string_view name;
-    std::string_view synopsis;
-    std::optional<Version> version;
+    std::string_view name;          ///< The name of the application, typically the executable name.
+    std::string_view synopsis;      ///< A brief synopsis of the application, typically a one-liner describing its purpose.
+    std::optional<Version> version; ///< The version of the application, if available.
 };
 
 std::optional<int> parseProgramOptions(int argc, char const* const* argv, HelpDocumentation const& msgDetails, CustomProgramOptions auto&... options)
 {
-    return parseProgramOptions(std::span<char const * const>{argv, static_cast<std::size_t>(argc)}, msgDetails, options...);
+    return parseProgramOptions(std::span<char const* const>{argv, static_cast<std::size_t>(argc)}, msgDetails, options...);
 }
 
-std::optional<int> parseProgramOptions(std::span<char const * const> parameters, HelpDocumentation const& msgDetails, CustomProgramOptions auto&... options)
+std::optional<int> parseProgramOptions(std::span<char const* const> parameters, HelpDocumentation const& msgDetails, CustomProgramOptions auto&... options)
 {
     namespace po = boost::program_options;
     try
     {
-        auto const version = (msgDetails.version) ? fmt_ns::format("version {}", *msgDetails.version) : std::string();
-        po::options_description desc(fmt_ns::format("{}\n{} \n\nUsage: ", boost::dll::program_location().stem().string(), version));
+        auto const version = (msgDetails.version) ? conf::fmt::format("version {}", *msgDetails.version) : std::string();
+        po::options_description desc(conf::fmt::format("{}\n{} \n\nUsage: ", boost::dll::program_location().stem().string(), version));
 
         desc.add_options()("help,h", "Display the application help message.");
 
@@ -74,8 +74,8 @@ std::optional<int> parseProgramOptions(std::span<char const * const> parameters,
 
         if (msgDetails.version && vm.count("version"))
         {
-            auto const output = fmt_ns::format("{} {}", boost::dll::program_location().stem().string(), *msgDetails.version);
-            print_ns::print("{}", output);
+            auto const output = conf::fmt::format("{} {}", boost::dll::program_location().stem().string(), *msgDetails.version);
+            conf::print::print("{}", output);
             return 1;
         }
 
@@ -93,6 +93,5 @@ std::optional<int> parseProgramOptions(std::span<char const * const> parameters,
     }
     return std::nullopt;
 }
-
 
 } // namespace morpheus::application::po

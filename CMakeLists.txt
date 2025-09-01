@@ -25,11 +25,17 @@ include(GNUInstallDirs)
 include(CMakeDependentOption)
 include(CMakePackageConfigHelpers)
 
-option(MORPHEUS_RENDER_SYSTEM_DIRECT_X12 "Build with support for the Dirext X 12 render system" ON)
-option(MORPHEUS_RENDER_SYSTEM_METAL "Build with support for the Metal render system" ON)
+if(WIN32)
+    option(MORPHEUS_RENDER_SYSTEM_DIRECT_X12 "Build with support for the Dirext X 12 render system" ON)
+endif(WIN32)
+
+if(APPLE AND CMAKE_CXX_COMPILER_ID MATCHES ".*Clang.*")
+    option(MORPHEUS_RENDER_SYSTEM_METAL "Build with support for the Metal render system" ON)
+endif(APPLE AND CMAKE_CXX_COMPILER_ID MATCHES ".*Clang.*")
+
 option(MORPHEUS_RENDER_SYSTEM_OPENGL "Build with support for the Open GL render system" ON)
 option(MORPHEUS_RENDER_SYSTEM_VULKAN "Build with support for the Vulkan render system" ON)
-cmake_dependent_option(MORPHEUS_LINK_WITH_MOLD "Enable the mold linker" ON "LINUX OR APPLE" OFF)
+cmake_dependent_option(MORPHEUS_LINK_WITH_MOLD "Enable the mold linker" ON "LINUX" OFF)
 cmake_dependent_option(MORPHEUS_CODE_COVERAGE "Enable code coverage" ON "\"${CMAKE_CXX_COMPILER_ID}\" STREQUAL \"Clang\" OR \"${CMAKE_CXX_COMPILER_ID}\" STREQUAL \"GNU\"" OFF)
 cmake_dependent_option(MORPHEUS_INCLUDE_NATVIS "Enable inclusion of a natvis files for debugging" ON "\"${CMAKE_CXX_COMPILER_ID}\" STREQUAL \"MSVC\"" OFF)
 
@@ -59,6 +65,8 @@ include(morpheus_add_testing_library)
 include(morpheus_add_tests)
 include(sanitisers)
 include(third_party)
+
+find_package(IWYU)
 
 enable_testing()
 

@@ -14,7 +14,8 @@ namespace morpheus::gfx::vulkan
 
 /// \class Adapter
 ///     Describes an available graphic hardware devices on the target platform.
-class Adapter {
+class Adapter
+{
 public:
     /// \name Life cycle
     ///@{

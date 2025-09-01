@@ -13,7 +13,7 @@ namespace morpheus::containers::concepts
 ///     <a href="https://eel.is/c++draft/container.alloc.reqmts">[container.alloc.reqmts]</a>, details at
 ///     <a href="https://en.cppreference.com/w/cpp/named_req/AllocatorAwareContainer">AllocatorAwareContainer</a>.
 template <typename X>
-concept AllocatorAware = Container<X> && requires(X x, X&& rx, typename X::allocator_type a){
+concept AllocatorAware = Container<X> && requires(X x, X&& rx, typename X::allocator_type a) {
     requires std::same_as<typename X::allocator_type::value_type, typename X::value_type>;
     requires std::default_initializable<X>;
     { X(a) };

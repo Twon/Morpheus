@@ -1,7 +1,5 @@
 #pragma once
 
-#include <morpheus/core/base/platform.hpp>
-
 #include <compare>
 #include <cstdint>
 
@@ -11,7 +9,8 @@ namespace morpheus::gfx
 /// \class VideoMode
 ///     A video mode describes a mode of available settings for an graphics adapter.
 ///
-class VideoMode {
+class VideoMode
+{
 public:
     /// \name Life cycle
     ///@{
@@ -27,20 +26,13 @@ public:
         \param[in] refreshRate
              The refresh rate of the video mode.
      */
-    constexpr VideoMode(
-        std::uint16_t const width,
-        std::uint16_t const height,
-        std::uint16_t const colourDepth,
-        std::uint16_t const refreshRate
-    ) noexcept
-    :   mWidth(width),
-        mHeight(height),
-        mColourDepth(colourDepth),
-        mRefreshRate(refreshRate)
-    {
-    }
+    constexpr VideoMode(std::uint16_t const width, std::uint16_t const height, std::uint16_t const colourDepth, std::uint16_t const refreshRate) noexcept
+        : mWidth(width)
+        , mHeight(height)
+        , mColourDepth(colourDepth)
+        , mRefreshRate(refreshRate)
+    {}
     ///@}
-
 
     /// The width in pixels of the render target.
     [[nodiscard]] constexpr auto width() const noexcept { return mWidth; }
@@ -55,7 +47,8 @@ public:
     [[nodiscard]] constexpr auto refreshRate() const noexcept { return mRefreshRate; }
 
     /// The three-way operator provides strong ordering of types.
-    [[nodiscard]] constexpr auto operator<=>(VideoMode const& rhs) const noexcept = default;
+    [[nodiscard]] constexpr auto operator<=>(VideoMode const& rhs) const noexcept -> std::strong_ordering = default;
+
 private:
     /// \name Data Members
     ///@{
