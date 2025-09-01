@@ -83,7 +83,7 @@ TEST_CASE("Verify deserialisation of std::ranges", "[morpheus.serialisation.rang
             EXPECT_CALL(serialiser.reader(), endComposite()).Times(1);
             WHEN("Serialising the std::expected")
             {
-                using ExpectedType = exp_ns::expected<std::int64_t, std::string>;
+                using ExpectedType = conf::exp::expected<std::int64_t, std::string>;
                 auto const expected = serialiser.deserialise<ExpectedType>();
                 REQUIRE(expected.value() == actualValue);
             }
@@ -108,7 +108,7 @@ TEST_CASE("Verify deserialisation of std::ranges", "[morpheus.serialisation.rang
 
             WHEN("Deserialising the std::expected")
             {
-                using ExpectedType = exp_ns::expected<std::int64_t, std::string>;
+                using ExpectedType = conf::exp::expected<std::int64_t, std::string>;
                 auto const expected = serialiser.deserialise<ExpectedType>();
                 REQUIRE(expected.error() == actualValue);
             }

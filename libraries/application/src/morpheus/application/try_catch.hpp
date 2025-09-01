@@ -18,11 +18,11 @@ void tryCatch(std::invocable auto f)
     }
     catch (std::exception const& ex)
     {
-        BOOST_LOG_TRIVIAL(error) << "Exception caught: " << ex.what() << std::endl << st_ns::stacktrace::current();
+        BOOST_LOG_TRIVIAL(error) << "Exception caught: " << ex.what() << std::endl << conf::st::stacktrace::current();
     }
     catch (...)
     {
-        BOOST_LOG_TRIVIAL(error) << "Unknown exception!\n" << st_ns::stacktrace::current();
+        BOOST_LOG_TRIVIAL(error) << "Unknown exception!\n" << conf::st::stacktrace::current();
     }
 }
 

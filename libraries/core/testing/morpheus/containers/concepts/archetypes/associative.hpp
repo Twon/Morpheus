@@ -112,9 +112,9 @@ struct Associative
     constexpr Associative(iterator, iterator);
 #if (__cpp_lib_containers_ranges >= 202202L)
     /// Construct the container from a range and key comparison function.
-    constexpr Associative(std::from_range_t, ranges::range auto, key_compare const&);
+    constexpr Associative(std::from_range_t, conf::ranges::range auto, key_compare const&);
     /// Construct the container from a range.
-    constexpr Associative(std::from_range_t, ranges::range auto);
+    constexpr Associative(std::from_range_t, conf::ranges::range auto);
 #endif // (__cpp_lib_containers_ranges >= 202202L)
     /// Construct the container from an initializer list and key comparison function.
     constexpr Associative(std::initializer_list<value_type>, key_compare const&);
@@ -146,7 +146,7 @@ struct Associative
     constexpr iterator insert(const_iterator, value_type);
     constexpr void insert(const_iterator, const_iterator);
 #if (__cpp_lib_containers_ranges >= 202202L)
-    constexpr void insert_range(ranges::range auto);
+    constexpr void insert_range(conf::ranges::range auto);
 #endif // (__cpp_lib_containers_ranges >= 202202L)
     constexpr void insert(std::initializer_list<value_type>);
     constexpr InsertNodeHandleReturnType insert(node_type&&);

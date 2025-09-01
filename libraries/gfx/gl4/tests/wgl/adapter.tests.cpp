@@ -54,31 +54,31 @@ using DisplayConfig = std::pair<PathInfoArray, ModeInfoArray>;
 /// Path mapping an output monitor to the graphic adapter mapped to it.
 using Path = std::pair<DISPLAYCONFIG_TARGET_DEVICE_NAME, DISPLAYCONFIG_ADAPTER_NAME>;
 
-auto getDisplayConfigBufferSizes() -> exp_ns::expected<std::pair<UINT32, UINT32>, std::string>
+auto getDisplayConfigBufferSizes() -> conf::exp::expected<std::pair<UINT32, UINT32>, std::string>
 {
     UINT32 pathCount = 0, modeCount = 0;
     auto const result = GetDisplayConfigBufferSizes(QDC_ONLY_ACTIVE_PATHS, &pathCount, &modeCount);
     if (result != ERROR_SUCCESS)
     {
-        return exp_ns::unexpected(win32::GetLastErrorString(result));
+        return conf::exp::unexpected(win32::GetLastErrorString(result));
     }
     return {
         std::pair{pathCount, modeCount}
     };
 }
 
-auto queryDisplayConfig(DisplayConfig config) -> exp_ns::expected<DisplayConfig, std::string>
+auto queryDisplayConfig(DisplayConfig config) -> conf::exp::expected<DisplayConfig, std::string>
 {
     auto& [pathInfo, modeInfo] = config;
     UINT32 pathSize = static_cast<UINT32>(pathInfo.size());
     UINT32 modeSize = static_cast<UINT32>(modeInfo.size());
     ULONG const result = QueryDisplayConfig(QDC_ONLY_ACTIVE_PATHS, &pathSize, pathInfo.data(), &modeSize, modeInfo.data(), NULL);
     if (result != ERROR_SUCCESS)
-        return exp_ns::unexpected(win32::GetLastErrorString(result));
+        return conf::exp::unexpected(win32::GetLastErrorString(result));
     return config;
 }
 
-auto targetDeviceName(DISPLAYCONFIG_PATH_INFO const& path) -> exp_ns::expected<DISPLAYCONFIG_TARGET_DEVICE_NAME, std::string>
+auto targetDeviceName(DISPLAYCONFIG_PATH_INFO const& path) -> conf::exp::expected<DISPLAYCONFIG_TARGET_DEVICE_NAME, std::string>
 {
     DISPLAYCONFIG_TARGET_DEVICE_NAME targetName = {};
     targetName.header.type = DISPLAYCONFIG_DEVICE_INFO_GET_TARGET_NAME;
@@ -88,12 +88,12 @@ auto targetDeviceName(DISPLAYCONFIG_PATH_INFO const& path) -> exp_ns::expected<D
     auto const result = DisplayConfigGetDeviceInfo(&targetName.header);
     if (result != ERROR_SUCCESS)
     {
-        return exp_ns::unexpected(win32::GetLastErrorString(result));
+        return conf::exp::unexpected(win32::GetLastErrorString(result));
     }
     return targetName;
 }
 
-auto adapterName(DISPLAYCONFIG_PATH_INFO const& path) -> exp_ns::expected<DISPLAYCONFIG_ADAPTER_NAME, std::string>
+auto adapterName(DISPLAYCONFIG_PATH_INFO const& path) -> conf::exp::expected<DISPLAYCONFIG_ADAPTER_NAME, std::string>
 {
     DISPLAYCONFIG_ADAPTER_NAME adapterName = {};
     adapterName.header.type = DISPLAYCONFIG_DEVICE_INFO_GET_ADAPTER_NAME;
@@ -103,18 +103,18 @@ auto adapterName(DISPLAYCONFIG_PATH_INFO const& path) -> exp_ns::expected<DISPLA
     auto const result = DisplayConfigGetDeviceInfo(&adapterName.header);
     if (result != ERROR_SUCCESS)
     {
-        return exp_ns::unexpected(win32::GetLastErrorString(result));
+        return conf::exp::unexpected(win32::GetLastErrorString(result));
     }
     return adapterName;
 }
 
 } // namespace
 
-exp_ns::expected<DisplayConfig, std::string> getCurrentDisplayConfig()
+conf::exp::expected<DisplayConfig, std::string> getCurrentDisplayConfig()
 {
     // clang-format off
     return getDisplayConfigBufferSizes()
-        .and_then([](auto counts) -> exp_ns::expected<DisplayConfig, std::string>
+        .and_then([](auto counts) -> conf::exp::expected<DisplayConfig, std::string>
             {
                 return std::apply([](auto&&... args)
                     {
@@ -128,7 +128,7 @@ exp_ns::expected<DisplayConfig, std::string> getCurrentDisplayConfig()
     // clang-format on
 }
 
-auto getDevicesPaths(DisplayConfig const& config) -> exp_ns::expected<std::vector<Path>, std::string>
+auto getDevicesPaths(DisplayConfig const& config) -> conf::exp::expected<std::vector<Path>, std::string>
 {
     auto& [paths, _] = config;
 
@@ -138,19 +138,19 @@ auto getDevicesPaths(DisplayConfig const& config) -> exp_ns::expected<std::vecto
             return std::pair{targetDeviceName(path), adapterName(path)};
         });
 
-    auto const result = std::ranges::fold_left(std::move(r), exp_ns::expected<std::vector<Path>, std::string>{},
-        [](auto&& result, auto element) -> exp_ns::expected<std::vector<Path>, std::string>
+    auto const result = std::ranges::fold_left(std::move(r), conf::exp::expected<std::vector<Path>, std::string>{},
+        [](auto&& result, auto element) -> conf::exp::expected<std::vector<Path>, std::string>
         {
             if (!result) {
-                return exp_ns::unexpected(result.error());
+                return conf::exp::unexpected(result.error());
             }
 
             if (!element.first) {
-                return exp_ns::unexpected(element.first.error());
+                return conf::exp::unexpected(element.first.error());
             }
 
             if (!element.second) {
-                return exp_ns::unexpected(element.second.error());
+                return conf::exp::unexpected(element.second.error());
             }
 
             result.value().push_back(Path{std::move(element).first.value(), std::move(element).second.value()});

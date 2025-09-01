@@ -10,14 +10,14 @@ namespace
 {
 
 template <typename T>
-using WGLExpected = exp_ns::expected<T, std::string>;
+using WGLExpected = conf::exp::expected<T, std::string>;
 
 auto createDC(HWND const window) -> WGLExpected<HDC>
 {
     MORPHEUS_ASSERT(window);
     auto const hDC = GetDC(window);
     if (!hDC)
-        return exp_ns::unexpected(getLastErrorMessage());
+        return conf::exp::unexpected(getLastErrorMessage());
     return hDC;
 }
 
@@ -25,7 +25,7 @@ WGLExpected<int> choosePixelFormat(HDC const hdc, PIXELFORMATDESCRIPTOR const& p
 {
     auto const format = ChoosePixelFormat(hdc, &pfd);
     if (format == 0)
-        return std::unexpected(fmt_ns::format("Failed to choose pixel format: {}", getLastErrorMessage()));
+        return conf::exp::unexpected(conf::fmt::format("Failed to choose pixel format: {}", getLastErrorMessage()));
     return format;
 }
 
@@ -36,7 +36,7 @@ WGLExpected<void> setPixelFormat(HDC hdc, int format)
         return std::unexpected(fmt_ns::format("Failed to describe pixel format: {}", getLastErrorMessage()));
 
     if (!SetPixelFormat(hdc, format, &pfd))
-        return std::unexpected(fmt_ns::format("Failed to set pixel format: {}", getLastErrorMessage()));
+        return conf::exp::unexpected(conf::fmt::format("Failed to set pixel format: {}", getLastErrorMessage()));
     return {};
 }
 
@@ -45,7 +45,7 @@ WGLExpected<HGLRC> createGLContext(HDC hdc)
     if (auto hglrc = wglCreateContext(hdc); hglrc)
         return hglrc;
     else
-        return std::unexpected(fmt_ns::format("Failed to create OpenGL context: {}", getLastErrorMessage()));
+        return conf::exp::unexpected(conf::fmt::format("Failed to create OpenGL context: {}", getLastErrorMessage()));
 }
 
 } // namespace

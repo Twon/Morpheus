@@ -3,29 +3,29 @@
 // clang-format off
 #if __has_include(<coroutine>)
     #include <coroutine> // IWYU pragma: export
-    namespace morpheus { namespace coro_ns = ::std; }
+    namespace morpheus::conf { namespace coro = ::std; }
 #else
     #include <experimental/coroutine> // IWYU pragma: export
-    namespace morpheus { namespace coro_ns = ::std::experimental; }
+    namespace morpheus::conf { namespace coro = ::std::experimental; }
 #endif
 // clang-format on
 
-namespace morpheus::conf::coro
+namespace morpheus::concurrency::coro
 {
 
 // [coroutine.traits], coroutine traits
-using coro_ns::coroutine_traits;
+using conf::coro::coroutine_traits;
 
 // [coroutine.handle], coroutine handle
-using coro_ns::coroutine_handle;
+using conf::coro::coroutine_handle;
 
 // [coroutine.noop], no-op coroutines
-using coro_ns::noop_coroutine;
-using coro_ns::noop_coroutine_handle;
-using coro_ns::noop_coroutine_promise;
+using conf::coro::noop_coroutine;
+using conf::coro::noop_coroutine_handle;
+using conf::coro::noop_coroutine_promise;
 
 // [coroutine.trivial.awaitables], trivial awaitables
-using coro_ns::suspend_always;
-using coro_ns::suspend_never;
+using conf::coro::suspend_always;
+using conf::coro::suspend_never;
 
-} // namespace morpheus::conf::coro
+} // namespace morpheus::concurrency::coro

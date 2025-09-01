@@ -420,7 +420,7 @@ void RenderWindow::resize()
     mWidth = boost::numeric_cast<std::uint16_t>(windowRect.right);
     mHeight = boost::numeric_cast<std::uint16_t>(windowRect.bottom);
 
-    debugPrint(fmt_ns::format("Window <{}> is at start <{}, {}> with dimensions <{}, {}>\n", mWindowName, mStartX, mStartY, mWidth, mHeight));
+    debugPrint(conf::fmt::format("Window <{}> is at start <{}, {}> with dimensions <{}, {}>\n", mWindowName, mStartX, mStartY, mWidth, mHeight));
 }
 
 } // namespace morpheus::gfx::win32
