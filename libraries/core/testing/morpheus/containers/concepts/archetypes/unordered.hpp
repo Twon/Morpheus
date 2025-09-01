@@ -109,10 +109,10 @@ struct Unordered
     constexpr Unordered(iterator, iterator);
     // constexpr Unordered(iterator, iterator, key_compare const&);
 #if (__cpp_lib_containers_ranges >= 202202L)
-    constexpr Unordered(std::from_range_t, ranges::range auto, size_type, hasher const&, key_equal const&);
-    constexpr Unordered(std::from_range_t, ranges::range auto, size_type, hasher const&);
-    constexpr Unordered(std::from_range_t, ranges::range auto, size_type);
-    constexpr Unordered(std::from_range_t, ranges::range auto);
+    constexpr Unordered(std::from_range_t, conf::ranges::range auto, size_type, hasher const&, key_equal const&);
+    constexpr Unordered(std::from_range_t, conf::ranges::range auto, size_type, hasher const&);
+    constexpr Unordered(std::from_range_t, conf::ranges::range auto, size_type);
+    constexpr Unordered(std::from_range_t, conf::ranges::range auto);
 #endif // (__cpp_lib_containers_ranges >= 202202L)
     constexpr Unordered(std::initializer_list<value_type>, size_type, hasher const&, key_equal const&);
     constexpr Unordered(std::initializer_list<value_type>, size_type, hasher const&);
@@ -136,7 +136,7 @@ struct Unordered
     constexpr iterator insert(const_iterator, value_type);
     constexpr void insert(const_iterator, const_iterator);
 #if (__cpp_lib_containers_ranges >= 202202L)
-    constexpr void insert_range(ranges::range auto);
+    constexpr void insert_range(conf::ranges::range auto);
 #endif // (__cpp_lib_containers_ranges >= 202202L)
     constexpr void insert(std::initializer_list<value_type>);
     constexpr InsertNodeHandleReturnType insert(node_type&&);
