@@ -1,5 +1,6 @@
 #pragma once
 
+#include "morpheus/core/conformance/ranges.hpp"
 #include "morpheus/core/containers/concepts/allocator_aware.hpp"
 #include "morpheus/core/containers/concepts/detail/return_types.hpp"
 
@@ -28,8 +29,8 @@ concept Associative = AllocatorAware<T> && requires(T t,
     { T(i, i, c) };
     { T(i, i) };
 #if (__cpp_lib_containers_ranges >= 202202L)
-    { T(std::from_range, ranges::subrange<typename T::iterator>{}, c) };
-    { T(std::from_range, ranges::subrange<typename T::iterator>{}) };
+    { T(std::from_range, conf::ranges::subrange<typename T::iterator>{}, c) };
+    { T(std::from_range, conf::ranges::subrange<typename T::iterator>{}) };
 #endif // (__cpp_lib_containers_ranges >= 202202L)
     { T(il, c) };
     { T(il) };
