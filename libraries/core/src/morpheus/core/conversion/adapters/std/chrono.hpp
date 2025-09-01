@@ -437,14 +437,14 @@ struct StringConverter<std::chrono::duration<Rep, Period>>
 template <>
 struct StringConverter<conf::date::time_zone>
 {
-    /// Convert a date_ns::time_zone to its string representation.
-    /// \param value The date_ns::time_zone to convert.
-    /// \return A string representation of the date_ns::time_zone, which is the name of the time zone.
+    /// Convert a conf::date::time_zone to its string representation.
+    /// \param value The conf::date::time_zone to convert.
+    /// \return A string representation of the conf::date::time_zone, which is the name of the time zone.
     static std::string toString(conf::date::time_zone const& value) { return std::string(value.name()); }
 
-    /// Convert a string representation to a date_ns::time_zone.
+    /// Convert a string representation to a conf::date::time_zone.
     /// \param value The string representation to convert.
-    /// \return An expected containing the date_ns::time_zone if the conversion was successful, or an unexpected error if it failed.
+    /// \return An expected containing the conf::date::time_zone if the conversion was successful, or an unexpected error if it failed.
     /// \note The string representation should be the name of the time zone as defined in the IANA Time Zone Database.
     static conf::exp::expected<std::reference_wrapper<conf::date::time_zone const>, std::string> fromString(std::string_view const value)
     {

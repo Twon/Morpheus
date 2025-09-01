@@ -22,7 +22,7 @@ struct Generator
 {
 
     struct promise_type;
-    using handle_type = coro_ns::coroutine_handle<promise_type>;                        ///< Handle to generator coroutines.
+    using handle_type = coro::coroutine_handle<promise_type>;                        ///< Handle to generator coroutines.
     using value_type = T;                                                               ///< Value type from resulting generation.
     using reference = std::conditional_t<std::is_reference_v<T>, T, value_type const&>; ///< Reference type to the value type.
     using pointer = std::add_pointer_t<reference>;                                      ///< Pointer type to the value type.
@@ -53,19 +53,19 @@ struct Generator
 
     struct promise_type
     {
-        auto initial_suspend() { return coro_ns::suspend_always{}; }
+        auto initial_suspend() { return coro::suspend_always{}; }
 
-        auto final_suspend() noexcept { return coro_ns::suspend_always{}; }
+        auto final_suspend() noexcept { return coro::suspend_always{}; }
 
         auto get_return_object() { return Generator{handle_type::from_promise(*this)}; }
 
-        auto return_void() { return coro_ns::suspend_never{}; }
+        auto return_void() { return coro::suspend_never{}; }
 
         template <std::convertible_to<T> From>
         auto yield_value(From&& from)
         {
             current_value = std::forward<From>(from);
-            return coro_ns::suspend_always{};
+            return coro::suspend_always{};
         }
 
         [[noreturn]] void unhandled_exception() { throw; }
@@ -120,11 +120,11 @@ struct Generator
     private:
         friend Generator;
 
-        explicit iterator(coro_ns::coroutine_handle<promise_type> h) noexcept
+        explicit iterator(coro::coroutine_handle<promise_type> h) noexcept
             : handle(h)
         {}
 
-        coro_ns::coroutine_handle<promise_type> handle;
+        coro::coroutine_handle<promise_type> handle;
     };
 
     [[nodiscard]] iterator begin() const noexcept

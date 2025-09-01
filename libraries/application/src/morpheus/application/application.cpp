@@ -37,14 +37,14 @@ void terminationHandler()
 /// Standardises all application logs to common log name format of <program name>-<process id>-<yeah-month-day>.log
 /*std::string getDefaultApplicationLogName()
 {
-    using namespace date_ns;
+    using namespace conf::date;
     auto const programName = boost::dll::program_location().stem().string();
     auto const processId = boost::this_process::get_id();
     auto const now = std::chrono::time_point{ std::chrono::system_clock::now() };
     auto const ymd = year_month_day{floor<days>(now)};
-    //    auto const localTime = date_ns::zoned_time{ date_ns::current_zone(), system_clock::now() };
-    //    return fmt_ns::format("{}_{}_{}", programName, processId, localTime);
-    return fmt_ns::format("{}.{}.{}.log", programName, processId, ymd);
+    //    auto const localTime = conf::date::zoned_time{ conf::date::current_zone(), system_clock::now() };
+    //    return conf::fmt::format("{}_{}_{}", programName, processId, localTime);
+    return conf::fmt::format("{}.{}.{}.log", programName, processId, ymd);
 }*/
 
 } // namespace

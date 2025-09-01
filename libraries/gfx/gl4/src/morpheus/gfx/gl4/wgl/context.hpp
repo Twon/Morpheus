@@ -17,7 +17,7 @@ class Context
 {
 public:
     /// Expected result type for the Context creation function.
-    using Expected = exp_ns::expected<Context, std::string>;
+    using Expected = conf::exp::expected<Context, std::string>;
 
     /// Creates a new OpenGL context using the global default device context.
     /// \param window The window to create the OpenGL context for.
