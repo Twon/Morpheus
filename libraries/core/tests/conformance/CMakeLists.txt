@@ -1,6 +1,7 @@
 target_sources(MorpheusCoreTests
     PRIVATE
         date.tests.cpp
+        outptr.tests.cpp
         print.tests.cpp
         scan.tests.cpp
         stacktrace.tests.cpp

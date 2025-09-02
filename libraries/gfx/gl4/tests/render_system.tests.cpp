@@ -5,7 +5,6 @@
 
 namespace morpheus::gfx::gl4::test
 {
-// using namespace morpheus::gfx;
 
 TEST_CASE("Verify the Graphics API", "[morpheus.gfx.gl4.render_system.api]")
 {

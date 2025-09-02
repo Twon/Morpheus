@@ -5,9 +5,6 @@
 namespace morpheus::gfx::metal
 {
 
-/*! \class RenderSystem
-        Rendering system abstraction based upon the Metal graphics API.
- */
 class RenderSystem
 {
 public:
