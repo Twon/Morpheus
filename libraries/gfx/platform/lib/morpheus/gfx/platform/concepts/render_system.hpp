@@ -17,6 +17,8 @@ template <typename T>
 concept RenderSystem = requires(T t) {
     typename T::Window;
 
+    { T::getGraphicsApi() } -> std::same_as<std::string_view>;
+
     //    requires !meta::Copyable<T>;
     //    { t.adapters() } -> AdapterRange;
 

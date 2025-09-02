@@ -5,6 +5,7 @@ target_sources(MorpheusGfxD3D12
             adapter.hpp
             render_system.hpp
             type_mapping.hpp
+            types.hpp
             verify.hpp
             video_mode.hpp
             video_mode_list.hpp
