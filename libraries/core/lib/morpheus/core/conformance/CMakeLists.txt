@@ -7,6 +7,7 @@ target_sources(MorpheusCore
             date.hpp
             format.hpp
             expected.hpp
+            outptr.hpp
             print.hpp
             ranges.hpp
             scan.hpp
@@ -39,6 +40,13 @@ morpheus_conformance_check(
 )
 
 morpheus_conformance_check(
+    RESULT OUTPTR_SUPPORTED
+    MSVC_VERSION "19.37"
+    GNU_VERSION "14"
+    CLANG_VERSION "19"
+)
+
+morpheus_conformance_check(
     RESULT RANGES_SUPPORTED
     MSVC_VERSION "19.29"
     GNU_VERSION "10"
@@ -57,6 +65,10 @@ endif (NOT ${EXPECTED_SUPPORTED})
 if (NOT ${FORMAT_SUPPORTED})
     find_package(fmt REQUIRED)
 endif (NOT ${FORMAT_SUPPORTED})
+
+if (NOT ${OUTPTR_SUPPORTED})
+    find_package(out_ptr REQUIRED)
+endif (NOT ${OUTPTR_SUPPORTED})
 
 if (NOT ${RANGES_SUPPORTED})
     find_package(range-v3 REQUIRED)
@@ -80,6 +92,7 @@ target_link_libraries(MorpheusCore
         $<$<NOT:$<BOOL:${DATE_SUPPORTED}>>:date::date>
         $<$<NOT:$<BOOL:${DATE_SUPPORTED}>>:date::date-tz>
         $<$<NOT:$<BOOL:${FORMAT_SUPPORTED}>>:fmt::fmt>
+        $<$<NOT:$<BOOL:${OUTPTR_SUPPORTED}>>:out_ptr::out_ptr>
         $<$<NOT:$<BOOL:${RANGES_SUPPORTED}>>:range-v3::range-v3>
         scn::scn
         $<$<NOT:$<BOOL:${EXPECTED_SUPPORTED}>>:tl::expected>

@@ -133,6 +133,15 @@ class Morpheus(ConanFile):
                       (compiler == "clang" and version >= Version("16")) or (compiler == "apple-clang" and version >= Version("15"))
         return not std_support
 
+    @property
+    def useOutPtr(self):
+        """ Does the current compiler version lack support for std::out_ptr via the STL. """
+        compiler = self.settings.compiler
+        version = Version(self.settings.compiler.version)
+        std_support = (compiler == "msvc" and version >= 193) or (compiler == "gcc" and version >= Version("14")) or \
+                      (compiler == "clang" and version >= Version("19"))
+        return not std_support
+
     def config_options(self):
         if not self.checkMoldIsSupported():
             self.options.rm_safe("link_with_mold")
@@ -182,6 +191,9 @@ class Morpheus(ConanFile):
 
         if self.useRanges:
             self.requires("range-v3/0.12.0", transitive_headers=True)
+
+        if self.useOutPtr:
+            self.requires("out_ptr/cci.20211119", transitive_headers=True)
 
     def system_requirements(self):
         if self.options.get_safe("with_rs_opengl", False):
