@@ -57,6 +57,13 @@ TEST_CASE("std::inout_ptr works for modifying existing allocation", "[morpheus.c
     create_object(conf::ptr::out_ptr(ptr));
     REQUIRE(ptr->value == 42);
 
+    ptr.release();
+    REQUIRE(ptr == nullptr);
+
+    update_object(conf::ptr::out_ptr(ptr), 64);
+    REQUIRE(ptr != nullptr);
+    REQUIRE(ptr->value == 64);
+ 
     // Now update the existing object with a new value using inout_ptr
     update_object(conf::ptr::inout_ptr(ptr), 99);
     REQUIRE(ptr != nullptr);
