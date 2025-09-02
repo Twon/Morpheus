@@ -1,10 +1,22 @@
+#include <morpheus/gfx/vulkan/render_system.hpp>
 
 #include <catch2/catch_all.hpp>
+
 #include <vulkan/vulkan.hpp>
 #include <vulkan/vulkan_raii.hpp>
 
 #include <iostream>
 #include <vector>
+
+namespace morpheus::gfx::vulkan
+{
+
+TEST_CASE("Verify the Graphics API", "[morpheus.gfx.vulkan.render_system.api]")
+{
+    STATIC_REQUIRE(RenderSystem::getGraphicsApi() == "Vulkan");
+}
+
+} // namespace morpheus::gfx::vulkan
 
 TEST_CASE("Create a vulkan render system", "[morpheus.gfx.vulkan.render_system]")
 {
