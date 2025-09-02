@@ -3,7 +3,7 @@
 
 #include <catch2/catch_all.hpp>
 
-namespace morpheus::gfx::gl4
+namespace morpheus::gfx::metal
 {
 
 TEST_CASE("Test the Metal render system adheres to GFX concepts", "[morpheus.gfx.metal.concept_checks]")
@@ -11,4 +11,4 @@ TEST_CASE("Test the Metal render system adheres to GFX concepts", "[morpheus.gfx
     STATIC_REQUIRE(concepts::RenderSystem<RenderSystem>);
 }
 
-} // namespace morpheus::gfx::gl4
+} // namespace morpheus::gfx::metal
