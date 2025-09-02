@@ -15,7 +15,7 @@ namespace morpheus::gfx::concepts
  */
 template <typename T>
 concept RenderSystem = requires(T t) {
-    typename T::Window;
+    //typename T::Window;
 
     { T::getGraphicsApi() } -> std::same_as<std::string_view>;
 
