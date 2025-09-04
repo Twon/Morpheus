@@ -13,18 +13,16 @@ namespace morpheus::gfx::win32
 
 TEST_CASE("Test construction of std::error_code for win32 errors via make_error_code", "[morpheus.gfx.win32.error_code.make_error_code]")
 {
-    DWORD const win32ErrorCode = GENERATE(
-        ERROR_SUCCESS,
-        ERROR_FILE_NOT_FOUND,
-        ERROR_PATH_NOT_FOUND,
-        ERROR_ACCESS_DENIED,
-        ERROR_INVALID_PARAMETER,
-        ERROR_ALREADY_EXISTS,
-        ERROR_BUFFER_OVERFLOW,
-        ERROR_NOT_SUPPORTED,
-        ERROR_OUTOFMEMORY,
-        ERROR_HANDLE_EOF
-    );
+    DWORD const win32ErrorCode = GENERATE(ERROR_SUCCESS,
+                                          ERROR_FILE_NOT_FOUND,
+                                          ERROR_PATH_NOT_FOUND,
+                                          ERROR_ACCESS_DENIED,
+                                          ERROR_INVALID_PARAMETER,
+                                          ERROR_ALREADY_EXISTS,
+                                          ERROR_BUFFER_OVERFLOW,
+                                          ERROR_NOT_SUPPORTED,
+                                          ERROR_OUTOFMEMORY,
+                                          ERROR_HANDLE_EOF);
     std::error_code error_code = make_error_code(ErrorCode(win32ErrorCode));
     REQUIRE(error_code.value() == static_cast<int>(win32ErrorCode));
     REQUIRE(std::string_view(error_code.category().name()) == std::string_view("Win32::ErrorCategory"));
