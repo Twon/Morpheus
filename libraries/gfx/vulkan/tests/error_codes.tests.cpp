@@ -8,6 +8,9 @@
 #include <string_view>
 #include <system_error>
 
+namespace morpheus::gfx::vulkan
+{
+
 TEST_CASE("Test construction of std::error_code object via make_error_code", "[vulkan.error_code.make_error_code]")
 {
     constexpr std::array<VkResult, 32> vkUniqueResults = {
@@ -52,3 +55,5 @@ TEST_CASE("Test construction of std::error_code object via make_error_code", "[v
         REQUIRE(error_code.message() != "unknown");
     }
 }
+
+} // namespace morpheus::gfx::vulkan
