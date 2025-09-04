@@ -46,12 +46,7 @@ std::error_code make_error_code(morpheus::gfx::win32::ErrorCode const& e)
     return std::error_code(static_cast<int>(e.error), morpheus::gfx::win32::ErrorCategory());
 }
 
-std::error_code makeWin32ErrorCode(morpheus::gfx::win32::ErrorCode error)
-{
-    return make_error_code(error);
-}
-
-std::error_code makeWin32ErrorCode()
+std::error_code getLastErrorCode()
 {
     return make_error_code(morpheus::gfx::win32::ErrorCode{::GetLastError()});
 }
