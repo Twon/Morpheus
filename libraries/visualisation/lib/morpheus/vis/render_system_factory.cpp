@@ -11,8 +11,6 @@ namespace hana = boost::hana;
 namespace morpheus::vis
 {
 
-//---------------------------------------------------------------------------------------------------------------------
-
 constexpr auto RenderSystemFactory::availableAPIs()
 {
     namespace hana = boost::hana;
@@ -33,6 +31,8 @@ void RenderSystemFactory::addOptions(boost::program_options::options_description
 }
 
 // boost::program_options::options_description& RenderSystemFactory::runTuiConfiguration()
+
+// LCOV_EXCL_START
 void RenderSystemFactory::runTuiConfiguration()
 {
     auto const renderSystems = []()
@@ -95,7 +95,6 @@ void RenderSystemFactory::runTuiConfiguration()
     //     });
     // screen.Loop(testComponent);
 }
-
-//---------------------------------------------------------------------------------------------------------------------
+// LCOV_EXCL_STOP
 
 } // namespace morpheus::vis
