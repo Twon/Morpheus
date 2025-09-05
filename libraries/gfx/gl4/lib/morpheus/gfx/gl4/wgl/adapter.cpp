@@ -75,8 +75,8 @@ concurrency::Generator<Adapter> enumerateAdapters()
 
     HWND hwnd = CreateWindow(dummyText, dummyText, WS_POPUP | WS_CLIPCHILDREN, 0, 0, 32, 32, 0, 0, hinst, 0);
 
-    //	auto const hDC = GetDC(hwnd);
-    //	auto const hResults = GetLastError();
+    //    auto const hDC = GetDC(hwnd);
+    //    auto const hResults = GetLastError();
 
     for (DWORD dwCurrentDevice = 0;; ++dwCurrentDevice)
     {
@@ -95,15 +95,18 @@ concurrency::Generator<Adapter> enumerateAdapters()
             .iLayerType = PFD_MAIN_PLANE,
         };
 
-        //		auto const glContext = wglCreateContext(hDC);
-        //		auto const hResult2 = GetLastError();
-        //		auto const successful = wglMakeCurrent(hDC, glContext);
+        //        auto const glContext = wglCreateContext(hDC);
+        //        auto const hResult2 = GetLastError();
+        //        auto const successful = wglMakeCurrent(hDC, glContext);
 
         auto context = Context::create(hwnd, pfd);
         if (!context)
             continue;
 
         auto oldContext = context.value().enable();
+        if (!oldContext)
+            continue;
+
         std::string_view vendor = glGetStringView(GL_VENDOR);
         std::string_view renderer = glGetStringView(GL_RENDERER);
         std::string_view version = glGetStringView(GL_VERSION);
@@ -119,7 +122,9 @@ concurrency::Generator<Adapter> enumerateAdapters()
                 // m_uCurrentAdapter = static_cast<u32>( m_GraphicsAdapters.size() - 1 );
             }
         }
-        oldContext.enable();
+        auto restoredContext = oldContext.value().enable();
+        if (!restoredContext)
+            continue;
     }
 }
 
