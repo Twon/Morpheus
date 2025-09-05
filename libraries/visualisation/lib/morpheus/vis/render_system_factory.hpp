@@ -65,11 +65,22 @@ public:
     // boost::program_options::options_description& runTuiConfiguration();
     void runTuiConfiguration();
 
-private:
     /// Returns a map of the available rendering systems to their respective underlying graphics APIs.
     ///
-    static constexpr auto availableAPIs();
+    static constexpr auto availableAPIs()
+    {
+        namespace hana = boost::hana;
+        return hana::make_map(
+#if (MORPHEUS_BUILD_PLATFORM == MORPHEUS_TARGET_PLATFORM_APPLE)
+            hana::make_pair(RenderSystemType<API::Metal>, hana::type_c<gfx::metal::RenderSystem>),
+#elif (MORPHEUS_BUILD_PLATFORM == MORPHEUS_TARGET_PLATFORM_PC_WINDOWS)
+            hana::make_pair(RenderSystemType<API::D3D12>, hana::type_c<gfx::d3d12::RenderSystem>),
+#endif // #if (MORPHEUS_BUILD_PLATFORM == MORPHEUS_TARGET_PLATFORM_APPLE)
+            hana::make_pair(RenderSystemType<API::OpenGL4>, hana::type_c<gfx::gl4::RenderSystem<gfx::gl4::GL4Traits>>),
+            hana::make_pair(RenderSystemType<API::Vulkan>, hana::type_c<gfx::vulkan::RenderSystem>));
+    }
 
+private:
     // using APIMap = std::invoke_result_t<decltype(&RenderSystemFactory::availableAPIs)()>;
 
     // constexpr static auto renderSystemAPIs = availableAPIs();
