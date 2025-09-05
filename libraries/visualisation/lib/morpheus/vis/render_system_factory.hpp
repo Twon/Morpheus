@@ -11,10 +11,10 @@
     #include <morpheus/gfx/metal/render_system.hpp>
 #endif // #if (MORPHEUS_RENDER_SYSTEM_METAL)
 
-#if (MORPHEUS_RENDER_SYSTEM_OPENGL4)
+#if (MORPHEUS_RENDER_SYSTEM_OPENGL)
     #include <morpheus/gfx/gl4/render_system.hpp>
     #include <morpheus/gfx/gl4/traits.hpp>
-#endif // #if (MORPHEUS_RENDER_SYSTEM_OPENGL4)
+#endif // #if (MORPHEUS_RENDER_SYSTEM_OPENGL)
 
 #if (MORPHEUS_RENDER_SYSTEM_VULKAN)
     #include <morpheus/gfx/vulkan/render_system.hpp>
@@ -72,7 +72,6 @@ public:
 
     auto getActiveAPI() const -> API { return mActiveApi; }
 
-private:
     /// Returns a map of the available rendering systems to their respective underlying graphics APIs.
     ///
     static constexpr auto availableAPIs()
@@ -90,7 +89,7 @@ private:
                                                 ,
                                             hana::make_pair(RenderSystemType<API::D3D12>, hana::type_c<gfx::d3d12::RenderSystem>)
 #endif
-#if (MORPHEUS_RENDER_SYSTEM_OPENGL4)
+#if (MORPHEUS_RENDER_SYSTEM_OPENGL)
                                                 ,
                                             hana::make_pair(RenderSystemType<API::OpenGL4>, hana::type_c<gfx::gl4::RenderSystem<gfx::gl4::GL4Traits>>)
 #endif
