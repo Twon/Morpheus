@@ -8,7 +8,11 @@ namespace morpheus::gfx::win32
 TEST_CASE("Ensure move construction of a win32 render window", "[morpheus.gfx.win32.render_window.construct.move]")
 {
     RenderWindow::Config const config;
-    RenderWindow window(config);
+    auto result = RenderWindow::create(config);
+
+    REQUIRE(result.has_value());
+
+    RenderWindow window(std::move(result.value()));
 
     REQUIRE(!window.fullScreen());
     REQUIRE(window.width() == config.width);
@@ -25,7 +29,11 @@ TEST_CASE("Ensure move construction of a win32 render window", "[morpheus.gfx.wi
 TEST_CASE("Ensure default construction of a win32 render window by defaulted config accessors", "[morpheus.gfx.win32.render_window]")
 {
     RenderWindow::Config const config;
-    RenderWindow window(config);
+    auto result = RenderWindow::create(config);
+
+    REQUIRE(result.has_value());
+
+    RenderWindow window(std::move(result.value()));
 
     REQUIRE(!window.fullScreen());
     REQUIRE(window.width() == config.width);

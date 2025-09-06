@@ -2,6 +2,7 @@
 #include <morpheus/core/base/debugging.hpp>
 #include <morpheus/core/base/verify.hpp>
 #include <morpheus/core/conformance/format.hpp>
+#include <morpheus/gfx/platform/win32/error.hpp>
 #include <morpheus/gfx/platform/win32/render_window.hpp>
 
 #include <boost/numeric/conversion/cast.hpp>
@@ -14,12 +15,15 @@ namespace morpheus::gfx::win32
 namespace
 {
 
-auto getModuleHandle()
+auto getModuleHandle() -> conf::exp::expected<HINSTANCE, std::string>
 {
     HINSTANCE hinst = nullptr;
     static const TCHAR findAddressFrom = TCHAR();
     auto const result = GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT, &findAddressFrom, &hinst);
-    MORPHEUS_VERIFY(result);
+    if (!result)
+    {
+        return conf::exp::unexpected(GetLastErrorString(GetLastError()));
+    }
     return hinst;
 }
 
@@ -28,8 +32,8 @@ bool HandlePowerBroadCast(WPARAM wParam, LPARAM /*lParam*/)
     switch (wParam)
     {
 
-        //	At this point the application should save any data for open network
-        //	connections, file, etc and prepare to go into suspended mode.
+        //    At this point the application should save any data for open network
+        //    connections, file, etc and prepare to go into suspended mode.
     case PBT_APMQUERYSUSPEND:
     {
     }
@@ -83,26 +87,26 @@ LRESULT WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
         // Store pointer in window user data area
         ::SetWindowLongPtr(hWnd, 0, reinterpret_cast<LONG_PTR>(thisWindow));
-        //			thisWindow->SetActive( true );
+        //            thisWindow->SetActive( true );
     }
     break;
 
-    ///	Handle activation or deactivation of the window
+    ///    Handle activation or deactivation of the window
     case WM_ACTIVATE:
     {
         MORPHEUS_ASSERT_MSG(thisWindow, "Window32::WndProc() - Failed to get active window - WM_ACTIVATE");
 
         // Check if the window is active
-        //			thisWindow->SetActive( WA_ACTIVE == LOWORD(wParam) );
+        // thisWindow->SetActive( WA_ACTIVE == LOWORD(wParam) );
     }
     break;
 
     case WM_PAINT:
     {
         MORPHEUS_ASSERT_MSG(thisWindow, "Window32::WndProc() - Failed to get active window - WM_PAINT");
-        //			if ( pThisWindow->IsActive() )
+        //            if ( pThisWindow->IsActive() )
         {
-            //					thisWindow->PresentBackBuffer();
+            //                    thisWindow->PresentBackBuffer();
         }
     }
     break;
@@ -125,7 +129,7 @@ LRESULT WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         {
         case 'T':
         case 't':
-            //					thisWindow->ToggleFullScreen();
+            //                    thisWindow->ToggleFullScreen();
             break;
         }
     }
@@ -139,17 +143,17 @@ LRESULT WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     case WM_ENTERSIZEMOVE:
     {
         MORPHEUS_ASSERT_MSG(thisWindow, "Window32::WndProc() - Failed to get active window - WM_ENTERSIZEMOVE");
-        //			thisWindow->SetActive( false );
+        //            thisWindow->SetActive( false );
     }
     break;
 
     case WM_EXITSIZEMOVE:
     {
         MORPHEUS_ASSERT_MSG(thisWindow, "Window32::WndProc() - Failed to get active window - WM_EXITSIZEMOVE");
-        //			pThisWindow->SetActive( true );
+        //            pThisWindow->SetActive( true );
 
-        //! @todo	Temp measure, find a better solution
-        //			pThisWindow->ResizeWindow();
+        //! @todo    Temp measure, find a better solution
+        //            pThisWindow->ResizeWindow();
     }
     break;
 
@@ -157,7 +161,7 @@ LRESULT WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     {
         MORPHEUS_ASSERT_MSG(thisWindow, "Window32::WndProc() - Failed to get active window - WM_CLOSE");
         // Shut down the relevant window
-        //			pThisWindow->Destroy();
+        //            pThisWindow->Destroy();
     }
     break;
 
@@ -206,7 +210,7 @@ LRESULT WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     return ::DefWindowProc(hWnd, message, wParam, lParam);
 }
 
-auto adjustWindowConfig(RenderWindow::Config& config)
+auto adjustWindowConfig(RenderWindow::Config& config) -> conf::exp::expected<DWORD, std::string>
 {
     // The style of the window depends select setting of our window.
     DWORD dwWindowStyle = (config.visible) ? WS_VISIBLE : 0;
@@ -234,7 +238,10 @@ auto adjustWindowConfig(RenderWindow::Config& config)
         // We need to adjust the window rectangle to ensure the client is the
         // requested size and takes the size of the window border into account.
         RECT WndRect = {0, 0, config.width, config.height};
-        MORPHEUS_VERIFY(::AdjustWindowRect(&WndRect, dwWindowStyle, false));
+        if (!::AdjustWindowRect(&WndRect, dwWindowStyle, false))
+        {
+            return conf::exp::unexpected(GetLastErrorString(GetLastError()));
+        }
         config.width = std::min<std::int16_t>(static_cast<std::int16_t>(WndRect.right - WndRect.left), screenWidth);
         config.height = std::min<std::int16_t>(static_cast<std::int16_t>(WndRect.bottom - WndRect.top), screenHeight);
 
@@ -256,7 +263,7 @@ auto createWindow(RenderWindow* thisWindow, RenderWindow::Config& config)
                           .lpfnWndProc = WndProc,
                           .cbClsExtra = 0,
                           .cbWndExtra = sizeof(RenderWindow*), // Reserve space for the Window pointer returned by GetWindowLong
-                          .hInstance = hInstance,
+                          .hInstance = hInstance.value(),
                           .hIcon = ::LoadIcon(nullptr, IDI_APPLICATION),
                           .hCursor = ::LoadCursor(nullptr, IDC_ARROW),
                           .hbrBackground = (HBRUSH)(COLOR_WINDOW + 1),
@@ -269,14 +276,14 @@ auto createWindow(RenderWindow* thisWindow, RenderWindow::Config& config)
     // Create the window using the WS_OVERLAPPEDWINDOW style
     auto const window = ::CreateWindow(config.windowName.c_str(),
                                        config.windowName.c_str(),
-                                       windowStyle,
+                                       windowStyle.value(),
                                        config.startX,
                                        config.startY,
                                        config.width,
                                        config.height,
                                        nullptr,
                                        nullptr,
-                                       hInstance,
+                                       hInstance.value(),
                                        thisWindow);
     MORPHEUS_VERIFY(window);
     return window;
@@ -284,33 +291,32 @@ auto createWindow(RenderWindow* thisWindow, RenderWindow::Config& config)
 
 } // namespace
 
-RenderWindow::RenderWindow(Config config)
-    : gfx::RenderWindow(config)
-    , mWindow(createWindow(this, config))
-{
-    //  Display the window and force an initial paint
-    // if (config.visible)
-    //{
-    //	::ShowWindow(mWindow.get(), SW_SHOWNORMAL);
-    //	::UpdateWindow(mWindow.get());
-    //}
-
-    // Get the true window dimensions
-    /*	{
-            RECT WinRect, ClientRect;
-            ::GetWindowRect(mWindow, &WinRect);
-            ::GetClientRect(mWindow, &ClientRect);
-            SetWidth(ClientRect.right);
-            SetHeight(ClientRect.bottom);
-            m_uStartX = WinRect.left;
-            m_uStartY = WinRect.top;
-        }*/
-}
-
-RenderWindow::RenderWindow(HWND const window) {}
+// RenderWindow::RenderWindow(Config config)
+//:   gfx::RenderWindow(config)
+//,   mWindow(createWindow(this, config))
+//{
+//    //  Display the window and force an initial paint
+//    if (config.visible)
+//    {
+//        ::ShowWindow(mWindow.get(), SW_SHOWNORMAL);
+//        ::UpdateWindow(mWindow.get());
+//    }
+//
+//    // Get the true window dimensions
+///*    {
+//        RECT WinRect, ClientRect;
+//        ::GetWindowRect(mWindow, &WinRect);
+//        ::GetClientRect(mWindow, &ClientRect);
+//        SetWidth(ClientRect.right);
+//        SetHeight(ClientRect.bottom);
+//        m_uStartX = WinRect.left;
+//        m_uStartY = WinRect.top;
+//    }*/
+//}
 
 RenderWindow::RenderWindow(RenderWindow&& rhs) noexcept
     : gfx::RenderWindow(std::move(rhs))
+    , mHInstance(std::move(rhs.mHInstance))
     , mWindow(std::move(rhs.mWindow))
 {
     SetWindowLongPtr(mWindow.get(), 0, reinterpret_cast<LONG_PTR>(this));
@@ -319,6 +325,7 @@ RenderWindow::RenderWindow(RenderWindow&& rhs) noexcept
 RenderWindow& RenderWindow::operator=(RenderWindow&& rhs) noexcept
 {
     gfx::RenderWindow::operator=(std::move(rhs));
+    mHInstance = std::move(rhs.mHInstance);
     mWindow = std::move(rhs.mWindow);
     SetWindowLongPtr(mWindow.get(), 0, reinterpret_cast<LONG_PTR>(this));
     return *this;
@@ -326,7 +333,64 @@ RenderWindow& RenderWindow::operator=(RenderWindow&& rhs) noexcept
 
 RenderWindow::~RenderWindow()
 {
-    ::UnregisterClass(mWindowName.c_str(), getModuleHandle());
+    ::UnregisterClass(mWindowName.c_str(), getModuleHandle().value());
+}
+
+conf::exp::expected<RenderWindow, std::string> RenderWindow::create(Config const& config)
+{
+    // clang-format off
+    RenderWindow thisWindow;
+    auto requestedCfg = config;
+    auto components = adjustWindowConfig(requestedCfg).and_then(
+        [](DWORD dwStyle) -> conf::exp::expected<std::tuple<DWORD, HINSTANCE>, std::string>
+        {
+            auto handle = getModuleHandle();
+            if (!handle) {
+                return conf::exp::unexpected(handle.error());
+            }
+            return makeExpected(std::tuple{dwStyle, handle.value()});
+        }
+    ).and_then(
+        [&](auto&& pair) -> conf::exp::expected<std::tuple<DWORD, HINSTANCE>, std::string>
+        {
+            auto [dwStyle, hInstance] = pair;
+            // Next default values for new objects
+            ::WNDCLASS const wcex{
+                .style = CS_OWNDC, .lpfnWndProc = WndProc, .cbClsExtra = 0, .cbWndExtra = sizeof(RenderWindow*), // Reserve space for the Window pointer returned by GetWindowLong
+                .hInstance = hInstance, .hIcon = ::LoadIcon(nullptr, IDI_APPLICATION), .hCursor = ::LoadCursor(nullptr, IDC_ARROW),
+                .hbrBackground = (HBRUSH)(COLOR_WINDOW + 1), .lpszMenuName = nullptr, .lpszClassName = requestedCfg.windowName.c_str()
+            };
+
+            // Register class  with the game application details
+            if(!::RegisterClass(&wcex) && GetLastError() != ERROR_CLASS_ALREADY_EXISTS){
+                return makeUnexpected();
+            }
+            return makeExpected(std::tuple{dwStyle, hInstance});
+        }
+    ).and_then(
+        [&config = requestedCfg, &thisWindow](auto&& pair)  -> conf::exp::expected<std::tuple<HINSTANCE, HWND>, std::string>
+        {
+            auto [dwStyle, hInstance] = pair;
+            auto const window = ::CreateWindow( config.windowName.c_str(), config.windowName.c_str(), dwStyle,
+                                                config.startX, config.startY, config.width, config.height,
+                                                nullptr, nullptr, hInstance, &thisWindow);
+            if (!window) {
+                return makeUnexpected();
+            }
+            return makeExpected(std::tuple{hInstance, window});
+        }
+    );
+    // clang-format on
+
+    if (!components)
+    {
+        return conf::exp::unexpected(components.error());
+    }
+
+    auto [hInstance, hWnd] = components.value();
+    thisWindow.mHInstance = hInstance;
+    thisWindow.mWindow.reset(hWnd);
+    return conf::exp::expected<RenderWindow, std::string>(std::move(thisWindow));
 }
 
 bool RenderWindow::visible() const noexcept
@@ -334,7 +398,6 @@ bool RenderWindow::visible() const noexcept
     // If only it where this simple, IsWindowVisible only queries the status flag, not if it is actually visible: https://stackoverflow.com/a/6269768/4764531
     return IsWindowVisible(mWindow.get()) == TRUE;
 }
-
 void RenderWindow::resize()
 {
     if (!visible())

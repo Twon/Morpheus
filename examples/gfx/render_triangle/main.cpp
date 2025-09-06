@@ -12,6 +12,11 @@ class RenderTriange : public Application
 public:
     using Application::Application;
 
+    RenderTriange(int argc, char const* const* argv)
+        : Application(argc, argv)
+        , window(std::move(win32::RenderWindow::create(win32::RenderWindow::Config{})).value())
+    {}
+
     void Run()
     {
         while (true)
