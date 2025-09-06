@@ -1,6 +1,7 @@
 #include "morpheus/core/base/assert.hpp"
 #include "morpheus/core/conformance/expected.hpp"
 #include "morpheus/core/conformance/format.hpp"
+#include "morpheus/core/conformance/outptr.hpp"
 #include "morpheus/gfx/d3d12/adapter.hpp"
 #include "morpheus/gfx/d3d12/exceptions.hpp"
 #include "morpheus/gfx/d3d12/types.hpp"
@@ -41,7 +42,7 @@ namespace
 auto createDXGIFactory() -> DXGIExpected<DXGIFactory>
 {
     DXGIFactory dxgiFactory;
-    HRESULT hr = CreateDXGIFactory1(IID_PPV_ARGS(&dxgiFactory));
+    HRESULT hr = CreateDXGIFactory1(__uuidof(IDXGIFactory1), conf::ptr::out_ptr(dxgiFactory));
     if (FAILED(hr))
         return conf::exp::unexpected(hr);
     return dxgiFactory;
@@ -75,7 +76,7 @@ auto getOutputModes(DXGIAdapter const& adapter)
     DXGIOutput output;
     std::vector<DXGI_MODE_DESC> displayModes;
 
-    for (UINT outputCount = 0; DXGI_ERROR_NOT_FOUND != adapter->EnumOutputs(outputCount, &output); ++outputCount)
+    for (UINT outputCount = 0; DXGI_ERROR_NOT_FOUND != adapter->EnumOutputs(outputCount, conf::ptr::out_ptr(output)); ++outputCount)
     {
         auto outputDisplayModes = throwOrUnwrap(getOutputModes(output));
         displayModes.insert(displayModes.end(), std::make_move_iterator(outputDisplayModes.begin()), std::make_move_iterator(outputDisplayModes.end()));
@@ -105,18 +106,18 @@ concurrency::Generator<Adapter> enumerateAdapters()
     DXGIAdapter pDXGIAdapter;
     for (UINT adapterId = 0;; ++adapterId)
     {
-        if (DXGI_ERROR_NOT_FOUND != dxgiFactory->EnumAdapters1(adapterId, &pDXGIAdapter))
+        if (DXGI_ERROR_NOT_FOUND != dxgiFactory->EnumAdapters1(adapterId, conf::ptr::out_ptr(pDXGIAdapter)))
         {
             break;
         }
 
         // See if the adapter support the minimum level required by Direct 3D 12
-        if (FAILED(D3D12CreateDevice(pDXGIAdapter.Get(), D3D_FEATURE_LEVEL_12_0, _uuidof(ID3D12Device), nullptr)))
+        if (FAILED(D3D12CreateDevice(pDXGIAdapter.get(), D3D_FEATURE_LEVEL_12_0, _uuidof(ID3D12Device), nullptr)))
         {
             continue;
         }
 
-        co_yield Adapter(pDXGIAdapter);
+        co_yield Adapter(std::move(pDXGIAdapter));
     }
 }
 
