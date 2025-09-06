@@ -84,7 +84,6 @@
 
 <div class="genindex-jumpbox">
  <a href="#_"><strong>_</strong></a>
- | <a href="#A"><strong>A</strong></a>
  | <a href="#B"><strong>B</strong></a>
  | <a href="#D"><strong>D</strong></a>
  | <a href="#G"><strong>G</strong></a>
@@ -101,14 +100,6 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="#c.__has_include">__has_include (C macro)</a>
-</li>
-  </ul></td>
-</tr></table>
-
-<h2 id="A">A</h2>
-<table style="width: 100%" class="indextable genindextable"><tr>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="#_CPPv47adapter">adapter (C++ class)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -980,6 +971,10 @@
 </li>
       <li><a href="#_CPPv4NK8morpheus3gfx5d3d127Adapter6vendorEv">morpheus::gfx::d3d12::Adapter::vendor (C++ function)</a>
 </li>
+      <li><a href="#_CPPv4N8morpheus3gfx5d3d1212createDeviceERK7Adapter">morpheus::gfx::d3d12::createDevice (C++ function)</a>
+</li>
+      <li><a href="#_CPPv4N8morpheus3gfx5d3d1217createDGXIFactoryEv">morpheus::gfx::d3d12::createDGXIFactory (C++ function)</a>
+</li>
       <li><a href="#_CPPv4N8morpheus3gfx5d3d1211D3D12DeviceE">morpheus::gfx::d3d12::D3D12Device (C++ type)</a>
 </li>
       <li><a href="#_CPPv4N8morpheus3gfx5d3d1211DXGIAdapterE">morpheus::gfx::d3d12::DXGIAdapter (C++ type)</a>
@@ -991,6 +986,8 @@
       <li><a href="#_CPPv4N8morpheus3gfx5d3d1210DXGIOutputE">morpheus::gfx::d3d12::DXGIOutput (C++ type)</a>
 </li>
       <li><a href="#_CPPv4N8morpheus3gfx5d3d1217enumerateAdaptersEv">morpheus::gfx::d3d12::enumerateAdapters (C++ function)</a>
+</li>
+      <li><a href="#_CPPv4N8morpheus3gfx5d3d129ExceptionE">morpheus::gfx::d3d12::Exception (C++ class)</a>
 </li>
       <li><a href="#_CPPv4N8morpheus3gfx5d3d1219getLastErrorMessageEv">morpheus::gfx::d3d12::getLastErrorMessage (C++ function)</a>
 </li>
@@ -1005,6 +1002,14 @@
       <li><a href="#_CPPv4N8morpheus3gfx5d3d1212RenderSystemaSERK12RenderSystem">morpheus::gfx::d3d12::RenderSystem::operator= (C++ function)</a>, <a href="#_CPPv4N8morpheus3gfx5d3d1212RenderSystemaSERR12RenderSystem">[1]</a>
 </li>
       <li><a href="#_CPPv4N8morpheus3gfx5d3d1212RenderSystem12RenderSystemERK12RenderSystem">morpheus::gfx::d3d12::RenderSystem::RenderSystem (C++ function)</a>, <a href="#_CPPv4N8morpheus3gfx5d3d1212RenderSystem12RenderSystemERR12RenderSystem">[1]</a>, <a href="#_CPPv4N8morpheus3gfx5d3d1212RenderSystem12RenderSystemEv">[2]</a>
+</li>
+      <li><a href="#_CPPv4N8morpheus3gfx5d3d1219throwD3D12ExceptionENSt11string_viewE">morpheus::gfx::d3d12::throwD3D12Exception (C++ function)</a>
+</li>
+      <li><a href="#_CPPv4I0EN8morpheus3gfx5d3d1212throwOnErrorEvRK12DXGIExpectedI1TE">morpheus::gfx::d3d12::throwOnError (C++ function)</a>
+</li>
+      <li><a href="#_CPPv4I0EN8morpheus3gfx5d3d1213throwOrUnwrapE1TRR12DXGIExpectedI1TE">morpheus::gfx::d3d12::throwOrUnwrap (C++ function)</a>
+</li>
+      <li><a href="#_CPPv4I0EN8morpheus3gfx5d3d1214toDXGIExpectedE12DXGIExpectedI1TE7HRESULTRR1T">morpheus::gfx::d3d12::toDXGIExpected (C++ function)</a>
 </li>
       <li><a href="#_CPPv4N8morpheus3gfx5d3d125typesE">morpheus::gfx::d3d12::types (C++ class)</a>
 </li>
@@ -1436,14 +1441,14 @@
 </li>
       <li><a href="#_CPPv4N8morpheus3gfx10video_mode10video_modeEKNSt8uint32_tEKNSt8uint32_tEKNSt8uint32_tE">morpheus::gfx::video_mode::video_mode (C++ function)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="#_CPPv4NK8morpheus3gfx10video_mode5widthEv">morpheus::gfx::video_mode::width (C++ function)</a>
 </li>
       <li><a href="#_CPPv4N8morpheus3gfx9VideoModeE">morpheus::gfx::VideoMode (C++ class)</a>
 </li>
       <li><a href="#_CPPv4NK8morpheus3gfx9VideoMode11colourDepthEv">morpheus::gfx::VideoMode::colourDepth (C++ function)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="#_CPPv4NK8morpheus3gfx9VideoMode6heightEv">morpheus::gfx::VideoMode::height (C++ function)</a>
 </li>
       <li><a href="#_CPPv4N8morpheus3gfx9VideoMode12mColourDepthE">morpheus::gfx::VideoMode::mColourDepth (C++ member)</a>
@@ -2722,7 +2727,7 @@
 <h2 id="N">N</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="#c.NOMINMAX">NOMINMAX (C macro)</a>, <a href="#c.NOMINMAX">[1]</a>, <a href="#c.NOMINMAX">[2]</a>
+      <li><a href="#c.NOMINMAX">NOMINMAX (C macro)</a>, <a href="#c.NOMINMAX">[1]</a>
 </li>
   </ul></td>
 </tr></table>
