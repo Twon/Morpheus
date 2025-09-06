@@ -1,5 +1,6 @@
 #include <morpheus/core/base/assert.hpp>
 #include <morpheus/core/conformance/format.hpp>
+#include <morpheus/gfx/gl4/prerequisites.hpp>
 #include <morpheus/gfx/gl4/wgl/context.hpp>
 #include <morpheus/gfx/gl4/wgl/verify.hpp>
 
@@ -64,6 +65,12 @@ Context::Expected Context::create(HWND const window, PIXELFORMATDESCRIPTOR const
         .and_then([&](HDC const hdc){
             return createGLContext(hdc)
                 .transform([window, hdc](HGLRC const hglrc) {
+                    glbinding::initialize(
+                        [](const char * name) -> glbinding::ProcAddress {
+                            return reinterpret_cast<glbinding::ProcAddress>(wglGetProcAddress(name));
+                        },
+                        true
+                    );
                     return Context(window, hdc, hglrc);
                 });
         });
