@@ -112,12 +112,12 @@ concurrency::Generator<Adapter> enumerateAdapters()
         }
 
         // See if the adapter support the minimum level required by Direct 3D 12
-        if (FAILED(D3D12CreateDevice(&conf::ptr::inout_ptr(pDXGIAdapter), D3D_FEATURE_LEVEL_12_0, _uuidof(ID3D12Device), nullptr)))
+        if (FAILED(D3D12CreateDevice(pDXGIAdapter.get(), D3D_FEATURE_LEVEL_12_0, _uuidof(ID3D12Device), nullptr)))
         {
             continue;
         }
 
-        co_yield Adapter(pDXGIAdapter);
+        co_yield Adapter(std::move(pDXGIAdapter));
     }
 }
 
