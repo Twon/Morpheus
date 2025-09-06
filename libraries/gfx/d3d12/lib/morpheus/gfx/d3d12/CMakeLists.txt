@@ -5,6 +5,7 @@ target_sources(MorpheusGfxD3D12
             adapter.hpp
             exceptions.hpp
             render_system.hpp
+            types.hpp
             type_mapping.hpp
             types.hpp
             verify.hpp
@@ -13,6 +14,7 @@ target_sources(MorpheusGfxD3D12
     PRIVATE
         adapter.cpp
         exceptions.cpp
+        render_system.cpp
         type_mapping.cpp
         video_mode.cpp
         video_mode_list.cpp

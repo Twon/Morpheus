@@ -1,3 +1,6 @@
+#include "morpheus/gfx/d3d12/adapter.hpp"
+#include "morpheus/gfx/d3d12/render_system.hpp"
+
 #include <d3d12.h>
 
 #include <wrl/client.h>

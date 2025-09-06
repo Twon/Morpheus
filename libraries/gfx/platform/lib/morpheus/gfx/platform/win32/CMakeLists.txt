@@ -4,11 +4,13 @@ target_sources(MorpheusGfxPlatform
         FILES
             error_codes.hpp
             error.hpp
+            error_codes.hpp
             monitor.hpp
             render_window.hpp
     PRIVATE
         error_codes.cpp
         error.cpp
+        error_codes.cpp
         monitor.cpp
         render_window.cpp
 )
