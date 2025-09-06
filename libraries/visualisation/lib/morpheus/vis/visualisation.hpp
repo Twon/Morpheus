@@ -32,6 +32,8 @@ private:
 
     R mRenderSystem;
     typename R::Window mWindow;
+
+    // N windows
 };
 
 template <gfx::concepts::RenderSystem R>

@@ -7,9 +7,7 @@
 
 namespace morpheus::gfx::win32
 {
-
 std::wstring GetLastErrorWString(DWORD errorCode);
-
 std::string GetLastErrorString(DWORD errorCode);
 
 std::string WStringToString(std::wstring const& wstr);

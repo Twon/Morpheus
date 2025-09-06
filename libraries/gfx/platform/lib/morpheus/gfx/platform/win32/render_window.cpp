@@ -362,7 +362,7 @@ conf::exp::expected<RenderWindow, std::string> RenderWindow::create(Config const
             };
 
             // Register class  with the game application details
-            if(!::RegisterClass(&wcex)){
+            if(!::RegisterClass(&wcex) && GetLastError() != ERROR_CLASS_ALREADY_EXISTS){
                 return makeUnexpected();
             }
             return makeExpected(std::tuple{dwStyle, hInstance});
