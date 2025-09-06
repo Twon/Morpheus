@@ -22,7 +22,6 @@ target_link_libraries(MorpheusGfxGL4
     PUBLIC
         morpheus::gfx::platform
         OpenGL::GL
-        GLEW::GLEW
         glbinding::glbinding
         khrplatform::khrplatform
 )
