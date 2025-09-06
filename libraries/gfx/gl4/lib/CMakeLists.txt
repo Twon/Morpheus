@@ -1,5 +1,4 @@
 find_package(OpenGL REQUIRED COMPONENTS OpenGL)
-find_package(GLEW REQUIRED)
 find_package(glbinding REQUIRED glbinding glbinding-aux)
 find_package(khrplatform REQUIRED)
 
