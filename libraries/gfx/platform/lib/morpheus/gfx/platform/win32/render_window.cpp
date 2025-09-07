@@ -398,6 +398,7 @@ bool RenderWindow::visible() const noexcept
     // If only it where this simple, IsWindowVisible only queries the status flag, not if it is actually visible: https://stackoverflow.com/a/6269768/4764531
     return IsWindowVisible(mWindow.get()) == TRUE;
 }
+
 void RenderWindow::resize()
 {
     if (!visible())
