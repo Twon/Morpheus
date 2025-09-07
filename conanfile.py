@@ -176,7 +176,6 @@ class Morpheus(ConanFile):
 
         if self.options.get_safe("with_rs_opengl", False):
             self.requires("glbinding/3.3.0", transitive_headers=True)
-            self.requires("glew/2.2.0", transitive_headers=True)
             self.requires("khrplatform/cci.20200529", transitive_headers=True)
 
         if self.settings.os in ["Windows"]:
@@ -198,8 +197,10 @@ class Morpheus(ConanFile):
             self.requires("out_ptr/cci.20211119", transitive_headers=True)
 
     def system_requirements(self):
+        apt = Apt(self)
+        apt.install(["libx11-dev", "libxrandr-dev"], update=True, check=True)
+
         if self.options.get_safe("with_rs_opengl", False):
-            apt = Apt(self)
             apt.install(["libgl-dev", "libopengl-dev", "libglu1-mesa-dev", "libgles2-mesa-dev"], update=True, check=True)
 
     @property
