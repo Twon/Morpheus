@@ -1,5 +1,7 @@
+#include "morpheus/core/conformance/outptr.hpp"
 #include "morpheus/gfx/d3d12/adapter.hpp"
 #include "morpheus/gfx/d3d12/render_system.hpp"
+#include "morpheus/gfx/d3d12/types.hpp"
 
 #include <d3d12.h>
 
@@ -26,14 +28,14 @@ DXGIExpected<T> toDXGIExpected(HRESULT hr, T&& val)
 DXGIExpected<DXGIFactory> createDGXIFactory()
 {
     DXGIFactory factory;
-    HRESULT hr = CreateDXGIFactory2(0, IID_PPV_ARGS(&factory));
+    HRESULT hr = CreateDXGIFactory2(0, __uuidof(IDXGIFactory2), conf::ptr::out_ptr(factory));
     return toDXGIExpected(hr, std::move(factory));
 }
 
 DXGIExpected<D3D12Device> createDevice(Adapter const& adapter)
 {
     D3D12Device device;
-    HRESULT hr = D3D12CreateDevice(adapter.dxgiAdapter().Get(), D3D_FEATURE_LEVEL_12_0, IID_PPV_ARGS(&device));
+    HRESULT hr = D3D12CreateDevice(adapter.dxgiAdapter().get(), D3D_FEATURE_LEVEL_12_0, _uuidof(ID3D12Device), conf::ptr::out_ptr(device));
     return toDXGIExpected(hr, std::move(device));
 }
 

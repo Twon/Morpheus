@@ -9,24 +9,24 @@
 #include <algorithm>
 #include <vector>
 
-#include <cfgmgr32.h>
+// #include <cfgmgr32.h>
 #include <windows.h>
 #if WINAPI_FAMILY_PARTITION(WINAPI_PARTITION_DESKTOP | WINAPI_PARTITION_SYSTEM)
 // #error "Missing define"
 #endif
 
-#include <devpkey.h>
-#include <setupapi.h>
+// #include <devpkey.h>
+// #include <setupapi.h>
 
-#include <devpkey.h>
-#include <initguid.h>
+// #include <devpkey.h>
+// #include <initguid.h>
 
-#include <Cfgmgr32.h>
-#include <Wiaintfc.h>
+// #include <Cfgmgr32.h>
+// #include <Wiaintfc.h>
 
-#include <devguid.h>
-#include <rpc.h>
-#include <winioctl.h>
+// #include <devguid.h>
+// #include <rpc.h>
+// #include <winioctl.h>
 
 /*
 #include <CL/cl.h>
@@ -181,12 +181,12 @@ TEST_CASE("Create an adapter mode list", "[morpheus.core.gfx.gl.wgl.adapter_list
     adapterName2.header.size = sizeof(adapterName2);
     auto result3 = DisplayConfigGetDeviceInfo(&adapterName2.header);
 
-    DEVPROPTYPE PropertyType = DEVPROP_TYPE_EMPTY;
-    ULONG PropertySize = 0;
-    ULONG SomeValue = 0;
+    // DEVPROPTYPE PropertyType = DEVPROP_TYPE_EMPTY;
+    // ULONG PropertySize = 0;
+    // ULONG SomeValue = 0;
 
-    SP_DEVICE_INTERFACE_DATA interfaceData = {0};
-    interfaceData.cbSize = sizeof(SP_DEVICE_INTERFACE_DATA);
+    // SP_DEVICE_INTERFACE_DATA interfaceData = {0};
+    // interfaceData.cbSize = sizeof(SP_DEVICE_INTERFACE_DATA);
 
     //    HDEVINFO deviceInfoSet = SetupDiCreateDeviceInfoList(NULL, NULL);
     //    SetupDiOpenDeviceInterface(deviceInfoSet, adapterName.adapterDevicePath, 0, &interfaceData);
