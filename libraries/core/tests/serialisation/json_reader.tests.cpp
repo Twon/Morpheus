@@ -49,7 +49,7 @@ T deserialise(std::string_view const value, bool const validate = true)
     std::unique_ptr<std::istream> iss = std::make_unique<std::istringstream>(value);
 #else
     std::unique_ptr<std::istream> iss = std::make_unique<std::istringstream>(std::string{value});
-#endif 
+#endif
     JsonReadSerialiser serialiser(std::move(iss), validate);
     return serialiser.deserialise<T>();
 }
@@ -60,7 +60,7 @@ auto readerFromString(std::string_view const value)
     std::unique_ptr<std::istream> iss = std::make_unique<std::istringstream>(value);
 #else
     std::unique_ptr<std::istream> iss = std::make_unique<std::istringstream>(std::string{value});
-#endif 
+#endif
     return JsonReader(std::move(iss), false);
 }
 

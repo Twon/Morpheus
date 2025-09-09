@@ -141,7 +141,7 @@ class Morpheus(ConanFile):
         std_support = (compiler == "msvc" and version >= 193) or (compiler == "gcc" and version >= Version("14")) or \
                       (compiler == "clang" and version >= Version("19"))
         return not std_support
-    
+
     @property
     def useValueTypes(self):
         """ Does the current compiler version lack support for std::indirect and std::polymorphic via the STL. """

@@ -15,9 +15,12 @@ public:
 class Derived : public Base
 {
     int value;
+
 public:
-    Derived(int value_) : value(value_) {}
-    int getValue() const { return value; } 
+    Derived(int value_)
+        : value(value_)
+    {}
+    int getValue() const { return value; }
 };
 
 TEST_CASE("Ensure value types are supported and working", "[morpheus.conformance.value_types.indirect]")
@@ -27,11 +30,11 @@ TEST_CASE("Ensure value types are supported and working", "[morpheus.conformance
     indirect value(42);
     REQUIRE(*value == 42);
 }
-    
+
 TEST_CASE("Ensure value types are supported and working", "[morpheus.conformance.value_types.polymorphic]")
 {
     using namespace conf::vt;
-    
+
     polymorphic<Base> value(std::in_place_type<Derived>, 64);
     REQUIRE(value->getValue() == 64);
 }
