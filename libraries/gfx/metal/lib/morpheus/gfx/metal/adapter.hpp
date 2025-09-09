@@ -1,6 +1,6 @@
 #pragma once
 
-#include <morpheus/core/memory/indirect_value.hpp>
+#include <morpheus/core/conformance/value_types.hpp>
 
 #include <cstdint>
 
@@ -38,7 +38,7 @@ private:
 
     /// \name Data Members
     ///@{
-    memory::indirect_value<Implementation> mImpl;
+    conf::vt::indirect<Implementation> mImpl;
     ///@}
 };
 
