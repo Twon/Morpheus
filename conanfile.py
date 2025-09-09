@@ -141,6 +141,14 @@ class Morpheus(ConanFile):
         std_support = (compiler == "msvc" and version >= 193) or (compiler == "gcc" and version >= Version("14")) or \
                       (compiler == "clang" and version >= Version("19"))
         return not std_support
+    
+    @property
+    def useValueTypes(self):
+        """ Does the current compiler version lack support for std::indirect and std::polymorphic via the STL. """
+        compiler = self.settings.compiler
+        version = Version(self.settings.compiler.version)
+        std_support = (compiler == "gcc" and version >= Version("16"))
+        return not std_support
 
     def config_options(self):
         if not self.checkMoldIsSupported():
@@ -194,6 +202,9 @@ class Morpheus(ConanFile):
 
         if self.useOutPtr:
             self.requires("out_ptr/cci.20211119", transitive_headers=True)
+
+        if self.useValueTypes:
+            self.requires("value_types/1.0.0", transitive_headers=True)
 
     def system_requirements(self):
         apt = Apt(self)
@@ -298,6 +309,12 @@ class Morpheus(ConanFile):
 
         if self.useFMT:
             self.cpp_info.components["core"].requires.append("fmt::fmt")
+
+        if self.useOutPtr:
+            self.cpp_info.components["core"].requires.append("out_ptr::out_ptr")
+
+        if self.useValueTypes:
+            self.cpp_info.components["core"].requires.append("value_types::value_types")
 
         if self.options.get_safe("with_rs_direct_x12", False):
             self.cpp_info.components["directx12"].set_property("cmake_file_name", "MorpheusGfxDirectX12")
