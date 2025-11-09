@@ -64,7 +64,7 @@ int main()
     if (!sockAndAdds) {
         return 1;
     }
-    auto [sock, serv_addr] = std::move(*sockAndAdds);
+    auto const& [sock, serv_addr] = *sockAndAdds;
 
     std::string_view const msg = "Hello from client!";
     send(sock.get(), msg.data(), msg.size(), 0);
