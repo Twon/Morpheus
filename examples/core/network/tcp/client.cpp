@@ -13,7 +13,7 @@ using namespace morpheus::conf;
 int main()
 {
     auto const combineSockAndAddr = [](Socket sock) {
-        return createSockAddr("127.0.0.1", 8080).and_then([sock = std::move(sock)](struct sockaddr_in addr) mutable -> exp::expected<std::pair<Socket, struct sockaddr_in>, int> {
+        return createSockAddr("127.0.0.1", 8080).and_then([sock = std::move(sock)](struct sockaddr_in addr) mutable -> exp::expected<std::pair<Socket, struct sockaddr_in>, std::error_code> {
             return std::pair{std::move(sock), std::move(addr)};
         });
     };
@@ -23,8 +23,10 @@ int main()
                            .and_then(createConnection);
 
     if (!sockAndAdds) {
-        return 1;
+        print::print("Error: {}\n", sockAndAdds.error().message());
+        return EXIT_FAILURE;
     }
+
     auto const& [sock, serv_addr] = *sockAndAdds;
 
     std::string_view const msg = "Hello from client!";
@@ -34,5 +36,5 @@ int main()
     read(sock.get(), buffer.data(), buffer.size());
 
     print::print("Server says: {}\n", std::string_view(buffer.data(), buffer.size()));
-    return 0;
+    return EXIT_SUCCESS;
 }
