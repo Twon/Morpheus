@@ -253,6 +253,7 @@ jobs:
           fi
 
           echo 'core.sources:download_urls=["origin", "https://c3i.jfrog.io/artifactory/conan-center-backup-sources/"]' >> .conan2/global.conf
+          echo 'tools.cmake.cmaketoolchain:configure_args = {"CMAKE_POLICY_VERSION_MINIMUM": "3.5"}' >> .conan2/global.conf
           echo "tools.cmake.cmaketoolchain:generator = Ninja Multi-Config" >> .conan2/global.conf
 
           if [[ "${{ matrix.settings.os }}" != "windows-latest" ]]; then

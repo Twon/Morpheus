@@ -100,6 +100,7 @@ jobs:
             sed -i.backup '1a mold*:compiler.libcxx=libstdc++11' .conan2/profiles/default
 
             cat >> .conan2/global.conf <<EOF
+            tools.cmake.cmaketoolchain:configure_args = {"CMAKE_POLICY_VERSION_MINIMUM": "3.5"}
             tools.cmake.cmaketoolchain:generator = Ninja
             tools.system.package_manager:mode = install
             tools.system.package_manager:sudo = True
