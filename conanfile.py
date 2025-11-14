@@ -174,7 +174,7 @@ class Morpheus(ConanFile):
                 self.requires("moltenvk/1.3.0", transitive_headers=True)
 
         if self.options.get_safe("with_rs_opengl", False):
-            self.requires("glbinding/3.3.0", transitive_headers=True)
+            self.requires("glbinding/3.5.0", transitive_headers=True)
             self.requires("khrplatform/cci.20200529", transitive_headers=True)
 
         if self.settings.os in ["Windows"]:
