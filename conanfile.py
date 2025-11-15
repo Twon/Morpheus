@@ -27,7 +27,7 @@ from conan.tools.env import VirtualBuildEnv
 from conan.tools.files import copy, rm
 from conan.tools.scm import Git, Version
 from conan.tools.files import load
-from conan.tools.system.package_manager import Apt
+from conan.tools.system.package_manager import Apt, Brew
 import re, os.path
 import subprocess
 import sys
@@ -196,11 +196,20 @@ class Morpheus(ConanFile):
             self.requires("out_ptr/cci.20211119", transitive_headers=True)
 
     def system_requirements(self):
-        apt = Apt(self)
-        apt.install(["libx11-dev", "libxrandr-dev"], update=True, check=True)
+        if self.settings.os == "Linux":
+            apt = Apt(self)
+            apt.install(["libx11-dev", "libxrandr-dev"], update=True, check=True)
+            apt.install(["tzdata"], update=True, check=True)
 
-        if self.options.get_safe("with_rs_opengl", False):
-            apt.install(["libgl-dev", "libopengl-dev", "libglu1-mesa-dev", "libgles2-mesa-dev"], update=True, check=True)
+            if self.options.get_safe("with_rs_opengl", False):
+                apt.install(["libgl-dev", "libopengl-dev", "libglu1-mesa-dev", "libgles2-mesa-dev"], update=True, check=True)
+        elif self.settings.os == "Macos":
+            brew = Brew(self)
+            try:
+                brew.install(["tz"])   # Homebrew tzdb package
+            except Exception:
+                self.output.warn("brew tz failed, falling back to icu4c")
+                brew.install(["icu4c"])  # fallback tzdb
 
     @property
     def _minimum_cpp_standard(self):
