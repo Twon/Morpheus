@@ -203,13 +203,6 @@ class Morpheus(ConanFile):
 
             if self.options.get_safe("with_rs_opengl", False):
                 apt.install(["libgl-dev", "libopengl-dev", "libglu1-mesa-dev", "libgles2-mesa-dev"], update=True, check=True)
-        elif self.settings.os == "Macos":
-            brew = Brew(self)
-            try:
-                brew.install(["tz"])   # Homebrew tzdb package
-            except Exception:
-                self.output.warn("brew tz failed, falling back to icu4c")
-                brew.install(["icu4c"])  # fallback tzdb
 
     @property
     def _minimum_cpp_standard(self):
