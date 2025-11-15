@@ -77,6 +77,10 @@ jobs:
           sudo ln -s /usr/bin/gcc-${{ env.COMPILER_VERSION }} /usr/bin/gcc
           sudo ln -s /usr/bin/g++-${{ env.COMPILER_VERSION }} /usr/bin/g++
 
+      - name: Install tzdata
+        if: contains(matrix.settings.os, 'ubuntu')
+        run: sudo apt-get update && sudo apt-get install -y tzdata
+
       - name: Install Lcov
         shell: bash
         # Lcov 2.0 is missing a dependency on DateTime so manually install for now.
