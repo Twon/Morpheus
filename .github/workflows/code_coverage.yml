@@ -158,32 +158,32 @@ jobs:
            source build/${{env.BUILD_TYPE}}/generators/conanbuild.sh
            cmake --build --preset ${{ env.CONAN_PRESET }}
 
-#      - name: Test
-#        working-directory: ${{github.workspace}}
+      - name: Test
+        working-directory: ${{github.workspace}}
         # Execute tests defined by the CMake configuration.
         # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
-#        run: ctest --preset ${{ env.CONAN_PRESET }} --rerun-failed --output-on-failure
+        run: ctest --preset ${{ env.CONAN_PRESET }} --rerun-failed --output-on-failure
 
-#      - name: Fastcov
+      - name: Fastcov
         # Run Fastcov target to collect coverage information.
-#        run: cmake --build --preset ${{ env.CONAN_PRESET }} --target coverage
+        run: cmake --build --preset ${{ env.CONAN_PRESET }} --target coverage
 
-#      - name: Lcov
+      - name: Lcov
         # Run LCov target to generate code coverage report
-#        run: cmake --build --preset ${{ env.CONAN_PRESET }} --target coverage-lcov
+        run: cmake --build --preset ${{ env.CONAN_PRESET }} --target coverage-lcov
 
-#      - name: Cobertura
+      - name: Cobertura
         # Run Cobertura target to generate code coverage report in XML
-#        run: cmake --build --preset ${{ env.CONAN_PRESET }} --target coverage-cobertura
+        run: cmake --build --preset ${{ env.CONAN_PRESET }} --target coverage-cobertura
 
-#      - name: Upload coverage to Codecov
-#        uses: codecov/codecov-action@v4.4.1
-#        env:
-#          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-#        with:
-#          files: ${{github.workspace}}/build/${{env.BUILD_TYPE}}/coverage/cobertura_coverage.xml
-#          fail_ci_if_error: true
-#          verbose: true
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4.4.1
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+        with:
+          files: ${{github.workspace}}/build/${{env.BUILD_TYPE}}/coverage/cobertura_coverage.xml
+          fail_ci_if_error: true
+          verbose: true
 
       - name: Conan Cache Save
         run: |
