@@ -228,12 +228,6 @@ jobs:
           sudo apt-get update && sudo apt-get install -y tzdata
           echo "TZDIR=/usr/share/zoneinfo" >> $GITHUB_ENV
 
-      - name: Install tzdata
-        if: contains(matrix.settings.os, 'macos')
-        run: |
-          brew install tz
-          echo "TZDIR=/usr/share/zoneinfo" >> $GITHUB_ENV
-
       - name: Select Xcode ${{matrix.settings.compiler.version}}
         if: contains(matrix.settings.os, 'macos')
         uses: maxim-lobanov/setup-xcode@v1.6.0
