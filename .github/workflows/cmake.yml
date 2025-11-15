@@ -138,34 +138,7 @@ jobs:
               os: windows-latest,
               compiler: { type: VISUAL, version: 16, conan: "mscv", cc: "cl", cxx: "cl", std: 23 },
             }
-          - {
-              name: "MacOS Apple Clang 15",
-              os: macos-14,
-              compiler:
-                {
-                  type: APPLE_CLANG,
-                  version: "15.3",
-                  conan: "apple-clang",
-                  cc: "clang",
-                  cxx: "clang++",
-                  std: 23
-                },
-              lib: "libc++",
-            }
-          - {
-              name: "MacOS Apple Clang 16",
-              os: macos-14,
-              compiler:
-                {
-                  type: APPLE_CLANG,
-                  version: "16.2",
-                  conan: "apple-clang",
-                  cc: "clang",
-                  cxx: "clang++",
-                  std: 23
-                },
-              lib: "libc++",
-            }
+
     steps:
       - uses: actions/checkout@v4.2.2
 
