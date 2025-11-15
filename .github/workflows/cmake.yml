@@ -228,7 +228,9 @@ jobs:
 
       - name: Install tzdata
         if: contains(matrix.settings.os, 'macos')
-        run: brew install tz
+        run: |
+          brew install tz
+          echo "TZDIR=$(brew --prefix tz)/share/zoneinfo" >> $GITHUB_ENV
 
       - name: Select Xcode ${{matrix.settings.compiler.version}}
         if: contains(matrix.settings.os, 'macos')
