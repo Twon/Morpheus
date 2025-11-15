@@ -224,13 +224,15 @@ jobs:
 
       - name: Install tzdata
         if: contains(matrix.settings.os, 'ubuntu')
-        run: sudo apt-get update && sudo apt-get install -y tzdata
+        run: |
+          sudo apt-get update && sudo apt-get install -y tzdata
+          echo "TZDIR=/usr/share/zoneinfo" >> $GITHUB_ENV
 
       - name: Install tzdata
         if: contains(matrix.settings.os, 'macos')
         run: |
           brew install tz
-          echo "TZDIR=$(brew --prefix tz)/share/zoneinfo" >> $GITHUB_ENV
+          echo "TZDIR=/usr/share/zoneinfo" >> $GITHUB_ENV
 
       - name: Select Xcode ${{matrix.settings.compiler.version}}
         if: contains(matrix.settings.os, 'macos')
@@ -339,12 +341,12 @@ jobs:
           source build/generators/conanbuild.sh
           cmake --build --preset ${{ env.CONAN_PRESET }}
 
-      - uses: owenthereal/action-upterm@v1
-        with:
+#      - uses: owenthereal/action-upterm@v1
+#        with:
           ## limits ssh access and adds the ssh public key for the user which triggered the workflow
-          limit-access-to-actor: true
+#          limit-access-to-actor: true
           ## limits ssh access and adds the ssh public keys of the listed GitHub users
-          limit-access-to-users: twon
+#          limit-access-to-users: twon
 
       - name: Test
         # Execute tests defined by the CMake configuration.
