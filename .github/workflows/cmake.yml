@@ -32,12 +32,6 @@ jobs:
         configuration: [ "Release", "Debug" ]
         settings:
           - {
-              name: "Ubuntu GCC-12",
-              os: ubuntu-latest,
-              compiler: { type: GCC, version: 12, conan: "gcc", cc: "gcc-12", cxx: "g++-12", std: 20 },
-              lib: "libstdc++11"
-            }
-          - {
               name: "Ubuntu GCC-13",
               os: ubuntu-22.04,
               compiler: { type: GCC, version: 13, conan: "gcc", cc: "gcc-13", cxx: "g++-13", std: 23 },
