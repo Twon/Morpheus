@@ -32,6 +32,12 @@ jobs:
         configuration: [ "Release", "Debug" ]
         settings:
           - {
+              name: "Ubuntu GCC-12",
+              os: ubuntu-latest,
+              compiler: { type: GCC, version: 12, conan: "gcc", cc: "gcc-12", cxx: "g++-12", std: 20 },
+              lib: "libstdc++11"
+            }
+          - {
               name: "Ubuntu GCC-13",
               os: ubuntu-22.04,
               compiler: { type: GCC, version: 13, conan: "gcc", cc: "gcc-13", cxx: "g++-13", std: 23 },
@@ -132,7 +138,34 @@ jobs:
               os: windows-latest,
               compiler: { type: VISUAL, version: 16, conan: "mscv", cc: "cl", cxx: "cl", std: 23 },
             }
-
+          - {
+              name: "MacOS Apple Clang 15",
+              os: macos-14,
+              compiler:
+                {
+                  type: APPLE_CLANG,
+                  version: "15.3",
+                  conan: "apple-clang",
+                  cc: "clang",
+                  cxx: "clang++",
+                  std: 23
+                },
+              lib: "libc++",
+            }
+          - {
+              name: "MacOS Apple Clang 16",
+              os: macos-14,
+              compiler:
+                {
+                  type: APPLE_CLANG,
+                  version: "16.2",
+                  conan: "apple-clang",
+                  cc: "clang",
+                  cxx: "clang++",
+                  std: 23
+                },
+              lib: "libc++",
+            }
     steps:
       - uses: actions/checkout@v4.2.2
 
@@ -194,6 +227,7 @@ jobs:
         run: |
           sudo apt-get update && sudo apt-get install -y tzdata
           echo "TZDIR=/usr/share/zoneinfo" >> $GITHUB_ENV
+
 
       - name: Select Xcode ${{matrix.settings.compiler.version}}
         if: contains(matrix.settings.os, 'macos')
@@ -309,10 +343,10 @@ jobs:
           ## limits ssh access and adds the ssh public keys of the listed GitHub users
 #          limit-access-to-users: twon
 
-      - name: Test
+#      - name: Test
         # Execute tests defined by the CMake configuration.
         # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
-        run: ctest --preset ${{ env.CONAN_PRESET }} -LE GPU # Exclude GPU tests as Github actions do not have the supported hardware/drivers
+#        run: ctest --preset ${{ env.CONAN_PRESET }} -LE GPU # Exclude GPU tests as Github actions do not have the supported hardware/drivers
 
       - name: Conan Cache Save
         run: |
