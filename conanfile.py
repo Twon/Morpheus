@@ -27,7 +27,7 @@ from conan.tools.env import VirtualBuildEnv
 from conan.tools.files import copy, rm
 from conan.tools.scm import Git, Version
 from conan.tools.files import load
-from conan.tools.system.package_manager import Apt, Brew
+from conan.tools.system.package_manager import Apt
 import re, os.path
 import subprocess
 import sys
