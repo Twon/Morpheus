@@ -241,16 +241,22 @@ jobs:
         shell: bash
         run: |
           conan profile detect --force
-          sed -i.backup '/^\[settings\]$/,/^\[/ s/^build_type=.*/build_type=${{ matrix.configuration }}/' .conan2/profiles/default
-          sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.cppstd=.*/compiler.cppstd=${{ matrix.settings.compiler.std }}/' .conan2/profiles/default
+
+          PROFILE=".conan2/profiles/default"
+
+          sed -i.backup '/^\[settings\]$/,/^\[/ s/^build_type=.*/build_type=${{ matrix.configuration }}/' "$PROFILE"
+          sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.cppstd=.*/compiler.cppstd=${{ matrix.settings.compiler.std }}/' "$PROFILE"
           if [[ "${{ matrix.settings.compiler.type }}" == "GCC" || "${{ matrix.settings.compiler.type }}" == "CLANG" ]]; then
-            sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler=.*/compiler=${{ matrix.settings.compiler.conan }}/' .conan2/profiles/default
-            sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.version=.*/compiler.version=${{ matrix.settings.compiler.version }}/' .conan2/profiles/default
-            sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.libcxx=.*/compiler.libcxx=${{ matrix.settings.lib }}/' .conan2/profiles/default
-            sed -i.backup '1a mold*:build_type=Release' .conan2/profiles/default
-            sed -i.backup '1a onetbb*:build_type=Release' .conan2/profiles/default
-            sed -i.backup '1a mold*:compiler.libcxx=libstdc++11' .conan2/profiles/default
+            sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler=.*/compiler=${{ matrix.settings.compiler.conan }}/' "$PROFILE"
+            sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.version=.*/compiler.version=${{ matrix.settings.compiler.version }}/' "$PROFILE"
+            sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.libcxx=.*/compiler.libcxx=${{ matrix.settings.lib }}/' "$PROFILE"
+            sed -i.backup '1a mold*:build_type=Release' "$PROFILE"
+            sed -i.backup '1a onetbb*:build_type=Release' "$PROFILE"
+            sed -i.backup '1a mold*:compiler.libcxx=libstdc++11' "$PROFILE"
           fi
+
+          grep -q "^\[options\]" "$PROFILE" || echo -e "\n[options]" >> "$PROFILE"
+          printf "date*:tz_db=system\n" >> "$PROFILE"
 
           echo 'core.sources:download_urls=["origin", "https://c3i.jfrog.io/artifactory/conan-center-backup-sources/"]' >> .conan2/global.conf
           echo "tools.cmake.cmaketoolchain:generator = Ninja Multi-Config" >> .conan2/global.conf
@@ -332,7 +338,7 @@ jobs:
       - name: Test
         # Execute tests defined by the CMake configuration.
         # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
-        run: ctest --preset ${{ env.CONAN_PRESET }} -LE GPU # Exclude GPU tests as Github actions do not have the supported hardware/drivers
+        run: ctest --preset ${{ env.CONAN_PRESET }} -LE GPU --output-on-failure # Exclude GPU tests as Github actions do not have the supported hardware/drivers
 
       - name: Conan Cache Save
         run: |
