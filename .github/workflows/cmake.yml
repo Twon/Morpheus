@@ -178,11 +178,11 @@ jobs:
         run: |
           sudo apt install -y libc++-${{ matrix.settings.compiler.version }}-dev libc++abi-${{ matrix.settings.compiler.version }}-dev libunwind-${{ matrix.settings.compiler.version }}-dev
 
-      - name: Install tzdata
-        if: contains(matrix.settings.os, 'ubuntu')
-        run: |
-          sudo apt-get update && sudo apt-get install -y tzdata
-          echo "TZDIR=/usr/share/zoneinfo" >> $GITHUB_ENV
+#      - name: Install tzdata
+#        if: contains(matrix.settings.os, 'ubuntu')
+#        run: |
+#          sudo apt-get update && sudo apt-get install -y tzdata
+#          echo "TZDIR=/usr/share/zoneinfo" >> $GITHUB_ENV
 
 
       - name: Select Xcode ${{matrix.settings.compiler.version}}
