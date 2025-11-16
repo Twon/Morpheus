@@ -1,9 +1,12 @@
 #include <morpheus/gfx/gl4/wgl/adapter.hpp>
 #include <morpheus/gfx/platform/concepts/adapter.hpp>
+#include <morpheus/gfx/platform/win32/error.hpp>
 
 #include <catch2/catch_all.hpp>
 
 #include <morpheus/core/conformance/expected.hpp>
+
+#include <algorithm>
 #include <vector>
 
 // #include <cfgmgr32.h>
@@ -33,43 +36,129 @@
 */
 #ifdef _WIN32
     #include <windows.h>
-extern "C" __declspec(dllexport) DWORD NvOptimusEnablement = 0x00000001;
-extern "C" __declspec(dllexport) DWORD AmdPowerXpressRequestHighPerformance = 0x00000001;
+// extern "C" __declspec(dllexport) DWORD NvOptimusEnablement = 0x00000001;
+// extern "C" __declspec(dllexport) DWORD AmdPowerXpressRequestHighPerformance = 0x00000001;
+extern "C" __declspec(dllexport) DWORD NvOptimusEnablement = 0x00000000;
+extern "C" __declspec(dllexport) DWORD AmdPowerXpressRequestHighPerformance = 0x00000000;
 #endif
 
 namespace morpheus::gfx::gl4::wgl
 {
 
+namespace
+{
 using PathInfoArray = std::vector<DISPLAYCONFIG_PATH_INFO>;
 using ModeInfoArray = std::vector<DISPLAYCONFIG_MODE_INFO>;
 using DisplayConfig = std::pair<PathInfoArray, ModeInfoArray>;
 
-conf::exp::expected<DisplayConfig, HRESULT> getCurrentDisplayConfig()
+/// Path mapping an output monitor to the graphic adapter mapped to it.
+using Path = std::pair<DISPLAYCONFIG_TARGET_DEVICE_NAME, DISPLAYCONFIG_ADAPTER_NAME>;
+
+auto getDisplayConfigBufferSizes() -> conf::exp::expected<std::pair<UINT32, UINT32>, std::string>
 {
-    PathInfoArray pathInfo;
-    ModeInfoArray modeInfo;
-
-    // First, grab the system's current configuration
-    for (UINT32 trySize = 32; trySize < 1024; trySize *= 2)
+    UINT32 pathCount = 0, modeCount = 0;
+    auto const result = GetDisplayConfigBufferSizes(QDC_ONLY_ACTIVE_PATHS, &pathCount, &modeCount);
+    if (result != ERROR_SUCCESS)
     {
-        pathInfo.resize(trySize);
-        modeInfo.resize(trySize);
-        UINT32 pathSize = static_cast<UINT32>(pathInfo.size());
-        UINT32 modeSize = static_cast<UINT32>(modeInfo.size());
-
-        ULONG const rc = QueryDisplayConfig(QDC_ALL_PATHS, &pathSize, pathInfo.data(), &modeSize, modeInfo.data(), NULL);
-
-        if (rc == ERROR_SUCCESS)
-        {
-            pathInfo.resize(pathSize);
-            modeInfo.resize(modeSize);
-            break;
-        }
-
-        if (rc != ERROR_INSUFFICIENT_BUFFER)
-            return conf::exp::unexpected(rc);
+        return conf::exp::unexpected(win32::GetLastErrorString(result));
     }
-    return DisplayConfig{std::move(pathInfo), std::move(modeInfo)};
+    return {
+        std::pair{pathCount, modeCount}
+    };
+}
+
+auto queryDisplayConfig(DisplayConfig config) -> conf::exp::expected<DisplayConfig, std::string>
+{
+    auto& [pathInfo, modeInfo] = config;
+    UINT32 pathSize = static_cast<UINT32>(pathInfo.size());
+    UINT32 modeSize = static_cast<UINT32>(modeInfo.size());
+    ULONG const result = QueryDisplayConfig(QDC_ONLY_ACTIVE_PATHS, &pathSize, pathInfo.data(), &modeSize, modeInfo.data(), NULL);
+    if (result != ERROR_SUCCESS)
+        return conf::exp::unexpected(win32::GetLastErrorString(result));
+    return config;
+}
+
+auto targetDeviceName(DISPLAYCONFIG_PATH_INFO const& path) -> conf::exp::expected<DISPLAYCONFIG_TARGET_DEVICE_NAME, std::string>
+{
+    DISPLAYCONFIG_TARGET_DEVICE_NAME targetName = {};
+    targetName.header.type = DISPLAYCONFIG_DEVICE_INFO_GET_TARGET_NAME;
+    targetName.header.size = sizeof(targetName);
+    targetName.header.adapterId = path.targetInfo.adapterId;
+    targetName.header.id = path.targetInfo.id;
+    auto const result = DisplayConfigGetDeviceInfo(&targetName.header);
+    if (result != ERROR_SUCCESS)
+    {
+        return conf::exp::unexpected(win32::GetLastErrorString(result));
+    }
+    return targetName;
+}
+
+auto adapterName(DISPLAYCONFIG_PATH_INFO const& path) -> conf::exp::expected<DISPLAYCONFIG_ADAPTER_NAME, std::string>
+{
+    DISPLAYCONFIG_ADAPTER_NAME adapterName = {};
+    adapterName.header.type = DISPLAYCONFIG_DEVICE_INFO_GET_ADAPTER_NAME;
+    adapterName.header.size = sizeof(adapterName);
+    adapterName.header.adapterId = path.sourceInfo.adapterId;
+    adapterName.header.id = 0;
+    auto const result = DisplayConfigGetDeviceInfo(&adapterName.header);
+    if (result != ERROR_SUCCESS)
+    {
+        return conf::exp::unexpected(win32::GetLastErrorString(result));
+    }
+    return adapterName;
+}
+
+} // namespace
+
+conf::exp::expected<DisplayConfig, std::string> getCurrentDisplayConfig()
+{
+    // clang-format off
+    return getDisplayConfigBufferSizes()
+        .and_then([](auto counts) -> conf::exp::expected<DisplayConfig, std::string>
+            {
+                return std::apply([](auto&&... args)
+                    {
+                        return DisplayConfig(std::forward<decltype(args)>(args)...);
+                    },
+                    std::move(counts)
+                );
+            })
+        .and_then([](auto config)
+            { return queryDisplayConfig(std::move(config)); });
+    // clang-format on
+}
+
+auto getDevicesPaths(DisplayConfig const& config) -> conf::exp::expected<std::vector<Path>, std::string>
+{
+    auto& [paths, _] = config;
+
+    // clang-format off
+    auto r = paths | std::ranges::views::transform([](auto const& path)
+        {
+            return std::pair{targetDeviceName(path), adapterName(path)};
+        });
+
+    auto const result = std::ranges::fold_left(std::move(r), conf::exp::expected<std::vector<Path>, std::string>{},
+        [](auto&& result, auto element) -> conf::exp::expected<std::vector<Path>, std::string>
+        {
+            if (!result) {
+                return conf::exp::unexpected(result.error());
+            }
+
+            if (!element.first) {
+                return conf::exp::unexpected(element.first.error());
+            }
+
+            if (!element.second) {
+                return conf::exp::unexpected(element.second.error());
+            }
+
+            result.value().push_back(Path{std::move(element).first.value(), std::move(element).second.value()});
+            return std::move(result);
+        });
+    // clang-format on
+
+    return result;
 }
 
 TEST_CASE("Create an adapter mode list", "[morpheus.core.gfx.gl.wgl.adapter_list]")
@@ -112,10 +201,12 @@ TEST_CASE("Create an adapter mode list", "[morpheus.core.gfx.gl.wgl.adapter_list
 */
     DISPLAYCONFIG_PATH_SOURCE_INFO* pSource = NULL; // will contain the answer
 
-    auto result = getCurrentDisplayConfig();
-    REQUIRE(result);
+    auto result = getCurrentDisplayConfig().and_then([](DisplayConfig const& config) { return getDevicesPaths(config); });
 
-    auto& [pathInfo, modeInfo] = result.value();
+    auto result4 = getCurrentDisplayConfig();
+    REQUIRE(result4);
+
+    auto& [pathInfo, modeInfo] = result4.value();
 
     for (UINT32 tryEnable = 0;; ++tryEnable)
     {

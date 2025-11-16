@@ -36,9 +36,8 @@ RenderSystem::RenderSystem(std::string_view const appName, std::string_view cons
     , mAvailableLayers(mContext.enumerateInstanceLayerProperties())
     , mAdapters(enumerateAdapters(mInstance))
 {}
-// LCOV_EXCL_STOP
-//---------------------------------------------------------------------------------------------------------------------
 
+// LCOV_EXCL_STOP
 //---------------------------------------------------------------------------------------------------------------------
 
 } // namespace morpheus::gfx::vulkan
