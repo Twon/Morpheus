@@ -31,11 +31,12 @@ add_subdirectory(meta)
 add_subdirectory(network)
 add_subdirectory(serialisation)
 
+#[[
 morpheus_add_executable(
     NAME MorpheusValidateChrono
     FOLDER "Libraries/Core"
 )
-#[[
+
 target_sources(MorpheusValidateChrono
     PRIVATE
         chronno_validator.cpp
