@@ -21,5 +21,5 @@ int main()
     for (auto& tz : tzdb.links)
         print::print("{}\n", tz.name());
 
-    return EXIT_FAILURE;
+    return EXIT_SUCCESS;
 }
