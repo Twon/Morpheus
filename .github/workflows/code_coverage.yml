@@ -117,6 +117,9 @@ jobs:
           sed -i.backup '1a onetbb*:build_type=Release' .conan2/profiles/default
           sed -i.backup '1a mold*:compiler.libcxx=libstdc++11' .conan2/profiles/default
 
+          echo -e "\n[options]" >> .conan2/profiles/default
+          sed -i.backup '/^\[options\]/a date*:tz_db=system' .conan2/profiles/default
+
           echo 'core.sources:download_urls=["origin", "https://c3i.jfrog.io/artifactory/conan-center-backup-sources/"]' >> .conan2/global.conf
           echo "tools.cmake.cmaketoolchain:generator = Ninja" >> .conan2/global.conf
           echo "tools.system.package_manager:mode = install" >> .conan2/global.conf

@@ -99,6 +99,9 @@ jobs:
             sed -i.backup '1a onetbb*:build_type=Release' .conan2/profiles/default
             sed -i.backup '1a mold*:compiler.libcxx=libstdc++11' .conan2/profiles/default
 
+            echo -e "\n[options]" >> .conan2/profiles/default
+            sed -i.backup '/^\[options\]/a date*:tz_db=system' .conan2/profiles/default
+
             cat >> .conan2/global.conf <<EOF
             tools.cmake.cmaketoolchain:generator = Ninja
             tools.system.package_manager:mode = install
