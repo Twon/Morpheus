@@ -30,3 +30,23 @@ add_subdirectory(memory)
 add_subdirectory(meta)
 add_subdirectory(network)
 add_subdirectory(serialisation)
+
+morpheus_add_executable(
+    NAME MorpheusValidateChrono
+    FOLDER "Libraries/Core"
+)
+
+target_sources(MorpheusValidateChrono
+    PRIVATE
+        chronno_validator.cpp
+)
+
+target_link_libraries(MorpheusValidateChrono
+    PRIVATE
+        morpheus::core
+)
+
+add_test(
+    NAME MorpheusValidateChrono
+    COMMAND MorpheusValidateChrono
+    WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
