@@ -15,3 +15,9 @@ target_link_libraries(MorpheusApplicationTests
 )
 
 add_subdirectory(po)
+
+if(APPLE)
+    set_tests_properties(MorpheusApplicationTests PROPERTIES ENVIRONMENT "TZDIR=/var/db/timezone/zoneinfo")
+elseif(UNIX)
+    set_tests_properties(MorpheusApplicationTests PROPERTIES ENVIRONMENT "TZDIR=/usr/share/zoneinfo")
+endif()
