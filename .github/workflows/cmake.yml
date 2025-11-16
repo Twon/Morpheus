@@ -213,6 +213,8 @@ jobs:
             sed -i.backup '1a mold*:build_type=Release' .conan2/profiles/default
             sed -i.backup '1a onetbb*:build_type=Release' .conan2/profiles/default
             sed -i.backup '1a mold*:compiler.libcxx=libstdc++11' .conan2/profiles/default
+
+            echo -e "\n[options]" >> .conan2/profiles/default
             sed -i.backup '1a date*:tz_db=system' .conan2/profiles/default
           fi
 
