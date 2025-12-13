@@ -63,20 +63,24 @@ int main() {
         return socketInfo;
     };
 
+    auto const acceptConnectionAndFwdSocketInfo = [&PORT](SocketAndAddr socketInfo) -> exp::expected<std::tuple<Socket, struct sockaddr_in, Socket>, std::error_code> {
+        print::print("Server listening on port {}...\n", PORT);
+        if (auto client = acceptConnection(socketInfo); !client) {
+            return exp::unexpected(client.error());
+        }
+        else {
+            return std::tuple{std::move(socketInfo.first), std::move(socketInfo.second), std::move(*client)};
+        }
+    };
+
+
+    
     auto sockAddrClient = createSocket()
                            .and_then(setSockOptions)
                            .and_then(combineSockAndAddr)
                            .and_then(bindAddress)
                            .and_then(listenOnSocket)
-                           .and_then([&PORT](SocketAndAddr socketInfo) -> exp::expected<std::tuple<Socket, struct sockaddr_in, Socket>, std::error_code> {
-                               print::print("Server listening on port {}...\n", PORT);
-                               if (auto client = acceptConnection(socketInfo); !client) {
-                                   return exp::unexpected(client.error());
-                               }
-                               else {
-                                   return std::tuple{std::move(socketInfo.first), std::move(socketInfo.second), std::move(*client)};
-                               }
-                           });
+                           .and_then(acceptConnectionAndFwdSocketInfo);
 
     if (!sockAddrClient) {
         print::print("Error: {}\n", sockAddrClient.error().message());

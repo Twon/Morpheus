@@ -50,4 +50,21 @@ auto createConnection(SocketAndAddr sockInfo) -> conf::exp::expected<SocketAndAd
     return std::pair{std::move(sock), std::move(serv_addr)};
 }
 
+auto sendData(Socket const& sock, std::string_view data) -> conf::exp::expected<std::size_t, std::error_code> {
+    if (auto result = send(sock.get(), data.data(), data.size(), 0); result < 0) {
+        return conf::exp::unexpected(std::error_code(errno, std::system_category()));
+    } else {
+        return static_cast<std::size_t>(result);
+    }
+}
+
+auto receiveData(Socket const& sock) -> conf::exp::expected<std::string, std::error_code> {
+    std::array<char, 1024> buffer = {0};
+    if (auto result = read(sock.get(), buffer.data(), buffer.size()); result < 0) {
+        return conf::exp::unexpected(std::error_code(errno, std::system_category()));
+    } else {
+        return std::string(buffer.data(), static_cast<std::size_t>(result));
+    }
+}
+
 } // namespace morpheus
