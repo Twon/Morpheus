@@ -3,6 +3,8 @@
 #include <morpheus/core/conformance/expected.hpp>
 #include <morpheus/core/conformance/print.hpp>
 
+#include <boost/scope/unique_resource.hpp>
+
 #include <arpa/inet.h>
 #include <unistd.h>
 
@@ -24,7 +26,7 @@ struct SocketCloser
     }
 };
 
-using Socket = std::unique_ptr<int, SocketCloser>;
+using Socket = boost::scope::unique_resource<int, SocketCloser>;
 using SocketAndAddr = std::pair<Socket, struct sockaddr_in>;
 
 auto createSocket() -> conf::exp::expected<Socket, std::error_code>
