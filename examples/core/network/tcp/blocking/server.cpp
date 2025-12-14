@@ -119,11 +119,11 @@ int main()
     print::print("Server listening on port {}...\n", PORT);
 
     std::array<char, 1024> buffer = {0};
-    read(client_fd.get(), buffer.data(), buffer.size());
+    socketRead(client_fd.get(), buffer.data(), buffer.size());
     print::print("Received: {}\n", std::string_view(buffer.data(), buffer.size()));
 
     std::string_view const reply = "Hello from server!";
-    send(client_fd.get(), reply.data(), reply.size(), 0);
+    socketWrite(client_fd.get(), reply.data(), reply.size());
 
     return EXIT_SUCCESS;
 }

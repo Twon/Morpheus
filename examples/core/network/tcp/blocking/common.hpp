@@ -55,9 +55,9 @@ using SocketAndAddr = std::pair<Socket, struct sockaddr_in>;
 bool socketError(SocketHandle const sock)
 {
 #if (MORPHEUS_BUILD_PLATFORM == MORPHEUS_TARGET_PLATFORM_PC_WINDOWS)
-        return (sock == invalidSocket);
+    return (sock == invalidSocket);
 #else
-        return (sock < 0);
+    return (sock < 0);
 #endif
 }
 
@@ -103,9 +103,27 @@ auto createConnection(SocketAndAddr sockInfo) -> conf::exp::expected<SocketAndAd
     return std::pair{std::move(sock), std::move(serv_addr)};
 }
 
+inline auto socketRead(SocketHandle s, void* buf, size_t len) noexcept
+{
+#if (MORPHEUS_BUILD_PLATFORM == MORPHEUS_TARGET_PLATFORM_PC_WINDOWS)
+    return ::recv(s, static_cast<char*>(buf), static_cast<int>(len), 0);
+#else
+    return ::read(s, buf, len);
+#endif
+}
+
+inline auto socketWrite(SocketHandle s, void const* buf, size_t len) noexcept
+{
+#if (MORPHEUS_BUILD_PLATFORM == MORPHEUS_TARGET_PLATFORM_PC_WINDOWS)
+    return ::send(s, static_cast<const char*>(buf), static_cast<int>(len), 0);
+#else
+    return ::write(s, buf, len);
+#endif
+}
+
 auto sendData(Socket const& sock, std::string_view data) -> conf::exp::expected<std::size_t, std::error_code>
 {
-    if (auto result = send(sock.get(), data.data(), data.size(), 0); result < 0)
+    if (auto result = socketWrite(sock.get(), data.data(), data.size()); result < 0)
     {
         return conf::exp::unexpected(socketErrorCode());
     }
@@ -118,7 +136,7 @@ auto sendData(Socket const& sock, std::string_view data) -> conf::exp::expected<
 auto receiveData(Socket const& sock) -> conf::exp::expected<std::string, std::error_code>
 {
     std::array<char, 1024> buffer = {0};
-    if (auto result = read(sock.get(), buffer.data(), buffer.size()); result < 0)
+    if (auto result = socketRead(sock.get(), buffer.data(), buffer.size()); result < 0)
     {
         return conf::exp::unexpected(socketErrorCode());
     }
