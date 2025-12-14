@@ -22,15 +22,30 @@
 namespace morpheus
 {
 
+#if (MORPHEUS_BUILD_PLATFORM == MORPHEUS_TARGET_PLATFORM_PC_WINDOWS)
+using SocketHandle = ::SOCKET;
+constexpr SocketHandle invalid_socket = INVALID_SOCKET;
+#else
+using SocketHandle = int;
+constexpr SocketHandle invalid_socket = -1;
+#endif
+
 struct SocketCloser
 {
-    using pointer = int; /// Unique ptr should store a file descriptor handle, not a pointer
+    using pointer = SocketHandle; /// Unique ptr should store a file descriptor handle, not a pointer
     void operator()(pointer fd) const noexcept
     {
+#if (MORPHEUS_BUILD_PLATFORM == MORPHEUS_TARGET_PLATFORM_PC_WINDOWS)
+        if (fd != INVALID_SOCKET)
+        {
+            ::closesocket(fd);
+        }
+#else
         if (fd >= 0)
         {
             ::close(fd);
         }
+#endif
     }
 };
 
