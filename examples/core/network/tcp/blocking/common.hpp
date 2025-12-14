@@ -1,5 +1,6 @@
 #pragma once
 
+#include <morpheus/core/base/platform.hpp>
 #include <morpheus/core/conformance/expected.hpp>
 #include <morpheus/core/conformance/print.hpp>
 
@@ -24,10 +25,10 @@ namespace morpheus
 
 #if (MORPHEUS_BUILD_PLATFORM == MORPHEUS_TARGET_PLATFORM_PC_WINDOWS)
 using SocketHandle = ::SOCKET;
-constexpr SocketHandle invalid_socket = INVALID_SOCKET;
+constexpr SocketHandle invalidSocket = INVALID_SOCKET;
 #else
 using SocketHandle = int;
-constexpr SocketHandle invalid_socket = -1;
+constexpr SocketHandle invalidSocket = -1;
 #endif
 
 struct SocketCloser
@@ -36,7 +37,7 @@ struct SocketCloser
     void operator()(pointer fd) const noexcept
     {
 #if (MORPHEUS_BUILD_PLATFORM == MORPHEUS_TARGET_PLATFORM_PC_WINDOWS)
-        if (fd != INVALID_SOCKET)
+        if (fd != invalidSocket)
         {
             ::closesocket(fd);
         }
@@ -59,7 +60,8 @@ auto createSocket() -> conf::exp::expected<Socket, std::error_code>
     {
         return conf::exp::unexpected(std::error_code(errno, std::system_category()));
     }
-    return Socket(s);
+    return Socket(s, SocketCloser{});
+
 }
 
 auto createSockAddr(std::string_view address, std::uint16_t port) -> conf::exp::expected<struct sockaddr_in, std::error_code>

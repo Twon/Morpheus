@@ -1,4 +1,6 @@
-#include <common.hpp>
+#include "common.hpp"
+
+#include <morpheus/core/base/platform.hpp>
 #include <morpheus/core/conformance/expected.hpp>
 #include <morpheus/core/conformance/print.hpp>
 
