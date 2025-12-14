@@ -31,34 +31,51 @@ using SocketHandle = int;
 constexpr SocketHandle invalidSocket = -1;
 #endif
 
+bool socketError(SocketHandle const sock);
+
 struct SocketCloser
 {
     using pointer = SocketHandle; /// Unique ptr should store a file descriptor handle, not a pointer
     void operator()(pointer fd) const noexcept
     {
+        if (!socketError(fd))
+        {
 #if (MORPHEUS_BUILD_PLATFORM == MORPHEUS_TARGET_PLATFORM_PC_WINDOWS)
-        if (fd != invalidSocket)
-        {
             ::closesocket(fd);
-        }
 #else
-        if (fd >= 0)
-        {
             ::close(fd);
-        }
 #endif
+        }
     }
 };
 
 using Socket = boost::scope::unique_resource<int, SocketCloser>;
 using SocketAndAddr = std::pair<Socket, struct sockaddr_in>;
 
+bool socketError(SocketHandle const sock)
+{
+#if (MORPHEUS_BUILD_PLATFORM == MORPHEUS_TARGET_PLATFORM_PC_WINDOWS)
+        return (sock == invalidSocket);
+#else
+        return (sock < 0);
+#endif
+}
+
+auto socketErrorCode() -> std::error_code
+{
+#if (MORPHEUS_BUILD_PLATFORM == MORPHEUS_TARGET_PLATFORM_PC_WINDOWS)
+    return std::error_code(WSAGetLastError(), std::system_category());
+#else
+    return std::error_code(errno, std::system_category());
+#endif
+}
+
 auto createSocket() -> conf::exp::expected<Socket, std::error_code>
 {
-    int s = socket(AF_INET, SOCK_STREAM, 0);
-    if (s < 0)
+    auto const s = socket(AF_INET, SOCK_STREAM, 0);
+    if (socketError(s))
     {
-        return conf::exp::unexpected(std::error_code(errno, std::system_category()));
+        return conf::exp::unexpected(socketErrorCode());
     }
     return Socket(s, SocketCloser{});
 }
@@ -71,7 +88,7 @@ auto createSockAddr(std::string_view address, std::uint16_t port) -> conf::exp::
     // Convert IPv4 address from text to binary form
     if (auto const result = inet_pton(AF_INET, address.data(), &addr.sin_addr); result <= 0)
     {
-        return conf::exp::unexpected(std::error_code(errno, std::system_category()));
+        return conf::exp::unexpected(socketErrorCode());
     }
     return addr;
 }
@@ -81,7 +98,7 @@ auto createConnection(SocketAndAddr sockInfo) -> conf::exp::expected<SocketAndAd
     auto [sock, serv_addr] = std::move(sockInfo);
     if (auto const result = connect(sock.get(), (struct sockaddr*)&serv_addr, sizeof(serv_addr)); result < 0)
     {
-        return conf::exp::unexpected(std::error_code(errno, std::system_category()));
+        return conf::exp::unexpected(socketErrorCode());
     }
     return std::pair{std::move(sock), std::move(serv_addr)};
 }
@@ -90,7 +107,7 @@ auto sendData(Socket const& sock, std::string_view data) -> conf::exp::expected<
 {
     if (auto result = send(sock.get(), data.data(), data.size(), 0); result < 0)
     {
-        return conf::exp::unexpected(std::error_code(errno, std::system_category()));
+        return conf::exp::unexpected(socketErrorCode());
     }
     else
     {
@@ -103,7 +120,7 @@ auto receiveData(Socket const& sock) -> conf::exp::expected<std::string, std::er
     std::array<char, 1024> buffer = {0};
     if (auto result = read(sock.get(), buffer.data(), buffer.size()); result < 0)
     {
-        return conf::exp::unexpected(std::error_code(errno, std::system_category()));
+        return conf::exp::unexpected(socketErrorCode());
     }
     else
     {
