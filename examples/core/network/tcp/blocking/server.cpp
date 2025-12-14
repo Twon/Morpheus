@@ -5,6 +5,8 @@
 #include <cstring>
 #include <unistd.h> // for close()
 
+#include <array>
+
 using namespace morpheus;
 using namespace morpheus::conf;
 
