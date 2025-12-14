@@ -1,11 +1,22 @@
-#include <common.hpp>
+#include "common.hpp"
+
+#include <morpheus/core/base/platform.hpp>
 #include <morpheus/core/conformance/print.hpp>
 
 #include <arpa/inet.h> // for sockaddr_in, inet_addr()
-#include <cstring>
 #include <unistd.h> // for close()
 
+#if (MORPHEUS_BUILD_PLATFORM == MORPHEUS_TARGET_PLATFORM_PC_WINDOWS)
+    #include <winsock2.h>
+    #include <ws2tcpip.h>
+#else
+    #include <arpa/inet.h>
+    #include <sys/socket.h>
+    #include <unistd.h>
+#endif
+
 #include <array>
+#include <cstring>
 
 using namespace morpheus;
 using namespace morpheus::conf;

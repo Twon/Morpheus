@@ -2,8 +2,14 @@
 #include <morpheus/core/conformance/expected.hpp>
 #include <morpheus/core/conformance/print.hpp>
 
-#include <arpa/inet.h>
-#include <unistd.h>
+#if (MORPHEUS_BUILD_PLATFORM == MORPHEUS_TARGET_PLATFORM_PC_WINDOWS)
+    #include <winsock2.h>
+    #include <ws2tcpip.h>
+#else
+    #include <arpa/inet.h>
+    #include <sys/socket.h>
+    #include <unistd.h>
+#endif
 
 using namespace morpheus;
 using namespace morpheus::conf;
