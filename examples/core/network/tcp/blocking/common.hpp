@@ -61,7 +61,6 @@ auto createSocket() -> conf::exp::expected<Socket, std::error_code>
         return conf::exp::unexpected(std::error_code(errno, std::system_category()));
     }
     return Socket(s, SocketCloser{});
-
 }
 
 auto createSockAddr(std::string_view address, std::uint16_t port) -> conf::exp::expected<struct sockaddr_in, std::error_code>
