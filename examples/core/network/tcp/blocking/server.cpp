@@ -31,19 +31,18 @@ auto acceptConnection(SocketAndAddr const& socketInfo) -> exp::expected<Socket, 
 {
     int addrlen = sizeof(socketInfo.second);
     // Accept a client connection
-    if (int client_fd = accept(socketInfo.first.get(), (struct sockaddr*)&socketInfo.second, (socklen_t*)&addrlen); client_fd < 0)
+    if (auto clientSocket = accept(socketInfo.first.get(), (struct sockaddr*)&socketInfo.second, (socklen_t*)&addrlen); socketError(clientSocket))
     {
         return conf::exp::unexpected(std::error_code(errno, std::system_category()));
     }
     else
     {
-        return Socket(client_fd);
+        return Socket(clientSocket);
     }
 }
 
 int main()
 {
-
     std::uint16_t const PORT = 8080;
 
     auto const setSockOptions = [](Socket sock) -> exp::expected<Socket, std::error_code>
