@@ -5,8 +5,6 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 
-#include <expected>
-
 using namespace morpheus;
 using namespace morpheus::conf;
 
