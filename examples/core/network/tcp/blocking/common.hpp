@@ -20,6 +20,7 @@
 #include <span>
 #include <string>
 #include <system_error>
+#include <vector>
 
 namespace morpheus
 {
@@ -107,7 +108,7 @@ auto createConnection(SocketAndAddr sockInfo) -> conf::exp::expected<SocketAndAd
 inline auto socketRead(SocketHandle s, std::span<std::byte> buffer) noexcept
 {
 #if (MORPHEUS_BUILD_PLATFORM == MORPHEUS_TARGET_PLATFORM_PC_WINDOWS)
-    return ::recv(s, static_cast<char*>(buf), static_cast<int>(len), 0);
+    return ::recv(s, reinterpret_cast<char*>(buffer.data()), static_cast<int>(buffer.size()), 0);
 #else
     return ::read(s, buffer.data(), buffer.size());
 #endif
@@ -116,7 +117,7 @@ inline auto socketRead(SocketHandle s, std::span<std::byte> buffer) noexcept
 inline auto socketWrite(SocketHandle s, std::span<std::byte const> const buffer) noexcept
 {
 #if (MORPHEUS_BUILD_PLATFORM == MORPHEUS_TARGET_PLATFORM_PC_WINDOWS)
-    return ::send(s, static_cast<const char*>(buf), static_cast<int>(len), 0);
+    return ::send(s, reinterpret_cast<const char*>(buffer.data()), static_cast<int>(buffer.size()), 0);
 #else
     return ::write(s, buffer.data(), buffer.size());
 #endif
