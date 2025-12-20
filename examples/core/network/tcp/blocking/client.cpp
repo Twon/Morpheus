@@ -42,13 +42,13 @@ int main()
     auto const receiveMsg = [](SocketAndAddr sockInfo) -> exp::expected<SocketAndAddr, std::error_code>
     {
         auto const& [sock, serv_addr] = sockInfo;
-        if (auto const result = receiveData(sock))
+        if (auto const result = receiveData(sock); !result)
         {
             return exp::unexpected(result.error());
         }
         else
         {
-            print::print("Received {} bytes from server: {}\n", result->size(), *result);
+            print::print("Received {} bytes from server: {}\n", result->size(), std::string_view{reinterpret_cast<char const*>(result->data()), result->size()});
         }
         return sockInfo;
     };

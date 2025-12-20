@@ -33,7 +33,7 @@ auto acceptConnection(SocketAndAddr const& socketInfo) -> exp::expected<Socket, 
     // Accept a client connection
     if (auto clientSocket = accept(socketInfo.first.get(), (struct sockaddr*)&socketInfo.second, (socklen_t*)&addrlen); socketError(clientSocket))
     {
-        return conf::exp::unexpected(std::error_code(errno, std::system_category()));
+        return conf::exp::unexpected(socketErrorCode());
     }
     else
     {
@@ -51,7 +51,7 @@ int main()
         int opt = 1;
         if (auto result = setsockopt(sock.get(), SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(opt)); result < 0)
         {
-            return conf::exp::unexpected(std::error_code(errno, std::system_category()));
+            return conf::exp::unexpected(socketErrorCode());
         }
         return sock;
     };
@@ -68,7 +68,7 @@ int main()
         // Bind socket to the address
         if (auto const result = bind(sock.get(), (struct sockaddr*)&addr, sizeof(addr)); result < 0)
         {
-            return conf::exp::unexpected(std::error_code(errno, std::system_category()));
+            return conf::exp::unexpected(socketErrorCode());
         }
         return std::pair{std::move(sock), std::move(addr)};
     };
@@ -78,7 +78,7 @@ int main()
         // Listen for connections (max backlog 3)
         if (auto const result = listen(socketInfo.first.get(), 3); result < 0)
         {
-            return conf::exp::unexpected(std::error_code(errno, std::system_category()));
+            return conf::exp::unexpected(socketErrorCode());
         }
         return socketInfo;
     };
@@ -114,12 +114,12 @@ int main()
 
     print::print("Server listening on port {}...\n", PORT);
 
-    std::array<char, 1024> buffer = {0};
-    socketRead(client_fd.get(), buffer.data(), buffer.size());
-    print::print("Received: {}\n", std::string_view(buffer.data(), buffer.size()));
+    std::array<std::byte, 1024> buffer = {};
+    auto size = socketRead(client_fd.get(), buffer);
+    print::print("Received: {}\n", std::string_view(reinterpret_cast<char const*>(buffer.data()), size));
 
     std::string_view const reply = "Hello from server!";
-    socketWrite(client_fd.get(), reply.data(), reply.size());
+    socketWrite(client_fd.get(), {reinterpret_cast<std::byte const*>(reply.data()), reply.size()});
 
     return EXIT_SUCCESS;
 }

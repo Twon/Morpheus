@@ -17,6 +17,7 @@
 
 #include <array>
 #include <cstdint>
+#include <span>
 #include <string>
 #include <system_error>
 
@@ -103,27 +104,27 @@ auto createConnection(SocketAndAddr sockInfo) -> conf::exp::expected<SocketAndAd
     return std::pair{std::move(sock), std::move(serv_addr)};
 }
 
-inline auto socketRead(SocketHandle s, void* buf, size_t len) noexcept
+inline auto socketRead(SocketHandle s, std::span<std::byte> buffer) noexcept
 {
 #if (MORPHEUS_BUILD_PLATFORM == MORPHEUS_TARGET_PLATFORM_PC_WINDOWS)
     return ::recv(s, static_cast<char*>(buf), static_cast<int>(len), 0);
 #else
-    return ::read(s, buf, len);
+    return ::read(s, buffer.data(), buffer.size());
 #endif
 }
 
-inline auto socketWrite(SocketHandle s, void const* buf, size_t len) noexcept
+inline auto socketWrite(SocketHandle s, std::span<std::byte const> const buffer) noexcept
 {
 #if (MORPHEUS_BUILD_PLATFORM == MORPHEUS_TARGET_PLATFORM_PC_WINDOWS)
     return ::send(s, static_cast<const char*>(buf), static_cast<int>(len), 0);
 #else
-    return ::write(s, buf, len);
+    return ::write(s, buffer.data(), buffer.size());
 #endif
 }
 
-auto sendData(Socket const& sock, std::string_view data) -> conf::exp::expected<std::size_t, std::error_code>
+auto sendData(Socket const& sock, std::span<std::byte const> const data) -> conf::exp::expected<std::size_t, std::error_code>
 {
-    if (auto result = socketWrite(sock.get(), data.data(), data.size()); result < 0)
+    if (auto result = socketWrite(sock.get(), data); result < 0)
     {
         return conf::exp::unexpected(socketErrorCode());
     }
@@ -133,16 +134,21 @@ auto sendData(Socket const& sock, std::string_view data) -> conf::exp::expected<
     }
 }
 
-auto receiveData(Socket const& sock) -> conf::exp::expected<std::string, std::error_code>
+auto sendData(Socket const& sock, std::string_view const str) -> conf::exp::expected<std::size_t, std::error_code>
 {
-    std::array<char, 1024> buffer = {0};
-    if (auto result = socketRead(sock.get(), buffer.data(), buffer.size()); result < 0)
+    return sendData(sock, std::span<std::byte const>{reinterpret_cast<std::byte const*>(str.data()), str.size()});
+}
+
+auto receiveData(Socket const& sock) -> conf::exp::expected<std::vector<std::byte>, std::error_code>
+{
+    std::array<std::byte, 1024> buffer = {};
+    if (auto result = socketRead(sock.get(), buffer); result < 0)
     {
         return conf::exp::unexpected(socketErrorCode());
     }
     else
     {
-        return std::string(buffer.data(), static_cast<std::size_t>(result));
+        return std::vector<std::byte>(buffer.begin(), buffer.begin() + static_cast<std::size_t>(result));
     }
 }
 
