@@ -104,29 +104,49 @@ int main()
         }
     };
 
+    auto receiveMessage =
+        [](std::tuple<Socket, struct sockaddr_in, Socket>&& serverAndClient) -> exp::expected<std::tuple<Socket, struct sockaddr_in, Socket>, std::error_code>
+    {
+        auto const data = receiveData(std::get<2>(serverAndClient))
+                              .and_then(
+                                  [](auto const& data) -> exp::expected<std::vector<std::byte>, std::error_code>
+                                  {
+                                      print::print("Received: {}\n", std::string_view(reinterpret_cast<char const*>(data.data()), data.size()));
+                                      return data;
+                                  });
+        if (!data)
+        {
+            return exp::unexpected(data.error());
+        }
+        return std::move(serverAndClient);
+    };
+
+    auto sendMessage =
+        [](std::tuple<Socket, struct sockaddr_in, Socket>&& serverAndClient) -> exp::expected<std::tuple<Socket, struct sockaddr_in, Socket>, std::error_code>
+    {
+        auto&& [server_fd, serv_addr, client_fd] = std::move(serverAndClient);
+        auto const sent = sendData(client_fd, "Hello from server!");
+        if (!sent)
+        {
+            return exp::unexpected(sent.error());
+        }
+        return std::tuple{std::move(server_fd), std::move(serv_addr), std::move(client_fd)};
+    };
+
     auto sockAddrClient = createSocket()
                               .and_then(setSockOptions)
                               .and_then(combineSockAndAddr)
                               .and_then(bindAddress)
                               .and_then(listenOnSocket)
-                              .and_then(acceptConnectionAndFwdSocketInfo);
+                              .and_then(acceptConnectionAndFwdSocketInfo)
+                              .and_then(receiveMessage)
+                              .and_then(sendMessage);
 
     if (!sockAddrClient)
     {
         print::print("Error: {}\n", sockAddrClient.error().message());
         return EXIT_FAILURE;
     }
-
-    auto const& [server_fd, serv_addr, client_fd] = *sockAddrClient;
-
-    print::print("Server listening on port {}...\n", PORT);
-
-    std::array<std::byte, 1024> buffer = {};
-    auto size = socketRead(client_fd.get(), buffer);
-    print::print("Received: {}\n", std::string_view(reinterpret_cast<char const*>(buffer.data()), size));
-
-    std::string_view const reply = "Hello from server!";
-    socketWrite(client_fd.get(), {reinterpret_cast<std::byte const*>(reply.data()), reply.size()});
 
     return EXIT_SUCCESS;
 }
