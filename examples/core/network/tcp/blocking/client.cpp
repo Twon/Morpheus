@@ -50,7 +50,8 @@ int main()
         }
         else
         {
-            print::print("Received {} bytes from server: {}\n", result->size(), std::string_view{reinterpret_cast<char const*>(result->data()), result->size()});
+            print::print(
+                "Received {} bytes from server: {}\n", result->size(), std::string_view{reinterpret_cast<char const*>(result->data()), result->size()});
         }
         return sockInfo;
     };
