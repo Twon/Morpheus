@@ -18,6 +18,8 @@ using namespace morpheus::conf;
 
 int main()
 {
+    SocketSystem initialiseSockers;
+
     auto const combineSockAndAddr = [](Socket sock)
     {
         return createSockAddr("127.0.0.1", 8080)

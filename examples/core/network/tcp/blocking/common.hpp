@@ -33,6 +33,21 @@ using SocketHandle = int;
 constexpr SocketHandle invalidSocket = -1;
 #endif
 
+struct SocketSystem {
+#if (MORPHEUS_BUILD_PLATFORM == MORPHEUS_TARGET_PLATFORM_PC_WINDOWS)
+    WSADATA wsaData;
+    SocketSystem() {
+        if (WSAStartup(MAKEWORD(2, 2), &wsaData) != 0)
+            throw std::runtime_error("WSAStartup failed");
+    }
+    ~SocketSystem() { WSACleanup(); }
+#else
+    SocketSystem() = default;
+    ~SocketSystem() = default;
+#endif
+};
+
+
 bool socketError(SocketHandle const sock);
 
 struct SocketCloser

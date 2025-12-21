@@ -43,13 +43,20 @@ auto acceptConnection(SocketAndAddr const& socketInfo) -> exp::expected<Socket, 
 
 int main()
 {
+    SocketSystem initialiseSockers;
+
     std::uint16_t const PORT = 8080;
 
     auto const setSockOptions = [](Socket sock) -> exp::expected<Socket, std::error_code>
     {
         // Allow reuse of the address/port
-        int opt = 1;
-        if (auto result = setsockopt(sock.get(), SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(opt)); result < 0)
+        int const opt = 1;
+#if (MORPHEUS_BUILD_PLATFORM == MORPHEUS_TARGET_PLATFORM_PC_WINDOWS)
+        int const optName = SO_EXCLUSIVEADDRUSE;
+#else
+        int const optName = SO_REUSEADDR | SO_REUSEPORT;
+#endif
+        if (auto result = setsockopt(sock.get(), SOL_SOCKET, optName, reinterpret_cast<char const*>(&opt), sizeof(opt)); result < 0)
         {
             return conf::exp::unexpected(socketErrorCode());
         }
