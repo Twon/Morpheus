@@ -6,6 +6,11 @@
 #include <boost/hana/functional/fix.hpp>
 #include <boost/program_options.hpp>
 
+#include <array>
+#include <cstdint>
+#include <cstddef>
+#include <memory>
+
 struct Settings
 {
     // boost::asio::ip::address address;

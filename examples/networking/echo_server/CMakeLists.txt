@@ -8,7 +8,6 @@ target_link_libraries(EchoServer
     PRIVATE
         morpheus::application
         morpheus::core
-        Boost::asio
 )
 
 set_target_properties(EchoServer
