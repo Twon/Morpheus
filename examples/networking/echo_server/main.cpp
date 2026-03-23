@@ -45,24 +45,22 @@ int main(int argc, char* argv[])
         {
             auto buffer = std::shared_ptr<std::array<char, 1024>>(new std::array<char, 1024>());
 
-            socket->async_read_some(
-                boost::asio::buffer(data->data(), data->size()),
-                [self, socket, data](boost::system::error_code ec, std::size_t n) mutable -> void
-                {
-                    if (!ec)
-                    {
-                        boost::asio::async_write(
-                            *socket,
-                            boost::asio::buffer(data->data(), n), // Write only the 'n' bytes read in.
-                            [self, socket, data](boost::system::error_code ec, std::size_t) mutable
-                            {
-                                if (!ec)
-                                {
-                                    self(socket);
-                                }
-                            });
-                    }
-                });
+            socket->async_read_some(boost::asio::buffer(data->data(), data->size()),
+                                    [self, socket, data](boost::system::error_code ec, std::size_t n) mutable -> void
+                                    {
+                                        if (!ec)
+                                        {
+                                            boost::asio::async_write(*socket,
+                                                                     boost::asio::buffer(data->data(), n), // Write only the 'n' bytes read in.
+                                                                     [self, socket, data](boost::system::error_code ec, std::size_t) mutable
+                                                                     {
+                                                                         if (!ec)
+                                                                         {
+                                                                             self(socket);
+                                                                         }
+                                                                     });
+                                        }
+                                    });
         });
 
     auto const doAccept = boost::hana::fix(
