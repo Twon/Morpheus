@@ -29,14 +29,6 @@ struct Settings
 
 using namespace morpheus::application::po;
 
-void force_shared_ptr_vtable()
-{
-    using T = std::array<char, 1024>;
-    // Allocate a shared_ptr on the heap
-    std::shared_ptr<T> dummy = std::shared_ptr<T>(new T);
-    (void)dummy; // suppress unused variable warning
-}
-
 int main(int argc, char* argv[])
 {
     Settings settings;
@@ -51,7 +43,7 @@ int main(int argc, char* argv[])
     auto const doRead = boost::hana::fix(
         [](auto self, std::shared_ptr<boost::asio::ip::tcp::socket> socket) -> void
         {
-            auto data = std::make_shared<std::array<char, 1024>>();
+            auto buffer = std::shared_ptr<std::array<char, 1024>>(new std::array<char, 1024>());
 
             socket->async_read_some(
                 boost::asio::buffer(data->data(), data->size()),
