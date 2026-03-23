@@ -29,6 +29,14 @@ struct Settings
 
 using namespace morpheus::application::po;
 
+void force_shared_ptr_vtable()
+{
+    using T = std::array<char, 1024>;
+    // Allocate a shared_ptr on the heap
+    std::shared_ptr<T> dummy = std::shared_ptr<T>(new T);
+    (void)dummy; // suppress unused variable warning
+}
+
 int main(int argc, char* argv[])
 {
     Settings settings;
@@ -45,22 +53,24 @@ int main(int argc, char* argv[])
         {
             auto data = std::make_shared<std::array<char, 1024>>();
 
-            socket->async_read_some(boost::asio::buffer(data->data(), data->size()),
-                                    [self, socket, data](boost::system::error_code ec, std::size_t n) mutable -> void
-                                    {
-                                        if (!ec)
-                                        {
-                                            boost::asio::async_write(*socket,
-                                                                     boost::asio::buffer(data->data(), n), // Write only the 'n' bytes read in.
-                                                                     [self, socket, data](boost::system::error_code ec, std::size_t) mutable
-                                                                     {
-                                                                         if (!ec)
-                                                                         {
-                                                                             self(socket);
-                                                                         }
-                                                                     });
-                                        }
-                                    });
+            socket->async_read_some(
+                boost::asio::buffer(data->data(), data->size()),
+                [self, socket, data](boost::system::error_code ec, std::size_t n) mutable -> void
+                {
+                    if (!ec)
+                    {
+                        boost::asio::async_write(
+                            *socket,
+                            boost::asio::buffer(data->data(), n), // Write only the 'n' bytes read in.
+                            [self, socket, data](boost::system::error_code ec, std::size_t) mutable
+                            {
+                                if (!ec)
+                                {
+                                    self(socket);
+                                }
+                            });
+                    }
+                });
         });
 
     auto const doAccept = boost::hana::fix(

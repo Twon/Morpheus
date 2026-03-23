@@ -29,7 +29,6 @@ target_link_libraries(MorpheusConfig
     INTERFACE
         $<$<PLATFORM_ID:Linux>:dl>
         $<$<OR:$<CXX_COMPILER_ID:Clang>,$<CXX_COMPILER_ID:AppleClang>>:-stdlib=libc++>
-        $<$<CXX_COMPILER_ID:AppleClang>:c++ c++abi>
 )
 
 target_compile_options(MorpheusConfig
