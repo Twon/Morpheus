@@ -40,11 +40,11 @@ int main(int argc, char* argv[])
     boost::asio::io_context io_context;
     boost::asio::ip::tcp::acceptor acceptor(io_context, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), settings.port));
 
-    auto const doRead = boost::hana::fix(
-        [](auto self, std::shared_ptr<boost::asio::ip::tcp::socket> socket) -> void
-        {
-            auto data = std::shared_ptr<std::array<char, 1024>>(new std::array<char, 1024>());
+    auto data = std::make_shared<std::array<char, 1024>>();
 
+    auto const doRead = boost::hana::fix(
+        [data = std::move(data)](auto self, std::shared_ptr<boost::asio::ip::tcp::socket> socket) mutable -> void
+        {
             socket->async_read_some(boost::asio::buffer(data->data(), data->size()),
                                     [self, socket, data](boost::system::error_code ec, std::size_t n) mutable -> void
                                     {
