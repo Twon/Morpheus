@@ -7,8 +7,8 @@
 #include <boost/program_options.hpp>
 
 #include <array>
-#include <cstdint>
 #include <cstddef>
+#include <cstdint>
 #include <memory>
 
 struct Settings
