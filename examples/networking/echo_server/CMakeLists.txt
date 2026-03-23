@@ -1,4 +1,8 @@
-add_executable(EchoServer main.cpp)
+morpheus_add_executable(NAME EchoServer)
+target_sources(EchoServer
+    PRIVATE
+         main.cpp
+)
 
 target_link_libraries(EchoServer
     PRIVATE
@@ -11,4 +15,3 @@ set_target_properties(EchoServer
          FOLDER Examples/Network
          RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
 )
-
