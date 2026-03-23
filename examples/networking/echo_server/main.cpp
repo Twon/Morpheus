@@ -7,8 +7,8 @@
 #include <boost/program_options.hpp>
 
 #include <array>
-#include <cstddef>
 #include <cstdint>
+#include <cstddef>
 #include <memory>
 
 struct Settings
@@ -43,7 +43,7 @@ int main(int argc, char* argv[])
     auto const doRead = boost::hana::fix(
         [](auto self, std::shared_ptr<boost::asio::ip::tcp::socket> socket) -> void
         {
-            auto data = std::shared_ptr<std::array<char, 1024>>(new std::array<char, 1024>());
+            auto data = std::make_shared<std::array<char, 1024>>();
 
             socket->async_read_some(boost::asio::buffer(data->data(), data->size()),
                                     [self, socket, data](boost::system::error_code ec, std::size_t n) mutable -> void
