@@ -59,7 +59,7 @@ jobs:
           wget https://apt.llvm.org/llvm.sh
           chmod +x llvm.sh
           sudo ./llvm.sh ${{ env.COMPILER_VERSION }} all
-          
+
           # We need to update symlink otherwise we end up with miss matched clang/clang++ and clang-tidy versions.
           sudo rm /usr/bin/clang
           sudo rm /usr/bin/clang++
