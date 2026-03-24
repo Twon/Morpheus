@@ -122,7 +122,7 @@ jobs:
         # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
         run: |
            source build/${{env.BUILD_TYPE}}/generators/conanbuild.sh
-           cmake --preset ${{ env.CONAN_PRESET }} -DCLANG_TIDY_ENABLE=1 -DCMAKE_COMPILE_WARNING_AS_ERROR=OFF
+           cmake --preset ${{ env.CONAN_PRESET }} -DCLANG_TIDY_ENABLE=1
 
       - name: Build
         # Build your program with the given configuration
