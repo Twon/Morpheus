@@ -5,6 +5,7 @@
         and version.
     @{
 */
+// NOLINTBEGIN(cppcoreguidelines-macro-usage)
 // clang-format off
 #if !defined(MORPHEUS_COMPILER)
 
@@ -121,4 +122,5 @@
 
 #endif // !defined ( MORPHEUS_COMPILER )
 // clang-format on
+// NOLINTEND(cppcoreguidelines-macro-usage)
 /// @}
