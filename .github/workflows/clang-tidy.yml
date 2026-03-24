@@ -71,6 +71,11 @@ jobs:
         run: |
           sudo apt install -y libc++-${{ env.COMPILER_VERSION }}-dev libc++abi-${{ env.COMPILER_VERSION }}-dev libunwind-${{env.COMPILER_VERSION }}-dev
 
+      - name: Install build dependencies and IWYU
+        run: |
+          sudo apt update
+          sudo apt install -y clang-tidy
+ 
       - name: Set up Python
         uses: actions/setup-python@v5.4.0
         with:
@@ -127,7 +132,7 @@ jobs:
         # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
         run: |
            source build/${{env.BUILD_TYPE}}/generators/conanbuild.sh
-           cmake --preset ${{ env.CONAN_PRESET }} -DIWYU_ENABLE=1
+           cmake --preset ${{ env.CONAN_PRESET }} -DCLANG_TIDY_ENABLE=1
 
       - name: Build
         # Build your program with the given configuration
