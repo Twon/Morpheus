@@ -71,10 +71,6 @@ jobs:
         run: |
           sudo apt install -y libc++-${{ env.COMPILER_VERSION }}-dev libc++abi-${{ env.COMPILER_VERSION }}-dev libunwind-${{env.COMPILER_VERSION }}-dev
 
-      - name: Install build dependencies and IWYU
-        run: |
-          sudo apt update
-          sudo apt install -y clang-tidy
 
       - name: Set up Python
         uses: actions/setup-python@v5.4.0
