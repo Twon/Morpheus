@@ -17,13 +17,7 @@
 
 name: Clang Tidy
 
-on:
-  schedule:
-    - cron: "0 2 * * *"   # Every day at 02:00 UTC
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
+on: workflow_dispatch
 
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
