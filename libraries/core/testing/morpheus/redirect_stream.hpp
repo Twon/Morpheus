@@ -17,11 +17,16 @@ struct RedirectStream
         , mPrevious(mStream.rdbuf(mStringStream.rdbuf()))
     {}
 
-    /// The output captured by the stream.
-    auto getOutput() const { return mStringStream.str(); }
+    RedirectStream(RedirectStream const&) = delete;
+    RedirectStream(RedirectStream&&) = delete;
+    RedirectStream& operator=(RedirectStream const&) = delete;
+    RedirectStream& operator=(RedirectStream&&) = delete;
 
     /// Restore previous stream state on destruction.
     ~RedirectStream() { mStream.rdbuf(mPrevious); }
+
+    /// The output captured by the stream.
+    auto getOutput() const { return mStringStream.str(); }
 
 private:
     std::ostream& mStream;

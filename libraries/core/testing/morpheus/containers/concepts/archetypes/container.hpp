@@ -37,35 +37,35 @@ struct Container
     /// Copy constructor
     constexpr Container(Container const&);
     /// Move constructor
-    constexpr Container(Container&&);
+    constexpr Container(Container&&) noexcept;
     /// Destructor
     constexpr ~Container() = default;
     /// Copy assignment operator
     constexpr Container& operator=(Container const&);
     /// Move assignment operator
-    constexpr Container& operator=(Container&&);
+    constexpr Container& operator=(Container&&) noexcept;
 
     /// Spaceship operator
-    constexpr auto operator<=>(Container const&) const = default;
+    [[nodiscard]] constexpr auto operator<=>(Container const&) const = default;
 
     /// returns an iterator to the beginning
-    constexpr iterator begin() noexcept;
+    [[nodiscard]] constexpr iterator begin() noexcept;
     /// returns an iterator to the end
-    constexpr iterator end() noexcept;
+    [[nodiscard]] constexpr iterator end() noexcept;
     /// returns a const iterator to the beginning
-    constexpr const_iterator begin() const noexcept;
+    [[nodiscard]] constexpr const_iterator begin() const noexcept;
     /// returns a const iterator to the end
-    constexpr const_iterator end() const noexcept;
+    [[nodiscard]] constexpr const_iterator end() const noexcept;
     /// returns a const iterator to the beginning
-    constexpr const_iterator cbegin() const noexcept;
+    [[nodiscard]] constexpr const_iterator cbegin() const noexcept;
     /// returns a const iterator to the end
-    constexpr const_iterator cend() const noexcept;
+    [[nodiscard]] constexpr const_iterator cend() const noexcept;
     /// returns the number of elements
-    constexpr size_type size() const noexcept;
+    [[nodiscard]] constexpr size_type size() const noexcept;
     /// returns the maximum number of elements
-    constexpr size_type max_size() const noexcept;
+    [[nodiscard]] constexpr size_type max_size() const noexcept;
     /// returns whether the container is empty
-    constexpr bool empty() const noexcept;
+    [[nodiscard]] constexpr bool empty() const noexcept;
 };
 
 } // namespace morpheus::containers::concepts::archetypes
