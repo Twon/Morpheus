@@ -20,8 +20,8 @@ struct RedirectStream
     RedirectStream(RedirectStream const&) = delete;
     RedirectStream(RedirectStream&&) = delete;
     RedirectStream& operator=(RedirectStream const&) = delete;
-    RedirectStream& operator=(RedirectStream&&) = delete;    
-    
+    RedirectStream& operator=(RedirectStream&&) = delete;
+
     /// Restore previous stream state on destruction.
     ~RedirectStream() { mStream.rdbuf(mPrevious); }
 
