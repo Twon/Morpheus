@@ -46,5 +46,6 @@ CheckOptions:
     - key: misc-non-private-member-variables-in-classes.IgnoreClassesWithAllMemberVariablesBeingPublic
       value: true
 WarningsAsErrors: ''
-HeaderFilterRegex: '.*'
+HeaderFilterRegex: '^libraries/.*/morpheus/.*'
 FormatStyle: file
+SystemHeaders: false
