@@ -145,7 +145,6 @@ function(enable_clang_tidy)
 
     _clang_tidy_log("  Arguments: ${_clang_tidy_args}")
     _clang_tidy_log("Enabling clang-tidy - done")
-    _clang_tidy_log("CLANG_TIDY = ${CMAKE_CXX_CLANG_TIDY}")
 endfunction()
 
 if (CLANG_TIDY_ENABLE)

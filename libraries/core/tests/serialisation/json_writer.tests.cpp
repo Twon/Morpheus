@@ -39,7 +39,7 @@ namespace test
 {
 
 template <class T>
-std::string serialise(T const& value)
+static std::string serialise(T const& value)
 {
     std::ostringstream oss;
     JsonWriteSerialiser serialiser{oss};
@@ -50,7 +50,7 @@ std::string serialise(T const& value)
 #if (__cpp_lib_to_chars >= 201611L)
 template <typename T>
 requires std::is_floating_point_v<T>
-T toFloatingPoint(std::string_view value)
+static T toFloatingPoint(std::string_view value)
 {
     T result = 0;
     auto [ptr, ec]{std::from_chars(value.data(), value.data() + value.size(), result)};

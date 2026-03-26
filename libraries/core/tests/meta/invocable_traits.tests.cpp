@@ -5,8 +5,10 @@
 namespace morpheus::meta
 {
 
+namespace {
 auto exceptInvocableFunction() noexcept(false) {}
 auto noexceptInvocableFunction() noexcept {}
+}
 
 TEST_CASE("Meta is nothrow invocable the compile time detection of noexcept invocable types", "[morpheus.meta.is_nothrow_invocable]")
 {

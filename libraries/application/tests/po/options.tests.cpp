@@ -19,6 +19,9 @@
 namespace morpheus::application::po
 {
 
+namespace
+{
+
 struct Person
 {
     std::string firstName;
@@ -56,6 +59,8 @@ auto captureOutput(conf::ranges::contiguous_range auto const& cliOptions, HelpDo
         return conf::ranges::find_if(linesView, [optionText](auto const line) { return line.contains(optionText); }) != linesView.end();
     };
     return findOption;
+}
+
 }
 
 TEST_CASE_METHOD(LoggingFixture, "Ensure options parsing of native types works", "[morpheus.application.po.basic_types]")
