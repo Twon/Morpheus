@@ -1,5 +1,5 @@
 Checks: 'misc-use-internal-linkage'
-CheckOptions:
+CheckOptions: []
 WarningsAsErrors: ''
 HeaderFilterRegex: '^libraries/.*/morpheus/.*'
 FormatStyle: file
