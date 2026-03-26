@@ -2,7 +2,7 @@ Checks: '
     misc-use-internal-linkage
 '
 CheckOptions:
-arningsAsErrors: ''
+WarningsAsErrors: ''
 HeaderFilterRegex: '^libraries/.*/morpheus/.*'
 FormatStyle: file
 SystemHeaders: false
