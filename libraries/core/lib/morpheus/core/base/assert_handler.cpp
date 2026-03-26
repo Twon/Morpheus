@@ -11,6 +11,8 @@
 namespace morpheus
 {
 
+namespace {
+
 AssertHandler gAssertHandler = [](Assertion assertion)
 {
     // LCOV_EXCL_START
@@ -24,6 +26,8 @@ AssertHandler gAssertHandler = [](Assertion assertion)
     return true;
     // LCOV_EXCL_STOP
 };
+
+}
 
 AssertHandler setAssertHandler(AssertHandler handler)
 {

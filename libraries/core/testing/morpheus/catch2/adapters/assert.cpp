@@ -10,7 +10,11 @@
 namespace morpheus
 {
 
-AssertHandler previousHandler;
+namespace {
+
+static AssertHandler previousHandler;
+
+}
 
 AssertHandler const& getPreviousHandler()
 {
