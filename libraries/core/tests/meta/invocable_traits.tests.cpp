@@ -8,10 +8,11 @@ namespace morpheus::meta
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunneeded-internal-declaration"
 
-namespace {
+namespace
+{
 auto exceptInvocableFunction() noexcept(false) {}
 auto noexceptInvocableFunction() noexcept {}
-}
+} // namespace
 
 #pragma clang diagnostic pop
 

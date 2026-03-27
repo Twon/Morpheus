@@ -15,7 +15,7 @@ void testFunction()
     SUCCEED();
 }
 
-}
+} // namespace
 
 TEST_CASE("Propagate constness and noexceptness to function_ref", "[morpheus.functional.function_ref]")
 {

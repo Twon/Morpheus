@@ -61,7 +61,7 @@ auto captureOutput(conf::ranges::contiguous_range auto const& cliOptions, HelpDo
     return findOption;
 }
 
-}
+} // namespace
 
 TEST_CASE_METHOD(LoggingFixture, "Ensure options parsing of native types works", "[morpheus.application.po.basic_types]")
 {

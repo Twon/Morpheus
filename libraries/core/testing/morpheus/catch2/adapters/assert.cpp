@@ -10,7 +10,8 @@
 namespace morpheus
 {
 
-namespace {
+namespace
+{
 
 static AssertHandler previousHandler;
 

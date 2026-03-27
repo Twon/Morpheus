@@ -11,7 +11,8 @@
 namespace morpheus
 {
 
-namespace {
+namespace
+{
 
 AssertHandler gAssertHandler = [](Assertion assertion)
 {
@@ -29,7 +30,7 @@ AssertHandler gAssertHandler = [](Assertion assertion)
 
 AssertHaltHandler gAssertHaltHandler = []() { breakpoint(); }; // LCOV_EXCL_LINE
 
-}
+} // namespace
 
 AssertHandler setAssertHandler(AssertHandler handler)
 {
