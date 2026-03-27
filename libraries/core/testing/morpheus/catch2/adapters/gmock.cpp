@@ -1,3 +1,5 @@
+#include "morpheus/catch2/adapters/gmock.hpp"
+
 #include <catch2/catch_all.hpp>
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>

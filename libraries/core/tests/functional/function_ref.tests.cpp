@@ -7,6 +7,16 @@
 namespace morpheus::functional
 {
 
+namespace
+{
+
+void testFunction()
+{
+    SUCCEED();
+}
+
+}
+
 TEST_CASE("Propagate constness and noexceptness to function_ref", "[morpheus.functional.function_ref]")
 {
     using ConcreteFunctionRef = conf::func_ref::function_ref<void()>;
@@ -14,11 +24,6 @@ TEST_CASE("Propagate constness and noexceptness to function_ref", "[morpheus.fun
     STATIC_REQUIRE(std::is_nothrow_copy_assignable_v<ConcreteFunctionRef>);
     STATIC_REQUIRE(std::is_nothrow_move_constructible_v<ConcreteFunctionRef>);
     STATIC_REQUIRE(std::is_nothrow_move_assignable_v<ConcreteFunctionRef>);
-}
-
-void testFunction()
-{
-    SUCCEED();
 }
 
 TEST_CASE("Verify construction of function_ref", "[morpheus.functional.function_ref]")
