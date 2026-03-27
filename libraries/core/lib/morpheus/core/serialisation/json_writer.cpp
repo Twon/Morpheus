@@ -102,6 +102,7 @@ void JsonWriter::write(float const value)
 
 void JsonWriter::write(double const value)
 {
+    // NOLINTNEXTLINE(clang-analyzer-core.CallAndMessage)
     MORPHEUS_VERIFY(mJsonWriter.Double(value));
 }
 
