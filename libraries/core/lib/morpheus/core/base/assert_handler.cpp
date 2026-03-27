@@ -27,6 +27,8 @@ AssertHandler gAssertHandler = [](Assertion assertion)
     // LCOV_EXCL_STOP
 };
 
+AssertHaltHandler gAssertHaltHandler = []() { breakpoint(); }; // LCOV_EXCL_LINE
+
 }
 
 AssertHandler setAssertHandler(AssertHandler handler)
@@ -40,8 +42,6 @@ AssertHandler setAssertHandler(AssertHandler handler)
 {
     return gAssertHandler;
 }
-
-AssertHaltHandler gAssertHaltHandler = []() { breakpoint(); }; // LCOV_EXCL_LINE
 
 AssertHaltHandler setAssertHaltHandler(AssertHaltHandler handler)
 {
