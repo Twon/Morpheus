@@ -43,7 +43,7 @@ namespace test
 {
 
 template <typename T>
-T deserialise(std::string_view const value, bool const validate = true)
+static T deserialise(std::string_view const value, bool const validate = true)
 {
 #if (__cpp_lib_sstream_from_string_view >= 202306L)
     std::unique_ptr<std::istream> iss = std::make_unique<std::istringstream>(value);
@@ -54,7 +54,7 @@ T deserialise(std::string_view const value, bool const validate = true)
     return serialiser.deserialise<T>();
 }
 
-auto readerFromString(std::string_view const value)
+static auto readerFromString(std::string_view const value)
 {
 #if (__cpp_lib_sstream_from_string_view >= 202306L)
     std::unique_ptr<std::istream> iss = std::make_unique<std::istringstream>(value);
