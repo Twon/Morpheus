@@ -5,10 +5,15 @@
 namespace morpheus::meta
 {
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunneeded-internal-declaration"
+
 namespace {
 auto exceptInvocableFunction() noexcept(false) {}
 auto noexceptInvocableFunction() noexcept {}
 }
+
+#pragma clang diagnostic pop
 
 TEST_CASE("Meta is nothrow invocable the compile time detection of noexcept invocable types", "[morpheus.meta.is_nothrow_invocable]")
 {
