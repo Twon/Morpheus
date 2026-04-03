@@ -7,7 +7,8 @@
 #include <string>
 #include <vector>
 
-namespace boost
+#if BOOST_VERSION < 109000  // before 1.90 added std::optional support
+namespace boost::program_options 
 {
 
 template <class T, class CharType>
@@ -17,8 +18,10 @@ void validate(boost::any& v, std::vector<std::basic_string<CharType>> const& val
     po::validators::check_first_occurrence(v);
     auto const& s = po::validators::get_single_string(values);
 
-    T n = boost::lexical_cast<T>(s);
-    v = boost::any(std::make_optional<T>(n));
+    boost::any n;
+    validate(n, values, static_cast<T*>(nullptr), 0);
+    v = boost::any(std::optional<T>(boost::any_cast<T>(n)));
 }
 
-} // namespace boost
+} // namespace boost::program_options
+#endif // BOOST_VERSION < 109000  // before 1.90 added std::optional support 

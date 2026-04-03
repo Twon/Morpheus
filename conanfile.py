@@ -230,6 +230,8 @@ class Morpheus(ConanFile):
         }
 
     def configure(self):
+        self.options["boost"].without_cobalt = True
+
         if self.settings.compiler.get_safe("cppstd"):
             check_min_cppstd(self, self._minimum_cpp_standard)
         min_version = self._minimum_compilers_version.get(
