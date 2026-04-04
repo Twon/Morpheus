@@ -161,12 +161,12 @@ class Morpheus(ConanFile):
             self.options.rm_safe("with_rs_direct_x12")
 
     def build_requirements(self):
-        self.tool_requires("ninja/1.13.1")
-        self.test_requires("catch2/3.9.0")
-        self.test_requires("gtest/1.16.0")
+        self.tool_requires("ninja/1.13.2")
+        self.test_requires("catch2/3.13.0")
+        self.test_requires("gtest/1.17.0")
 
-        if get_cmake_version() < Version("4.0.3"):
-            self.tool_requires("cmake/4.0.3")
+        if get_cmake_version() < Version("4.3.0"):
+            self.tool_requires("cmake/4.3.0")
 
         if self.options.build_docs:
             self.build_requires("doxygen/1.16.1")
@@ -195,7 +195,7 @@ class Morpheus(ConanFile):
             self.requires("tl-expected/20190710", transitive_headers=True)
 
         if self.useFMT:
-            self.requires("fmt/11.2.0", transitive_headers=True)
+            self.requires("fmt/12.1.0", transitive_headers=True)
 
         if self.useRanges:
             self.requires("range-v3/0.12.0", transitive_headers=True)
