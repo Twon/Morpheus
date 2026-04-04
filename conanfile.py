@@ -76,11 +76,11 @@ class Morpheus(ConanFile):
         "with_rs_vulkan": True,
      }
     requires = (
-        "unordered_dense/4.5.0",
+        "unordered_dense/4.8.1",
         "boost/1.90.0",
-        "ctre/3.9.0",
+        "ctre/3.10.0",
         "magic_enum/0.9.7",
-        "ms-gsl/4.1.0",
+        "ms-gsl/4.2.0",
         "rapidjson/cci.20230929",
         "scnlib/4.0.1",
     )
