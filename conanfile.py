@@ -81,7 +81,7 @@ class Morpheus(ConanFile):
         "ctre/3.10.0",
         "magic_enum/0.9.7",
         "ms-gsl/4.2.0",
-        "rapidjson/cci.20230929",
+        "rapidjson/cci.20250205",
         "scnlib/4.0.1",
     )
 
