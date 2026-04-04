@@ -7,8 +7,8 @@
 #include <string>
 #include <vector>
 
-#if BOOST_VERSION < 109000  // before 1.90 added std::optional support
-namespace boost::program_options 
+#if BOOST_VERSION < 109000 // before 1.90 added std::optional support
+namespace boost::program_options
 {
 
 template <class T, class CharType>
@@ -24,4 +24,4 @@ void validate(boost::any& v, std::vector<std::basic_string<CharType>> const& val
 }
 
 } // namespace boost::program_options
-#endif // BOOST_VERSION < 109000  // before 1.90 added std::optional support 
+#endif // BOOST_VERSION < 109000  // before 1.90 added std::optional support
