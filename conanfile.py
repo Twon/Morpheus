@@ -76,12 +76,12 @@ class Morpheus(ConanFile):
         "with_rs_vulkan": True,
      }
     requires = (
-        "unordered_dense/4.5.0",
+        "unordered_dense/4.8.1",
         "boost/1.90.0",
-        "ctre/3.9.0",
+        "ctre/3.10.0",
         "magic_enum/0.9.7",
-        "ms-gsl/4.1.0",
-        "rapidjson/cci.20230929",
+        "ms-gsl/4.3.0",
+        "rapidjson/1.1.0",
         "scnlib/4.0.1",
     )
 
@@ -172,7 +172,7 @@ class Morpheus(ConanFile):
             self.build_requires("doxygen/1.16.1")
 
         if self.options.get_safe("link_with_mold", False):
-            self.build_requires("mold/2.36.0")
+            self.build_requires("mold/2.40.1")
 
     def requirements(self):
         if self.options.get_safe("with_rs_vulkan", False):
