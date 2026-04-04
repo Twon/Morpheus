@@ -77,7 +77,7 @@ class Morpheus(ConanFile):
      }
     requires = (
         "unordered_dense/4.5.0",
-        "boost/1.88.0",
+        "boost/1.90.0",
         "ctre/3.9.0",
         "magic_enum/0.9.7",
         "ms-gsl/4.1.0",
@@ -230,6 +230,8 @@ class Morpheus(ConanFile):
         }
 
     def configure(self):
+        self.options["boost"].without_cobalt = True
+
         if self.settings.compiler.get_safe("cppstd"):
             check_min_cppstd(self, self._minimum_cpp_standard)
         min_version = self._minimum_compilers_version.get(
