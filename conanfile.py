@@ -80,7 +80,7 @@ class Morpheus(ConanFile):
         "boost/1.90.0",
         "ctre/3.10.0",
         "magic_enum/0.9.7",
-        "ms-gsl/4.3.0",
+        "ms-gsl/4.2.0",
         "rapidjson/1.1.0",
         "scnlib/4.0.1",
     )
