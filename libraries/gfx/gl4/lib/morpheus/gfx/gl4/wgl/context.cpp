@@ -52,7 +52,7 @@ auto createGLContext(HDC hdc) -> WGLExpected<HGLRC>
 
 } // namespace
 
-Context::Expected Context::create(HWND const window, PIXELFORMATDESCRIPTOR const& pfd)
+auto Context::create(HWND const window, PIXELFORMATDESCRIPTOR const& pfd) -> Expected
 {
     auto const setupPixelFormat = [&pfd](HDC const hdc)
     { return choosePixelFormat(hdc, pfd).and_then([hdc, &pfd](int format) { return setPixelFormat(hdc, format).transform([hdc]() { return hdc; }); }); };

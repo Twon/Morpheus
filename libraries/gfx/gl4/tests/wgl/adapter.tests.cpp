@@ -2,9 +2,9 @@
 #include <morpheus/gfx/platform/concepts/adapter.hpp>
 #include <morpheus/gfx/platform/win32/error.hpp>
 
-#include <catch2/catch_all.hpp>
-
 #include <morpheus/core/conformance/expected.hpp>
+
+#include <catch2/catch_all.hpp>
 
 #include <algorithm>
 #include <vector>
