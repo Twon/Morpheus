@@ -1,5 +1,5 @@
 #
-# Copyright 2023 Antony Peacock
+# Copyright 2025 Antony Peacock
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
 # documentation files (the "Software"), to deal in the Software without restriction, including without limitation the
@@ -15,24 +15,19 @@
 # OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-name: Documentation
-on:
-  schedule:
-    - cron: "0 2 * * *"   # Every day at 02:00 UTC
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
+name: Clang Tidy
+
+on: workflow_dispatch
 
 env:
   # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: Debug
-  COMPILER_TYPE: gcc
-  COMPILER_VERSION: 13
-  STDLIB: libstdc++11
+  COMPILER_TYPE: clang
+  COMPILER_VERSION: 19
+  STDLIB: libc++
 
 jobs:
-  documentation:
+  build:
     # The CMake configure and build commands are platform agnostic and should work equally
     # well on Windows or Mac.  You can convert this to a matrix build if you need
     # cross-platform coverage.
@@ -51,19 +46,34 @@ jobs:
           cache-name: cache-conan-data
         with:
           path: ${{github.workspace}}/conan_cache_save.tgz
-          key: ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.os }}-${{ env.BUILD_TYPE }}-${{ env.COMPILER_TYPE }}-${{ env.COMPILER_VERSION }}-${{ env.STDLIB }}-documentation
+          key: ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.os }}-${{ env.BUILD_TYPE }}-${{ env.COMPILER_TYPE }}-${{ env.COMPILER_VERSION }}-${{ env.STDLIB }}
           restore-keys: |
-            ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.os }}-${{ env.BUILD_TYPE }}-${{ env.COMPILER_TYPE }}-${{ env.COMPILER_VERSION }}-${{ env.STDLIB }}
             ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.os }}-${{ env.BUILD_TYPE }}-${{ env.COMPILER_TYPE }}-${{ env.COMPILER_VERSION }}-
             ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.os }}-${{ env.BUILD_TYPE }}-${{ env.COMPILER_TYPE }}-
             ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.os }}-${{ env.BUILD_TYPE }}-
             ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.os }}-
 
-      - name: Install Latest GCC
-        uses: egor-tensin/setup-gcc@v1.3
-        with:
-          version: ${{ env.COMPILER_VERSION }}
-          platform: x64
+      - name: Install Clang
+        shell: bash
+        run: |
+          wget https://apt.llvm.org/llvm.sh
+          chmod +x llvm.sh
+          sudo ./llvm.sh ${{ env.COMPILER_VERSION }} all
+
+          # We need to update symlink otherwise we end up with miss matched clang/clang++ and clang-tidy versions.
+          sudo rm /usr/bin/clang
+          sudo rm /usr/bin/clang++
+          sudo rm /usr/bin/clang-tidy
+
+          sudo ln -s /usr/bin/clang-${{ env.COMPILER_VERSION }} /usr/bin/clang
+          sudo ln -s /usr/bin/clang++-${{ env.COMPILER_VERSION }} /usr/bin/clang++
+          sudo ln -s /usr/bin/clang-tidy-${{ env.COMPILER_VERSION }} /usr/bin/clang-tidy
+
+      - name: Install Libc++
+        shell: bash
+        run: |
+          sudo apt install -y libc++-${{ env.COMPILER_VERSION }}-dev libc++abi-${{ env.COMPILER_VERSION }}-dev libunwind-${{env.COMPILER_VERSION }}-dev
+
 
       - name: Set up Python
         uses: actions/setup-python@v5.4.0
@@ -77,25 +87,27 @@ jobs:
       - name: Configure Conan
         shell: bash
         run: |
-          conan profile detect --force
-          sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.cppstd=.*/compiler.cppstd=20/' .conan2/profiles/default
-          sed -i.backup '/^\[settings\]$/,/^\[/ s/^build_type=.*/build_type=${{ env.BUILD_TYPE }}/' .conan2/profiles/default
-          sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler=.*/compiler=${{ env.COMPILER_TYPE }}/' .conan2/profiles/default
-          sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.version=.*/compiler.version=${{ env.COMPILER_VERSION }}/' .conan2/profiles/default
-          sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.libcxx=.*/compiler.libcxx=${{ env.STDLIB }}/' .conan2/profiles/default
-          sed -i.backup '1a mold*:build_type=Release' .conan2/profiles/default
-          sed -i.backup '1a onetbb*:build_type=Release' .conan2/profiles/default
-          sed -i.backup '1a mold*:compiler.libcxx=libstdc++11' .conan2/profiles/default
+            conan profile detect --force
+            sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.cppstd=.*/compiler.cppstd=23/' .conan2/profiles/default
+            sed -i.backup '/^\[settings\]$/,/^\[/ s/^build_type=.*/build_type=${{ env.BUILD_TYPE }}/' .conan2/profiles/default
+            sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler=.*/compiler=${{ env.COMPILER_TYPE }}/' .conan2/profiles/default
+            sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.version=.*/compiler.version=${{ env.COMPILER_VERSION }}/' .conan2/profiles/default
+            sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.libcxx=.*/compiler.libcxx=${{ env.STDLIB }}/' .conan2/profiles/default
+            sed -i.backup '1a mold*:build_type=Release' .conan2/profiles/default
+            sed -i.backup '1a onetbb*:build_type=Release' .conan2/profiles/default
+            sed -i.backup '1a mold*:compiler.libcxx=libstdc++11' .conan2/profiles/default
 
-          echo -e "\n[options]" >> .conan2/profiles/default
-          sed -i.backup '/^\[options\]/a date*:tz_db=system' .conan2/profiles/default
+            echo -e "\n[options]" >> .conan2/profiles/default
+            sed -i.backup '/^\[options\]/a date*:tz_db=system' .conan2/profiles/default
 
-          echo 'core.sources:download_urls=["origin", "https://c3i.jfrog.io/artifactory/conan-center-backup-sources/"]' >> .conan2/global.conf
-          echo "tools.cmake.cmaketoolchain:generator = Ninja Multi-Config" >> .conan2/global.conf
-          echo "tools.system.package_manager:mode = install" >> .conan2/global.conf
-          echo "tools.system.package_manager:sudo = True" >> .conan2/global.conf
+            cat >> .conan2/global.conf <<EOF
+            tools.cmake.cmaketoolchain:generator = Ninja
+            tools.system.package_manager:mode = install
+            tools.system.package_manager:sudo = True
+            tools.build:compiler_executables = {"c": "clang-$COMPILER_VERSION", "cpp": "clang++-$COMPILER_VERSION"}
+            EOF
 
-          conan profile show -pr default
+            conan profile show -pr default
 
       - name: Conan Cache Restore
         shell: bash
@@ -108,34 +120,24 @@ jobs:
         working-directory: ${{github.workspace}}
         shell: bash
         run: |
-          conan install "${{github.workspace}}" --build missing -o build_docs=True
-
-      - name: Configure Conan Build
-        shell: bash
-        working-directory: ${{github.workspace}}
-        run: |
-          source build/generators/conanbuild.sh
-
-      - name: Configure CMake
-        # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
-        # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
-        run: |
-          cmake --preset conan-default -DMORPHEUS_BUILD_DOCUMENTATION:BOOL=ON
+          conan install "${{github.workspace}}" --build missing
 
       - name: Conan Preset
         shell: bash
         run: echo "CONAN_PRESET=conan-$(echo ${{env.BUILD_TYPE}} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
 
+      - name: Configure CMake
+        # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
+        # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
+        run: |
+           source build/${{env.BUILD_TYPE}}/generators/conanbuild.sh
+           cmake --preset ${{ env.CONAN_PRESET }} -DCLANG_TIDY_ENABLE=1
+
       - name: Build
         # Build your program with the given configuration
-        run: cmake --build --preset ${{ env.CONAN_PRESET }} --target Documentation
-
-      - name: Deploy documentation
-        if: github.ref == 'refs/heads/main'
-        uses: peaceiris/actions-gh-pages@v3.9.3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./build/documentation/sphinx
+        run: |
+           source build/${{env.BUILD_TYPE}}/generators/conanbuild.sh
+           cmake --build --preset ${{ env.CONAN_PRESET }}
 
       - name: Conan Cache Save
         run: |

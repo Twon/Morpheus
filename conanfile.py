@@ -27,7 +27,7 @@ from conan.tools.env import VirtualBuildEnv
 from conan.tools.files import copy, rm
 from conan.tools.scm import Git, Version
 from conan.tools.files import load
-from conan.tools.system.package_manager import Apt, Brew
+from conan.tools.system.package_manager import Apt
 import re, os.path
 import subprocess
 import sys
@@ -76,13 +76,13 @@ class Morpheus(ConanFile):
         "with_rs_vulkan": True,
      }
     requires = (
-        "unordered_dense/4.5.0",
-        "boost/1.88.0",
-        "ctre/3.9.0",
+        "unordered_dense/4.8.1",
+        "boost/1.90.0",
+        "ctre/3.10.0",
         "ftxui/6.0.2",
         "magic_enum/0.9.7",
-        "ms-gsl/4.1.0",
-        "rapidjson/cci.20230929",
+        "ms-gsl/4.2.0",
+        "rapidjson/cci.20250205",
         "scnlib/4.0.1",
     )
 
@@ -162,15 +162,15 @@ class Morpheus(ConanFile):
             self.options.rm_safe("with_rs_direct_x12")
 
     def build_requirements(self):
-        self.tool_requires("ninja/1.13.1")
-        self.test_requires("catch2/3.9.0")
-        self.test_requires("gtest/1.16.0")
+        self.tool_requires("ninja/1.13.2")
+        self.test_requires("catch2/3.13.0")
+        self.test_requires("gtest/1.17.0")
 
-        if get_cmake_version() < Version("4.0.3"):
-            self.tool_requires("cmake/4.0.3")
+        if get_cmake_version() < Version("4.3.0"):
+            self.tool_requires("cmake/4.3.0")
 
         if self.options.build_docs:
-            self.build_requires("doxygen/1.14.0")
+            self.build_requires("doxygen/1.16.1")
 
         if self.options.get_safe("link_with_mold", False):
             self.build_requires("mold/2.36.0")
@@ -196,7 +196,7 @@ class Morpheus(ConanFile):
             self.requires("tl-expected/20190710", transitive_headers=True)
 
         if self.useFMT:
-            self.requires("fmt/11.2.0", transitive_headers=True)
+            self.requires("fmt/12.1.0", transitive_headers=True)
 
         if self.useRanges:
             self.requires("range-v3/0.12.0", transitive_headers=True)
@@ -231,6 +231,8 @@ class Morpheus(ConanFile):
         }
 
     def configure(self):
+        self.options["boost"].without_cobalt = True
+
         if self.settings.compiler.get_safe("cppstd"):
             check_min_cppstd(self, self._minimum_cpp_standard)
         min_version = self._minimum_compilers_version.get(

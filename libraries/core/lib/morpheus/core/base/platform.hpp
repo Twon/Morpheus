@@ -11,6 +11,7 @@
     \def MORPHEUS_BUILD_PLATFORM
         Macro describing the current build platform of the build.
 */
+// NOLINTBEGIN(cppcoreguidelines-macro-usage)
 // clang-format off
 #if !defined(MORPHEUS_BUILD_PLATFORM)
 
@@ -49,6 +50,7 @@
     #endif
 #endif
 // clang-format on
+// NOLINTEND(cppcoreguidelines-macro-usage)
 /// @}
 
 /*! \def MORPHEUS_COMPILER_DEAD_CODE_ELIMINATION
