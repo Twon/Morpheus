@@ -16,8 +16,8 @@ TEST_CASE("Test RenderSystem Factory command line options", "[morpheus.vis.rende
         {
             RenderSystemFactory renderSystemFactory;
             std::array cliOptions = {"dummyProgram.exe", "--render-system", param.data()};
-            // auto const result = app::po::parseProgramOptions(cliOptions, app::po::HelpDocumentation{}, renderSystemFactory);
-            // REQUIRE(!result);
+            auto const result = application::po::parseProgramOptions(cliOptions, app::po::HelpDocumentation(), renderSystemFactory);
+            REQUIRE(!result);
             return renderSystemFactory.getActiveAPI();
         };
 
