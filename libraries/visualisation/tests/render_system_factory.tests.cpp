@@ -1,3 +1,4 @@
+#include <morpheus/application/po/options.hpp>
 #include <morpheus/vis/render_system_factory.hpp>
 
 #include <catch2/catch_all.hpp>
@@ -14,9 +15,10 @@ TEST_CASE("Test RenderSystem Factory command line options", "[morpheus.vis.rende
     {
         auto const getAPI = [](std::string_view param)
         {
+            using namespace morpheus::application::po;
             RenderSystemFactory renderSystemFactory;
             std::array cliOptions = {"dummyProgram.exe", "--render-system", param.data()};
-            auto const result = application::po::parseProgramOptions(cliOptions, app::po::HelpDocumentation(), renderSystemFactory);
+            auto const result = application::po::parseProgramOptions(cliOptions, application::po::HelpDocumentation(), renderSystemFactory);
             REQUIRE(!result);
             return renderSystemFactory.getActiveAPI();
         };
