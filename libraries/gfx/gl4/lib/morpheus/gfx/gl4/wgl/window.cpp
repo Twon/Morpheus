@@ -34,4 +34,29 @@ Window::Window(HWND const window)
     , mGLContext(getHandle(), []() { return ::PIXELFORMATDESCRIPTOR{}; }())
 {}
 
+Window::Window(gfx::win32::RenderWindow&& window, Context&& context) noexcept
+    : gfx::win32::RenderWindow(std::move(window))
+    , mGLContext(std::move(context))
+{}
+
+auto Window::create(Config const& config = Config{}) -> conf::exp::expected<Window, std::string>
+{
+    auto const createContext = [&](auto window) -> conf::exp::expected<std::tuple<RenderWindow, Context>, std::string>
+    {
+        auto context = Context::create(window.getHandle(), calculatePixedlFormatDescriptor(config));
+        if (!context)
+            return conf::exp::unexpected(std::move(context).error());
+        return std::tuple{std::move(window), std::move(context).value()};
+    };
+
+    auto windowAndContext = gfx::win32::RenderWindow::create(config).and_then(createContext);
+    if (!windowAndContext)
+    {
+        return conf::exp::unexpected(std::move(windowAndContext).error());
+    }
+    auto&& [window, context] = std::move(windowAndContext).value();
+    Window thisWindow(std::move(window), std::move(context));
+    return thisWindow;
+}
+
 } // namespace morpheus::gfx::gl4::wgl

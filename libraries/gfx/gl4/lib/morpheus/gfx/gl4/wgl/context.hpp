@@ -25,6 +25,9 @@ public:
     /// \return Returns an expected containing the new OpenGL context or an error message.
     static Expected create(HWND const window, PIXELFORMATDESCRIPTOR const& pfd);
 
+    /// Context initialised from the global default.
+    Context();
+
     Context(Context const&) = delete;
     Context& operator=(Context const&) = delete;
 
@@ -41,9 +44,6 @@ public:
     auto getGL() const noexcept { return mGLContext.get(); }
 
 private:
-    /// Context initialised from the global default.
-    Context();
-
     explicit Context(HWND const window, HDC const hdc, HGLRC const hglrc);
 
     /// \struct ReleaseResources

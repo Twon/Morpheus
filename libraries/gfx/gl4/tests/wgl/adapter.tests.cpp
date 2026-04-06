@@ -112,34 +112,28 @@ auto adapterName(DISPLAYCONFIG_PATH_INFO const& path) -> conf::exp::expected<DIS
 
 conf::exp::expected<DisplayConfig, std::string> getCurrentDisplayConfig()
 {
-    // clang-format off
-    return getDisplayConfigBufferSizes()
-        .and_then([](auto counts) -> conf::exp::expected<DisplayConfig, std::string>
-            {
-                return std::apply([](auto&&... args)
-                    {
-                        return DisplayConfig(std::forward<decltype(args)>(args)...);
-                    },
-                    std::move(counts)
-                );
-            })
-        .and_then([](auto config)
-            { return queryDisplayConfig(std::move(config)); });
-    // clang-format on
+    auto const unpackCountsToDisplayConfig = [](auto counts) -> conf::exp::expected<DisplayConfig, std::string>
+    {
+        auto const unpackCounts = [](auto&&... args) { return DisplayConfig{std::forward<decltype(args)>(args)...}; };
+        return std::apply(unpackCounts, std::move(counts));
+    };
+
+    return getDisplayConfigBufferSizes().and_then(unpackCountsToDisplayConfig).and_then(queryDisplayConfig);
 }
 
+/// Provides all active display paths mapping a monitors to the graphic adapter which
+/// \param config
+/// @return
 auto getDevicesPaths(DisplayConfig const& config) -> conf::exp::expected<std::vector<Path>, std::string>
 {
     auto& [paths, _] = config;
+    auto const toMonitorToAdapterMapping = [](DISPLAYCONFIG_PATH_INFO const& path) { return std::pair{targetDeviceName(path), adapterName(path)}; };
+
+    auto r = paths | std::ranges::views::transform(toMonitorToAdapterMapping);
 
     // clang-format off
-    auto r = paths | std::ranges::views::transform([](auto const& path)
-        {
-            return std::pair{targetDeviceName(path), adapterName(path)};
-        });
-
     auto const result = std::ranges::fold_left(std::move(r), conf::exp::expected<std::vector<Path>, std::string>{},
-        [](auto&& result, auto element) -> conf::exp::expected<std::vector<Path>, std::string>
+        [](auto&& result, auto&& element) -> conf::exp::expected<std::vector<Path>, std::string>
         {
             if (!result) {
                 return conf::exp::unexpected(result.error());
