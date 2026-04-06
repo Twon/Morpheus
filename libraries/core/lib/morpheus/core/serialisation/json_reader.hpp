@@ -3,7 +3,6 @@
 #include "morpheus/core/base/assert.hpp"
 #include "morpheus/core/base/export.hpp"
 #include "morpheus/core/functional/overload.hpp"
-#include "morpheus/core/memory/polymorphic_value.hpp"
 #include "morpheus/core/serialisation/concepts/reader_archetype.hpp"
 #include "morpheus/core/serialisation/exceptions.hpp"
 
@@ -47,7 +46,7 @@ class MORPHEUSCORE_EXPORT JsonReader
     };
 
 public:
-    using OwnedStream = memory::polymorphic_value<std::istream>;
+    using OwnedStream = std::unique_ptr<std::istream>;
 
     static constexpr bool canBeTextual() { return true; }
 
@@ -59,7 +58,11 @@ public:
     /// \param[in] validate If true, the json will be validated against the schema.  If false, no validation is performed.
     explicit JsonReader(OwnedStream stream, bool validate = true);
 
-    explicit JsonReader(JsonReader const& rhs);
+    explicit JsonReader(JsonReader const& rhs) = delete;
+    JsonReader& operator=(JsonReader const& rhs) = delete;
+
+    explicit JsonReader(JsonReader&& rhs) noexcept = delete;
+    JsonReader& operator=(JsonReader&& rhs) noexcept = delete;
 
     /// Destructor for the JsonReader.
     ~JsonReader();
@@ -170,7 +173,7 @@ private:
 
     [[nodiscard]] EventValue getNext();
 
-    memory::polymorphic_value<std::istream> mSourceStream; /// Owned input stream containing the Json source.
+    OwnedStream mSourceStream; /// Owned input stream containing the Json source.
     rapidjson::IStreamWrapper mStream;
     rapidjson::Reader mJsonReader;
     std::unique_ptr<struct JsonExtracter> mExtractor;

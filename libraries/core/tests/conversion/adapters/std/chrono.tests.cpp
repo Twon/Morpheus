@@ -66,7 +66,7 @@ TEST_CASE("Verify std::format specialisation for std::chrono::date", "[morpheus.
     REQUIRE(conf::fmt::format("{}", year_month_weekday_last{year{1980}, month{10}, weekday_last{Monday[last]}}) == "1980/Oct/Mon[last]");
 }
 
-TEST_CASE("Verify toString handling for std::chrono::duration types", "[morpheus.conversion.chrono.time_zone.toString]")
+TEST_CASE("Verify toString handling for std::chrono::time_zone types", "[morpheus.conversion.chrono.time_zone.toString]")
 {
     using namespace conf::date;
     REQUIRE(toString(*get_tzdb().locate_zone("Africa/Johannesburg")) == "Africa/Johannesburg");
@@ -75,7 +75,7 @@ TEST_CASE("Verify toString handling for std::chrono::duration types", "[morpheus
     REQUIRE(toString(*get_tzdb().locate_zone("Europe/London")) == "Europe/London");
 }
 
-TEST_CASE("Verify fromString handling for std::chrono::duration types", "[morpheus.conversion.chrono.time_zone.fromString]")
+TEST_CASE("Verify fromString handling for std::chrono::time_zone types", "[morpheus.conversion.chrono.time_zone.fromString]")
 {
     REQUIRE(fromString<conf::date::time_zone>("Africa/Johannesburg") == *conf::date::get_tzdb().locate_zone("Africa/Johannesburg"));
     REQUIRE(fromString<conf::date::time_zone>("America/New_York") == *conf::date::get_tzdb().locate_zone("America/New_York"));

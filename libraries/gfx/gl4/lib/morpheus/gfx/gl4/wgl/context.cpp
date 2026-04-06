@@ -22,7 +22,7 @@ auto createDC(HWND const window) -> WGLExpected<HDC>
     return hDC;
 }
 
-WGLExpected<int> choosePixelFormat(HDC const hdc, PIXELFORMATDESCRIPTOR const& pfd)
+auto choosePixelFormat(HDC const hdc, PIXELFORMATDESCRIPTOR const& pfd) -> WGLExpected<int>
 {
     auto const format = ChoosePixelFormat(hdc, &pfd);
     if (format == 0)
@@ -30,7 +30,7 @@ WGLExpected<int> choosePixelFormat(HDC const hdc, PIXELFORMATDESCRIPTOR const& p
     return format;
 }
 
-WGLExpected<void> setPixelFormat(HDC hdc, int format)
+auto setPixelFormat(HDC hdc, int format) -> WGLExpected<void>
 {
     PIXELFORMATDESCRIPTOR pfd;
     if (!DescribePixelFormat(hdc, format, sizeof(pfd), &pfd))
@@ -41,17 +41,17 @@ WGLExpected<void> setPixelFormat(HDC hdc, int format)
     return {};
 }
 
-WGLExpected<HGLRC> createGLContext(HDC hdc)
+auto createGLContext(HDC hdc) -> WGLExpected<HGLRC>
 {
-    if (auto hglrc = wglCreateContext(hdc); hglrc)
-        return hglrc;
-    else
+    if (auto const hglrc = wglCreateContext(hdc); !hglrc)
         return conf::exp::unexpected(conf::fmt::format("Failed to create OpenGL context: {}", getLastErrorMessage()));
+    else
+        return hglrc;
 }
 
 } // namespace
 
-Context::Expected Context::create(HWND const window, PIXELFORMATDESCRIPTOR const& pfd)
+auto Context::create(HWND const window, PIXELFORMATDESCRIPTOR const& pfd) -> Expected
 {
     // clang-format off
     return createDC(window)

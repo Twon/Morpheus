@@ -151,15 +151,6 @@ JsonReader::JsonReader(OwnedStream stream, bool validate)
     mJsonReader.IterativeParseInit();
 }
 
-JsonReader::JsonReader(JsonReader const& rhs)
-    : mSourceStream(rhs.mSourceStream)
-    , mStream(*mSourceStream)
-    , mExtractor(std::make_unique<JsonExtracter>())
-    , mValidate(rhs.mValidate)
-{
-    mJsonReader.IterativeParseInit();
-}
-
 JsonReader::~JsonReader()
 {
     if (mValidate)

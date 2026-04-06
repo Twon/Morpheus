@@ -66,6 +66,7 @@ include(morpheus_add_tests)
 include(sanitisers)
 include(third_party)
 
+find_package(ClangTidy)
 find_package(IWYU)
 
 enable_testing()
