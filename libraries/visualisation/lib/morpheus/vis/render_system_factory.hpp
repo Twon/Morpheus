@@ -31,7 +31,7 @@ namespace morpheus::vis
 
 /// \enum API
 ///     Enumerate type describing the underlying graphics API for available render systems.
-enum API : std::uint32_t
+enum class API : std::uint32_t
 {
     D3D12,
     Metal,
@@ -57,11 +57,13 @@ public:
     /*!
 
      */
-    RenderSystemFactory();
+    RenderSystemFactory() = default;
     ///@}
 
     /// Register program options
     void addOptions(boost::program_options::options_description& options);
+
+    auto getActiveAPI() const -> API { return mActiveApi; }
 
 private:
     /// Returns a map of the available rendering systems to their respective underlying graphics APIs.
@@ -83,7 +85,7 @@ private:
 
     // constexpr static auto renderSystemAPIs = availableAPIs();
 
-    API mActiveApi = Vulkan;
+    API mActiveApi = API::Vulkan;
 };
 
 } // namespace morpheus::vis
