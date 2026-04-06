@@ -5,7 +5,7 @@
 
 #if (MORPHEUS_BUILD_PLATFORM == MORPHEUS_TARGET_PLATFORM_APPLE)
     #include <morpheus/gfx/metal/render_system.hpp>
-#elif (MORPHEUS_BUILD_PLATFORM == MORPHEUS_TARGET_PLATFORM_WINDOWS)
+#elif (MORPHEUS_BUILD_PLATFORM == MORPHEUS_TARGET_PLATFORM_PC_WINDOWS)
     #include <morpheus/gfx/d3d12/render_system.hpp>
 #endif // #if (MORPHEUS_BUILD_PLATFORM == MORPHEUS_TARGET_PLATFORM_APPLE)
 
@@ -18,10 +18,13 @@
 #include <boost/hana/pair.hpp>
 #include <boost/hana/tuple.hpp>
 
-#include <boost/program_options/options_description.hpp>
-
 #include <cstdint>
 #include <type_traits>
+
+namespace boost::program_options
+{
+class options_description;
+}
 
 namespace morpheus::vis
 {
@@ -58,11 +61,7 @@ public:
     ///@}
 
     /// Register program options
-    void addOptions(boost::program_options::options_description& options)
-    {
-        namespace po = boost::program_options;
-        options.add_options()("render-system", po::value(&mActiveApi)->default_value(mActiveApi), "The rendering system to instantiate.");
-    }
+    void addOptions(boost::program_options::options_description& options);
 
 private:
     /// Returns a map of the available rendering systems to their respective underlying graphics APIs.
