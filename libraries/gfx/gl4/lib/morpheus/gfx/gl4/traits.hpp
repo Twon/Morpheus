@@ -24,14 +24,14 @@ using GL4Traits = Traits<platform::RenderWindow>;
 
 struct GL4Traits
 {
-    using Window = int;
+    using RenderWindow = int;
 };
 
 #elif (MORPHEUS_BUILD_PLATFORM == MORPHEUS_TARGET_PLATFORM_LINUX)
 
 struct GL4Traits
 {
-    using Window = int;
+    using RenderWindow = int;
 };
 
 #endif
