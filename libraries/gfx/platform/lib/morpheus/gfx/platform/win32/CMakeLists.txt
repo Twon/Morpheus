@@ -1,15 +1,14 @@
     PUBLIC
         FILE_SET HEADERS
         FILES
-            error.hpp
             error_codes.hpp
+            error.hpp
             luid.hpp
             monitor.hpp
             render_window.hpp
     PRIVATE
         error_codes.cpp
         error.cpp
-        error_codes.cpp
         monitor.cpp
         render_window.cpp
 )
