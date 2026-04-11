@@ -288,42 +288,6 @@ auto adjustWindowConfig(RenderWindow::Config& config) -> conf::exp::expected<DWO
     return dwWindowStyle;
 }
 
-auto createWindow(RenderWindow* thisWindow, RenderWindow::Config& config)
-{
-    auto const windowStyle = adjustWindowConfig(config);
-    auto const hInstance = getModuleHandle();
-
-    // Next default values for new objects
-    ::WNDCLASS const wcex{.style = CS_OWNDC,
-                          .lpfnWndProc = WndProc,
-                          .cbClsExtra = 0,
-                          .cbWndExtra = sizeof(RenderWindow*), // Reserve space for the Window pointer returned by GetWindowLong
-                          .hInstance = hInstance.value(),
-                          .hIcon = ::LoadIcon(nullptr, IDI_APPLICATION),
-                          .hCursor = ::LoadCursor(nullptr, IDC_ARROW),
-                          .hbrBackground = (HBRUSH)(COLOR_WINDOW + 1),
-                          .lpszMenuName = nullptr,
-                          .lpszClassName = config.windowName.c_str()};
-
-    // Register class  with the game application details
-    ::RegisterClass(&wcex);
-
-    // Create the window using the WS_OVERLAPPEDWINDOW style
-    auto const window = ::CreateWindow(config.windowName.c_str(),
-                                       config.windowName.c_str(),
-                                       windowStyle.value(),
-                                       config.startX,
-                                       config.startY,
-                                       config.width,
-                                       config.height,
-                                       nullptr,
-                                       nullptr,
-                                       hInstance.value(),
-                                       thisWindow);
-    MORPHEUS_VERIFY(window);
-    return window;
-}
-
 } // namespace
 
 // RenderWindow::RenderWindow(Config config)
@@ -402,7 +366,8 @@ conf::exp::expected<RenderWindow, std::string> RenderWindow::create(Config const
         return registerClass(hInstance, config.windowName).transform(makeTuple).or_else(ignoreAlreadyRegistered).transform_error(toString);
     };
 
-    auto const constructWindow = [&config, &thisWindow](auto&& pair) -> conf::exp::expected<std::tuple<HINSTANCE, HWND>, std::string>
+    auto requestedCfg = config;
+    auto const constructWindow = [&config = requestedCfg, &thisWindow](auto&& pair) -> conf::exp::expected<std::tuple<HINSTANCE, HWND>, std::string>
     {
         auto const [dwStyle, hInstance] = pair;
         auto const makeTuple = [hInstance](HWND window) -> conf::exp::expected<std::tuple<HINSTANCE, HWND>, std::string>
@@ -410,7 +375,6 @@ conf::exp::expected<RenderWindow, std::string> RenderWindow::create(Config const
         return createWindow(config, thisWindow, dwStyle, hInstance).and_then(makeTuple);
     };
 
-    auto requestedCfg = config;
     auto components = adjustWindowConfig(requestedCfg).and_then(getStyleAndModuleHandle).and_then(registerClassAndIgnoreDuplicates).and_then(constructWindow);
 
     if (!components)
@@ -429,6 +393,7 @@ bool RenderWindow::visible() const noexcept
     // If only it where this simple, IsWindowVisible only queries the status flag, not if it is actually visible: https://stackoverflow.com/a/6269768/4764531
     return IsWindowVisible(mWindow.get()) == TRUE;
 }
+
 void RenderWindow::resize()
 {
     if (!visible())
