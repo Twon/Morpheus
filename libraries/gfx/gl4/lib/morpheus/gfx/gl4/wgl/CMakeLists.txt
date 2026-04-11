@@ -4,12 +4,14 @@ target_sources(MorpheusGfxGL4
         FILES
             adapter.hpp
             context.hpp
+            render_window.hpp
             verify.hpp
             video_mode.hpp
             window.cpp
     PRIVATE
         adapter.cpp
         context.cpp
+        render_window.cpp
         video_mode.cpp
         window.cpp
 )

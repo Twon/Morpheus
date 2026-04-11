@@ -20,6 +20,8 @@ public:
     using WindowHandle = HWND;
     using Config = gfx::RenderWindow::Config;
 
+    RenderWindow() = default;
+
     explicit RenderWindow(RenderWindow const&) = delete;
     RenderWindow& operator=(RenderWindow const&) = delete;
 
@@ -65,8 +67,6 @@ public:
     auto getHandle() const noexcept { return mWindow.get(); }
 
 private:
-    RenderWindow() = default;
-
     friend LRESULT WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
     std::optional<HINSTANCE> mHInstance; /// HInstance of initiating module.
