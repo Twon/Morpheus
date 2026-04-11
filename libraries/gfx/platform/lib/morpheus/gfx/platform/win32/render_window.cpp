@@ -15,18 +15,6 @@ namespace morpheus::gfx::win32
 namespace
 {
 
-auto getModuleHandle() -> conf::exp::expected<HINSTANCE, std::string>
-{
-    HINSTANCE hinst = nullptr;
-    static const TCHAR findAddressFrom = TCHAR();
-    auto const result = GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT, &findAddressFrom, &hinst);
-    if (!result)
-    {
-        return conf::exp::unexpected(GetLastErrorString(GetLastError()));
-    }
-    return hinst;
-}
-
 bool HandlePowerBroadCast(WPARAM wParam, LPARAM /*lParam*/)
 {
     switch (wParam)
@@ -56,12 +44,6 @@ bool HandlePowerBroadCast(WPARAM wParam, LPARAM /*lParam*/)
     }
 
     return true;
-}
-
-inline std::string getLastErrorMessage()
-{
-    DWORD const error = ::GetLastError();
-    return std::system_category().message(error);
 }
 
 LRESULT WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -210,6 +192,59 @@ LRESULT WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     return ::DefWindowProc(hWnd, message, wParam, lParam);
 }
 
+auto getModuleHandle() -> conf::exp::expected<HINSTANCE, std::string>
+{
+    HINSTANCE hinst = nullptr;
+    static const TCHAR findAddressFrom = TCHAR();
+    auto const result = GetModuleHandleEx(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS | GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT, &findAddressFrom, &hinst);
+    if (!result)
+    {
+        return conf::exp::unexpected(GetLastErrorString(GetLastError()));
+    }
+    return hinst;
+}
+
+auto registerClass(HINSTANCE hInstance, std::string const& windowName) -> conf::exp::expected<void, DWORD>
+{
+    ::WNDCLASS const wcex{.style = CS_OWNDC,
+                          .lpfnWndProc = WndProc,
+                          .cbClsExtra = 0,
+                          .cbWndExtra = sizeof(RenderWindow*), // Reserve space for the Window pointer returned by GetWindowLong
+                          .hInstance = hInstance,
+                          .hIcon = ::LoadIcon(nullptr, IDI_APPLICATION),
+                          .hCursor = ::LoadCursor(nullptr, IDC_ARROW),
+                          .hbrBackground = (HBRUSH)(COLOR_WINDOW + 1),
+                          .lpszMenuName = nullptr,
+                          .lpszClassName = windowName.c_str()};
+
+    // Register class  with the game application details
+    if (!::RegisterClass(&wcex))
+    {
+        return conf::exp::unexpected(GetLastError());
+    }
+    return conf::exp::expected<void, DWORD>();
+}
+
+auto createWindow(RenderWindow::Config const& config, RenderWindow& window, DWORD dwStyle, HINSTANCE hInstance) -> conf::exp::expected<HWND, std::string>
+{
+    auto const windowHandle = ::CreateWindow(config.windowName.c_str(),
+                                             config.windowName.c_str(),
+                                             dwStyle,
+                                             config.startX,
+                                             config.startY,
+                                             config.width,
+                                             config.height,
+                                             nullptr,
+                                             nullptr,
+                                             hInstance,
+                                             &window);
+    if (!windowHandle)
+    {
+        return conf::exp::unexpected(GetLastErrorString(GetLastError()));
+    }
+    return windowHandle;
+};
+
 auto adjustWindowConfig(RenderWindow::Config& config) -> conf::exp::expected<DWORD, std::string>
 {
     // The style of the window depends select setting of our window.
@@ -338,49 +373,45 @@ RenderWindow::~RenderWindow()
 
 conf::exp::expected<RenderWindow, std::string> RenderWindow::create(Config const& config)
 {
-    // clang-format off
     RenderWindow thisWindow;
-    auto requestedCfg = config;
-    auto components = adjustWindowConfig(requestedCfg).and_then(
-        [](DWORD dwStyle) -> conf::exp::expected<std::tuple<DWORD, HINSTANCE>, std::string>
-        {
-            auto handle = getModuleHandle();
-            if (!handle) {
-                return conf::exp::unexpected(handle.error());
-            }
-            return makeExpected(std::tuple{dwStyle, handle.value()});
-        }
-    ).and_then(
-        [&](auto&& pair) -> conf::exp::expected<std::tuple<DWORD, HINSTANCE>, std::string>
-        {
-            auto [dwStyle, hInstance] = pair;
-            // Next default values for new objects
-            ::WNDCLASS const wcex{
-                .style = CS_OWNDC, .lpfnWndProc = WndProc, .cbClsExtra = 0, .cbWndExtra = sizeof(RenderWindow*), // Reserve space for the Window pointer returned by GetWindowLong
-                .hInstance = hInstance, .hIcon = ::LoadIcon(nullptr, IDI_APPLICATION), .hCursor = ::LoadCursor(nullptr, IDC_ARROW),
-                .hbrBackground = (HBRUSH)(COLOR_WINDOW + 1), .lpszMenuName = nullptr, .lpszClassName = requestedCfg.windowName.c_str()
-            };
+    auto const getStyleAndModuleHandle = [](DWORD dwStyle) -> conf::exp::expected<std::tuple<DWORD, HINSTANCE>, std::string>
+    {
+        return getModuleHandle().and_then(
+            [dwStyle](auto handle)
+            {
+                return conf::exp::expected<std::tuple<DWORD, HINSTANCE>, std::string>{
+                    {dwStyle, handle}
+                };
+            });
+    };
 
-            // Register class  with the game application details
-            if(!::RegisterClass(&wcex) && GetLastError() != ERROR_CLASS_ALREADY_EXISTS){
-                return makeUnexpected();
-            }
-            return makeExpected(std::tuple{dwStyle, hInstance});
-        }
-    ).and_then(
-        [&config = requestedCfg, &thisWindow](auto&& pair)  -> conf::exp::expected<std::tuple<HINSTANCE, HWND>, std::string>
+    auto const registerClassAndIgnoreDuplicates = [&config](auto&& pair) -> conf::exp::expected<std::tuple<DWORD, HINSTANCE>, std::string>
+    {
+        auto const [dwStyle, hInstance] = pair;
+        auto const makeTuple = [dwStyle, hInstance]() -> std::tuple<DWORD, HINSTANCE> { return std::tuple{dwStyle, hInstance}; };
+        auto const ignoreAlreadyRegistered = [dwStyle, hInstance](DWORD error) -> conf::exp::expected<std::tuple<DWORD, HINSTANCE>, DWORD>
         {
-            auto [dwStyle, hInstance] = pair;
-            auto const window = ::CreateWindow( config.windowName.c_str(), config.windowName.c_str(), dwStyle,
-                                                config.startX, config.startY, config.width, config.height,
-                                                nullptr, nullptr, hInstance, &thisWindow);
-            if (!window) {
-                return makeUnexpected();
+            if (error == ERROR_CLASS_ALREADY_EXISTS)
+            {
+                return std::tuple{dwStyle, hInstance};
             }
-            return makeExpected(std::tuple{hInstance, window});
-        }
-    );
-    // clang-format on
+            return conf::exp::unexpected(error);
+        };
+        auto const toString = [](DWORD error) -> std::string { return GetLastErrorString(error); };
+
+        return registerClass(hInstance, config.windowName).transform(makeTuple).or_else(ignoreAlreadyRegistered).transform_error(toString);
+    };
+
+    auto const constructWindow = [&config, &thisWindow](auto&& pair) -> conf::exp::expected<std::tuple<HINSTANCE, HWND>, std::string>
+    {
+        auto const [dwStyle, hInstance] = pair;
+        auto const makeTuple = [hInstance](HWND window) -> conf::exp::expected<std::tuple<HINSTANCE, HWND>, std::string>
+        { return std::tuple{hInstance, window}; };
+        return createWindow(config, thisWindow, dwStyle, hInstance).and_then(makeTuple);
+    };
+
+    auto requestedCfg = config;
+    auto components = adjustWindowConfig(requestedCfg).and_then(getStyleAndModuleHandle).and_then(registerClassAndIgnoreDuplicates).and_then(constructWindow);
 
     if (!components)
     {
