@@ -36,6 +36,8 @@ public:
     ///     An expected of the newly created window, or an error if creation failed.
     static auto create(Config const& config = Config{}) -> conf::exp::expected<RenderWindow, std::string>;
 
+    // static auto create(WindowHandle handle) -> conf::exp::expected<RenderWindow, std::string>;
+
     /// \copydoc gfx::RenderTarget::width()
     [[nodiscard]] auto width() const noexcept -> std::uint16_t { return mWindow.width(); }
 

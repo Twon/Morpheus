@@ -8,7 +8,6 @@ target_sources(MorpheusGfxPlatform
             monitor.hpp
             render_window.hpp
     PRIVATE
-        error_codes.cpp
         error.cpp
         error_codes.cpp
         monitor.cpp
