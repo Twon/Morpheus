@@ -1,4 +1,5 @@
 #include <morpheus/core/base/assert.hpp>
+#include <morpheus/core/conformance/bit_cast.hpp>
 #include <morpheus/core/conformance/format.hpp>
 #include <morpheus/gfx/gl4/prerequisites.hpp>
 #include <morpheus/gfx/gl4/wgl/context.hpp>
@@ -24,10 +25,10 @@ auto createDC(HWND const window) -> WGLExpected<HDC>
 
 auto choosePixelFormat(HDC const hdc, PIXELFORMATDESCRIPTOR const& pfd) -> WGLExpected<int>
 {
-    auto const format = ChoosePixelFormat(hdc, &pfd);
-    if (format == 0)
+    if (auto const format = ChoosePixelFormat(hdc, &pfd); format == 0)
         return conf::exp::unexpected(conf::fmt::format("Failed to choose pixel format: {}", getLastErrorMessage()));
-    return format;
+    else
+        return format;
 }
 
 auto setPixelFormat(HDC hdc, int format) -> WGLExpected<void>
@@ -53,28 +54,21 @@ auto createGLContext(HDC hdc) -> WGLExpected<HGLRC>
 
 auto Context::create(HWND const window, PIXELFORMATDESCRIPTOR const& pfd) -> Expected
 {
-    // clang-format off
-    return createDC(window)
-        .and_then([&](HDC const hdc)
-            { return choosePixelFormat(hdc, pfd)
-                .and_then([hdc, &pfd](int format)
-                    { return setPixelFormat(hdc, format)
-                        .transform([hdc]() { return hdc; });
-                    });
-            })
-        .and_then([&](HDC const hdc){
-            return createGLContext(hdc)
-                .transform([window, hdc](HGLRC const hglrc) {
-                    glbinding::initialize(
-                        [](const char * name) -> glbinding::ProcAddress {
-                            return reinterpret_cast<glbinding::ProcAddress>(wglGetProcAddress(name));
-                        },
-                        true
-                    );
-                    return Context(window, hdc, hglrc);
-                });
-        });
-    // clang-format on
+    auto const setupPixelFormat = [&pfd](HDC const hdc)
+    { return choosePixelFormat(hdc, pfd).and_then([hdc, &pfd](int format) { return setPixelFormat(hdc, format).transform([hdc]() { return hdc; }); }); };
+
+    auto const createContext = [&](HDC const hdc)
+    {
+        return createGLContext(hdc).transform(
+            [window, hdc](HGLRC const hglrc)
+            {
+                glbinding::initialize(
+                    [](char const* name) -> glbinding::ProcAddress { return conf::bit::bit_cast<glbinding::ProcAddress>(wglGetProcAddress(name)); }, true);
+                return Context(window, hdc, hglrc);
+            });
+    };
+
+    return createDC(window).and_then(setupPixelFormat).and_then(createContext);
 }
 
 Context::Context(HWND const window, HDC const hdc, HGLRC const hglrc)
