@@ -45,11 +45,6 @@
               <p class="caption" role="heading"><span class="caption-text">Library:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="libraries/core/serialisation.html">Serialisation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="libraries/core/serialisation.html#serialisation-specifications">Serialisation specifications:</a></li>
-<li class="toctree-l1"><a class="reference internal" href="libraries/core/serialisation.html#serialisation-formats">Serialisation Formats</a></li>
-<li class="toctree-l1"><a class="reference internal" href="libraries/core/serialisation.html#overview-of-serialisation-in-c">Overview of serialisation in C++</a></li>
-<li class="toctree-l1"><a class="reference internal" href="libraries/core/serialisation.html#existing-c-serialisation-libraries">Existing	C++ Serialisation Libraries</a></li>
-<li class="toctree-l1"><a class="reference internal" href="libraries/core/serialisation.html#toml-sax-parsers">Toml Sax Parsers</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Appendix:</span></p>
 <ul>
@@ -96,15 +91,35 @@
 <p class="caption" role="heading"><span class="caption-text">Library:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="libraries/core/serialisation.html">Serialisation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="libraries/core/serialisation.html#entry-points">Entry Points</a></li>
-<li class="toctree-l2"><a class="reference internal" href="libraries/core/serialisation.html#reader-and-writers">Reader and Writers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libraries/core/serialisation.html#architecture">Architecture</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="libraries/core/serialisation.html#customisation-point-objects-cpos">Customisation Point Objects (CPOs)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="libraries/core/serialisation.html#serialisers">Serialisers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="libraries/core/serialisation.html#readers-and-writers">Readers and Writers</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="libraries/core/serialisation.html#serialisation-specifications">Serialisation specifications:</a></li>
-<li class="toctree-l1"><a class="reference internal" href="libraries/core/serialisation.html#serialisation-formats">Serialisation Formats</a></li>
-<li class="toctree-l1"><a class="reference internal" href="libraries/core/serialisation.html#overview-of-serialisation-in-c">Overview of serialisation in C++</a></li>
-<li class="toctree-l1"><a class="reference internal" href="libraries/core/serialisation.html#existing-c-serialisation-libraries">Existing	C++ Serialisation Libraries</a></li>
-<li class="toctree-l1"><a class="reference internal" href="libraries/core/serialisation.html#toml-sax-parsers">Toml Sax Parsers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libraries/core/serialisation.html#supported-formats">Supported Formats</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="libraries/core/serialisation.html#binary">Binary</a></li>
+<li class="toctree-l3"><a class="reference internal" href="libraries/core/serialisation.html#json">JSON</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="libraries/core/serialisation.html#usage-guide">Usage Guide</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="libraries/core/serialisation.html#serialising-data-write">Serialising Data (Write)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="libraries/core/serialisation.html#deserialising-data-read">Deserialising Data (Read)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="libraries/core/serialisation.html#making-types-serialisable">Making Types Serialisable</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="libraries/core/serialisation.html#intrusive-pattern">Intrusive Pattern</a></li>
+<li class="toctree-l3"><a class="reference internal" href="libraries/core/serialisation.html#non-intrusive-pattern-adl">Non-Intrusive Pattern (ADL)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="libraries/core/serialisation.html#adapters-deep-integration">Adapters: Deep Integration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="libraries/core/serialisation.html#standard-library-stl-support">Standard Library (STL) Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="libraries/core/serialisation.html#external-library-integration-boost">External Library Integration (Boost)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="libraries/core/serialisation.html#showcase-compounding-types">Showcase: Compounding Types</a></li>
+</ul>
+</li>
 </ul>
 </div>
 <div class="toctree-wrapper compound" id="appendixtoc">

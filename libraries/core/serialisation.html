@@ -46,15 +46,35 @@
               <p class="caption" role="heading"><span class="caption-text">Library:</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Serialisation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#entry-points">Entry Points</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#reader-and-writers">Reader and Writers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#architecture">Architecture</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#customisation-point-objects-cpos">Customisation Point Objects (CPOs)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#serialisers">Serialisers</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#readers-and-writers">Readers and Writers</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="#serialisation-specifications">Serialisation specifications:</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#serialisation-formats">Serialisation Formats</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#overview-of-serialisation-in-c">Overview of serialisation in C++</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#existing-c-serialisation-libraries">Existing	C++ Serialisation Libraries</a></li>
-<li class="toctree-l1"><a class="reference internal" href="#toml-sax-parsers">Toml Sax Parsers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#supported-formats">Supported Formats</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#binary">Binary</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#json">JSON</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#usage-guide">Usage Guide</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#serialising-data-write">Serialising Data (Write)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#deserialising-data-read">Deserialising Data (Read)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#making-types-serialisable">Making Types Serialisable</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#intrusive-pattern">Intrusive Pattern</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#non-intrusive-pattern-adl">Non-Intrusive Pattern (ADL)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#adapters-deep-integration">Adapters: Deep Integration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#standard-library-stl-support">Standard Library (STL) Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#external-library-integration-boost">External Library Integration (Boost)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#showcase-compounding-types">Showcase: Compounding Types</a></li>
+</ul>
+</li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Appendix:</span></p>
 <ul>
@@ -89,80 +109,196 @@
              
   <section id="serialisation">
 <h1>Serialisation<a class="headerlink" href="#serialisation" title="Link to this heading"></a></h1>
-<p>Serialisation is the process of writing objects to and output format and reading them back in. The serialisation framework is designed to be extensible and support a wide range of format, including both binary and text based serialisation.</p>
-<p>Within the framework their are concepts defining interfaces for readers and writers. Reader and writers support a basic set of fundamental operation which must be support for the framework to convert the data of supported types to the serialisation format. Currently supported formats include:</p>
+<p>The Morpheus serialisation framework provides a unified, extensible interface for converting C++ objects to and from various data formats. A key design principle is <strong>extensibility</strong>, allowing the framework to support a diverse range of formats while maintaining a consistent user-facing API.</p>
+<p>Currently, the framework supports:</p>
 <ul class="simple">
-<li><p>Json</p></li>
+<li><p><strong>JSON</strong>: A human-readable text format, implemented via RapidJSON.</p></li>
+<li><p><strong>Binary</strong>: A high-performance, compact format for storage and transmission.</p></li>
 </ul>
-<p>Longer term there is intend to be support for the following formats</p>
-<ul class="simple">
-<li><p>Binary</p></li>
-<li><p>Json</p></li>
-<li><p>Yaml</p></li>
-<li><p>Toml</p></li>
-<li><p>Xml</p></li>
-<li><p>HDF5</p></li>
-<li><p>MessagePack: https://msgpack.org/index.html</p></li>
-<li><p>Protobuf</p></li>
-<li><p>Cap’n Proto</p></li>
-</ul>
-<section id="entry-points">
-<h2>Entry Points<a class="headerlink" href="#entry-points" title="Link to this heading"></a></h2>
-<p>The serialisation framework is based on 2 entry points, <code class="docutils literal notranslate"><span class="pre">serialise</span></code> and <code class="docutils literal notranslate"><span class="pre">deserialise</span></code> which are <a class="reference external" href="https://quuxplusone.github.io/blog/2018/03/19/customization-points-for-functions/">customisation point object (CPOs)</a>.  These CPOs do the work of then dispatching to an appropriate overload for the actual type being serialised.</p>
+<p>In the future, support is planned for additional formats including XML, YAML, BSON, S-Expressions (SEXP), TOML, FlatBuffers, MessagePack, and Protobuf.</p>
+<section id="architecture">
+<h2>Architecture<a class="headerlink" href="#architecture" title="Link to this heading"></a></h2>
+<p>The framework is built on a layered architecture that decouples the object-level serialisation logic from the low-level format implementation.</p>
+<section id="customisation-point-objects-cpos">
+<h3>Customisation Point Objects (CPOs)<a class="headerlink" href="#customisation-point-objects-cpos" title="Link to this heading"></a></h3>
+<p>The primary entry points are the <code class="docutils literal notranslate"><span class="pre">serialise</span></code> and <code class="docutils literal notranslate"><span class="pre">deserialise</span></code> <a class="reference external" href="https://quuxplusone.github.io/blog/2018/03/19/customization-points-for-functions/">Customisation Point Objects (CPOs)</a>. These CPOs dispatch the work to the appropriate overload for the type being processed, supporting both intrusive (member functions) and non-intrusive (ADL-found free functions) patterns.</p>
 </section>
-<section id="reader-and-writers">
-<h2>Reader and Writers<a class="headerlink" href="#reader-and-writers" title="Link to this heading"></a></h2>
-<p>The serialisation framework provides concepts for readers and writers, which are interfaces specifying how read and write the fundmental primitive types supported by the C++ language.  All serialisation is build upon these basic building blocks.</p>
+<section id="serialisers">
+<h3>Serialisers<a class="headerlink" href="#serialisers" title="Link to this heading"></a></h3>
+<p>User-level interaction typically happens through <code class="docutils literal notranslate"><span class="pre">WriteSerialiser</span></code> and <code class="docutils literal notranslate"><span class="pre">ReadSerialiser</span></code> templates. These act as wrappers around specific <code class="docutils literal notranslate"><span class="pre">Writer</span></code> or <code class="docutils literal notranslate"><span class="pre">Reader</span></code> implementations, providing a high-level API for serialising complex types and managing the serialisation state.</p>
+</section>
+<section id="readers-and-writers">
+<h3>Readers and Writers<a class="headerlink" href="#readers-and-writers" title="Link to this heading"></a></h3>
+<p>At the lowest level, the framework defines concepts for <strong>Readers</strong> and <strong>Writers</strong>. These are responsible for the actual byte-level or text-level representation of fundamental primitive types.</p>
 <p>.. doxygenconcept:: morpheus::serialisation::concepts::Reader
 :project: morpheus_core</p>
 <p>.. doxygenconcept:: morpheus::serialisation::concepts::Writer
 :project: morpheus_core</p>
+<p>.. doxygenconcept:: morpheus::serialisation::concepts::ReadSerialisable
+:project: morpheus_core</p>
+<p>.. doxygenconcept:: morpheus::serialisation::concepts::WriteSerialisable
+:project: morpheus_core</p>
 </section>
 </section>
-<section id="serialisation-specifications">
-<h1>Serialisation specifications:<a class="headerlink" href="#serialisation-specifications" title="Link to this heading"></a></h1>
+<section id="supported-formats">
+<h2>Supported Formats<a class="headerlink" href="#supported-formats" title="Link to this heading"></a></h2>
+<section id="binary">
+<h3>Binary<a class="headerlink" href="#binary" title="Link to this heading"></a></h3>
+<p>The binary format is designed for maximum performance and minimum storage overhead. It writes data as a raw byte stream. Note that the binary format requires many sequence types (like <code class="docutils literal notranslate"><span class="pre">std::vector</span></code>) to provide their size upfront during serialisation.</p>
+</section>
+<section id="json">
+<h3>JSON<a class="headerlink" href="#json" title="Link to this heading"></a></h3>
+<p>The JSON format provides a human-readable representation of data. It is implemented using the RapidJSON library and supports all standard JSON data types.</p>
+</section>
+</section>
+<section id="usage-guide">
+<h2>Usage Guide<a class="headerlink" href="#usage-guide" title="Link to this heading"></a></h2>
+<section id="serialising-data-write">
+<h3>Serialising Data (Write)<a class="headerlink" href="#serialising-data-write" title="Link to this heading"></a></h3>
+<p>To serialise an object, you create a <code class="docutils literal notranslate"><span class="pre">WriteSerialiser</span></code> with the desired <code class="docutils literal notranslate"><span class="pre">Writer</span></code> implementation and call the <code class="docutils literal notranslate"><span class="pre">serialise</span></code> function.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;morpheus/core/serialisation/serialisers.hpp&quot;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;iostream&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;vector&gt;</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">example</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// Compounding: Serialising a container of complex types</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="s">&quot;engine&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;graphics&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;core&quot;</span><span class="p">};</span>
+<span class="w">    </span><span class="n">morpheus</span><span class="o">::</span><span class="n">serialisation</span><span class="o">::</span><span class="n">JsonWriteSerialiser</span><span class="w"> </span><span class="n">serialiser</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="p">);</span>
+<span class="w">    </span><span class="n">morpheus</span><span class="o">::</span><span class="n">serialisation</span><span class="o">::</span><span class="n">serialise</span><span class="p">(</span><span class="n">serialiser</span><span class="p">,</span><span class="w"> </span><span class="n">tags</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="deserialising-data-read">
+<h3>Deserialising Data (Read)<a class="headerlink" href="#deserialising-data-read" title="Link to this heading"></a></h3>
+<p>Deserialisation follows a similar pattern using <code class="docutils literal notranslate"><span class="pre">ReadSerialiser</span></code> and the <code class="docutils literal notranslate"><span class="pre">deserialise</span></code> function.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;morpheus/core/serialisation/serialisers.hpp&quot;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;sstream&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;vector&gt;</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">example</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">stringstream</span><span class="w"> </span><span class="n">ss</span><span class="p">(</span><span class="sa">R</span><span class="s">&quot;</span><span class="dl">(</span><span class="s">[&quot;engine&quot;, &quot;graphics&quot;, &quot;core&quot;]</span><span class="dl">)</span><span class="s">&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">morpheus</span><span class="o">::</span><span class="n">serialisation</span><span class="o">::</span><span class="n">JsonReadSerialiser</span><span class="w"> </span><span class="n">serialiser</span><span class="p">(</span><span class="n">ss</span><span class="p">);</span>
+<span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">morpheus</span><span class="o">::</span><span class="n">serialisation</span><span class="o">::</span><span class="n">deserialise</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;&gt;</span><span class="p">(</span><span class="n">serialiser</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="making-types-serialisable">
+<h2>Making Types Serialisable<a class="headerlink" href="#making-types-serialisable" title="Link to this heading"></a></h2>
+<section id="intrusive-pattern">
+<h3>Intrusive Pattern<a class="headerlink" href="#intrusive-pattern" title="Link to this heading"></a></h3>
+<p>Add <code class="docutils literal notranslate"><span class="pre">serialise</span></code> and <code class="docutils literal notranslate"><span class="pre">deserialise</span></code> member functions to your class.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span><span class="w"> </span><span class="nc">MyStruct</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">a</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">double</span><span class="w"> </span><span class="n">b</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">template</span><span class="w"> </span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">Serialiser</span><span class="o">&gt;</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">serialise</span><span class="p">(</span><span class="n">Serialiser</span><span class="o">&amp;</span><span class="w"> </span><span class="n">s</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">s</span><span class="p">.</span><span class="n">serialise</span><span class="p">(</span><span class="s">&quot;a&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">a</span><span class="p">);</span>
+<span class="w">        </span><span class="n">s</span><span class="p">.</span><span class="n">serialise</span><span class="p">(</span><span class="s">&quot;b&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">template</span><span class="w"> </span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">Serialiser</span><span class="o">&gt;</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">deserialise</span><span class="p">(</span><span class="n">Serialiser</span><span class="o">&amp;</span><span class="w"> </span><span class="n">s</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="k">template</span><span class="w"> </span><span class="n">deserialise</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="s">&quot;a&quot;</span><span class="p">);</span>
+<span class="w">        </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="k">template</span><span class="w"> </span><span class="n">deserialise</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">(</span><span class="s">&quot;b&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</section>
+<section id="non-intrusive-pattern-adl">
+<h3>Non-Intrusive Pattern (ADL)<a class="headerlink" href="#non-intrusive-pattern-adl" title="Link to this heading"></a></h3>
+<p>Define free functions in the same namespace as your type.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="k">namespace</span><span class="w"> </span><span class="nn">my_namespace</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">struct</span><span class="w"> </span><span class="nc">MyOtherStruct</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">x</span><span class="p">;</span>
+<span class="w">    </span><span class="p">};</span>
+
+<span class="w">    </span><span class="k">template</span><span class="w"> </span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">Serialiser</span><span class="o">&gt;</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">serialise</span><span class="p">(</span><span class="n">Serialiser</span><span class="o">&amp;</span><span class="w"> </span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="n">MyOtherStruct</span><span class="w"> </span><span class="k">const</span><span class="o">&amp;</span><span class="w"> </span><span class="n">val</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">s</span><span class="p">.</span><span class="n">serialise</span><span class="p">(</span><span class="s">&quot;x&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">val</span><span class="p">.</span><span class="n">x</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">template</span><span class="w"> </span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">Serialiser</span><span class="o">&gt;</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">deserialise</span><span class="p">(</span><span class="n">Serialiser</span><span class="o">&amp;</span><span class="w"> </span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="n">MyOtherStruct</span><span class="o">&amp;</span><span class="w"> </span><span class="n">val</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">val</span><span class="p">.</span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="k">template</span><span class="w"> </span><span class="n">deserialise</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="s">&quot;x&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="adapters-deep-integration">
+<h2>Adapters: Deep Integration<a class="headerlink" href="#adapters-deep-integration" title="Link to this heading"></a></h2>
+<p>One of the most powerful features of the Morpheus serialisation framework is its <strong>Adapter</strong> system. Adapters act as the “connective tissue” between the core framework and external libraries, allowing types from disparate sources to be serialised transparently.</p>
+<p>The goal is to provide a “just-works” experience: once the relevant adapter header is included, types from that library can be used seamlessly within the serialisation pipeline.</p>
+<section id="standard-library-stl-support">
+<h3>Standard Library (STL) Support<a class="headerlink" href="#standard-library-stl-support" title="Link to this heading"></a></h3>
+<p>Morpheus provides out-of-the-box support for the majority of the C++ Standard Library. Adapters are located in <code class="docutils literal notranslate"><span class="pre">morpheus/core/serialisation/adapters/std/</span></code> and cover:</p>
 <ul class="simple">
-<li><p>ASN.1: https://en.wikipedia.org/wiki/ASN.1</p></li>
+<li><p><strong>Containers</strong>: <code class="docutils literal notranslate"><span class="pre">std::vector</span></code>, <code class="docutils literal notranslate"><span class="pre">std::list</span></code>, <code class="docutils literal notranslate"><span class="pre">std::map</span></code>, <code class="docutils literal notranslate"><span class="pre">std::unordered_map</span></code>, <code class="docutils literal notranslate"><span class="pre">std::set</span></code>, etc. These leverage C++20 ranges for generic and efficient support.</p></li>
+<li><p><strong>Vocabulary Types</strong>: <code class="docutils literal notranslate"><span class="pre">std::optional</span></code>, <code class="docutils literal notranslate"><span class="pre">std::variant</span></code> (including <code class="docutils literal notranslate"><span class="pre">std::monostate</span></code>), <code class="docutils literal notranslate"><span class="pre">std::pair</span></code>, and <code class="docutils literal notranslate"><span class="pre">std::tuple</span></code>.</p></li>
+<li><p><strong>Smart Pointers</strong>: <code class="docutils literal notranslate"><span class="pre">std::unique_ptr</span></code> and <code class="docutils literal notranslate"><span class="pre">std::shared_ptr</span></code>.</p></li>
+<li><p><strong>Time</strong>: <code class="docutils literal notranslate"><span class="pre">std::chrono::duration</span></code> and <code class="docutils literal notranslate"><span class="pre">std::chrono::time_point</span></code>. In textual formats (JSON), these produce human-readable strings like <code class="docutils literal notranslate"><span class="pre">&quot;100ms&quot;</span></code>.</p></li>
 </ul>
 </section>
-<section id="serialisation-formats">
-<h1>Serialisation Formats<a class="headerlink" href="#serialisation-formats" title="Link to this heading"></a></h1>
+<section id="external-library-integration-boost">
+<h3>External Library Integration (Boost)<a class="headerlink" href="#external-library-integration-boost" title="Link to this heading"></a></h3>
+<p>The framework is designed to integrate with major C++ ecosystems to reduce boilerplate:</p>
 <ul class="simple">
-<li><p>https://en.wikipedia.org/wiki/Comparison_of_data-serialization_formats</p></li>
+<li><p><strong>Automatic Aggregate Serialisation</strong>: Through <code class="docutils literal notranslate"><span class="pre">morpheus/core/serialisation/adapters/aggregate.hpp</span></code>, simple structs (aggregates) can opt-in to automatic serialisation via <code class="docutils literal notranslate"><span class="pre">boost::pfr</span></code>. This enables field-by-field serialisation without writing any manual logic.</p></li>
+<li><p><strong>Stable Type Naming</strong>: The <code class="docutils literal notranslate"><span class="pre">std::variant</span></code> adapter uses <code class="docutils literal notranslate"><span class="pre">boost::type_index</span></code> to ensure that type names stored in textual formats are stable and consistent regardless of the compiler or platform.</p></li>
 </ul>
 </section>
-<section id="overview-of-serialisation-in-c">
-<h1>Overview of serialisation in C++<a class="headerlink" href="#overview-of-serialisation-in-c" title="Link to this heading"></a></h1>
-<ul class="simple">
-<li><p>Killing C++ Serialization Overhead &amp; Complexity - Eyal Zedaka - CppCon 2022: https://youtu.be/G7-GQhCw8eE</p></li>
-</ul>
 </section>
-<section id="existing-c-serialisation-libraries">
-<h1>Existing	C++ Serialisation Libraries<a class="headerlink" href="#existing-c-serialisation-libraries" title="Link to this heading"></a></h1>
-<ul class="simple">
-<li><p>Alpaca: https://github.com/p-ranav/alpaca</p></li>
-<li><p>Arvo: https://avro.apache.org/</p></li>
-<li><p>Bitsery: https://github.com/fraillt/bitsery</p></li>
-<li><p>Boost Serialisation: https://github.com/boostorg/serialization</p>
-<ul>
-<li><p>Boost Portable Archive: https://github.com/daldegam/eos-portable-archive</p></li>
-<li><p>Boost Yaml Archive: https://github.com/rwols/yaml-archive</p></li>
-</ul>
-</li>
-<li><p>Cerial: https://github.com/USCiLab/cereal</p></li>
-<li><p>Cista: https://github.com/felixguendling/cista</p></li>
-<li><p>FlatBuffer: https://github.com/google/flatbuffers</p></li>
-<li><p>Thors: https://github.com/Loki-Astari/ThorsSerializer</p></li>
-<li><p>Thrift: https://thrift.apache.org/</p></li>
-<li><p>YAS: https://github.com/niXman/yas</p></li>
-<li><p>zpp::bits: https://github.com/eyalz800/zpp_bits</p></li>
-</ul>
+<section id="showcase-compounding-types">
+<h2>Showcase: Compounding Types<a class="headerlink" href="#showcase-compounding-types" title="Link to this heading"></a></h2>
+<p>The recursive nature of the framework allows for depth and complexity without additional effort. Below is a realistic example of a configuration structure compounding multiple STL types.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;morpheus/core/serialisation/serialisers.hpp&quot;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;morpheus/core/serialisation/adapters/std/vector.hpp&quot;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;morpheus/core/serialisation/adapters/std/map.hpp&quot;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;morpheus/core/serialisation/adapters/std/variant.hpp&quot;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;morpheus/core/serialisation/adapters/std/optional.hpp&quot;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;morpheus/core/serialisation/adapters/std/chrono.hpp&quot;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;iostream&gt;</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">AppConfig</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">name</span><span class="p">;</span>
+<span class="w">    </span><span class="c1">// Compounding: A map of dynamic properties using variants and containers</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">map</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">variant</span><span class="o">&lt;</span><span class="kt">int</span><span class="p">,</span><span class="w"> </span><span class="kt">double</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;&gt;&gt;</span><span class="w"> </span><span class="n">properties</span><span class="p">;</span>
+<span class="w">    </span><span class="c1">// An optional timeout duration</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">optional</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="o">::</span><span class="n">seconds</span><span class="o">&gt;</span><span class="w"> </span><span class="n">timeout</span><span class="p">;</span>
+
+<span class="w">    </span><span class="c1">// Intrusive serialisation</span>
+<span class="w">    </span><span class="k">template</span><span class="w"> </span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">Serialiser</span><span class="o">&gt;</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">serialise</span><span class="p">(</span><span class="n">Serialiser</span><span class="o">&amp;</span><span class="w"> </span><span class="n">s</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">s</span><span class="p">.</span><span class="n">serialise</span><span class="p">(</span><span class="s">&quot;name&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="p">);</span>
+<span class="w">        </span><span class="n">s</span><span class="p">.</span><span class="n">serialise</span><span class="p">(</span><span class="s">&quot;properties&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">properties</span><span class="p">);</span>
+<span class="w">        </span><span class="n">s</span><span class="p">.</span><span class="n">serialise</span><span class="p">(</span><span class="s">&quot;timeout&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">timeout</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">example</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">AppConfig</span><span class="w"> </span><span class="n">config</span><span class="p">{</span>
+<span class="w">        </span><span class="p">.</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;MorpheusEngine&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">properties</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="p">{</span><span class="s">&quot;version&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">},</span>
+<span class="w">            </span><span class="p">{</span><span class="s">&quot;threshold&quot;</span><span class="p">,</span><span class="w"> </span><span class="mf">0.75</span><span class="p">},</span>
+<span class="w">            </span><span class="p">{</span><span class="s">&quot;tags&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="p">{</span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="mi">20</span><span class="p">,</span><span class="w"> </span><span class="mi">30</span><span class="p">}}</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="p">.</span><span class="n">timeout</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="o">::</span><span class="n">seconds</span><span class="p">{</span><span class="mi">30</span><span class="p">}</span>
+<span class="w">    </span><span class="p">};</span>
+
+<span class="w">    </span><span class="c1">// Serialising the compound type to JSON</span>
+<span class="w">    </span><span class="n">morpheus</span><span class="o">::</span><span class="n">serialisation</span><span class="o">::</span><span class="n">JsonWriteSerialiser</span><span class="w"> </span><span class="n">serialiser</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="p">);</span>
+<span class="w">    </span><span class="n">morpheus</span><span class="o">::</span><span class="n">serialisation</span><span class="o">::</span><span class="n">serialise</span><span class="p">(</span><span class="n">serialiser</span><span class="p">,</span><span class="w"> </span><span class="n">config</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
 </section>
-<section id="toml-sax-parsers">
-<h1>Toml Sax Parsers<a class="headerlink" href="#toml-sax-parsers" title="Link to this heading"></a></h1>
-<ul class="simple">
-<li><p>loltoml: https://github.com/andrusha97/loltoml</p></li>
-</ul>
 </section>
 
 
