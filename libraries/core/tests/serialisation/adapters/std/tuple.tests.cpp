@@ -2,12 +2,20 @@
 #include "morpheus/core/serialisation/mock/reader.hpp"
 #include "morpheus/core/serialisation/mock/serialisers.hpp"
 #include "morpheus/core/serialisation/mock/writer.hpp"
+#include "morpheus/core/serialisation/read_serialiser.hpp"
+#include "morpheus/core/serialisation/write_serialiser.hpp"
 
-#include <catch2/catch_all.hpp>
+#include <catch2/catch_test_macros.hpp>
 #include <gmock/gmock.h>
+#include <gtest/gtest.h>
 
+#include <cstddef>
+#include <cstdint>
+#include <optional>
 #include <string>
+#include <string_view>
 #include <tuple>
+#include <utility>
 
 namespace morpheus::serialisation
 {
@@ -23,7 +31,7 @@ TEST_CASE("Verify serialisation of std::tuple", "[morpheus.serialisation.tuple.s
         constexpr std::int64_t secondValue = 10;
         constexpr bool thirdValue = true;
         constexpr double fourthValue = 1.0;
-        std::tuple value{ firstValue, secondValue, thirdValue, fourthValue };
+        std::tuple value{firstValue, secondValue, thirdValue, fourthValue};
 
         THEN("Expect the following sequence of operations on the underlying writer")
         {
@@ -49,17 +57,18 @@ TEST_CASE("Verify deserialisation of std::tuple", "[morpheus.serialisation.tuple
     GIVEN("A serialiser which can track expected calls")
     {
         using namespace std::literals::string_literals;
-        using ExpectedTuple = std::tuple<std::string, std::int64_t,  bool, double>;
-        const ExpectedTuple expectedValues( "value"s, 10, true, 1.0 );
+        using ExpectedTuple = std::tuple<std::string, std::int64_t, bool, double>;
+        ExpectedTuple const expectedValues("value"s, 10, true, 1.0);
 
         THEN("Expect the following sequence of operations on the underlying reader")
         {
             MockedReadSerialiser serialiser;
             EXPECT_CALL(serialiser.reader(), beginSequence()).WillOnce(Return(std::optional<std::size_t>(std::tuple_size<ExpectedTuple>::value)));
 
-            [&] <std::size_t... Index>(std::index_sequence<Index...>)
+            [&]<std::size_t... Index>(std::index_sequence<Index...>)
             {
-                (EXPECT_CALL(serialiser.reader(), read(An< std::tuple_element_t<Index, ExpectedTuple>>())).WillOnce(Return(std::get<Index>(expectedValues))), ...);
+                (EXPECT_CALL(serialiser.reader(), read(An<std::tuple_element_t<Index, ExpectedTuple>>())).WillOnce(Return(std::get<Index>(expectedValues))),
+                 ...);
             }(std::make_index_sequence<std::tuple_size<ExpectedTuple>::value>());
 
             EXPECT_CALL(serialiser.reader(), endSequence()).Times(1);
@@ -76,4 +85,4 @@ TEST_CASE("Verify deserialisation of std::tuple", "[morpheus.serialisation.tuple
     }
 }
 
-} // morpheus::serialisation
+} // namespace morpheus::serialisation

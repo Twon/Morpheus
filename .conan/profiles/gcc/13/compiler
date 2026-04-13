@@ -1,0 +1,7 @@
+include(../../compiler/gcc)
+
+[settings]
+compiler.version=13
+
+[conf]
+tools.build:compiler_executables={"c":"gcc-13","cpp":"g++-13"}

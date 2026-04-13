@@ -1,0 +1,84 @@
+#include "morpheus/application/po/adapters/scannable.hpp"
+#include "morpheus/application/po/options.hpp"
+#include "morpheus/application/version.hpp"
+#include "morpheus/core/conformance/scan.hpp"
+#include "morpheus/logging.hpp"
+
+#include <boost/program_options/options_description.hpp>
+#include <boost/program_options/value_semantic.hpp>
+#include <catch2/catch_test_macros.hpp>
+
+#include <array>
+#include <compare>
+#include <cstdint>
+#include <optional>
+#include <string>
+#include <string_view>
+#include <tuple>
+
+struct Coordinates
+{
+    double x = 0.0;
+    double y = 0.0;
+
+    auto operator<=>(Coordinates const&) const = default;
+};
+
+template <>
+struct morpheus::conf::scan::scanner<Coordinates> : morpheus::conf::scan::scanner<std::string>
+{
+    template <typename Context>
+    auto scan(Coordinates& val, Context& ctx) const -> morpheus::conf::scan::scan_expected<typename Context::iterator>
+    {
+        return morpheus::conf::scan::scan<int, double>(ctx.range(), "[{}, {}]")
+            .transform(
+                [&val](auto const& result)
+                {
+                    std::tie(val.x, val.y) = result.values();
+                    return result.begin();
+                });
+    }
+};
+
+namespace morpheus::application::po
+{
+
+struct Location
+{
+    Coordinates coordinates;
+
+    void addOptions(boost::program_options::options_description& options)
+    {
+        namespace po = boost::program_options;
+        // clang-format off
+        options.add_options()
+            ("coordinates", po::value(&coordinates), "The 2-dimensional coordinates of the location.");
+        // clang-format on
+    }
+};
+
+TEST_CASE_METHOD(LoggingFixture, "Test parsing of scannable as options", "[morpheus.application.po.adapters.scannable]")
+{
+    SECTION("Ensure valid value parse correctly")
+    {
+        auto getCoordinates = [](std::string_view param)
+        {
+            Location location{};
+            std::array cliOptions = {"dummyProgram.exe", "--coordinates", param.data()};
+            auto const result = parseProgramOptions(cliOptions, HelpDocumentation{}, location);
+            REQUIRE(!result);
+            return location.coordinates;
+        };
+
+        REQUIRE(getCoordinates("[1, 97]") == Coordinates{1.0, 97.0});
+    }
+    SECTION("Ensure invalid value parse correctly")
+    {
+        std::array cliOptions = {"dummyProgram.exe", "--coordinates", "invalid"};
+        Location location{};
+        auto const result = parseProgramOptions(cliOptions, HelpDocumentation{}, location);
+        REQUIRE(result);
+    }
+}
+
+} // namespace morpheus::application::po

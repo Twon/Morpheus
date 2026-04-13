@@ -9,17 +9,23 @@
 #include "morpheus/core/serialisation/adapters/std/set.hpp"
 #include "morpheus/core/serialisation/adapters/std/unordered_set.hpp"
 #include "morpheus/core/serialisation/adapters/std/vector.hpp"
-#include "morpheus/core/serialisation/mock/reader.hpp"
+// #include "morpheus/core/serialisation/mock/reader.hpp"
 #include "morpheus/core/serialisation/mock/serialisers.hpp"
 #include "morpheus/core/serialisation/mock/writer.hpp"
+#include "morpheus/core/serialisation/write_serialiser.hpp"
 
-#include <catch2/catch_all.hpp>
+#include <catch2/catch_template_test_macros.hpp>
+#include <catch2/catch_test_macros.hpp>
 #include <gmock/gmock.h>
-// #include <rapidcheck.h>
 
 #include <array>
+#include <deque>
 #include <initializer_list>
+#include <list>
+#include <optional>
+#include <set>
 #include <string_view>
+#include <unordered_set>
 #include <utility>
 #include <vector>
 
@@ -35,8 +41,14 @@ TEST_CASE("Verify serialisation of ranges", "[morpheus.serialisation.ranges]")
     STATIC_REQUIRE(meta::IsStringView<std::string_view>);
 }
 
-TEMPLATE_TEST_CASE("Verify serialisation of sequence containers std::ranges", "[morpheus.serialisation.ranges.serialise.sequence_containers]",
-                   (std::array<int, 5>), std::deque<int>, std::list<int>, std::set<int>, std::unordered_set<int>, std::vector<int>)
+TEMPLATE_TEST_CASE("Verify serialisation of sequence containers std::ranges",
+                   "[morpheus.serialisation.ranges.serialise.sequence_containers]",
+                   (std::array<int, 5>),
+                   std::deque<int>,
+                   std::list<int>,
+                   std::set<int>,
+                   std::unordered_set<int>,
+                   std::vector<int>)
 {
     GIVEN("A range of values")
     {
@@ -44,10 +56,12 @@ TEMPLATE_TEST_CASE("Verify serialisation of sequence containers std::ranges", "[
             []
             {
                 std::initializer_list<int> const values = {1, 2, 3, 4, 5};
-                if constexpr (std::is_constructible_v<TestType, decltype(values)>) {
+                if constexpr (std::is_constructible_v<TestType, decltype(values)>)
+                {
                     return values;
                 }
-                else {
+                else
+                {
                     return TestType{1, 2, 3, 4, 5};
                 }
             }());
@@ -56,11 +70,15 @@ TEMPLATE_TEST_CASE("Verify serialisation of sequence containers std::ranges", "[
         {
             InSequence seq;
             MockedWriteSerialiser serialiser;
-            EXPECT_CALL(serialiser.writer(), beginSequence(std::optional(ranges::size(container)))).Times(1);
-            ranges::for_each(container, [&serialiser](auto const& element) { EXPECT_CALL(serialiser.writer(), write(Matcher<int>(Eq(element)))).Times(1); });
+            EXPECT_CALL(serialiser.writer(), beginSequence(std::optional(conf::ranges::size(container)))).Times(1);
+            conf::ranges::for_each(container,
+                                   [&serialiser](auto const& element) { EXPECT_CALL(serialiser.writer(), write(Matcher<int>(Eq(element)))).Times(1); });
             EXPECT_CALL(serialiser.writer(), endSequence()).Times(1);
 
-            WHEN("Serialising the std::expected") { serialiser.serialise(container); }
+            WHEN("Serialising the std::expected")
+            {
+                serialiser.serialise(container);
+            }
         }
     }
 }
@@ -94,5 +112,4 @@ TEMPLATE_TEST_CASE("Verify deserialisation of std::ranges", "[morpheus.serialisa
     }
 }
 */
-
 } // namespace morpheus::serialisation

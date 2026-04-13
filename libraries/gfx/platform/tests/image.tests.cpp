@@ -2,12 +2,10 @@
 
 #include <catch2/catch_test_macros.hpp>
 
-
 namespace morpheus::gfx
 {
 
-
-TEST_CASE("Ensure options parsing of stndard application config", "[morpheus.gfx.image]")
+TEST_CASE("Ensure image accessors", "[morpheus.gfx.image]")
 {
     Image image(64, 128, 32);
     REQUIRE(image.width() == 64);
@@ -15,4 +13,4 @@ TEST_CASE("Ensure options parsing of stndard application config", "[morpheus.gfx
     REQUIRE(image.colourDepth() == 32);
 }
 
-}
+} // namespace morpheus::gfx

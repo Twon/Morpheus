@@ -23,15 +23,16 @@ from conan import ConanFile
 from conan.errors import ConanException, ConanInvalidConfiguration
 from conan.tools.build import check_min_cppstd
 from conan.tools.cmake import cmake_layout, CMake, CMakeDeps, CMakeToolchain
-from conan.tools.files import copy
-from conan.tools.scm import Version
+from conan.tools.env import VirtualBuildEnv
+from conan.tools.files import copy, rm
+from conan.tools.scm import Git, Version
 from conan.tools.files import load
+from conan.tools.system.package_manager import Apt
 import re, os.path
 import subprocess
 import sys
 
-required_conan_version = ">=1.59.0"
-
+required_conan_version = ">=2.1.0"
 
 def get_cmake_version():
     try:
@@ -53,18 +54,24 @@ class Morpheus(ConanFile):
     settings = "os", "compiler", "build_type", "arch"
     no_copy_source = True
     options = {
-        "shared": [True, False],
-        "fPIC": [True, False],
-        "tools": [True, False],
+        "build_tests": [True, False],
         "build_docs": [True, False],
-        "build_tests": [True, False]
+        "fPIC": [True, False],
+        "link_with_mold": [True, False],
+        "shared": [True, False],
+        "tools": [True, False],
+        "with_rs_direct_x12": [True, False],
+        "with_rs_metal": [True, False],
+        "with_rs_opengl": [True, False],
+        "with_rs_vulkan": [True, False]
     }
     default_options = {
-        "shared": False,
-        "fPIC": True,
-        "tools": True,
+        "build_tests": True,
         "build_docs": False,
-        "build_tests": True
+        "fPIC": True,
+        "link_with_mold": True,
+        "shared": False,
+        "tools": True
     }
     exports_sources = ["CMakeLists.txt", "LICENSE", "version.txt", "cmake/*", "examples/*" "libraries/*"]
     #generators = "CMakeDeps", "CMakeToolchain"
@@ -81,6 +88,19 @@ class Morpheus(ConanFile):
         "tl-expected/20190710",
         "vulkan-headers/1.3.239.0"#,
         #"zlib/1.2.12" # xapian-core/1.4.19' requires 'zlib/1.2.12' while 'boost/1.81.0' requires 'zlib/1.2.13'. To fix this conflict you need to override the package 'zlib' in your root package.
+        "with_rs_direct_x12": True,
+        "with_rs_metal": True,
+        "with_rs_opengl": True,
+        "with_rs_vulkan": True,
+     }
+    requires = (
+        "unordered_dense/4.8.1",
+        "boost/1.90.0",
+        "ctre/3.10.0",
+        "magic_enum/0.9.7",
+        "ms-gsl/4.2.0",
+        "rapidjson/cci.20250205",
+        "scnlib/4.0.1",
     )
 
     build_requires = (
@@ -92,34 +112,129 @@ class Morpheus(ConanFile):
         version = re.search(r'(\d+\.\d+\.\d+)', content).group(1)
         self.version = version.strip()
 
+    def checkMoldIsSupported(self):
+        """ Mold is only tested on Linux with gcc and clang. In future support for icc may be added. """
+        return self.settings.os == "Linux" and (self.settings.compiler == "clang" or self.settings.compiler == "gcc")
+
+    @property
+    def useDate(self):
+        """ Does the current compiler version lack support for Date and timezones via the STL. """
+        compiler = self.settings.compiler
+        version = Version(self.settings.compiler.version)
+        std_support = (compiler == "msvc" and version >= 193) or (compiler == "gcc" and version >= Version("14"))
+        return not std_support
+
+    @property
+    def useExpected(self):
+        """ Does the current compiler version lack support for std::expected via the STL. """
+        compiler = self.settings.compiler
+        version = Version(self.settings.compiler.version)
+        std_support = (compiler == "msvc" and version >= 193) or (compiler == "gcc" and version >= Version("13")) or \
+                      (compiler == "clang" and version >= Version("17")) or (compiler == "apple-clang" and version >= Version("15"))
+        return not std_support
+
+    @property
+    def useFMT(self):
+        """ Does the current compiler version lack support for std::format or std::print via the STL. """
+        compiler = self.settings.compiler
+        version = Version(self.settings.compiler.version)
+        std_support = (compiler == "msvc" and version >= 193) or (compiler == "gcc" and version >= Version("14")) or \
+                      (compiler == "clang" and version >= Version("19"))
+        return not std_support
+
+    @property
+    def useRanges(self):
+        """ Does the current compiler version lack support for std::ranges via the STL. """
+        compiler = self.settings.compiler
+        version = Version(self.settings.compiler.version)
+        std_support = (compiler == "msvc" and version >= 193) or (compiler == "gcc" and version >= Version("10")) or \
+                      (compiler == "clang" and version >= Version("16")) or (compiler == "apple-clang" and version >= Version("15"))
+        return not std_support
+
+    @property
+    def useOutPtr(self):
+        """ Does the current compiler version lack support for std::out_ptr via the STL. """
+        compiler = self.settings.compiler
+        version = Version(self.settings.compiler.version)
+        std_support = (compiler == "msvc" and version >= 193) or (compiler == "gcc" and version >= Version("14")) or \
+                      (compiler == "clang" and version >= Version("19"))
+        return not std_support
+
+    @property
+    def useValueTypes(self):
+        """ Does the current compiler version lack support for std::indirect and std::polymorphic via the STL. """
+        compiler = self.settings.compiler
+        version = Version(self.settings.compiler.version)
+        std_support = (compiler == "gcc" and version >= Version("16"))
+        return not std_support
+
+    def config_options(self):
+        if not self.checkMoldIsSupported():
+            self.options.rm_safe("link_with_mold")
+
+        if not (self.settings.os in ["Macos", "iOS", "tvOS"]):
+            self.options.rm_safe("with_rs_metal")
+
+        if not (self.settings.os in ["Windows"]):
+            self.options.rm_safe("with_rs_direct_x12")
+
     def build_requirements(self):
-        self.tool_requires("ninja/1.11.1")
+        self.tool_requires("ninja/1.13.2")
 
         if self.options.build_tests:
-            self.test_requires("gtest/1.13.0")
+            self.test_requires("catch2/3.13.0")
+            self.test_requires("gtest/1.17.0")
             #self.test_requires("rapidcheck/cci.20220514", options={'enable_catch':'True'})
-            #self.requires("catch2/3.3.2", override=True, test=True) # Should be 'test_requires' but that does not allow override which we need for catch2.
-            self.test_requires("catch2/3.4.0")
 
-        if get_cmake_version() < Version("3.27.0"):
-            self.tool_requires("cmake/3.27.0")
+        if get_cmake_version() < Version("4.3.0"):
+            self.tool_requires("cmake/4.3.0")
 
         if self.options.build_docs:
-            self.build_requires("doxygen/1.9.4") # doxygen/1.9.5 will update dependency on zlib/1.2.12 to zlib/1.2.13
+            self.build_requires("doxygen/1.16.1")
+
+        if self.options.get_safe("link_with_mold", False):
+            self.build_requires("mold/2.36.0")
 
     def requirements(self):
-        if self.settings.os in ["Macos", "iOS", "tvOS"] and self.settings.compiler == "apple-clang":
-            self.requires("moltenvk/1.2.2")
+        if self.options.get_safe("with_rs_vulkan", False):
+            self.requires("vulkan-headers/1.4.313.0", transitive_headers=True)
+
+            if (self.settings.os in ["Macos", "iOS", "tvOS"]):
+                self.requires("moltenvk/1.3.0", transitive_headers=True)
+
+        if self.options.get_safe("with_rs_opengl", False):
+            self.requires("glbinding/3.5.0", transitive_headers=True)
+            self.requires("khrplatform/cci.20200529", transitive_headers=True)
 
         if self.settings.os in ["Windows"]:
-            self.requires("wil/1.0.230411.1")
+            self.requires("wil/1.0.250325.1", transitive_headers=True)
 
-        if self.settings.compiler != "msvc":
-            self.requires("date/3.0.1")
+        if self.useDate:
+            self.requires("date/3.0.4", transitive_headers=True)
 
-#    @property
-#    def _source_subfolder(self):
-#        return "source_subfolder"
+        if self.useExpected:
+            self.requires("tl-expected/20190710", transitive_headers=True)
+
+        if self.useFMT:
+            self.requires("fmt/12.1.0", transitive_headers=True)
+
+        if self.useRanges:
+            self.requires("range-v3/0.12.0", transitive_headers=True)
+
+        if self.useOutPtr:
+            self.requires("out_ptr/cci.20211119", transitive_headers=True)
+
+        if self.useValueTypes:
+            self.requires("value_types/1.0.0", transitive_headers=True)
+
+    def system_requirements(self):
+        if self.settings.os == "Linux":
+            apt = Apt(self)
+            apt.install(["libx11-dev", "libxrandr-dev"], update=True, check=True)
+            apt.install(["tzdata"], update=True, check=True)
+
+            if self.options.get_safe("with_rs_opengl", False):
+                apt.install(["libgl-dev", "libopengl-dev", "libglu1-mesa-dev", "libgles2-mesa-dev"], update=True, check=True)
 
     @property
     def _minimum_cpp_standard(self):
@@ -130,10 +245,13 @@ class Morpheus(ConanFile):
         return {
 #            "intel-cc": "??"
             "msvc": "16",
-            "gcc": "11",
+            "gcc": "12",
             "clang": "13",
             "apple-clang": "13"
         }
+
+    def configure(self):
+        self.options["boost"].without_cobalt = True
 
     def validate(self):
         if self.settings.compiler.get_safe("cppstd"):
@@ -155,44 +273,94 @@ class Morpheus(ConanFile):
 
     def generate(self):
         tc = CMakeToolchain(self)
+        tc.variables["BUILD_SHARED_LIBS"] = self.options.shared
         tc.variables["MORPHEUS_ENABLE_TESTS"] = self.options.build_tests
         tc.variables["MORPHEUS_BUILD_DOCUMENTATION"] = self.options.build_docs
+        tc.variables["MORPHEUS_LINK_WITH_MOLD"] = self.options.get_safe("link_with_mold", False)
+        tc.variables["MORPHEUS_RENDER_SYSTEM_DIRECT_X12"] = self.options.get_safe("with_rs_direct_x12", False)
+        tc.variables["MORPHEUS_RENDER_SYSTEM_METAL"] = self.options.get_safe("with_rs_metal", False)
+        tc.variables["MORPHEUS_RENDER_SYSTEM_OPENGL"] = self.options.get_safe("with_rs_opengl", False)
+        tc.variables["MORPHEUS_RENDER_SYSTEM_VULKAN"] = self.options.get_safe("with_rs_vulkan", False)
         tc.generate()
-
-        tc = CMakeDeps(self)
-        tc.generate()
-    
-#    def generate(self):
-#        tc = CMakeToolchain(self, generator=os.getenv("CONAN_CMAKE_GENERATOR"))
-#        tc.variables["MORPHEUS_BUILD_DOCS"] = self.options.build_docs
-#        tc.generate()
-#        deps = CMakeDeps(self)
-        #import pdb; pdb.pm()
-#        breakpoint()
-#        deps.generate()
-
-#    def source(self):
-#        tools.get(**self.conan_data["sources"][self.version],
-#                  strip_root=True, destination=self._source_subfolder)
+        deps = CMakeDeps(self)
+        deps.generate()
+        ms = VirtualBuildEnv(self)
+        ms.generate()
 
     def layout(self):
         cmake_layout(self)
 
+    def export_sources(self):
+        copy(self, "CMakeLists.txt", src=self.recipe_folder, dst=self.export_sources_folder)
+        copy(self, "LICENSE", src=self.recipe_folder, dst=self.export_sources_folder)
+        copy(self, "version.txt", src=self.recipe_folder, dst=self.export_sources_folder)
+        copy(self, "cmake/*", src=self.recipe_folder, dst=self.export_sources_folder)
+        copy(self, "examples/*", src=self.recipe_folder, dst=self.export_sources_folder)
+        copy(self, "libraries/*", src=self.recipe_folder, dst=self.export_sources_folder)
+
+    def build(self):
+        cmake = CMake(self)
+        cmake.configure()
+        cmake.build()
+
     def package(self):
-        copy(self, "*LICENSE*", dst="licenses", keep_path=False)
+        copy(self, pattern="LICENSE", src=self.source_folder, dst=os.path.join(self.package_folder, "licenses"))
         cmake = CMake(self)
         cmake.configure()
         cmake.install()
-
-#    def package_id(self):
-#        self.info.header_only()
+        rm(self, "*export-set*.cmake", os.path.join(self.package_folder, "lib", "cmake", "morpheus"))
 
     def package_info(self):
-        pass
-        #self.cpp_info.names["cmake_find_package"] = "wg21_linear_algebra"
-        #self.cpp_info.names["cmake_find_package_multi"] = "wg21_linear_algebra"
-        #self.cpp_info.components["_wg21_linear_algebra"].names["cmake_find_package"] = "wg21_linear_algebra"
-        #self.cpp_info.components["_wg21_linear_algebra"].names["cmake_find_package_multi"] = "wg21_linear_algebra"
-        #self.cpp_info.components["_wg21_linear_algebra"].requires = ["mdspan::mdspan"]
+        self.cpp_info.components["core"].set_property("cmake_file_name", "MorpheusCore")
+        self.cpp_info.components["core"].set_property("cmake_target_name", "morpheus::core")
+        self.cpp_info.components["core"].defines = ["BOOST_USE_WINAPI_VERSION=BOOST_WINAPI_NTDDI_WIN10"]
+        self.cpp_info.components["core"].requires = [
+            "boost::headers",
+            "boost::log",
+            "ctre::ctre",
+            "magic_enum::magic_enum",
+            "ms-gsl::ms-gsl",
+            "range-v3::range-v3",
+            "rapidjson::rapidjson",
+            "scnlib::scnlib",
+            "unordered_dense::unordered_dense"
+        ]
+        self.cpp_info.components["core"].builddirs.append(os.path.join("lib", "cmake", "morpheus"))
 
+        if self.useDate:
+            self.cpp_info.components["core"].requires.append("date::date")
+            self.cpp_info.components["core"].requires.append("date::date-tz")
 
+        if self.useExpected:
+            self.cpp_info.components["core"].requires.append("tl-expected::expected")
+
+        if self.useFMT:
+            self.cpp_info.components["core"].requires.append("fmt::fmt")
+
+        if self.useOutPtr:
+            self.cpp_info.components["core"].requires.append("out_ptr::out_ptr")
+
+        if self.useValueTypes:
+            self.cpp_info.components["core"].requires.append("value_types::value_types")
+
+        if self.options.get_safe("with_rs_direct_x12", False):
+            self.cpp_info.components["directx12"].set_property("cmake_file_name", "MorpheusGfxDirectX12")
+            self.cpp_info.components["directx12"].set_property("cmake_target_name", "morpheus::gfx::directx12")
+
+        if self.options.get_safe("with_rs_metal", False):
+            self.cpp_info.components["metal"].set_property("cmake_file_name", "MorpheusGfxMetal")
+            self.cpp_info.components["metal"].set_property("cmake_target_name", "morpheus::gfx::metal")
+
+        if self.options.get_safe("with_rs_opengl", False):
+            self.cpp_info.components["opengl"].set_property("cmake_file_name", "MorpheusGfxVulkan")
+            self.cpp_info.components["opengl"].set_property("cmake_target_name", "morpheus::gfx::vulkan")
+            self.cpp_info.components["opengl"].requires.append("glbinding::glbinding")
+            self.cpp_info.components["opengl"].requires.append("glew::glew")
+
+        if self.options.get_safe("with_rs_vulkan", False):
+            self.cpp_info.components["vulkan"].set_property("cmake_file_name", "MorpheusGfxVulkan")
+            self.cpp_info.components["vulkan"].set_property("cmake_target_name", "morpheus::gfx::vulkan")
+            self.cpp_info.components["vulkan"].requires.append("vulkan-headers::vulkan-headers")
+
+            if (self.settings.os in ["Macos", "iOS", "tvOS"]):
+                self.cpp_info.components["vulkan"].requires.append("moltenvk::moltenvk")

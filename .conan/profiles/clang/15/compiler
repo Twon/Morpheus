@@ -2,3 +2,6 @@ include(../../compiler/clang)
 
 [settings]
 compiler.version=15
+
+[conf]
+tools.build:compiler_executables={"c":"clang-15","cpp":"clang++-15"}

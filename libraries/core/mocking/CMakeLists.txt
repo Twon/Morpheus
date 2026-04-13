@@ -1,5 +1,5 @@
 morpheus_add_testing_library(
-    INFERFACE
+    INTERFACE
 	NAME MorpheusCoreMocking
 	ALIAS morpheus::core::mocking
 	FOLDER "Libraries/Core"

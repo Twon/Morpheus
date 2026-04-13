@@ -76,7 +76,7 @@ if(CMAKE_SIZEOF_VOID_P EQUAL 8)
 elseif(CMAKE_SIZEOF_VOID_P EQUAL 4)
     find_library(DXGI_LIBRARY NAMES dxgi.lib
                  HINTS ${WIN10_SDK_PATH}/Lib/${WIN10_SDK_VERSION}/um/x86 )
-endif()		  
+endif()
 
 set(DXGI_LIBRARIES ${DXGI_LIBRARY})
 set(DXGI_INCLUDE_DIRS ${DXGI_INCLUDE_DIR})

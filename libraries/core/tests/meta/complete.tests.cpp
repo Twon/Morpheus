@@ -8,15 +8,13 @@ namespace morpheus::meta
 
 class IncompleteType;
 
-class CompleteEmptyType {};
+class CompleteEmptyType
+{};
 
-class CompleteType 
+struct CompleteType
 {
     int member = 0;
 };
-
-template <std::size_t Size>
-struct show_size;
 
 TEST_CASE("Meta is complete allows the compile time detection of complete types", "[morpheus.meta.is_complete]")
 {

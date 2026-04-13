@@ -1,11 +1,13 @@
 #include <morpheus/catch2/adapters/assert.hpp>
 #include <morpheus/core/base/assert.hpp>
+#include <morpheus/core/base/assert_handler.hpp>
 #include <morpheus/core/base/scoped_action.hpp>
 #include <morpheus/redirect_stream.hpp>
 
-#include <catch2/catch_all.hpp>
+#include <catch2/catch_test_macros.hpp>
 
 #include <iostream>
+#include <string_view>
 
 namespace morpheus
 {
@@ -26,8 +28,8 @@ TEST_CASE("Ensure assert functionality works and is hooked into by the test fram
                 return false;
             });
     };
-    
-    auto const onExit = [&](){ setAssertHandler(currentHandler); };
+
+    auto const onExit = [&]() { setAssertHandler(currentHandler); };
     ScopedAction const restoreAssertHandler(onEntry, onExit);
 
     RedirectStream captureOutStream(std::cout);
@@ -46,7 +48,7 @@ TEST_CASE("Ensure assert functionality responds to appropriate defines", "[morph
 
 #define MORPHEUS_DISABLE_ASSERT
     MORPHEUS_ASSERT(true);
-#undef MORPHEUS_DISABLE_ASSERT 
+#undef MORPHEUS_DISABLE_ASSERT
 }
 
 } // namespace morpheus

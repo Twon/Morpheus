@@ -1,17 +1,17 @@
 #[[
 Copyright 2022 Antony Peacock
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
-documentation files (the "Software"), to deal in the Software without restriction, including without limitation the 
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
+documentation files (the "Software"), to deal in the Software without restriction, including without limitation the
 rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit
 persons to whom the Software is furnished to do so, subject to the following conditions:
 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the
 Software.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE 
-WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR 
-COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR 
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ]]
 
@@ -38,8 +38,8 @@ the installation process
       [FOLDER <folder>]
       [INTERFACE]
   )
-   -- Generates a testing library targets with default build directories and 
-   setting. 
+   -- Generates a testing library targets with default build directories and
+   setting.
 
   ``NAME``
     The ``NAME`` option is required to provide the internal name for the library.
@@ -52,7 +52,7 @@ the installation process
 
 #]=======================================================================]
 function(morpheus_add_testing_library)
-    set(options INFERFACE)
+    set(options INTERFACE)
     set(oneValueArgs NAME ALIAS FOLDER)
     set(multiValueArgs)
     cmake_parse_arguments(MORPHEUS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
@@ -63,7 +63,15 @@ function(morpheus_add_testing_library)
         message(FATAL_ERROR "ALIAS parameter must be supplied")
     endif()
 
-    if (NOT MORPHEUS_INFERFACE)
+    if (NOT Catch2::Catch2)
+        find_package(Catch2 3 REQUIRED)
+    endif(NOT Catch2::Catch2)
+
+    if (NOT GTest::gmock)
+        find_package(GTest REQUIRED)
+    endif(NOT GTest::gmock)
+
+    if (NOT MORPHEUS_INTERFACE)
         add_library(${MORPHEUS_NAME})
         target_link_libraries(${MORPHEUS_NAME}
             PUBLIC

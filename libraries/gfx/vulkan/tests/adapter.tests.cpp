@@ -1,6 +1,9 @@
-#include <morpheus/gfx/vulkan/adapter.hpp>
 #include <morpheus/gfx/platform/concepts/adapter.hpp>
-#include <catch2/catch_all.hpp>
+#include <morpheus/gfx/platform/concepts/video_mode.hpp>
+#include <morpheus/gfx/vulkan/adapter.hpp>
+#include <morpheus/gfx/vulkan/video_mode.hpp>
+
+#include <catch2/catch_test_macros.hpp>
 
 namespace morpheus::gfx::vulkan
 {
@@ -15,12 +18,12 @@ TEST_CASE("Iterates over the adapters in the list", "[morpheus.gfx.vulkan.adapte
 {
     GIVEN("An adapter list")
     {
-        //adapter_list adapters;
+        // adapter_list adapters;
         THEN("Loop over all adapters using native for loop syntax")
         {
-//            for (auto& adapter : enumerateAdapters())
+            //            for (auto& adapter : enumerateAdapters())
             {
-//                INFO("The adapter id is: " << adapter.getId());
+                //                INFO("The adapter id is: " << adapter.getId());
             }
         }
     }

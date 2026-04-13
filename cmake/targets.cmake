@@ -1,17 +1,17 @@
 #[[
 Copyright 2022 Antony Peacock
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated 
-documentation files (the "Software"), to deal in the Software without restriction, including without limitation the 
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
+documentation files (the "Software"), to deal in the Software without restriction, including without limitation the
 rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit
 persons to whom the Software is furnished to do so, subject to the following conditions:
 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the
 Software.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE 
-WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR 
-COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR 
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
 OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ]]
 
@@ -26,6 +26,20 @@ Overview
 
 Locates all targets with in a directory and its subdirectories.
 
+.. code-block:: cmake
+
+  targets_get_all(
+      [DIRECTORY <directory>]
+      [RESULT <result>]
+  )
+
+  ``DIRECTORY``
+    The ``DIRECTORY`` option specifies the directory to recursively search for targets
+    from.
+
+  ``RESULT``
+    The ``RESULT`` option is required to store the results of the function.  The list
+    of all targets from the specified directory and below.
 
 #]=======================================================================]
 function(targets_get_all)
@@ -59,6 +73,20 @@ Overview
 
 Given a list of targets will return a list of targets containing sources to be
 compiled.
+
+.. code-block:: cmake
+
+  targets_filter_for_sources(
+      [TARGETS <targets...>]
+      [RESULT <result>]
+  )
+
+  ``TARGETS``
+    The ``TARGETS`` option specifies a list of targets to retrieve source files for.
+
+  ``RESULT``
+    The ``RESULT`` option is required to store the results of the function.  The list
+    of source files for all requested targets.
 
 #]=======================================================================]
 function(targets_filter_for_sources)
@@ -103,8 +131,8 @@ Overview
 For a given target calculate the subset of sources which will produce a translation
 unit (the compiler representation of a source file with all
 marcos and include statements expanded in place).  Output is a list of resulting
-sources in terms of the output location subsequent intermediate files from the 
-compiler are written too, i.e. a list containing the following inputs would be 
+sources in terms of the output location subsequent intermediate files from the
+compiler are written too, i.e. a list containing the following inputs would be
 transformed as such:
 
     ${targetSourceDir}/sourcefile.cpp -> ${targetBinaryDir}/CMakeFiles/${targetName}.dir/${file}
@@ -129,7 +157,7 @@ function(targets_get_translation_units)
 
     # CMAKE_CXX_SOURCE_FILE_EXTENSIONS defined in: https://github.com/Kitware/CMake/blob/master/Modules/CMakeCXXCompiler.cmake.in
     foreach(cppExt IN LISTS CMAKE_CXX_SOURCE_FILE_EXTENSIONS)
-        # Filter on a copy of the oringal source list
+        # Filter on a copy of the original source list
         set(filteredTargetSource "${targetSource}")
         # Escape any file extensions with special characters (i.e. the '+' in "c++").
         string(REGEX REPLACE "([][+.*()^])" "\\\\\\1" cppExt "${cppExt}")
@@ -137,10 +165,15 @@ function(targets_get_translation_units)
         list(APPEND targetTranslationUnits ${filteredTargetSource})
     endforeach()
 
+    get_property(IS_MULTI_CONFIG GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
     get_target_property(targetBinaryDir ${ARGS_TARGET} BINARY_DIR)
     foreach(file IN LISTS targetTranslationUnits)
-        targets_relative_path_of_source(TARGET_NAME ${COVERAGE_TARGET_NAME} RESULT file SOURCE_FILE ${file})
-        set(translationUnitLocation "${targetBinaryDir}/CMakeFiles/${COVERAGE_TARGET_NAME}.dir/${file}")
+        targets_relative_path_of_source(TARGET_NAME ${ARGS_TARGET} RESULT file SOURCE_FILE ${file})
+        if(IS_MULTI_CONFIG)
+            set(translationUnitLocation "${targetBinaryDir}/CMakeFiles/${ARGS_TARGET}.dir/$<CONFIG>/${file}")
+        else()
+            set(translationUnitLocation "${targetBinaryDir}/CMakeFiles/${ARGS_TARGET}.dir/${file}")
+        endif()
         list(APPEND targetTranslationUnitLocations ${translationUnitLocation})
     endforeach()
 

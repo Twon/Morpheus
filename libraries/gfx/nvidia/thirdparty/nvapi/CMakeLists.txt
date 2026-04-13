@@ -1,29 +1,42 @@
-add_library(NvapiHeaders STATIC)
-add_library(NVidia::NvapiHeaders ALIAS NvapiHeaders)
-target_include_directories(NvapiHeaders
+include(FetchContent)
+FetchContent_Declare(
+    nvapi
+    URL https://download.nvidia.com/XFree86/nvapi-open-source-sdk/R550-OpenSource.tar
+)
+FetchContent_MakeAvailable(nvapi)
+
+morpheus_add_library(
+    NAME Nvapi
+    ALIAS NVidia::Nvapi
+)
+
+target_include_directories(Nvapi
     PUBLIC
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+        $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/include>
+        $<BUILD_INTERFACE:${nvapi_SOURCE_DIR}/R550-OpenSource>
 )
 
-target_sources(NvapiHeaders
-	PUBLIC
-		nvapi.h
-		nvapi_lite_common.h
-		nvapi_lite_d3dext.h
-		nvapi_lite_salend.h
-		nvapi_lite_salstart.h
-		nvapi_lite_sli.h
-		nvapi_lite_stereo.h
-		nvapi_lite_surround.h
-		NvApiDriverSettings.h
-		nvHLSLExtns.h
-		nvHLSLExtnsInternal.h
-		nvShaderExtnEnums.h
-	PRIVATE
-		NvApiDriverSettings.cpp
-)
+target_compile_options(Nvapi
+    PRIVATE
+         /wd4838
+         /FIstddef.h
+         /FI${nvapi_SOURCE_DIR}/R550-OpenSource/nvapi.h
 
-set_target_properties(NvapiHeaders
+)
+target_sources(Nvapi
+    PUBLIC
+        $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/include/nvapi.h>
+        $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/include/nvapi_interface.h>
+        $<INSTALL_INTERFACE:$<INSTALL_PREFIX>/include/NvApiDriverSettings.h>
+        $<BUILD_INTERFACE:${nvapi_SOURCE_DIR}/R550-OpenSource/nvapi.h>
+        $<BUILD_INTERFACE:${nvapi_SOURCE_DIR}/R550-OpenSource/nvapi_interface.h>
+        $<BUILD_INTERFACE:${nvapi_SOURCE_DIR}/R550-OpenSource/NvApiDriverSettings.h>
+    PRIVATE
+        ${nvapi_SOURCE_DIR}/R550-OpenSource/NvApiDriverSettings.c
+)
+set_source_files_properties(${nvapi_SOURCE_DIR}/R550-OpenSource/NvApiDriverSettings.c PROPERTIES LANGUAGE CXX)
+
+set_target_properties(Nvapi
     PROPERTIES
         FOLDER "Thirdparty"
         ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
@@ -31,7 +44,7 @@ set_target_properties(NvapiHeaders
         RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
 )
 
-install(TARGETS NvapiHeaders
+install(TARGETS Nvapi
         RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}

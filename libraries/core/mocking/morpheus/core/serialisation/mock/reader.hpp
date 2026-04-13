@@ -1,12 +1,15 @@
 #pragma once
 
+#include "morpheus/core/serialisation/concepts/reader_archetype.hpp"
+
 #include <gmock/gmock.h>
-#include <cstdint>
+
 #include <cstddef>
+#include <cstdint>
 #include <optional>
 #include <span>
-#include <string_view>
 #include <string>
+#include <string_view>
 #include <vector>
 
 namespace morpheus::serialisation::mock
@@ -20,24 +23,24 @@ public:
     /// \defgroup MockFunctions Mock Functions
     ///@{
 
-    /// \copydoc morpheus::serialisation::concepts::ReaderArchtype::isTextual()
+    /// \copydoc morpheus::serialisation::concepts::ReaderArchetype::isTextual()
     MOCK_METHOD(bool, isTextual, (), ());
 
-    /// \copydoc morpheus::serialisation::concepts::ReaderArchtype::beginComposite()
+    /// \copydoc morpheus::serialisation::concepts::ReaderArchetype::beginComposite()
     MOCK_METHOD(void, beginComposite, (), ());
-    /// \copydoc morpheus::serialisation::concepts::ReaderArchtype::endComposite()
+    /// \copydoc morpheus::serialisation::concepts::ReaderArchetype::endComposite()
     MOCK_METHOD(void, endComposite, (), ());
-    /// \copydoc morpheus::serialisation::concepts::ReaderArchtype::beginValue()
+    /// \copydoc morpheus::serialisation::concepts::ReaderArchetype::beginValue()
     MOCK_METHOD(void, beginValue, (std::string_view), ());
-    /// \copydoc morpheus::serialisation::concepts::ReaderArchtype::endValue()
+    /// \copydoc morpheus::serialisation::concepts::ReaderArchetype::endValue()
     MOCK_METHOD(void, endValue, (), ());
     /// Begin reading a sequence of values.
     MOCK_METHOD(std::optional<std::size_t>, beginSequence, (), ());
-    /// \copydoc morpheus::serialisation::concepts::ReaderArchtype::endSequence()
+    /// \copydoc morpheus::serialisation::concepts::ReaderArchetype::endSequence()
     MOCK_METHOD(void, endSequence, (), ());
     /// Begin reading a nullable value.
     MOCK_METHOD(bool, beginNullable, (), ());
-    /// \copydoc morpheus::serialisation::concepts::ReaderArchtype::endNullable()
+    /// \copydoc morpheus::serialisation::concepts::ReaderArchetype::endNullable()
     MOCK_METHOD(void, endNullable, (), ());
 
     /// Reads a boolean type from the serialisation.
@@ -67,13 +70,15 @@ public:
     /// Reads a std::string type from the serialisation.
     MOCK_METHOD(std::string, read, (std::string), ());
     /// Reads a string literal type from the serialisation.
-    MOCK_METHOD(std::string, read, (char const * const), ());
+    MOCK_METHOD(std::string, read, (char const* const), ());
     /// Reads a blob of bytes from the serialisation.
     MOCK_METHOD(std::vector<std::byte>, read, (std::vector<std::byte>), ());
     ///@}
 
-    template<typename T>
-    T read() requires requires(Reader r) { r.read(T{}); }
+    /// Template wrapper around read which dispatches to the correct concrete read method based on the type T.
+    template <typename T>
+    T read()
+    requires requires(Reader r) { r.read(T{}); }
     {
         return read(T{});
     }

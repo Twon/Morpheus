@@ -11,9 +11,14 @@ target_link_libraries(MorpheusGfxGL4Tests
 
 target_sources(MorpheusGfxGL4Tests
     PRIVATE
+        concept_checks.tests.cpp
         render_system.tests.cpp
 )
 
 if (WIN32)
     add_subdirectory(wgl)
 endif(WIN32)
+
+if(UNIX AND NOT APPLE)
+    add_subdirectory(xgl)
+endif(UNIX AND NOT APPLE)

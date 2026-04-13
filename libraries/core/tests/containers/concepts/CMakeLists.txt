@@ -1,0 +1,10 @@
+target_sources(MorpheusCoreTests
+    PRIVATE
+        allocator_aware.tests.cpp
+        associative.tests.cpp
+        container.tests.cpp
+        contiguous.tests.cpp
+        reversible.tests.cpp
+        sequence.tests.cpp
+        unordered.tests.cpp
+)

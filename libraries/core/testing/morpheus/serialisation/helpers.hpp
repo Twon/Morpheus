@@ -42,11 +42,11 @@ std::vector<char> serialise(auto const& value)
 
 /// Serialise a value to a binary buffer with limited space.  This is useful for testing or error cases such as testing
 /// condition where storage is exhuasted.
-/// 
+///
 /// \tparam Size The size of the static buffer.
 /// \param[in] value The value to be serialised.
 /// \return The binary blob containing the serialised form of the input value.
-template<std::size_t Size>
+template <std::size_t Size>
 std::array<char, Size> serialiseWithLimitedSpace(auto const& value)
 {
     using namespace boost::iostreams;
@@ -62,7 +62,7 @@ std::array<char, Size> serialiseWithLimitedSpace(auto const& value)
 /// testing condition where storage is exhuasted.
 ///
 /// \tparam T The type of value to be deserialised.
-/// \param[in] storage The binary blob represending the serialised form of the type.
+/// \param[in] storage The binary blob representing the serialised form of the type.
 /// \returns The deserialised value.
 template <typename T>
 T deserialiseWithIoStream(auto const& storage)
@@ -96,7 +96,7 @@ std::array<char, Size> serialiseWithSpanStream(auto const& value)
 /// testing condition where storage is exhuasted.
 ///
 /// \tparam T The type of value to be deserialised.
-/// \param[in] storage The binary blob represending the serialised form of the type.
+/// \param[in] storage The binary blob representing the serialised form of the type.
 /// \returns The deserialised value.
 template <typename T>
 T deserialiseWithSpanStream(auto const& storage)
@@ -109,9 +109,9 @@ T deserialiseWithSpanStream(auto const& storage)
 #endif
 
 /// Deserialised a value from a binary blob of data.
-/// 
+///
 /// \tparam T The type of value to be deserialised.
-/// \param[in] value The binary blob represending the serialised form of the type.
+/// \param[in] value The binary blob representing the serialised form of the type.
 /// \returns The deserialised value.
 template <typename T>
 T deserialise(std::vector<char> const& value)
@@ -123,8 +123,8 @@ T deserialise(std::vector<char> const& value)
     return serialiser.deserialise<T>();
 }
 
-/// Serialises an object to a binary blob and then deserialise back into the orginal form.
-/// 
+/// Serialises an object to a binary blob and then deserialise back into the original form.
+///
 /// \tparam T The type of value to be serialised/deserialised.
 /// \param[in] value The value to be serialised then deserialised.
 /// \returns The resulting deserialised value.

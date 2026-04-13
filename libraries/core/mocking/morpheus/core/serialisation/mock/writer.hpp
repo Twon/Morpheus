@@ -1,6 +1,9 @@
 #pragma once
 
+#include "morpheus/core/serialisation/concepts/writer_archetype.hpp"
+
 #include <gmock/gmock.h>
+
 #include <cstdint>
 #include <optional>
 #include <span>
@@ -17,24 +20,24 @@ public:
     /// \defgroup MockFunctions Mock Functions
     ///@{
 
-    /// \copydoc morpheus::serialisation::concepts::WriterArchtype::isTextual()
+    /// \copydoc morpheus::serialisation::concepts::WriterArchetype::isTextual()
     MOCK_METHOD(bool, isTextual, (), ());
 
-    /// \copydoc morpheus::serialisation::concepts::WriterArchtype::beginComposite()
+    /// \copydoc morpheus::serialisation::concepts::WriterArchetype::beginComposite()
     MOCK_METHOD(void, beginComposite, (), ());
-    /// \copydoc morpheus::serialisation::concepts::WriterArchtype::endComposite()
+    /// \copydoc morpheus::serialisation::concepts::WriterArchetype::endComposite()
     MOCK_METHOD(void, endComposite, (), ());
-    /// \copydoc morpheus::serialisation::concepts::WriterArchtype::beginValue()
+    /// \copydoc morpheus::serialisation::concepts::WriterArchetype::beginValue()
     MOCK_METHOD(void, beginValue, (std::string_view), ());
-    /// \copydoc morpheus::serialisation::concepts::WriterArchtype::endValue()
+    /// \copydoc morpheus::serialisation::concepts::WriterArchetype::endValue()
     MOCK_METHOD(void, endValue, (), ());
     /// Begin writing a sequence of values.
     MOCK_METHOD(void, beginSequence, (std::optional<std::size_t>), ());
-    /// \copydoc morpheus::serialisation::concepts::WriterArchtype::endSequence()
+    /// \copydoc morpheus::serialisation::concepts::WriterArchetype::endSequence()
     MOCK_METHOD(void, endSequence, (), ());
     /// Begin writing a nullable value.
     MOCK_METHOD(void, beginNullable, (bool), ());
-    /// \copydoc morpheus::serialisation::concepts::WriterArchtype::endNullable()
+    /// \copydoc morpheus::serialisation::concepts::WriterArchetype::endNullable()
     MOCK_METHOD(void, endNullable, (), ());
 
     /// \copydoc morpheus::serialisation::JsonWriter::write(bool)
@@ -59,9 +62,9 @@ public:
     MOCK_METHOD(void, write, (float), ());
     /// \copydoc morpheus::serialisation::JsonWriter::write(double)
     MOCK_METHOD(void, write, (double), ());
-    /// \copydoc morpheus::serialisation::concepts::WriterArchtype::write(std::string_view const)
+    /// \copydoc morpheus::serialisation::concepts::WriterArchetype::write(std::string_view const)
     MOCK_METHOD(void, write, (std::string_view), ());
-    /// \copydoc morpheus::serialisation::concepts::WriterArchtype::write(std::span<std::byte> const)
+    /// \copydoc morpheus::serialisation::concepts::WriterArchetype::write(std::span<std::byte> const)
     MOCK_METHOD(void, write, (std::span<std::byte>), ());
     /// Write a string to the serialisation.
     MOCK_METHOD(void, write, (char const* const), ());

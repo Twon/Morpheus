@@ -6,4 +6,5 @@ target_sources(MorpheusCoreTesting
 )
 
 add_subdirectory(catch2)
+add_subdirectory(containers)
 add_subdirectory(serialisation)

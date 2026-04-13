@@ -1,11 +1,9 @@
-if(APPLE)
-	add_subdirectory(metal)
-endif(APPLE)
+add_subdirectory(metal)
 
 if(WIN32)
-	add_subdirectory(d3d12)
-	add_subdirectory(intel)
-	add_subdirectory(nvidia)
+    add_subdirectory(d3d12)
+    add_subdirectory(intel)
+    add_subdirectory(nvidia)
 endif(WIN32)
 
 add_subdirectory(gl4)
