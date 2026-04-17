@@ -81,6 +81,12 @@ public:
     template <typename T>
     [[nodiscard]] T deserialise();
 
+    /// Deserialise to a non-default construtible single value
+    /// \tparam T The underlying type of value to deserialise.
+    /// \param[out] The deserialises value.
+    template <typename T>
+    [[nodiscard]] void deserialise(T& value);
+
     /// Deserialise a key value pair
     /// \tparam T The underlying type of value to deserialise.
     /// \param[in] key The key to serialise.

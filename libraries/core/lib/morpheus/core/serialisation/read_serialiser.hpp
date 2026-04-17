@@ -19,6 +19,13 @@ template <typename T>
 
 template <concepts::Reader ReaderType>
 template <typename T>
+[[nodiscard]] void ReadSerialiser<ReaderType>::deserialise(T& value)
+{
+    serialisation::deserialise.template operator()<ReadSerialiser<ReaderType>, T>(*this, value);
+}
+
+template <concepts::Reader ReaderType>
+template <typename T>
 [[nodiscard]] T ReadSerialiser<ReaderType>::deserialise(std::string_view const key)
 {
     auto const scope = makeScopedValue(mReader, key);
