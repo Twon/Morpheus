@@ -34,11 +34,11 @@ template <concepts::ReadSerialiser Serialiser, IsRange T>
 T deserialise(Serialiser& serialiser)
 {
     auto const scope = makeScopedSequence(serialiser.reader());
-    auto sequenceGenerator = serialiser.reader().template readSequence<ranges::range_value_t<T>>();
+    auto sequenceGenerator = serialiser.reader().template readSequence<conf::ranges::range_value_t<T>>();
     // We should be using the for_range_t constructor create the container but there is no support for this in Gcc 12 and Clang 15.
     // T sequence(std::from_range_t, sequenceGenerator);
     T sequence;
-    for (auto& entry : sequenceGenerator)
+    for (auto const& entry : sequenceGenerator)
     {
         sequence.push_back(entry);
     }
