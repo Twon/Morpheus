@@ -7,7 +7,6 @@
 #include "morpheus/core/concurrency/generator.hpp"
 #include "morpheus/core/functional/overload.hpp"
 #include "morpheus/core/serialisation/concepts/reader_archetype.hpp"
-#include "morpheus/core/serialisation/concepts/reader_archtype.hpp"
 #include "morpheus/core/serialisation/exceptions.hpp"
 #include "morpheus/core/serialisation/read_serialiser_decl.hpp"
 
@@ -98,7 +97,7 @@ public:
     void endNullable();
 
     template <typename T>
-    requires requires(concepts::ReaderArchtype& r) {
+    requires requires(concepts::ReaderArchetype& r) {
         { r.template read<T>() } -> std::same_as<T>;
     }
     concurrency::Generator<T> readSequence()

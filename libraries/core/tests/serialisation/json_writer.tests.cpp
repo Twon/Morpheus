@@ -302,7 +302,7 @@ TEST_CASE("Json writer can write std types to underlying text representation", "
     REQUIRE(test::serialise(std::make_unique<int>(123)) == R"(123)");
     REQUIRE(test::serialise(std::variant<int, bool, std::string>{true}) == R"({"type":"bool","value":true})");
     REQUIRE(test::serialise(std::vector<int>{0, 1, 2, 3, 4, 5}) == R"([0,1,2,3,4,5])");
-    static_assert(ranges::range<std::vector<int>>);
+    static_assert(conf::ranges::range<std::vector<int>>);
 }
 
 } // namespace morpheus::serialisation
