@@ -65,6 +65,18 @@ struct deserialise_fn
         using detail::serialise;
         return deserialise<Serialiser, Type>(serialiser);
     }
+
+    /// Deserialise into a value using the provided serialiser.
+    /// \tparam Serialiser The type of the serialiser to use.
+    /// \tparam Type The type of the value to deserialise.
+    /// \param[in] serialiser The serialiser to use for deserialisation.
+    /// \param[out] value The value to deserialise into.
+    template <concepts::ReadSerialiser Serialiser, typename Type>
+    auto operator()(Serialiser& serialiser, Type& value) const
+    {
+        using detail::serialise;
+        return deserialise<Serialiser, Type>(serialiser, value);
+    }
 };
 
 } // namespace detail

@@ -2,6 +2,7 @@
 
 #include "morpheus/core/serialisation/adapters/std/ranges.hpp"
 
+#include <cstddef>
 #include <span>
 
 namespace morpheus::serialisation::detail

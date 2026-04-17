@@ -6,6 +6,7 @@ target_sources(MorpheusCoreTests
         optional.tests.cpp
         pair.tests.cpp
         ranges.tests.cpp
+        reference_wrapper.tests.cpp
         source_location.cpp
         tuple.tests.cpp
         unique_ptr.tests.cpp
