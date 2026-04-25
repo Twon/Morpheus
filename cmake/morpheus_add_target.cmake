@@ -125,6 +125,8 @@ commonly associated attributes.
   morpheus_add_target_properties(
       [NAME <name>]
       [FOLDER <folder>]
+      [NO_INSTALL]
+      [INTERFACE]
   )
    -- Generates targets with default build directories and install options.
 
@@ -174,7 +176,9 @@ function(morpheus_add_target_properties)
     endif()
 
     # Create an empty header set here so that the subsequent install step finds it.
-    target_sources(${MORPHEUS_NAME} ${scope} FILE_SET HEADERS FILES)
+    if (NOT ${MORPHEUS_NO_INSTALL})
+        target_sources(${MORPHEUS_NAME} ${scope} FILE_SET HEADERS FILES)
+    endif()
 
     if (NOT ${MORPHEUS_NO_INSTALL})
         install(TARGETS ${MORPHEUS_NAME}
