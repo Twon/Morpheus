@@ -102,6 +102,14 @@ public:
         return std::get<T>(*next);
     }
 
+    /// Read a single byte from the serialisation.
+    template <typename T>
+    requires std::same_as<T, std::byte>
+    T read()
+    {
+        return static_cast<std::byte>(read<std::uint8_t>());
+    }
+
     /// Reads a integral type from the serialisation.
     template <std::integral Integer>
     requires(not std::is_same_v<bool, Integer>)
@@ -149,10 +157,7 @@ public:
     /// Read a blob of binary from the serialisation.
     template <typename T>
     requires std::is_same_v<T, std::vector<std::byte>>
-    T read()
-    {
-        return {};
-    }
+    T read();
     // clang-format on
 private:
     enum class Event : std::uint32_t

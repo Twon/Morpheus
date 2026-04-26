@@ -6,6 +6,10 @@
 #include <rapidjson/error/error.h>
 #include <rapidjson/rapidjson.h>
 
+#include <boost/archive/iterators/binary_from_base64.hpp>
+#include <boost/archive/iterators/transform_width.hpp>
+
+#include <algorithm>
 #include <utility>
 
 namespace morpheus::serialisation
@@ -210,5 +214,30 @@ bool JsonReader::beginNullable()
 }
 
 void JsonReader::endNullable() {}
+
+template <>
+std::vector<std::byte> JsonReader::read<std::vector<std::byte>>()
+{
+    auto encoded = read<std::string>();
+
+    // Base64 padding characters '=' must be removed before decoding with boost iterators
+    encoded.erase(std::remove(encoded.begin(), encoded.end(), '='), encoded.end());
+
+    using namespace boost::archive::iterators;
+    typedef transform_width<binary_from_base64<std::string::const_iterator>, 8, 6> base64_dec;
+
+    std::vector<std::byte> decoded;
+    try
+    {
+        decoded.reserve((encoded.size() * 3) / 4);
+        std::copy(base64_dec(encoded.begin()), base64_dec(encoded.end()), std::back_inserter(decoded));
+    }
+    catch (std::exception const& e)
+    {
+        throw serialisation::serialisation_exception("Failed to decode Base64 string: " + std::string(e.what()));
+    }
+
+    return decoded;
+}
 
 } // namespace morpheus::serialisation

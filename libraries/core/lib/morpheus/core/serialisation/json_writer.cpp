@@ -2,7 +2,14 @@
 #include "morpheus/core/base/verify.hpp"
 #include "morpheus/core/serialisation/json_writer.hpp"
 
+#include <boost/archive/iterators/base64_from_binary.hpp>
+#include <boost/archive/iterators/insert_linebreaks.hpp>
+#include <boost/archive/iterators/ostream_iterator.hpp>
+#include <boost/archive/iterators/transform_width.hpp>
+
 #include <rapidjson/rapidjson.h>
+
+#include <algorithm>
 
 namespace morpheus::serialisation
 {
@@ -53,6 +60,11 @@ void JsonWriter::endNullable() {}
 void JsonWriter::write(bool const value)
 {
     MORPHEUS_VERIFY(mJsonWriter.Bool(value));
+}
+
+void JsonWriter::write(std::byte const value)
+{
+    write(static_cast<std::uint8_t>(value));
 }
 
 void JsonWriter::write(std::uint8_t const value)
@@ -112,5 +124,16 @@ void JsonWriter::write(std::string_view const value)
     MORPHEUS_VERIFY(mJsonWriter.String(value.data(), static_cast<rapidjson::SizeType>(value.size())));
 }
 
-void JsonWriter::write(std::span<std::byte const> const) {} // LCOV_EXCL_LINE
+void JsonWriter::write(std::span<std::byte const> const value)
+{
+    using namespace boost::archive::iterators;
+    typedef base64_from_binary<transform_width<std::byte const*, 6, 8>> base64_enc;
+
+    std::string encoded(base64_enc(value.data()), base64_enc(value.data() + value.size()));
+
+    // Add RFC-compliant Base64 padding if the input size is not a multiple of 3.
+    encoded.append((3 - value.size() % 3) % 3, '=');
+
+    write(std::string_view(encoded));
+}
 } // namespace morpheus::serialisation

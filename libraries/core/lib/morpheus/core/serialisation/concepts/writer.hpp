@@ -27,6 +27,7 @@ concept Writer = requires(T t) {
     { t.endNullable() } -> std::same_as<void>;
 
     { t.write(bool{}) } -> std::same_as<void>;
+    { t.write(std::byte{}) } -> std::same_as<void>;
     { t.write(std::uint8_t{}) } -> std::same_as<void>;
     { t.write(std::int8_t{}) } -> std::same_as<void>;
     { t.write(std::uint16_t{}) } -> std::same_as<void>;

@@ -60,6 +60,8 @@ public:
 
     /// Write a boolean to the serialisation.
     void write(bool const value);
+    /// Write a single byte to the serialisation.
+    void write(std::byte const value);
     /// Write a 8-bit unsigned integer to the serialisation.
     void write(std::uint8_t const value);
     /// Write a 8-bit integer to the serialisation.

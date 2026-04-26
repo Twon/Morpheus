@@ -60,7 +60,7 @@ public:
 
     /// Reads a integral type, a float or double type from the serialisation.
     template <typename T>
-    requires std::integral<T> or std::floating_point<T>
+    requires std::integral<T> or std::floating_point<T> or std::same_as<T, std::byte>
     T read()
     {
         T value = {};

@@ -1,5 +1,6 @@
 #include "morpheus/core/conformance/format.hpp"
 #include "morpheus/core/serialisation/adapters/aggregate.hpp"
+#include "morpheus/core/serialisation/adapters/hex.hpp"
 #include "morpheus/core/serialisation/adapters/std/chrono.hpp"
 #include "morpheus/core/serialisation/adapters/std/monostate.hpp"
 #include "morpheus/core/serialisation/adapters/std/optional.hpp"
@@ -171,6 +172,90 @@ TEST_CASE("Json reader providess basic reader functionality", "[morpheus.seriali
         }
     }
 }
+}
+
+TEST_CASE("Json reader can read single std::byte from underlying text representation", "[morpheus.serialisation.json_reader.byte]")
+{
+    WHEN("Deserialising a single byte")
+    {
+        REQUIRE(test::deserialise<std::byte>("42") == std::byte{42});
+    }
+}
+
+TEST_CASE("Json reader can read byte buffer types from underlying text representation", "[morpheus.serialisation.json_reader.buffers]")
+{
+    GIVEN("A Json reader")
+    {
+        WHEN("Reading a Base64 encoded byte buffer into a vector")
+        {
+            auto const value = test::deserialise<std::vector<std::byte>>(R"("ChQe")");
+
+            THEN("Expect the bytes to be correctly decoded")
+            {
+                REQUIRE(value.size() == 3);
+                REQUIRE(value[0] == std::byte{10});
+                REQUIRE(value[1] == std::byte{20});
+                REQUIRE(value[2] == std::byte{30});
+            }
+        }
+    }
+}
+
+TEST_CASE("Json reader can read std::byte using the Hex adapter", "[morpheus.serialisation.json_reader.hex_adapter]")
+{
+    GIVEN("A Json stream with a hex string")
+    {
+        WHEN("Reading using the Hex adapter (0x prefixed)")
+        {
+            std::byte value{};
+            JsonReader reader = test::readerFromString(R"("0xB4")");
+            deserialise(reader, Hex{value});
+
+            THEN("Expect the byte to be correctly parsed")
+            {
+                REQUIRE(value == std::byte{0xB4});
+            }
+        }
+        WHEN("Reading using the Hex adapter (no prefix)")
+        {
+            std::byte value{};
+            JsonReader reader = test::readerFromString(R"("A5")");
+            deserialise(reader, Hex{value});
+
+            THEN("Expect the byte to be correctly parsed")
+            {
+                REQUIRE(value == std::byte{0xA5});
+            }
+        }
+    }
+}
+
+TEMPLATE_TEST_CASE("Json reader can read multiple integer types using the Hex adapter",
+                   "[morpheus.serialisation.json_reader.hex_adapter]",
+                   std::uint8_t,
+                   std::int8_t,
+                   std::uint16_t,
+                   std::int16_t,
+                   std::uint32_t,
+                   std::int32_t,
+                   std::uint64_t,
+                   std::int64_t)
+{
+    GIVEN("A Json stream with a hex string")
+    {
+        WHEN("Reading using the Hex adapter (0x prefixed)")
+        {
+            TestType value{};
+            JsonReader reader = test::readerFromString(R"("0xFF")");
+            deserialise(reader, Hex{value});
+
+            THEN("Expect the value to be correctly parsed")
+            {
+                REQUIRE(static_cast<std::uint8_t>(value) == 0xFF);
+            }
+        }
+    }
+}
 
 struct SimpleComposite
 {
@@ -201,6 +286,40 @@ struct ComplexComposite
         second = s.template deserialise<decltype(second)>("second");
     }
 };
+
+struct BlobComposite
+{
+    int id = 0;
+    std::vector<std::byte> data;
+    std::string name;
+
+    template <concepts::ReadSerialiser Serialiser>
+    void deserialise(Serialiser& s)
+    {
+        id = s.template deserialise<decltype(id)>("id");
+        data = s.template deserialise<decltype(data)>("data");
+        name = s.template deserialise<decltype(name)>("name");
+    }
+};
+
+TEST_CASE("Json reader can read composite types containing byte buffers", "[morpheus.serialisation.json_reader.composite_buffers]")
+{
+    GIVEN("A composite type with a byte vector")
+    {
+        auto const json = R"({"id":1,"data":"ChQe","name":"blob"})";
+        auto const composite = test::deserialise<BlobComposite>(json);
+
+        THEN("Expect all fields to be correctly deserialised")
+        {
+            REQUIRE(composite.id == 1);
+            REQUIRE(composite.name == "blob");
+            REQUIRE(composite.data.size() == 3);
+            REQUIRE(composite.data[0] == std::byte{10});
+            REQUIRE(composite.data[1] == std::byte{20});
+            REQUIRE(composite.data[2] == std::byte{30});
+        }
+    }
+}
 
 TEST_CASE("Json reader can read simple composite types from underlying test representation", "[morpheus.serialisation.json_reader.composite]")
 {

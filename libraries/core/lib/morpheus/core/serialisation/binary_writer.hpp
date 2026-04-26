@@ -66,7 +66,7 @@ public:
     /// \tparam T The type of the value to write.  Must be an integral or floating point type.
     /// \param[in] value The value to write to the serialisation.
     template <typename T>
-    requires std::integral<T> or std::floating_point<T>
+    requires std::integral<T> or std::floating_point<T> or std::same_as<T, std::byte>
     void write(T const value)
     {
         // https://stackoverflow.com/questions/24482028/why-is-stdstreamsize-defined-as-signed-rather-than-unsigned

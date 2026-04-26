@@ -48,7 +48,7 @@ struct WriterArchetype
 
     /// Write any arithmetic type to the serialisation.
     template <typename T>
-    requires std::is_arithmetic_v<T>
+    requires std::is_arithmetic_v<T> or std::same_as<T, std::byte>
     consteval void write(T const value);
 
     /// Write a string to the serialisation.
