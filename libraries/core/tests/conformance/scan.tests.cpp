@@ -29,9 +29,11 @@ TEST_CASE("Ensure scan is supported and working", "[morpheus.conformance.scan]")
 
     SECTION("Hexadecimal patterns using regex")
     {
+        using namespace std::string_view_literals;
+
         GIVEN("A hex string with 0x prefix")
         {
-            auto const input = "0x42";
+            auto const input = "0x42"sv;
             auto result = conf::scan::scan<int>(input, "{:/(?:0[xX])?([0-9a-fA-F]+)/}");
             REQUIRE(result);
             REQUIRE(result->value() == 0x42);
@@ -39,7 +41,7 @@ TEST_CASE("Ensure scan is supported and working", "[morpheus.conformance.scan]")
 
         GIVEN("A hex string without prefix")
         {
-            auto const input = "42";
+            auto const input = "42"sv;
             auto result = conf::scan::scan<int>(input, "{:/(?:0[xX])?([0-9a-fA-F]+)/}");
             REQUIRE(result);
             REQUIRE(result->value() == 0x42);
@@ -47,7 +49,7 @@ TEST_CASE("Ensure scan is supported and working", "[morpheus.conformance.scan]")
 
         GIVEN("A hex string with 0X prefix")
         {
-            auto const input = "0XFF";
+            auto const input = "0XFF"sv;
             auto result = conf::scan::scan<int>(input, "{:/(?:0[xX])?([0-9a-fA-F]+)/}");
             REQUIRE(result);
             REQUIRE(result->value() == 0xFF);
