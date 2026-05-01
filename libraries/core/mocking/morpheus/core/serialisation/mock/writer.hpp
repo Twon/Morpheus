@@ -1,9 +1,11 @@
 #pragma once
 
+#include "morpheus/core/serialisation/concepts/writer.hpp"
 #include "morpheus/core/serialisation/concepts/writer_archetype.hpp"
 
 #include <gmock/gmock.h>
 
+#include <cstddef>
 #include <cstdint>
 #include <optional>
 #include <span>
@@ -42,6 +44,8 @@ public:
 
     /// \copydoc morpheus::serialisation::JsonWriter::write(bool)
     MOCK_METHOD(void, write, (bool), ());
+    /// Write a single byte to the serialisation.
+    MOCK_METHOD(void, write, (std::byte), ());
     /// \copydoc morpheus::serialisation::JsonWriter::write(std::uint8_t)
     MOCK_METHOD(void, write, (std::uint8_t), ());
     /// \copydoc morpheus::serialisation::JsonWriter::write(std::int8_t)
@@ -64,8 +68,8 @@ public:
     MOCK_METHOD(void, write, (double), ());
     /// \copydoc morpheus::serialisation::concepts::WriterArchetype::write(std::string_view const)
     MOCK_METHOD(void, write, (std::string_view), ());
-    /// \copydoc morpheus::serialisation::concepts::WriterArchetype::write(std::span<std::byte> const)
-    MOCK_METHOD(void, write, (std::span<std::byte>), ());
+    /// \copydoc morpheus::serialisation::concepts::WriterArchetype::write(std::span<std::byte const>)
+    MOCK_METHOD(void, write, (std::span<std::byte const>), ());
     /// Write a string to the serialisation.
     MOCK_METHOD(void, write, (char const* const), ());
     ///@}

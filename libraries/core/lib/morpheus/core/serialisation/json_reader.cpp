@@ -10,6 +10,7 @@
 #include <boost/archive/iterators/transform_width.hpp>
 
 #include <algorithm>
+#include <istream>
 #include <utility>
 
 namespace morpheus::serialisation
@@ -136,11 +137,11 @@ struct JsonExtracter : rapidjson::BaseReaderHandler<rapidjson::UTF8<>, JsonExtra
 JsonReader::EventValue JsonReader::getNext()
 {
     using namespace rapidjson;
-    mJsonReader.IterativeParseNext<kParseCommentsFlag | kParseNanAndInfFlag | kParseValidateEncodingFlag>(mStream, *mExtractor);
-    if (mJsonReader.HasParseError())
+    mJsonReader->IterativeParseNext<kParseCommentsFlag | kParseNanAndInfFlag | kParseValidateEncodingFlag>(*mStream, *mExtractor);
+    if (mJsonReader->HasParseError())
     {
-        rapidjson::ParseErrorCode const c = mJsonReader.GetParseErrorCode();
-        size_t const o = mJsonReader.GetErrorOffset();
+        rapidjson::ParseErrorCode const c = mJsonReader->GetParseErrorCode();
+        size_t const o = mJsonReader->GetErrorOffset();
         throwJsonException("Parse error at offset {}, error {}", o, magic_enum::enum_name(c));
     }
     return mExtractor->mCurrent;
@@ -148,17 +149,21 @@ JsonReader::EventValue JsonReader::getNext()
 
 JsonReader::JsonReader(OwnedStream stream, bool validate)
     : mSourceStream(std::move(stream))
-    , mStream(*mSourceStream)
+    , mStream(std::make_unique<rapidjson::IStreamWrapper>(*mSourceStream))
+    , mJsonReader(std::make_unique<rapidjson::Reader>())
     , mExtractor(std::make_unique<JsonExtracter>())
     , mValidate(validate)
 {
-    mJsonReader.IterativeParseInit();
+    mJsonReader->IterativeParseInit();
 }
+
+JsonReader::JsonReader(JsonReader&& rhs) noexcept = default;
+JsonReader& JsonReader::operator=(JsonReader&& rhs) noexcept = default;
 
 JsonReader::~JsonReader()
 {
     if (mValidate)
-        MORPHEUS_VERIFY(mJsonReader.IterativeParseComplete());
+        MORPHEUS_VERIFY(mJsonReader->IterativeParseComplete());
 }
 
 void JsonReader::beginComposite()
@@ -230,11 +235,11 @@ std::vector<std::byte> JsonReader::read<std::vector<std::byte>>()
     try
     {
         decoded.reserve((encoded.size() * 3) / 4);
-        std::copy(base64_dec(encoded.begin()), base64_dec(encoded.end()), std::back_inserter(decoded));
+        std::transform(base64_dec(encoded.begin()), base64_dec(encoded.end()), std::back_inserter(decoded), [](auto c) { return static_cast<std::byte>(c); });
     }
     catch (std::exception const& e)
     {
-        throw serialisation::serialisation_exception("Failed to decode Base64 string: " + std::string(e.what()));
+        throwJsonException("Failed to decode Base64 string: {}", e.what());
     }
 
     return decoded;

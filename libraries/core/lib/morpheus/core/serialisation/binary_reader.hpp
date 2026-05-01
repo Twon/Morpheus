@@ -6,12 +6,13 @@
 #include <concepts>
 #include <cstddef>
 #include <cstdint>
-#include <iosfwd>
+#include <istream>
 #include <optional>
 #include <span>
 #include <string>
 #include <string_view>
 #include <type_traits>
+#include <vector>
 
 namespace morpheus::serialisation
 {

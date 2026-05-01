@@ -68,10 +68,10 @@ TEST_CASE("Ensure read serialiser are forward constructible where the underlying
             using ForwardingSerialiserArchetype = ReadSerialiser<MultiConstructorReader>;
             THEN("Is default construtible")
             {
-                STATIC_REQUIRE(!std::is_constructible_v<ForwardingSerialiserArchetype, int>);
-                STATIC_REQUIRE(std::is_constructible_v<ForwardingSerialiserArchetype, int, bool>);
-                STATIC_REQUIRE(!std::is_constructible_v<ForwardingSerialiserArchetype, int, bool, int>);
-                STATIC_REQUIRE(std::is_constructible_v<ForwardingSerialiserArchetype, int, bool, int, bool>);
+                STATIC_REQUIRE(!std::is_constructible_v<ForwardingSerialiserArchetype, std::in_place_t, int>);
+                STATIC_REQUIRE(std::is_constructible_v<ForwardingSerialiserArchetype, std::in_place_t, int, bool>);
+                STATIC_REQUIRE(!std::is_constructible_v<ForwardingSerialiserArchetype, std::in_place_t, int, bool, int>);
+                STATIC_REQUIRE(std::is_constructible_v<ForwardingSerialiserArchetype, std::in_place_t, int, bool, int, bool>);
             }
         }
     }
@@ -87,10 +87,10 @@ TEST_CASE("Ensure read serialiser are forward constructible where the underlying
             using ReadSerialiserArchetype = ReadSerialiser<concepts::ReaderArchetype>;
             THEN("Is default construtible")
             {
-                STATIC_REQUIRE(!std::is_constructible_v<ReadSerialiserArchetype, int>);
-                STATIC_REQUIRE(!std::is_constructible_v<ReadSerialiserArchetype, int, bool>);
-                STATIC_REQUIRE(!std::is_constructible_v<ReadSerialiserArchetype, int, bool, int>);
-                STATIC_REQUIRE(!std::is_constructible_v<ReadSerialiserArchetype, int, bool, int, bool>);
+                STATIC_REQUIRE(!std::is_constructible_v<ReadSerialiserArchetype, std::in_place_t, int>);
+                STATIC_REQUIRE(!std::is_constructible_v<ReadSerialiserArchetype, std::in_place_t, int, bool>);
+                STATIC_REQUIRE(!std::is_constructible_v<ReadSerialiserArchetype, std::in_place_t, int, bool, int>);
+                STATIC_REQUIRE(!std::is_constructible_v<ReadSerialiserArchetype, std::in_place_t, int, bool, int, bool>);
             }
         }
     }

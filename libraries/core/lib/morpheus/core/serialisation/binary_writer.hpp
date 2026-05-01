@@ -86,7 +86,7 @@ public:
             throwBinaryException("Error writing data to stream.  Attempted to write {} bytes, but only {} bytes were written.", value.size(), writtenSize);
     }
 
-    /// \copydoc morpheus::serialisation::concepts::WriterArchetype::write(std::span<std::byte> const)
+    /// \copydoc morpheus::serialisation::concepts::WriterArchetype::write(std::span<std::byte const> const)
     void write(std::span<std::byte const> const value)
     {
         auto const length = value.size();

@@ -20,10 +20,10 @@ void serialise(Serialiser& serialiser, std::reference_wrapper<T> const& value)
     serialiser.serialise(value.get());
 }
 
-template <concepts::ReadSerialiser Serialiser, IsStdRefWrapper T>
-void deserialise(Serialiser& serialiser, std::reference_wrapper<typename T::type> ref)
+template <concepts::ReadSerialiser Serialiser, concepts::ReadSerialisable T>
+void deserialise_to(Serialiser& serialiser, std::reference_wrapper<T>& ref)
 {
-    ref.get() = serialiser.template deserialise<typename T::type>();
+    ref.get() = serialiser.template deserialise<T>();
 }
 
 } // namespace morpheus::serialisation::detail

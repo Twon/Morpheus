@@ -21,6 +21,7 @@
 #include <limits>
 #include <memory>
 #include <optional>
+#include <span>
 #include <string>
 #include <string_view>
 #include <tuple>
@@ -32,7 +33,7 @@ namespace morpheus::serialisation
 {
 
 /// \class JsonReader
-///     Read in objects from an underlying json representation.
+///     Implements the concept Reader for a streaming JSON reader which extracts items one by one from the input stream.
 class MORPHEUSCORE_EXPORT JsonReader
 {
     enum class FundamentalType : std::uint32_t
@@ -61,8 +62,8 @@ public:
     explicit JsonReader(JsonReader const& rhs) = delete;
     JsonReader& operator=(JsonReader const& rhs) = delete;
 
-    explicit JsonReader(JsonReader&& rhs) noexcept = delete;
-    JsonReader& operator=(JsonReader&& rhs) noexcept = delete;
+    explicit JsonReader(JsonReader&& rhs) noexcept;
+    JsonReader& operator=(JsonReader&& rhs) noexcept;
 
     /// Destructor for the JsonReader.
     ~JsonReader();
@@ -154,11 +155,12 @@ public:
         return std::get<T>(*next);
     }
 
-    /// Read a blob of binary from the serialisation.
+    /// Reads a stream of bytes from the serialisation.
     template <typename T>
     requires std::is_same_v<T, std::vector<std::byte>>
     T read();
     // clang-format on
+
 private:
     enum class Event : std::uint32_t
     {
@@ -179,8 +181,8 @@ private:
     [[nodiscard]] EventValue getNext();
 
     OwnedStream mSourceStream; /// Owned input stream containing the Json source.
-    rapidjson::IStreamWrapper mStream;
-    rapidjson::Reader mJsonReader;
+    std::unique_ptr<rapidjson::IStreamWrapper> mStream;
+    std::unique_ptr<rapidjson::Reader> mJsonReader;
     std::unique_ptr<struct JsonExtracter> mExtractor;
     bool mValidate = true;
 };

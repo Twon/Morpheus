@@ -54,7 +54,7 @@ struct WriterArchetype
     /// Write a string to the serialisation.
     consteval void write(std::string_view const value);
 
-    /// Write a span of bytes to the serialisation.
+    /// Write a sequence of bytes to the serialisation.
     consteval void write(std::span<std::byte const> const value);
 };
 

@@ -9,6 +9,7 @@
 #include <rapidjson/ostreamwrapper.h>
 #include <rapidjson/writer.h>
 
+#include <concepts>
 #include <cstddef>
 #include <cstdint>
 #include <optional>
@@ -78,14 +79,16 @@ public:
     void write(std::uint64_t const value);
     /// Write a 64-bit integer to the serialisation.
     void write(std::int64_t const value);
-    /// Write a float to the serialisation.
+    /// Write a single precision floating point to the serialisation.
     void write(float const value);
-    /// Write a double to the serialisation.
+    /// Write a double precision floating point to the serialisation.
     void write(double const value);
+
     /// \copydoc morpheus::serialisation::concepts::WriterArchetype::write(std::string_view const)
     void write(std::string_view const value);
-    /// \copydoc morpheus::serialisation::concepts::WriterArchetype::write(std::span<std::byte> const)
+    /// \copydoc morpheus::serialisation::concepts::WriterArchetype::write(std::span<std::byte const>)
     void write(std::span<std::byte const> const value);
+
     /// Write a string literal to the serialisation.
     template <std::size_t N>
     void write(char const (&str)[N])
