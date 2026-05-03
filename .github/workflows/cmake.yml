@@ -41,13 +41,13 @@ jobs:
             }
           - {
               name: "Ubuntu GCC-13",
-              os: ubuntu-22.04,
+              os: ubuntu-latest,
               compiler: { type: GCC, version: 13, conan: "gcc", cc: "gcc-13", cxx: "g++-13", std: 23 },
               lib: "libstdc++11"
             }
           - {
               name: "Ubuntu GCC-14",
-              os: ubuntu-24.04,
+              os: ubuntu-latest,
               compiler: { type: GCC, version: 14, conan: "gcc", cc: "gcc-14", cxx: "g++-14", std: 23 },
               lib: "libstdc++11"
             }
