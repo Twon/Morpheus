@@ -69,6 +69,7 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#adapters-deep-integration">Adapters: Deep Integration</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#standard-library-stl-support">Standard Library (STL) Support</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#formatting-adapters-hex">Formatting Adapters: Hex</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#external-library-integration-boost">External Library Integration (Boost)</a></li>
 </ul>
 </li>
@@ -243,7 +244,24 @@
 <li><p><strong>Vocabulary Types</strong>: <code class="docutils literal notranslate"><span class="pre">std::optional</span></code>, <code class="docutils literal notranslate"><span class="pre">std::variant</span></code> (including <code class="docutils literal notranslate"><span class="pre">std::monostate</span></code>), <code class="docutils literal notranslate"><span class="pre">std::pair</span></code>, and <code class="docutils literal notranslate"><span class="pre">std::tuple</span></code>.</p></li>
 <li><p><strong>Smart Pointers</strong>: <code class="docutils literal notranslate"><span class="pre">std::unique_ptr</span></code> and <code class="docutils literal notranslate"><span class="pre">std::shared_ptr</span></code>.</p></li>
 <li><p><strong>Time</strong>: <code class="docutils literal notranslate"><span class="pre">std::chrono::duration</span></code> and <code class="docutils literal notranslate"><span class="pre">std::chrono::time_point</span></code>. In textual formats (JSON), these produce human-readable strings like <code class="docutils literal notranslate"><span class="pre">&quot;100ms&quot;</span></code>.</p></li>
+<li><p><strong>Bytes</strong>: <code class="docutils literal notranslate"><span class="pre">std::byte</span></code> is supported as a primitive. Arrays of bytes (such as <code class="docutils literal notranslate"><span class="pre">std::vector&lt;std::byte&gt;</span></code> or <code class="docutils literal notranslate"><span class="pre">std::span&lt;std::byte</span> <span class="pre">const&gt;</span></code>) are automatically encoded as <strong>Base64 strings</strong> in JSON to ensure compact and efficient storage of binary blobs.</p></li>
 </ul>
+</section>
+<section id="formatting-adapters-hex">
+<h3>Formatting Adapters: Hex<a class="headerlink" href="#formatting-adapters-hex" title="Link to this heading"></a></h3>
+<p>Sometimes you want to explicitly control the textual representation of a value without changing its underlying type. The <code class="docutils literal notranslate"><span class="pre">Hex&lt;T&gt;</span></code> adapter allows you to serialise any integral type or <code class="docutils literal notranslate"><span class="pre">std::byte</span></code> as a hexadecimal string in textual formats.</p>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;morpheus/core/serialisation/adapters/hex.hpp&quot;</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">example</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">byte</span><span class="w"> </span><span class="n">secret</span><span class="p">{</span><span class="mh">0xB4</span><span class="p">};</span>
+<span class="w">    </span><span class="n">morpheus</span><span class="o">::</span><span class="n">serialisation</span><span class="o">::</span><span class="n">JsonWriteSerialiser</span><span class="w"> </span><span class="n">serialiser</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// Serialises as &quot;0xB4&quot; in JSON</span>
+<span class="w">    </span><span class="n">morpheus</span><span class="o">::</span><span class="n">serialisation</span><span class="o">::</span><span class="n">serialise</span><span class="p">(</span><span class="n">serialiser</span><span class="p">,</span><span class="w"> </span><span class="n">morpheus</span><span class="o">::</span><span class="n">serialisation</span><span class="o">::</span><span class="n">Hex</span><span class="p">{</span><span class="n">secret</span><span class="p">});</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>In binary formats, <code class="docutils literal notranslate"><span class="pre">Hex&lt;T&gt;</span></code> is a zero-overhead pass-through that writes the raw bits, ensuring you don’t pay a performance penalty for human-readable debugging elsewhere.</p>
 </section>
 <section id="external-library-integration-boost">
 <h3>External Library Integration (Boost)<a class="headerlink" href="#external-library-integration-boost" title="Link to this heading"></a></h3>

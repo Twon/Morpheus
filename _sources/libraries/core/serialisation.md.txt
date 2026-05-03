@@ -143,6 +143,25 @@ Morpheus provides out-of-the-box support for the majority of the C++ Standard Li
 *   **Vocabulary Types**: `std::optional`, `std::variant` (including `std::monostate`), `std::pair`, and `std::tuple`.
 *   **Smart Pointers**: `std::unique_ptr` and `std::shared_ptr`.
 *   **Time**: `std::chrono::duration` and `std::chrono::time_point`. In textual formats (JSON), these produce human-readable strings like `"100ms"`.
+*   **Bytes**: `std::byte` is supported as a primitive. Arrays of bytes (such as `std::vector<std::byte>` or `std::span<std::byte const>`) are automatically encoded as **Base64 strings** in JSON to ensure compact and efficient storage of binary blobs.
+
+### Formatting Adapters: Hex
+
+Sometimes you want to explicitly control the textual representation of a value without changing its underlying type. The `Hex<T>` adapter allows you to serialise any integral type or `std::byte` as a hexadecimal string in textual formats.
+
+```cpp
+#include "morpheus/core/serialisation/adapters/hex.hpp"
+
+void example() {
+    std::byte secret{0xB4};
+    morpheus::serialisation::JsonWriteSerialiser serialiser(std::cout);
+
+    // Serialises as "0xB4" in JSON
+    morpheus::serialisation::serialise(serialiser, morpheus::serialisation::Hex{secret});
+}
+```
+
+In binary formats, `Hex<T>` is a zero-overhead pass-through that writes the raw bits, ensuring you don't pay a performance penalty for human-readable debugging elsewhere.
 
 ### External Library Integration (Boost)
 
