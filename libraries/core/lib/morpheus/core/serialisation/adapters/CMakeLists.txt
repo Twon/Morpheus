@@ -3,6 +3,7 @@ target_sources(MorpheusCore
         FILE_SET HEADERS
         FILES
             aggregate.hpp
+            hex.hpp
 )
 
 add_subdirectory(std)

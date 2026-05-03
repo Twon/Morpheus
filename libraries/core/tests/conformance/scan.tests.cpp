@@ -26,6 +26,35 @@ TEST_CASE("Ensure scan is supported and working", "[morpheus.conformance.scan]")
             }
         }
     }
+
+    SECTION("Hexadecimal patterns using regex")
+    {
+        using namespace std::string_view_literals;
+
+        GIVEN("A hex string with 0x prefix")
+        {
+            auto const input = "0x42"sv;
+            auto result = conf::scan::scan<int>(input, "{:x}");
+            REQUIRE(result);
+            REQUIRE(result->value() == 0x42);
+        }
+
+        GIVEN("A hex string without prefix")
+        {
+            auto const input = "42"sv;
+            auto result = conf::scan::scan<int>(input, "{:x}");
+            REQUIRE(result);
+            REQUIRE(result->value() == 0x42);
+        }
+
+        GIVEN("A hex string with 0X prefix")
+        {
+            auto const input = "0XFF"sv;
+            auto result = conf::scan::scan<int>(input, "{:x}");
+            REQUIRE(result);
+            REQUIRE(result->value() == 0xFF);
+        }
+    }
 }
 
 } // namespace morpheus

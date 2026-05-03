@@ -2,14 +2,20 @@
 
 #include "morpheus/core/serialisation/concepts/reader_archetype.hpp"
 
+#include <concepts>
 #include <type_traits>
 
 namespace morpheus::serialisation::concepts
 {
 
 template <typename Type>
-concept ReadSerialisableFreeStading = requires(ReadSerialiserArchetype s, Type t) {
-    { deserialise(s, t) } -> std::same_as<Type>;
+concept ReadSerialisableFactory = requires(ReadSerialiserArchetype s) {
+    { deserialise<Type>(s) } -> std::same_as<Type>;
+};
+
+template <typename Type>
+concept ReadSerialisableSink = requires(ReadSerialiserArchetype s, Type t) {
+    { deserialise_to(s, t) } -> std::same_as<void>;
 };
 
 template <typename Type>
@@ -23,6 +29,6 @@ concept ReadSerialisableNative = requires(ReadSerialiserArchetype s, Type t) {
 };
 
 template <typename Type>
-concept ReadSerialisable = ReadSerialisableFreeStading<Type> or ReadSerialisableInsrusive<Type> or ReadSerialisableNative<Type>;
+concept ReadSerialisable = ReadSerialisableFactory<Type> || ReadSerialisableSink<Type> || ReadSerialisableInsrusive<Type> || ReadSerialisableNative<Type>;
 
 } // namespace morpheus::serialisation::concepts

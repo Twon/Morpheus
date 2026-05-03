@@ -60,6 +60,10 @@ TEST_CASE("Binary reader handles error cases gracefully", "[morpheus.serialisati
         REQUIRE_THROWS_AS(testing::deserialiseWithIoStream<std::vector<std::byte>>(testing::makeCharArray(0x64, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00)),
                           BinaryException);
     }
+    SECTION("Single byte serialisation")
+    {
+        REQUIRE(testing::deserialiseWithIoStream<std::byte>(testing::makeCharArray(0x42)) == std::byte{0x42});
+    }
 }
 
 } // namespace morpheus::serialisation

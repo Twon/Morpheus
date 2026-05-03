@@ -29,6 +29,7 @@ concept Reader = requires(T t) {
     { t.endNullable() } -> std::same_as<void>;
 
     { t.template read<bool>() } -> std::same_as<bool>;
+    { t.template read<std::byte>() } -> std::same_as<std::byte>;
     { t.template read<std::uint8_t>() } -> std::same_as<std::uint8_t>;
     { t.template read<std::int8_t>() } -> std::same_as<std::int8_t>;
     { t.template read<std::uint16_t>() } -> std::same_as<std::uint16_t>;

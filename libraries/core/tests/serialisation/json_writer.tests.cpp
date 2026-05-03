@@ -1,5 +1,6 @@
 #include "morpheus/core/conformance/format.hpp"
 #include "morpheus/core/serialisation/adapters/aggregate.hpp"
+#include "morpheus/core/serialisation/adapters/hex.hpp"
 #include "morpheus/core/serialisation/adapters/std/chrono.hpp"
 #include "morpheus/core/serialisation/adapters/std/monostate.hpp"
 #include "morpheus/core/serialisation/adapters/std/optional.hpp"
@@ -42,7 +43,7 @@ template <class T>
 static std::string serialise(T const& value)
 {
     std::ostringstream oss;
-    JsonWriteSerialiser serialiser{oss};
+    JsonWriteSerialiser serialiser{std::in_place, oss};
     serialiser.serialise(value);
     return oss.str();
 }
@@ -171,6 +172,111 @@ TEST_CASE("Json writer can write simple composite types to underlying text repre
             THEN("Expect an empty composite in the json document")
             {
                 REQUIRE(strStream.str() == R"({"1":"A","2":"B","3":"C"})");
+            }
+        }
+    }
+}
+
+TEST_CASE("Json writer can write byte buffer types to underlying text representation", "[morpheus.serialisation.json_writer.buffers]")
+{
+    GIVEN("A Json writer")
+    {
+        std::ostringstream strStream;
+        JsonWriter writer{strStream};
+
+        WHEN("Writing a span of bytes (blob)")
+        {
+            std::array<std::byte, 3> const raw{std::byte{10}, std::byte{20}, std::byte{30}};
+            std::span<std::byte const> const value{raw};
+            writer.write(value);
+
+            THEN("Expect a Base64 encoded string")
+            {
+                REQUIRE(strStream.str() == R"("ChQe")");
+            }
+        }
+        WHEN("Writing a sequence of 8-bit integers")
+        {
+            std::uint8_t value[]{10, 20, 30};
+            writer.beginSequence(3);
+            writer.write(value[0]);
+            writer.write(value[1]);
+            writer.write(value[2]);
+            writer.endSequence();
+
+            THEN("Expect a JSON array of integers")
+            {
+                REQUIRE(strStream.str() == "[10,20,30]");
+            }
+        }
+        WHEN("Writing a single byte")
+        {
+            writer.write(std::byte{42});
+
+            THEN("Expect a single JSON integer")
+            {
+                REQUIRE(strStream.str() == "42");
+            }
+        }
+    }
+}
+
+/*
+TEST_CASE("Json writer can write hex values to underlying text representation", "[morpheus.serialisation.json_writer.hex]")
+{
+    GIVEN("A Json writer")
+    {
+        std::ostringstream strStream;
+        JsonWriter writer{strStream};
+        WHEN("Writing a single byte using the Hex adapter")
+        {
+            std::byte value{0xB4};
+            writer.beginComposite();
+            writer.beginValue("hex_val");
+            writer.write(Hex{value});
+            writer.endValue();
+            writer.endComposite();
+
+            THEN("Expect a hexadecimal string in the JSON output")
+            {
+                REQUIRE(strStream.str() == R"({"hex_val":"0xB4"})");
+            }
+        }
+    }
+}
+*/
+
+TEMPLATE_TEST_CASE("Hex adapter can write multiple integer types to underlying text representation",
+                   "[morpheus.serialisation.json_writer.hex]",
+                   std::uint8_t,
+                   std::int8_t,
+                   std::uint16_t,
+                   std::int16_t,
+                   std::uint32_t,
+                   std::int32_t,
+                   std::uint64_t,
+                   std::int64_t)
+{
+    GIVEN("A Json writer")
+    {
+        std::ostringstream strStream;
+        JsonWriteSerialiser serialiser{std::in_place, strStream};
+
+        WHEN("Writing a value using the Hex adapter")
+        {
+            TestType value = static_cast<TestType>(255);
+            serialise(serialiser, Hex{value});
+
+            THEN("Expect a hexadecimal string in the JSON output")
+            {
+                if constexpr (sizeof(TestType) == 1)
+                    REQUIRE(strStream.str() == R"("0xFF")");
+                else if constexpr (sizeof(TestType) == 2)
+                    REQUIRE(strStream.str() == R"("0x00FF")");
+                else if constexpr (sizeof(TestType) == 4)
+                    REQUIRE(strStream.str() == R"("0x000000FF")");
+                else
+                    REQUIRE(strStream.str() == R"("0x00000000000000FF")");
             }
         }
     }

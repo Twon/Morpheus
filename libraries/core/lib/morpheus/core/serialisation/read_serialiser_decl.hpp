@@ -38,18 +38,25 @@ template <concepts::Reader ReaderType>
 class ReadSerialiser
 {
 public:
+    using Reader = ReaderType;
+
     /// Constructs a ReadSerialiser when the underlying reader supports default construction.
     template <meta::concepts::DefaultConstructible T = ReaderType>
-    ReadSerialiser() noexcept(meta::concepts::DefaultNothrowConstructible<T>)
+    explicit ReadSerialiser() noexcept(meta::concepts::DefaultNothrowConstructible<T>)
+    {}
+
+    explicit ReadSerialiser(ReaderType&& reader) noexcept
+        : mReader(std::move(reader))
     {}
 
     /// Constructs a ReadSerialiser with the provided arguments when the underlying reader supports construction
     /// with those arguments.
     /// \tparam Args The types of the arguments to forward to the reader's constructor.
+    /// \param tag The tag to indicate that the reader should be constructed in-place.
     /// \param args The arguments to forward to the reader's constructor.
     template <typename... Args>
     requires(std::is_constructible_v<ReaderType, Args...>)
-    ReadSerialiser(Args&&... args) noexcept(meta::concepts::NothrowConstructible<ReaderType, Args...>)
+    explicit ReadSerialiser([[maybe_unused]] std::in_place_t tag, Args&&... args) noexcept(meta::concepts::NothrowConstructible<ReaderType, Args...>)
         : mReader(std::forward<Args>(args)...)
     {}
 

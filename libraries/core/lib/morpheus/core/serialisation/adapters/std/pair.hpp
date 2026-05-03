@@ -7,6 +7,7 @@
 #include "morpheus/core/serialisation/concepts/write_serialisable.hpp"
 #include "morpheus/core/serialisation/concepts/write_serialiser.hpp"
 
+#include <type_traits>
 #include <utility>
 
 namespace morpheus::serialisation::detail
@@ -25,7 +26,7 @@ void serialise(Serialiser& serialiser, std::pair<T1, T2> const& value)
 }
 
 template <concepts::ReadSerialiser Serialiser, IsStdPair T>
-T deserialise(Serialiser& serialiser)
+T deserialise(Serialiser& serialiser, std::type_identity<T>)
 {
     // More work required to support std::pairs containing references.
     static_assert(!std::is_reference_v<typename T::first_type>);

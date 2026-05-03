@@ -24,7 +24,7 @@ void serialise(Serialiser& serialiser, std::tuple<T...> const& value)
 }
 
 template <concepts::ReadSerialiser Serialiser, IsStdTuple T>
-T deserialise(Serialiser& serialiser)
+T deserialise(Serialiser& serialiser, std::type_identity<T>)
 {
     constexpr std::size_t size = std::tuple_size<T>::value;
 

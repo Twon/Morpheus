@@ -6,6 +6,11 @@
 #include <rapidjson/error/error.h>
 #include <rapidjson/rapidjson.h>
 
+#include <boost/archive/iterators/binary_from_base64.hpp>
+#include <boost/archive/iterators/transform_width.hpp>
+
+#include <algorithm>
+#include <istream>
 #include <utility>
 
 namespace morpheus::serialisation
@@ -132,11 +137,11 @@ struct JsonExtracter : rapidjson::BaseReaderHandler<rapidjson::UTF8<>, JsonExtra
 JsonReader::EventValue JsonReader::getNext()
 {
     using namespace rapidjson;
-    mJsonReader.IterativeParseNext<kParseCommentsFlag | kParseNanAndInfFlag | kParseValidateEncodingFlag>(mStream, *mExtractor);
-    if (mJsonReader.HasParseError())
+    mJsonReader->IterativeParseNext<kParseCommentsFlag | kParseNanAndInfFlag | kParseValidateEncodingFlag>(*mStream, *mExtractor);
+    if (mJsonReader->HasParseError())
     {
-        rapidjson::ParseErrorCode const c = mJsonReader.GetParseErrorCode();
-        size_t const o = mJsonReader.GetErrorOffset();
+        rapidjson::ParseErrorCode const c = mJsonReader->GetParseErrorCode();
+        size_t const o = mJsonReader->GetErrorOffset();
         throwJsonException("Parse error at offset {}, error {}", o, magic_enum::enum_name(c));
     }
     return mExtractor->mCurrent;
@@ -144,17 +149,21 @@ JsonReader::EventValue JsonReader::getNext()
 
 JsonReader::JsonReader(OwnedStream stream, bool validate)
     : mSourceStream(std::move(stream))
-    , mStream(*mSourceStream)
+    , mStream(std::make_unique<rapidjson::IStreamWrapper>(*mSourceStream))
+    , mJsonReader(std::make_unique<rapidjson::Reader>())
     , mExtractor(std::make_unique<JsonExtracter>())
     , mValidate(validate)
 {
-    mJsonReader.IterativeParseInit();
+    mJsonReader->IterativeParseInit();
 }
+
+JsonReader::JsonReader(JsonReader&& rhs) noexcept = default;
+JsonReader& JsonReader::operator=(JsonReader&& rhs) noexcept = default;
 
 JsonReader::~JsonReader()
 {
     if (mValidate)
-        MORPHEUS_VERIFY(mJsonReader.IterativeParseComplete());
+        MORPHEUS_VERIFY(mJsonReader->IterativeParseComplete());
 }
 
 void JsonReader::beginComposite()
@@ -210,5 +219,30 @@ bool JsonReader::beginNullable()
 }
 
 void JsonReader::endNullable() {}
+
+template <>
+std::vector<std::byte> JsonReader::read<std::vector<std::byte>>()
+{
+    auto encoded = read<std::string>();
+
+    // Base64 padding characters '=' must be removed before decoding with boost iterators
+    encoded.erase(std::remove(encoded.begin(), encoded.end(), '='), encoded.end());
+
+    using namespace boost::archive::iterators;
+    typedef transform_width<binary_from_base64<std::string::const_iterator>, 8, 6> base64_dec;
+
+    std::vector<std::byte> decoded;
+    try
+    {
+        decoded.reserve((encoded.size() * 3) / 4);
+        std::transform(base64_dec(encoded.begin()), base64_dec(encoded.end()), std::back_inserter(decoded), [](auto c) { return static_cast<std::byte>(c); });
+    }
+    catch (std::exception const& e)
+    {
+        throwJsonException("Failed to decode Base64 string: {}", e.what());
+    }
+
+    return decoded;
+}
 
 } // namespace morpheus::serialisation

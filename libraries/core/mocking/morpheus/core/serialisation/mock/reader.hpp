@@ -1,5 +1,6 @@
 #pragma once
 
+#include "morpheus/core/serialisation/concepts/reader.hpp"
 #include "morpheus/core/serialisation/concepts/reader_archetype.hpp"
 
 #include <gmock/gmock.h>
@@ -45,6 +46,8 @@ public:
 
     /// Reads a boolean type from the serialisation.
     MOCK_METHOD(bool, read, (bool), ());
+    /// Reads a single byte from the serialisation.
+    MOCK_METHOD(std::byte, read, (std::byte), ());
     /// Reads a 8-bit unsigned integral type from the serialisation.
     MOCK_METHOD(std::uint8_t, read, (std::uint8_t), ());
     /// Reads a 8-bit integral type from the serialisation.

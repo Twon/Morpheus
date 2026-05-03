@@ -21,7 +21,7 @@ template <concepts::Reader ReaderType>
 template <typename T>
 [[nodiscard]] void ReadSerialiser<ReaderType>::deserialise(T& value)
 {
-    serialisation::deserialise.template operator()<ReadSerialiser<ReaderType>, T>(*this, value);
+    serialisation::deserialise(*this, value);
 }
 
 template <concepts::Reader ReaderType>

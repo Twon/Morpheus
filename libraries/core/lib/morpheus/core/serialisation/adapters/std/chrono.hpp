@@ -10,6 +10,7 @@
 #include "morpheus/core/serialisation/concepts/write_serialiser.hpp"
 
 #include <chrono>
+#include <type_traits>
 
 namespace morpheus::serialisation::detail
 {
@@ -39,7 +40,7 @@ void serialise(Serialiser& serialiser, std::chrono::duration<Rep, Period> const&
 }
 
 template <concepts::ReadSerialiser Serialiser, IsStdChronoDuration T>
-T deserialise(Serialiser& serialiser)
+T deserialise(Serialiser& serialiser, std::type_identity<T>)
 {
     if (serialiser.reader().isTextual())
     {
