@@ -323,7 +323,7 @@ TEMPLATE_TEST_CASE("Json reader can read multiple integer types using the Hex ad
         WHEN("Reading using the Hex adapter (no prefix)")
         {
             TestType value{};
-            JsonReadSerialiser serialiser(test::readerFromString(R"("0xFF")"));
+            JsonReadSerialiser serialiser(test::readerFromString(R"("FF")"));
             deserialise(serialiser, Hex{value});
 
             THEN("Expect the value to be correctly parsed")
