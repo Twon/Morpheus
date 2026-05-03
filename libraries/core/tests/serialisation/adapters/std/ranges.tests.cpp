@@ -62,6 +62,30 @@ TEMPLATE_TEST_CASE("Verify serialisation of sequence containers std::ranges",
     }
 }
 
+TEMPLATE_TEST_CASE("Verify serialisation of associative containers std::ranges", "[morpheus.serialisation.ranges.serialise.associative_containers]",
+                   (std::map<int, int>), (std::unordered_map<int, int>), (std::multimap<int, int>), (std::unordered_multimap<int, int>))
+{
+    GIVEN("A range of values")
+    {
+        MapType container;
+        
+        auto key = GENERATE(take(10, random(-100, 100)));
+        auto value = GENERATE(take(10, random(-100, 100)));
+
+        THEN("Expect the following sequence of operations on the underlying writer")
+        {
+
+            InSequence seq;
+            MockedWriteSerialiser serialiser;
+            EXPECT_CALL(serialiser.writer(), beginSequence(std::optional(ranges::size(container)))).Times(1);
+            ranges::for_each(container, [&serialiser](auto const& element) { EXPECT_CALL(serialiser.writer(), write(Matcher<int>(Eq(element)))).Times(1); });
+            EXPECT_CALL(serialiser.writer(), endSequence()).Times(1);
+
+            WHEN("Serialising the std::expected") { serialiser.serialise(container); }
+        }
+    }
+}
+
 /*
 TEST_CASE("Verify deserialisation of std::ranges", "[morpheus.serialisation.ranges.deserialise]")
 {
