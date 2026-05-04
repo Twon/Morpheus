@@ -123,7 +123,7 @@ T deserialise(Serialiser& serialiser, std::type_identity<T>)
         return T(std::from_range, std::move(vec));
 #else
         T range;
-        deserialise(serialiser, range);
+        serialiser.deserialise(serialiser, range);
         return range;
 #endif
     }
@@ -137,7 +137,7 @@ T deserialise(Serialiser& serialiser, std::type_identity<T>)
         return T(std::from_range, std::move(seq));
 #else
         T range;
-        deserialise(serialiser, range);
+        serialiser.deserialise(serialiser, range);
         return range;
 #endif
     }
