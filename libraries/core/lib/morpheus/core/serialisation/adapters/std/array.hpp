@@ -8,7 +8,33 @@
 namespace morpheus::serialisation::detail
 {
 
-template <typename T, std::size_t N>
-inline constexpr bool isEnabledForRangeSerialisation<std::array<T, N>> = true;
+// template <typename T, std::size_t N>
+// inline constexpr bool isEnabledForRangeSerialisation<std::array<T, N>> = true;
+
+template <concepts::WriteSerialiser Serialiser, typename T, std::size_t N>
+void serialise(Serialiser& s, std::array<T, N> const& value)
+{
+    s.writer().beginSequence(N);
+    for (auto const& elem : value)
+    {
+        s.serialise(elem);
+    }
+    s.writer().endSequence();
+}
+
+template <concepts::ReadSerialiser Serialiser, typename T, std::size_t N>
+std::array<T, N> deserialise(Serialiser& s, std::type_identity<std::array<T, N>>)
+{
+    s.reader().beginSequence();
+    std::array<T, N> result{};
+
+    for (auto& elem : result)
+    {
+        elem = s.template deserialise<T>();
+    }
+    s.reader().endSequence();
+
+    return result;
+}
 
 } // namespace morpheus::serialisation::detail

@@ -45,10 +45,10 @@ TEST_CASE("Verify serialisation concepts", "[morpheus.serialisation.concepts.rea
 
 TEST_CASE("Verify serialisation mocks adhere to concepts", "[morpheus.serialisation.concepts.mocks]")
 {
-    STATIC_REQUIRE(concepts::Reader<mock::Reader>);
+    STATIC_REQUIRE(concepts::Reader<mock::Reader<>>);
     STATIC_REQUIRE(concepts::Writer<mock::Writer>);
 
-    STATIC_REQUIRE(concepts::ReadSerialiser<MockedReadSerialiser>);
+    STATIC_REQUIRE(concepts::ReadSerialiser<MockedReadSerialiser<>>);
     STATIC_REQUIRE(concepts::WriteSerialiser<MockedWriteSerialiser>);
 }
 

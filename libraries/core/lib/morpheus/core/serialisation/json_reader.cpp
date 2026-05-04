@@ -137,6 +137,14 @@ struct JsonExtracter : rapidjson::BaseReaderHandler<rapidjson::UTF8<>, JsonExtra
 JsonReader::EventValue JsonReader::getNext()
 {
     using namespace rapidjson;
+
+    if (mPendingEvent)
+    {
+        auto result = std::move(*mPendingEvent);
+        mPendingEvent.reset();
+        return result;
+    }
+
     mJsonReader->IterativeParseNext<kParseCommentsFlag | kParseNanAndInfFlag | kParseValidateEncodingFlag>(*mStream, *mExtractor);
     if (mJsonReader->HasParseError())
     {
@@ -145,6 +153,30 @@ JsonReader::EventValue JsonReader::getNext()
         throwJsonException("Parse error at offset {}, error {}", o, magic_enum::enum_name(c));
     }
     return mExtractor->mCurrent;
+}
+
+JsonReader::EventValue const& JsonReader::peekNext()
+{
+    using namespace rapidjson;
+
+    if (!mPendingEvent)
+    {
+        mJsonReader->IterativeParseNext<kParseCommentsFlag | kParseNanAndInfFlag | kParseValidateEncodingFlag>(*mStream, *mExtractor);
+        if (mJsonReader->HasParseError())
+        {
+            rapidjson::ParseErrorCode const c = mJsonReader->GetParseErrorCode();
+            size_t const o = mJsonReader->GetErrorOffset();
+            throwJsonException("Parse error at offset {}, error {}", o, magic_enum::enum_name(c));
+        }
+        mPendingEvent = mExtractor->mCurrent;
+    }
+    return *mPendingEvent;
+}
+
+bool JsonReader::isAtEndSequence()
+{
+    auto const& [event, value] = peekNext();
+    return event == Event::EndSequence;
 }
 
 JsonReader::JsonReader(OwnedStream stream, bool validate)
@@ -220,8 +252,7 @@ bool JsonReader::beginNullable()
 
 void JsonReader::endNullable() {}
 
-template <>
-std::vector<std::byte> JsonReader::read<std::vector<std::byte>>()
+std::vector<std::byte> JsonReader::readBytes()
 {
     auto encoded = read<std::string>();
 

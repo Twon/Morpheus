@@ -155,10 +155,68 @@ public:
         return std::get<T>(*next);
     }
 
-    /// Reads a stream of bytes from the serialisation.
+    /// Read a blob of binary from the serialisation with an allocator.
+    //template <typename T, typename Allocator = std::allocator<T>>
+    //requires std::is_same_v<T, std::vector<std::byte, Allocator>>
+    //T read(Allocator const& alloc = Allocator{})
+    //{
+    //    beginSequence();
+    //    T result(readBytes(), alloc);
+    //    endSequence();
+    //    return result;
+    //}
+
+    /// Read a blob of binary from the serialisation.
     template <typename T>
     requires std::is_same_v<T, std::vector<std::byte>>
-    T read();
+    T read()
+    {
+        return readBytes();
+    }
+
+    /// Read a fixed size blob of binary from the serialisation.
+    //template <typename T>
+    //requires requires {
+    //    typename T::value_type;
+    //    { std::is_same_v<typename T::value_type, std::byte> };
+    //    { std::tuple_size<T>::value };
+    //}
+    //T read()
+    //{
+    //    T result{};
+    //    beginSequence();
+    //    for (std::size_t i = 0; i < std::tuple_size<T>::value; ++i)
+    //    {
+    //        if (isAtEndSequence())
+    //            throwJsonException("Fixed-size byte array: JSON array has fewer elements than expected");
+    //        result[i] = static_cast<std::byte>(read<std::uint8_t>());
+    //    }
+    //    if (!isAtEndSequence())
+    //        throwJsonException("Fixed-size byte array: JSON array has more elements than expected");
+    //    endSequence();
+    //    return result;
+    //}
+
+    /// Read a sequence of elements from the serialisation.
+    /// \tparam T The type of the elements to read.
+    /// \tparam Fn The type of the function to read a single element.
+    /// \param readOne The function to read a single element.
+    /// \param size The number of elements to read, if known.
+    /// \return A generator yielding the elements of the sequence.
+    template <typename T, typename Fn>
+    concurrency::Generator<T> readElements(Fn&& readOne, std::optional<std::size_t> size)
+    {
+        if (size)
+        {
+            for (std::size_t i = 0; i < *size; ++i)
+                co_yield readOne();
+        }
+        else
+        {
+            while (!isAtEndSequence())
+                co_yield readOne();
+        }
+    }
     // clang-format on
 
 private:
@@ -179,11 +237,15 @@ private:
     using EventValue = std::tuple<Event, PossibleValue>;
 
     [[nodiscard]] EventValue getNext();
+    [[nodiscard]] EventValue const& peekNext();
+    [[nodiscard]] bool isAtEndSequence();
+    [[nodiscard]] std::vector<std::byte> readBytes();
 
     OwnedStream mSourceStream; /// Owned input stream containing the Json source.
     std::unique_ptr<rapidjson::IStreamWrapper> mStream;
     std::unique_ptr<rapidjson::Reader> mJsonReader;
     std::unique_ptr<struct JsonExtracter> mExtractor;
+    std::optional<EventValue> mPendingEvent;
     bool mValidate = true;
 };
 

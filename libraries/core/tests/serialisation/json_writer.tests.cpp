@@ -184,6 +184,16 @@ TEST_CASE("Json writer can write byte buffer types to underlying text representa
         std::ostringstream strStream;
         JsonWriter writer{strStream};
 
+        WHEN("Writing a vector of bytes")
+        {
+            std::vector<std::byte> const value{std::byte{1}, std::byte{2}, std::byte{3}};
+            writer.write(value);
+
+            THEN("Expect it to be serialises as a blob of binary data via aBase64 encoded string")
+            {
+                REQUIRE(strStream.str() == R"("AQID")");
+            }
+        }
         WHEN("Writing a span of bytes (blob)")
         {
             std::array<std::byte, 3> const raw{std::byte{10}, std::byte{20}, std::byte{30}};

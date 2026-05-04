@@ -62,6 +62,10 @@ struct ReaderArchetype
     template <typename T>
     requires std::is_same_v<T, std::vector<std::byte>>
     consteval T read();
+
+    /// Read a sequence of values from the serialisation.
+    template <typename T, typename Fn>
+    concurrency::Generator<T> readElements(Fn&& readOne, std::optional<std::size_t> size);
 };
 
 using ReadSerialiserArchetype = serialisation::ReadSerialiser<ReaderArchetype>;

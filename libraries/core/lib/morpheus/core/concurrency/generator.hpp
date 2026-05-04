@@ -27,7 +27,7 @@ struct Generator
     using reference = std::conditional_t<std::is_reference_v<T>, T, value_type const&>; ///< Reference type to the value type.
     using pointer = std::add_pointer_t<reference>;                                      ///< Pointer type to the value type.
 
-    Generator(handle_type h)
+    explicit Generator(handle_type h)
         : coro(h)
     {}
 

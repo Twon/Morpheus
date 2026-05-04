@@ -62,11 +62,8 @@ public:
 
 #if (__cpp_explicit_this_parameter >= 202110)
     /// Access the underlying reader.
-    template <typename Self>
-    [[nodiscard]] auto& reader(this Self&& self) noexcept
-    {
-        return self.mReader;
-    }
+    // template <typename Self>
+    [[nodiscard]] auto reader(this auto&& self) noexcept -> decltype(auto) { return std::forward_like<decltype(self)>(self.mReader); }
 #else
     /// Access the underlying reader.
     [[nodiscard]] ReaderType& reader() noexcept { return mReader; }
@@ -88,6 +85,14 @@ public:
     template <typename T>
     [[nodiscard]] T deserialise();
 
+    /// Deserialise a single value with an allocator.
+    /// \tparam T The underlying type of value to deserialise.
+    /// \tparam Allocator The type of the allocator to use.
+    /// \param[in] alloc The allocator to use.
+    /// \return The deserialises value.
+    // template <typename T, typename Allocator>
+    //[[nodiscard]] T deserialise(Allocator const& alloc);
+
     /// Deserialise to a non-default construtible single value
     /// \tparam T The underlying type of value to deserialise.
     /// \param[out] The deserialises value.
@@ -100,6 +105,27 @@ public:
     /// \return The deserialises value.
     template <typename T>
     [[nodiscard]] T deserialise(std::string_view const key);
+
+    /// Deserialise a sequence of values
+    /// \tparam T The underlying type of values to deserialise.
+    /// \return A generator yielding the deserialised values.
+    template <typename T>
+    [[nodiscard]] concurrency::Generator<T> sequence();
+
+    /// Deserialise a sequence of values with an allocator.
+    /// \tparam T The underlying type of values to deserialise.
+    /// \tparam Allocator The type of the allocator to use for internal buffers if needed.
+    /// \param[in] alloc The allocator to use.
+    /// \return A generator yielding the deserialised values.
+    template <typename T, typename Allocator>
+    [[nodiscard]] concurrency::Generator<T> sequence(Allocator const& alloc);
+
+    /// Deserialise a named sequence of values
+    /// \tparam T The underlying type of values to deserialise.
+    /// \param[in] key The key to serialise.
+    /// \return A generator yielding the deserialised values.
+    template <typename T>
+    [[nodiscard]] concurrency::Generator<T> sequence(std::string_view const key);
     ///@}
 private:
     ReaderType mReader; ///< The underlying reading for serialising fundamental types.

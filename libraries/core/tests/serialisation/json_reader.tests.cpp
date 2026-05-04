@@ -1,6 +1,7 @@
 #include "morpheus/core/conformance/format.hpp"
 #include "morpheus/core/serialisation/adapters/aggregate.hpp"
 #include "morpheus/core/serialisation/adapters/hex.hpp"
+#include "morpheus/core/serialisation/adapters/std/array.hpp"
 #include "morpheus/core/serialisation/adapters/std/chrono.hpp"
 #include "morpheus/core/serialisation/adapters/std/monostate.hpp"
 #include "morpheus/core/serialisation/adapters/std/optional.hpp"
@@ -21,8 +22,11 @@
 #include <catch2/matchers/catch_matchers.hpp>
 #include <catch2/matchers/catch_matchers_string.hpp>
 
+#include <array>
 #include <chrono>
 #include <cmath>
+#include <compare>
+#include <cstddef>
 #include <cstdint>
 #include <limits>
 #include <memory>
@@ -573,6 +577,7 @@ TEST_CASE("Json reader can read std types from underlying text representation", 
     REQUIRE(test::deserialise<std::string>(R"("Hello")") == std::string("Hello"));
     REQUIRE(test::deserialise<std::tuple<int, bool, std::string>>(R"([75,true,"Example"])") == std::tuple<int, bool, std::string>{75, true, "Example"});
     //    REQUIRE(test::deserialise<std::variant<int, bool, std::string>>(R"({"type":"bool","value":true})") == std::variant<int, bool, std::string>{true});
+    REQUIRE(test::deserialise<std::vector<int>>(R"([1, 2, 3, 4, 5])") == std::vector<int>{1, 2, 3, 4, 5});
     REQUIRE(*test::deserialise<std::unique_ptr<int>>(R"(50)") == 50);
 }
 
@@ -612,6 +617,31 @@ TEST_CASE("Error handling test cases for unexpected errors in the input Json str
             }
         }
     }
+}
+
+struct SimplePair
+{
+    int first = 0;
+    bool second = false;
+
+    auto operator<=>(SimplePair const&) const = default;
+
+    template <concepts::ReadSerialiser Serialiser>
+    void deserialise(Serialiser& s)
+    {
+        first = s.template deserialise<decltype(first)>("first");
+        second = s.template deserialise<decltype(second)>("second");
+    }
+};
+
+TEST_CASE("Json reader can read ranges of composites", "[morpheus.serialisation.range.deserialise.composites]")
+{
+    REQUIRE(test::deserialise<std::vector<SimplePair>>(R"([{"first":1,"second":true},{"first":2,"second":true},{"first":3,"second":true}])") ==
+            std::vector<SimplePair>{
+                {1, true},
+                {2, true},
+                {3, true}
+    });
 }
 
 } // namespace morpheus::serialisation

@@ -4,34 +4,34 @@
 
 #include <string_view>
 
-namespace morpheus
+namespace morpheus::conformance
 {
 
-TEST_CASE("Ensure scan is supported and working", "[morpheus.conformance.scan]")
+TEST_CASE("Verify scan conformance", "[morpheus.core.conformance.scan]")
 {
-    GIVEN("A capture to file")
+    GIVEN("A string containing two integers")
     {
-        using namespace std::string_view_literals;
-        auto const input = "123 456"sv;
+        std::string_view const input = "123 456";
 
         WHEN("Using std::scan to read from input")
         {
-            auto result = conf::scan::scan<int, int>(input, "{} {}");
-            auto [a, b] = result->values();
+            auto const result = conf::scan::scan<int, int>(input, "{} {}");
 
-            THEN("Expect the variables wrote to the stream in the specified order")
+            THEN("Expect the variables read from the stream in the specified order")
             {
+                REQUIRE(result);
+                auto [a, b] = result->values();
                 REQUIRE(a == 123);
                 REQUIRE(b == 456);
             }
         }
     }
 
-    SECTION("Hexadecimal patterns using regex")
+    GIVEN("A string containing a hex integer")
     {
         using namespace std::string_view_literals;
 
-        GIVEN("A hex string with 0x prefix")
+        WHEN("Using std::scan to read a hex integer")
         {
             auto const input = "0x42"sv;
             auto result = conf::scan::scan<int>(input, "{:x}");
@@ -57,4 +57,4 @@ TEST_CASE("Ensure scan is supported and working", "[morpheus.conformance.scan]")
     }
 }
 
-} // namespace morpheus
+} // namespace morpheus::conformance
