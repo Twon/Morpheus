@@ -117,8 +117,8 @@ public:
     /// \tparam Allocator The type of the allocator to use for internal buffers if needed.
     /// \param[in] alloc The allocator to use.
     /// \return A generator yielding the deserialised values.
-    template <typename T, typename Allocator>
-    [[nodiscard]] concurrency::Generator<T> sequence(Allocator const& alloc);
+    // template <typename T>
+    //[[nodiscard]] concurrency::Generator<T> sequence(Allocator const& alloc);
 
     /// Deserialise a named sequence of values
     /// \tparam T The underlying type of values to deserialise.
