@@ -12,7 +12,7 @@ namespace morpheus::serialisation
 
 template <concepts::Reader ReaderType>
 template <typename T>
-[[nodiscard]] T ReadSerialiser<ReaderType>::deserialise()
+[[nodiscard]] auto ReadSerialiser<ReaderType>::deserialise() -> T
 {
     return serialisation::deserialise.template operator()<ReadSerialiser<ReaderType>, T>(*this);
 }
@@ -26,14 +26,14 @@ template <typename T>
 
 template <concepts::Reader ReaderType>
 template <typename T>
-[[nodiscard]] void ReadSerialiser<ReaderType>::deserialise(T& value)
+auto ReadSerialiser<ReaderType>::deserialise(T& value) -> void
 {
     serialisation::deserialise(*this, value);
 }
 
 template <concepts::Reader ReaderType>
 template <typename T>
-[[nodiscard]] T ReadSerialiser<ReaderType>::deserialise(std::string_view const key)
+[[nodiscard]] auto ReadSerialiser<ReaderType>::deserialise(std::string_view const key) -> T
 {
     auto const scope = makeScopedValue(mReader, key);
     return serialisation::deserialise.template operator()<ReadSerialiser<ReaderType>, T>(*this);
@@ -41,7 +41,7 @@ template <typename T>
 
 template <concepts::Reader ReaderType>
 template <typename T>
-[[nodiscard]] concurrency::Generator<T> ReadSerialiser<ReaderType>::sequence()
+[[nodiscard]] auto ReadSerialiser<ReaderType>::sequence() -> concurrency::Generator<T>
 {
     auto const size = mReader.beginSequence();
     auto g = mReader.template readElements<T>([this]() { return this->deserialise<T>(); }, size);
@@ -75,7 +75,7 @@ template <typename T>
 
 template <concepts::Reader ReaderType>
 template <typename T>
-[[nodiscard]] concurrency::Generator<T> ReadSerialiser<ReaderType>::sequence(std::string_view const key)
+[[nodiscard]] auto ReadSerialiser<ReaderType>::sequence(std::string_view const key) -> concurrency::Generator<T>
 {
     auto const scope = makeScopedValue(mReader, key);
     auto gen = sequence<T>();

@@ -83,7 +83,7 @@ public:
     /// \tparam T The underlying type of value to deserialise.
     /// \return The deserialises value.
     template <typename T>
-    [[nodiscard]] T deserialise();
+    [[nodiscard]] auto deserialise() -> T;
 
     /// Deserialise a single value with an allocator.
     /// \tparam T The underlying type of value to deserialise.
@@ -97,20 +97,20 @@ public:
     /// \tparam T The underlying type of value to deserialise.
     /// \param[out] The deserialises value.
     template <typename T>
-    [[nodiscard]] void deserialise(T& value);
+    auto deserialise(T& value) -> void;
 
     /// Deserialise a key value pair
     /// \tparam T The underlying type of value to deserialise.
     /// \param[in] key The key to serialise.
     /// \return The deserialises value.
     template <typename T>
-    [[nodiscard]] T deserialise(std::string_view const key);
+    [[nodiscard]] auto deserialise(std::string_view const key) -> T;
 
     /// Deserialise a sequence of values
     /// \tparam T The underlying type of values to deserialise.
     /// \return A generator yielding the deserialised values.
     template <typename T>
-    [[nodiscard]] concurrency::Generator<T> sequence();
+    [[nodiscard]] auto sequence() -> concurrency::Generator<T>;
 
     /// Deserialise a sequence of values with an allocator.
     /// \tparam T The underlying type of values to deserialise.
@@ -125,7 +125,7 @@ public:
     /// \param[in] key The key to serialise.
     /// \return A generator yielding the deserialised values.
     template <typename T>
-    [[nodiscard]] concurrency::Generator<T> sequence(std::string_view const key);
+    [[nodiscard]] auto sequence(std::string_view const key) -> concurrency::Generator<T>;
     ///@}
 private:
     ReaderType mReader; ///< The underlying reading for serialising fundamental types.
