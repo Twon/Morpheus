@@ -204,7 +204,7 @@ public:
     /// \param size The number of elements to read, if known.
     /// \return A generator yielding the elements of the sequence.
     template <typename T, typename Fn>
-    concurrency::Generator<T> readElements(Fn&& readOne, std::optional<std::size_t> size)
+    concurrency::Generator<T> readElements(Fn readOne, std::optional<std::size_t> size)
     {
         if (size)
         {

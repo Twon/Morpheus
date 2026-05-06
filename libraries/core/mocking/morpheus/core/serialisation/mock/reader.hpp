@@ -98,7 +98,7 @@ public:
 
     /// Read a sequence of elements from the serialisation.
     template <typename T, typename Fn>
-    concurrency::Generator<T> readElements(Fn&& readOne, std::optional<std::size_t> size)
+    concurrency::Generator<T> readElements(Fn readOne, std::optional<std::size_t> size)
     {
         if (size)
         {
