@@ -96,7 +96,7 @@ struct morpheus::conf::fmt::formatter<morpheus::serialisation::testing::SimpleTu
 };
 
 template <>
-struct ::Catch::StringMaker<morpheus::serialisation::testing::SimpleTuple>
+struct Catch::StringMaker<morpheus::serialisation::testing::SimpleTuple>
 {
     static std::string convert(morpheus::serialisation::testing::SimpleTuple const& t) { return morpheus::conf::fmt::format("{}", t); }
 };
