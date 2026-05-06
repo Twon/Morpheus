@@ -15,6 +15,7 @@
 #include "morpheus/core/serialisation/json_reader.hpp"
 #include "morpheus/core/serialisation/read_serialiser.hpp"
 #include "morpheus/core/serialisation/serialisers.hpp"
+#include "morpheus/serialisation/types/simple_tuple.hpp"
 
 #include <catch2/catch_approx.hpp>
 #include <catch2/catch_template_test_macros.hpp>
@@ -619,28 +620,14 @@ TEST_CASE("Error handling test cases for unexpected errors in the input Json str
     }
 }
 
-struct SimplePair
-{
-    int first = 0;
-    bool second = false;
-
-    auto operator<=>(SimplePair const&) const = default;
-
-    template <concepts::ReadSerialiser Serialiser>
-    void deserialise(Serialiser& s)
-    {
-        first = s.template deserialise<decltype(first)>("first");
-        second = s.template deserialise<decltype(second)>("second");
-    }
-};
-
 TEST_CASE("Json reader can read ranges of composites", "[morpheus.serialisation.range.deserialise.composites]")
 {
-    REQUIRE(test::deserialise<std::vector<SimplePair>>(R"([{"first":1,"second":true},{"first":2,"second":true},{"first":3,"second":true}])") ==
-            std::vector<SimplePair>{
-                {1, true},
-                {2, true},
-                {3, true}
+    REQUIRE(test::deserialise<std::vector<testing::SimpleTuple>>(
+                R"([{"first":1,"second":true,"data":"AQID"},{"first":2,"second":true,"data":"ChQe"},{"first":3,"second":true,"data":"ZMj/"}])") ==
+            std::vector<testing::SimpleTuple>{
+                {1, true,       {std::byte{1}, std::byte{2}, std::byte{3}}},
+                {2, true,    {std::byte{10}, std::byte{20}, std::byte{30}}},
+                {3, true, {std::byte{100}, std::byte{200}, std::byte{255}}}
     });
 }
 

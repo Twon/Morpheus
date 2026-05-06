@@ -12,6 +12,7 @@
 #include "morpheus/core/serialisation/json_writer.hpp"
 #include "morpheus/core/serialisation/serialisers.hpp"
 #include "morpheus/core/serialisation/write_serialiser.hpp"
+#include "morpheus/serialisation/types/simple_tuple.hpp"
 
 #include <catch2/catch_template_test_macros.hpp>
 #include <catch2/catch_test_macros.hpp>
@@ -417,6 +418,17 @@ TEST_CASE("Json writer can write std types to underlying text representation", "
     REQUIRE(test::serialise(std::make_unique<int>(123)) == R"(123)");
     REQUIRE(test::serialise(std::variant<int, bool, std::string>{true}) == R"({"type":"bool","value":true})");
     REQUIRE(test::serialise(std::vector<int>{1, 2, 3, 4, 5}) == R"([1,2,3,4,5])");
+}
+
+TEST_CASE("Json writer can write ranges of composites", "[morpheus.serialisation.range.serialise.composites]")
+{
+    auto const value = std::vector<testing::SimpleTuple>{
+        {1, true,       {std::byte{1}, std::byte{2}, std::byte{3}}},
+        {2, true,    {std::byte{10}, std::byte{20}, std::byte{30}}},
+        {3, true, {std::byte{100}, std::byte{200}, std::byte{255}}}
+    };
+    REQUIRE(test::serialise(value) ==
+            R"([{"first":1,"second":true,"data":"AQID"},{"first":2,"second":true,"data":"ChQe"},{"first":3,"second":true,"data":"ZMj/"}])");
 }
 
 } // namespace morpheus::serialisation
