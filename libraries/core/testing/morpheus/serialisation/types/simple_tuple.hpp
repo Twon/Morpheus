@@ -70,7 +70,7 @@ struct morpheus::conf::fmt::formatter<morpheus::serialisation::testing::SimpleTu
     template <typename Context>
     constexpr auto parse(Context& context)
     {
-        return morpheus::conf::fmt::begin(context);
+        return std::begin(context);
     }
 
     /// Format the morpheus::application::Version as a string.
