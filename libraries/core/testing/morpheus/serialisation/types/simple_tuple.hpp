@@ -22,7 +22,23 @@ struct SimpleTuple
     bool second = false;
     std::vector<std::byte> data;
 
-    auto operator<=>(SimpleTuple const&) const = default;
+#if defined(__cpp_lib_three_way_comparison) && (__cpp_lib_three_way_comparison >= 201907L)
+    /// Compare two endpoint objects.
+    [[nodiscard]] auto operator<=>(SimpleTuple const& rhs) const noexcept = default;
+#else
+    /// Compare two endpoint objects.
+    /// \param rhs The NamedEndpoint to compare against.
+    /// \return A comparison result indicating the relative order of the NamedEndpoint objects.
+    [[nodiscard]] auto operator<=>(SimpleTuple const& rhs) const noexcept
+    {
+        return std::tie(first, second, data) <=> std::tie(rhs.first, rhs.second, rhs.data);
+    }
+
+    /// Equality operator for NamedEndpoint.
+    /// \param rhs The NamedEndpoint to compare against.
+    /// \return True if the NamedEndpoint objects are equal, false otherwise.
+    [[nodiscard]] bool operator==(SimpleTuple const& rhs) const noexcept { return std::tie(first, second, data) == std::tie(rhs.first, rhs.second, rhs.data); }
+#endif
 
     template <concepts::WriteSerialiser Serialiser>
     void serialise(Serialiser& s) const
@@ -54,7 +70,7 @@ struct morpheus::conf::fmt::formatter<morpheus::serialisation::testing::SimpleTu
     template <typename Context>
     constexpr auto parse(Context& context)
     {
-        return std::begin(context);
+        return morpheus::conf::fmt::begin(context);
     }
 
     /// Format the morpheus::application::Version as a string.
@@ -65,17 +81,17 @@ struct morpheus::conf::fmt::formatter<morpheus::serialisation::testing::SimpleTu
     constexpr auto format(morpheus::serialisation::testing::SimpleTuple const& value, Context& context) const
     {
         auto out = context.out();
-        out = std::format_to(out, "{{first={},second={},data=[", value.first, value.second);
+        out = morpheus::conf::fmt::format_to(out, "{{first={},second={},data=[", value.first, value.second);
 
         for (size_t i = 0; i < value.data.size(); ++i)
         {
             if (i > 0)
-                out = std::format_to(out, ", ");
+                out = morpheus::conf::fmt::format_to(out, ", ");
 
-            out = std::format_to(out, "{}", std::to_integer<int>(value.data[i]));
+            out = morpheus::conf::fmt::format_to(out, "{}", std::to_integer<int>(value.data[i]));
         }
 
-        return std::format_to(out, "]}}");
+        return morpheus::conf::fmt::format_to(out, "]}}");
     }
 };
 
