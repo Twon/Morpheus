@@ -622,6 +622,14 @@ TEST_CASE("Error handling test cases for unexpected errors in the input Json str
 
 TEST_CASE("Json reader can read ranges of composites", "[morpheus.serialisation.range.deserialise.composites]")
 {
+    auto const value = std::vector<testing::SimpleTuple>{
+        {1, true,       {std::byte{1}, std::byte{2}, std::byte{3}}},
+        {2, true,    {std::byte{10}, std::byte{20}, std::byte{30}}},
+        {3, true, {std::byte{100}, std::byte{200}, std::byte{255}}}
+    };
+    REQUIRE(conf::fmt::format("{}", value) ==
+            R"([{first=1,second=true,data=[1, 2, 3]}, {first=2,second=true,data=[10, 20, 30]}, {first=3,second=true,data=[100, 200, 255]}])");
+
     REQUIRE(test::deserialise<std::vector<testing::SimpleTuple>>(
                 R"([{"first":1,"second":true,"data":"AQID"},{"first":2,"second":true,"data":"ChQe"},{"first":3,"second":true,"data":"ZMj/"}])") ==
             std::vector<testing::SimpleTuple>{
@@ -629,6 +637,11 @@ TEST_CASE("Json reader can read ranges of composites", "[morpheus.serialisation.
                 {2, true,    {std::byte{10}, std::byte{20}, std::byte{30}}},
                 {3, true, {std::byte{100}, std::byte{200}, std::byte{255}}}
     });
+    using Catch::Matchers::ContainsSubstring;
+    REQUIRE_THROWS_WITH(
+        test::deserialise<std::vector<testing::SimpleTuple>>(
+            R"([{"first":1,"second":true,"data":"AQID"},{"first":2,"second":true,"data":"ChQe"},{"first":3,"second":true,"data":"ZMj/"})", false),
+        ContainsSubstring("Parse error at offset"));
 }
 
 } // namespace morpheus::serialisation

@@ -40,70 +40,28 @@ void deserialise_to(Serialiser& serialiser, T& range)
 {
     using ValueType = conf::ranges::range_value_t<T>;
 
-    if constexpr (Serialiser::Reader::isTextual() and std::same_as<ValueType, std::byte>)
-    {
-        auto const deserialiseIntoRange = [&range](auto&& seq)
-        {
+    auto seq = serialiser.template sequence<ValueType>();
+
 #if defined(__cpp_lib_containers_ranges) && __cpp_lib_containers_ranges >= 202202L
-            if constexpr (requires { range.assign_range(std::declval<decltype(seq)>()); })
-            {
-                range.assign_range(std::forward<decltype(seq)>(seq));
-            }
-            else
+    if constexpr (requires { range.assign_range(std::move(seq)); })
+    {
+        range.assign_range(std::move(seq));
+    }
+    else
 #endif
-            {
-                if constexpr (requires { range.clear(); })
-                {
-                    range.clear();
-                }
+    {
+        if constexpr (requires { range.clear(); })
+        {
+            range.clear();
+        }
 
-                if constexpr (requires { range.push_back(std::declval<ValueType>()); })
-                {
-                    conf::ranges::copy(seq, std::back_inserter(range));
-                }
-                else
-                {
-                    conf::ranges::copy(seq, std::inserter(range, range.end()));
-                }
-            }
-        };
-
-        // if constexpr (requires { range.get_allocator(); })
+        // if constexpr (requires { range.push_back(std::declval<ValueType>()); })
         //{
-        //     auto vec = serialiser.template deserialise<std::vector<std::byte, typename T::allocator_type>>(range.get_allocator());
-        //     deserialiseIntoRange(std::move(vec));
+        //     conf::ranges::copy(seq, std::back_inserter(range));
         // }
         // else
         {
-            auto vec = serialiser.template deserialise<std::vector<std::byte>>();
-            deserialiseIntoRange(std::move(vec));
-        }
-    }
-    else
-    {
-        auto seq = serialiser.template sequence<ValueType>();
-
-#if defined(__cpp_lib_containers_ranges) && __cpp_lib_containers_ranges >= 202202L
-        if constexpr (requires { range.assign_range(std::move(seq)); })
-        {
-            range.assign_range(std::move(seq));
-        }
-        else
-#endif
-        {
-            if constexpr (requires { range.clear(); })
-            {
-                range.clear();
-            }
-
-            // if constexpr (requires { range.push_back(std::declval<ValueType>()); })
-            //{
-            //     conf::ranges::copy(seq, std::back_inserter(range));
-            // }
-            // else
-            {
-                conf::ranges::copy(seq, std::inserter(range, range.end()));
-            }
+            conf::ranges::copy(seq, std::inserter(range, range.end()));
         }
     }
 }
@@ -113,34 +71,17 @@ T deserialise(Serialiser& serialiser, std::type_identity<T>)
 {
     using ValueType = conf::ranges::range_value_t<T>;
 
-    if (Serialiser::Reader::isTextual() and std::same_as<ValueType, std::byte>)
-    {
-#if defined(__cpp_lib_ranges_to_container) && __cpp_lib_ranges_to_container >= 202202L
-        auto vec = serialiser.template deserialise<std::vector<ValueType>>();
-        return conf::ranges::to<T>(std::move(vec));
-#elif defined(__cpp_lib_containers_ranges) && __cpp_lib_containers_ranges >= 202202L
-        auto vec = serialiser.template deserialise<std::vector<ValueType>>();
-        return T(std::from_range, std::move(vec));
-#else
-        T range;
-        serialiser.deserialise(range);
-        return range;
-#endif
-    }
-    else
-    {
-        auto seq = serialiser.template sequence<ValueType>();
+    auto seq = serialiser.template sequence<ValueType>();
 
 #if defined(__cpp_lib_ranges_to_container) && __cpp_lib_ranges_to_container >= 202202L
-        return conf::ranges::to<T>(std::move(seq));
+    return conf::ranges::to<T>(std::move(seq));
 #elif defined(__cpp_lib_containers_ranges) && __cpp_lib_containers_ranges >= 202202L
-        return T(std::from_range, std::move(seq));
+    return T(std::from_range, std::move(seq));
 #else
-        T range;
-        serialiser.deserialise(range);
-        return range;
+    T range;
+    serialiser.deserialise(range);
+    return range;
 #endif
-    }
 }
 
 } // namespace morpheus::serialisation::detail
