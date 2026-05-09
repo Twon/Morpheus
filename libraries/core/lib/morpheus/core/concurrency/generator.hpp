@@ -69,10 +69,7 @@ struct Generator
             return coro::suspend_always{};
         }
 
-        void unhandled_exception()
-        { 
-            exception = std::current_exception();
-        }
+        void unhandled_exception() { exception = std::current_exception(); }
 
         T current_value;
         std::exception_ptr exception;
@@ -107,7 +104,8 @@ struct Generator
         {
             assert(!handle.done() && "Can't increment generator end iterator");
             handle.resume();
-            if (handle.promise().exception){
+            if (handle.promise().exception)
+            {
                 std::rethrow_exception(handle.promise().exception);
             }
             return *this;
@@ -144,7 +142,8 @@ struct Generator
 #else
         const_cast<Generator*>(this)->coro.resume(); // std::experimental::resume is not marked const.
 #endif
-        if (coro.promise().exception){
+        if (coro.promise().exception)
+        {
             std::rethrow_exception(coro.promise().exception);
         }
         return iterator(coro);
