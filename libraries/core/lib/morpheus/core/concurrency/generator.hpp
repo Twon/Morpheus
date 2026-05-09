@@ -5,6 +5,7 @@
 
 #include <cassert>
 #include <concepts>
+#include <exception>
 #include <iterator>
 #include <utility>
 
@@ -68,9 +69,13 @@ struct Generator
             return coro::suspend_always{};
         }
 
-        [[noreturn]] void unhandled_exception() { throw; }
+        void unhandled_exception()
+        { 
+            exception = std::current_exception();
+        }
 
         T current_value;
+        std::exception_ptr exception;
     };
 
     /// \class iterator
@@ -102,6 +107,9 @@ struct Generator
         {
             assert(!handle.done() && "Can't increment generator end iterator");
             handle.resume();
+            if (handle.promise().exception){
+                std::rethrow_exception(handle.promise().exception);
+            }
             return *this;
         }
 
@@ -136,6 +144,9 @@ struct Generator
 #else
         const_cast<Generator*>(this)->coro.resume(); // std::experimental::resume is not marked const.
 #endif
+        if (coro.promise().exception){
+            std::rethrow_exception(coro.promise().exception);
+        }
         return iterator(coro);
     }
 
@@ -151,4 +162,4 @@ template <typename T>
 inline constexpr bool ::morpheus::conf::ranges::enable_view<morpheus::concurrency::Generator<T>> = true;
 
 template <class T>
-inline constexpr bool ::morpheus::conf::ranges::enable_borrowed_range<morpheus::concurrency::Generator<T>> = true;
+inline constexpr bool ::morpheus::conf::ranges::enable_borrowed_range<morpheus::concurrency::Generator<T>> = false;

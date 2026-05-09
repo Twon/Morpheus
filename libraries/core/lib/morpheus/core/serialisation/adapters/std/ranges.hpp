@@ -55,11 +55,11 @@ void deserialise_to(Serialiser& serialiser, T& range)
             range.clear();
         }
 
-        // if constexpr (requires { range.push_back(std::declval<ValueType>()); })
-        //{
-        //     conf::ranges::copy(seq, std::back_inserter(range));
-        // }
-        // else
+        if constexpr (requires { range.push_back(std::declval<ValueType>()); })
+        {
+            conf::ranges::copy(seq, std::back_inserter(range));
+        }
+        else
         {
             conf::ranges::copy(seq, std::inserter(range, range.end()));
         }
@@ -69,13 +69,13 @@ void deserialise_to(Serialiser& serialiser, T& range)
 template <concepts::ReadSerialiser Serialiser, IsRange T>
 T deserialise(Serialiser& serialiser, std::type_identity<T>)
 {
-    using ValueType = conf::ranges::range_value_t<T>;
-
-    auto seq = serialiser.template sequence<ValueType>();
-
 #if defined(__cpp_lib_ranges_to_container) && __cpp_lib_ranges_to_container >= 202202L
+    using ValueType = conf::ranges::range_value_t<T>;
+    auto seq = serialiser.template sequence<ValueType>();
     return conf::ranges::to<T>(std::move(seq));
 #elif defined(__cpp_lib_containers_ranges) && __cpp_lib_containers_ranges >= 202202L
+    using ValueType = conf::ranges::range_value_t<T>;
+    auto seq = serialiser.template sequence<ValueType>();
     return T(std::from_range, std::move(seq));
 #else
     T range;
