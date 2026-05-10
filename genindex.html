@@ -277,6 +277,8 @@
 </li>
       <li><a href="#_CPPv4N8morpheus11concurrency9Generator12promise_type13current_valueE">morpheus::concurrency::Generator::promise_type::current_value (C++ member)</a>
 </li>
+      <li><a href="#_CPPv4N8morpheus11concurrency9Generator12promise_type9exceptionE">morpheus::concurrency::Generator::promise_type::exception (C++ member)</a>
+</li>
       <li><a href="#_CPPv4N8morpheus11concurrency9Generator12promise_type13final_suspendEv">morpheus::concurrency::Generator::promise_type::final_suspend (C++ function)</a>
 </li>
       <li><a href="#_CPPv4N8morpheus11concurrency9Generator12promise_type17get_return_objectEv">morpheus::concurrency::Generator::promise_type::get_return_object (C++ function)</a>
@@ -428,6 +430,12 @@
       <li><a href="#_CPPv4I_N8morpheus13serialisation8concepts7HexableE0EN8morpheus4conf3fmt9formatterIN8morpheus13serialisation3HexI1TEE5CharTEE">morpheus::conf::fmt::formatter&lt;morpheus::serialisation::Hex&lt;T&gt;, CharT&gt; (C++ struct)</a>
 </li>
       <li><a href="#_CPPv4I0ENK8morpheus4conf3fmt9formatterIN8morpheus13serialisation3HexI1TEE5CharTE6formatEDaRKN8morpheus13serialisation3HexI1TEER7Context">morpheus::conf::fmt::formatter&lt;morpheus::serialisation::Hex&lt;T&gt;, CharT&gt;::format (C++ function)</a>
+</li>
+      <li><a href="#_CPPv4IEN8morpheus4conf3fmt9formatterIN8morpheus13serialisation7testing11SimpleTupleEEE">morpheus::conf::fmt::formatter&lt;morpheus::serialisation::testing::SimpleTuple&gt; (C++ struct)</a>
+</li>
+      <li><a href="#_CPPv4I0ENK8morpheus4conf3fmt9formatterIN8morpheus13serialisation7testing11SimpleTupleEE6formatEDaRKN8morpheus13serialisation7testing11SimpleTupleER7Context">morpheus::conf::fmt::formatter&lt;morpheus::serialisation::testing::SimpleTuple&gt;::format (C++ function)</a>
+</li>
+      <li><a href="#_CPPv4I0EN8morpheus4conf3fmt9formatterIN8morpheus13serialisation7testing11SimpleTupleEE5parseEDaR7Context">morpheus::conf::fmt::formatter&lt;morpheus::serialisation::testing::SimpleTuple&gt;::parse (C++ function)</a>
 </li>
       <li><a href="#_CPPv4I0EN8morpheus4conf3fmt9formatterINSt6thread2idE5charTEE">morpheus::conf::fmt::formatter&lt;std::thread::id, charT&gt; (C++ struct)</a>
 </li>
@@ -1339,8 +1347,6 @@
 </li>
       <li><a href="#_CPPv4N8morpheus3gfx12pixel_format8A8R8G8B8E">morpheus::gfx::pixel_format::A8R8G8B8 (C++ enumerator)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="#_CPPv4N8morpheus3gfx12pixel_format6B5G6R5E">morpheus::gfx::pixel_format::B5G6R5 (C++ enumerator)</a>
 </li>
       <li><a href="#_CPPv4N8morpheus3gfx12pixel_format6B8G8R8E">morpheus::gfx::pixel_format::B8G8R8 (C++ enumerator)</a>
@@ -1353,6 +1359,8 @@
 </li>
       <li><a href="#_CPPv4N8morpheus3gfx12pixel_format6R3G3B2E">morpheus::gfx::pixel_format::R3G3B2 (C++ enumerator)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="#_CPPv4N8morpheus3gfx12pixel_format6R5G6B5E">morpheus::gfx::pixel_format::R5G6B5 (C++ enumerator)</a>
 </li>
       <li><a href="#_CPPv4N8morpheus3gfx12pixel_format7R8_SINTE">morpheus::gfx::pixel_format::R8_SINT (C++ enumerator)</a>
@@ -1957,6 +1965,8 @@
 </li>
       <li><a href="#_CPPv4I0EN8morpheus13serialisation12BinaryReader4readE1Tv">morpheus::serialisation::BinaryReader::read (C++ function)</a>, <a href="#_CPPv4I0EN8morpheus13serialisation12BinaryReader4readE1Tv">[1]</a>, <a href="#_CPPv4I0EN8morpheus13serialisation12BinaryReader4readE1Tv">[2]</a>
 </li>
+      <li><a href="#_CPPv4I00EN8morpheus13serialisation12BinaryReader12readElementsEN11concurrency9GeneratorI1TEE2FnNSt8optionalINSt6size_tEEE">morpheus::serialisation::BinaryReader::readElements (C++ function)</a>
+</li>
       <li><a href="#_CPPv4N8morpheus13serialisation20BinaryReadSerialiserE">morpheus::serialisation::BinaryReadSerialiser (C++ type)</a>
 </li>
       <li><a href="#_CPPv4N8morpheus13serialisation12BinaryWriterE">morpheus::serialisation::BinaryWriter (C++ class)</a>
@@ -2018,6 +2028,8 @@
       <li><a href="#_CPPv4N8morpheus13serialisation8concepts15ReaderArchetype9isTextualEv">morpheus::serialisation::concepts::ReaderArchetype::isTextual (C++ function)</a>
 </li>
       <li><a href="#_CPPv4I0EN8morpheus13serialisation8concepts15ReaderArchetype4readE1Tv">morpheus::serialisation::concepts::ReaderArchetype::read (C++ function)</a>, <a href="#_CPPv4I0EN8morpheus13serialisation8concepts15ReaderArchetype4readE1Tv">[1]</a>, <a href="#_CPPv4I0EN8morpheus13serialisation8concepts15ReaderArchetype4readE1Tv">[2]</a>
+</li>
+      <li><a href="#_CPPv4I00EN8morpheus13serialisation8concepts15ReaderArchetype12readElementsEN11concurrency9GeneratorI1TEERR2FnNSt8optionalINSt6size_tEEE">morpheus::serialisation::concepts::ReaderArchetype::readElements (C++ function)</a>
 </li>
       <li><a href="#_CPPv4I0EN8morpheus13serialisation8concepts16ReadSerialisableE">morpheus::serialisation::concepts::ReadSerialisable (C++ concept)</a>
 </li>
@@ -2083,17 +2095,15 @@
 </li>
       <li><a href="#_CPPv4N8morpheus13serialisation6detail8defaultsE">morpheus::serialisation::detail::defaults (C++ type)</a>
 </li>
-      <li><a href="#_CPPv4I_N8concepts14ReadSerialiserE_10IsStdTupleEN8morpheus13serialisation6detail11deserialiseE1TR10SerialiserNSt13type_identityI1TEE">morpheus::serialisation::detail::deserialise (C++ function)</a>, <a href="#_CPPv4I_N8concepts14ReadSerialiserE_13IsStdExpectedEN8morpheus13serialisation6detail11deserialiseE1TR10SerialiserNSt13type_identityI1TEE">[1]</a>, <a href="#_CPPv4I_N8concepts14ReadSerialiserE_13IsStdOptionalEN8morpheus13serialisation6detail11deserialiseE1TR10SerialiserNSt13type_identityI1TEE">[2]</a>, <a href="#_CPPv4I_N8concepts14ReadSerialiserE_14IsStdUniquePtrEN8morpheus13serialisation6detail11deserialiseE1TR10SerialiserNSt13type_identityI1TEE">[3]</a>, <a href="#_CPPv4I_N8concepts14ReadSerialiserE_19IsStdChronoDurationEN8morpheus13serialisation6detail11deserialiseE1TR10SerialiserNSt13type_identityI1TEE">[4]</a>, <a href="#_CPPv4I_N8concepts14ReadSerialiserE_9IsStdPairEN8morpheus13serialisation6detail11deserialiseE1TR10SerialiserNSt13type_identityI1TEE">[5]</a>, <a href="#_CPPv4I_N8concepts14ReadSerialiserE_N8concepts22ReadSerialisableNativeEEN8morpheus13serialisation6detail11deserialiseE1TR10SerialiserNSt13type_identityI1TEE">[6]</a>, <a href="#_CPPv4I_N8concepts14ReadSerialiserE_N8concepts25ReadSerialisableInsrusiveEEN8morpheus13serialisation6detail11deserialiseE4TypeR10SerialiserNSt13type_identityI4TypeEE">[7]</a>, <a href="#_CPPv4I_N8concepts14ReadSerialiserE_NSt7same_asINSt9monostateEEEEN8morpheus13serialisation6detail11deserialiseE1TR10SerialiserNSt13type_identityI1TEE">[8]</a>
+      <li><a href="#_CPPv4I_N8concepts14ReadSerialiserE0_NSt6size_tEEN8morpheus13serialisation6detail11deserialiseENSt5arrayI1T1NEER10SerialiserNSt13type_identityINSt5arrayI1T1NEEEE">morpheus::serialisation::detail::deserialise (C++ function)</a>, <a href="#_CPPv4I_N8concepts14ReadSerialiserE_10IsStdTupleEN8morpheus13serialisation6detail11deserialiseE1TR10SerialiserNSt13type_identityI1TEE">[1]</a>, <a href="#_CPPv4I_N8concepts14ReadSerialiserE_13IsStdExpectedEN8morpheus13serialisation6detail11deserialiseE1TR10SerialiserNSt13type_identityI1TEE">[2]</a>, <a href="#_CPPv4I_N8concepts14ReadSerialiserE_13IsStdOptionalEN8morpheus13serialisation6detail11deserialiseE1TR10SerialiserNSt13type_identityI1TEE">[3]</a>, <a href="#_CPPv4I_N8concepts14ReadSerialiserE_14IsStdUniquePtrEN8morpheus13serialisation6detail11deserialiseE1TR10SerialiserNSt13type_identityI1TEE">[4]</a>, <a href="#_CPPv4I_N8concepts14ReadSerialiserE_19IsStdChronoDurationEN8morpheus13serialisation6detail11deserialiseE1TR10SerialiserNSt13type_identityI1TEE">[5]</a>, <a href="#_CPPv4I_N8concepts14ReadSerialiserE_7IsRangeEN8morpheus13serialisation6detail11deserialiseE1TR10SerialiserNSt13type_identityI1TEE">[6]</a>, <a href="#_CPPv4I_N8concepts14ReadSerialiserE_9IsStdPairEN8morpheus13serialisation6detail11deserialiseE1TR10SerialiserNSt13type_identityI1TEE">[7]</a>, <a href="#_CPPv4I_N8concepts14ReadSerialiserE_N8concepts22ReadSerialisableNativeEEN8morpheus13serialisation6detail11deserialiseE1TR10SerialiserNSt13type_identityI1TEE">[8]</a>, <a href="#_CPPv4I_N8concepts14ReadSerialiserE_N8concepts25ReadSerialisableInsrusiveEEN8morpheus13serialisation6detail11deserialiseE4TypeR10SerialiserNSt13type_identityI4TypeEE">[9]</a>, <a href="#_CPPv4I_N8concepts14ReadSerialiserE_NSt7same_asINSt9monostateEEEEN8morpheus13serialisation6detail11deserialiseE1TR10SerialiserNSt13type_identityI1TEE">[10]</a>
 </li>
       <li><a href="#_CPPv4N8morpheus13serialisation6detail14deserialise_fnE">morpheus::serialisation::detail::deserialise_fn (C++ struct)</a>
 </li>
       <li><a href="#_CPPv4I_N8concepts14ReadSerialiserE0ENK8morpheus13serialisation6detail14deserialise_fnclE4TypeR10Serialiser">morpheus::serialisation::detail::deserialise_fn::operator() (C++ function)</a>, <a href="#_CPPv4I_N8concepts14ReadSerialiserE0ENK8morpheus13serialisation6detail14deserialise_fnclEvR10SerialiserRR4Type">[1]</a>
 </li>
-      <li><a href="#_CPPv4I_N8concepts14ReadSerialiserE_N8concepts16ReadSerialisableEEN8morpheus13serialisation6detail14deserialise_toEvR10SerialiserRNSt17reference_wrapperI1TEE">morpheus::serialisation::detail::deserialise_to (C++ function)</a>, <a href="#_CPPv4I_N8concepts14ReadSerialiserE_N8concepts25ReadSerialisableInsrusiveEEN8morpheus13serialisation6detail14deserialise_toEvR10SerialiserR4Type">[1]</a>, <a href="#_CPPv4I_N8concepts14ReadSerialiserE_N8concepts7HexableEEN8morpheus13serialisation6detail14deserialise_toEvR10SerialiserRR3HexI1TE">[2]</a>
+      <li><a href="#_CPPv4I_N8concepts14ReadSerialiserE_7IsRangeEN8morpheus13serialisation6detail14deserialise_toEvR10SerialiserR1T">morpheus::serialisation::detail::deserialise_to (C++ function)</a>, <a href="#_CPPv4I_N8concepts14ReadSerialiserE_N8concepts16ReadSerialisableEEN8morpheus13serialisation6detail14deserialise_toEvR10SerialiserRNSt17reference_wrapperI1TEE">[1]</a>, <a href="#_CPPv4I_N8concepts14ReadSerialiserE_N8concepts25ReadSerialisableInsrusiveEEN8morpheus13serialisation6detail14deserialise_toEvR10SerialiserR4Type">[2]</a>, <a href="#_CPPv4I_N8concepts14ReadSerialiserE_N8concepts7HexableEEN8morpheus13serialisation6detail14deserialise_toEvR10SerialiserRR3HexI1TE">[3]</a>
 </li>
       <li><a href="#_CPPv4I0EN8morpheus13serialisation6detail30isEnabledForRangeSerialisationE">morpheus::serialisation::detail::isEnabledForRangeSerialisation (C++ member)</a>
-</li>
-      <li><a href="#_CPPv4I0_NSt6size_tEEN8morpheus13serialisation6detail30isEnabledForRangeSerialisationINSt5arrayI1T1NEEEE">morpheus::serialisation::detail::isEnabledForRangeSerialisation&lt;std::array&lt;T, N&gt;&gt; (C++ member)</a>
 </li>
       <li><a href="#_CPPv4I00EN8morpheus13serialisation6detail30isEnabledForRangeSerialisationINSt5dequeI1T1AEEEE">morpheus::serialisation::detail::isEnabledForRangeSerialisation&lt;std::deque&lt;T, A&gt;&gt; (C++ member)</a>
 </li>
@@ -2133,7 +2143,7 @@
 </li>
       <li><a href="#_CPPv4I0EN8morpheus13serialisation6detail12IsStdVariantE">morpheus::serialisation::detail::IsStdVariant (C++ concept)</a>
 </li>
-      <li><a href="#_CPPv4I_N8concepts15WriteSerialiserE00EN8morpheus13serialisation6detail9serialiseEvR10SerialiserRKNSt6chrono8durationI3Rep6PeriodEE">morpheus::serialisation::detail::serialise (C++ function)</a>, <a href="#_CPPv4I_N8concepts15WriteSerialiserEEN8morpheus13serialisation6detail9serialiseEvR10SerialiserNSt9monostateE">[1]</a>, <a href="#_CPPv4I_N8concepts15WriteSerialiserEEN8morpheus13serialisation6detail9serialiseEvR10SerialiserRK7IsRange">[2]</a>, <a href="#_CPPv4I_N8concepts15WriteSerialiserEEN8morpheus13serialisation6detail9serialiseEvR10SerialiserRKN4conf2sl15source_locationE">[3]</a>, <a href="#_CPPv4I_N8concepts15WriteSerialiserE_21SerialisableAggregateEN8morpheus13serialisation6detail9serialiseEvR10SerialiserRK13AggregateType">[4]</a>, <a href="#_CPPv4I_N8concepts15WriteSerialiserE_DpN8concepts17WriteSerialisableEEN8morpheus13serialisation6detail9serialiseEvR10SerialiserRKNSt5tupleIDp1TEE">[5]</a>, <a href="#_CPPv4I_N8concepts15WriteSerialiserE_DpN8concepts17WriteSerialisableEEN8morpheus13serialisation6detail9serialiseEvR10SerialiserRKNSt7variantIDp1TEE">[6]</a>, <a href="#_CPPv4I_N8concepts15WriteSerialiserE_N8concepts17WriteSerialisableEEN8morpheus13serialisation6detail9serialiseEvR10SerialiserRKNSt10unique_ptrI1TEE">[7]</a>, <a href="#_CPPv4I_N8concepts15WriteSerialiserE_N8concepts17WriteSerialisableEEN8morpheus13serialisation6detail9serialiseEvR10SerialiserRKNSt17reference_wrapperI1TEE">[8]</a>, <a href="#_CPPv4I_N8concepts15WriteSerialiserE_N8concepts17WriteSerialisableEEN8morpheus13serialisation6detail9serialiseEvR10SerialiserRKNSt8optionalI1TEE">[9]</a>, <a href="#_CPPv4I_N8concepts15WriteSerialiserE_N8concepts17WriteSerialisableE_N8concepts17WriteSerialisableEEN8morpheus13serialisation6detail9serialiseEvR10SerialiserRKN4conf3exp8expectedI1T1EEE">[10]</a>, <a href="#_CPPv4I_N8concepts15WriteSerialiserE_N8concepts17WriteSerialisableE_N8concepts17WriteSerialisableEEN8morpheus13serialisation6detail9serialiseEvR10SerialiserRKNSt4pairI2T12T2EE">[11]</a>, <a href="#_CPPv4I_N8concepts15WriteSerialiserE_N8concepts23WriteSerialisableNativeEEN8morpheus13serialisation6detail9serialiseEvR10SerialiserRR1T">[12]</a>, <a href="#_CPPv4I_N8concepts15WriteSerialiserE_N8concepts26WriteSerialisableInsrusiveEEN8morpheus13serialisation6detail9serialiseEvR10SerialiserRK4Type">[13]</a>, <a href="#_CPPv4I_N8concepts15WriteSerialiserE_N8concepts7HexableEEN8morpheus13serialisation6detail9serialiseEvR10SerialiserRK3HexI1TE">[14]</a>
+      <li><a href="#_CPPv4I_N8concepts15WriteSerialiserE00EN8morpheus13serialisation6detail9serialiseEvR10SerialiserRKNSt6chrono8durationI3Rep6PeriodEE">morpheus::serialisation::detail::serialise (C++ function)</a>, <a href="#_CPPv4I_N8concepts15WriteSerialiserE0_NSt6size_tEEN8morpheus13serialisation6detail9serialiseEvR10SerialiserRKNSt5arrayI1T1NEE">[1]</a>, <a href="#_CPPv4I_N8concepts15WriteSerialiserEEN8morpheus13serialisation6detail9serialiseEvR10SerialiserNSt9monostateE">[2]</a>, <a href="#_CPPv4I_N8concepts15WriteSerialiserEEN8morpheus13serialisation6detail9serialiseEvR10SerialiserRK7IsRange">[3]</a>, <a href="#_CPPv4I_N8concepts15WriteSerialiserEEN8morpheus13serialisation6detail9serialiseEvR10SerialiserRKN4conf2sl15source_locationE">[4]</a>, <a href="#_CPPv4I_N8concepts15WriteSerialiserE_21SerialisableAggregateEN8morpheus13serialisation6detail9serialiseEvR10SerialiserRK13AggregateType">[5]</a>, <a href="#_CPPv4I_N8concepts15WriteSerialiserE_DpN8concepts17WriteSerialisableEEN8morpheus13serialisation6detail9serialiseEvR10SerialiserRKNSt5tupleIDp1TEE">[6]</a>, <a href="#_CPPv4I_N8concepts15WriteSerialiserE_DpN8concepts17WriteSerialisableEEN8morpheus13serialisation6detail9serialiseEvR10SerialiserRKNSt7variantIDp1TEE">[7]</a>, <a href="#_CPPv4I_N8concepts15WriteSerialiserE_N8concepts17WriteSerialisableEEN8morpheus13serialisation6detail9serialiseEvR10SerialiserRKNSt10unique_ptrI1TEE">[8]</a>, <a href="#_CPPv4I_N8concepts15WriteSerialiserE_N8concepts17WriteSerialisableEEN8morpheus13serialisation6detail9serialiseEvR10SerialiserRKNSt17reference_wrapperI1TEE">[9]</a>, <a href="#_CPPv4I_N8concepts15WriteSerialiserE_N8concepts17WriteSerialisableEEN8morpheus13serialisation6detail9serialiseEvR10SerialiserRKNSt8optionalI1TEE">[10]</a>, <a href="#_CPPv4I_N8concepts15WriteSerialiserE_N8concepts17WriteSerialisableE_N8concepts17WriteSerialisableEEN8morpheus13serialisation6detail9serialiseEvR10SerialiserRKN4conf3exp8expectedI1T1EEE">[11]</a>, <a href="#_CPPv4I_N8concepts15WriteSerialiserE_N8concepts17WriteSerialisableE_N8concepts17WriteSerialisableEEN8morpheus13serialisation6detail9serialiseEvR10SerialiserRKNSt4pairI2T12T2EE">[12]</a>, <a href="#_CPPv4I_N8concepts15WriteSerialiserE_N8concepts23WriteSerialisableNativeEEN8morpheus13serialisation6detail9serialiseEvR10SerialiserRR1T">[13]</a>, <a href="#_CPPv4I_N8concepts15WriteSerialiserE_N8concepts26WriteSerialisableInsrusiveEEN8morpheus13serialisation6detail9serialiseEvR10SerialiserRK4Type">[14]</a>, <a href="#_CPPv4I_N8concepts15WriteSerialiserE_N8concepts7HexableEEN8morpheus13serialisation6detail9serialiseEvR10SerialiserRK3HexI1TE">[15]</a>
 </li>
       <li><a href="#_CPPv4N8morpheus13serialisation6detail12serialise_fnE">morpheus::serialisation::detail::serialise_fn (C++ struct)</a>
 </li>
@@ -2247,6 +2257,8 @@
 </li>
       <li><a href="#_CPPv4N8morpheus13serialisation10JsonReader7getNextEv">morpheus::serialisation::JsonReader::getNext (C++ function)</a>
 </li>
+      <li><a href="#_CPPv4N8morpheus13serialisation10JsonReader15isAtEndSequenceEv">morpheus::serialisation::JsonReader::isAtEndSequence (C++ function)</a>
+</li>
       <li><a href="#_CPPv4N8morpheus13serialisation10JsonReader9isTextualEv">morpheus::serialisation::JsonReader::isTextual (C++ function)</a>
 </li>
       <li><a href="#_CPPv4N8morpheus13serialisation10JsonReader10JsonReaderE11OwnedStreamb">morpheus::serialisation::JsonReader::JsonReader (C++ function)</a>, <a href="#_CPPv4N8morpheus13serialisation10JsonReader10JsonReaderERK10JsonReader">[1]</a>, <a href="#_CPPv4N8morpheus13serialisation10JsonReader10JsonReaderERR10JsonReader">[2]</a>
@@ -2254,6 +2266,8 @@
       <li><a href="#_CPPv4N8morpheus13serialisation10JsonReader10mExtractorE">morpheus::serialisation::JsonReader::mExtractor (C++ member)</a>
 </li>
       <li><a href="#_CPPv4N8morpheus13serialisation10JsonReader11mJsonReaderE">morpheus::serialisation::JsonReader::mJsonReader (C++ member)</a>
+</li>
+      <li><a href="#_CPPv4N8morpheus13serialisation10JsonReader13mPendingEventE">morpheus::serialisation::JsonReader::mPendingEvent (C++ member)</a>
 </li>
       <li><a href="#_CPPv4N8morpheus13serialisation10JsonReader13mSourceStreamE">morpheus::serialisation::JsonReader::mSourceStream (C++ member)</a>
 </li>
@@ -2265,11 +2279,15 @@
 </li>
       <li><a href="#_CPPv4N8morpheus13serialisation10JsonReader11OwnedStreamE">morpheus::serialisation::JsonReader::OwnedStream (C++ type)</a>
 </li>
+      <li><a href="#_CPPv4N8morpheus13serialisation10JsonReader8peekNextEv">morpheus::serialisation::JsonReader::peekNext (C++ function)</a>
+</li>
       <li><a href="#_CPPv4N8morpheus13serialisation10JsonReader13PossibleValueE">morpheus::serialisation::JsonReader::PossibleValue (C++ type)</a>
 </li>
       <li><a href="#_CPPv4I0EN8morpheus13serialisation10JsonReader4readE1Tv">morpheus::serialisation::JsonReader::read (C++ function)</a>, <a href="#_CPPv4I0EN8morpheus13serialisation10JsonReader4readE1Tv">[1]</a>, <a href="#_CPPv4I0EN8morpheus13serialisation10JsonReader4readE1Tv">[2]</a>, <a href="#_CPPv4I0EN8morpheus13serialisation10JsonReader4readE1Tv">[3]</a>, <a href="#_CPPv4I_NSt14floating_pointEEN8morpheus13serialisation10JsonReader4readE5Floatv">[4]</a>, <a href="#_CPPv4I_NSt8integralEEN8morpheus13serialisation10JsonReader4readE7Integerv">[5]</a>
 </li>
-      <li><a href="#_CPPv4IEN8morpheus13serialisation10JsonReader4readINSt6vectorINSt4byteEEEEENSt6vectorINSt4byteEEEv">morpheus::serialisation::JsonReader::read&lt;std::vector&lt;std::byte&gt;&gt; (C++ function)</a>
+      <li><a href="#_CPPv4N8morpheus13serialisation10JsonReader9readBytesEv">morpheus::serialisation::JsonReader::readBytes (C++ function)</a>
+</li>
+      <li><a href="#_CPPv4I00EN8morpheus13serialisation10JsonReader12readElementsEN11concurrency9GeneratorI1TEE2FnNSt8optionalINSt6size_tEEE">morpheus::serialisation::JsonReader::readElements (C++ function)</a>
 </li>
       <li><a href="#_CPPv4N8morpheus13serialisation10JsonReaderD0Ev">morpheus::serialisation::JsonReader::~JsonReader (C++ function)</a>
 </li>
@@ -2319,13 +2337,15 @@
 </li>
       <li><a href="#_CPPv4N8morpheus13serialisation4mockE">morpheus::serialisation::mock (C++ type)</a>
 </li>
-      <li><a href="#_CPPv4N8morpheus13serialisation4mock6ReaderE">morpheus::serialisation::mock::Reader (C++ class)</a>
+      <li><a href="#_CPPv4I_bEN8morpheus13serialisation4mock6ReaderE">morpheus::serialisation::mock::Reader (C++ class)</a>
 </li>
       <li><a href="#_CPPv4I0EN8morpheus13serialisation4mock6Reader4readE1Tv">morpheus::serialisation::mock::Reader::read (C++ function)</a>
 </li>
+      <li><a href="#_CPPv4I00EN8morpheus13serialisation4mock6Reader12readElementsEN11concurrency9GeneratorI1TEE2FnNSt8optionalINSt6size_tEEE">morpheus::serialisation::mock::Reader::readElements (C++ function)</a>
+</li>
       <li><a href="#_CPPv4N8morpheus13serialisation4mock6WriterE">morpheus::serialisation::mock::Writer (C++ class)</a>
 </li>
-      <li><a href="#_CPPv4N8morpheus13serialisation20MockedReadSerialiserE">morpheus::serialisation::MockedReadSerialiser (C++ type)</a>
+      <li><a href="#_CPPv4I_bEN8morpheus13serialisation20MockedReadSerialiserE">morpheus::serialisation::MockedReadSerialiser (C++ type)</a>
 </li>
       <li><a href="#_CPPv4N8morpheus13serialisation21MockedWriteSerialiserE">morpheus::serialisation::MockedWriteSerialiser (C++ type)</a>
 </li>
@@ -2340,6 +2360,8 @@
       <li><a href="#_CPPv4N8morpheus13serialisation14ReadSerialiser6ReaderE">morpheus::serialisation::ReadSerialiser::Reader (C++ type)</a>
 </li>
       <li><a href="#_CPPv4IDpEN8morpheus13serialisation14ReadSerialiser14ReadSerialiserENSt10in_place_tEDpRR4Args">morpheus::serialisation::ReadSerialiser::ReadSerialiser (C++ function)</a>, <a href="#_CPPv4I_N4meta8concepts20DefaultConstructibleEEN8morpheus13serialisation14ReadSerialiser14ReadSerialiserEv">[1]</a>, <a href="#_CPPv4N8morpheus13serialisation14ReadSerialiser14ReadSerialiserERR10ReaderType">[2]</a>
+</li>
+      <li><a href="#_CPPv4I0EN8morpheus13serialisation14ReadSerialiser8sequenceEN11concurrency9GeneratorI1TEEKNSt11string_viewE">morpheus::serialisation::ReadSerialiser::sequence (C++ function)</a>, <a href="#_CPPv4I0EN8morpheus13serialisation14ReadSerialiser8sequenceEN11concurrency9GeneratorI1TEEv">[1]</a>
 </li>
       <li><a href="#_CPPv4I0EN8morpheus13serialisation21SerialisableAggregateE">morpheus::serialisation::SerialisableAggregate (C++ concept)</a>
 </li>
@@ -2360,6 +2382,22 @@
       <li><a href="#_CPPv4N8morpheus13serialisation7testing9serialiseERKDa">morpheus::serialisation::testing::serialise (C++ function)</a>
 </li>
       <li><a href="#_CPPv4I_NSt6size_tEEN8morpheus13serialisation7testing25serialiseWithLimitedSpaceENSt5arrayIc4SizeEERKDa">morpheus::serialisation::testing::serialiseWithLimitedSpace (C++ function)</a>
+</li>
+      <li><a href="#_CPPv4N8morpheus13serialisation7testing11SimpleTupleE">morpheus::serialisation::testing::SimpleTuple (C++ struct)</a>
+</li>
+      <li><a href="#_CPPv4N8morpheus13serialisation7testing11SimpleTuple4dataE">morpheus::serialisation::testing::SimpleTuple::data (C++ member)</a>
+</li>
+      <li><a href="#_CPPv4I_N8concepts14ReadSerialiserEEN8morpheus13serialisation7testing11SimpleTuple11deserialiseEvR10Serialiser">morpheus::serialisation::testing::SimpleTuple::deserialise (C++ function)</a>
+</li>
+      <li><a href="#_CPPv4N8morpheus13serialisation7testing11SimpleTuple5firstE">morpheus::serialisation::testing::SimpleTuple::first (C++ member)</a>
+</li>
+      <li><a href="#_CPPv4NK8morpheus13serialisation7testing11SimpleTuplessERK11SimpleTuple">morpheus::serialisation::testing::SimpleTuple::operator&lt;=&gt; (C++ function)</a>
+</li>
+      <li><a href="#_CPPv4NK8morpheus13serialisation7testing11SimpleTupleeqERK11SimpleTuple">morpheus::serialisation::testing::SimpleTuple::operator== (C++ function)</a>
+</li>
+      <li><a href="#_CPPv4N8morpheus13serialisation7testing11SimpleTuple6secondE">morpheus::serialisation::testing::SimpleTuple::second (C++ member)</a>
+</li>
+      <li><a href="#_CPPv4I_N8concepts15WriteSerialiserEENK8morpheus13serialisation7testing11SimpleTuple9serialiseEvR10Serialiser">morpheus::serialisation::testing::SimpleTuple::serialise (C++ function)</a>
 </li>
       <li><a href="#_CPPv4N8morpheus13serialisation10TextWriterE">morpheus::serialisation::TextWriter (C++ class)</a>
 </li>
