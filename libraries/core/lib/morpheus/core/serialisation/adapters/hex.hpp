@@ -47,7 +47,7 @@ void serialise(Serialiser& s, Hex<T> const& wrapper)
 
 /// Deserialise a Hex wrapped value via a ReadSerialiser wrapper.
 template <concepts::ReadSerialiser Serialiser, concepts::Hexable T>
-void deserialise_to(Serialiser& s, Hex<T>&& wrapper)
+void deserialise(Serialiser& s, Hex<T>&& wrapper)
 {
     if constexpr (Serialiser::Reader::isTextual())
     {

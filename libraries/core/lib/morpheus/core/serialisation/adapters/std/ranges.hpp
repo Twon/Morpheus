@@ -36,7 +36,7 @@ void serialise(Serialiser& serialiser, IsRange auto const& range)
 }
 
 template <concepts::ReadSerialiser Serialiser, IsRange T>
-void deserialise_to(Serialiser& serialiser, T& range)
+void deserialise(Serialiser& serialiser, T& range)
 {
     using ValueType = conf::ranges::range_value_t<T>;
 

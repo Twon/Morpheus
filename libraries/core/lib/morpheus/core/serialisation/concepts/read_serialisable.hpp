@@ -15,7 +15,7 @@ concept ReadSerialisableFactory = requires(ReadSerialiserArchetype s) {
 
 template <typename Type>
 concept ReadSerialisableSink = requires(ReadSerialiserArchetype s, Type t) {
-    { deserialise_to(s, t) } -> std::same_as<void>;
+    { deserialise(s, t) } -> std::same_as<void>;
 };
 
 template <typename Type>
