@@ -1,5 +1,5 @@
 target_sources(MorpheusCoreTests
-    PUBLIC
+    PRIVATE
         binary_reader.tests.cpp
         binary_roundtrip.tests.cpp
         binary_writer.tests.cpp
@@ -12,3 +12,4 @@ target_sources(MorpheusCoreTests
 )
 
 add_subdirectory(adapters)
+add_subdirectory(types)
