@@ -37,7 +37,7 @@ TEST_CASE("Verify serialisation of std::expected", "[morpheus.serialisation.type
     REQUIRE(conf::fmt::format("{}", c) == "{first=3,second=true,data=[100, 200, 255]}");
 }
 
-TEST_CASE("Json writer can write ranges of composites", "[morpheus.serialisation.types.simple_tuple.rountdtrip]")
+TEST_CASE("Simple tuple can be round trips to binary and back again", "[morpheus.serialisation.types.simple_tuple.rountdtrip]")
 {
     auto const value = std::vector<testing::SimpleTuple>{
         {1, true,       {std::byte{1}, std::byte{2}, std::byte{3}}},
