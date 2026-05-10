@@ -7,6 +7,8 @@
 #include "morpheus/core/serialisation/write_serialiser.hpp"
 
 #include <catch2/catch_test_macros.hpp>
+#include <catch2/matchers/catch_matchers_string.hpp>
+
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
@@ -40,6 +42,24 @@ TEST_CASE("Verify serialisation of std::indirect", "[morpheus.serialisation.indi
             WHEN("Serialising the std::indirect")
             {
                 serialiser.serialise(value);
+            }
+        }
+    }
+    GIVEN("A std::indirect in a valueless after move value")
+    {
+        constexpr std::int64_t actualValue = 10;
+        auto value = conf::vt::indirect<std::int64_t>(actualValue);
+        auto const movedValue = std::move(value);
+
+        THEN("Expect the following sequence of operations on the underlying writer")
+        {
+            InSequence seq;
+            MockedWriteSerialiser serialiser;
+
+            WHEN("Serialising the std::indirect")
+            {
+                using Catch::Matchers::ContainsSubstring;
+                REQUIRE_THROWS_WITH(serialiser.serialise(value), ContainsSubstring("valueless after move"));
             }
         }
     }
