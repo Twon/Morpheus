@@ -21,7 +21,7 @@ void serialise(Serialiser& serialiser, std::reference_wrapper<T> const& value)
 }
 
 template <concepts::ReadSerialiser Serialiser, concepts::ReadSerialisable T>
-void deserialise_to(Serialiser& serialiser, std::reference_wrapper<T>& ref)
+void deserialise(Serialiser& serialiser, std::reference_wrapper<T>& ref)
 {
     ref.get() = serialiser.template deserialise<T>();
 }

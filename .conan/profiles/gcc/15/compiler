@@ -1,0 +1,7 @@
+include(../../compiler/gcc)
+
+[settings]
+compiler.version=15
+
+[conf]
+tools.build:compiler_executables={"c":"gcc-15","cpp":"g++-15"}

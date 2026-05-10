@@ -34,7 +34,7 @@ auto deserialise(Serialiser& serialiser, std::type_identity<Type>) -> Type
 }
 
 template <concepts::ReadSerialiser Serialiser, concepts::ReadSerialisableInsrusive Type>
-auto deserialise_to(Serialiser& serialiser, Type& value) -> void
+auto deserialise(Serialiser& serialiser, Type& value) -> void
 {
     serialiser.reader().beginComposite();
     value.deserialise(serialiser);
@@ -68,10 +68,10 @@ auto adl_deserialise(Serialiser& s, std::type_identity<Type> type) -> Type
 }
 
 template <concepts::ReadSerialiser Serialiser, typename Type>
-auto adl_deserialise_to(Serialiser& s, Type&& value) -> void
+auto adl_deserialise(Serialiser& s, Type&& value) -> void
 {
-    using detail::deserialise_to;
-    return deserialise_to(s, std::forward<Type>(value));
+    using detail::deserialise;
+    return deserialise(s, std::forward<Type>(value));
 }
 
 /// \struct deserialise_fn
@@ -97,11 +97,11 @@ struct deserialise_fn
     /// \param[in] serialiser The serialiser to use for deserialisation.
     /// \param[out] value The value to deserialise into.
     template <concepts::ReadSerialiser Serialiser, typename Type>
-    requires requires(Serialiser& s, Type&& v) { adl_deserialise_to(s, std::forward<Type>(v)); }
+    requires requires(Serialiser& s, Type&& v) { adl_deserialise(s, std::forward<Type>(v)); }
     void operator()(Serialiser& serialiser, Type&& value) const
     {
-        using detail::deserialise_to;
-        deserialise_to(serialiser, std::forward<Type>(value));
+        using detail::deserialise;
+        deserialise(serialiser, std::forward<Type>(value));
     }
 };
 

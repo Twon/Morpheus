@@ -52,6 +52,12 @@ jobs:
               lib: "libstdc++11"
             }
           - {
+              name: "Ubuntu GCC-15",
+              os: ubuntu-latest,
+              compiler: { type: GCC, version: 15, conan: "gcc", cc: "gcc-15", cxx: "g++-15", std: 23 },
+              lib: "libstdc++11"
+            }
+          - {
               name: "Ubuntu Clang-14 + libc++",
               os: ubuntu-22.04,
               compiler:
@@ -183,10 +189,10 @@ jobs:
               lib: "libc++",
             }
     steps:
-      - uses: actions/checkout@v4.2.2
+      - uses: actions/checkout@v6.0.2
 
       - name: Cache Conan data
-        uses: actions/cache@v4.2.2
+        uses: actions/cache@v5.0.5
         env:
           cache-name: cache-conan-data
         with:

@@ -5,423 +5,239 @@
     "minor": 25,
     "patch": 0
   },
-    "configurePresets": [
-        {
-            "name": "ninja",
-            "hidden": true,
-            "generator": "Ninja",
-            "cacheVariables": {
-                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
-            }
-        },
-        {
-            "name": "default",
-            "binaryDir": "${sourceDir}/build/${presetName}/build",
-            "cacheVariables": {
-                "CMAKE_INSTALL_PREFIX": "${sourceDir}/install/${presetName}"
-            },
-            "inherits": [
-                "ninja"
-            ],
-            "hidden": true
-        },
-        {
-            "name": "clang15",
-            "cacheVariables": {
-                "CMAKE_C_COMPILER": "clang-15",
-                "CMAKE_CXX_COMPILER": "clang++-15"
-            },
-            "inherits": [
-                "default"
-            ],
-            "hidden": true
-        },
-        {
-            "name": "clang16",
-            "cacheVariables": {
-                "CMAKE_C_COMPILER": "clang-16",
-                "CMAKE_CXX_COMPILER": "clang++-16"
-            },
-            "inherits": [
-                "default"
-            ],
-            "hidden": true
-        },
-        {
-            "name": "clang17",
-            "cacheVariables": {
-                "CMAKE_C_COMPILER": "clang-17",
-                "CMAKE_CXX_COMPILER": "clang++-17"
-            },
-            "inherits": [
-                "default"
-            ],
-            "hidden": true
-        },
-        {
-            "name": "clang18",
-            "cacheVariables": {
-                "CMAKE_C_COMPILER": "clang-18",
-                "CMAKE_CXX_COMPILER": "clang++-18"
-            },
-            "inherits": [
-                "default"
-            ],
-            "hidden": true
-        },
-        {
-            "name": "clang19",
-            "cacheVariables": {
-                "CMAKE_C_COMPILER": "clang-19",
-                "CMAKE_CXX_COMPILER": "clang++-19"
-            },
-            "inherits": [
-                "default"
-            ],
-            "hidden": true
-        },
-        {
-            "name": "clang20",
-            "cacheVariables": {
-                "CMAKE_C_COMPILER": "clang-20",
-                "CMAKE_CXX_COMPILER": "clang++-20"
-            },
-            "inherits": [
-                "default"
-            ],
-            "hidden": true
-        },
-        {
-            "name": "gcc12",
-            "cacheVariables": {
-                "CMAKE_C_COMPILER": "gcc-12",
-                "CMAKE_CXX_COMPILER": "g++-12"
-            },
-            "inherits": [
-                "default"
-            ],
-            "hidden": true
-        },
-        {
-            "name": "gcc13",
-            "cacheVariables": {
-                "CMAKE_C_COMPILER": "gcc-13",
-                "CMAKE_CXX_COMPILER": "g++-13"
-            },
-            "inherits": [
-                "default"
-            ],
-            "hidden": true
-        },
-        {
-            "name": "gcc14",
-            "cacheVariables": {
-                "CMAKE_C_COMPILER": "gcc-14",
-                "CMAKE_CXX_COMPILER": "g++-14"
-            },
-            "inherits": [
-                "default"
-            ],
-            "hidden": true
-        },
-        {
-            "name": "msvc",
-            "condition": {
-                "type": "equals",
-                "lhs": "${hostSystemName}",
-                "rhs": "Windows"
-            },
-            "cacheVariables": {
-                "CMAKE_C_COMPILER": "cl",
-                "CMAKE_CXX_COMPILER": "cl"
-            },
-            "inherits": [
-                "default"
-            ],
-            "hidden": true
-        },
-        {
-            "name": "debug",
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Debug"
-            },
-            "hidden": true
-        },
-        {
-            "name": "release",
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "Release",
-                "CMAKE_INTERPROCEDURAL_OPTIMIZATION": true
-            },
-            "hidden": true
-        },
-        {
-            "name": "rwdi",
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "RelWithDebInfo",
-                "CMAKE_INTERPROCEDURAL_OPTIMIZATION": true
-            },
-            "hidden": true
-        },
-        {
-            "name": "msr",
-            "cacheVariables": {
-                "CMAKE_BUILD_TYPE": "MinSizeRel",
-                "CMAKE_INTERPROCEDURAL_OPTIMIZATION": true
-            },
-            "hidden": true
-        },
+  "configurePresets": [
+    {
+      "name": "ninja",
+      "hidden": true,
+      "generator": "Ninja",
+      "cacheVariables": {
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+      }
+    },
+    {
+      "name": "default",
+      "binaryDir": "${sourceDir}/build/${presetName}/build",
+      "cacheVariables": {
+        "CMAKE_INSTALL_PREFIX": "${sourceDir}/install/${presetName}"
+      },
+      "inherits": [
+        "ninja"
+      ],
+      "hidden": true
+    },
+    {
+      "name": "clang15",
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "clang-15",
+        "CMAKE_CXX_COMPILER": "clang++-15"
+      },
+      "inherits": [
+        "default"
+      ],
+      "hidden": true
+    },
+    {
+      "name": "clang16",
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "clang-16",
+        "CMAKE_CXX_COMPILER": "clang++-16"
+      },
+      "inherits": [
+        "default"
+      ],
+      "hidden": true
+    },
+    {
+      "name": "clang17",
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "clang-17",
+        "CMAKE_CXX_COMPILER": "clang++-17"
+      },
+      "inherits": [
+        "default"
+      ],
+      "hidden": true
+    },
+    {
+      "name": "clang18",
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "clang-18",
+        "CMAKE_CXX_COMPILER": "clang++-18"
+      },
+      "inherits": [
+        "default"
+      ],
+      "hidden": true
+    },
+    {
+      "name": "clang19",
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "clang-19",
+        "CMAKE_CXX_COMPILER": "clang++-19"
+      },
+      "inherits": [
+        "default"
+      ],
+      "hidden": true
+    },
+    {
+      "name": "clang20",
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "clang-20",
+        "CMAKE_CXX_COMPILER": "clang++-20"
+      },
+      "inherits": [
+        "default"
+      ],
+      "hidden": true
+    },
+    {
+      "name": "gcc12",
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "gcc-12",
+        "CMAKE_CXX_COMPILER": "g++-12"
+      },
+      "inherits": [
+        "default"
+      ],
+      "hidden": true
+    },
+    {
+      "name": "gcc13",
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "gcc-13",
+        "CMAKE_CXX_COMPILER": "g++-13"
+      },
+      "inherits": [
+        "default"
+      ],
+      "hidden": true
+    },
+    {
+      "name": "gcc14",
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "gcc-14",
+        "CMAKE_CXX_COMPILER": "g++-14"
+      },
+      "inherits": [
+        "default"
+      ],
+      "hidden": true
+    },
+    {
+      "name": "gcc15",
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "gcc-15",
+        "CMAKE_CXX_COMPILER": "g++-15"
+      },
+      "inherits": [
+        "default"
+      ],
+      "hidden": true
+    },
+    {
+      "name": "msvc",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
+      },
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "cl",
+        "CMAKE_CXX_COMPILER": "cl"
+      },
+      "inherits": [
+        "default"
+      ],
+      "hidden": true
+    },
+    {
+      "name": "debug",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug"
+      },
+      "hidden": true
+    },
+    {
+      "name": "release",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_INTERPROCEDURAL_OPTIMIZATION": true
+      },
+      "hidden": true
+    },
+    {
+      "name": "rwdi",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo",
+        "CMAKE_INTERPROCEDURAL_OPTIMIZATION": true
+      },
+      "hidden": true
+    },
+    {
+      "name": "msr",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "MinSizeRel",
+        "CMAKE_INTERPROCEDURAL_OPTIMIZATION": true
+      },
+      "hidden": true
+    },
 
-        {
-            "name": "msvc-x64-debug",
-            "displayName": "MSVC x64 Debug",
-            "description": "msvc for x64 (Debug)",
-            "inherits": [ "msvc", "debug" ]
-        },
-        {
-            "name": "msvc-x64-release",
-            "displayName": "MSVC x64 Release",
-            "description": "msvc for x64 (Release)",
-            "inherits": [ "msvc", "release" ]
-        },
-        {
-            "name": "msvc-x64-rwdi",
-            "displayName": "MSVC x64 RelWithDebInfo",
-            "description": "msvc for x64 (RelWithDebInfo)",
-            "inherits": [ "msvc", "rwdi" ]
-        },
-        {
-            "name": "msvc-x64-msr",
-            "displayName": "MSVC x64 MinSizeRel",
-            "description": "msvc for x64 (MinSizeRel)",
-            "inherits": [ "msvc", "msr" ]
-        },
+    { "name": "msvc-x64-debug", "displayName": "MSVC x64 Debug", "description": "msvc for x64 (Debug)", "inherits": [ "msvc", "debug" ] },
+    { "name": "msvc-x64-release", "displayName": "MSVC x64 Release", "description": "msvc for x64 (Release)", "inherits": [ "msvc", "release" ] },
+    { "name": "msvc-x64-rwdi", "displayName": "MSVC x64 RelWithDebInfo", "description": "msvc for x64 (RelWithDebInfo)", "inherits": [ "msvc", "rwdi" ] },
+    { "name": "msvc-x64-msr", "displayName": "MSVC x64 MinSizeRel", "description": "msvc for x64 (MinSizeRel)", "inherits": [ "msvc", "msr" ] },
 
-        {
-            "name": "gcc12-x64-debug",
-            "displayName": "gcc-12 x64 Debug",
-            "description": "gcc12 for x64 (Debug)",
-            "inherits": [ "gcc12", "debug" ]
-        },
-        {
-            "name": "gcc12-x64-release",
-            "displayName": "gcc-12 x64 Release",
-            "description": "gcc12 for x64 (Release)",
-            "inherits": [ "gcc12", "release" ]
-        },
-        {
-            "name": "gcc12-x64-rwdi",
-            "displayName": "gcc-12 x64 RelWithDebInfo",
-            "description": "gcc12 for x64 (RelWithDebInfo)",
-            "inherits": [ "gcc12", "rwdi" ]
-        },
-        {
-            "name": "gcc12-x64-msr",
-            "displayName": "gcc-12 x64 MinSizeRel",
-            "description": "gcc12 for x64 (MinSizeRel)",
-            "inherits": [ "gcc12", "msr" ]
-        },
+    { "name": "gcc12-x64-debug", "displayName": "gcc-12 x64 Debug", "description": "gcc12 for x64 (Debug)", "inherits": [ "gcc12", "debug" ] },
+    { "name": "gcc12-x64-release", "displayName": "gcc-12 x64 Release", "description": "gcc12 for x64 (Release)", "inherits": [ "gcc12", "release" ] },
+    { "name": "gcc12-x64-rwdi", "displayName": "gcc-12 x64 RelWithDebInfo", "description": "gcc12 for x64 (RelWithDebInfo)", "inherits": [ "gcc12", "rwdi" ] },
+    { "name": "gcc12-x64-msr", "displayName": "gcc-12 x64 MinSizeRel", "description": "gcc12 for x64 (MinSizeRel)", "inherits": [ "gcc12", "msr" ] },
 
-        {
-            "name": "gcc13-x64-debug",
-            "displayName": "gcc-13 x64 Debug",
-            "description": "gcc13 for x64 (Debug)",
-            "inherits": [ "gcc13", "debug" ]
-        },
-        {
-            "name": "gcc13-x64-release",
-            "displayName": "gcc-13 x64 Release",
-            "description": "gcc13 for x64 (Release)",
-            "inherits": [ "gcc13", "release" ]
-        },
-        {
-            "name": "gcc13-x64-rwdi",
-            "displayName": "gcc-13 x64 RelWithDebInfo",
-            "description": "gcc13 for x64 (RelWithDebInfo)",
-            "inherits": [ "gcc13", "rwdi" ]
-        },
-        {
-            "name": "gcc13-x64-msr",
-            "displayName": "gcc-13 x64 MinSizeRel",
-            "description": "gcc13 for x64 (MinSizeRel)",
-            "inherits": [ "gcc13", "msr" ]
-        },
+    { "name": "gcc13-x64-debug", "displayName": "gcc-13 x64 Debug", "description": "gcc13 for x64 (Debug)", "inherits": [ "gcc13", "debug" ] },
+    { "name": "gcc13-x64-release", "displayName": "gcc-13 x64 Release", "description": "gcc13 for x64 (Release)", "inherits": [ "gcc13", "release" ] },
+    { "name": "gcc13-x64-rwdi", "displayName": "gcc-13 x64 RelWithDebInfo", "description": "gcc13 for x64 (RelWithDebInfo)", "inherits": [ "gcc13", "rwdi" ] },
+    { "name": "gcc13-x64-msr", "displayName": "gcc-13 x64 MinSizeRel", "description": "gcc13 for x64 (MinSizeRel)", "inherits": [ "gcc13", "msr" ] },
 
-        {
-            "name": "gcc14-x64-debug",
-            "displayName": "gcc-14 x64 Debug",
-            "description": "gcc14 for x64 (Debug)",
-            "inherits": [ "gcc14", "debug" ]
-        },
-        {
-            "name": "gcc14-x64-release",
-            "displayName": "gcc-14 x64 Release",
-            "description": "gcc14 for x64 (Release)",
-            "inherits": [ "gcc14", "release" ]
-        },
-        {
-            "name": "gcc14-x64-rwdi",
-            "displayName": "gcc-14 x64 RelWithDebInfo",
-            "description": "gcc14 for x64 (RelWithDebInfo)",
-            "inherits": [ "gcc14", "rwdi" ]
-        },
-        {
-            "name": "gcc14-x64-msr",
-            "displayName": "gcc-14 x64 MinSizeRel",
-            "description": "gcc14 for x64 (MinSizeRel)",
-            "inherits": [ "gcc14", "msr" ]
-        },
+    { "name": "gcc14-x64-debug", "displayName": "gcc-14 x64 Debug", "description": "gcc14 for x64 (Debug)", "inherits": [ "gcc14", "debug" ] },
+    { "name": "gcc14-x64-release", "displayName": "gcc-14 x64 Release", "description": "gcc14 for x64 (Release)", "inherits": [ "gcc14", "release" ] },
+    { "name": "gcc14-x64-rwdi", "displayName": "gcc-14 x64 RelWithDebInfo", "description": "gcc14 for x64 (RelWithDebInfo)", "inherits": [ "gcc14", "rwdi" ] },
+    { "name": "gcc14-x64-msr", "displayName": "gcc-14 x64 MinSizeRel", "description": "gcc14 for x64 (MinSizeRel)", "inherits": [ "gcc14", "msr" ] },
 
-        {
-            "name": "clang15-x64-debug",
-            "displayName": "clang-15 x64 Debug",
-            "description": "clang15 for x64 (Debug)",
-            "inherits": [ "clang15", "debug" ]
-        },
-        {
-            "name": "clang15-x64-release",
-            "displayName": "clang-15 x64 Release",
-            "description": "clang15 for x64 (Release)",
-            "inherits": [ "clang15", "release" ]
-        },
-        {
-            "name": "clang15-x64-rwdi",
-            "displayName": "clang-15 x64 RelWithDebInfo",
-            "description": "clang15 for x64 (RelWithDebInfo)",
-            "inherits": [ "clang15", "rwdi" ]
-        },
-        {
-            "name": "clang15-x64-msr",
-            "displayName": "clang-15 x64 MinSizeRel",
-            "description": "clang15 for x64 (MinSizeRel)",
-            "inherits": [ "clang15", "msr" ]
-        },
+    { "name": "gcc15-x64-debug", "displayName": "gcc-15 x64 Debug", "description": "gcc15 for x64 (Debug)", "inherits": [ "gcc15", "debug" ] },
+    { "name": "gcc15-x64-release", "displayName": "gcc-15 x64 Release", "description": "gcc15 for x64 (Release)", "inherits": [ "gcc15", "release" ] },
+    { "name": "gcc15-x64-rwdi", "displayName": "gcc-15 x64 RelWithDebInfo", "description": "gcc15 for x64 (RelWithDebInfo)", "inherits": [ "gcc15", "rwdi" ] },
+    { "name": "gcc15-x64-msr", "displayName": "gcc-15 x64 MinSizeRel", "description": "gcc15 for x64 (MinSizeRel)", "inherits": [ "gcc15", "msr" ] },
 
-        {
-            "name": "clang16-x64-debug",
-            "displayName": "clang-16 x64 Debug",
-            "description": "clang16 for x64 (Debug)",
-            "inherits": [ "clang16", "debug" ]
-        },
-        {
-            "name": "clang16-x64-release",
-            "displayName": "clang-16 x64 Release",
-            "description": "clang16 for x64 (Release)",
-            "inherits": [ "clang16", "release" ]
-        },
-        {
-            "name": "clang16-x64-rwdi",
-            "displayName": "clang-16 x64 RelWithDebInfo",
-            "description": "clang16 for x64 (RelWithDebInfo)",
-            "inherits": [ "clang16", "rwdi" ]
-        },
-        {
-            "name": "clang16-x64-msr",
-            "displayName": "clang-16 x64 MinSizeRel",
-            "description": "clang16 for x64 (MinSizeRel)",
-            "inherits": [ "clang16", "msr" ]
-        },
+    { "name": "clang15-x64-debug", "displayName": "clang-15 x64 Debug", "description": "clang15 for x64 (Debug)", "inherits": [ "clang15", "debug" ] },
+    { "name": "clang15-x64-release", "displayName": "clang-15 x64 Release", "description": "clang15 for x64 (Release)", "inherits": [ "clang15", "release" ] },
+    { "name": "clang15-x64-rwdi", "displayName": "clang-15 x64 RelWithDebInfo", "description": "clang15 for x64 (RelWithDebInfo)", "inherits": [ "clang15", "rwdi" ] },
+    { "name": "clang15-x64-msr", "displayName": "clang-15 x64 MinSizeRel", "description": "clang15 for x64 (MinSizeRel)", "inherits": [ "clang15", "msr" ] },
 
-        {
-            "name": "clang17-x64-debug",
-            "displayName": "clang-17 x64 Debug",
-            "description": "clang17 for x64 (Debug)",
-            "inherits": [ "clang17", "debug" ]
-        },
-        {
-            "name": "clang17-x64-release",
-            "displayName": "clang-17 x64 Release",
-            "description": "clang17 for x64 (Release)",
-            "inherits": [ "clang17", "release" ]
-        },
-        {
-            "name": "clang17-x64-rwdi",
-            "displayName": "clang-17 x64 RelWithDebInfo",
-            "description": "clang17 for x64 (RelWithDebInfo)",
-            "inherits": [ "clang17", "rwdi" ]
-        },
-        {
-            "name": "clang17-x64-msr",
-            "displayName": "clang-17 x64 MinSizeRel",
-            "description": "clang17 for x64 (MinSizeRel)",
-            "inherits": [ "clang17", "msr" ]
-        },
+    { "name": "clang16-x64-debug", "displayName": "clang-16 x64 Debug", "description": "clang16 for x64 (Debug)", "inherits": [ "clang16", "debug" ] },
+    { "name": "clang16-x64-release", "displayName": "clang-16 x64 Release", "description": "clang16 for x64 (Release)", "inherits": [ "clang16", "release" ] },
+    { "name": "clang16-x64-rwdi", "displayName": "clang-16 x64 RelWithDebInfo", "description": "clang16 for x64 (RelWithDebInfo)", "inherits": [ "clang16", "rwdi" ] },
+    { "name": "clang16-x64-msr", "displayName": "clang-16 x64 MinSizeRel", "description": "clang16 for x64 (MinSizeRel)",  "inherits": [ "clang16", "msr" ] },
 
-        {
-            "name": "clang18-x64-debug",
-            "displayName": "clang-18 x64 Debug",
-            "description": "clang18 for x64 (Debug)",
-            "inherits": [ "clang18", "debug" ]
-        },
-        {
-            "name": "clang18-x64-release",
-            "displayName": "clang-18 x64 Release",
-            "description": "clang18 for x64 (Release)",
-            "inherits": [ "clang18", "release" ]
-        },
-        {
-            "name": "clang18-x64-rwdi",
-            "displayName": "clang-18 x64 RelWithDebInfo",
-            "description": "clang18 for x64 (RelWithDebInfo)",
-            "inherits": [ "clang18", "rwdi" ]
-        },
-        {
-            "name": "clang18-x64-msr",
-            "displayName": "clang-18 x64 MinSizeRel",
-            "description": "clang18 for x64 (MinSizeRel)",
-            "inherits": [ "clang18", "msr" ]
-        },
+    { "name": "clang17-x64-debug", "displayName": "clang-17 x64 Debug", "description": "clang17 for x64 (Debug)", "inherits": [ "clang17", "debug" ] },
+    { "name": "clang17-x64-release", "displayName": "clang-17 x64 Release", "description": "clang17 for x64 (Release)", "inherits": [ "clang17", "release" ] },
+    { "name": "clang17-x64-rwdi", "displayName": "clang-17 x64 RelWithDebInfo", "description": "clang17 for x64 (RelWithDebInfo)", "inherits": [ "clang17", "rwdi" ] },
+    { "name": "clang17-x64-msr", "displayName": "clang-17 x64 MinSizeRel", "description": "clang17 for x64 (MinSizeRel)", "inherits": [ "clang17", "msr" ] },
 
-        {
-            "name": "clang19-x64-debug",
-            "displayName": "clang-19 x64 Debug",
-            "description": "clang19 for x64 (Debug)",
-            "inherits": [ "clang19", "debug" ]
-        },
-        {
-            "name": "clang19-x64-release",
-            "displayName": "clang-19 x64 Release",
-            "description": "clang19 for x64 (Release)",
-            "inherits": [ "clang19", "release" ]
-        },
-        {
-            "name": "clang19-x64-rwdi",
-            "displayName": "clang-19 x64 RelWithDebInfo",
-            "description": "clang19 for x64 (RelWithDebInfo)",
-            "inherits": [ "clang19", "rwdi" ]
-        },
-        {
-            "name": "clang19-x64-msr",
-            "displayName": "clang-19 x64 MinSizeRel",
-            "description": "clang19 for x64 (MinSizeRel)",
-            "inherits": [ "clang19", "msr" ]
-        },
+    { "name": "clang18-x64-debug", "displayName": "clang-18 x64 Debug", "description": "clang18 for x64 (Debug)", "inherits": [ "clang18", "debug" ] },
+    { "name": "clang18-x64-release", "displayName": "clang-18 x64 Release", "description": "clang18 for x64 (Release)", "inherits": [ "clang18", "release" ] },
+    { "name": "clang18-x64-rwdi", "displayName": "clang-18 x64 RelWithDebInfo", "description": "clang18 for x64 (RelWithDebInfo)", "inherits": [ "clang18", "rwdi" ] },
+    { "name": "clang18-x64-msr", "displayName": "clang-18 x64 MinSizeRel", "description": "clang18 for x64 (MinSizeRel)", "inherits": [ "clang18", "msr" ] },
 
-        {
-            "name": "clang20-x64-debug",
-            "displayName": "clang-20 x64 Debug",
-            "description": "clang20 for x64 (Debug)",
-            "inherits": [ "clang20", "debug" ]
-        },
-        {
-            "name": "clang20-x64-release",
-            "displayName": "clang-20 x64 Release",
-            "description": "clang20 for x64 (Release)",
-            "inherits": [ "clang20", "release" ]
-        },
-        {
-            "name": "clang20-x64-rwdi",
-            "displayName": "clang-20 x64 RelWithDebInfo",
-            "description": "clang20 for x64 (RelWithDebInfo)",
-            "inherits": [ "clang20", "rwdi" ]
-        },
-        {
-            "name": "clang20-x64-msr",
-            "displayName": "clang-20 x64 MinSizeRel",
-            "description": "clang20 for x64 (MinSizeRel)",
-            "inherits": [ "clang20", "msr" ]
-        }
-    ],
+    { "name": "clang19-x64-debug", "displayName": "clang-19 x64 Debug", "description": "clang19 for x64 (Debug)", "inherits": [ "clang19", "debug" ] },
+    { "name": "clang19-x64-release", "displayName": "clang-19 x64 Release", "description": "clang19 for x64 (Release)", "inherits": [ "clang19", "release" ] },
+    { "name": "clang19-x64-rwdi", "displayName": "clang-19 x64 RelWithDebInfo", "description": "clang19 for x64 (RelWithDebInfo)", "inherits": [ "clang19", "rwdi" ] },
+    { "name": "clang19-x64-msr", "displayName": "clang-19 x64 MinSizeRel", "description": "clang19 for x64 (MinSizeRel)", "inherits": [ "clang19", "msr" ] },
+
+    { "name": "clang20-x64-debug", "displayName": "clang-20 x64 Debug", "description": "clang20 for x64 (Debug)", "inherits": [ "clang20", "debug" ] },
+    { "name": "clang20-x64-release", "displayName": "clang-20 x64 Release", "description": "clang20 for x64 (Release)", "inherits": [ "clang20", "release" ] },
+    { "name": "clang20-x64-rwdi", "displayName": "clang-20 x64 RelWithDebInfo", "description": "clang20 for x64 (RelWithDebInfo)", "inherits": [ "clang20", "rwdi" ] },
+    { "name": "clang20-x64-msr", "displayName": "clang-20 x64 MinSizeRel", "description": "clang20 for x64 (MinSizeRel)", "inherits": [ "clang20", "msr" ] }
+  ],
   "buildPresets": [
     { "name": "msvc-x64-debug", "displayName": "MSVC x64 Debug", "configurePreset": "msvc-x64-debug" },
     { "name": "msvc-x64-release", "displayName": "MSVC x64 Release", "configurePreset": "msvc-x64-release" },
@@ -442,6 +258,11 @@
     { "name": "gcc14-x64-release", "displayName": "gcc-14 x64 Release", "configurePreset": "gcc14-x64-release" },
     { "name": "gcc14-x64-rwdi", "displayName": "gcc-14 x64 RelWithDebInfo", "configurePreset": "gcc14-x64-rwdi" },
     { "name": "gcc14-x64-msr", "displayName": "gcc-14 x64 MinSizeRel", "configurePreset": "gcc14-x64-msr" },
+
+    { "name": "gcc15-x64-debug", "displayName": "gcc-15 x64 Debug", "configurePreset": "gcc15-x64-debug" },
+    { "name": "gcc15-x64-release", "displayName": "gcc-15 x64 Release", "configurePreset": "gcc15-x64-release" },
+    { "name": "gcc15-x64-rwdi", "displayName": "gcc-15 x64 RelWithDebInfo", "configurePreset": "gcc15-x64-rwdi" },
+    { "name": "gcc15-x64-msr", "displayName": "gcc-15 x64 MinSizeRel", "configurePreset": "gcc15-x64-msr" },
 
     { "name": "clang15-x64-debug", "displayName": "clang-15 x64 Debug", "configurePreset": "clang15-x64-debug" },
     { "name": "clang15-x64-release", "displayName": "clang-15 x64 Release", "configurePreset": "clang15-x64-release" },
