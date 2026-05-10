@@ -60,7 +60,7 @@ void JsonWriter::write(bool const value)
 
 void JsonWriter::write(std::byte const value)
 {
-    MORPHEUS_VERIFY(mJsonWriter.Uint(static_cast<std::uint8_t>(value)));
+    write(static_cast<std::uint8_t>(value));
 }
 
 void JsonWriter::write(std::uint8_t const value)

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "morpheus/core/base/assert.hpp"
 #include "morpheus/core/serialisation/concepts/reader.hpp"
 #include "morpheus/core/serialisation/concepts/reader_archetype.hpp"
 
@@ -18,6 +19,7 @@ namespace morpheus::serialisation::mock
 
 /// \class Reader
 ///     Provides a mocks adhering to the concept morpheus::serialisation::concepts::Reader.
+template <bool IsTextual = true>
 class Reader
 {
 public:
@@ -25,7 +27,7 @@ public:
     ///@{
 
     /// \copydoc morpheus::serialisation::concepts::ReaderArchetype::isTextual()
-    MOCK_METHOD(bool, isTextual, (), ());
+    static constexpr bool isTextual() noexcept { return IsTextual; }
 
     /// \copydoc morpheus::serialisation::concepts::ReaderArchetype::beginComposite()
     MOCK_METHOD(void, beginComposite, (), ());
@@ -84,6 +86,22 @@ public:
     requires requires(Reader r) { r.read(T{}); }
     {
         return read(T{});
+    }
+
+    /// Read a sequence of elements from the serialisation.
+    template <typename T, typename Fn>
+    concurrency::Generator<T> readElements(Fn readOne, std::optional<std::size_t> size)
+    {
+        if (size)
+        {
+            for (std::size_t i = 0; i < *size; ++i)
+                co_yield readOne();
+        }
+        else
+        {
+            // For mocks, we typically require a size hint as they are not stateful by default for sequences.
+            MORPHEUS_ASSERT(false && "MockReader::readElements requires a size hint.");
+        }
     }
 };
 

@@ -3,6 +3,7 @@
 #include "morpheus/core/serialisation/concepts/reader_archetype.hpp"
 #include "morpheus/core/serialisation/exceptions.hpp"
 
+#include <array>
 #include <concepts>
 #include <cstddef>
 #include <cstdint>
@@ -48,7 +49,7 @@ public:
     void endValue() noexcept {}
 
     /// \copydoc morpheus::serialisation::concepts::ReaderArchetype::beginSequence()
-    std::optional<std::size_t> beginSequence() { return read<std::size_t>(); }
+    std::optional<std::size_t> beginSequence() { return static_cast<std::size_t>(read<std::uint64_t>()); }
 
     /// \copydoc morpheus::serialisation::concepts::ReaderArchetype::endSequence()
     void endSequence() noexcept {}
@@ -77,7 +78,7 @@ public:
     requires std::is_same_v<T, std::string>
     T read()
     {
-        std::size_t const length = read<std::size_t>();
+        std::size_t const length = static_cast<std::size_t>(read<std::uint64_t>());
         T value(length, '\0');
         auto const readSize = static_cast<std::size_t>(mInStream.rdbuf()->sgetn(value.data(), value.size()));
         if (readSize != value.size())
@@ -85,17 +86,35 @@ public:
         return value;
     }
 
-    /// Reads a stream of bytes from the serialisation.
+    /// Reads a stream of bytes into a vector from the serialisation.
     template <typename T>
     requires std::is_same_v<T, std::vector<std::byte>>
     T read()
     {
-        std::size_t const length = read<std::size_t>();
-        T value(length);
+        std::size_t const length = static_cast<std::size_t>(read<std::uint64_t>());
+        T value(length, std::byte{0});
         auto const readSize = static_cast<std::size_t>(mInStream.rdbuf()->sgetn(reinterpret_cast<char*>(value.data()), value.size()));
         if (readSize != value.size())
             throwBinaryException("Error reading data from stream.  Attempted to read {} bytes, but only {} bytes were read.", value.size(), readSize);
         return value;
+    }
+
+    /// Read a sequence of elements from the serialisation.
+    /// \tparam T The type of the elements to read.
+    /// \tparam Fn The type of the function to read a single element.
+    /// \param readOne The function to read a single element.
+    /// \param size The number of elements to read, if known.
+    /// \return A generator yielding the elements of the sequence.
+    template <typename T, typename Fn>
+    concurrency::Generator<T> readElements(Fn readOne, std::optional<std::size_t> size)
+    {
+        if (!size)
+             throwBinaryException("Binary sequences must have a known size.");
+
+        for (std::size_t i = 0; i < *size; ++i)
+        {
+            co_yield readOne();
+        }
     }
     // clang-format on
 

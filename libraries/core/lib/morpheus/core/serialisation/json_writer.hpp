@@ -9,6 +9,7 @@
 #include <rapidjson/ostreamwrapper.h>
 #include <rapidjson/writer.h>
 
+#include <array>
 #include <concepts>
 #include <cstddef>
 #include <cstdint>
@@ -16,6 +17,7 @@
 #include <ostream>
 #include <span>
 #include <string_view>
+#include <vector>
 
 namespace morpheus::serialisation
 {
@@ -88,7 +90,14 @@ public:
     void write(std::string_view const value);
     /// \copydoc morpheus::serialisation::concepts::WriterArchetype::write(std::span<std::byte const>)
     void write(std::span<std::byte const> const value);
-
+    ///// Write a vector of bytes to the serialisation.
+    // void write(std::vector<std::byte> const& value);
+    ///// Write a fixed size array of bytes to the serialisation.
+    // template <std::size_t N>
+    // void write(std::array<std::byte, N> const& value)
+    //{
+    //     write(std::span<std::byte const>(value));
+    // }
     /// Write a string literal to the serialisation.
     template <std::size_t N>
     void write(char const (&str)[N])

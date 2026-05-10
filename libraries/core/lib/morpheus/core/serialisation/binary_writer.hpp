@@ -5,12 +5,14 @@
 #include "morpheus/core/serialisation/concepts/writer_archetype.hpp"
 #include "morpheus/core/serialisation/exceptions.hpp"
 
+#include <array>
 #include <cstddef>
 #include <cstdint>
 #include <iosfwd>
 #include <optional>
 #include <span>
 #include <string_view>
+#include <vector>
 
 namespace morpheus::serialisation
 {
@@ -48,7 +50,7 @@ public:
     void beginSequence(std::optional<std::size_t> size = std::nullopt)
     {
         if (size)
-            write(size.value());
+            write(static_cast<std::uint64_t>(size.value()));
         else
             throwBinaryException("Sequence does not provide size.  This must be proided for binary serialisation.");
     }
@@ -78,7 +80,7 @@ public:
     /// \copydoc morpheus::serialisation::concepts::WriterArchetype::write(std::string_view const)
     void write(std::string_view const value)
     {
-        auto const length = value.size();
+        auto const length = static_cast<std::uint64_t>(value.size());
         write(length);
 
         auto const writtenSize = static_cast<std::size_t>(mOutStream.rdbuf()->sputn(value.data(), value.size()));
@@ -89,7 +91,7 @@ public:
     /// \copydoc morpheus::serialisation::concepts::WriterArchetype::write(std::span<std::byte const> const)
     void write(std::span<std::byte const> const value)
     {
-        auto const length = value.size();
+        auto const length = static_cast<std::uint64_t>(value.size());
         write(length);
 
         auto const writtenSize = static_cast<std::size_t>(mOutStream.rdbuf()->sputn(reinterpret_cast<char const*>(value.data()), value.size()));

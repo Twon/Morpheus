@@ -42,7 +42,7 @@ TEST_CASE("Verify deserialisation of std::reference_wrapper", "[morpheus.seriali
 
         THEN("Expect the following sequence of operations on the underlying reader")
         {
-            MockedReadSerialiser serialiser;
+            MockedReadSerialiser<> serialiser;
             EXPECT_CALL(serialiser.reader(), read(An<std::int64_t>())).WillOnce(Return(expectedValue));
 
             WHEN("Deserialising a std::reference_wrapper")

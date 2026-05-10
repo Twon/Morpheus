@@ -1,6 +1,7 @@
 #include "morpheus/core/conformance/format.hpp"
 #include "morpheus/core/serialisation/adapters/aggregate.hpp"
 #include "morpheus/core/serialisation/adapters/hex.hpp"
+#include "morpheus/core/serialisation/adapters/std/array.hpp"
 #include "morpheus/core/serialisation/adapters/std/chrono.hpp"
 #include "morpheus/core/serialisation/adapters/std/monostate.hpp"
 #include "morpheus/core/serialisation/adapters/std/optional.hpp"
@@ -14,6 +15,7 @@
 #include "morpheus/core/serialisation/json_reader.hpp"
 #include "morpheus/core/serialisation/read_serialiser.hpp"
 #include "morpheus/core/serialisation/serialisers.hpp"
+#include "morpheus/serialisation/types/simple_tuple.hpp"
 
 #include <catch2/catch_approx.hpp>
 #include <catch2/catch_template_test_macros.hpp>
@@ -21,8 +23,11 @@
 #include <catch2/matchers/catch_matchers.hpp>
 #include <catch2/matchers/catch_matchers_string.hpp>
 
+#include <array>
 #include <chrono>
 #include <cmath>
+#include <compare>
+#include <cstddef>
 #include <cstdint>
 #include <limits>
 #include <memory>
@@ -573,6 +578,7 @@ TEST_CASE("Json reader can read std types from underlying text representation", 
     REQUIRE(test::deserialise<std::string>(R"("Hello")") == std::string("Hello"));
     REQUIRE(test::deserialise<std::tuple<int, bool, std::string>>(R"([75,true,"Example"])") == std::tuple<int, bool, std::string>{75, true, "Example"});
     //    REQUIRE(test::deserialise<std::variant<int, bool, std::string>>(R"({"type":"bool","value":true})") == std::variant<int, bool, std::string>{true});
+    REQUIRE(test::deserialise<std::vector<int>>(R"([1, 2, 3, 4, 5])") == std::vector<int>{1, 2, 3, 4, 5});
     REQUIRE(*test::deserialise<std::unique_ptr<int>>(R"(50)") == 50);
 }
 
@@ -612,6 +618,30 @@ TEST_CASE("Error handling test cases for unexpected errors in the input Json str
             }
         }
     }
+}
+
+TEST_CASE("Json reader can read ranges of composites", "[morpheus.serialisation.range.deserialise.composites]")
+{
+    // auto const value = std::vector<testing::SimpleTuple>{
+    //     {1, true,       {std::byte{1}, std::byte{2}, std::byte{3}}},
+    //     {2, true,    {std::byte{10}, std::byte{20}, std::byte{30}}},
+    //     {3, true, {std::byte{100}, std::byte{200}, std::byte{255}}}
+    // };
+    // REQUIRE(conf::fmt::format("{}", value) ==
+    //         R"([{first=1,second=true,data=[1, 2, 3]}, {first=2,second=true,data=[10, 20, 30]}, {first=3,second=true,data=[100, 200, 255]}])");
+
+    REQUIRE(test::deserialise<std::vector<testing::SimpleTuple>>(
+                R"([{"first":1,"second":true,"data":"AQID"},{"first":2,"second":true,"data":"ChQe"},{"first":3,"second":true,"data":"ZMj/"}])") ==
+            std::vector<testing::SimpleTuple>{
+                {1, true,       {std::byte{1}, std::byte{2}, std::byte{3}}},
+                {2, true,    {std::byte{10}, std::byte{20}, std::byte{30}}},
+                {3, true, {std::byte{100}, std::byte{200}, std::byte{255}}}
+    });
+    using Catch::Matchers::ContainsSubstring;
+    REQUIRE_THROWS_WITH(
+        test::deserialise<std::vector<testing::SimpleTuple>>(
+            R"([{"first":1,"second":true,"data":"AQID"},{"first":2,"second":true,"data":"ChQe"},{"first":3,"second":true,"data":"ZMj/"})", false),
+        ContainsSubstring("Parse error at offset"));
 }
 
 } // namespace morpheus::serialisation

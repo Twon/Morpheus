@@ -18,7 +18,9 @@ inline namespace defaults
 template <concepts::WriteSerialiser Serialiser, concepts::WriteSerialisableInsrusive Type>
 auto serialise(Serialiser& serialiser, Type const& value) -> void
 {
+    serialiser.writer().beginComposite();
     value.serialise(serialiser);
+    serialiser.writer().endComposite();
 }
 
 template <concepts::ReadSerialiser Serialiser, concepts::ReadSerialisableInsrusive Type>
