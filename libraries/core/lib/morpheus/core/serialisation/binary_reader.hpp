@@ -88,37 +88,17 @@ public:
 
     /// Reads a stream of bytes into a vector from the serialisation.
     template <typename T>
-    requires requires {
-        typename T::value_type;
-        requires std::is_same_v<typename T::value_type, std::byte>;
-        requires requires(T v) { v.reserve(std::size_t{}); v.data(); };
-    }
-    T read(typename T::allocator_type const& alloc = {})
+    requires std::is_same_v<T, std::vector<std::byte>>
+    T read()
     {
         std::size_t const length = static_cast<std::size_t>(read<std::uint64_t>());
-        T value(alloc);
-        value.resize(length);
+        T value(length, std::byte{0});
         auto const readSize = static_cast<std::size_t>(mInStream.rdbuf()->sgetn(reinterpret_cast<char*>(value.data()), value.size()));
         if (readSize != value.size())
             throwBinaryException("Error reading data from stream.  Attempted to read {} bytes, but only {} bytes were read.", value.size(), readSize);
         return value;
     }
 
-    /// Reads a stream of bytes into a fixed size array from the serialisation.
-    template <typename T>
-    requires requires {
-        typename T::value_type;
-        { std::is_same_v<typename T::value_type, std::byte> };
-        { std::tuple_size<T>::value };
-    }
-    T read()
-    {
-        T value;
-        auto const readSize = static_cast<std::size_t>(mInStream.rdbuf()->sgetn(reinterpret_cast<char*>(value.data()), value.size()));
-        if (readSize != value.size())
-            throwBinaryException("Error reading data from stream.  Attempted to read {} bytes, but only {} bytes were read.", value.size(), readSize);
-        return value;
-    }
     /// Read a sequence of elements from the serialisation.
     /// \tparam T The type of the elements to read.
     /// \tparam Fn The type of the function to read a single element.

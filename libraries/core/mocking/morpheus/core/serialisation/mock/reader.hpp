@@ -88,14 +88,6 @@ public:
         return read(T{});
     }
 
-    /// Template wrapper around read which dispatches to the correct concrete read method based on the type T and accepts an allocator.
-    template <typename T, typename Allocator>
-    T read(Allocator const& /*alloc*/)
-    requires requires(Reader r) { r.read(T{}); }
-    {
-        return read(T{});
-    }
-
     /// Read a sequence of elements from the serialisation.
     template <typename T, typename Fn>
     concurrency::Generator<T> readElements(Fn readOne, std::optional<std::size_t> size)
@@ -112,9 +104,5 @@ public:
         }
     }
 };
-
-/// Deduction guide for the Hex wrapper.
-template <bool B>
-Reader(std::bool_constant<B>) -> Reader<B>;
 
 } // namespace morpheus::serialisation::mock

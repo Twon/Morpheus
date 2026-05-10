@@ -99,19 +99,6 @@ public:
             throwBinaryException("Error writing data to stream.  Attempted to write {} bytes, but only {} bytes were written.", value.size(), writtenSize);
     }
 
-    /// Write a vector of bytes to the serialisation.
-    void write(std::vector<std::byte> const& value) { write(std::span<std::byte const>(value)); }
-
-    /// Write a fixed size array of bytes to the serialisation.
-    template <std::size_t N>
-    void write(std::array<std::byte, N> const& value)
-    {
-        // Don't write length for fixed size arrays, as it's known from the type.
-        auto const writtenSize = static_cast<std::size_t>(mOutStream.rdbuf()->sputn(reinterpret_cast<char const*>(value.data()), value.size()));
-        if (writtenSize != value.size())
-            throwBinaryException("Error writing data to stream.  Attempted to write {} bytes, but only {} bytes were written.", value.size(), writtenSize);
-    }
-
     /// Write a string literal to the serialisation.
     template <std::size_t N>
     void write(char const (&str)[N])

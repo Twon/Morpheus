@@ -161,4 +161,4 @@ template <typename T>
 inline constexpr bool ::morpheus::conf::ranges::enable_view<morpheus::concurrency::Generator<T>> = true;
 
 template <class T>
-inline constexpr bool ::morpheus::conf::ranges::enable_borrowed_range<morpheus::concurrency::Generator<T>> = false;
+inline constexpr bool ::morpheus::conf::ranges::enable_borrowed_range<morpheus::concurrency::Generator<T>> = true;

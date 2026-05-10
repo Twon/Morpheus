@@ -85,14 +85,6 @@ public:
     template <typename T>
     [[nodiscard]] auto deserialise() -> T;
 
-    /// Deserialise a single value with an allocator.
-    /// \tparam T The underlying type of value to deserialise.
-    /// \tparam Allocator The type of the allocator to use.
-    /// \param[in] alloc The allocator to use.
-    /// \return The deserialises value.
-    // template <typename T, typename Allocator>
-    //[[nodiscard]] T deserialise(Allocator const& alloc);
-
     /// Deserialise to a non-default construtible single value
     /// \tparam T The underlying type of value to deserialise.
     /// \param[out] The deserialises value.
@@ -111,14 +103,6 @@ public:
     /// \return A generator yielding the deserialised values.
     template <typename T>
     [[nodiscard]] auto sequence() -> concurrency::Generator<T>;
-
-    /// Deserialise a sequence of values with an allocator.
-    /// \tparam T The underlying type of values to deserialise.
-    /// \tparam Allocator The type of the allocator to use for internal buffers if needed.
-    /// \param[in] alloc The allocator to use.
-    /// \return A generator yielding the deserialised values.
-    // template <typename T>
-    //[[nodiscard]] concurrency::Generator<T> sequence(Allocator const& alloc);
 
     /// Deserialise a named sequence of values
     /// \tparam T The underlying type of values to deserialise.

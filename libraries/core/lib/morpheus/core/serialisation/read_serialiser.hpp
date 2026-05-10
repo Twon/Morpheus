@@ -54,25 +54,6 @@ template <typename T>
     mReader.endSequence();
 }
 
-// template <concepts::Reader ReaderType>
-// template <typename T, typename Allocator>
-//[[nodiscard]] concurrency::Generator<T> ReadSerialiser<ReaderType>::sequence(Allocator const& alloc)
-//{
-//     auto const size = mReader.beginSequence();
-//     // For general types, we don't have a way to propagate the allocator to the elements
-//     // unless the element is also a container that takes an allocator, but we'd need
-//     // to know how to pass it.
-//     // For std::byte sequences, this will be handled by the optimization in ranges.hpp.
-//     auto g = mReader.template readElements<T>([this]() { return this->deserialise<T>(); }, size);
-//
-//     for (auto&& item : g)
-//     {
-//         co_yield std::move(item);
-//     }
-//
-//     mReader.endSequence();
-// }
-
 template <concepts::Reader ReaderType>
 template <typename T>
 [[nodiscard]] auto ReadSerialiser<ReaderType>::sequence(std::string_view const key) -> concurrency::Generator<T>
