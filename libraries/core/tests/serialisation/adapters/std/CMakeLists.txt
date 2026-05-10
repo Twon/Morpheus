@@ -2,6 +2,7 @@ target_sources(MorpheusCoreTests
     PRIVATE
         chrono.tests.cpp
         expected.tests.cpp
+        indirect.tests.cpp
         monostate.tests.cpp
         optional.tests.cpp
         pair.tests.cpp

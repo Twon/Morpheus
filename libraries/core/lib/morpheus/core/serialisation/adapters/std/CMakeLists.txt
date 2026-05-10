@@ -6,6 +6,7 @@ target_sources(MorpheusCore
             deque.hpp
             expected.hpp
             forward_list.hpp
+            indirect.hpp
             list.hpp
             map.hpp
             monostate.hpp
