@@ -169,10 +169,10 @@ jobs:
               lib: "libc++",
             }
     steps:
-      - uses: actions/checkout@v4.2.2
+      - uses: actions/checkout@v6.0.2
 
       - name: Cache Conan data
-        uses: actions/cache@v4.2.2
+        uses: actions/cache@v5.0.5
         env:
           cache-name: cache-conan-data
         with:
