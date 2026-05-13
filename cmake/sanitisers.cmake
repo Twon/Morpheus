@@ -32,9 +32,9 @@ FetchContent_Declare(
     sanitizers
     GIT_REPOSITORY https://github.com/arsenm/sanitizers-cmake
 )
-FetchContent_GetProperties(sanitizers)
-if(NOT sanitizers_POPULATED)
-    FetchContent_Populate(sanitizers)
+FetchContent_MakeAvailable(sanitizers)
+
+if(sanitizers_SOURCE_DIR)
     list(APPEND CMAKE_MODULE_PATH ${sanitizers_SOURCE_DIR}/cmake)
 endif()
 
