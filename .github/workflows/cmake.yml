@@ -188,6 +188,20 @@ jobs:
                 },
               lib: "libc++",
             }
+          - {
+              name: "MacOS Apple Clang 18",
+              os: macos-26,
+              compiler:
+                {
+                  type: APPLE_CLANG,
+                  version: "26.4.1",
+                  conan: "apple-clang",
+                  cc: "clang",
+                  cxx: "clang++",
+                  std: 23
+                },
+              lib: "libc++",
+            }
     steps:
       - uses: actions/checkout@v6.0.2
 
