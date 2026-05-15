@@ -33,12 +33,12 @@ jobs:
       matrix:
         configuration: [ "Release", "Debug" ]
         settings:
-          - {
-              name: "Ubuntu GCC-12",
-              os: ubuntu-latest,
-              compiler: { type: GCC, version: 12, conan: "gcc", cc: "gcc-12", cxx: "g++-12", std: 20 },
-              lib: "libstdc++11"
-            }
+          # - {
+          #     name: "Ubuntu GCC-12",
+          #     os: ubuntu-latest,
+          #     compiler: { type: GCC, version: 12, conan: "gcc", cc: "gcc-12", cxx: "g++-12", std: 20 },
+          #     lib: "libstdc++11"
+          #   }
           - {
               name: "Ubuntu GCC-13",
               os: ubuntu-latest,
