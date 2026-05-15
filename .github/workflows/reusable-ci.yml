@@ -1,0 +1,283 @@
+#
+# Copyright 2026 Antony Peacock
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
+# documentation files (the "Software"), to deal in the Software without restriction, including without limitation the
+# rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit
+# persons to whom the Software is furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all copies or substantial portions of the
+# Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+# WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+# COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+# OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+#
+
+name: CI Reusable
+
+on:
+  workflow_call:
+    inputs:
+      os:
+        required: true
+        type: string
+      build-type:
+        required: true
+        type: string
+      compiler-type:
+        required: true
+        type: string
+      compiler-version:
+        required: true
+        type: string
+      conan-compiler:
+        required: true
+        type: string
+      stdlib:
+        required: false
+        type: string
+        default: ""
+      cppstd:
+        required: false
+        type: string
+        default: "20"
+      generator:
+        required: false
+        type: string
+        default: "Ninja"
+      conan-options:
+        required: false
+        type: string
+        default: ""
+      cmake-options:
+        required: false
+        type: string
+        default: ""
+      cache-suffix:
+        required: false
+        type: string
+        default: ""
+      install-compiler:
+        required: false
+        type: boolean
+        default: true
+      run-tests:
+        required: false
+        type: boolean
+        default: true
+      test-options:
+        required: false
+        type: string
+        default: "-LE GPU --output-on-failure"
+      build-target:
+        required: false
+        type: string
+        default: ""
+      # Hooks
+      pre-setup-command:
+        required: false
+        type: string
+        default: ""
+      post-build-command:
+        required: false
+        type: string
+        default: ""
+      # Flags for specialized actions
+      enable-codecov:
+        required: false
+        type: boolean
+        default: false
+      enable-gh-pages:
+        required: false
+        type: boolean
+        default: false
+      gh-pages-publish-dir:
+        required: false
+        type: string
+        default: ""
+    secrets:
+      CODECOV_TOKEN:
+        required: false
+
+jobs:
+  build:
+    runs-on: ${{ inputs.os }}
+    steps:
+      - uses: actions/checkout@v6.0.2
+
+      - name: Pre-setup command
+        if: inputs.pre-setup-command != ''
+        shell: bash
+        run: ${{ inputs.pre-setup-command }}
+
+      - name: Cache Conan data
+        uses: actions/cache@v5.0.5
+        env:
+          cache-name: cache-conan-data
+        with:
+          path: ${{ github.workspace }}/conan_cache_save.tgz
+          key: ${{ hashFiles('**/conanfile.py') }}-build-${{ inputs.os }}-${{ inputs.build-type }}-${{ inputs.conan-compiler }}-${{ inputs.compiler-version }}-${{ inputs.stdlib }}${{ inputs.cache-suffix }}
+          restore-keys: |
+            ${{ hashFiles('**/conanfile.py') }}-build-${{ inputs.os }}-${{ inputs.build-type }}-${{ inputs.conan-compiler }}-${{ inputs.compiler-version }}-
+            ${{ hashFiles('**/conanfile.py') }}-build-${{ inputs.os }}-${{ inputs.build-type }}-${{ inputs.conan-compiler }}-
+            ${{ hashFiles('**/conanfile.py') }}-build-${{ inputs.os }}-${{ inputs.build-type }}-
+            ${{ hashFiles('**/conanfile.py') }}-build-${{ inputs.os }}-
+
+      - name: Add msbuild to PATH
+        if: inputs.install-compiler && inputs.compiler-type == 'VISUAL' && contains(inputs.os, 'windows')
+        uses: microsoft/setup-msbuild@v2
+        with:
+          vs-version: "16.5"
+
+      - name: Install GCC
+        if: inputs.install-compiler && inputs.compiler-type == 'GCC' && contains(inputs.os, 'ubuntu')
+        uses: egor-tensin/setup-gcc@v1.3
+        with:
+          version: ${{ inputs.compiler-version }}
+          platform: x64
+
+      - name: Install libstdc++11 for Clang
+        if: inputs.install-compiler && inputs.compiler-type == 'CLANG' && inputs.stdlib == 'libstdc++11' && contains(inputs.os, 'ubuntu')
+        uses: egor-tensin/setup-gcc@v1.3
+        with:
+          version: 12
+          platform: x64
+
+      - name: Install Clang
+        if: inputs.install-compiler && inputs.compiler-type == 'CLANG' && contains(inputs.os, 'ubuntu')
+        uses: egor-tensin/setup-clang@v1.4
+        with:
+          version: ${{ inputs.compiler-version }}
+          platform: x64
+
+      - name: Install Libc++
+        if: inputs.install-compiler && inputs.compiler-type == 'CLANG' && inputs.stdlib == 'libc++' && contains(inputs.os, 'ubuntu')
+        shell: bash
+        run: |
+          sudo apt install -y libc++-${{ inputs.compiler-version }}-dev libc++abi-${{ inputs.compiler-version }}-dev libunwind-${{ inputs.compiler-version }}-dev
+
+      - name: Select Xcode
+        if: inputs.install-compiler && inputs.compiler-type == 'APPLE_CLANG' && contains(inputs.os, 'macos')
+        uses: maxim-lobanov/setup-xcode@v1.6.0
+        with:
+          xcode-version: '${{ inputs.compiler-version }}'
+
+      - name: Set up Python
+        uses: actions/setup-python@v5.4.0
+        with:
+          python-version: '3.13'
+
+      - name: Install Python requirements
+        shell: bash
+        run: |
+          pip install -r ./requirements.txt
+
+      - name: Configure Conan
+        shell: bash
+        run: |
+          conan profile detect --force
+          PROFILE=".conan2/profiles/default"
+
+          # Base settings
+          sed -i.backup '/^\[settings\]$/,/^\[/ s/^build_type=.*/build_type=${{ inputs.build-type }}/' "$PROFILE"
+          sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.cppstd=.*/compiler.cppstd=${{ inputs.cppstd }}/' "$PROFILE"
+
+          if [[ "${{ inputs.compiler-type }}" == "GCC" || "${{ inputs.compiler-type }}" == "CLANG" ]]; then
+            sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler=.*/compiler=${{ inputs.conan-compiler }}/' "$PROFILE"
+            sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.version=.*/compiler.version=${{ inputs.compiler-version }}/' "$PROFILE"
+            sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.libcxx=.*/compiler.libcxx=${{ inputs.stdlib }}/' "$PROFILE"
+            sed -i.backup '1a mold*:build_type=Release' "$PROFILE"
+            sed -i.backup '1a onetbb*:build_type=Release' "$PROFILE"
+            sed -i.backup '1a mold*:compiler.libcxx=libstdc++11' "$PROFILE"
+          fi
+
+          grep -q "^\[options\]" "$PROFILE" || echo -e "\n[options]" >> "$PROFILE"
+          printf "date*:tz_db=system\n" >> "$PROFILE"
+
+          echo 'core.sources:download_urls=["origin", "https://c3i.jfrog.io/artifactory/conan-center-backup-sources/"]' >> .conan2/global.conf
+          echo "tools.cmake.cmaketoolchain:generator = ${{ inputs.generator }}" >> .conan2/global.conf
+
+          if [[ "${{ runner.os }}" != "Windows" ]]; then
+            echo "tools.system.package_manager:mode = install" >> .conan2/global.conf
+            echo "tools.system.package_manager:sudo = True" >> .conan2/global.conf
+          fi
+
+          if [[ "${{ inputs.conan-compiler }}" == "clang" && "${{ runner.os }}" == "Linux" ]]; then
+             echo "tools.build:compiler_executables = {\"c\": \"clang-${{ inputs.compiler-version }}\", \"cpp\": \"clang++-${{ inputs.compiler-version }}\"}" >> .conan2/global.conf
+          fi
+
+          conan profile show -pr default
+
+      - name: Conan Cache Restore
+        shell: bash
+        run: |
+          if [ -f ./conan_cache_save.tgz ]; then
+              conan cache restore ./conan_cache_save.tgz
+          fi
+
+      - name: Configure Install
+        shell: bash
+        run: |
+          conan install "${{ github.workspace }}" --build missing ${{ inputs.conan-options }}
+
+      - name: Conan Preset Export
+        shell: bash
+        run: |
+          echo "CONAN_PRESET=conan-$(echo ${{ inputs.build-type }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+
+      - name: Configure CMake
+        shell: bash
+        run: |
+          if [ -f build/generators/conanbuild.sh ]; then
+            source build/generators/conanbuild.sh
+          elif [ -f build/generators/conanbuild.bat ]; then
+             # This is for safety, but in bash we usually have .sh
+             echo "Warning: conanbuild.sh not found, looking for .bat"
+          fi
+          cmake --preset conan-default ${{ inputs.cmake-options }}
+
+      - name: Build
+        shell: bash
+        run: |
+          if [ -f build/generators/conanbuild.sh ]; then
+            source build/generators/conanbuild.sh
+          fi
+          cmake --build --preset ${{ env.CONAN_PRESET }} ${{ inputs.build-target != '' && format('--target {0}', inputs.build-target) || '' }}
+
+      - name: Test
+        if: inputs.run-tests
+        shell: bash
+        run: |
+          if [ -f build/generators/conanbuild.sh ]; then
+            source build/generators/conanbuild.sh
+          fi
+          ctest --preset ${{ env.CONAN_PRESET }} ${{ inputs.test-options }}
+
+      - name: Post-build command
+        if: inputs.post-build-command != ''
+        shell: bash
+        run: ${{ inputs.post-build-command }}
+
+      - name: Upload coverage to Codecov
+        if: inputs.enable-codecov
+        uses: codecov/codecov-action@v4.4.1
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+        with:
+          files: ${{ github.workspace }}/build/${{ inputs.build-type }}/coverage/cobertura_coverage.xml
+          fail_ci_if_error: true
+          verbose: true
+
+      - name: Deploy to GH Pages
+        if: inputs.enable-gh-pages && github.ref == 'refs/heads/main'
+        uses: peaceiris/actions-gh-pages@v3.9.3
+        with:
+          github_token: ${{ github.token }}
+          publish_dir: ${{ inputs.gh-pages-publish-dir }}
+
+      - name: Conan Cache Save
+        run: |
+          conan cache clean
+          conan cache save "*/*:*"
