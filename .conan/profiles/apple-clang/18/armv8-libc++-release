@@ -1,0 +1,7 @@
+include(../../default)
+include(../../arch/armv8)
+include(../../cpp/23)
+include(../../config/release)
+include(../../os/current)
+include(../../packages/settings)
+include(compiler)
