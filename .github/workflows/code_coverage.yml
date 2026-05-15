@@ -47,19 +47,6 @@ jobs:
     steps:
       - uses: actions/checkout@v6.0.2
 
-      - name: Cache Conan data
-        uses: actions/cache@v5.0.5
-        env:
-          cache-name: cache-conan-data
-        with:
-          path: ${{github.workspace}}/conan_cache_save.tgz
-          key: ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.os }}-${{ env.BUILD_TYPE }}-${{ env.COMPILER_TYPE }}-${{ env.COMPILER_VERSION }}-${{ env.STDLIB }}
-          restore-keys: |
-            ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.os }}-${{ env.BUILD_TYPE }}-${{ env.COMPILER_TYPE }}-${{ env.COMPILER_VERSION }}-
-            ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.os }}-${{ env.BUILD_TYPE }}-${{ env.COMPILER_TYPE }}-
-            ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.os }}-${{ env.BUILD_TYPE }}-
-            ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.os }}-
-
       # Previously GCC was installed via egor-tensin/setup-gcc@v1 but this does not install gcov with the compiler.
       # By default Ubuntu has Gcov 11 installed. This worked so long as the compiler was gcc 11, but if a later gcc was
       # installed then gcov could fail as it must be the same version as the compiler.  By installing the compiler
@@ -97,54 +84,17 @@ jobs:
 
           sudo apt-get install libdatetime-perl
 
-      - name: Set up Python
-        uses: actions/setup-python@v5.4.0
+      - name: Setup Environment
+        uses: ./.github/actions/setup-morpheus-env
         with:
-          python-version: '3.13'
-
-      - name: Install Python requirements
-        run: |
-          pip install -r ./requirements.txt
-
-      - name: Configure Conan
-        shell: bash
-        run: |
-          conan profile detect --force
-          sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.cppstd=.*/compiler.cppstd=20/' .conan2/profiles/default
-          sed -i.backup '/^\[settings\]$/,/^\[/ s/^build_type=.*/build_type=${{ env.BUILD_TYPE }}/' .conan2/profiles/default
-          sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler=.*/compiler=${{ env.COMPILER_TYPE }}/' .conan2/profiles/default
-          sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.version=.*/compiler.version=${{ env.COMPILER_VERSION }}/' .conan2/profiles/default
-          sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.libcxx=.*/compiler.libcxx=${{ env.STDLIB }}/' .conan2/profiles/default
-          sed -i.backup '1a mold*:build_type=Release' .conan2/profiles/default
-          sed -i.backup '1a onetbb*:build_type=Release' .conan2/profiles/default
-          sed -i.backup '1a mold*:compiler.libcxx=libstdc++11' .conan2/profiles/default
-
-          echo -e "\n[options]" >> .conan2/profiles/default
-          sed -i.backup '/^\[options\]/a date*:tz_db=system' .conan2/profiles/default
-
-          echo 'core.sources:download_urls=["origin", "https://c3i.jfrog.io/artifactory/conan-center-backup-sources/"]' >> .conan2/global.conf
-          echo "tools.cmake.cmaketoolchain:generator = Ninja" >> .conan2/global.conf
-          echo "tools.system.package_manager:mode = install" >> .conan2/global.conf
-          echo "tools.system.package_manager:sudo = True" >> .conan2/global.conf
-
-          conan profile show -pr default
-
-      - name: Conan Cache Restore
-        shell: bash
-        run: |
-          if [ -f ./conan_cache_save.tgz ]; then
-              conan cache restore ./conan_cache_save.tgz
-          fi
-
-      - name: Configure Install
-        working-directory: ${{github.workspace}}
-        shell: bash
-        run: |
-          conan install "${{github.workspace}}" --build missing
-
-      - name: Conan Preset
-        shell: bash
-        run: echo "CONAN_PRESET=conan-$(echo ${{env.BUILD_TYPE}} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+          build-type: ${{ env.BUILD_TYPE }}
+          compiler-type: "GCC"
+          compiler-version: ${{ env.COMPILER_VERSION }}
+          conan-compiler: "gcc"
+          stdlib: ${{ env.STDLIB }}
+          cppstd: 20
+          install-compiler: false
+          os: "Linux"
 
       - name: Configure CMake
         # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.

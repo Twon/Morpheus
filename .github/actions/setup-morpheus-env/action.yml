@@ -1,0 +1,156 @@
+name: Setup Morpheus Environment
+description: Consolidates environment setup, Conan configuration, and caching logic.
+
+inputs:
+  build-type:
+    description: "Build type (Release, Debug)"
+    required: true
+  compiler-type:
+    description: "Compiler type (GCC, CLANG, APPLE_CLANG, VISUAL)"
+    required: true
+  compiler-version:
+    description: "Compiler version"
+    required: true
+  conan-compiler:
+    description: "Conan compiler name"
+    required: true
+  stdlib:
+    description: "C++ standard library (libstdc++11, libc++)"
+    default: ""
+  cppstd:
+    description: "C++ standard (20, 23)"
+    required: true
+  generator:
+    description: "CMake generator (Ninja, Ninja Multi-Config)"
+    default: "Ninja"
+  conan-options:
+    description: "Additional options for conan install"
+    default: ""
+  cache-suffix:
+    description: "Optional suffix for the cache key"
+    default: ""
+  install-compiler:
+    description: "Whether to install the compiler"
+    default: "true"
+  os:
+    description: "Operating system (runner.os)"
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Cache Conan data
+      uses: actions/cache@v5.0.5
+      env:
+        cache-name: cache-conan-data
+      with:
+        path: ${{ github.workspace }}/conan_cache_save.tgz
+        key: ${{ hashFiles('**/conanfile.py') }}-build-${{ inputs.os }}-${{ inputs.build-type }}-${{ inputs.conan-compiler }}-${{ inputs.compiler-version }}-${{ inputs.stdlib }}${{ inputs.cache-suffix }}
+        restore-keys: |
+          ${{ hashFiles('**/conanfile.py') }}-build-${{ inputs.os }}-${{ inputs.build-type }}-${{ inputs.conan-compiler }}-${{ inputs.compiler-version }}-
+          ${{ hashFiles('**/conanfile.py') }}-build-${{ inputs.os }}-${{ inputs.build-type }}-${{ inputs.conan-compiler }}-
+          ${{ hashFiles('**/conanfile.py') }}-build-${{ inputs.os }}-${{ inputs.build-type }}-
+          ${{ hashFiles('**/conanfile.py') }}-build-${{ inputs.os }}-
+
+    - name: Add msbuild to PATH
+      if: inputs.install-compiler == 'true' && inputs.compiler-type == 'VISUAL' && inputs.os == 'Windows'
+      uses: microsoft/setup-msbuild@v2
+      with:
+        vs-version: "16.5"
+
+    - name: Install GCC
+      if: inputs.install-compiler == 'true' && inputs.compiler-type == 'GCC' && inputs.os == 'Linux'
+      uses: egor-tensin/setup-gcc@v1.3
+      with:
+        version: ${{ inputs.compiler-version }}
+        platform: x64
+
+    - name: Install libstdc++11 for Clang
+      if: inputs.install-compiler == 'true' && inputs.compiler-type == 'CLANG' && inputs.stdlib == 'libstdc++11' && inputs.os == 'Linux'
+      uses: egor-tensin/setup-gcc@v1.3
+      with:
+        version: 12
+        platform: x64
+
+    - name: Install Clang
+      if: inputs.install-compiler == 'true' && inputs.compiler-type == 'CLANG' && inputs.os == 'Linux'
+      uses: egor-tensin/setup-clang@v1.4
+      with:
+        version: ${{ inputs.compiler-version }}
+        platform: x64
+
+    - name: Install Libc++
+      if: inputs.install-compiler == 'true' && inputs.compiler-type == 'CLANG' && inputs.stdlib == 'libc++' && inputs.os == 'Linux'
+      shell: bash
+      run: |
+        sudo apt install -y libc++-${{ inputs.compiler-version }}-dev libc++abi-${{ inputs.compiler-version }}-dev libunwind-${{ inputs.compiler-version }}-dev
+
+    - name: Select Xcode
+      if: inputs.install-compiler == 'true' && inputs.compiler-type == 'APPLE_CLANG' && inputs.os == 'macOS'
+      uses: maxim-lobanov/setup-xcode@v1.6.0
+      with:
+        xcode-version: '${{ inputs.compiler-version }}'
+
+    - name: Set up Python
+      uses: actions/setup-python@v5.4.0
+      with:
+        python-version: '3.13'
+
+    - name: Install Python requirements
+      shell: bash
+      run: |
+        pip install -r ./requirements.txt
+
+    - name: Configure Conan
+      shell: bash
+      run: |
+        conan profile detect --force
+        PROFILE=".conan2/profiles/default"
+
+        # Base settings
+        sed -i.backup '/^\[settings\]$/,/^\[/ s/^build_type=.*/build_type=${{ inputs.build-type }}/' "$PROFILE"
+        sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.cppstd=.*/compiler.cppstd=${{ inputs.cppstd }}/' "$PROFILE"
+
+        if [[ "${{ inputs.compiler-type }}" == "GCC" || "${{ inputs.compiler-type }}" == "CLANG" ]]; then
+          sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler=.*/compiler=${{ inputs.conan-compiler }}/' "$PROFILE"
+          sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.version=.*/compiler.version=${{ inputs.compiler-version }}/' "$PROFILE"
+          sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.libcxx=.*/compiler.libcxx=${{ inputs.stdlib }}/' "$PROFILE"
+          sed -i.backup '1a mold*:build_type=Release' "$PROFILE"
+          sed -i.backup '1a onetbb*:build_type=Release' "$PROFILE"
+          sed -i.backup '1a mold*:compiler.libcxx=libstdc++11' "$PROFILE"
+        fi
+
+        grep -q "^\[options\]" "$PROFILE" || echo -e "\n[options]" >> "$PROFILE"
+        printf "date*:tz_db=system\n" >> "$PROFILE"
+
+        echo 'core.sources:download_urls=["origin", "https://c3i.jfrog.io/artifactory/conan-center-backup-sources/"]' >> .conan2/global.conf
+        echo "tools.cmake.cmaketoolchain:generator = ${{ inputs.generator }}" >> .conan2/global.conf
+
+        if [[ "${{ inputs.os }}" != "Windows" ]]; then
+          echo "tools.system.package_manager:mode = install" >> .conan2/global.conf
+          echo "tools.system.package_manager:sudo = True" >> .conan2/global.conf
+        fi
+
+        # For Clang-Tidy and IWYU, we might need compiler executables if on Linux
+        if [[ "${{ inputs.conan-compiler }}" == "clang" && "${{ inputs.os }}" == "Linux" ]]; then
+           echo "tools.build:compiler_executables = {\"c\": \"clang-${{ inputs.compiler-version }}\", \"cpp\": \"clang++-${{ inputs.compiler-version }}\"}" >> .conan2/global.conf
+        fi
+
+        conan profile show -pr default
+
+    - name: Conan Cache Restore
+      shell: bash
+      run: |
+        if [ -f ./conan_cache_save.tgz ]; then
+            conan cache restore ./conan_cache_save.tgz
+        fi
+
+    - name: Configure Install
+      shell: bash
+      run: |
+        conan install "${{ github.workspace }}" --build missing ${{ inputs.conan-options }}
+
+    - name: Conan Preset Export
+      shell: bash
+      run: |
+        echo "CONAN_PRESET=conan-$(echo ${{ inputs.build-type }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
