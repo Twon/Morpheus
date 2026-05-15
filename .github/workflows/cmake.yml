@@ -217,32 +217,10 @@ jobs:
         with:
           vs-version: "16.5"
 
-      - name: Install Latest GCC
-        if: matrix.settings.compiler.type == 'GCC'
-        uses: egor-tensin/setup-gcc@v1.3
+      - uses: twon/bebe@main
+        if: runner.os == 'Linux'
         with:
-          version: ${{ matrix.settings.compiler.version }}
-          platform: x64
-
-      - name: Install Latest libstdC++11
-        if: matrix.settings.compiler.type == 'CLANG' && matrix.settings.lib == 'libstdc++11'
-        uses: egor-tensin/setup-gcc@v1.3
-        with:
-          version: 12
-          platform: x64
-
-      - name: Install Clang
-        if: matrix.settings.compiler.type == 'CLANG'
-        uses: egor-tensin/setup-clang@v1.4
-        with:
-          version: ${{ matrix.settings.compiler.version }}
-          platform: x64
-
-      - name: Install Libc++
-        if: matrix.settings.compiler.type == 'CLANG' && matrix.settings.lib == 'libc++'
-        shell: bash
-        run: |
-          sudo apt install -y libc++-${{ matrix.settings.compiler.version }}-dev libc++abi-${{ matrix.settings.compiler.version }}-dev libunwind-${{ matrix.settings.compiler.version }}-dev
+          config: ubuntu.${{ matrix.settings.compiler.conan }}${{ matrix.settings.compiler.version }}.json
 
       - name: Select Xcode ${{matrix.settings.compiler.version}}
         if: contains(matrix.settings.os, 'macos')
