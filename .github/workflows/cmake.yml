@@ -64,7 +64,7 @@ jobs:
             }
           - {
               name: "Ubuntu Clang-14 + libc++",
-              os: ubuntu-22.04,
+              os: ubuntu-latest,
               bebe_image: "ghcr.io/twon/bebe/bebe:ubuntu.clang14",
               compiler:
                 {
@@ -79,7 +79,7 @@ jobs:
             }
           - {
               name: "Ubuntu Clang-15 + libc++",
-              os: ubuntu-22.04,
+              os: ubuntu-latest,
               bebe_image: "ghcr.io/twon/bebe/bebe:ubuntu.clang15",
               compiler:
                 {
@@ -94,7 +94,7 @@ jobs:
             }
           - {
               name: "Ubuntu Clang-16 + libc++",
-              os: ubuntu-22.04,
+              os: ubuntu-latest,
               bebe_image: "ghcr.io/twon/bebe/bebe:ubuntu.clang16",
               compiler:
                 {
