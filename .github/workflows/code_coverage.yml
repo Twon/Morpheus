@@ -102,7 +102,7 @@ jobs:
           if [ -f build/generators/conanbuild.sh ]; then
             source build/generators/conanbuild.sh
           fi
-          ctest --preset ${{ env.CONAN_PRESET }} --rerun-failed --output-on-failure
+          ctest --preset ${{ env.CONAN_BUILD_PRESET }} --rerun-failed --output-on-failure
 
       - name: Generate Coverage Reports
         shell: bash
@@ -110,9 +110,9 @@ jobs:
           if [ -f build/generators/conanbuild.sh ]; then
             source build/generators/conanbuild.sh
           fi
-          cmake --build --preset conan-debug --target coverage
-          cmake --build --preset conan-debug --target coverage-lcov
-          cmake --build --preset conan-debug --target coverage-cobertura
+          cmake --build --preset ${{ env.CONAN_BUILD_PRESET }} --target coverage
+          cmake --build --preset ${{ env.CONAN_BUILD_PRESET }} --target coverage-lcov
+          cmake --build --preset ${{ env.CONAN_BUILD_PRESET }} --target coverage-cobertura
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4.4.1
