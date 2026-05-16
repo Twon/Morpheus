@@ -35,18 +35,6 @@ jobs:
     steps:
       - uses: actions/checkout@v6.0.2
 
-      - name: Setup Python
-        uses: ./.github/actions/setup-python
-
-      - name: Cache Conan Restore
-        uses: ./.github/actions/conan-cache-restore
-        with:
-          os: Linux
-          build-type: ${{ env.BUILD_TYPE }}
-          conan-compiler: gcc
-          compiler-version: ${{ env.COMPILER_VERSION }}
-          stdlib: libstdc++11
-
       - name: Install Latest GCC
         shell: bash
         run: |
@@ -64,6 +52,18 @@ jobs:
           cd lcov-2.0 && sudo make install && cd ..
           sudo perl -MCPAN -e 'install Capture::Tiny'
           sudo apt-get install -y libdatetime-perl
+
+      - name: Setup Python
+        uses: ./.github/actions/setup-python
+
+      - name: Cache Conan Restore
+        uses: ./.github/actions/conan-cache-restore
+        with:
+          os: Linux
+          build-type: ${{ env.BUILD_TYPE }}
+          conan-compiler: gcc
+          compiler-version: ${{ env.COMPILER_VERSION }}
+          stdlib: libstdc++11
 
       - name: Setup Conan
         uses: ./.github/actions/setup-conan

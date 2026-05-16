@@ -206,6 +206,14 @@ jobs:
     steps:
       - uses: actions/checkout@v6.0.2
 
+      - name: Install Compiler
+        uses: ./.github/actions/setup-compiler
+        with:
+          compiler-type: ${{ matrix.settings.compiler.type }}
+          compiler-version: ${{ matrix.settings.compiler.version }}
+          stdlib: ${{ matrix.settings.lib || '' }}
+          os: ${{ matrix.settings.os }}
+
       - name: Setup Python
         uses: ./.github/actions/setup-python
 
@@ -217,14 +225,6 @@ jobs:
           conan-compiler: ${{ matrix.settings.compiler.conan }}
           compiler-version: ${{ matrix.settings.compiler.version }}
           stdlib: ${{ matrix.settings.lib || '' }}
-
-      - name: Install Compiler
-        uses: ./.github/actions/setup-compiler
-        with:
-          compiler-type: ${{ matrix.settings.compiler.type }}
-          compiler-version: ${{ matrix.settings.compiler.version }}
-          stdlib: ${{ matrix.settings.lib || '' }}
-          os: ${{ matrix.settings.os }}
 
       - name: Setup Conan
         uses: ./.github/actions/setup-conan
