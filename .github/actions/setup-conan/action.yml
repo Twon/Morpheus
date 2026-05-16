@@ -65,7 +65,15 @@ runs:
         fi
 
         if [[ "${{ inputs.conan-compiler }}" == "clang" && "${{ runner.os }}" == "Linux" ]]; then
-           echo "tools.build:compiler_executables = {\"c\": \"clang-${{ inputs.compiler-version }}\", \"cpp\": \"clang++-${{ inputs.compiler-version }}\"}" >> .conan2/global.conf
+           CC_NAME="clang-${{ inputs.compiler-version }}"
+           CXX_NAME="clang++-${{ inputs.compiler-version }}"
+           if ! command -v "$CC_NAME" >/dev/null 2>&1; then
+             CC_NAME="clang"
+           fi
+           if ! command -v "$CXX_NAME" >/dev/null 2>&1; then
+             CXX_NAME="clang++"
+           fi
+           echo "tools.build:compiler_executables = {\"c\": \"$CC_NAME\", \"cpp\": \"$CXX_NAME\"}" >> .conan2/global.conf
         fi
 
         conan profile show -pr default
