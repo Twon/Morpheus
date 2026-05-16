@@ -22,7 +22,7 @@ inputs:
     default: "20"
   generator:
     description: 'CMake generator'
-    default: "Ninja"
+    default: "Ninja Multi-Config"
 
 runs:
   using: "composite"
