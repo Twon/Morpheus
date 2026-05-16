@@ -76,7 +76,7 @@ jobs:
           if [ -f build/generators/conanbuild.sh ]; then
             source build/generators/conanbuild.sh
           fi
-          cmake --preset ${{ env.CONAN_PRESET }} -DCLANG_TIDY_ENABLE=1
+          cmake --preset ${{ env.CONAN_CONFIGURE_PRESET }} -DCLANG_TIDY_ENABLE=1
 
       - name: Build
         shell: bash
@@ -84,7 +84,7 @@ jobs:
           if [ -f build/generators/conanbuild.sh ]; then
             source build/generators/conanbuild.sh
           fi
-          cmake --build --preset ${{ env.CONAN_PRESET }}
+          cmake --build --preset ${{ env.CONAN_BUILD_PRESET }}
 
       - name: Cache Conan Save
         uses: ./.github/actions/conan-cache-save

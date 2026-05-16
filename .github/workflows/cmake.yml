@@ -247,7 +247,7 @@ jobs:
         shell: cmd
         run: |
           if exist build\generators\conanbuild.bat call build\generators\conanbuild.bat
-          cmake --preset ${{ env.CONAN_PRESET }} -DENABLE_ADDRESS_SANITIZER=ON -DENABLE_UNDEFINED_BEHAVIOUR_SANITIZER=ON
+          cmake --preset ${{ env.CONAN_CONFIGURE_PRESET }} -DENABLE_ADDRESS_SANITIZER=ON -DENABLE_UNDEFINED_BEHAVIOUR_SANITIZER=ON
 
       - name: Configure CMake (Linux/macOS)
         if: runner.os != 'Windows'
@@ -256,14 +256,14 @@ jobs:
           if [ -f build/generators/conanbuild.sh ]; then
             source build/generators/conanbuild.sh
           fi
-          cmake --preset ${{ env.CONAN_PRESET }} -DENABLE_ADDRESS_SANITIZER=ON -DENABLE_UNDEFINED_BEHAVIOUR_SANITIZER=ON
+          cmake --preset ${{ env.CONAN_CONFIGURE_PRESET }} -DENABLE_ADDRESS_SANITIZER=ON -DENABLE_UNDEFINED_BEHAVIOUR_SANITIZER=ON
 
       - name: Build (Windows)
         if: runner.os == 'Windows'
         shell: cmd
         run: |
           if exist build\generators\conanbuild.bat call build\generators\conanbuild.bat
-          cmake --build --preset ${{ env.CONAN_PRESET }}
+          cmake --build --preset ${{ env.CONAN_BUILD_PRESET }}
 
       - name: Build (Linux/macOS)
         if: runner.os != 'Windows'
@@ -272,14 +272,14 @@ jobs:
           if [ -f build/generators/conanbuild.sh ]; then
             source build/generators/conanbuild.sh
           fi
-          cmake --build --preset ${{ env.CONAN_PRESET }}
+          cmake --build --preset ${{ env.CONAN_BUILD_PRESET }}
 
       - name: Test (Windows)
         if: runner.os == 'Windows'
         shell: cmd
         run: |
           if exist build\generators\conanbuild.bat call build\generators\conanbuild.bat
-          ctest --preset ${{ env.CONAN_PRESET }} -LE GPU --output-on-failure
+          ctest --preset ${{ env.CONAN_BUILD_PRESET }} -LE GPU --output-on-failure
 
       - name: Test (Linux/macOS)
         if: runner.os != 'Windows'
@@ -288,7 +288,7 @@ jobs:
           if [ -f build/generators/conanbuild.sh ]; then
             source build/generators/conanbuild.sh
           fi
-          ctest --preset ${{ env.CONAN_PRESET }} -LE GPU --output-on-failure
+          ctest --preset ${{ env.CONAN_BUILD_PRESET }} -LE GPU --output-on-failure
 
       - name: Cache Conan Save
         uses: ./.github/actions/conan-cache-save

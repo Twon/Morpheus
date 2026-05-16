@@ -66,8 +66,10 @@ runs:
     - name: Conan Preset Export
       shell: bash
       run: |
+        LOWER_BUILD_TYPE=$(echo ${{ inputs.build-type }} | tr '[:upper:]' '[:lower:]')
         if [[ "${{ inputs.generator }}" == *"Multi-Config"* || "${{ inputs.generator }}" == "Visual Studio"* || "${{ inputs.generator }}" == "Xcode"* ]]; then
-          echo "CONAN_PRESET=conan-default" >> $GITHUB_ENV
+          echo "CONAN_CONFIGURE_PRESET=conan-default" >> $GITHUB_ENV
         else
-          echo "CONAN_PRESET=conan-$(echo ${{ inputs.build-type }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+          echo "CONAN_CONFIGURE_PRESET=conan-$LOWER_BUILD_TYPE" >> $GITHUB_ENV
         fi
+        echo "CONAN_BUILD_PRESET=conan-$LOWER_BUILD_TYPE" >> $GITHUB_ENV

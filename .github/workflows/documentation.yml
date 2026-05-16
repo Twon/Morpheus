@@ -78,7 +78,7 @@ jobs:
           if [ -f build/generators/conanbuild.sh ]; then
             source build/generators/conanbuild.sh
           fi
-          cmake --preset ${{ env.CONAN_PRESET }} -DMORPHEUS_BUILD_DOCUMENTATION:BOOL=ON
+          cmake --preset ${{ env.CONAN_CONFIGURE_PRESET }} -DMORPHEUS_BUILD_DOCUMENTATION:BOOL=ON
 
       - name: Build Documentation
         shell: bash
@@ -86,7 +86,7 @@ jobs:
           if [ -f build/generators/conanbuild.sh ]; then
             source build/generators/conanbuild.sh
           fi
-          cmake --build --preset ${{ env.CONAN_PRESET }} --target Documentation
+          cmake --build --preset ${{ env.CONAN_BUILD_PRESET }} --target MorpheusDocumentation
 
       - name: Deploy to GH Pages
         if: github.ref == 'refs/heads/main'

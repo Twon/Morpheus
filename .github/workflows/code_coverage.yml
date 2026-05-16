@@ -86,7 +86,7 @@ jobs:
           if [ -f build/generators/conanbuild.sh ]; then
             source build/generators/conanbuild.sh
           fi
-          cmake --preset ${{ env.CONAN_PRESET }} -DENABLE_CODE_COVERAGE=1
+          cmake --preset ${{ env.CONAN_CONFIGURE_PRESET }} -DENABLE_CODE_COVERAGE=1
 
       - name: Build
         shell: bash
@@ -94,7 +94,7 @@ jobs:
           if [ -f build/generators/conanbuild.sh ]; then
             source build/generators/conanbuild.sh
           fi
-          cmake --build --preset ${{ env.CONAN_PRESET }}
+          cmake --build --preset ${{ env.CONAN_BUILD_PRESET }}
 
       - name: Test
         shell: bash
