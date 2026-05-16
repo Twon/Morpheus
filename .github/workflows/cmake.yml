@@ -242,7 +242,15 @@ jobs:
         run: |
           conan install "${{ github.workspace }}" --build missing -pr:b default
 
-      - name: Configure CMake
+      - name: Configure CMake (Windows)
+        if: runner.os == 'Windows'
+        shell: cmd
+        run: |
+          if exist build\generators\conanbuild.bat call build\generators\conanbuild.bat
+          cmake --preset conan-default -DENABLE_ADDRESS_SANITIZER=ON -DENABLE_UNDEFINED_BEHAVIOUR_SANITIZER=ON
+
+      - name: Configure CMake (Linux/macOS)
+        if: runner.os != 'Windows'
         shell: bash
         run: |
           if [ -f build/generators/conanbuild.sh ]; then
@@ -250,7 +258,15 @@ jobs:
           fi
           cmake --preset conan-default -DENABLE_ADDRESS_SANITIZER=ON -DENABLE_UNDEFINED_BEHAVIOUR_SANITIZER=ON
 
-      - name: Build
+      - name: Build (Windows)
+        if: runner.os == 'Windows'
+        shell: cmd
+        run: |
+          if exist build\generators\conanbuild.bat call build\generators\conanbuild.bat
+          cmake --build --preset ${{ env.CONAN_PRESET }}
+
+      - name: Build (Linux/macOS)
+        if: runner.os != 'Windows'
         shell: bash
         run: |
           if [ -f build/generators/conanbuild.sh ]; then
@@ -258,7 +274,15 @@ jobs:
           fi
           cmake --build --preset ${{ env.CONAN_PRESET }}
 
-      - name: Test
+      - name: Test (Windows)
+        if: runner.os == 'Windows'
+        shell: cmd
+        run: |
+          if exist build\generators\conanbuild.bat call build\generators\conanbuild.bat
+          ctest --preset ${{ env.CONAN_PRESET }} -LE GPU --output-on-failure
+
+      - name: Test (Linux/macOS)
+        if: runner.os != 'Windows'
         shell: bash
         run: |
           if [ -f build/generators/conanbuild.sh ]; then

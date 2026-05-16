@@ -18,11 +18,11 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Set up MSVC
+    - name: Add msbuild to PATH
       if: inputs.compiler-type == 'VISUAL' && runner.os == 'Windows'
-      uses: ilammy/msvc-dev-cmd@v1
+      uses: microsoft/setup-msbuild@v2
       with:
-        vsversion: "2022"
+        vs-version: "16.5"
 
     - name: Install GCC
       if: inputs.compiler-type == 'GCC' && runner.os == 'Linux'
