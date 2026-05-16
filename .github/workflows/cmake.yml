@@ -264,6 +264,9 @@ jobs:
             fi
             $SUDO_CMD rm -f /etc/ld.so.conf.d/gcc-releases-gcc-*.conf
             $SUDO_CMD ldconfig
+
+            # Ensure the container has basic C/C++ runtime objects and headers
+            $SUDO_CMD apt-get update && $SUDO_CMD apt-get install -y build-essential
           fi
           conan install . --build missing -pr:b default
 
