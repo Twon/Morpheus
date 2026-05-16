@@ -258,8 +258,12 @@ jobs:
         run: |
           # Temporarily remove the conflicting global GCC library config to allow apt-get to work
           if [[ -d "/etc/ld.so.conf.d" ]]; then
-            sudo rm -f /etc/ld.so.conf.d/gcc-releases-gcc-*.conf
-            sudo ldconfig
+            SUDO_CMD=""
+            if command -v sudo >/dev/null 2>&1; then
+              SUDO_CMD="sudo"
+            fi
+            $SUDO_CMD rm -f /etc/ld.so.conf.d/gcc-releases-gcc-*.conf
+            $SUDO_CMD ldconfig
           fi
           conan install . --build missing -pr:b default
 
