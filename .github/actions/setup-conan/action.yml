@@ -23,6 +23,9 @@ inputs:
   generator:
     description: 'CMake generator'
     default: "Ninja"
+  package-manager-mode:
+    description: 'Conan system package manager mode (install, patch, or None)'
+    default: "install"
 
 runs:
   using: "composite"
@@ -53,7 +56,7 @@ runs:
         echo "tools.cmake.cmaketoolchain:generator = ${{ inputs.generator }}" >> .conan2/global.conf
 
         if [[ "${{ runner.os }}" != "Windows" ]]; then
-          echo "tools.system.package_manager:mode = install" >> .conan2/global.conf
+          echo "tools.system.package_manager:mode = ${{ inputs.package-manager-mode }}" >> .conan2/global.conf
           if command -v sudo >/dev/null 2>&1; then
             echo "tools.system.package_manager:sudo = True" >> .conan2/global.conf
           else

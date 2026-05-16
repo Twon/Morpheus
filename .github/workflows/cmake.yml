@@ -251,11 +251,13 @@ jobs:
           stdlib: ${{ matrix.settings.lib || '' }}
           cppstd: ${{ matrix.settings.compiler.std }}
           generator: "Ninja Multi-Config"
+          package-manager-mode: "install"
 
       - name: Conan Install
         shell: bash
         run: |
-          unset LD_LIBRARY_PATH
+          echo "LD_LIBRARY_PATH: $LD_LIBRARY_PATH"
+          echo "PATH: $PATH"
           conan install . --build missing -pr:b default
 
       - name: Configure CMake (Windows)
