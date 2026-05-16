@@ -54,7 +54,11 @@ runs:
 
         if [[ "${{ runner.os }}" != "Windows" ]]; then
           echo "tools.system.package_manager:mode = install" >> .conan2/global.conf
-          echo "tools.system.package_manager:sudo = True" >> .conan2/global.conf
+          if command -v sudo >/dev/null 2>&1; then
+            echo "tools.system.package_manager:sudo = True" >> .conan2/global.conf
+          else
+            echo "tools.system.package_manager:sudo = False" >> .conan2/global.conf
+          fi
         fi
 
         if [[ "${{ inputs.conan-compiler }}" == "clang" && "${{ runner.os }}" == "Linux" ]]; then
