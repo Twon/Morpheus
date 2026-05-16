@@ -255,7 +255,7 @@ jobs:
       - name: Conan Install
         shell: bash
         run: |
-          conan install "${{ github.workspace }}" --build missing -pr:b default
+          conan install . --build missing -pr:b default
 
       - name: Configure CMake (Windows)
         if: runner.os == 'Windows'
