@@ -256,13 +256,11 @@ jobs:
       - name: Conan Install
         shell: bash
         run: |
-          echo "--- LDD APT-GET ---"
-          ldd /usr/bin/apt-get
-          echo "--- LDCONFIG GCC ---"
-          ldconfig -p | grep libstdc++.so.6
-          echo "--- LD.SO.CONF.D ---"
-          ls /etc/ld.so.conf.d/
-          cat /etc/ld.so.conf.d/* || true
+          # Temporarily remove the conflicting global GCC library config to allow apt-get to work
+          if [[ -d "/etc/ld.so.conf.d" ]]; then
+            sudo rm -f /etc/ld.so.conf.d/gcc-releases-gcc-*.conf
+            sudo ldconfig
+          fi
           conan install . --build missing -pr:b default
 
       - name: Configure CMake (Windows)
