@@ -49,7 +49,7 @@ runs:
       if: inputs.compiler-type == 'CLANG' && inputs.stdlib == 'libc++' && runner.os == 'Linux'
       shell: bash
       run: |
-        sudo apt install -y libc++-${{ inputs.compiler-version }}-dev libc++abi-${{ inputs.compiler-version }}-dev libunwind-${{ inputs.compiler-version }}-dev
+        sudo apt install -y libc++1 libc++abi1 libc++-${{ inputs.compiler-version }}-dev libc++abi-${{ inputs.compiler-version }}-dev libunwind-${{ inputs.compiler-version }}-dev
 
     - name: Select Xcode
       if: inputs.compiler-type == 'APPLE_CLANG' && runner.os == 'macOS'
