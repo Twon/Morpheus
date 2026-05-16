@@ -158,7 +158,7 @@ jobs:
           - {
               name: "Visual Studio 2019",
               os: windows-latest,
-              compiler: { type: VISUAL, version: 16, conan: "mscv", cc: "cl", cxx: "cl", std: 23 },
+              compiler: { type: VISUAL, version: 16, conan: "msvc", cc: "cl", cxx: "cl", std: 23 },
             }
           - {
               name: "MacOS Apple Clang 15",

@@ -8,4 +8,4 @@ runs:
       shell: bash
       run: |
         conan cache clean
-        conan cache save "*/*:*"
+        conan cache save "*/*:*" --file conan_cache_save.tgz

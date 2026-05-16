@@ -48,7 +48,7 @@ runs:
       env:
         cache-name: cache-conan-data
       with:
-        path: ${{ github.workspace }}/conan_cache_save.tgz
+        path: conan_cache_save.tgz
         key: ${{ hashFiles('**/conanfile.py') }}-build-${{ inputs.os }}-${{ inputs.build-type }}-${{ inputs.conan-compiler }}-${{ inputs.compiler-version }}${{ steps.prep.outputs.stdlib }}${{ steps.prep.outputs.suffix }}
         restore-keys: |
           ${{ hashFiles('**/conanfile.py') }}-build-${{ inputs.os }}-${{ inputs.build-type }}-${{ inputs.conan-compiler }}-${{ inputs.compiler-version }}${{ steps.prep.outputs.stdlib }}${{ steps.prep.outputs.suffix }}
@@ -57,6 +57,6 @@ runs:
     - name: Conan Cache Restore
       shell: bash
       run: |
-        if [ -f ./conan_cache_save.tgz ]; then
-            conan cache restore ./conan_cache_save.tgz
+        if [ -f conan_cache_save.tgz ]; then
+            conan cache restore conan_cache_save.tgz
         fi
