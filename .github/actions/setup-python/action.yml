@@ -1,0 +1,15 @@
+name: 'Setup Python'
+description: 'Sets up Python and installs requirements (including Conan)'
+
+runs:
+  using: "composite"
+  steps:
+    - name: Set up Python
+      uses: actions/setup-python@v5.4.0
+      with:
+        python-version: '3.13'
+
+    - name: Install Python requirements
+      shell: bash
+      run: |
+        pip install -r ./requirements.txt

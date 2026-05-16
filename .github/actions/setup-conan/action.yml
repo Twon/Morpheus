@@ -1,0 +1,75 @@
+name: 'Setup Conan'
+description: 'Sets up Python, Conan, and configures Morpheus-specific profiles'
+
+inputs:
+  build-type:
+    description: 'Debug or Release'
+    required: true
+  compiler-type:
+    description: 'GCC, CLANG, APPLE_CLANG, or VISUAL'
+    required: true
+  compiler-version:
+    description: 'Version of the compiler'
+    required: true
+  conan-compiler:
+    description: 'Conan compiler setting (gcc, clang, etc.)'
+    required: true
+  stdlib:
+    description: 'C++ standard library (libstdc++11, libc++)'
+    default: ""
+  cppstd:
+    description: 'C++ standard (20, 23)'
+    default: "20"
+  generator:
+    description: 'CMake generator'
+    default: "Ninja"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Configure Conan
+      shell: bash
+      run: |
+        conan profile detect --force
+        PROFILE=".conan2/profiles/default"
+
+        # Base settings
+        sed -i.backup '/^\[settings\]$/,/^\[/ s/^build_type=.*/build_type=${{ inputs.build-type }}/' "$PROFILE"
+        sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.cppstd=.*/compiler.cppstd=${{ inputs.cppstd }}/' "$PROFILE"
+
+        if [[ "${{ inputs.compiler-type }}" == "GCC" || "${{ inputs.compiler-type }}" == "CLANG" ]]; then
+          sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler=.*/compiler=${{ inputs.conan-compiler }}/' "$PROFILE"
+          sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.version=.*/compiler.version=${{ inputs.compiler-version }}/' "$PROFILE"
+          sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.libcxx=.*/compiler.libcxx=${{ inputs.stdlib }}/' "$PROFILE"
+          sed -i.backup '1a mold*:build_type=Release' "$PROFILE"
+          sed -i.backup '1a onetbb*:build_type=Release' "$PROFILE"
+          sed -i.backup '1a mold*:compiler.libcxx=libstdc++11' "$PROFILE"
+        fi
+
+        grep -q "^\[options\]" "$PROFILE" || echo -e "\n[options]" >> "$PROFILE"
+        printf "date*:tz_db=system\n" >> "$PROFILE"
+
+        echo 'core.sources:download_urls=["origin", "https://c3i.jfrog.io/artifactory/conan-center-backup-sources/"]' >> .conan2/global.conf
+        echo "tools.cmake.cmaketoolchain:generator = ${{ inputs.generator }}" >> .conan2/global.conf
+
+        if [[ "${{ runner.os }}" != "Windows" ]]; then
+          echo "tools.system.package_manager:mode = install" >> .conan2/global.conf
+          echo "tools.system.package_manager:sudo = True" >> .conan2/global.conf
+        fi
+
+        if [[ "${{ inputs.conan-compiler }}" == "clang" && "${{ runner.os }}" == "Linux" ]]; then
+           echo "tools.build:compiler_executables = {\"c\": \"clang-${{ inputs.compiler-version }}\", \"cpp\": \"clang++-${{ inputs.compiler-version }}\"}" >> .conan2/global.conf
+        fi
+
+        conan profile show -pr default
+
+    - name: Conan Preset Export
+      shell: bash
+      run: |
+        LOWER_BUILD_TYPE=$(echo ${{ inputs.build-type }} | tr '[:upper:]' '[:lower:]')
+        if [[ "${{ inputs.generator }}" == *"Multi-Config"* || "${{ inputs.generator }}" == "Visual Studio"* || "${{ inputs.generator }}" == "Xcode"* ]]; then
+          echo "CONAN_CONFIGURE_PRESET=conan-default" >> $GITHUB_ENV
+        else
+          echo "CONAN_CONFIGURE_PRESET=conan-$LOWER_BUILD_TYPE" >> $GITHUB_ENV
+        fi
+        echo "CONAN_BUILD_PRESET=conan-$LOWER_BUILD_TYPE" >> $GITHUB_ENV
