@@ -1,0 +1,45 @@
+name: 'Conan Cache Restore'
+description: 'Restores Conan data from GitHub cache'
+
+inputs:
+  os:
+    description: 'Runner OS'
+    required: true
+  build-type:
+    description: 'Debug or Release'
+    required: true
+  conan-compiler:
+    description: 'Conan compiler'
+    required: true
+  compiler-version:
+    description: 'Compiler version'
+    required: true
+  stdlib:
+    description: 'Standard library'
+    default: ""
+  cache-suffix:
+    description: 'Optional cache suffix'
+    default: ""
+
+runs:
+  using: "composite"
+  steps:
+    - name: Cache Conan data
+      uses: actions/cache@v5.0.5
+      env:
+        cache-name: cache-conan-data
+      with:
+        path: ${{ github.workspace }}/conan_cache_save.tgz
+        key: ${{ hashFiles('**/conanfile.py') }}-build-${{ inputs.os }}-${{ inputs.build-type }}-${{ inputs.conan-compiler }}-${{ inputs.compiler-version }}-${{ inputs.stdlib }}${{ inputs.cache-suffix }}
+        restore-keys: |
+          ${{ hashFiles('**/conanfile.py') }}-build-${{ inputs.os }}-${{ inputs.build-type }}-${{ inputs.conan-compiler }}-${{ inputs.compiler-version }}-
+          ${{ hashFiles('**/conanfile.py') }}-build-${{ inputs.os }}-${{ inputs.build-type }}-${{ inputs.conan-compiler }}-
+          ${{ hashFiles('**/conanfile.py') }}-build-${{ inputs.os }}-${{ inputs.build-type }}-
+          ${{ hashFiles('**/conanfile.py') }}-build-${{ inputs.os }}-
+
+    - name: Conan Cache Restore
+      shell: bash
+      run: |
+        if [ -f ./conan_cache_save.tgz ]; then
+            conan cache restore ./conan_cache_save.tgz
+        fi

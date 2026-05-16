@@ -27,24 +27,61 @@ env:
 
 jobs:
   build:
-    uses: ./.github/workflows/reusable-ci.yml
-    with:
-      os: ubuntu-latest
-      build-type: Debug
-      compiler-type: clang
-      compiler-version: "19"
-      conan-compiler: clang
-      stdlib: libc++
-      cppstd: "23"
-      cmake-options: "-DCLANG_TIDY_ENABLE=1"
-      install-compiler: false
-      run-tests: false
-      pre-setup-command: |
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6.0.2
+
+      - name: Cache Conan Restore
+        uses: ./.github/actions/conan-cache-restore
+        with:
+          os: Linux
+          build-type: ${{ env.BUILD_TYPE }}
+          conan-compiler: clang
+          compiler-version: ${{ env.COMPILER_VERSION }}
+          stdlib: ${{ env.STDLIB }}
+
+      - name: Install Clang
+        shell: bash
+        run: |
           wget https://apt.llvm.org/llvm.sh
           chmod +x llvm.sh
-          sudo ./llvm.sh 19 all
+          sudo ./llvm.sh ${{ env.COMPILER_VERSION }} all
           sudo rm -f /usr/bin/clang /usr/bin/clang++ /usr/bin/clang-tidy
-          sudo ln -s /usr/bin/clang-19 /usr/bin/clang
-          sudo ln -s /usr/bin/clang++-19 /usr/bin/clang++
-          sudo ln -s /usr/bin/clang-tidy-19 /usr/bin/clang-tidy
-          sudo apt install -y libc++-19-dev libc++abi-19-dev libunwind-19-dev
+          sudo ln -s /usr/bin/clang-${{ env.COMPILER_VERSION }} /usr/bin/clang
+          sudo ln -s /usr/bin/clang++-${{ env.COMPILER_VERSION }} /usr/bin/clang++
+          sudo ln -s /usr/bin/clang-tidy-${{ env.COMPILER_VERSION }} /usr/bin/clang-tidy
+          sudo apt install -y libc++-${{ env.COMPILER_VERSION }}-dev libc++abi-${{ env.COMPILER_VERSION }}-dev libunwind-${{ env.COMPILER_VERSION }}-dev
+
+      - name: Setup Conan
+        uses: ./.github/actions/setup-conan
+        with:
+          build-type: ${{ env.BUILD_TYPE }}
+          compiler-type: CLANG
+          compiler-version: ${{ env.COMPILER_VERSION }}
+          conan-compiler: clang
+          stdlib: ${{ env.STDLIB }}
+          cppstd: "23"
+
+      - name: Conan Install
+        shell: bash
+        run: |
+          conan install "${{ github.workspace }}" --build missing
+
+      - name: Configure CMake
+        shell: bash
+        run: |
+          if [ -f build/generators/conanbuild.sh ]; then
+            source build/generators/conanbuild.sh
+          fi
+          cmake --preset conan-default -DCLANG_TIDY_ENABLE=1
+
+      - name: Build
+        shell: bash
+        run: |
+          if [ -f build/generators/conanbuild.sh ]; then
+            source build/generators/conanbuild.sh
+          fi
+          cmake --build --preset ${{ env.CONAN_PRESET }}
+
+      - name: Cache Conan Save
+        uses: ./.github/actions/conan-cache-save

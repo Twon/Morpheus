@@ -25,36 +25,100 @@ on:
   pull_request:
     branches: [main]
 
+env:
+  BUILD_TYPE: Debug
+  COMPILER_VERSION: 12
+
 jobs:
   build:
-    uses: ./.github/workflows/reusable-ci.yml
-    with:
-      os: ubuntu-latest
-      build-type: Debug
-      compiler-type: gcc
-      compiler-version: "12"
-      conan-compiler: gcc
-      stdlib: libstdc++11
-      cppstd: "20"
-      install-compiler: false
-      cmake-options: "-DENABLE_CODE_COVERAGE=1"
-      test-options: "--rerun-failed --output-on-failure"
-      pre-setup-command: |
-          sudo apt install -y g++-12
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6.0.2
+
+      - name: Cache Conan Restore
+        uses: ./.github/actions/conan-cache-restore
+        with:
+          os: Linux
+          build-type: ${{ env.BUILD_TYPE }}
+          conan-compiler: gcc
+          compiler-version: ${{ env.COMPILER_VERSION }}
+          stdlib: libstdc++11
+
+      - name: Install Latest GCC
+        shell: bash
+        run: |
+          sudo apt install -y g++-${{ env.COMPILER_VERSION }}
           sudo rm -f /usr/bin/gcc /usr/bin/g++ /usr/bin/gcov
-          sudo ln -s /usr/bin/gcov-12 /usr/bin/gcov
-          sudo ln -s /usr/bin/gcc-12 /usr/bin/gcc
-          sudo ln -s /usr/bin/g++-12 /usr/bin/g++
+          sudo ln -s /usr/bin/gcov-${{ env.COMPILER_VERSION }} /usr/bin/gcov
+          sudo ln -s /usr/bin/gcc-${{ env.COMPILER_VERSION }} /usr/bin/gcc
+          sudo ln -s /usr/bin/g++-${{ env.COMPILER_VERSION }} /usr/bin/g++
+
+      - name: Install Lcov
+        shell: bash
+        run: |
           wget https://github.com/linux-test-project/lcov/archive/refs/tags/v2.0.tar.gz
           tar -xvf v2.0.tar.gz
           cd lcov-2.0 && sudo make install && cd ..
           sudo perl -MCPAN -e 'install Capture::Tiny'
           sudo apt-get install -y libdatetime-perl
-      post-build-command: |
-          source build/generators/conanbuild.sh
+
+      - name: Setup Conan
+        uses: ./.github/actions/setup-conan
+        with:
+          build-type: ${{ env.BUILD_TYPE }}
+          compiler-type: GCC
+          compiler-version: ${{ env.COMPILER_VERSION }}
+          conan-compiler: gcc
+          stdlib: libstdc++11
+          cppstd: "20"
+
+      - name: Conan Install
+        shell: bash
+        run: |
+          conan install "${{ github.workspace }}" --build missing
+
+      - name: Configure CMake
+        shell: bash
+        run: |
+          if [ -f build/generators/conanbuild.sh ]; then
+            source build/generators/conanbuild.sh
+          fi
+          cmake --preset conan-default -DENABLE_CODE_COVERAGE=1
+
+      - name: Build
+        shell: bash
+        run: |
+          if [ -f build/generators/conanbuild.sh ]; then
+            source build/generators/conanbuild.sh
+          fi
+          cmake --build --preset ${{ env.CONAN_PRESET }}
+
+      - name: Test
+        shell: bash
+        run: |
+          if [ -f build/generators/conanbuild.sh ]; then
+            source build/generators/conanbuild.sh
+          fi
+          ctest --preset ${{ env.CONAN_PRESET }} --rerun-failed --output-on-failure
+
+      - name: Generate Coverage Reports
+        shell: bash
+        run: |
+          if [ -f build/generators/conanbuild.sh ]; then
+            source build/generators/conanbuild.sh
+          fi
           cmake --build --preset conan-debug --target coverage
           cmake --build --preset conan-debug --target coverage-lcov
           cmake --build --preset conan-debug --target coverage-cobertura
-      enable-codecov: true
-    secrets:
-      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4.4.1
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+        with:
+          files: ${{ github.workspace }}/build/${{ env.BUILD_TYPE }}/coverage/cobertura_coverage.xml
+          fail_ci_if_error: true
+          verbose: true
+
+      - name: Cache Conan Save
+        uses: ./.github/actions/conan-cache-save

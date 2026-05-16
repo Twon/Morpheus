@@ -25,22 +25,72 @@ on:
   pull_request:
     branches: [main]
 
+env:
+  BUILD_TYPE: Debug
+  COMPILER_VERSION: 13
+
 jobs:
   documentation:
-    uses: ./.github/workflows/reusable-ci.yml
-    with:
-      os: ubuntu-latest
-      build-type: Debug
-      compiler-type: gcc
-      compiler-version: "13"
-      conan-compiler: gcc
-      stdlib: libstdc++11
-      cppstd: "20"
-      generator: "Ninja Multi-Config"
-      conan-options: "-o build_docs=True"
-      cmake-options: "-DMORPHEUS_BUILD_DOCUMENTATION:BOOL=ON"
-      cache-suffix: "-documentation"
-      build-target: "Documentation"
-      run-tests: false
-      enable-gh-pages: true
-      gh-pages-publish-dir: "./build/documentation/sphinx"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6.0.2
+
+      - name: Cache Conan Restore
+        uses: ./.github/actions/conan-cache-restore
+        with:
+          os: Linux
+          build-type: ${{ env.BUILD_TYPE }}
+          conan-compiler: gcc
+          compiler-version: ${{ env.COMPILER_VERSION }}
+          stdlib: libstdc++11
+          cache-suffix: "-documentation"
+
+      - name: Install Compiler
+        uses: ./.github/actions/install-compiler
+        with:
+          compiler-type: GCC
+          compiler-version: ${{ env.COMPILER_VERSION }}
+          stdlib: libstdc++11
+          os: Linux
+
+      - name: Setup Conan
+        uses: ./.github/actions/setup-conan
+        with:
+          build-type: ${{ env.BUILD_TYPE }}
+          compiler-type: GCC
+          compiler-version: ${{ env.COMPILER_VERSION }}
+          conan-compiler: gcc
+          stdlib: libstdc++11
+          cppstd: "20"
+          generator: "Ninja Multi-Config"
+
+      - name: Conan Install
+        shell: bash
+        run: |
+          conan install "${{ github.workspace }}" --build missing -o build_docs=True
+
+      - name: Configure CMake
+        shell: bash
+        run: |
+          if [ -f build/generators/conanbuild.sh ]; then
+            source build/generators/conanbuild.sh
+          fi
+          cmake --preset conan-default -DMORPHEUS_BUILD_DOCUMENTATION:BOOL=ON
+
+      - name: Build Documentation
+        shell: bash
+        run: |
+          if [ -f build/generators/conanbuild.sh ]; then
+            source build/generators/conanbuild.sh
+          fi
+          cmake --build --preset ${{ env.CONAN_PRESET }} --target Documentation
+
+      - name: Deploy to GH Pages
+        if: github.ref == 'refs/heads/main'
+        uses: peaceiris/actions-gh-pages@v3.9.3
+        with:
+          github_token: ${{ github.token }}
+          publish_dir: "./build/documentation/sphinx"
+
+      - name: Cache Conan Save
+        uses: ./.github/actions/conan-cache-save

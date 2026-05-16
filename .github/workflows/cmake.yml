@@ -28,6 +28,7 @@ on:
 jobs:
   build:
     name: ${{ matrix.settings.name }} ${{ matrix.configuration }}
+    runs-on: ${{ matrix.settings.os }}
     strategy:
       matrix:
         configuration: [ "Release", "Debug" ]
@@ -202,15 +203,65 @@ jobs:
               lib: "libc++",
             }
 
-    uses: ./.github/workflows/reusable-ci.yml
-    with:
-      os: ${{ matrix.settings.os }}
-      build-type: ${{ matrix.configuration }}
-      compiler-type: ${{ matrix.settings.compiler.type }}
-      compiler-version: ${{ matrix.settings.compiler.version }}
-      conan-compiler: ${{ matrix.settings.compiler.conan }}
-      stdlib: ${{ matrix.settings.lib || '' }}
-      cppstd: ${{ matrix.settings.compiler.std }}
-      generator: "Ninja Multi-Config"
-      conan-options: "-pr:b default"
-      cmake-options: "-DENABLE_ADDRESS_SANITIZER=ON -DENABLE_UNDEFINED_BEHAVIOUR_SANITIZER=ON"
+    steps:
+      - uses: actions/checkout@v6.0.2
+
+      - name: Cache Conan Restore
+        uses: ./.github/actions/conan-cache-restore
+        with:
+          os: ${{ matrix.settings.os }}
+          build-type: ${{ matrix.configuration }}
+          conan-compiler: ${{ matrix.settings.compiler.conan }}
+          compiler-version: ${{ matrix.settings.compiler.version }}
+          stdlib: ${{ matrix.settings.lib || '' }}
+
+      - name: Install Compiler
+        uses: ./.github/actions/install-compiler
+        with:
+          compiler-type: ${{ matrix.settings.compiler.type }}
+          compiler-version: ${{ matrix.settings.compiler.version }}
+          stdlib: ${{ matrix.settings.lib || '' }}
+          os: ${{ matrix.settings.os }}
+
+      - name: Setup Conan
+        uses: ./.github/actions/setup-conan
+        with:
+          build-type: ${{ matrix.configuration }}
+          compiler-type: ${{ matrix.settings.compiler.type }}
+          compiler-version: ${{ matrix.settings.compiler.version }}
+          conan-compiler: ${{ matrix.settings.compiler.conan }}
+          stdlib: ${{ matrix.settings.lib || '' }}
+          cppstd: ${{ matrix.settings.compiler.std }}
+          generator: "Ninja Multi-Config"
+
+      - name: Conan Install
+        shell: bash
+        run: |
+          conan install "${{ github.workspace }}" --build missing -pr:b default
+
+      - name: Configure CMake
+        shell: bash
+        run: |
+          if [ -f build/generators/conanbuild.sh ]; then
+            source build/generators/conanbuild.sh
+          fi
+          cmake --preset conan-default -DENABLE_ADDRESS_SANITIZER=ON -DENABLE_UNDEFINED_BEHAVIOUR_SANITIZER=ON
+
+      - name: Build
+        shell: bash
+        run: |
+          if [ -f build/generators/conanbuild.sh ]; then
+            source build/generators/conanbuild.sh
+          fi
+          cmake --build --preset ${{ env.CONAN_PRESET }}
+
+      - name: Test
+        shell: bash
+        run: |
+          if [ -f build/generators/conanbuild.sh ]; then
+            source build/generators/conanbuild.sh
+          fi
+          ctest --preset ${{ env.CONAN_PRESET }} -LE GPU --output-on-failure
+
+      - name: Cache Conan Save
+        uses: ./.github/actions/conan-cache-save
