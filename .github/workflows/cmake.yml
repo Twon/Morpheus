@@ -219,7 +219,7 @@ jobs:
           stdlib: ${{ matrix.settings.lib || '' }}
 
       - name: Install Compiler
-        uses: ./.github/actions/install-compiler
+        uses: ./.github/actions/setup-compiler
         with:
           compiler-type: ${{ matrix.settings.compiler.type }}
           compiler-version: ${{ matrix.settings.compiler.version }}

@@ -49,7 +49,7 @@ jobs:
           cache-suffix: "-documentation"
 
       - name: Install Compiler
-        uses: ./.github/actions/install-compiler
+        uses: ./.github/actions/setup-compiler
         with:
           compiler-type: GCC
           compiler-version: ${{ env.COMPILER_VERSION }}

@@ -1,0 +1,58 @@
+name: 'Install Compiler'
+description: 'Installs GCC, Clang, MSVC, or Apple Clang based on inputs'
+
+inputs:
+  compiler-type:
+    description: 'GCC, CLANG, APPLE_CLANG, or VISUAL'
+    required: true
+  compiler-version:
+    description: 'Version of the compiler'
+    required: true
+  stdlib:
+    description: 'C++ standard library (libstdc++11, libc++)'
+    default: ""
+  os:
+    description: 'Runner OS (Linux, Windows, macOS)'
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Add msbuild to PATH
+      if: inputs.compiler-type == 'VISUAL' && contains(inputs.os, 'Windows')
+      uses: microsoft/setup-msbuild@v2
+      with:
+        vs-version: "16.5"
+
+    - name: Install GCC
+      if: inputs.compiler-type == 'GCC' && contains(inputs.os, 'Linux')
+      uses: egor-tensin/setup-gcc@v1.3
+      with:
+        version: ${{ inputs.compiler-version }}
+        platform: x64
+
+    - name: Install libstdc++11 for Clang
+      if: inputs.compiler-type == 'CLANG' && inputs.stdlib == 'libstdc++11' && contains(inputs.os, 'Linux')
+      uses: egor-tensin/setup-gcc@v1.3
+      with:
+        version: 12
+        platform: x64
+
+    - name: Install Clang
+      if: inputs.compiler-type == 'CLANG' && contains(inputs.os, 'Linux')
+      uses: egor-tensin/setup-clang@v1.4
+      with:
+        version: ${{ inputs.compiler-version }}
+        platform: x64
+
+    - name: Install Libc++
+      if: inputs.compiler-type == 'CLANG' && inputs.stdlib == 'libc++' && contains(inputs.os, 'Linux')
+      shell: bash
+      run: |
+        sudo apt install -y libc++-${{ inputs.compiler-version }}-dev libc++abi-${{ inputs.compiler-version }}-dev libunwind-${{ inputs.compiler-version }}-dev
+
+    - name: Select Xcode
+      if: inputs.compiler-type == 'APPLE_CLANG' && contains(inputs.os, 'macOS')
+      uses: maxim-lobanov/setup-xcode@v1.6.0
+      with:
+        xcode-version: '${{ inputs.compiler-version }}'
