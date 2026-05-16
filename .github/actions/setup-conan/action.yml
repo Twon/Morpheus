@@ -22,7 +22,7 @@ inputs:
     default: "20"
   generator:
     description: 'CMake generator'
-    default: "Ninja Multi-Config"
+    default: "Ninja"
 
 runs:
   using: "composite"
@@ -66,4 +66,8 @@ runs:
     - name: Conan Preset Export
       shell: bash
       run: |
-        echo "CONAN_PRESET=conan-$(echo ${{ inputs.build-type }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+        if [[ "${{ inputs.generator }}" == *"Multi-Config"* || "${{ inputs.generator }}" == "Visual Studio"* || "${{ inputs.generator }}" == "Xcode"* ]]; then
+          echo "CONAN_PRESET=conan-default" >> $GITHUB_ENV
+        else
+          echo "CONAN_PRESET=conan-$(echo ${{ inputs.build-type }} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+        fi

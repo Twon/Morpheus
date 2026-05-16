@@ -80,7 +80,7 @@ jobs:
           if [ -f build/generators/conanbuild.sh ]; then
             source build/generators/conanbuild.sh
           fi
-          cmake --preset conan-default -DIWYU_ENABLE=1
+          cmake --preset ${{ env.CONAN_PRESET }} -DIWYU_ENABLE=1
 
       - name: Build
         shell: bash
