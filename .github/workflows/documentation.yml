@@ -78,7 +78,7 @@ jobs:
           if [ -f build/generators/conanbuild.sh ]; then
             source build/generators/conanbuild.sh
           fi
-          cmake --preset conan-default -DMORPHEUS_BUILD_DOCUMENTATION:BOOL=ON
+          cmake --preset ${{ env.CONAN_PRESET }} -DMORPHEUS_BUILD_DOCUMENTATION:BOOL=ON
 
       - name: Build Documentation
         shell: bash
