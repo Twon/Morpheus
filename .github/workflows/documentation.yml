@@ -54,7 +54,7 @@ jobs:
           conan-compiler: gcc
           compiler-version: ${{ env.COMPILER_VERSION }}
           stdlib: libstdc++11
-          cache-suffix: "-documentation"
+          cache-suffix: "documentation"
 
       - name: Setup Conan
         uses: ./.github/actions/setup-conan

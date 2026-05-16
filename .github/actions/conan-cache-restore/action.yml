@@ -24,18 +24,35 @@ inputs:
 runs:
   using: "composite"
   steps:
+    - name: Prepare Cache Key Components
+      id: prep
+      shell: bash
+      run: |
+        STDLIB="${{ inputs.stdlib }}"
+        if [ -n "$STDLIB" ]; then
+          echo "stdlib=-$STDLIB" >> $GITHUB_OUTPUT
+        else
+          echo "stdlib=" >> $GITHUB_OUTPUT
+        fi
+
+        SUFFIX="${{ inputs.cache-suffix }}"
+        SUFFIX="${SUFFIX#-}" # Remove leading hyphen if present
+        if [ -n "$SUFFIX" ]; then
+          echo "suffix=-$SUFFIX" >> $GITHUB_OUTPUT
+        else
+          echo "suffix=" >> $GITHUB_OUTPUT
+        fi
+
     - name: Cache Conan data
       uses: actions/cache@v5.0.5
       env:
         cache-name: cache-conan-data
       with:
         path: ${{ github.workspace }}/conan_cache_save.tgz
-        key: ${{ hashFiles('**/conanfile.py') }}-build-${{ inputs.os }}-${{ inputs.build-type }}-${{ inputs.conan-compiler }}-${{ inputs.compiler-version }}-${{ inputs.stdlib }}${{ inputs.cache-suffix }}
+        key: ${{ hashFiles('**/conanfile.py') }}-build-${{ inputs.os }}-${{ inputs.build-type }}-${{ inputs.conan-compiler }}-${{ inputs.compiler-version }}${{ steps.prep.outputs.stdlib }}${{ steps.prep.outputs.suffix }}
         restore-keys: |
-          ${{ hashFiles('**/conanfile.py') }}-build-${{ inputs.os }}-${{ inputs.build-type }}-${{ inputs.conan-compiler }}-${{ inputs.compiler-version }}-
-          ${{ hashFiles('**/conanfile.py') }}-build-${{ inputs.os }}-${{ inputs.build-type }}-${{ inputs.conan-compiler }}-
-          ${{ hashFiles('**/conanfile.py') }}-build-${{ inputs.os }}-${{ inputs.build-type }}-
-          ${{ hashFiles('**/conanfile.py') }}-build-${{ inputs.os }}-
+          ${{ hashFiles('**/conanfile.py') }}-build-${{ inputs.os }}-${{ inputs.build-type }}-${{ inputs.conan-compiler }}-${{ inputs.compiler-version }}${{ steps.prep.outputs.stdlib }}${{ steps.prep.outputs.suffix }}
+          ${{ hashFiles('**/conanfile.py') }}-build-${{ inputs.os }}-${{ inputs.build-type }}-${{ inputs.conan-compiler }}-${{ inputs.compiler-version }}${{ steps.prep.outputs.suffix }}
 
     - name: Conan Cache Restore
       shell: bash
