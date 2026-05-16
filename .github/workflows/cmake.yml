@@ -219,6 +219,7 @@ jobs:
       - uses: actions/checkout@v6.0.2
 
       - name: Install Compiler
+        if: ${{ !matrix.settings.bebe_image }}
         uses: ./.github/actions/setup-compiler
         with:
           compiler-type: ${{ matrix.settings.compiler.type }}
@@ -228,6 +229,8 @@ jobs:
 
       - name: Setup Python
         uses: ./.github/actions/setup-python
+        with:
+          install-python: ${{ !matrix.settings.bebe_image }}
 
       - name: Cache Conan Restore
         uses: ./.github/actions/conan-cache-restore
