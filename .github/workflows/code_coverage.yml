@@ -32,26 +32,9 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
+    container: ghcr.io/twon/bebe/bebe:ubuntu.gcc15
     steps:
       - uses: actions/checkout@v6.0.2
-
-      - name: Install Latest GCC
-        shell: bash
-        run: |
-          sudo apt install -y g++-${{ env.COMPILER_VERSION }}
-          sudo rm -f /usr/bin/gcc /usr/bin/g++ /usr/bin/gcov
-          sudo ln -s /usr/bin/gcov-${{ env.COMPILER_VERSION }} /usr/bin/gcov
-          sudo ln -s /usr/bin/gcc-${{ env.COMPILER_VERSION }} /usr/bin/gcc
-          sudo ln -s /usr/bin/g++-${{ env.COMPILER_VERSION }} /usr/bin/g++
-
-      - name: Install Lcov
-        shell: bash
-        run: |
-          wget https://github.com/linux-test-project/lcov/archive/refs/tags/v2.0.tar.gz
-          tar -xvf v2.0.tar.gz
-          cd lcov-2.0 && sudo make install && cd ..
-          sudo perl -MCPAN -e 'install Capture::Tiny'
-          sudo apt-get install -y libdatetime-perl
 
       - name: Setup Python
         uses: ./.github/actions/setup-python

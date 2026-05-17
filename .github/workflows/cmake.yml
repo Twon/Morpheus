@@ -251,7 +251,6 @@ jobs:
           stdlib: ${{ matrix.settings.lib || '' }}
           cppstd: ${{ matrix.settings.compiler.std }}
           generator: "Ninja Multi-Config"
-          package-manager-mode: "install"
 
       - name: Conan Install
         shell: bash

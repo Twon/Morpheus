@@ -32,6 +32,7 @@ env:
 jobs:
   documentation:
     runs-on: ubuntu-latest
+    container: ghcr.io/twon/bebe/bebe:ubuntu.gcc15
     steps:
       - uses: actions/checkout@v6.0.2
 
