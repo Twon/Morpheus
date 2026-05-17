@@ -36,13 +36,6 @@ jobs:
     steps:
       - uses: actions/checkout@v6.0.2
 
-      - name: Install Compiler
-        uses: ./.github/actions/setup-compiler
-        with:
-          compiler-type: GCC
-          compiler-version: ${{ env.COMPILER_VERSION }}
-          stdlib: libstdc++11
-          os: Linux
 
       - name: Setup Python
         uses: ./.github/actions/setup-python
