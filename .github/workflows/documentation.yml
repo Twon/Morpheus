@@ -27,7 +27,7 @@ on:
 
 env:
   BUILD_TYPE: Debug
-  COMPILER_VERSION: 13
+  COMPILER_VERSION: 15
 
 jobs:
   documentation:
