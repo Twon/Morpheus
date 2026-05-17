@@ -23,9 +23,6 @@ inputs:
   generator:
     description: 'CMake generator'
     default: "Ninja"
-  package-manager-mode:
-    description: 'Conan system package manager mode (install, patch, or None)'
-    default: "install"
 
 runs:
   using: "composite"
@@ -56,24 +53,12 @@ runs:
         echo "tools.cmake.cmaketoolchain:generator = ${{ inputs.generator }}" >> .conan2/global.conf
 
         if [[ "${{ runner.os }}" != "Windows" ]]; then
-          echo "tools.system.package_manager:mode = ${{ inputs.package-manager-mode }}" >> .conan2/global.conf
-          if command -v sudo >/dev/null 2>&1; then
-            echo "tools.system.package_manager:sudo = True" >> .conan2/global.conf
-          else
-            echo "tools.system.package_manager:sudo = False" >> .conan2/global.conf
-          fi
+          echo "tools.system.package_manager:mode = install" >> .conan2/global.conf
+          echo "tools.system.package_manager:sudo = True" >> .conan2/global.conf
         fi
 
         if [[ "${{ inputs.conan-compiler }}" == "clang" && "${{ runner.os }}" == "Linux" ]]; then
-           CC_NAME="clang-${{ inputs.compiler-version }}"
-           CXX_NAME="clang++-${{ inputs.compiler-version }}"
-           if ! command -v "$CC_NAME" >/dev/null 2>&1; then
-             CC_NAME="clang"
-           fi
-           if ! command -v "$CXX_NAME" >/dev/null 2>&1; then
-             CXX_NAME="clang++"
-           fi
-           echo "tools.build:compiler_executables = {\"c\": \"$CC_NAME\", \"cpp\": \"$CXX_NAME\"}" >> .conan2/global.conf
+           echo "tools.build:compiler_executables = {\"c\": \"clang-${{ inputs.compiler-version }}\", \"cpp\": \"clang++-${{ inputs.compiler-version }}\"}" >> .conan2/global.conf
         fi
 
         conan profile show -pr default

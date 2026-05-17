@@ -256,23 +256,6 @@ jobs:
       - name: Conan Install
         shell: bash
         run: |
-          # Temporarily remove the conflicting global GCC library config to allow apt-get to work
-          if [[ -d "/etc/ld.so.conf.d" ]]; then
-            SUDO_CMD=""
-            if command -v sudo >/dev/null 2>&1; then
-              SUDO_CMD="sudo"
-            fi
-            $SUDO_CMD rm -f /etc/ld.so.conf.d/gcc-releases-gcc-*.conf
-            $SUDO_CMD ldconfig
-
-            # Ensure the container has basic C/C++ runtime objects and headers
-            $SUDO_CMD apt-get update && $SUDO_CMD apt-get install -y build-essential
-
-            # Install libc++ if needed for Clang
-            if [[ "${{ matrix.settings.compiler.type }}" == "CLANG" && "${{ matrix.settings.lib }}" == "libc++" ]]; then
-              $SUDO_CMD apt-get install -y libc++-${{ matrix.settings.compiler.version }}-dev libc++abi-${{ matrix.settings.compiler.version }}-dev
-            fi
-          fi
           conan install . --build missing -pr:b default
 
       - name: Configure CMake (Windows)
