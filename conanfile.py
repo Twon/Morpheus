@@ -162,9 +162,11 @@ class Morpheus(ConanFile):
 
     def build_requirements(self):
         self.tool_requires("ninja/1.13.2")
-        self.tool_requires("pkgconf/2.1.0")
         self.test_requires("catch2/3.13.0")
         self.test_requires("gtest/1.17.0")
+
+        if self.settings.os == "Linux":
+            self.tool_requires("pkgconf/2.1.0")
 
         if get_cmake_version() < Version("4.3.0"):
             self.tool_requires("cmake/4.3.0")

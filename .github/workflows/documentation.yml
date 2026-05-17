@@ -36,7 +36,6 @@ jobs:
     steps:
       - uses: actions/checkout@v6.0.2
 
-
       - name: Setup Python
         uses: ./.github/actions/setup-python
         with:
