@@ -63,7 +63,7 @@ jobs:
       - name: Conan Install
         shell: bash
         run: |
-          conan install "${{ github.workspace }}" --build missing
+          conan install . --build missing
 
       - name: Configure CMake
         shell: bash
