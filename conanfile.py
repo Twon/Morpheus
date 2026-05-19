@@ -79,6 +79,7 @@ class Morpheus(ConanFile):
         "unordered_dense/4.8.1",
         "boost/1.90.0",
         "ctre/3.10.0",
+        "ftxui/6.0.2",
         "magic_enum/0.9.7",
         "ms-gsl/4.2.0",
         "rapidjson/cci.20250205",

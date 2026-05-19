@@ -1,6 +1,5 @@
 #pragma once
 
-#include "morpheus/application/po/adapters/enum.hpp"
 #include <morpheus/core/base/platform.hpp>
 
 #if (MORPHEUS_BUILD_PLATFORM == MORPHEUS_TARGET_PLATFORM_APPLE)
@@ -63,9 +62,10 @@ public:
     /// Register program options
     void addOptions(boost::program_options::options_description& options);
 
+    // boost::program_options::options_description& runTuiConfiguration();
+    void runTuiConfiguration();
     auto getActiveAPI() const -> API { return mActiveApi; }
 
-private:
     /// Returns a map of the available rendering systems to their respective underlying graphics APIs.
     ///
     static constexpr auto availableAPIs()
@@ -81,6 +81,7 @@ private:
             hana::make_pair(RenderSystemType<API::Vulkan>, hana::type_c<gfx::vulkan::RenderSystem>));
     }
 
+private:
     // using APIMap = std::invoke_result_t<decltype(&RenderSystemFactory::availableAPIs)()>;
 
     // constexpr static auto renderSystemAPIs = availableAPIs();
