@@ -1,5 +1,6 @@
 target_sources(MorpheusCoreTests
     PRIVATE
+        bitset.tests.cpp
         chrono.tests.cpp
         expected.tests.cpp
         indirect.tests.cpp
