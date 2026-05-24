@@ -23,7 +23,7 @@ using namespace ::testing;
 using namespace std::literals::string_view_literals;
 
 template <typename Range>
-constexpr std::string toBitString(Range const& values)
+std::string toBitString(Range const& values)
 {
     std::string result;
     result.reserve(std::size(values) * 64uz);
