@@ -3,6 +3,7 @@ target_sources(MorpheusCore
         FILE_SET HEADERS
         FILES
             array.hpp
+            bitset.hpp
             deque.hpp
             expected.hpp
             forward_list.hpp
