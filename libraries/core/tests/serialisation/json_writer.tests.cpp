@@ -413,7 +413,7 @@ TEST_CASE("Json writer can write std types to underlying text representation", "
         REQUIRE(test::serialise(std::chrono::months{12}) == R"("12m")");
     }
     REQUIRE(test::serialise(std::bitset<4>("1101")) == R"("1101")");
-    REQUIRE(test::serialise(conf::vt::indirect<int>(42)) == R"("42")");
+    REQUIRE(test::serialise(conf::vt::indirect<int>(42)) == R"({"value":42})");
     REQUIRE(test::serialise(std::monostate{}) == R"({})");
     REQUIRE(test::serialise(std::optional<int>{100}) == R"(100)");
     REQUIRE(test::serialise(std::optional<int>{}) == R"(null)");
