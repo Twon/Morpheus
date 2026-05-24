@@ -1,6 +1,5 @@
 #pragma once
 
-#include "morpheus/core/meta/is_specialisation.hpp"
 #include "morpheus/core/serialisation/concepts/read_serialisable.hpp"
 #include "morpheus/core/serialisation/concepts/read_serialiser.hpp"
 #include "morpheus/core/serialisation/concepts/write_serialisable.hpp"
@@ -11,9 +10,6 @@
 
 namespace morpheus::serialisation::detail
 {
-
-template <typename T>
-concept IsStdBitset = meta::IsSpecialisationOf<std::bitset, T>;
 
 template <concepts::WriteSerialiser Serialiser, std::size_t N>
 void serialise(Serialiser& serialiser, std::bitset<N> const& bits)
@@ -63,7 +59,7 @@ std::bitset<N> deserialise(Serialiser& serialiser, std::type_identity<std::bitse
     else
     {
         std::bitset<N> bits;
-        auto const numBlocks = serialiser.reader().beginSequence();
+        [[maybe_unused]] auto const numBlocks = serialiser.reader().beginSequence();
         for (std::size_t i = 0; i < bits.size(); i += bits_per_uint64)
         {
             std::uint64_t block = serialiser.template deserialise<std::uint64_t>();

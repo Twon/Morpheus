@@ -8,9 +8,6 @@
 namespace morpheus::serialisation::detail
 {
 
-// template <typename T, std::size_t N>
-// inline constexpr bool isEnabledForRangeSerialisation<std::array<T, N>> = true;
-
 template <concepts::WriteSerialiser Serialiser, typename T, std::size_t N>
 void serialise(Serialiser& s, std::array<T, N> const& value)
 {
