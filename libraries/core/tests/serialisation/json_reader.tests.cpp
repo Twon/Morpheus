@@ -1,8 +1,11 @@
 #include "morpheus/core/conformance/format.hpp"
+#include "morpheus/core/conformance/value_types.hpp"
 #include "morpheus/core/serialisation/adapters/aggregate.hpp"
 #include "morpheus/core/serialisation/adapters/hex.hpp"
 #include "morpheus/core/serialisation/adapters/std/array.hpp"
+#include "morpheus/core/serialisation/adapters/std/bitset.hpp"
 #include "morpheus/core/serialisation/adapters/std/chrono.hpp"
+#include "morpheus/core/serialisation/adapters/std/indirect.hpp"
 #include "morpheus/core/serialisation/adapters/std/monostate.hpp"
 #include "morpheus/core/serialisation/adapters/std/optional.hpp"
 #include "morpheus/core/serialisation/adapters/std/pair.hpp"
@@ -24,6 +27,7 @@
 #include <catch2/matchers/catch_matchers_string.hpp>
 
 #include <array>
+#include <bitset>
 #include <chrono>
 #include <cmath>
 #include <compare>
@@ -571,6 +575,8 @@ TEST_CASE("Json reader can read std types from underlying text representation", 
         REQUIRE(test::deserialise<std::chrono::years>(R"("100y")") == std::chrono::years{100});
         REQUIRE(test::deserialise<std::chrono::months>(R"("12m")") == std::chrono::months{12});
     }
+    REQUIRE(test::deserialise<std::bitset<4>>(R"("1101")") == std::bitset<4>("1101"));
+    REQUIRE(test::deserialise<conf::vt::indirect<int>>(R"("42")") == conf::vt::indirect<int>(42));
     REQUIRE(test::deserialise<std::monostate>(R"({})") == std::monostate{});
     REQUIRE(test::deserialise<std::optional<int>>(R"(100)") == std::optional<int>{100});
     REQUIRE(test::deserialise<std::optional<int>>(R"(null)") == std::optional<int>{});

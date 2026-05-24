@@ -1,5 +1,8 @@
+#include "morpheus/core/conformance/value_types.hpp"
 #include "morpheus/core/serialisation/adapters/aggregate.hpp"
+#include "morpheus/core/serialisation/adapters/std/bitset.hpp"
 #include "morpheus/core/serialisation/adapters/std/chrono.hpp"
+#include "morpheus/core/serialisation/adapters/std/indirect.hpp"
 #include "morpheus/core/serialisation/adapters/std/monostate.hpp"
 #include "morpheus/core/serialisation/adapters/std/optional.hpp"
 #include "morpheus/core/serialisation/adapters/std/pair.hpp"
@@ -14,6 +17,7 @@
 
 #include <catch2/catch_test_macros.hpp>
 
+#include <bitset>
 #include <chrono>
 #include <memory>
 #include <optional>
@@ -42,6 +46,8 @@ TEST_CASE("Binary serialisation can roundtrip standard library types to binary a
         REQUIRE(roundtrip(std::chrono::years{100}) == std::chrono::years{100});
         REQUIRE(roundtrip(std::chrono::months{12}) == std::chrono::months{12});
     }
+    REQUIRE(roundtrip(std::bitset<4>{"1101"}) == std::bitset<4>{"1101"});
+    REQUIRE(roundtrip(conf::vt::indirect<int>{42}) == conf::vt::indirect<int>{42});
     REQUIRE(roundtrip(std::monostate{}) == std::monostate{});
     REQUIRE(roundtrip(std::optional<int>{100}) == std::optional<int>{100});
     REQUIRE(roundtrip(std::optional<int>{}) == std::optional<int>{});

@@ -1,7 +1,9 @@
 #include "morpheus/core/conformance/format.hpp"
 #include "morpheus/core/serialisation/adapters/aggregate.hpp"
 #include "morpheus/core/serialisation/adapters/hex.hpp"
+#include "morpheus/core/serialisation/adapters/std/bitset.hpp"
 #include "morpheus/core/serialisation/adapters/std/chrono.hpp"
+#include "morpheus/core/serialisation/adapters/std/indirect.hpp"
 #include "morpheus/core/serialisation/adapters/std/monostate.hpp"
 #include "morpheus/core/serialisation/adapters/std/optional.hpp"
 #include "morpheus/core/serialisation/adapters/std/pair.hpp"
@@ -18,6 +20,7 @@
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/catch_tostring.hpp>
 
+#include <bitset>
 #include <charconv> // IWYU pragma: keep
 #include <chrono>
 #include <cstdint>
@@ -409,6 +412,8 @@ TEST_CASE("Json writer can write std types to underlying text representation", "
         REQUIRE(test::serialise(std::chrono::years{100}) == R"("100y")");
         REQUIRE(test::serialise(std::chrono::months{12}) == R"("12m")");
     }
+    REQUIRE(test::serialise(std::bitset<4>("1101")) == R"("1101")");
+    REQUIRE(test::serialise(conf::vt::indirect<int>(42)) == R"("42")");
     REQUIRE(test::serialise(std::monostate{}) == R"({})");
     REQUIRE(test::serialise(std::optional<int>{100}) == R"(100)");
     REQUIRE(test::serialise(std::optional<int>{}) == R"(null)");
