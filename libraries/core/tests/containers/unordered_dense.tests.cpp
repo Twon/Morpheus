@@ -10,7 +10,7 @@ namespace morpheus::containers::concepts
 TEMPLATE_TEST_CASE("Verify unordered dense map aliases work correctly", "[morpheus.containers.unordered.dense.map]", std::string, int)
 {
     auto const values = std::vector{1, 2, 3, 4, 5};
-    UnorderedMap<TestType, int> container;
+    UnorderedDenseMap<TestType, int> container;
 
     for (auto const& value : values)
     {
@@ -35,7 +35,7 @@ TEMPLATE_TEST_CASE("Verify unordered dense map aliases work correctly", "[morphe
 TEMPLATE_TEST_CASE("Verify unordered dense set aliases work correctly", "[morpheus.containers.unordered.dense.set]", std::string, int)
 {
     auto const values = std::vector{1, 2, 3, 4, 5};
-    UnorderedSet<TestType> container;
+    UnorderedDenseSet<TestType> container;
 
     for (auto const& value : values)
     {
