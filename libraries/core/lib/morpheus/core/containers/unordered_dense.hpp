@@ -23,38 +23,38 @@ struct string_hash
 namespace details
 {
 
-template <typename K, typename V>
+template <typename K, typename V, typename A = std::allocator<std::pair<K, V>>>
 struct UnorderdDenseMap
 {
-    using type = ankerl::unordered_dense::map<K, V>;
+    using type = ankerl::unordered_dense::map<K, V, ankerl::unordered_dense::hash<K>, std::equal_to<>, A>;
 };
 
-template <typename V>
-struct UnorderdDenseMap<std::string, V>
+template <typename V, typename A>
+struct UnorderdDenseMap<std::string, V, A>
 {
-    using type = ankerl::unordered_dense::map<std::string, V, string_hash, std::equal_to<>>;
+    using type = ankerl::unordered_dense::map<std::string, V, string_hash, std::equal_to<>, A>;
 };
 
-template <typename V>
+template <typename V, typename A = std::allocator<V>>
 struct UnorderdDenseSet
 {
-    using type = ankerl::unordered_dense::set<V>;
+    using type = ankerl::unordered_dense::set<V, ankerl::unordered_dense::hash<V>, std::equal_to<>, A>;
 };
 
-template <>
-struct UnorderdDenseSet<std::string>
+template <typename A>
+struct UnorderdDenseSet<std::string, A>
 {
-    using type = ankerl::unordered_dense::set<std::string, string_hash, std::equal_to<>>;
+    using type = ankerl::unordered_dense::set<std::string, string_hash, std::equal_to<>, A>;
 };
 
 } // namespace details
 
 /// Helper alias which ensure users get heterogeneous overloads where possible.
-template <typename K, typename V>
-using UnorderedMap = typename details::UnorderdDenseMap<K, V>::type;
+template <typename K, typename V, typename A = std::allocator<std::pair<K, V>>>
+using UnorderedDenseMap = typename details::UnorderdDenseMap<K, V>::type;
 
 /// Helper alias which ensure users get heterogeneous overloads where possible.
-template <typename V>
-using UnorderedSet = typename details::UnorderdDenseSet<V>::type;
+template <typename K, typename A = std::allocator<K>>
+using UnorderedDenseSet = typename details::UnorderdDenseSet<K, A>::type;
 
 } // namespace morpheus::containers
