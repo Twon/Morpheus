@@ -6,6 +6,7 @@
 #include "morpheus/core/serialisation/adapters/std/bitset.hpp"
 #include "morpheus/core/serialisation/adapters/std/chrono.hpp"
 #include "morpheus/core/serialisation/adapters/std/indirect.hpp"
+#include "morpheus/core/serialisation/adapters/std/map.hpp"
 #include "morpheus/core/serialisation/adapters/std/monostate.hpp"
 #include "morpheus/core/serialisation/adapters/std/optional.hpp"
 #include "morpheus/core/serialisation/adapters/std/pair.hpp"
@@ -575,6 +576,15 @@ TEST_CASE("Json reader can read std types from underlying text representation", 
         REQUIRE(test::deserialise<std::chrono::years>(R"("100y")") == std::chrono::years{100});
         REQUIRE(test::deserialise<std::chrono::months>(R"("12m")") == std::chrono::months{12});
     }
+    SECTION("Container types")
+    {
+        REQUIRE(test::deserialise<std::map<int, std::string>>(R"([[1,"a"],[2,"b"],[3,"b"]])") == std::map<int, std::string>{
+                                                                                                     {1, "a"},
+                                                                                                     {2, "b"},
+                                                                                                     {3, "b"}
+        });
+        REQUIRE(test::deserialise<std::vector<int>>(R"([1, 2, 3, 4, 5])") == std::vector<int>{1, 2, 3, 4, 5});
+    }
     REQUIRE(test::deserialise<std::bitset<4>>(R"("1101")") == std::bitset<4>("1101"));
     REQUIRE(test::deserialise<conf::vt::indirect<int>>(R"({"value":42})") == conf::vt::indirect<int>(42));
     REQUIRE(test::deserialise<std::monostate>(R"({})") == std::monostate{});
@@ -584,7 +594,6 @@ TEST_CASE("Json reader can read std types from underlying text representation", 
     REQUIRE(test::deserialise<std::string>(R"("Hello")") == std::string("Hello"));
     REQUIRE(test::deserialise<std::tuple<int, bool, std::string>>(R"([75,true,"Example"])") == std::tuple<int, bool, std::string>{75, true, "Example"});
     //    REQUIRE(test::deserialise<std::variant<int, bool, std::string>>(R"({"type":"bool","value":true})") == std::variant<int, bool, std::string>{true});
-    REQUIRE(test::deserialise<std::vector<int>>(R"([1, 2, 3, 4, 5])") == std::vector<int>{1, 2, 3, 4, 5});
     REQUIRE(*test::deserialise<std::unique_ptr<int>>(R"(50)") == 50);
 }
 

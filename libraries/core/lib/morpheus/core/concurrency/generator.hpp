@@ -65,13 +65,13 @@ struct Generator
         template <std::convertible_to<T> From>
         auto yield_value(From&& from)
         {
-            current_value = std::forward<From>(from);
+            current_value = std::addressof(from);
             return coro::suspend_always{};
         }
 
         void unhandled_exception() { exception = std::current_exception(); }
 
-        T current_value;
+        T const* current_value = nullptr;
         std::exception_ptr exception;
     };
 
@@ -116,7 +116,7 @@ struct Generator
         [[nodiscard]] reference& operator*() const noexcept
         {
             assert(!handle.done() && "Can't dereference generator end iterator");
-            return handle.promise().current_value;
+            return *handle.promise().current_value;
         }
 
         [[nodiscard]] pointer& operator->() const noexcept { return std::addressof(operator*()); }

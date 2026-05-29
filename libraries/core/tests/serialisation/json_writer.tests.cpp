@@ -4,6 +4,7 @@
 #include "morpheus/core/serialisation/adapters/std/bitset.hpp"
 #include "morpheus/core/serialisation/adapters/std/chrono.hpp"
 #include "morpheus/core/serialisation/adapters/std/indirect.hpp"
+#include "morpheus/core/serialisation/adapters/std/map.hpp"
 #include "morpheus/core/serialisation/adapters/std/monostate.hpp"
 #include "morpheus/core/serialisation/adapters/std/optional.hpp"
 #include "morpheus/core/serialisation/adapters/std/pair.hpp"
@@ -412,6 +413,15 @@ TEST_CASE("Json writer can write std types to underlying text representation", "
         REQUIRE(test::serialise(std::chrono::years{100}) == R"("100y")");
         REQUIRE(test::serialise(std::chrono::months{12}) == R"("12m")");
     }
+    SECTION("Container types")
+    {
+        REQUIRE(test::serialise(std::map<int, std::string>{
+                    {1, "a"},
+                    {2, "b"},
+                    {3, "b"}
+        }) == R"([[1,"a"],[2,"b"],[3,"b"]])");
+        REQUIRE(test::serialise(std::vector<int>{1, 2, 3, 4, 5}) == R"([1,2,3,4,5])");
+    }
     REQUIRE(test::serialise(std::bitset<4>("1101")) == R"("1101")");
     REQUIRE(test::serialise(conf::vt::indirect<int>(42)) == R"({"value":42})");
     REQUIRE(test::serialise(std::monostate{}) == R"({})");
@@ -422,7 +432,6 @@ TEST_CASE("Json writer can write std types to underlying text representation", "
     REQUIRE(test::serialise(std::tuple<int, bool, std::string>{75, true, "Example"}) == R"([75,true,"Example"])");
     REQUIRE(test::serialise(std::make_unique<int>(123)) == R"(123)");
     REQUIRE(test::serialise(std::variant<int, bool, std::string>{true}) == R"({"type":"bool","value":true})");
-    REQUIRE(test::serialise(std::vector<int>{1, 2, 3, 4, 5}) == R"([1,2,3,4,5])");
 }
 
 TEST_CASE("Json writer can write ranges of composites", "[morpheus.serialisation.range.serialise.composites]")
