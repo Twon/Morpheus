@@ -35,10 +35,28 @@ void serialise(Serialiser& serialiser, IsRange auto const& range)
     serialiser.writer().endSequence();
 }
 
+template <typename T>
+concept IsMapLike = requires {
+    typename T::key_type;
+    typename T::mapped_type;
+};
+
+template <typename T>
+struct RangeDeserialiseValue
+{
+    using type = conf::ranges::range_value_t<T>;
+};
+
+template <IsMapLike T>
+struct RangeDeserialiseValue<T>
+{
+    using type = std::pair<typename T::key_type, typename T::mapped_type>;
+};
+
 template <concepts::ReadSerialiser Serialiser, IsRange T>
 void deserialise(Serialiser& serialiser, T& range)
 {
-    using ValueType = conf::ranges::range_value_t<T>;
+    using ValueType = typename RangeDeserialiseValue<T>::type;
 
     auto seq = serialiser.template sequence<ValueType>();
 
@@ -69,14 +87,12 @@ void deserialise(Serialiser& serialiser, T& range)
 template <concepts::ReadSerialiser Serialiser, IsRange T>
 T deserialise(Serialiser& serialiser, std::type_identity<T>)
 {
+    using ValueType = typename RangeDeserialiseValue<T>::type;
+
 #if defined(__cpp_lib_ranges_to_container) && __cpp_lib_ranges_to_container >= 202202L
-    using ValueType = conf::ranges::range_value_t<T>;
-    auto seq = serialiser.template sequence<ValueType>();
-    return conf::ranges::to<T>(std::move(seq));
+    return conf::ranges::to<T>(serialiser.template sequence<ValueType>());
 #elif defined(__cpp_lib_containers_ranges) && __cpp_lib_containers_ranges >= 202202L
-    using ValueType = conf::ranges::range_value_t<T>;
-    auto seq = serialiser.template sequence<ValueType>();
-    return T(std::from_range, std::move(seq));
+    return T(std::from_range, serialiser.template sequence<ValueType>());
 #else
     T range;
     serialiser.deserialise(range);
