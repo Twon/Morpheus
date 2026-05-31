@@ -1,6 +1,7 @@
 #pragma once
 
 // IWYU pragma: always_keep
+#include "morpheus/core/base/compiler.hpp"
 #include "morpheus/core/conformance/ranges.hpp"
 #include "morpheus/core/meta/concepts/string.hpp"
 #include "morpheus/core/serialisation/concepts/read_serialisable.hpp"
@@ -36,27 +37,27 @@ void serialise(Serialiser& serialiser, IsRange auto const& range)
 }
 
 template <typename T>
-concept IsMapLike = requires {
+concept IsAssociativeLike = requires {
+    typename T::value_type;
     typename T::key_type;
-    typename T::mapped_type;
 };
 
-template <typename T>
-struct RangeDeserialiseValue
-{
-    using type = conf::ranges::range_value_t<T>;
-};
-
-template <IsMapLike T>
-struct RangeDeserialiseValue<T>
-{
-    using type = std::pair<typename T::key_type, typename T::mapped_type>;
-};
+// template <typename T>
+// struct RangeDeserialiseValue
+//{
+//     using type = conf::ranges::range_value_t<T>;
+// };
+//
+// template <IsMapLike T>
+// struct RangeDeserialiseValue<T>
+//{
+//     using type = std::pair<typename T::key_type, typename T::mapped_type>;
+// };
 
 template <concepts::ReadSerialiser Serialiser, IsRange T>
 void deserialise(Serialiser& serialiser, T& range)
 {
-    using ValueType = typename RangeDeserialiseValue<T>::type;
+    using ValueType = conf::ranges::range_value_t<T>;
 
     auto seq = serialiser.template sequence<ValueType>();
 
@@ -87,10 +88,23 @@ void deserialise(Serialiser& serialiser, T& range)
 template <concepts::ReadSerialiser Serialiser, IsRange T>
 T deserialise(Serialiser& serialiser, std::type_identity<T>)
 {
-    using ValueType = typename RangeDeserialiseValue<T>::type;
+    using ValueType = conf::ranges::range_value_t<T>;
 
 #if defined(__cpp_lib_ranges_to_container) && __cpp_lib_ranges_to_container >= 202202L
-    return conf::ranges::to<T>(serialiser.template sequence<ValueType>());
+    static constexpr bool isGcc14 = (MORPHEUS_COMPILER == MORPHEUS_GNUC_COMPILER) && (MORPHEUS_COMP_VER >= 140000000) && (MORPHEUS_COMP_VER < 150000000);
+
+    if constexpr (isGcc14 && IsAssociativeLike<T>)
+    {
+        // We must work around Gcc's std::ranges::to implementation for associative containers:
+        // https://www.open-std.org/jtc1/sc22/wg21/docs/lwg-active.html#4121
+        T range;
+        serialiser.deserialise(range);
+        return range;
+    }
+    else
+    {
+        return conf::ranges::to<T>(serialiser.template sequence<ValueType>());
+    }
 #elif defined(__cpp_lib_containers_ranges) && __cpp_lib_containers_ranges >= 202202L
     return T(std::from_range, serialiser.template sequence<ValueType>());
 #else

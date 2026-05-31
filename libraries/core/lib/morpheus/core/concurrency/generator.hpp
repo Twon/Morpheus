@@ -71,7 +71,7 @@ struct Generator
 
         void unhandled_exception() { exception = std::current_exception(); }
 
-        T const* current_value = nullptr;
+        std::add_pointer_t<std::add_const_t<T>> current_value = nullptr;
         std::exception_ptr exception;
     };
 
