@@ -10,9 +10,6 @@
 namespace morpheus::memory::concepts
 {
 
-// clang-format off
-// Requires clang-format 18.0 support for AllowShortCompoundRequirementOnASingleLine: true
-
 /// \concept Allocator
 ///     Concept capturing the requirements for an allocator as outline in the standard at
 ///     <a href="https://eel.is/c++draft/allocator.requirements">[allocator.requirements]</a>.
@@ -38,11 +35,11 @@ concept Allocator = requires(A<T> a, typename std::allocator_traits<A<T>>::size_
     { a.allocate(s) } -> std::same_as<typename std::allocator_traits<A<T>>::pointer>;
     { a.deallocate(p, s) } -> std::same_as<void>;
 
-#if (__cpp_lib_allocate_at_least >= 202302L )
-    { a.allocate_at_least(s) } -> std::same_as<std::allocation_result<typename std::allocator_traits<A<T>>::pointer, typename std::allocator_traits<A<T>>::size_type>>;
+#if (__cpp_lib_allocate_at_least >= 202302L)
+    {
+        a.allocate_at_least(s)
+    } -> std::same_as<std::allocation_result<typename std::allocator_traits<A<T>>::pointer, typename std::allocator_traits<A<T>>::size_type>>;
 #endif
 };
-
-// clang-format on
 
 } // namespace morpheus::memory::concepts
