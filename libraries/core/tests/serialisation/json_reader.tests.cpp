@@ -1,6 +1,7 @@
 #include "morpheus/core/conformance/format.hpp"
 #include "morpheus/core/conformance/value_types.hpp"
 #include "morpheus/core/serialisation/adapters/aggregate.hpp"
+#include "morpheus/core/serialisation/adapters/boost/dynamic_bitset.hpp"
 #include "morpheus/core/serialisation/adapters/hex.hpp"
 #include "morpheus/core/serialisation/adapters/std/array.hpp"
 #include "morpheus/core/serialisation/adapters/std/bitset.hpp"
@@ -595,6 +596,11 @@ TEST_CASE("Json reader can read std types from underlying text representation", 
     REQUIRE(test::deserialise<std::tuple<int, bool, std::string>>(R"([75,true,"Example"])") == std::tuple<int, bool, std::string>{75, true, "Example"});
     //    REQUIRE(test::deserialise<std::variant<int, bool, std::string>>(R"({"type":"bool","value":true})") == std::variant<int, bool, std::string>{true});
     REQUIRE(*test::deserialise<std::unique_ptr<int>>(R"(50)") == 50);
+}
+
+TEST_CASE("Json reader can read std types from underlying text representation", "[morpheus.serialisation.json_reader.adapters.boost]")
+{
+    REQUIRE(test::deserialise<boost::dynamic_bitset<>>(R"("1101")") == boost::dynamic_bitset<>("1101"));
 }
 
 TEST_CASE("Error handling test cases for unexpected errors in the input Json stream", "[morpheus.serialisation.json_reader.error_handling]")
