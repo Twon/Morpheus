@@ -68,6 +68,7 @@ TEST_CASE("Verify serialisation of boost::dynamic_bitset", "[morpheus.serialisat
             0xFEDCBA9876543210,
         };
 
+        auto const numBits = actualValues.size() * sizeof(std::uint64_t) * 8;
         auto const value = BitsetType(actualValues.begin(), actualValues.end());
 
         THEN("Expect the following sequence of operations on the underlying writer")
@@ -75,7 +76,7 @@ TEST_CASE("Verify serialisation of boost::dynamic_bitset", "[morpheus.serialisat
             InSequence seq;
             MockedWriteSerialiser serialiser;
             EXPECT_CALL(serialiser.writer(), isTextual()).WillOnce(Return(false));
-            EXPECT_CALL(serialiser.writer(), beginSequence(std::optional(actualValues.size()))).Times(1);
+            EXPECT_CALL(serialiser.writer(), beginSequence(std::optional(numBits))).Times(1);
             for (std::size_t i = 0uz; i < actualValues.size(); ++i)
             {
                 EXPECT_CALL(serialiser.writer(), write(Matcher<std::uint64_t>(Eq(actualValues[i])))).Times(1);
@@ -118,13 +119,14 @@ TEST_CASE("Verify deserialisation of boost::dynamic_bitset", "[morpheus.serialis
             0xFEDCBA9876543210,
         };
 
+        auto const numBits = actualValues.size() * sizeof(std::uint64_t) * 8;
         auto const value = BitsetType(actualValues.begin(), actualValues.end());
 
         THEN("Expect the following sequence of operations on the underlying reader")
         {
             InSequence seq;
             MockedReadSerialiser<false> serialiser;
-            EXPECT_CALL(serialiser.reader(), beginSequence()).WillOnce(Return(std::optional(actualValues.size())));
+            EXPECT_CALL(serialiser.reader(), beginSequence()).WillOnce(Return(std::optional(numBits)));
             for (std::size_t i = 0uz; i < actualValues.size(); ++i)
             {
                 EXPECT_CALL(serialiser.reader(), read(An<std::uint64_t>())).WillOnce(Return(actualValues[i]));

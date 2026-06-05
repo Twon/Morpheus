@@ -1,5 +1,6 @@
 #include "morpheus/core/conformance/value_types.hpp"
 #include "morpheus/core/serialisation/adapters/aggregate.hpp"
+#include "morpheus/core/serialisation/adapters/boost/dynamic_bitset.hpp"
 #include "morpheus/core/serialisation/adapters/std/bitset.hpp"
 #include "morpheus/core/serialisation/adapters/std/chrono.hpp"
 #include "morpheus/core/serialisation/adapters/std/indirect.hpp"
@@ -58,6 +59,11 @@ TEST_CASE("Binary serialisation can roundtrip standard library types to binary a
 
     /*  REQUIRE(test::serialise(std::variant<int, bool, std::string>{true}) == R"({"type":"bool","value":true})");
      */
+}
+
+TEST_CASE("Binary serialisation can roundtrip standard library types to binary and back", "[morpheus.serialisation.binary.roundtrip.adapters.boost]")
+{
+    REQUIRE(roundtrip(boost::dynamic_bitset<>{"1101"}) == boost::dynamic_bitset<>{"1101"});
 }
 
 } // namespace morpheus::serialisation

@@ -1,5 +1,6 @@
 #include "morpheus/core/conformance/format.hpp"
 #include "morpheus/core/serialisation/adapters/aggregate.hpp"
+#include "morpheus/core/serialisation/adapters/boost/dynamic_bitset.hpp"
 #include "morpheus/core/serialisation/adapters/hex.hpp"
 #include "morpheus/core/serialisation/adapters/std/bitset.hpp"
 #include "morpheus/core/serialisation/adapters/std/chrono.hpp"
@@ -432,6 +433,11 @@ TEST_CASE("Json writer can write std types to underlying text representation", "
     REQUIRE(test::serialise(std::tuple<int, bool, std::string>{75, true, "Example"}) == R"([75,true,"Example"])");
     REQUIRE(test::serialise(std::make_unique<int>(123)) == R"(123)");
     REQUIRE(test::serialise(std::variant<int, bool, std::string>{true}) == R"({"type":"bool","value":true})");
+}
+
+TEST_CASE("Json writer can write std types to underlying text representation", "[morpheus.serialisation.json_writer.adapters.boost]")
+{
+    REQUIRE(test::serialise(boost::dynamic_bitset<>("1101")) == R"("1101")");
 }
 
 TEST_CASE("Json writer can write ranges of composites", "[morpheus.serialisation.range.serialise.composites]")
