@@ -29,6 +29,7 @@ jobs:
   build:
     name: ${{ matrix.settings.name }} ${{ matrix.configuration }}
     runs-on: ${{ matrix.settings.os }}
+    container: ${{ matrix.settings.bebe_image }}
     strategy:
       matrix:
         configuration: [ "Release", "Debug" ]
@@ -36,30 +37,35 @@ jobs:
           - {
               name: "Ubuntu GCC-12",
               os: ubuntu-latest,
+              bebe_image: "ghcr.io/twon/bebe/bebe:ubuntu.gcc12",
               compiler: { type: GCC, version: 12, conan: "gcc", cc: "gcc-12", cxx: "g++-12", std: 20 },
               lib: "libstdc++11"
             }
           - {
               name: "Ubuntu GCC-13",
               os: ubuntu-latest,
+              bebe_image: "ghcr.io/twon/bebe/bebe:ubuntu.gcc13",
               compiler: { type: GCC, version: 13, conan: "gcc", cc: "gcc-13", cxx: "g++-13", std: 23 },
               lib: "libstdc++11"
             }
           - {
               name: "Ubuntu GCC-14",
               os: ubuntu-latest,
+              bebe_image: "ghcr.io/twon/bebe/bebe:ubuntu.gcc14",
               compiler: { type: GCC, version: 14, conan: "gcc", cc: "gcc-14", cxx: "g++-14", std: 23 },
               lib: "libstdc++11"
             }
           - {
               name: "Ubuntu GCC-15",
               os: ubuntu-latest,
+              bebe_image: "ghcr.io/twon/bebe/bebe:ubuntu.gcc15",
               compiler: { type: GCC, version: 15, conan: "gcc", cc: "gcc-15", cxx: "g++-15", std: 23 },
               lib: "libstdc++11"
             }
           - {
               name: "Ubuntu Clang-14 + libc++",
-              os: ubuntu-22.04,
+              os: ubuntu-latest,
+              bebe_image: "ghcr.io/twon/bebe/bebe:ubuntu.clang14",
               compiler:
                 {
                   type: CLANG,
@@ -73,7 +79,8 @@ jobs:
             }
           - {
               name: "Ubuntu Clang-15 + libc++",
-              os: ubuntu-22.04,
+              os: ubuntu-latest,
+              bebe_image: "ghcr.io/twon/bebe/bebe:ubuntu.clang15",
               compiler:
                 {
                   type: CLANG,
@@ -87,7 +94,8 @@ jobs:
             }
           - {
               name: "Ubuntu Clang-16 + libc++",
-              os: ubuntu-22.04,
+              os: ubuntu-latest,
+              bebe_image: "ghcr.io/twon/bebe/bebe:ubuntu.clang16",
               compiler:
                 {
                   type: CLANG,
@@ -102,6 +110,7 @@ jobs:
           - {
               name: "Ubuntu Clang-17 + libc++",
               os: ubuntu-latest,
+              bebe_image: "ghcr.io/twon/bebe/bebe:ubuntu.clang17",
               compiler:
                 {
                   type: CLANG,
@@ -116,6 +125,7 @@ jobs:
           - {
               name: "Ubuntu Clang-18 + libc++",
               os: ubuntu-latest,
+              bebe_image: "ghcr.io/twon/bebe/bebe:ubuntu.clang18",
               compiler:
                 {
                   type: CLANG,
@@ -130,6 +140,7 @@ jobs:
           - {
               name: "Ubuntu Clang-19 + libc++",
               os: ubuntu-latest,
+              bebe_image: "ghcr.io/twon/bebe/bebe:ubuntu.clang19",
               compiler:
                 {
                   type: CLANG,
@@ -144,6 +155,7 @@ jobs:
           - {
               name: "Ubuntu Clang-20 + libc++",
               os: ubuntu-latest,
+              bebe_image: "ghcr.io/twon/bebe/bebe:ubuntu.clang20",
               compiler:
                 {
                   type: CLANG,
@@ -207,6 +219,7 @@ jobs:
       - uses: actions/checkout@v6.0.2
 
       - name: Install Compiler
+        if: ${{ !matrix.settings.bebe_image }}
         uses: ./.github/actions/setup-compiler
         with:
           compiler-type: ${{ matrix.settings.compiler.type }}
@@ -216,6 +229,8 @@ jobs:
 
       - name: Setup Python
         uses: ./.github/actions/setup-python
+        with:
+          install-python: ${{ !matrix.settings.bebe_image }}
 
       - name: Cache Conan Restore
         uses: ./.github/actions/conan-cache-restore
@@ -240,7 +255,7 @@ jobs:
       - name: Conan Install
         shell: bash
         run: |
-          conan install "${{ github.workspace }}" --build missing -pr:b default
+          conan install . --build missing -pr:b default
 
       - name: Configure CMake (Windows)
         if: runner.os == 'Windows'

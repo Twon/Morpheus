@@ -27,24 +27,19 @@ on:
 
 env:
   BUILD_TYPE: Debug
-  COMPILER_VERSION: 13
+  COMPILER_VERSION: 15
 
 jobs:
   documentation:
     runs-on: ubuntu-latest
+    container: ghcr.io/twon/bebe/bebe:ubuntu.gcc15
     steps:
       - uses: actions/checkout@v6.0.2
 
-      - name: Install Compiler
-        uses: ./.github/actions/setup-compiler
-        with:
-          compiler-type: GCC
-          compiler-version: ${{ env.COMPILER_VERSION }}
-          stdlib: libstdc++11
-          os: Linux
-
       - name: Setup Python
         uses: ./.github/actions/setup-python
+        with:
+          install-python: 'false'
 
       - name: Cache Conan Restore
         uses: ./.github/actions/conan-cache-restore
@@ -70,7 +65,7 @@ jobs:
       - name: Conan Install
         shell: bash
         run: |
-          conan install "${{ github.workspace }}" --build missing -o build_docs=True
+          conan install . --build missing -o build_docs=True
 
       - name: Configure CMake
         shell: bash
