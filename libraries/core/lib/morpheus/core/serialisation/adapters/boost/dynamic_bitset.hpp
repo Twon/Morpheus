@@ -25,7 +25,7 @@ void serialise(Serialiser& serialiser, boost::dynamic_bitset<Block, AllocatorOrC
     }
     else
     {
-        serialiser.writer().beginSequence(bits.num_blocks());
+        serialiser.writer().beginSequence(bits.size());
         for (std::size_t i = 0; i < bits.size(); i += bits_per_block)
         {
             std::uint64_t block = 0;
@@ -51,8 +51,8 @@ boost::dynamic_bitset<Block, AllocatorOrContainer> deserialise(Serialiser& seria
     }
     else
     {
-        auto const numBlocks = serialiser.reader().beginSequence();
-        boost::dynamic_bitset<Block, AllocatorOrContainer> bits(numBlocks.value_or(0) * bits_per_block);
+        auto const numBits = serialiser.reader().beginSequence();
+        boost::dynamic_bitset<Block, AllocatorOrContainer> bits(numBits.value_or(0));
         for (std::size_t i = 0; i < bits.size(); i += bits_per_block)
         {
             Block block = serialiser.template deserialise<Block>();
