@@ -7,4 +7,5 @@ target_sources(MorpheusCore
 )
 
 add_subdirectory(ankerl)
+add_subdirectory(boost)
 add_subdirectory(std)
