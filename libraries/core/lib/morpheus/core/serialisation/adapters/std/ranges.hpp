@@ -95,7 +95,7 @@ T deserialise(Serialiser& serialiser, std::type_identity<T>)
 
     if constexpr (isGcc14 && IsAssociativeLike<T>)
     {
-        // We must work around Gcc's std::ranges::to implementation for associative containers:
+        // We must work around Gcc's std::ranges::to implementation for associative containers when using input iterators (i.e. a generator):
         // https://www.open-std.org/jtc1/sc22/wg21/docs/lwg-active.html#4121
         T range;
         serialiser.deserialise(range);
