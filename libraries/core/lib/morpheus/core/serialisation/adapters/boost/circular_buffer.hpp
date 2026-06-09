@@ -18,7 +18,7 @@ template <typename T, typename Alloc>
 inline constexpr bool
     isEnabledForRangeSerialisation<conf::ranges::subrange<boost::cb_details::iterator<boost::circular_buffer<T, Alloc>, boost::cb_details::const_traits<Alloc>>,
                                                           boost::cb_details::iterator<boost::circular_buffer<T, Alloc>, boost::cb_details::const_traits<Alloc>>,
-                                                          std::ranges::subrange_kind::sized>> = true;
+                                                          conf::ranges::subrange_kind::sized>> = true;
 
 template <concepts::WriteSerialiser Serialiser, typename T, typename Allocator>
 void serialise(Serialiser& serialiser, boost::circular_buffer<T, Allocator> const& buffer)
