@@ -42,18 +42,6 @@ concept IsAssociativeLike = requires {
     typename T::key_type;
 };
 
-// template <typename T>
-// struct RangeDeserialiseValue
-//{
-//     using type = conf::ranges::range_value_t<T>;
-// };
-//
-// template <IsMapLike T>
-// struct RangeDeserialiseValue<T>
-//{
-//     using type = std::pair<typename T::key_type, typename T::mapped_type>;
-// };
-
 template <concepts::ReadSerialiser Serialiser, IsRange T>
 void deserialise(Serialiser& serialiser, T& range)
 {

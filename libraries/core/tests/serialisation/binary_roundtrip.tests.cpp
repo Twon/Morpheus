@@ -1,5 +1,6 @@
 #include "morpheus/core/conformance/value_types.hpp"
 #include "morpheus/core/serialisation/adapters/aggregate.hpp"
+#include "morpheus/core/serialisation/adapters/boost/circular_buffer.hpp"
 #include "morpheus/core/serialisation/adapters/boost/dynamic_bitset.hpp"
 #include "morpheus/core/serialisation/adapters/std/bitset.hpp"
 #include "morpheus/core/serialisation/adapters/std/chrono.hpp"
@@ -25,6 +26,7 @@
 #include <string>
 #include <utility>
 #include <variant>
+#include <vector>
 
 using namespace Catch;
 
@@ -55,7 +57,7 @@ TEST_CASE("Binary serialisation can roundtrip standard library types to binary a
     REQUIRE(roundtrip(std::pair<int, bool>{50, true}) == std::pair<int, bool>{50, true});
     REQUIRE(roundtrip(std::string("Hello")) == std::string("Hello"));
     REQUIRE(*roundtrip(std::make_unique<int>(123)) == 123);
-    // REQUIRE(roundtrip(std::vector<int>{1, 2, 3, 4, 5}) == std::vector<int>{1, 2, 3, 4, 5});
+    REQUIRE(roundtrip(std::vector<int>{1, 2, 3, 4, 5}) == std::vector<int>{1, 2, 3, 4, 5});
 
     /*  REQUIRE(test::serialise(std::variant<int, bool, std::string>{true}) == R"({"type":"bool","value":true})");
      */
@@ -63,6 +65,8 @@ TEST_CASE("Binary serialisation can roundtrip standard library types to binary a
 
 TEST_CASE("Binary serialisation can roundtrip standard library types to binary and back", "[morpheus.serialisation.binary.roundtrip.adapters.boost]")
 {
+    auto const values = std::vector{1, 2, 3, 4, 5};
+    REQUIRE(roundtrip(boost::circular_buffer<int>{values.begin(), values.end()}) == boost::circular_buffer<int>{values.begin(), values.end()});
     REQUIRE(roundtrip(boost::dynamic_bitset<>{"1101"}) == boost::dynamic_bitset<>{"1101"});
 }
 
