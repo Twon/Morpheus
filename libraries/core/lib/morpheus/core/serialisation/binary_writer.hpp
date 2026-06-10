@@ -27,7 +27,7 @@ namespace morpheus::serialisation
 class BinaryWriter
 {
 public:
-    BinaryWriter(std::ostream& outStream) noexcept
+    explicit BinaryWriter(std::ostream& outStream) noexcept
         : mOutStream(outStream)
     {}
 
