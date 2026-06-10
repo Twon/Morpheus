@@ -72,7 +72,7 @@ T deserialiseWithIoStream(auto const& storage)
     array_source source{storage.data(), storage.size()};
     stream is{source};
     BinaryReadSerialiser serialiser{std::in_place, is};
-    return serialiser.deserialise<T>();
+    return serialiser.template deserialise<T>();
 }
 
 /// Serialise a value to a binary buffer with limited space.  This is useful for testing or error cases such as testing
@@ -105,7 +105,7 @@ T deserialiseWithSpanStream(auto const& storage)
     std::span view{storage};
     std::ispanstream stream{view};
     BinaryReadSerialiser serialiser{std::in_place, stream};
-    return serialiser.deserialise<T>();
+    return serialiser.template deserialise<T>();
 }
 #endif
 
@@ -121,7 +121,7 @@ T deserialise(std::vector<char> const& value)
     array_source source{value.data(), value.size()};
     stream is{source};
     Serialiser serialiser(std::in_place, is);
-    return serialiser.deserialise<T>();
+    return serialiser.template deserialise<T>();
 }
 
 /// Serialises an object to a binary blob and then deserialise back into the original form.
