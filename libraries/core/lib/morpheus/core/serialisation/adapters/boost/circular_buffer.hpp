@@ -24,7 +24,7 @@ template <concepts::WriteSerialiser Serialiser, typename T, typename Allocator>
 void serialise(Serialiser& serialiser, boost::circular_buffer<T, Allocator> const& buffer)
 {
     serialiser.writer().beginComposite();
-    serialiser.serialise("capacity", buffer.capacity());
+    serialiser.serialise("capacity", static_cast<std::uint64_t>(buffer.capacity()));
     serialiser.serialise("values", conf::ranges::subrange(buffer.begin(), buffer.end()));
     serialiser.writer().endComposite();
 }
@@ -34,7 +34,7 @@ boost::circular_buffer<T, Allocator> deserialise(Serialiser& serialiser, std::ty
 {
     boost::circular_buffer<T, Allocator> buffer;
     serialiser.reader().beginComposite();
-    buffer.set_capacity(serialiser.template deserialise<std::size_t>("capacity"));
+    buffer.set_capacity(serialiser.template deserialise<std::uint64_t>("capacity"));
     serialiser.reader().beginValue("values");
     conf::ranges::copy(serialiser.template sequence<T>(), std::back_inserter(buffer));
     serialiser.reader().endValue();
