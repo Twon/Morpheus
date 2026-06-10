@@ -50,6 +50,7 @@ runs:
         printf "date*:tz_db=system\n" >> "$PROFILE"
 
         echo 'core.sources:download_urls=["origin", "https://c3i.jfrog.io/artifactory/conan-center-backup-sources/"]' >> .conan2/global.conf
+        echo 'tools.cmake.cmaketoolchain:configure_args = {"CMAKE_POLICY_VERSION_MINIMUM": "3.5"}' >> .conan2/global.conf
         echo "tools.cmake.cmaketoolchain:generator = ${{ inputs.generator }}" >> .conan2/global.conf
 
         if [[ "${{ runner.os }}" != "Windows" ]]; then
