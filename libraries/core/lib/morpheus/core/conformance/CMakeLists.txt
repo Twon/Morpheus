@@ -54,6 +54,11 @@ morpheus_conformance_check(
     APPLECLANG_VERSION "15"
 )
 
+morpheus_conformance_check(
+    RESULT VALUE_TYPES_SUPPORTED
+    GNU_VERSION "16"
+)
+
 if (NOT ${DATE_SUPPORTED})
     find_package(date REQUIRED)
 endif (NOT ${DATE_SUPPORTED})
@@ -73,6 +78,10 @@ endif (NOT ${OUTPTR_SUPPORTED})
 if (NOT ${RANGES_SUPPORTED})
     find_package(range-v3 REQUIRED)
 endif (NOT ${RANGES_SUPPORTED})
+
+if (NOT ${VALUE_TYPES_SUPPORTED})
+    find_package(value_types REQUIRED)
+endif (NOT ${VALUE_TYPES_SUPPORTED})
 
 find_package(scn REQUIRED)
 
@@ -94,6 +103,7 @@ target_link_libraries(MorpheusCore
         $<$<NOT:$<BOOL:${FORMAT_SUPPORTED}>>:fmt::fmt>
         $<$<NOT:$<BOOL:${OUTPTR_SUPPORTED}>>:out_ptr::out_ptr>
         $<$<NOT:$<BOOL:${RANGES_SUPPORTED}>>:range-v3::range-v3>
+        $<$<NOT:$<BOOL:${VALUE_TYPES_SUPPORTED}>>:value_types::value_types>
         scn::scn
         $<$<NOT:$<BOOL:${EXPECTED_SUPPORTED}>>:tl::expected>
         $<$<AND:$<CXX_COMPILER_ID:GNU>,$<BOOL:${GCC_STACKTRACE_SUPPORTED}>,$<VERSION_GREATER_EQUAL:$<CXX_COMPILER_VERSION>,12>,$<VERSION_LESS:$<CXX_COMPILER_VERSION>,14>>:-lstdc++_libbacktrace>

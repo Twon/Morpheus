@@ -1,0 +1,11 @@
+name: 'Conan Cache Save'
+description: 'Cleans and saves Conan data to a tarball for caching'
+
+runs:
+  using: "composite"
+  steps:
+    - name: Conan Cache Save
+      shell: bash
+      run: |
+        conan cache clean
+        conan cache save "*/*:*" --file conan_cache_save.tgz

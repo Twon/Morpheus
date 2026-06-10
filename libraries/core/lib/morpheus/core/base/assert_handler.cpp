@@ -11,6 +11,9 @@
 namespace morpheus
 {
 
+namespace
+{
+
 AssertHandler gAssertHandler = [](Assertion assertion)
 {
     // LCOV_EXCL_START
@@ -25,6 +28,10 @@ AssertHandler gAssertHandler = [](Assertion assertion)
     // LCOV_EXCL_STOP
 };
 
+AssertHaltHandler gAssertHaltHandler = []() { breakpoint(); }; // LCOV_EXCL_LINE
+
+} // namespace
+
 AssertHandler setAssertHandler(AssertHandler handler)
 {
     auto previousHandler = std::move(gAssertHandler);
@@ -36,8 +43,6 @@ AssertHandler setAssertHandler(AssertHandler handler)
 {
     return gAssertHandler;
 }
-
-AssertHaltHandler gAssertHaltHandler = []() { breakpoint(); }; // LCOV_EXCL_LINE
 
 AssertHaltHandler setAssertHaltHandler(AssertHaltHandler handler)
 {

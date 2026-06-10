@@ -1,6 +1,13 @@
 #include "morpheus/core/conformance/format.hpp"
+#include "morpheus/core/conformance/value_types.hpp"
 #include "morpheus/core/serialisation/adapters/aggregate.hpp"
+#include "morpheus/core/serialisation/adapters/boost/dynamic_bitset.hpp"
+#include "morpheus/core/serialisation/adapters/hex.hpp"
+#include "morpheus/core/serialisation/adapters/std/array.hpp"
+#include "morpheus/core/serialisation/adapters/std/bitset.hpp"
 #include "morpheus/core/serialisation/adapters/std/chrono.hpp"
+#include "morpheus/core/serialisation/adapters/std/indirect.hpp"
+#include "morpheus/core/serialisation/adapters/std/map.hpp"
 #include "morpheus/core/serialisation/adapters/std/monostate.hpp"
 #include "morpheus/core/serialisation/adapters/std/optional.hpp"
 #include "morpheus/core/serialisation/adapters/std/pair.hpp"
@@ -13,6 +20,7 @@
 #include "morpheus/core/serialisation/json_reader.hpp"
 #include "morpheus/core/serialisation/read_serialiser.hpp"
 #include "morpheus/core/serialisation/serialisers.hpp"
+#include "morpheus/serialisation/types/simple_tuple.hpp"
 
 #include <catch2/catch_approx.hpp>
 #include <catch2/catch_template_test_macros.hpp>
@@ -20,8 +28,12 @@
 #include <catch2/matchers/catch_matchers.hpp>
 #include <catch2/matchers/catch_matchers_string.hpp>
 
+#include <array>
+#include <bitset>
 #include <chrono>
 #include <cmath>
+#include <compare>
+#include <cstddef>
 #include <cstdint>
 #include <limits>
 #include <memory>
@@ -42,44 +54,44 @@ namespace morpheus::serialisation
 namespace test
 {
 
-struct ISteamCopier
-{
-    using deleter_type = std::default_delete<std::istream>;
-
-    std::istream* operator()(std::istream const& rhs) const
-    {
-        auto ss = std::make_unique<std::istream>(rhs.rdbuf());
-        return ss.release();
-    }
-
-    std::istringstream* operator()(std::istringstream const& rhs) const
-    {
-        auto ss = std::make_unique<std::istringstream>(rhs.str());
-        return ss.release();
-    }
-};
-
 template <typename T>
-T deserialise(std::string_view const value, bool const validate = true)
+static T deserialise(std::string_view const value, bool const validate = true)
 {
-    using namespace memory;
-    auto strstream = std::make_unique<std::istringstream>(std::string{value});
-    auto iss = polymorphic_value<std::istream>(strstream.release(), ISteamCopier{});
-    JsonReadSerialiser serialiser(std::move(iss), validate);
-    return serialiser.deserialise<T>();
+#if (__cpp_lib_sstream_from_string_view >= 202306L)
+    std::istringstream iss(value);
+#else
+    std::istringstream iss(std::string{value});
+#endif
+    JsonReadSerialiser serialiser(std::in_place, iss, validate);
+    return serialiser.template deserialise<T>();
 }
 
-auto readerFromString(std::string_view const value)
+static auto readerFromString(std::string_view const value) -> std::pair<JsonReader, std::unique_ptr<std::istream>>
 {
-    using namespace memory;
-    auto strstream = std::make_unique<std::istringstream>(std::string{value});
-    auto iss = polymorphic_value<std::istream>(strstream.release(), ISteamCopier{});
-    return JsonReader(std::move(iss), false);
+#if (__cpp_lib_sstream_from_string_view >= 202306L)
+    std::unique_ptr<std::istream> iss = std::make_unique<std::istringstream>(value);
+#else
+    std::unique_ptr<std::istream> iss = std::make_unique<std::istringstream>(std::string{value});
+#endif
+    return std::make_pair(JsonReader(*iss, false), std::move(iss));
 }
 
 } // namespace test
 
-TEMPLATE_TEST_CASE("Json writer can write single native types to underlying text representation",
+TEST_CASE("Json reader can read string types to underlying text representation", "[morpheus.serialisation.json_reader.special_member_functions]")
+{
+    STATIC_REQUIRE(std::is_constructible_v<JsonReader, std::istream&, bool>);
+    STATIC_REQUIRE_FALSE(std::is_copy_constructible_v<JsonReader>);
+    STATIC_REQUIRE_FALSE(std::is_copy_assignable_v<JsonReader>);
+    STATIC_REQUIRE_FALSE(std::is_nothrow_copy_constructible_v<JsonReader>);
+    STATIC_REQUIRE_FALSE(std::is_nothrow_copy_assignable_v<JsonReader>);
+    STATIC_REQUIRE(std::is_move_constructible_v<JsonReader>);
+    STATIC_REQUIRE(std::is_move_assignable_v<JsonReader>);
+    STATIC_REQUIRE(std::is_nothrow_move_constructible_v<JsonReader>);
+    STATIC_REQUIRE(std::is_nothrow_move_assignable_v<JsonReader>);
+}
+
+TEMPLATE_TEST_CASE("Json reader can read single native types to underlying text representation",
                    "[morpheus.serialisation.json_reader.native]",
                    bool,
                    std::int8_t,
@@ -115,63 +127,99 @@ TEMPLATE_TEST_CASE("Json writer can write single native types to underlying text
     }
 }
 
-TEST_CASE("Create and then copy a reader and read from the copied stream", "[morpheus.serialisation.json_reader.copy]")
+TEST_CASE("Json reader can read string types to underlying text representation", "[morpheus.serialisation.json_reader.string]")
 {
-    GIVEN("A Json stream")
+    GIVEN("A Json reader")
     {
-        std::string_view str(R"("value")");
-
-        WHEN("Read an single value from the stream")
+        WHEN("Reading a string")
         {
-            JsonReader reader = test::readerFromString(str);
-            JsonReader copiedReader(reader);
-
-            THEN("Expect an empty composite in the json document")
-            {
-                REQUIRE("value" == copiedReader.read<std::string>());
-            }
+            REQUIRE(test::deserialise<std::string>(R"("Hello World")") == "Hello World");
         }
     }
 }
 
-TEST_CASE("Json reader providess basic reader functionality", "[morpheus.serialisation.json_reader.fundamental]")
+// TEST_CASE("Json reader can read sequence types to underlying text representation", "[morpheus.serialisation.json_reader.sequence]")
+// {
+//     GIVEN("A Json reader")
+//     {
+//         WHEN("Reading a vector of integers")
+//         {
+//             auto const value = test::deserialise<std::vector<int>>("[1, 2, 3]");
+//             REQUIRE(value == std::vector<int>{1, 2, 3});
+//         }
+//     }
+// }
+
+TEST_CASE("Json reader can read composite types to underlying text representation", "[morpheus.serialisation.json_reader.composite]")
 {
-    GIVEN("A Json stream")
+    GIVEN("A Json reader")
     {
-        std::string_view str(R"("value")");
-
-        WHEN("Read an single value from the stream")
+        WHEN("Reading a composite type")
         {
-            JsonReader reader = test::readerFromString(str);
-
-            THEN("Expect an empty composite in the json document")
-            {
-                REQUIRE("value" == reader.read<std::string>());
-            }
+            auto const value = test::deserialise<std::pair<int, double>>("[1, 2.75]");
+            REQUIRE(value == std::pair<int, double>{1, 2.75});
         }
     }
-    GIVEN("A Json stream")
+}
+
+// TEST_CASE("Json reader can read complex nested composite types to underlying text representation", "[morpheus.serialisation.json_reader.nested]")
+// {
+//     GIVEN("A Json reader")
+//     {
+//         WHEN("Reading a complex nested type")
+//         {
+//             auto const value = test::deserialise<std::vector<std::pair<int, std::string>>>("[[1, \"one\"], [2, \"two\"]]");
+//             REQUIRE(value == std::vector<std::pair<int, std::string>>{
+//                                  {1, "one"},
+//                                  {2, "two"}
+//             });
+//         }
+//     }
+// }
+
+TEST_CASE("Json reader can read nullable types to underlying text representation", "[morpheus.serialisation.json_reader.nullable]")
+{
+    GIVEN("A Json reader")
     {
-        std::string_view str(R"({})");
-
-        WHEN("Read an empty composite from the stream")
+        WHEN("Reading an optional value (not null)")
         {
-            JsonReader reader = test::readerFromString(str);
-
-            THEN("Expect an empty composite in the json document")
-            {
-                reader.beginComposite();
-                reader.endComposite();
-            }
+            auto const value = test::deserialise<std::optional<int>>("42");
+            REQUIRE(value == std::optional<int>{42});
+        }
+        WHEN("Reading an optional value (null)")
+        {
+            auto const value = test::deserialise<std::optional<int>>("null");
+            REQUIRE(value == std::optional<int>{std::nullopt});
         }
     }
+}
+
+// TEST_CASE("Json reader can read variants to underlying text representation", "[morpheus.serialisation.json_reader.variant]")
+// {
+//     GIVEN("A Json reader")
+//     {
+//         WHEN("Reading a variant (first type)")
+//         {
+//             auto const value = test::deserialise<std::variant<int, std::string>>("42");
+//             REQUIRE(std::get<int>(value) == 42);
+//         }
+//         WHEN("Reading a variant (second type)")
+//         {
+//             auto const value = test::deserialise<std::variant<int, std::string>>(R"("Hello World")");
+//             REQUIRE(std::get<std::string>(value) == "Hello World");
+//         }
+//     }
+//}
+
+TEST_CASE("Json reader can read manual composites", "[morpheus.serialisation.json_reader.manual]")
+{
     GIVEN("A Json stream")
     {
         std::string_view str(R"({"key":"value"})");
 
         WHEN("Read a composite of key pair from the stream")
         {
-            JsonReader reader = test::readerFromString(str);
+            auto [reader, _] = test::readerFromString(str);
 
             THEN("Expect an empty composite in the json document")
             {
@@ -189,7 +237,7 @@ TEST_CASE("Json reader providess basic reader functionality", "[morpheus.seriali
 
         WHEN("Read a composite of key to null pair from the stream")
         {
-            JsonReader reader = test::readerFromString(str);
+            auto [reader, _] = test::readerFromString(str);
 
             THEN("Expect an empty composite in the json document")
             {
@@ -203,6 +251,181 @@ TEST_CASE("Json reader providess basic reader functionality", "[morpheus.seriali
         }
     }
 }
+
+TEST_CASE("Json reader can read single std::byte from underlying text representation", "[morpheus.serialisation.json_reader.byte]")
+{
+    WHEN("Deserialising a single byte")
+    {
+        REQUIRE(test::deserialise<std::byte>("42") == std::byte{42});
+    }
+}
+
+TEST_CASE("Json reader can read byte buffer types from underlying text representation", "[morpheus.serialisation.json_reader.buffers]")
+{
+    GIVEN("A Json reader")
+    {
+        WHEN("Reading a Base64 encoded byte buffer into a vector")
+        {
+            auto const value = test::deserialise<std::vector<std::byte>>(R"("ChQe")");
+
+            THEN("Expect the bytes to be correctly decoded")
+            {
+                REQUIRE(value.size() == 3);
+                REQUIRE(value[0] == std::byte{10});
+                REQUIRE(value[1] == std::byte{20});
+                REQUIRE(value[2] == std::byte{30});
+            }
+        }
+    }
+}
+
+TEST_CASE("Json reader can read std::byte using the Hex adapter", "[morpheus.serialisation.json_reader.hex_adapter]")
+{
+    GIVEN("A Json stream with a hex string")
+    {
+        WHEN("Reading using the Hex adapter (0x prefixed)")
+        {
+            std::byte value{};
+            auto [reader, _] = test::readerFromString(R"("0xB4")");
+            JsonReadSerialiser serialiser(std::move(reader));
+            deserialise(serialiser, Hex{value});
+
+            THEN("Expect the byte to be correctly parsed")
+            {
+                REQUIRE(value == std::byte{0xB4});
+            }
+        }
+        WHEN("Reading using the Hex adapter (no prefix)")
+        {
+            std::byte value{};
+            auto [reader, _] = test::readerFromString(R"("A5")");
+            JsonReadSerialiser serialiser(std::move(reader));
+            deserialise(serialiser, Hex{value});
+            THEN("Expect the byte to be correctly parsed")
+            {
+                REQUIRE(value == std::byte{0xA5});
+            }
+        }
+    }
+}
+
+TEMPLATE_TEST_CASE("Json reader can read multiple integer types using the Hex adapter",
+                   "[morpheus.serialisation.json_reader.hex_adapter]",
+                   std::uint8_t,
+                   std::int8_t,
+                   std::uint16_t,
+                   std::int16_t,
+                   std::uint32_t,
+                   std::int32_t,
+                   std::uint64_t,
+                   std::int64_t)
+{
+    GIVEN("A Json stream with a hex string")
+    {
+        WHEN("Reading using the Hex adapter (0x prefixed)")
+        {
+            TestType value{};
+            auto [reader, _] = test::readerFromString(R"("0xFF")");
+            JsonReadSerialiser serialiser(std::move(reader));
+            deserialise(serialiser, Hex{value});
+
+            THEN("Expect the value to be correctly parsed")
+            {
+                REQUIRE(value == TestType{static_cast<TestType>(0xFF)});
+            }
+        }
+        WHEN("Reading using the Hex adapter (no prefix)")
+        {
+            TestType value{};
+            auto [reader, _] = test::readerFromString(R"("0xFF")");
+            JsonReadSerialiser serialiser(std::move(reader));
+            deserialise(serialiser, Hex{value});
+
+            THEN("Expect the value to be correctly parsed")
+            {
+                REQUIRE(value == TestType{static_cast<TestType>(0xFF)});
+            }
+        }
+    }
+}
+
+struct PointComposite
+{
+    int x;
+    double y;
+
+    template <concepts::ReadSerialiser Serialiser>
+    void deserialise(Serialiser& s)
+    {
+        x = s.template deserialise<decltype(x)>("x");
+        y = s.template deserialise<decltype(y)>("y");
+    }
+};
+
+struct NamedPointComposite
+{
+    PointComposite simple;
+    std::string name;
+
+    template <concepts::ReadSerialiser Serialiser>
+    void deserialise(Serialiser& s)
+    {
+        simple = s.template deserialise<decltype(simple)>("simple");
+        name = s.template deserialise<decltype(name)>("name");
+    }
+};
+
+struct BlobComposite
+{
+    int id = 0;
+    std::vector<std::byte> data;
+    std::string name;
+
+    template <concepts::ReadSerialiser Serialiser>
+    void deserialise(Serialiser& s)
+    {
+        id = s.template deserialise<decltype(id)>("id");
+        data = s.template deserialise<decltype(data)>("data");
+        name = s.template deserialise<decltype(name)>("name");
+    }
+};
+
+TEST_CASE("Json reader can read composite types containing byte buffers", "[morpheus.serialisation.json_reader.composite_buffers]")
+{
+    GIVEN("A composite type with a byte vector")
+    {
+        auto const json = R"({"id":1,"data":"ChQe","name":"blob"})";
+        auto const composite = test::deserialise<BlobComposite>(json);
+
+        THEN("Expect all fields to be correctly deserialised")
+        {
+            REQUIRE(composite.id == 1);
+            REQUIRE(composite.name == "blob");
+            REQUIRE(composite.data.size() == 3);
+            REQUIRE(composite.data[0] == std::byte{10});
+            REQUIRE(composite.data[1] == std::byte{20});
+            REQUIRE(composite.data[2] == std::byte{30});
+        }
+    }
+}
+
+// TEST_CASE("Json reader can read nested composites in arrays", "[morpheus.serialisation.json_reader.nested_composites]")
+// {
+//     GIVEN("An array of composites")
+//     {
+//         auto const json = R"([{"x":1,"y":1.5}, {"x":2,"y":2.5}])";
+//         auto const value = test::deserialise<std::vector<PointComposite>>(json);
+
+//         THEN("Expect both composites to be correctly deserialised")
+//         {
+//             REQUIRE(value.size() == 2);
+//             REQUIRE(value[0].x == 1);
+//             REQUIRE(value[0].y == 1.5);
+//             REQUIRE(value[1].x == 2);
+//             REQUIRE(value[1].y == 2.5);
+//         }
+//     }
+// }
 
 struct SimpleComposite
 {
@@ -234,7 +457,7 @@ struct ComplexComposite
     }
 };
 
-TEST_CASE("Json reader can read simple composite types from underlying test representation", "[morpheus.serialisation.json_reader.composite]")
+TEST_CASE("Json reader can read simple composite types from underlying test representation", "[morpheus.serialisation.json_reader.composite.legacy]")
 {
     GIVEN("A Json reader")
     {
@@ -283,7 +506,7 @@ struct ContainsType
     }
 };
 
-TEST_CASE("Json reader raise an error on reading incorrect types", "[morpheus.serialisation.json_reader.invalid_values]")
+TEST_CASE("Json reader handles missing fields gracefully", "[morpheus.serialisation.json_reader.error_handling]")
 {
     GIVEN("A test type for validating serialition of specific types")
     {
@@ -358,6 +581,17 @@ TEST_CASE("Json reader can read std types from underlying text representation", 
         REQUIRE(test::deserialise<std::chrono::years>(R"("100y")") == std::chrono::years{100});
         REQUIRE(test::deserialise<std::chrono::months>(R"("12m")") == std::chrono::months{12});
     }
+    SECTION("Container types")
+    {
+        REQUIRE(test::deserialise<std::map<int, std::string>>(R"([[1,"a"],[2,"b"],[3,"b"]])") == std::map<int, std::string>{
+                                                                                                     {1, "a"},
+                                                                                                     {2, "b"},
+                                                                                                     {3, "b"}
+        });
+        REQUIRE(test::deserialise<std::vector<int>>(R"([1, 2, 3, 4, 5])") == std::vector<int>{1, 2, 3, 4, 5});
+    }
+    REQUIRE(test::deserialise<std::bitset<4>>(R"("1101")") == std::bitset<4>("1101"));
+    REQUIRE(test::deserialise<conf::vt::indirect<int>>(R"({"value":42})") == conf::vt::indirect<int>(42));
     REQUIRE(test::deserialise<std::monostate>(R"({})") == std::monostate{});
     REQUIRE(test::deserialise<std::optional<int>>(R"(100)") == std::optional<int>{100});
     REQUIRE(test::deserialise<std::optional<int>>(R"(null)") == std::optional<int>{});
@@ -368,14 +602,19 @@ TEST_CASE("Json reader can read std types from underlying text representation", 
     REQUIRE(*test::deserialise<std::unique_ptr<int>>(R"(50)") == 50);
 }
 
+TEST_CASE("Json reader can read std types from underlying text representation", "[morpheus.serialisation.json_reader.adapters.boost]")
+{
+    REQUIRE(test::deserialise<boost::dynamic_bitset<>>(R"("1101")") == boost::dynamic_bitset<>("1101"));
+}
+
 TEST_CASE("Error handling test cases for unexpected errors in the input Json stream", "[morpheus.serialisation.json_reader.error_handling]")
 {
     using Catch::Matchers::ContainsSubstring;
-    REQUIRE_THROWS_WITH(test::readerFromString("50").beginValue("expected_key"),
+    REQUIRE_THROWS_WITH(test::readerFromString("50").first.beginValue("expected_key"),
                         ContainsSubstring("BeginComposite expected") && ContainsSubstring("Value encountered"));
-    REQUIRE_THROWS_WITH(test::readerFromString("[1,2,3]").beginValue("expected_key"),
+    REQUIRE_THROWS_WITH(test::readerFromString("[1,2,3]").first.beginValue("expected_key"),
                         ContainsSubstring("BeginComposite expected") && ContainsSubstring("BeginSequence encountered"));
-    REQUIRE_THROWS_WITH(test::readerFromString("{}").beginValue("expected_key"), ContainsSubstring("empty composite"));
+    REQUIRE_THROWS_WITH(test::readerFromString("{}").first.beginValue("expected_key"), ContainsSubstring("empty composite"));
 
     GIVEN("A type which parses a key value pair")
     {
@@ -404,6 +643,30 @@ TEST_CASE("Error handling test cases for unexpected errors in the input Json str
             }
         }
     }
+}
+
+TEST_CASE("Json reader can read ranges of composites", "[morpheus.serialisation.range.deserialise.composites]")
+{
+    // auto const value = std::vector<testing::SimpleTuple>{
+    //     {1, true,       {std::byte{1}, std::byte{2}, std::byte{3}}},
+    //     {2, true,    {std::byte{10}, std::byte{20}, std::byte{30}}},
+    //     {3, true, {std::byte{100}, std::byte{200}, std::byte{255}}}
+    // };
+    // REQUIRE(conf::fmt::format("{}", value) ==
+    //         R"([{first=1,second=true,data=[1, 2, 3]}, {first=2,second=true,data=[10, 20, 30]}, {first=3,second=true,data=[100, 200, 255]}])");
+
+    REQUIRE(test::deserialise<std::vector<testing::SimpleTuple>>(
+                R"([{"first":1,"second":true,"data":"AQID"},{"first":2,"second":true,"data":"ChQe"},{"first":3,"second":true,"data":"ZMj/"}])") ==
+            std::vector<testing::SimpleTuple>{
+                {1, true,       {std::byte{1}, std::byte{2}, std::byte{3}}},
+                {2, true,    {std::byte{10}, std::byte{20}, std::byte{30}}},
+                {3, true, {std::byte{100}, std::byte{200}, std::byte{255}}}
+    });
+    using Catch::Matchers::ContainsSubstring;
+    REQUIRE_THROWS_WITH(
+        test::deserialise<std::vector<testing::SimpleTuple>>(
+            R"([{"first":1,"second":true,"data":"AQID"},{"first":2,"second":true,"data":"ChQe"},{"first":3,"second":true,"data":"ZMj/"})", false),
+        ContainsSubstring("Parse error at offset"));
 }
 
 } // namespace morpheus::serialisation

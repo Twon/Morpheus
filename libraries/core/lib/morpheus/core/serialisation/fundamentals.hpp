@@ -19,7 +19,7 @@ void serialise(Serialiser& s, T&& value)
 }
 
 template <concepts::ReadSerialiser Serialiser, concepts::ReadSerialisableNative T>
-T deserialise(Serialiser& s)
+T deserialise(Serialiser& s, std::type_identity<T>)
 {
     return s.reader().template read<T>();
 }

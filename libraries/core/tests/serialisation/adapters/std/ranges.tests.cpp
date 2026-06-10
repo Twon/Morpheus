@@ -62,58 +62,82 @@ TEMPLATE_TEST_CASE("Verify serialisation of sequence containers std::ranges",
     }
 }
 
-/*
-TEST_CASE("Verify deserialisation of std::ranges", "[morpheus.serialisation.ranges.deserialise]")
+TEST_CASE("Verify deserialisation of sequence containers std::ranges", "[morpheus.serialisation.ranges.deserialise.sequence_containers]")
 {
-    GIVEN("Expected contents of a std::expected holding a value")
+    GIVEN("A sequence of values in the reader")
     {
-        constexpr std::int64_t actualValue = 10;
+        std::vector<int> const expectedValues{1, 2, 3, 4, 5};
 
-        THEN("Expect the following sequence of operations on the underlying writer")
+        THEN("Expect the following sequence of operations on the underlying reader")
         {
             InSequence seq;
-            MockedReadSerialiser serialiser;
-            EXPECT_CALL(serialiser.reader(), beginComposite()).Times(1);
-            EXPECT_CALL(serialiser.reader(), beginValue("state"sv)).Times(1);
-            EXPECT_CALL(serialiser.reader(), read(An<bool>())).WillOnce(Return(true));
-            EXPECT_CALL(serialiser.reader(), endValue()).Times(1);
-            EXPECT_CALL(serialiser.reader(), beginValue("value"sv)).Times(1);
-            EXPECT_CALL(serialiser.reader(), read(An<std::int64_t>())).WillOnce(Return(actualValue));
-            EXPECT_CALL(serialiser.reader(), endValue()).Times(1);
-            EXPECT_CALL(serialiser.reader(), endComposite()).Times(1);
-            WHEN("Serialising the std::expected")
+            MockedReadSerialiser<> serialiser;
+
+            EXPECT_CALL(serialiser.reader(), beginSequence()).WillOnce(Return(std::optional<std::size_t>(expectedValues.size())));
+            for (auto const& value : expectedValues)
             {
-                using ExpectedType = conf::exp::expected<std::int64_t, std::string>;
-                auto const expected = serialiser.deserialise<ExpectedType>();
-                REQUIRE(expected.value() == actualValue);
+                EXPECT_CALL(serialiser.reader(), read(Matcher<int>(_))).WillOnce(Return(value));
             }
-        }
-    }
-    GIVEN("Expected contents of a std::expected holding an error")
-    {
-        std::string const actualValue = "This string is an error";
+            EXPECT_CALL(serialiser.reader(), endSequence()).Times(1);
 
-        THEN("Expect the following sequence of operations on the underlying writer")
-        {
-            InSequence seq;
-            MockedReadSerialiser serialiser;
-            EXPECT_CALL(serialiser.reader(), beginComposite()).Times(1);
-            EXPECT_CALL(serialiser.reader(), beginValue("state"sv)).Times(1);
-            EXPECT_CALL(serialiser.reader(), read(An<bool>())).WillOnce(Return(false));
-            EXPECT_CALL(serialiser.reader(), endValue()).Times(1);
-            EXPECT_CALL(serialiser.reader(), beginValue("error"sv)).Times(1);
-            EXPECT_CALL(serialiser.reader(), read(An<std::string>())).WillOnce(Return(actualValue));
-            EXPECT_CALL(serialiser.reader(), endValue()).Times(1);
-            EXPECT_CALL(serialiser.reader(), endComposite()).Times(1);
-
-            WHEN("Deserialising the std::expected")
+            WHEN("Deserialising the range")
             {
-                using ExpectedType = conf::exp::expected<std::int64_t, std::string>;
-                auto const expected = serialiser.deserialise<ExpectedType>();
-                REQUIRE(expected.error() == actualValue);
+                auto const actualValues = serialiser.deserialise<std::vector<int>>();
+                REQUIRE(actualValues == expectedValues);
             }
         }
     }
 }
-*/
+
+TEST_CASE("Verify optimized block-read deserialisation of byte sequence containers",
+          "[morpheus.serialisation.ranges.deserialise.byte_sequence_containers.binary]")
+{
+    GIVEN("A sequence of bytes in the reader")
+    {
+        std::vector<std::byte> const expectedValues{std::byte{1}, std::byte{2}, std::byte{3}};
+
+        THEN("Expect a single block-read on the underlying reader instead of multiple byte-reads")
+        {
+            InSequence seq;
+            MockedReadSerialiser<false> serialiser;
+
+            EXPECT_CALL(serialiser.reader(), beginSequence()).WillOnce(Return(std::optional<std::size_t>(expectedValues.size())));
+            EXPECT_CALL(serialiser.reader(), read(Matcher<std::byte>(_))).WillOnce(Return(expectedValues[0]));
+            EXPECT_CALL(serialiser.reader(), read(Matcher<std::byte>(_))).WillOnce(Return(expectedValues[1]));
+            EXPECT_CALL(serialiser.reader(), read(Matcher<std::byte>(_))).WillOnce(Return(expectedValues[2]));
+            EXPECT_CALL(serialiser.reader(), endSequence()).Times(1);
+
+            WHEN("Deserialising a std::list<std::byte>")
+            {
+                auto const actualValues = serialiser.deserialise<std::list<std::byte>>();
+                std::vector<std::byte> const actualVec(actualValues.begin(), actualValues.end());
+                REQUIRE(actualVec == expectedValues);
+            }
+        }
+    }
+}
+
+TEST_CASE("Verify optimized block-read deserialisation of byte sequence containers",
+          "[morpheus.serialisation.ranges.deserialise.byte_sequence_containers.text]")
+{
+    GIVEN("A sequence of bytes in the reader")
+    {
+        std::vector<std::byte> const expectedValues{std::byte{1}, std::byte{2}, std::byte{3}};
+
+        THEN("Expect a single block-read on the underlying reader instead of multiple byte-reads")
+        {
+            InSequence seq;
+            MockedReadSerialiser<true> serialiser;
+
+            EXPECT_CALL(serialiser.reader(), read(Matcher<std::vector<std::byte>>(_))).WillOnce(Return(expectedValues));
+
+            WHEN("Deserialising a std::list<std::byte>")
+            {
+                auto const actualValues = serialiser.deserialise<std::vector<std::byte>>();
+                REQUIRE(actualValues == expectedValues);
+            }
+        }
+    }
+}
+
 } // namespace morpheus::serialisation

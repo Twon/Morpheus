@@ -8,6 +8,7 @@
 #include "morpheus/core/serialisation/concepts/write_serialiser.hpp"
 
 #include <optional>
+#include <type_traits>
 
 namespace morpheus::serialisation::detail
 {
@@ -25,7 +26,7 @@ void serialise(Serialiser& serialiser, std::optional<T> const& value)
 }
 
 template <concepts::ReadSerialiser Serialiser, IsStdOptional T>
-T deserialise(Serialiser& serialiser)
+T deserialise(Serialiser& serialiser, std::type_identity<T>)
 {
     auto const nullable = makeScopedNullable(serialiser.reader());
     if (nullable.value())

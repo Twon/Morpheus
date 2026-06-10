@@ -5,12 +5,14 @@
 #include "morpheus/core/serialisation/concepts/writer_archetype.hpp"
 #include "morpheus/core/serialisation/exceptions.hpp"
 
+#include <array>
 #include <cstddef>
 #include <cstdint>
 #include <iosfwd>
 #include <optional>
 #include <span>
 #include <string_view>
+#include <vector>
 
 namespace morpheus::serialisation
 {
@@ -25,7 +27,7 @@ namespace morpheus::serialisation
 class BinaryWriter
 {
 public:
-    BinaryWriter(std::ostream& outStream) noexcept
+    explicit BinaryWriter(std::ostream& outStream) noexcept
         : mOutStream(outStream)
     {}
 
@@ -48,7 +50,7 @@ public:
     void beginSequence(std::optional<std::size_t> size = std::nullopt)
     {
         if (size)
-            write(size.value());
+            write(static_cast<std::uint64_t>(size.value()));
         else
             throwBinaryException("Sequence does not provide size.  This must be proided for binary serialisation.");
     }
@@ -66,7 +68,7 @@ public:
     /// \tparam T The type of the value to write.  Must be an integral or floating point type.
     /// \param[in] value The value to write to the serialisation.
     template <typename T>
-    requires std::integral<T> or std::floating_point<T>
+    requires std::integral<T> or std::floating_point<T> or std::same_as<T, std::byte>
     void write(T const value)
     {
         // https://stackoverflow.com/questions/24482028/why-is-stdstreamsize-defined-as-signed-rather-than-unsigned
@@ -78,7 +80,7 @@ public:
     /// \copydoc morpheus::serialisation::concepts::WriterArchetype::write(std::string_view const)
     void write(std::string_view const value)
     {
-        auto const length = value.size();
+        auto const length = static_cast<std::uint64_t>(value.size());
         write(length);
 
         auto const writtenSize = static_cast<std::size_t>(mOutStream.rdbuf()->sputn(value.data(), value.size()));
@@ -86,10 +88,10 @@ public:
             throwBinaryException("Error writing data to stream.  Attempted to write {} bytes, but only {} bytes were written.", value.size(), writtenSize);
     }
 
-    /// \copydoc morpheus::serialisation::concepts::WriterArchetype::write(std::span<std::byte> const)
+    /// \copydoc morpheus::serialisation::concepts::WriterArchetype::write(std::span<std::byte const> const)
     void write(std::span<std::byte const> const value)
     {
-        auto const length = value.size();
+        auto const length = static_cast<std::uint64_t>(value.size());
         write(length);
 
         auto const writtenSize = static_cast<std::size_t>(mOutStream.rdbuf()->sputn(reinterpret_cast<char const*>(value.data()), value.size()));

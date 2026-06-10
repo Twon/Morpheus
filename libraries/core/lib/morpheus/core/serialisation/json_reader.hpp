@@ -3,7 +3,6 @@
 #include "morpheus/core/base/assert.hpp"
 #include "morpheus/core/base/export.hpp"
 #include "morpheus/core/functional/overload.hpp"
-#include "morpheus/core/memory/polymorphic_value.hpp"
 #include "morpheus/core/serialisation/concepts/reader_archetype.hpp"
 #include "morpheus/core/serialisation/exceptions.hpp"
 
@@ -18,10 +17,12 @@
 #include <concepts>
 #include <cstddef>
 #include <cstdint>
+#include <functional>
 #include <istream>
 #include <limits>
 #include <memory>
 #include <optional>
+#include <span>
 #include <string>
 #include <string_view>
 #include <tuple>
@@ -33,7 +34,7 @@ namespace morpheus::serialisation
 {
 
 /// \class JsonReader
-///     Read in objects from an underlying json representation.
+///     Implements the concept Reader for a streaming JSON reader which extracts items one by one from the input stream.
 class MORPHEUSCORE_EXPORT JsonReader
 {
     enum class FundamentalType : std::uint32_t
@@ -47,8 +48,6 @@ class MORPHEUSCORE_EXPORT JsonReader
     };
 
 public:
-    using OwnedStream = memory::polymorphic_value<std::istream>;
-
     static constexpr bool canBeTextual() { return true; }
 
     /// \copydoc morpheus::serialisation::concepts::ReaderArchetype::isTextual()
@@ -57,9 +56,13 @@ public:
     /// Json reader take in a stream of json to extract data members from.
     /// \param[in] stream Stream used to read in the json source.  This must outlive the reader as its held by reference.
     /// \param[in] validate If true, the json will be validated against the schema.  If false, no validation is performed.
-    explicit JsonReader(OwnedStream stream, bool validate = true);
+    explicit JsonReader(std::istream& stream, bool validate = true);
 
-    explicit JsonReader(JsonReader const& rhs);
+    explicit JsonReader(JsonReader const& rhs) = delete;
+    JsonReader& operator=(JsonReader const& rhs) = delete;
+
+    explicit JsonReader(JsonReader&& rhs) noexcept;
+    JsonReader& operator=(JsonReader&& rhs) noexcept;
 
     /// Destructor for the JsonReader.
     ~JsonReader();
@@ -97,6 +100,14 @@ public:
         auto const [event, next] = getNext();
         MORPHEUS_ASSERT(next->index() == 0);
         return std::get<T>(*next);
+    }
+
+    /// Read a single byte from the serialisation.
+    template <typename T>
+    requires std::same_as<T, std::byte>
+    T read()
+    {
+        return static_cast<std::byte>(read<std::uint8_t>());
     }
 
     /// Reads a integral type from the serialisation.
@@ -148,9 +159,31 @@ public:
     requires std::is_same_v<T, std::vector<std::byte>>
     T read()
     {
-        return {};
+        return readBytes();
+    }
+
+    /// Read a sequence of elements from the serialisation.
+    /// \tparam T The type of the elements to read.
+    /// \tparam Fn The type of the function to read a single element.
+    /// \param readOne The function to read a single element.
+    /// \param size The number of elements to read, if known.
+    /// \return A generator yielding the elements of the sequence.
+    template <typename T, typename Fn>
+    concurrency::Generator<T> readElements(Fn readOne, std::optional<std::size_t> size)
+    {
+        if (size)
+        {
+            for (std::size_t i = 0; i < *size; ++i)
+                co_yield readOne();
+        }
+        else
+        {
+            while (!isAtEndSequence())
+                co_yield readOne();
+        }
     }
     // clang-format on
+
 private:
     enum class Event : std::uint32_t
     {
@@ -169,11 +202,15 @@ private:
     using EventValue = std::tuple<Event, PossibleValue>;
 
     [[nodiscard]] EventValue getNext();
+    [[nodiscard]] EventValue const& peekNext();
+    [[nodiscard]] bool isAtEndSequence();
+    [[nodiscard]] std::vector<std::byte> readBytes();
 
-    memory::polymorphic_value<std::istream> mSourceStream; /// Owned input stream containing the Json source.
-    rapidjson::IStreamWrapper mStream;
-    rapidjson::Reader mJsonReader;
+    std::reference_wrapper<std::istream> mSourceStream;
+    std::unique_ptr<rapidjson::IStreamWrapper> mStream;
+    std::unique_ptr<rapidjson::Reader> mJsonReader;
     std::unique_ptr<struct JsonExtracter> mExtractor;
+    std::optional<EventValue> mPendingEvent;
     bool mValidate = true;
 };
 

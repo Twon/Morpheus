@@ -16,19 +16,29 @@ inline namespace defaults
 {
 
 template <concepts::WriteSerialiser Serialiser, concepts::WriteSerialisableInsrusive Type>
-void serialise(Serialiser& serialiser, Type const& value)
+auto serialise(Serialiser& serialiser, Type const& value) -> void
 {
+    serialiser.writer().beginComposite();
     value.serialise(serialiser);
+    serialiser.writer().endComposite();
 }
 
 template <concepts::ReadSerialiser Serialiser, concepts::ReadSerialisableInsrusive Type>
-auto deserialise(Serialiser& serialiser)
+auto deserialise(Serialiser& serialiser, std::type_identity<Type>) -> Type
 {
     Type value;
     serialiser.reader().beginComposite();
     value.deserialise(serialiser);
     serialiser.reader().endComposite();
     return value;
+}
+
+template <concepts::ReadSerialiser Serialiser, concepts::ReadSerialisableInsrusive Type>
+auto deserialise(Serialiser& serialiser, Type& value) -> void
+{
+    serialiser.reader().beginComposite();
+    value.deserialise(serialiser);
+    serialiser.reader().endComposite();
 }
 
 } // namespace defaults
@@ -50,6 +60,20 @@ struct serialise_fn
     }
 };
 
+template <concepts::ReadSerialiser Serialiser, typename Type>
+auto adl_deserialise(Serialiser& s, std::type_identity<Type> type) -> Type
+{
+    using detail::deserialise;
+    return deserialise(s, type);
+}
+
+template <concepts::ReadSerialiser Serialiser, typename Type>
+auto adl_deserialise(Serialiser& s, Type&& value) -> void
+{
+    using detail::deserialise;
+    return deserialise(s, std::forward<Type>(value));
+}
+
 /// \struct deserialise_fn
 ///     Customisation point functor for deserialising a value.
 struct deserialise_fn
@@ -60,10 +84,24 @@ struct deserialise_fn
     /// \param serialiser The serialiser to use for deserialisation.
     /// \return The deserialised value.
     template <concepts::ReadSerialiser Serialiser, typename Type>
-    auto operator()(Serialiser& serialiser) const
+    requires requires(Serialiser& s) { adl_deserialise(s, std::type_identity<Type>{}); }
+    auto operator()(Serialiser& serialiser) const -> Type
     {
-        using detail::serialise;
-        return deserialise<Serialiser, Type>(serialiser);
+        using detail::deserialise;
+        return deserialise(serialiser, std::type_identity<Type>{});
+    }
+
+    /// Deserialise into a value using the provided serialiser.
+    /// \tparam Serialiser The type of the serialiser to use.
+    /// \tparam Type The type of the value to deserialise.
+    /// \param[in] serialiser The serialiser to use for deserialisation.
+    /// \param[out] value The value to deserialise into.
+    template <concepts::ReadSerialiser Serialiser, typename Type>
+    requires requires(Serialiser& s, Type&& v) { adl_deserialise(s, std::forward<Type>(v)); }
+    void operator()(Serialiser& serialiser, Type&& value) const
+    {
+        using detail::deserialise;
+        deserialise(serialiser, std::forward<Type>(value));
     }
 };
 

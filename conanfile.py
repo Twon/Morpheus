@@ -76,12 +76,12 @@ class Morpheus(ConanFile):
         "with_rs_vulkan": True,
      }
     requires = (
-        "unordered_dense/4.5.0",
-        "boost/1.88.0",
-        "ctre/3.9.0",
+        "unordered_dense/4.8.1",
+        "boost/1.90.0",
+        "ctre/3.10.0",
         "magic_enum/0.9.7",
-        "ms-gsl/4.1.0",
-        "rapidjson/cci.20230929",
+        "ms-gsl/4.2.0",
+        "rapidjson/cci.20250205",
         "scnlib/4.0.1",
     )
 
@@ -142,6 +142,14 @@ class Morpheus(ConanFile):
                       (compiler == "clang" and version >= Version("19"))
         return not std_support
 
+    @property
+    def useValueTypes(self):
+        """ Does the current compiler version lack support for std::indirect and std::polymorphic via the STL. """
+        compiler = self.settings.compiler
+        version = Version(self.settings.compiler.version)
+        std_support = (compiler == "gcc" and version >= Version("16"))
+        return not std_support
+
     def config_options(self):
         if not self.checkMoldIsSupported():
             self.options.rm_safe("link_with_mold")
@@ -153,15 +161,15 @@ class Morpheus(ConanFile):
             self.options.rm_safe("with_rs_direct_x12")
 
     def build_requirements(self):
-        self.tool_requires("ninja/1.13.1")
-        self.test_requires("catch2/3.9.0")
-        self.test_requires("gtest/1.16.0")
+        self.tool_requires("ninja/1.13.2")
+        self.test_requires("catch2/3.13.0")
+        self.test_requires("gtest/1.17.0")
 
-        if get_cmake_version() < Version("4.0.3"):
-            self.tool_requires("cmake/4.0.3")
+        if get_cmake_version() < Version("4.3.0"):
+            self.tool_requires("cmake/4.3.0")
 
         if self.options.build_docs:
-            self.build_requires("doxygen/1.14.0")
+            self.build_requires("doxygen/1.16.1")
 
         if self.options.get_safe("link_with_mold", False):
             self.build_requires("mold/2.36.0")
@@ -174,7 +182,7 @@ class Morpheus(ConanFile):
                 self.requires("moltenvk/1.3.0", transitive_headers=True)
 
         if self.options.get_safe("with_rs_opengl", False):
-            self.requires("glbinding/3.3.0", transitive_headers=True)
+            self.requires("glbinding/3.5.0", transitive_headers=True)
             self.requires("khrplatform/cci.20200529", transitive_headers=True)
 
         if self.settings.os in ["Windows"]:
@@ -187,7 +195,7 @@ class Morpheus(ConanFile):
             self.requires("tl-expected/20190710", transitive_headers=True)
 
         if self.useFMT:
-            self.requires("fmt/11.2.0", transitive_headers=True)
+            self.requires("fmt/12.1.0", transitive_headers=True)
 
         if self.useRanges:
             self.requires("range-v3/0.12.0", transitive_headers=True)
@@ -195,12 +203,17 @@ class Morpheus(ConanFile):
         if self.useOutPtr:
             self.requires("out_ptr/cci.20211119", transitive_headers=True)
 
-    def system_requirements(self):
-        apt = Apt(self)
-        apt.install(["libx11-dev", "libxrandr-dev"], update=True, check=True)
+        if self.useValueTypes:
+            self.requires("value_types/1.0.0", transitive_headers=True)
 
-        if self.options.get_safe("with_rs_opengl", False):
-            apt.install(["libgl-dev", "libopengl-dev", "libglu1-mesa-dev", "libgles2-mesa-dev"], update=True, check=True)
+    def system_requirements(self):
+        if self.settings.os == "Linux":
+            apt = Apt(self)
+            apt.install(["libx11-dev", "libxrandr-dev"], update=True, check=True)
+            apt.install(["tzdata"], update=True, check=True)
+
+            if self.options.get_safe("with_rs_opengl", False):
+                apt.install(["libgl-dev", "libopengl-dev", "libglu1-mesa-dev", "libgles2-mesa-dev"], update=True, check=True)
 
     @property
     def _minimum_cpp_standard(self):
@@ -217,6 +230,8 @@ class Morpheus(ConanFile):
         }
 
     def configure(self):
+        self.options["boost"].without_cobalt = True
+
         if self.settings.compiler.get_safe("cppstd"):
             check_min_cppstd(self, self._minimum_cpp_standard)
         min_version = self._minimum_compilers_version.get(
@@ -237,7 +252,7 @@ class Morpheus(ConanFile):
     def generate(self):
         tc = CMakeToolchain(self)
         tc.variables["BUILD_SHARED_LIBS"] = self.options.shared
-        tc.variables["MORPHEUS_BUILD_DOCS"] = self.options.build_docs
+        tc.variables["MORPHEUS_BUILD_DOCUMENTATION"] = self.options.build_docs
         tc.variables["MORPHEUS_LINK_WITH_MOLD"] = self.options.get_safe("link_with_mold", False)
         tc.variables["MORPHEUS_RENDER_SYSTEM_DIRECT_X12"] = self.options.get_safe("with_rs_direct_x12", False)
         tc.variables["MORPHEUS_RENDER_SYSTEM_METAL"] = self.options.get_safe("with_rs_metal", False)
@@ -298,6 +313,12 @@ class Morpheus(ConanFile):
 
         if self.useFMT:
             self.cpp_info.components["core"].requires.append("fmt::fmt")
+
+        if self.useOutPtr:
+            self.cpp_info.components["core"].requires.append("out_ptr::out_ptr")
+
+        if self.useValueTypes:
+            self.cpp_info.components["core"].requires.append("value_types::value_types")
 
         if self.options.get_safe("with_rs_direct_x12", False):
             self.cpp_info.components["directx12"].set_property("cmake_file_name", "MorpheusGfxDirectX12")

@@ -1,8 +1,9 @@
 #pragma once
 
-#include <cstdint>
 #include <morpheus/core/base/compiler.hpp>
 #include <morpheus/core/base/export.hpp>
+
+#include <cstdint>
 
 /*! \defgroup Platform Morpheus Supported Platforms
         The platform group of macros allow for compile time detection of the current platform.
@@ -10,6 +11,7 @@
     \def MORPHEUS_BUILD_PLATFORM
         Macro describing the current build platform of the build.
 */
+// NOLINTBEGIN(cppcoreguidelines-macro-usage)
 // clang-format off
 #if !defined(MORPHEUS_BUILD_PLATFORM)
 
@@ -48,6 +50,7 @@
     #endif
 #endif
 // clang-format on
+// NOLINTEND(cppcoreguidelines-macro-usage)
 /// @}
 
 /*! \def MORPHEUS_COMPILER_DEAD_CODE_ELIMINATION

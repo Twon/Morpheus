@@ -18,6 +18,8 @@
 name: CMake
 
 on:
+  schedule:
+    - cron: "0 2 * * *"   # Every day at 02:00 UTC
   push:
     branches: [main]
   pull_request:
@@ -39,14 +41,20 @@ jobs:
             }
           - {
               name: "Ubuntu GCC-13",
-              os: ubuntu-22.04,
+              os: ubuntu-latest,
               compiler: { type: GCC, version: 13, conan: "gcc", cc: "gcc-13", cxx: "g++-13", std: 23 },
               lib: "libstdc++11"
             }
           - {
               name: "Ubuntu GCC-14",
-              os: ubuntu-24.04,
+              os: ubuntu-latest,
               compiler: { type: GCC, version: 14, conan: "gcc", cc: "gcc-14", cxx: "g++-14", std: 23 },
+              lib: "libstdc++11"
+            }
+          - {
+              name: "Ubuntu GCC-15",
+              os: ubuntu-latest,
+              compiler: { type: GCC, version: 15, conan: "gcc", cc: "gcc-15", cxx: "g++-15", std: 23 },
               lib: "libstdc++11"
             }
           - {
@@ -134,9 +142,23 @@ jobs:
               lib: "libc++",
             }
           - {
+              name: "Ubuntu Clang-20 + libc++",
+              os: ubuntu-latest,
+              compiler:
+                {
+                  type: CLANG,
+                  version: 20,
+                  conan: "clang",
+                  cc: "clang-20",
+                  cxx: "clang++-20",
+                  std: 23
+                },
+              lib: "libc++",
+            }
+          - {
               name: "Visual Studio 2019",
               os: windows-latest,
-              compiler: { type: VISUAL, version: 16, conan: "mscv", cc: "cl", cxx: "cl", std: 23 },
+              compiler: { type: VISUAL, version: 16, conan: "msvc", cc: "cl", cxx: "cl", std: 23 },
             }
           - {
               name: "MacOS Apple Clang 15",
@@ -166,176 +188,107 @@ jobs:
                 },
               lib: "libc++",
             }
+          - {
+              name: "MacOS Apple Clang 17",
+              os: macos-15,
+              compiler:
+                {
+                  type: APPLE_CLANG,
+                  version: "16.4",
+                  conan: "apple-clang",
+                  cc: "clang",
+                  cxx: "clang++",
+                  std: 23
+                },
+              lib: "libc++",
+            }
+
     steps:
-      - uses: actions/checkout@v4.2.2
+      - uses: actions/checkout@v6.0.2
 
-      - name: Cache Conan data
-        uses: actions/cache@v4.2.2
-        env:
-          cache-name: cache-conan-data
+      - name: Install Compiler
+        uses: ./.github/actions/setup-compiler
         with:
-          path: ${{github.workspace}}/conan_cache_save.tgz
-          key: ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-${{ matrix.settings.compiler.version }}-${{ matrix.settings.lib }}
-          restore-keys: |
-            ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-${{ matrix.settings.compiler.version }}-
-            ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.settings.os }}-${{ matrix.configuration }}-${{ matrix.settings.compiler.conan }}-
-            ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.settings.os }}-${{ matrix.configuration }}-
-            ${{ hashFiles('**/conanfile.py') }}-build-${{ matrix.settings.os }}-
+          compiler-type: ${{ matrix.settings.compiler.type }}
+          compiler-version: ${{ matrix.settings.compiler.version }}
+          stdlib: ${{ matrix.settings.lib || '' }}
+          os: ${{ matrix.settings.os }}
 
-#      - uses: lhotari/action-upterm@v1
-#        with:
-#          ## limits ssh access and adds the ssh public key for the user which triggered the workflow
-#          limit-access-to-actor: true
-          ## limits ssh access and adds the ssh public keys of the listed GitHub users
-#          limit-access-to-users: twon
+      - name: Setup Python
+        uses: ./.github/actions/setup-python
 
-      - name: Add msbuild to PATH
-        if: matrix.settings.os == 'windows-latest'
-        uses: microsoft/setup-msbuild@v2
+      - name: Cache Conan Restore
+        uses: ./.github/actions/conan-cache-restore
         with:
-          vs-version: "16.5"
+          os: ${{ matrix.settings.os }}
+          build-type: ${{ matrix.configuration }}
+          conan-compiler: ${{ matrix.settings.compiler.conan }}
+          compiler-version: ${{ matrix.settings.compiler.version }}
+          stdlib: ${{ matrix.settings.lib || '' }}
 
-      - name: Install Latest GCC
-        if: matrix.settings.compiler.type == 'GCC'
-        uses: egor-tensin/setup-gcc@v1.3
+      - name: Setup Conan
+        uses: ./.github/actions/setup-conan
         with:
-          version: ${{ matrix.settings.compiler.version }}
-          platform: x64
+          build-type: ${{ matrix.configuration }}
+          compiler-type: ${{ matrix.settings.compiler.type }}
+          compiler-version: ${{ matrix.settings.compiler.version }}
+          conan-compiler: ${{ matrix.settings.compiler.conan }}
+          stdlib: ${{ matrix.settings.lib || '' }}
+          cppstd: ${{ matrix.settings.compiler.std }}
+          generator: "Ninja Multi-Config"
 
-      - name: Install Latest libstdC++11
-        if: matrix.settings.compiler.type == 'CLANG' && matrix.settings.lib == 'libstdc++11'
-        uses: egor-tensin/setup-gcc@v1.3
-        with:
-          version: 12
-          platform: x64
-
-      - name: Install Clang
-        if: matrix.settings.compiler.type == 'CLANG'
-        uses: egor-tensin/setup-clang@v1.4
-        with:
-          version: ${{ matrix.settings.compiler.version }}
-          platform: x64
-
-      - name: Install Libc++
-        if: matrix.settings.compiler.type == 'CLANG' && matrix.settings.lib == 'libc++'
+      - name: Conan Install
         shell: bash
         run: |
-          sudo apt install -y libc++-${{ matrix.settings.compiler.version }}-dev libc++abi-${{ matrix.settings.compiler.version }}-dev libunwind-${{ matrix.settings.compiler.version }}-dev
+          conan install "${{ github.workspace }}" --build missing -pr:b default
 
-      - name: Select Xcode ${{matrix.settings.compiler.version}}
-        if: contains(matrix.settings.os, 'macos')
-        uses: maxim-lobanov/setup-xcode@v1.6.0
-        with:
-          xcode-version: '${{matrix.settings.compiler.version}}'
-
-      - name: Set up Python
-        uses: actions/setup-python@v5.4.0
-        with:
-          python-version: '3.13'
-
-      - name: Install Python requirements
-        run: |
-          pip install -r ./requirements.txt
-
-      - name: Configure Conan
-        shell: bash
-        run: |
-          conan profile detect --force
-          sed -i.backup '/^\[settings\]$/,/^\[/ s/^build_type=.*/build_type=${{ matrix.configuration }}/' .conan2/profiles/default
-          sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.cppstd=.*/compiler.cppstd=${{ matrix.settings.compiler.std }}/' .conan2/profiles/default
-          if [[ "${{ matrix.settings.compiler.type }}" == "GCC" || "${{ matrix.settings.compiler.type }}" == "CLANG" ]]; then
-            sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler=.*/compiler=${{ matrix.settings.compiler.conan }}/' .conan2/profiles/default
-            sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.version=.*/compiler.version=${{ matrix.settings.compiler.version }}/' .conan2/profiles/default
-            sed -i.backup '/^\[settings\]$/,/^\[/ s/^compiler.libcxx=.*/compiler.libcxx=${{ matrix.settings.lib }}/' .conan2/profiles/default
-            sed -i.backup '1a mold*:build_type=Release' .conan2/profiles/default
-            sed -i.backup '1a onetbb*:build_type=Release' .conan2/profiles/default
-            sed -i.backup '1a mold*:compiler.libcxx=libstdc++11' .conan2/profiles/default
-          fi
-
-          echo 'core.sources:download_urls=["origin", "https://c3i.jfrog.io/artifactory/conan-center-backup-sources/"]' >> .conan2/global.conf
-          echo 'tools.cmake.cmaketoolchain:configure_args = {"CMAKE_POLICY_VERSION_MINIMUM": "3.5"}' >> .conan2/global.conf
-          echo "tools.cmake.cmaketoolchain:generator = Ninja Multi-Config" >> .conan2/global.conf
-
-          if [[ "${{ matrix.settings.os }}" != "windows-latest" ]]; then
-            echo "tools.system.package_manager:mode = install" >> .conan2/global.conf
-            echo "tools.system.package_manager:sudo = True" >> .conan2/global.conf
-          fi
-
-          conan profile show -pr default
-
-      - name: Conan Cache Restore
-        shell: bash
-        run: |
-          if [ -f ./conan_cache_save.tgz ]; then
-              conan cache restore ./conan_cache_save.tgz
-          fi
-
-      - name: Configure Install
-        working-directory: ${{github.workspace}}
-        shell: bash
-        run: |
-          conan install "${{github.workspace}}" --build missing -pr:b default -o boost/*:without_cobalt=True
-
-      - name: Configure Conan Build
-        if: matrix.settings.os == 'windows-latest'
-        shell: cmd
-        working-directory: ${{github.workspace}}
-        run: |
-           call build\generators\conanvcvars.bat
-           call build\generators\conanbuild.bat
-
-      - name: Configure Conan Build
-        if: matrix.settings.os != 'windows-latest'
-        shell: bash
-        working-directory: ${{github.workspace}}
-        run: |
-           source build/generators/conanbuild.sh
-
-#      - name: Setup tmate session
-#        uses: mxschmitt/action-tmate@v3
-#        timeout-minutes: 15
-#        with:
-#          detached: true
-
-      - name: Configure CMake
-        if: matrix.settings.os == 'windows-latest'
+      - name: Configure CMake (Windows)
+        if: runner.os == 'Windows'
         shell: cmd
         run: |
-          cmake --version
-          call build\generators\conanbuild.bat
-          cmake --preset conan-default -DENABLE_ADDRESS_SANITIZER=ON -DENABLE_UNDEFINED_BEHAVIOUR_SANITIZER=ON
+          if exist build\generators\conanbuild.bat call build\generators\conanbuild.bat
+          cmake --preset ${{ env.CONAN_CONFIGURE_PRESET }} -DENABLE_ADDRESS_SANITIZER=ON -DENABLE_UNDEFINED_BEHAVIOUR_SANITIZER=ON
 
-      - name: Configure CMake
-        if: matrix.settings.os != 'windows-latest'
+      - name: Configure CMake (Linux/macOS)
+        if: runner.os != 'Windows'
         shell: bash
         run: |
-          source build/generators/conanbuild.sh
-          cmake --preset conan-default -DENABLE_ADDRESS_SANITIZER=ON -DENABLE_UNDEFINED_BEHAVIOUR_SANITIZER=ON
+          if [ -f build/generators/conanbuild.sh ]; then
+            source build/generators/conanbuild.sh
+          fi
+          cmake --preset ${{ env.CONAN_CONFIGURE_PRESET }} -DENABLE_ADDRESS_SANITIZER=ON -DENABLE_UNDEFINED_BEHAVIOUR_SANITIZER=ON
 
-      - name: Conan Preset
-        shell: bash
-        run: echo "CONAN_PRESET=conan-$(echo ${{matrix.configuration}} | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
-
-      - name: Build
-        if: matrix.settings.os == 'windows-latest'
+      - name: Build (Windows)
+        if: runner.os == 'Windows'
         shell: cmd
         run: |
-          call build\generators\conanbuild.bat
-          cmake --build --preset ${{ env.CONAN_PRESET }}
+          if exist build\generators\conanbuild.bat call build\generators\conanbuild.bat
+          cmake --build --preset ${{ env.CONAN_BUILD_PRESET }}
 
-      - name: Build
-        if: matrix.settings.os != 'windows-latest'
+      - name: Build (Linux/macOS)
+        if: runner.os != 'Windows'
         shell: bash
         run: |
-          source build/generators/conanbuild.sh
-          cmake --build --preset ${{ env.CONAN_PRESET }}
+          if [ -f build/generators/conanbuild.sh ]; then
+            source build/generators/conanbuild.sh
+          fi
+          cmake --build --preset ${{ env.CONAN_BUILD_PRESET }}
 
-      - name: Test
-        # Execute tests defined by the CMake configuration.
-        # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
-        run: ctest --preset ${{ env.CONAN_PRESET }} -LE GPU # Exclude GPU tests as Github actions do not have the supported hardware/drivers
-
-      - name: Conan Cache Save
+      - name: Test (Windows)
+        if: runner.os == 'Windows'
+        shell: cmd
         run: |
-          conan cache clean
-          conan cache save "*/*:*"
+          if exist build\generators\conanbuild.bat call build\generators\conanbuild.bat
+          ctest --preset ${{ env.CONAN_BUILD_PRESET }} -LE GPU --output-on-failure
+
+      - name: Test (Linux/macOS)
+        if: runner.os != 'Windows'
+        shell: bash
+        run: |
+          if [ -f build/generators/conanbuild.sh ]; then
+            source build/generators/conanbuild.sh
+          fi
+          ctest --preset ${{ env.CONAN_BUILD_PRESET }} -LE GPU --output-on-failure
+
+      - name: Cache Conan Save
+        uses: ./.github/actions/conan-cache-save

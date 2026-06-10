@@ -68,10 +68,10 @@ TEST_CASE("Ensure write serialiser are forward constructible where the underlyin
             using ForwardingSerialiserArchetype = WriteSerialiser<MultiConstructorWriter>;
             THEN("Is default construtible")
             {
-                STATIC_REQUIRE(!std::is_constructible_v<ForwardingSerialiserArchetype, int>);
-                STATIC_REQUIRE(std::is_constructible_v<ForwardingSerialiserArchetype, int, bool>);
-                STATIC_REQUIRE(!std::is_constructible_v<ForwardingSerialiserArchetype, int, bool, int>);
-                STATIC_REQUIRE(std::is_constructible_v<ForwardingSerialiserArchetype, int, bool, int, bool>);
+                STATIC_REQUIRE(!std::is_constructible_v<ForwardingSerialiserArchetype, std::in_place_t, int>);
+                STATIC_REQUIRE(std::is_constructible_v<ForwardingSerialiserArchetype, std::in_place_t, int, bool>);
+                STATIC_REQUIRE(!std::is_constructible_v<ForwardingSerialiserArchetype, std::in_place_t, int, bool, int>);
+                STATIC_REQUIRE(std::is_constructible_v<ForwardingSerialiserArchetype, std::in_place_t, int, bool, int, bool>);
             }
         }
     }
@@ -87,10 +87,10 @@ TEST_CASE("Ensure write serialiser are forward constructible where the underlyin
             using WriteSerialiserArchetype = WriteSerialiser<concepts::WriterArchetype>;
             THEN("Is default construtible")
             {
-                STATIC_REQUIRE(!std::is_constructible_v<WriteSerialiserArchetype, int>);
-                STATIC_REQUIRE(!std::is_constructible_v<WriteSerialiserArchetype, int, bool>);
-                STATIC_REQUIRE(!std::is_constructible_v<WriteSerialiserArchetype, int, bool, int>);
-                STATIC_REQUIRE(!std::is_constructible_v<WriteSerialiserArchetype, int, bool, int, bool>);
+                STATIC_REQUIRE(!std::is_constructible_v<WriteSerialiserArchetype, std::in_place_t, int>);
+                STATIC_REQUIRE(!std::is_constructible_v<WriteSerialiserArchetype, std::in_place_t, int, bool>);
+                STATIC_REQUIRE(!std::is_constructible_v<WriteSerialiserArchetype, std::in_place_t, int, bool, int>);
+                STATIC_REQUIRE(!std::is_constructible_v<WriteSerialiserArchetype, std::in_place_t, int, bool, int, bool>);
             }
         }
     }

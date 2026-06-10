@@ -8,6 +8,8 @@
 #include "morpheus/core/serialisation/concepts/write_serialisable.hpp"
 #include "morpheus/core/serialisation/concepts/write_serialiser.hpp"
 
+#include <type_traits>
+
 namespace morpheus::serialisation::detail
 {
 
@@ -27,7 +29,7 @@ void serialise(Serialiser& serialiser, conf::exp::expected<T, E> const& value)
 }
 
 template <concepts::ReadSerialiser Serialiser, IsStdExpected T>
-T deserialise(Serialiser& serialiser)
+T deserialise(Serialiser& serialiser, std::type_identity<T>)
 {
     auto const composite = makeScopedComposite(serialiser.reader());
     auto const has_value = serialiser.template deserialise<bool>("state");

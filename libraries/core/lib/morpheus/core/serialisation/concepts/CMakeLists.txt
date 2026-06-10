@@ -2,6 +2,7 @@ target_sources(MorpheusCore
     PUBLIC
         FILE_SET HEADERS
         FILES
+            hexable.hpp
             read_serialisable.hpp
             read_serialiser.hpp
             reader.hpp

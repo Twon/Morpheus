@@ -24,7 +24,7 @@ void serialise(Serialiser& serialiser, std::unique_ptr<T> const& value)
 }
 
 template <concepts::ReadSerialiser Serialiser, IsStdUniquePtr T>
-T deserialise(Serialiser& serialiser)
+T deserialise(Serialiser& serialiser, std::type_identity<T>)
 {
     auto const nullable = makeScopedNullable(serialiser.reader());
     if (nullable.value())

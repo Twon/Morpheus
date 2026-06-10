@@ -50,7 +50,7 @@ struct ReaderArchetype
     // https://github.com/doxygen/doxygen/commit/64d0cb7f695b2ebe63131c06b7762c1f75212c28
     /// Read any arithmetic type from the serialisation.
     template <typename T>
-    requires std::is_arithmetic_v<T>
+    requires std::is_arithmetic_v<T> or std::same_as<T, std::byte>
     consteval T read();
 
     /// Read a string from the serialisation.
@@ -62,6 +62,10 @@ struct ReaderArchetype
     template <typename T>
     requires std::is_same_v<T, std::vector<std::byte>>
     consteval T read();
+
+    /// Read a sequence of values from the serialisation.
+    template <typename T, typename Fn>
+    concurrency::Generator<T> readElements(Fn&& readOne, std::optional<std::size_t> size);
 };
 
 using ReadSerialiserArchetype = serialisation::ReadSerialiser<ReaderArchetype>;
