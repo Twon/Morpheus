@@ -63,9 +63,7 @@ TEST_CASE("Binary serialisation can roundtrip standard library types to binary a
     REQUIRE(binaryRoundtrip(std::string("Hello")) == std::string("Hello"));
     REQUIRE(*binaryRoundtrip(std::make_unique<int>(123)) == 123);
     REQUIRE(binaryRoundtrip(std::vector<int>{1, 2, 3, 4, 5}) == std::vector<int>{1, 2, 3, 4, 5});
-
-    /*  REQUIRE(test::serialise(std::variant<int, bool, std::string>{true}) == R"({"type":"bool","value":true})");
-     */
+    REQUIRE(binaryRoundtrip(std::variant<int, bool, std::string>{true}) == std::variant<int, bool, std::string>{true});
 }
 
 TEST_CASE("Binary serialisation can roundtrip standard library types to binary and back", "[morpheus.serialisation.binary.roundtrip.adapters.boost]")

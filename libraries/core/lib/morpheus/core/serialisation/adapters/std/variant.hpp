@@ -2,6 +2,7 @@
 
 // IWYU pragma: always_keep
 #include "morpheus/core/base/assert.hpp"
+#include "morpheus/core/base/exceptions.hpp"
 #include "morpheus/core/conformance/format.hpp"
 #include "morpheus/core/conformance/ranges.hpp"
 #include "morpheus/core/meta/is_specialisation.hpp"
@@ -38,7 +39,7 @@ struct TypeListNames<std::variant<T...>>
     }
 
     /// Find the index within the types of a std::variant for a given type name.
-    static constexpr std::string_view findIndex(std::string_view const name)
+    static constexpr std::size_t findIndex(std::string_view const name)
     {
         auto const entry = conf::ranges::find(typeNames, name);
         if (entry == typeNames.end())
@@ -72,28 +73,38 @@ void serialise(Serialiser& serialiser, std::variant<T...> const& value)
     serialiser.writer().endComposite();
 }
 
-// template <concepts::ReadSerialiser Serialiser, IsStdVariant T>
-// T deserialise(Serialiser& serialiser, std::type_identity<T>)
-// {
-//     auto const scope = makeScopedComposite(serialiser.reader());
-//     auto const index = [&serialiser]
-//     {
-//         if (serialiser.reader().isTextual())
-//         {
-//             auto const type = serialiser.template deserialise<std::string>("type");
-//             return TypeListNames<T>::findIndex(type);
-//         }
-//         else
-//             return serialiser.template deserialise<std::uint64_t>("index");
-//     }();
-//     [&serialiser]<std::size_t... Indexes>(std::index_sequence<Indexes...>)
-//     {
-//         static_assert((!std::is_reference_v<std::variant_alternative_t<Indexes, T>> || ...));
-//         ((index == Indexes))
-//         return T{serialiser.template deserialise<std::variant_alternative_t<Indexes, T>>()...};
-//     }(std::make_index_sequence<std::variant_size_v<T>>());
+template <concepts::ReadSerialiser Serialiser, IsStdVariant T>
+T deserialise(Serialiser& serialiser, std::type_identity<T>)
+{
+    auto const scope = makeScopedComposite(serialiser.reader());
+    auto const index = [&serialiser]
+    {
+        if (serialiser.reader().isTextual())
+        {
+            auto const type = serialiser.template deserialise<std::string>("type");
+            return TypeListNames<T>::findIndex(type);
+        }
+        else
+            return serialiser.template deserialise<std::uint64_t>("index");
+    }();
 
-//     return T{};
-// }
+    if (index >= std::variant_size_v<T>)
+        throwRuntimeException("Invalid variant index");
+
+    return [&]<std::size_t... Indexes>(std::index_sequence<Indexes...>) -> T
+    {
+        static_assert((!std::is_reference_v<std::variant_alternative_t<Indexes, T>> || ...));
+
+        using Fn = T (*)(Serialiser&);
+
+        static constexpr std::array<Fn, std::variant_size_v<T>> table = {+[](Serialiser& s) -> T
+                                                                         {
+                                                                             using Alt = std::variant_alternative_t<Indexes, T>;
+                                                                             return T{std::in_place_index<Indexes>, s.template deserialise<Alt>("value")};
+                                                                         }...};
+
+        return table[index](serialiser);
+    }(std::make_index_sequence<std::variant_size_v<T>>{});
+}
 
 } // namespace morpheus::serialisation::detail
