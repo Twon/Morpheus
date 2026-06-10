@@ -35,9 +35,7 @@ boost::circular_buffer<T, Allocator> deserialise(Serialiser& serialiser, std::ty
     boost::circular_buffer<T, Allocator> buffer;
     serialiser.reader().beginComposite();
     buffer.set_capacity(serialiser.template deserialise<std::uint64_t>("capacity"));
-    serialiser.reader().beginValue("values");
-    conf::ranges::copy(serialiser.template sequence<T>(), std::back_inserter(buffer));
-    serialiser.reader().endValue();
+    conf::ranges::copy(serialiser.template sequence<T>("values"), std::back_inserter(buffer));
     serialiser.reader().endComposite();
     return buffer;
 }
