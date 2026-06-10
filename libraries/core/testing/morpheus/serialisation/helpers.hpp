@@ -121,7 +121,7 @@ T deserialise(std::vector<char> const& value)
     array_source source{value.data(), value.size()};
     stream is{source};
     Serialiser serialiser(std::in_place, is);
-    return serialiser.deserialise<T>();
+    return serialiser.template deserialise<T>();
 }
 
 /// Serialises an object to a binary blob and then deserialise back into the original form.
