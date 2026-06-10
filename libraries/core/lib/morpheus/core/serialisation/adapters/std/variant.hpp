@@ -77,12 +77,12 @@ template <concepts::ReadSerialiser Serialiser, IsStdVariant T>
 T deserialise(Serialiser& serialiser, std::type_identity<T>)
 {
     auto const scope = makeScopedComposite(serialiser.reader());
-    auto const index = [&serialiser]
+    auto const index = [&serialiser] -> std::uint64_t
     {
         if (serialiser.reader().isTextual())
         {
             auto const type = serialiser.template deserialise<std::string>("type");
-            return TypeListNames<T>::findIndex(type);
+            return static_cast<uint64_t>(TypeListNames<T>::findIndex(type));
         }
         else
             return serialiser.template deserialise<std::uint64_t>("index");
