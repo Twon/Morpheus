@@ -25,10 +25,11 @@ using namespace Catch;
 
 namespace morpheus::serialisation
 {
+using namespace testing;
 
 TEST_CASE("Binary writer handles error cases gracefully", "[morpheus.serialisation.binary_writer.error_handling]")
 {
-    constexpr auto bytes = testing::makeBytes(0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00);
+    constexpr auto bytes = makeBytes(0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00);
     constexpr auto string = std::string_view{"String longer than 4-bytes"};
 
 #if (__cpp_lib_spanstream >= 202106L)
@@ -36,9 +37,8 @@ TEST_CASE("Binary writer handles error cases gracefully", "[morpheus.serialisati
     {
         REQUIRE(conf::ranges::equal(testing::serialiseWithSpanStream<sizeof(std::int64_t)>(std::int64_t{100}),
                                     testing::makeCharArray(0x64, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00)));
-        REQUIRE(conf::ranges::equal(testing::serialiseWithSpanStream<sizeof(std::size_t) + string.size()>(string), testing::serialise(string)));
-        REQUIRE(
-            conf::ranges::equal(testing::serialiseWithSpanStream<sizeof(std::size_t) + bytes.size()>(std::span{bytes}), testing::serialise(std::span{bytes})));
+        REQUIRE(conf::ranges::equal(testing::serialiseWithSpanStream<sizeof(std::size_t) + string.size()>(string), binarySerialise(string)));
+        REQUIRE(conf::ranges::equal(testing::serialiseWithSpanStream<sizeof(std::size_t) + bytes.size()>(std::span{bytes}), binarySerialise(std::span{bytes})));
 
         REQUIRE_THROWS_AS(testing::serialiseWithSpanStream<sizeof(std::int32_t)>(std::int64_t{100}), BinaryException);
         REQUIRE_THROWS_AS(testing::serialiseWithSpanStream<sizeof(std::int64_t)>(string), BinaryException);
@@ -49,9 +49,9 @@ TEST_CASE("Binary writer handles error cases gracefully", "[morpheus.serialisati
     {
         REQUIRE(conf::ranges::equal(testing::serialiseWithLimitedSpace<sizeof(std::int64_t)>(std::int64_t{100}),
                                     testing::makeCharArray(0x64, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00)));
-        REQUIRE(conf::ranges::equal(testing::serialiseWithLimitedSpace<sizeof(std::size_t) + string.size()>(string), testing::serialise(string)));
-        REQUIRE(conf::ranges::equal(testing::serialiseWithLimitedSpace<sizeof(std::size_t) + bytes.size()>(std::span{bytes}),
-                                    testing::serialise(std::span{bytes})));
+        REQUIRE(conf::ranges::equal(testing::serialiseWithLimitedSpace<sizeof(std::size_t) + string.size()>(string), binarySerialise(string)));
+        REQUIRE(
+            conf::ranges::equal(testing::serialiseWithLimitedSpace<sizeof(std::size_t) + bytes.size()>(std::span{bytes}), binarySerialise(std::span{bytes})));
 
         REQUIRE_THROWS_AS(testing::serialiseWithLimitedSpace<sizeof(std::int32_t)>(std::int64_t{100}), std::ios_base::failure);
         REQUIRE_THROWS_AS(testing::serialiseWithLimitedSpace<sizeof(std::int32_t)>(string), std::ios_base::failure);

@@ -29,13 +29,14 @@ constexpr std::array<char, sizeof...(Ts)> makeCharArray(Ts&&... args) noexcept
 /// Serialiser a value to a binary buffer.
 /// \param[in] value The value to be serialised.
 /// \return The binary blob containing the serialised form of the input value.
+template <concepts::WriteSerialiser Serialiser>
 std::vector<char> serialise(auto const& value)
 {
     using namespace boost::iostreams;
     std::vector<char> storage;
     back_insert_device sink{storage};
     stream os{sink};
-    BinaryWriteSerialiser serialiser{os};
+    Serialiser serialiser{std::in_place, os};
     serialiser.serialise(value);
     return storage;
 }
@@ -53,7 +54,7 @@ std::array<char, Size> serialiseWithLimitedSpace(auto const& value)
     std::array<char, Size> storage = {};
     array_sink sink{storage.data(), storage.size()};
     stream os{sink};
-    BinaryWriteSerialiser serialiser{os};
+    BinaryWriteSerialiser serialiser{std::in_place, os};
     serialiser.serialise(value);
     return storage;
 }
@@ -70,7 +71,7 @@ T deserialiseWithIoStream(auto const& storage)
     using namespace boost::iostreams;
     array_source source{storage.data(), storage.size()};
     stream is{source};
-    BinaryReadSerialiser serialiser{is};
+    BinaryReadSerialiser serialiser{std::in_place, is};
     return serialiser.deserialise<T>();
 }
 
@@ -87,7 +88,7 @@ std::array<char, Size> serialiseWithSpanStream(auto const& value)
     std::array<char, Size> storage;
     std::span view{storage};
     std::ospanstream stream{view};
-    BinaryWriteSerialiser serialiser{stream};
+    BinaryWriteSerialiser serialiser{std::in_place, stream};
     serialiser.serialise(value);
     return storage;
 }
@@ -103,7 +104,7 @@ T deserialiseWithSpanStream(auto const& storage)
 {
     std::span view{storage};
     std::ispanstream stream{view};
-    BinaryReadSerialiser serialiser{stream};
+    BinaryReadSerialiser serialiser{std::in_place, stream};
     return serialiser.deserialise<T>();
 }
 #endif
@@ -113,13 +114,13 @@ T deserialiseWithSpanStream(auto const& storage)
 /// \tparam T The type of value to be deserialised.
 /// \param[in] value The binary blob representing the serialised form of the type.
 /// \returns The deserialised value.
-template <typename T>
+template <typename T, concepts::ReadSerialiser Serialiser>
 T deserialise(std::vector<char> const& value)
 {
     using namespace boost::iostreams;
     array_source source{value.data(), value.size()};
     stream is{source};
-    BinaryReadSerialiser serialiser{is};
+    Serialiser serialiser(std::in_place, is);
     return serialiser.deserialise<T>();
 }
 
@@ -128,10 +129,15 @@ T deserialise(std::vector<char> const& value)
 /// \tparam T The type of value to be serialised/deserialised.
 /// \param[in] value The value to be serialised then deserialised.
 /// \returns The resulting deserialised value.
-template <typename T>
+template <concepts::WriteSerialiser WriteSerialiser, concepts::ReadSerialiser ReadSerialiser, typename T>
 T roundtrip(T const& value)
 {
-    return deserialise<T>(serialise(value));
+    return deserialise<T, ReadSerialiser>(serialise<WriteSerialiser>(value));
+}
+
+std::vector<char> binarySerialise(auto const& value)
+{
+    return serialise<BinaryWriteSerialiser>(value);
 }
 
 } // namespace morpheus::serialisation::testing
