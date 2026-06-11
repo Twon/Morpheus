@@ -1,3 +1,5 @@
+find_package(ftxui)
+
 target_sources(MorpheusVisualisation
     PUBLIC
         FILE_SET HEADERS
@@ -7,4 +9,9 @@ target_sources(MorpheusVisualisation
     PRIVATE
         render_system_factory.cpp
         visualisation.cpp
+)
+
+target_link_libraries(MorpheusVisualisation
+    PRIVATE
+        ftxui::ftxui
 )
