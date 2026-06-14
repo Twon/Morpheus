@@ -1,0 +1,7 @@
+include(../../compiler/clang)
+
+[settings]
+compiler.version=21
+
+[conf]
+tools.build:compiler_executables={"c":"clang-21","cpp":"clang++-21"}

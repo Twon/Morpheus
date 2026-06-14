@@ -142,6 +142,20 @@ jobs:
               lib: "libc++",
             }
           - {
+              name: "Ubuntu Clang-21 + libc++",
+              os: ubuntu-latest,
+              compiler:
+                {
+                  type: CLANG,
+                  version: 21,
+                  conan: "clang",
+                  cc: "clang-21",
+                  cxx: "clang++-21",
+                  std: 23
+                },
+              lib: "libc++",
+            }
+          - {
               name: "Visual Studio 2019",
               os: windows-latest,
               compiler: { type: VISUAL, version: 16, conan: "msvc", cc: "cl", cxx: "cl", std: 23 },
