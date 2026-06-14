@@ -1,7 +1,0 @@
-include(../../compiler/clang)
-
-[settings]
-compiler.version=14
-
-[conf]
-tools.build:compiler_executables={"c":"clang-14","cpp":"clang++-14"}
