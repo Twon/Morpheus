@@ -7,6 +7,8 @@
 #include "morpheus/core/serialisation/json_writer.hpp"
 #include "morpheus/core/serialisation/read_serialiser.hpp"
 #include "morpheus/core/serialisation/serialise.hpp"
+#include "morpheus/core/serialisation/toml_reader.hpp"
+#include "morpheus/core/serialisation/toml_writer.hpp"
 #include "morpheus/core/serialisation/write_serialiser.hpp"
 
 namespace morpheus::serialisation
@@ -17,5 +19,8 @@ using BinaryReadSerialiser = ReadSerialiser<BinaryReader>;
 
 using JsonWriteSerialiser = WriteSerialiser<JsonWriter>;
 using JsonReadSerialiser = ReadSerialiser<JsonReader>;
+
+using TomlWriteSerialiser = WriteSerialiser<TomlWriter>;
+using TomlReadSerialiser = ReadSerialiser<TomlReader>;
 
 } // namespace morpheus::serialisation
