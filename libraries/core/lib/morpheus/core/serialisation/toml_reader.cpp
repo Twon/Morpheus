@@ -14,9 +14,26 @@ void TomlReader::beginComposite() {}
 
 void TomlReader::endComposite() {}
 
-void TomlReader::beginValue(std::string_view const key) {}
+void TomlReader::beginValue(std::string_view const key)
+{
+    if (mCurrentKey)
+        mKeyStack.push_back(*mCurrentKey);
 
-void TomlReader::endValue() {}
+    mCurrentKey = std::string(key);
+}
+
+void TomlReader::endValue()
+{
+    if (!mKeyStack.empty())
+    {
+        mCurrentKey = mKeyStack.back();
+        mKeyStack.pop_back();
+    }
+    else
+    {
+        mCurrentKey.reset();
+    }
+}
 
 std::optional<std::size_t> TomlReader::beginSequence()
 {

@@ -97,6 +97,8 @@ public:
 
 private:
     std::istream& mStream;
+    std::optional<std::string> mCurrentKey;
+    std::vector<std::string> mKeyStack;
     toml::table mTable;
 };
 
