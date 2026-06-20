@@ -169,7 +169,7 @@ class Morpheus(ConanFile):
             self.tool_requires("cmake/4.3.0")
 
         if self.options.build_docs:
-            self.build_requires("doxygen/1.16.1")
+            self.build_requires("doxygen/1.17.0")
 
         if self.options.get_safe("link_with_mold", False):
             self.build_requires("mold/2.36.0")
