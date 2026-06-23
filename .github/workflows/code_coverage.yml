@@ -115,7 +115,7 @@ jobs:
           cmake --build --preset ${{ env.CONAN_BUILD_PRESET }} --target coverage-cobertura
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v4.4.1
+        uses: codecov/codecov-action@v7.0.0
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         with:
