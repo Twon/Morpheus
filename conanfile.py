@@ -76,13 +76,14 @@ class Morpheus(ConanFile):
         "with_rs_vulkan": True,
      }
     requires = (
-        "unordered_dense/4.8.1",
         "boost/1.91.0",
         "ctre/3.10.0",
         "magic_enum/0.9.7",
         "ms-gsl/4.2.0",
         "rapidjson/cci.20250205",
         "scnlib/4.0.1",
+        "tomlplusplus/3.4.0",
+        "unordered_dense/4.8.1",
     )
 
     build_requires = (
