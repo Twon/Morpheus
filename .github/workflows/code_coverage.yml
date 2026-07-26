@@ -29,10 +29,11 @@ env:
   BUILD_TYPE: Debug
   COMPILER_VERSION: 14
   LCOV_VERSION: 2.5
+  OS: ubuntu-latest
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ${{ env.OS }}
     steps:
       - uses: actions/checkout@v6.0.2
 
@@ -60,7 +61,7 @@ jobs:
       - name: Cache Conan Restore
         uses: ./.github/actions/conan-cache-restore
         with:
-          os: Linux
+          os: ${{ env.OS }}
           build-type: ${{ env.BUILD_TYPE }}
           conan-compiler: gcc
           compiler-version: ${{ env.COMPILER_VERSION }}
