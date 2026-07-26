@@ -57,7 +57,7 @@ jobs:
         run: |
           wget https://github.com/linux-test-project/lcov/archive/refs/tags/v${{ env.LCOV_VERSION }}.tar.gz
           tar -xvf v${{ env.LCOV_VERSION }}.tar.gz
-          cd lcov-${{ env.LCOV_VERSION }} && sudo make install-bin install-script PREFIX=/usr/local && cd ..
+          cd lcov-${{ env.LCOV_VERSION }} && sudo make install SPHINXBUILD=/bin/true PREFIX=/usr/local && cd ..
           sudo perl -MCPAN -e 'install Capture::Tiny'
           sudo apt-get install -y libdatetime-perl
 
