@@ -27,7 +27,8 @@ on:
 
 env:
   BUILD_TYPE: Debug
-  COMPILER_VERSION: 12
+  COMPILER_VERSION: 15
+  LCOV_VERSION: 2.5
 
 jobs:
   build:
@@ -47,9 +48,9 @@ jobs:
       - name: Install Lcov
         shell: bash
         run: |
-          wget https://github.com/linux-test-project/lcov/archive/refs/tags/v2.0.tar.gz
-          tar -xvf v2.0.tar.gz
-          cd lcov-2.0 && sudo make install && cd ..
+          wget https://github.com/linux-test-project/lcov/archive/refs/tags/v${{ env.LCOV_VERSION }}.tar.gz
+          tar -xvf v${{ env.LCOV_VERSION }}.tar.gz
+          cd lcov-${{ env.LCOV_VERSION }} && sudo make install && cd ..
           sudo perl -MCPAN -e 'install Capture::Tiny'
           sudo apt-get install -y libdatetime-perl
 
