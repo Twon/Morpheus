@@ -57,7 +57,7 @@ jobs:
 
       - name: Install Sphinx
         run: |
-          python3 -m pip install sphinx sphinx-rtd-theme
+          sudo apt-get install -y python3-sphinx
 
       - name: Install Lcov
         shell: bash
