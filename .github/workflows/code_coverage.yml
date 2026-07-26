@@ -68,6 +68,11 @@ jobs:
           sudo perl -MCPAN -e 'install Capture::Tiny'
           sudo apt-get install -y libdatetime-perl
 
+      - name: Verify Lcov versions
+        run: |
+          genhtml --version
+          lcov --version
+
       - name: Cache Conan Restore
         uses: ./.github/actions/conan-cache-restore
         with:
