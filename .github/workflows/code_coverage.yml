@@ -52,17 +52,21 @@ jobs:
           sudo ln -s /usr/bin/gcc-${{ matrix.settings.compiler.version }} /usr/bin/gcc
           sudo ln -s /usr/bin/g++-${{ matrix.settings.compiler.version }} /usr/bin/g++
 
+      - name: Setup Python
+        uses: ./.github/actions/setup-python
+
+      - name: Install Sphinx
+        run: |
+          python3 -m pip install sphinx sphinx-rtd-theme
+
       - name: Install Lcov
         shell: bash
         run: |
           wget https://github.com/linux-test-project/lcov/archive/refs/tags/v${{ env.LCOV_VERSION }}.tar.gz
           tar -xvf v${{ env.LCOV_VERSION }}.tar.gz
-          cd lcov-${{ env.LCOV_VERSION }} && sudo make install SPHINXBUILD=/bin/true PREFIX=/usr/local && cd ..
+          cd lcov-${{ env.LCOV_VERSION }} && sudo make install && cd ..
           sudo perl -MCPAN -e 'install Capture::Tiny'
           sudo apt-get install -y libdatetime-perl
-
-      - name: Setup Python
-        uses: ./.github/actions/setup-python
 
       - name: Cache Conan Restore
         uses: ./.github/actions/conan-cache-restore
