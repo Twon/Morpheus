@@ -26,25 +26,31 @@ on:
     branches: [main]
 
 env:
-  BUILD_TYPE: Debug
-  COMPILER_VERSION: 14
   LCOV_VERSION: 2.5
-  OS: ubuntu-latest
 
 jobs:
   build:
-    runs-on: ${{ env.OS }}
+    runs-on: ${{ matrix.settings.os }}
+    strategy:
+      matrix:
+        configuration: [ "Debug" ]
+        settings:
+          - {
+              os: ubuntu-latest,
+              compiler: { type: GCC, version: 14, conan: "gcc", cc: "gcc-14", cxx: "g++-14", std: 23 },
+              lib: "libstdc++11"
+            }
     steps:
       - uses: actions/checkout@v6.0.2
 
       - name: Install Latest GCC
         shell: bash
         run: |
-          sudo apt install -y g++-${{ env.COMPILER_VERSION }}
+          sudo apt install -y g++-${{ matrix.settings.compiler.version }}
           sudo rm -f /usr/bin/gcc /usr/bin/g++ /usr/bin/gcov
-          sudo ln -s /usr/bin/gcov-${{ env.COMPILER_VERSION }} /usr/bin/gcov
-          sudo ln -s /usr/bin/gcc-${{ env.COMPILER_VERSION }} /usr/bin/gcc
-          sudo ln -s /usr/bin/g++-${{ env.COMPILER_VERSION }} /usr/bin/g++
+          sudo ln -s /usr/bin/gcov-${{ matrix.settings.compiler.version }} /usr/bin/gcov
+          sudo ln -s /usr/bin/gcc-${{ matrix.settings.compiler.version }} /usr/bin/gcc
+          sudo ln -s /usr/bin/g++-${{ matrix.settings.compiler.version }} /usr/bin/g++
 
       - name: Install Lcov
         shell: bash
@@ -61,21 +67,21 @@ jobs:
       - name: Cache Conan Restore
         uses: ./.github/actions/conan-cache-restore
         with:
-          os: ${{ env.OS }}
-          build-type: ${{ env.BUILD_TYPE }}
-          conan-compiler: gcc
-          compiler-version: ${{ env.COMPILER_VERSION }}
-          stdlib: libstdc++11
+          os: ${{ matrix.settings.os }}
+          build-type: ${{ matrix.configuration }}
+          conan-compiler: ${{ matrix.settings.compiler.conan }}
+          compiler-version: ${{ matrix.settings.compiler.version }}
+          stdlib: ${{ matrix.settings.lib }}
 
       - name: Setup Conan
         uses: ./.github/actions/setup-conan
         with:
-          build-type: ${{ env.BUILD_TYPE }}
-          compiler-type: GCC
-          compiler-version: ${{ env.COMPILER_VERSION }}
-          conan-compiler: gcc
-          stdlib: libstdc++11
-          cppstd: "20"
+          build-type: ${{ matrix.configuration }}
+          compiler-type: ${{ matrix.settings.compiler.type }}
+          compiler-version: ${{ matrix.settings.compiler.version }}
+          conan-compiler: ${{ matrix.settings.compiler.conan }}
+          stdlib: ${{ matrix.settings.lib }}
+          cppstd: ${{ matrix.settings.compiler.std }}
 
       - name: Conan Install
         shell: bash
@@ -121,7 +127,7 @@ jobs:
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         with:
-          files: ${{ github.workspace }}/build/${{ env.BUILD_TYPE }}/coverage/cobertura_coverage.xml
+          files: ${{ github.workspace }}/build/${{ matrix.configuration }}/coverage/cobertura_coverage.xml
           fail_ci_if_error: true
           verbose: true
 
