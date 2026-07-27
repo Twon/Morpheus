@@ -52,6 +52,11 @@ jobs:
           sudo ln -s /usr/bin/gcc-${{ matrix.settings.compiler.version }} /usr/bin/gcc
           sudo ln -s /usr/bin/g++-${{ matrix.settings.compiler.version }} /usr/bin/g++
 
+          echo "PATH=$PATH"
+          which gcov || true
+          gcov --version || true
+          gcov-14 --version || true
+
       - name: Setup Python
         uses: ./.github/actions/setup-python
 
