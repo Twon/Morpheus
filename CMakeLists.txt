@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.22)
+cmake_minimum_required(VERSION 4.0)
 
 file(STRINGS "version.txt" MORPHEUS_VERSION)
 
@@ -16,7 +16,6 @@ cmake_policy(SET CMP0127 NEW)
 cmake_policy(SET CMP0135 NEW)
 cmake_policy(SET CMP0140 NEW)
 
-
 #------------------------------------------------------------------------------------------------------------------------------------------
 # Standard CMake Includes
 include(CTest)
@@ -24,22 +23,6 @@ include(FetchContent)
 include(GNUInstallDirs)
 include(CMakeDependentOption)
 include(CMakePackageConfigHelpers)
-
-if(WIN32)
-    option(MORPHEUS_RENDER_SYSTEM_DIRECT_X12 "Build with support for the Dirext X 12 render system" ON)
-endif(WIN32)
-
-if(APPLE AND CMAKE_CXX_COMPILER_ID MATCHES ".*Clang.*")
-    option(MORPHEUS_RENDER_SYSTEM_METAL "Build with support for the Metal render system" ON)
-endif(APPLE AND CMAKE_CXX_COMPILER_ID MATCHES ".*Clang.*")
-
-option(MORPHEUS_RENDER_SYSTEM_OPENGL "Build with support for the Open GL render system" ON)
-option(MORPHEUS_RENDER_SYSTEM_VULKAN "Build with support for the Vulkan render system" ON)
-cmake_dependent_option(MORPHEUS_LINK_WITH_MOLD "Enable the mold linker" ON "LINUX" OFF)
-cmake_dependent_option(MORPHEUS_CODE_COVERAGE "Enable code coverage" ON "\"${CMAKE_CXX_COMPILER_ID}\" STREQUAL \"Clang\" OR \"${CMAKE_CXX_COMPILER_ID}\" STREQUAL \"GNU\"" OFF)
-cmake_dependent_option(MORPHEUS_INCLUDE_NATVIS "Enable inclusion of a natvis files for debugging" ON "\"${CMAKE_CXX_COMPILER_ID}\" STREQUAL \"MSVC\"" OFF)
-
-set(BUILD_SHARED_LIBS NO)
 
 # Include necessary submodules
 list(APPEND CMAKE_MODULE_PATH
@@ -55,6 +38,7 @@ list(APPEND CMAKE_PREFIX_PATH "${CMAKE_BINARY_DIR}" "${CMAKE_BINARY_DIR}/generat
 # Custom CMake Includes
 include(coverage)
 include(compiler)
+include(third_party)
 include(conformance)
 include(documentation)
 include(IDESettings)
@@ -64,7 +48,31 @@ include(morpheus_add_library)
 include(morpheus_add_testing_library)
 include(morpheus_add_tests)
 include(sanitisers)
-include(third_party)
+
+set(BUILD_SHARED_LIBS NO)
+
+morpheus_conformance_check(
+    RESULT MODULES_SUPPORTED
+    MSVC_VERSION "19.34"
+    GNU_VERSION "14"
+    CLANG_VERSION "17"
+)
+
+if(WIN32)
+    option(MORPHEUS_RENDER_SYSTEM_DIRECT_X12 "Build with support for the Dirext X 12 render system" ON)
+endif(WIN32)
+
+if(APPLE AND CMAKE_CXX_COMPILER_ID MATCHES ".*Clang.*")
+    option(MORPHEUS_RENDER_SYSTEM_METAL "Build with support for the Metal render system" ON)
+endif(APPLE AND CMAKE_CXX_COMPILER_ID MATCHES ".*Clang.*")
+
+option(MORPHEUS_RENDER_SYSTEM_OPENGL "Build with support for the Open GL render system" ON)
+option(MORPHEUS_RENDER_SYSTEM_VULKAN "Build with support for the Vulkan render system" ON)
+cmake_dependent_option(MORPHEUS_LINK_WITH_MOLD "Enable the mold linker" ON "LINUX" OFF)
+cmake_dependent_option(MORPHEUS_CODE_COVERAGE "Enable code coverage" ON "\"${CMAKE_CXX_COMPILER_ID}\" STREQUAL \"Clang\" OR \"${CMAKE_CXX_COMPILER_ID}\" STREQUAL \"GNU\"" OFF)
+cmake_dependent_option(MORPHEUS_INCLUDE_NATVIS "Enable inclusion of a natvis files for debugging" ON "\"${CMAKE_CXX_COMPILER_ID}\" STREQUAL \"MSVC\"" OFF)
+cmake_dependent_option(MORPHEUS_USE_MODULES "Enable C++20 modules support" ON "MODULES_SUPPORTED" OFF)
+
 
 find_package(ClangTidy)
 find_package(IWYU)

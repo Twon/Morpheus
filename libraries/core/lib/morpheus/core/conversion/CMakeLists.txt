@@ -7,3 +7,11 @@ target_sources(MorpheusCore
         FILES
             string.hpp
 )
+
+if (MORPHEUS_USE_MODULES)
+    target_sources(MorpheusCore
+        PUBLIC
+            FILE_SET CXX_MODULES
+            FILES conversion.cppm
+    )
+endif()
