@@ -1,7 +1,6 @@
 .conan2
 .idea
 .vs
-.vscode
 .venv
 [Bb]uild*
 Install*
