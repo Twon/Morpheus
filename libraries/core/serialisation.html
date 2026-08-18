@@ -157,13 +157,13 @@
 <section id="serialising-data-write">
 <h3>Serialising Data (Write)<a class="headerlink" href="#serialising-data-write" title="Link to this heading"></a></h3>
 <p>To serialise an object, you create a <code class="docutils literal notranslate"><span class="pre">WriteSerialiser</span></code> with the desired <code class="docutils literal notranslate"><span class="pre">Writer</span></code> implementation and call the <code class="docutils literal notranslate"><span class="pre">serialise</span></code> function.</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;morpheus/core/serialisation/serialisers.hpp&quot;</span>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">"morpheus/core/serialisation/serialisers.hpp"</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;iostream&gt;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;vector&gt;</span>
 
 <span class="kt">void</span><span class="w"> </span><span class="nf">example</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="c1">// Compounding: Serialising a container of complex types</span>
-<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="s">&quot;engine&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;graphics&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;core&quot;</span><span class="p">};</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;</span><span class="w"> </span><span class="n">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="s">"engine"</span><span class="p">,</span><span class="w"> </span><span class="s">"graphics"</span><span class="p">,</span><span class="w"> </span><span class="s">"core"</span><span class="p">};</span>
 <span class="w">    </span><span class="n">morpheus</span><span class="o">::</span><span class="n">serialisation</span><span class="o">::</span><span class="n">JsonWriteSerialiser</span><span class="w"> </span><span class="n">serialiser</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="p">);</span>
 <span class="w">    </span><span class="n">morpheus</span><span class="o">::</span><span class="n">serialisation</span><span class="o">::</span><span class="n">serialise</span><span class="p">(</span><span class="n">serialiser</span><span class="p">,</span><span class="w"> </span><span class="n">tags</span><span class="p">);</span>
 <span class="p">}</span>
@@ -173,12 +173,12 @@
 <section id="deserialising-data-read">
 <h3>Deserialising Data (Read)<a class="headerlink" href="#deserialising-data-read" title="Link to this heading"></a></h3>
 <p>Deserialisation follows a similar pattern using <code class="docutils literal notranslate"><span class="pre">ReadSerialiser</span></code> and the <code class="docutils literal notranslate"><span class="pre">deserialise</span></code> function.</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;morpheus/core/serialisation/serialisers.hpp&quot;</span>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">"morpheus/core/serialisation/serialisers.hpp"</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;sstream&gt;</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;vector&gt;</span>
 
 <span class="kt">void</span><span class="w"> </span><span class="nf">example</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">stringstream</span><span class="w"> </span><span class="n">ss</span><span class="p">(</span><span class="sa">R</span><span class="s">&quot;</span><span class="dl">(</span><span class="s">[&quot;engine&quot;, &quot;graphics&quot;, &quot;core&quot;]</span><span class="dl">)</span><span class="s">&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">stringstream</span><span class="w"> </span><span class="n">ss</span><span class="p">(</span><span class="sa">R</span><span class="s">"</span><span class="dl">(</span><span class="s">["engine", "graphics", "core"]</span><span class="dl">)</span><span class="s">"</span><span class="p">);</span>
 <span class="w">    </span><span class="n">morpheus</span><span class="o">::</span><span class="n">serialisation</span><span class="o">::</span><span class="n">JsonReadSerialiser</span><span class="w"> </span><span class="n">serialiser</span><span class="p">(</span><span class="n">ss</span><span class="p">);</span>
 <span class="w">    </span><span class="k">auto</span><span class="w"> </span><span class="n">tags</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">morpheus</span><span class="o">::</span><span class="n">serialisation</span><span class="o">::</span><span class="n">deserialise</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&gt;&gt;</span><span class="p">(</span><span class="n">serialiser</span><span class="p">);</span>
 <span class="p">}</span>
@@ -197,14 +197,14 @@
 
 <span class="w">    </span><span class="k">template</span><span class="w"> </span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">Serialiser</span><span class="o">&gt;</span>
 <span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">serialise</span><span class="p">(</span><span class="n">Serialiser</span><span class="o">&amp;</span><span class="w"> </span><span class="n">s</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">s</span><span class="p">.</span><span class="n">serialise</span><span class="p">(</span><span class="s">&quot;a&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">a</span><span class="p">);</span>
-<span class="w">        </span><span class="n">s</span><span class="p">.</span><span class="n">serialise</span><span class="p">(</span><span class="s">&quot;b&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">);</span>
+<span class="w">        </span><span class="n">s</span><span class="p">.</span><span class="n">serialise</span><span class="p">(</span><span class="s">"a"</span><span class="p">,</span><span class="w"> </span><span class="n">a</span><span class="p">);</span>
+<span class="w">        </span><span class="n">s</span><span class="p">.</span><span class="n">serialise</span><span class="p">(</span><span class="s">"b"</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p">);</span>
 <span class="w">    </span><span class="p">}</span>
 
 <span class="w">    </span><span class="k">template</span><span class="w"> </span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">Serialiser</span><span class="o">&gt;</span>
 <span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">deserialise</span><span class="p">(</span><span class="n">Serialiser</span><span class="o">&amp;</span><span class="w"> </span><span class="n">s</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="k">template</span><span class="w"> </span><span class="n">deserialise</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="s">&quot;a&quot;</span><span class="p">);</span>
-<span class="w">        </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="k">template</span><span class="w"> </span><span class="n">deserialise</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">(</span><span class="s">&quot;b&quot;</span><span class="p">);</span>
+<span class="w">        </span><span class="n">a</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="k">template</span><span class="w"> </span><span class="n">deserialise</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="s">"a"</span><span class="p">);</span>
+<span class="w">        </span><span class="n">b</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="k">template</span><span class="w"> </span><span class="n">deserialise</span><span class="o">&lt;</span><span class="kt">double</span><span class="o">&gt;</span><span class="p">(</span><span class="s">"b"</span><span class="p">);</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="p">};</span>
 </pre></div>
@@ -220,12 +220,12 @@
 
 <span class="w">    </span><span class="k">template</span><span class="w"> </span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">Serialiser</span><span class="o">&gt;</span>
 <span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">serialise</span><span class="p">(</span><span class="n">Serialiser</span><span class="o">&amp;</span><span class="w"> </span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="n">MyOtherStruct</span><span class="w"> </span><span class="k">const</span><span class="o">&amp;</span><span class="w"> </span><span class="n">val</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">s</span><span class="p">.</span><span class="n">serialise</span><span class="p">(</span><span class="s">&quot;x&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">val</span><span class="p">.</span><span class="n">x</span><span class="p">);</span>
+<span class="w">        </span><span class="n">s</span><span class="p">.</span><span class="n">serialise</span><span class="p">(</span><span class="s">"x"</span><span class="p">,</span><span class="w"> </span><span class="n">val</span><span class="p">.</span><span class="n">x</span><span class="p">);</span>
 <span class="w">    </span><span class="p">}</span>
 
 <span class="w">    </span><span class="k">template</span><span class="w"> </span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">Serialiser</span><span class="o">&gt;</span>
 <span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">deserialise</span><span class="p">(</span><span class="n">Serialiser</span><span class="o">&amp;</span><span class="w"> </span><span class="n">s</span><span class="p">,</span><span class="w"> </span><span class="n">MyOtherStruct</span><span class="o">&amp;</span><span class="w"> </span><span class="n">val</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">val</span><span class="p">.</span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="k">template</span><span class="w"> </span><span class="n">deserialise</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="s">&quot;x&quot;</span><span class="p">);</span>
+<span class="w">        </span><span class="n">val</span><span class="p">.</span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="k">template</span><span class="w"> </span><span class="n">deserialise</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="s">"x"</span><span class="p">);</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="p">}</span>
 </pre></div>
@@ -250,13 +250,13 @@
 <section id="formatting-adapters-hex">
 <h3>Formatting Adapters: Hex<a class="headerlink" href="#formatting-adapters-hex" title="Link to this heading"></a></h3>
 <p>Sometimes you want to explicitly control the textual representation of a value without changing its underlying type. The <code class="docutils literal notranslate"><span class="pre">Hex&lt;T&gt;</span></code> adapter allows you to serialise any integral type or <code class="docutils literal notranslate"><span class="pre">std::byte</span></code> as a hexadecimal string in textual formats.</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;morpheus/core/serialisation/adapters/hex.hpp&quot;</span>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">"morpheus/core/serialisation/adapters/hex.hpp"</span>
 
 <span class="kt">void</span><span class="w"> </span><span class="nf">example</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="n">byte</span><span class="w"> </span><span class="n">secret</span><span class="p">{</span><span class="mh">0xB4</span><span class="p">};</span>
+<span class="w">    </span><span class="n">std</span><span class="o">::</span><span class="kt">byte</span><span class="w"> </span><span class="n">secret</span><span class="p">{</span><span class="mh">0xB4</span><span class="p">};</span>
 <span class="w">    </span><span class="n">morpheus</span><span class="o">::</span><span class="n">serialisation</span><span class="o">::</span><span class="n">JsonWriteSerialiser</span><span class="w"> </span><span class="n">serialiser</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="p">);</span>
 
-<span class="w">    </span><span class="c1">// Serialises as &quot;0xB4&quot; in JSON</span>
+<span class="w">    </span><span class="c1">// Serialises as "0xB4" in JSON</span>
 <span class="w">    </span><span class="n">morpheus</span><span class="o">::</span><span class="n">serialisation</span><span class="o">::</span><span class="n">serialise</span><span class="p">(</span><span class="n">serialiser</span><span class="p">,</span><span class="w"> </span><span class="n">morpheus</span><span class="o">::</span><span class="n">serialisation</span><span class="o">::</span><span class="n">Hex</span><span class="p">{</span><span class="n">secret</span><span class="p">});</span>
 <span class="p">}</span>
 </pre></div>
@@ -275,12 +275,12 @@
 <section id="showcase-compounding-types">
 <h2>Showcase: Compounding Types<a class="headerlink" href="#showcase-compounding-types" title="Link to this heading"></a></h2>
 <p>The recursive nature of the framework allows for depth and complexity without additional effort. Below is a realistic example of a configuration structure compounding multiple STL types.</p>
-<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;morpheus/core/serialisation/serialisers.hpp&quot;</span>
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;morpheus/core/serialisation/adapters/std/vector.hpp&quot;</span>
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;morpheus/core/serialisation/adapters/std/map.hpp&quot;</span>
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;morpheus/core/serialisation/adapters/std/variant.hpp&quot;</span>
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;morpheus/core/serialisation/adapters/std/optional.hpp&quot;</span>
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;morpheus/core/serialisation/adapters/std/chrono.hpp&quot;</span>
+<div class="highlight-cpp notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">"morpheus/core/serialisation/serialisers.hpp"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"morpheus/core/serialisation/adapters/std/vector.hpp"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"morpheus/core/serialisation/adapters/std/map.hpp"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"morpheus/core/serialisation/adapters/std/variant.hpp"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"morpheus/core/serialisation/adapters/std/optional.hpp"</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"morpheus/core/serialisation/adapters/std/chrono.hpp"</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;iostream&gt;</span>
 
 <span class="k">struct</span><span class="w"> </span><span class="nc">AppConfig</span><span class="w"> </span><span class="p">{</span>
@@ -293,19 +293,19 @@
 <span class="w">    </span><span class="c1">// Intrusive serialisation</span>
 <span class="w">    </span><span class="k">template</span><span class="w"> </span><span class="o">&lt;</span><span class="k">typename</span><span class="w"> </span><span class="nc">Serialiser</span><span class="o">&gt;</span>
 <span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="n">serialise</span><span class="p">(</span><span class="n">Serialiser</span><span class="o">&amp;</span><span class="w"> </span><span class="n">s</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="n">s</span><span class="p">.</span><span class="n">serialise</span><span class="p">(</span><span class="s">&quot;name&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="p">);</span>
-<span class="w">        </span><span class="n">s</span><span class="p">.</span><span class="n">serialise</span><span class="p">(</span><span class="s">&quot;properties&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">properties</span><span class="p">);</span>
-<span class="w">        </span><span class="n">s</span><span class="p">.</span><span class="n">serialise</span><span class="p">(</span><span class="s">&quot;timeout&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">timeout</span><span class="p">);</span>
+<span class="w">        </span><span class="n">s</span><span class="p">.</span><span class="n">serialise</span><span class="p">(</span><span class="s">"name"</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="p">);</span>
+<span class="w">        </span><span class="n">s</span><span class="p">.</span><span class="n">serialise</span><span class="p">(</span><span class="s">"properties"</span><span class="p">,</span><span class="w"> </span><span class="n">properties</span><span class="p">);</span>
+<span class="w">        </span><span class="n">s</span><span class="p">.</span><span class="n">serialise</span><span class="p">(</span><span class="s">"timeout"</span><span class="p">,</span><span class="w"> </span><span class="n">timeout</span><span class="p">);</span>
 <span class="w">    </span><span class="p">}</span>
 <span class="p">};</span>
 
 <span class="kt">void</span><span class="w"> </span><span class="nf">example</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="n">AppConfig</span><span class="w"> </span><span class="n">config</span><span class="p">{</span>
-<span class="w">        </span><span class="p">.</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;MorpheusEngine&quot;</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"MorpheusEngine"</span><span class="p">,</span>
 <span class="w">        </span><span class="p">.</span><span class="n">properties</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
-<span class="w">            </span><span class="p">{</span><span class="s">&quot;version&quot;</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">},</span>
-<span class="w">            </span><span class="p">{</span><span class="s">&quot;threshold&quot;</span><span class="p">,</span><span class="w"> </span><span class="mf">0.75</span><span class="p">},</span>
-<span class="w">            </span><span class="p">{</span><span class="s">&quot;tags&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="p">{</span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="mi">20</span><span class="p">,</span><span class="w"> </span><span class="mi">30</span><span class="p">}}</span>
+<span class="w">            </span><span class="p">{</span><span class="s">"version"</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">},</span>
+<span class="w">            </span><span class="p">{</span><span class="s">"threshold"</span><span class="p">,</span><span class="w"> </span><span class="mf">0.75</span><span class="p">},</span>
+<span class="w">            </span><span class="p">{</span><span class="s">"tags"</span><span class="p">,</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="p">{</span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="mi">20</span><span class="p">,</span><span class="w"> </span><span class="mi">30</span><span class="p">}}</span>
 <span class="w">        </span><span class="p">},</span>
 <span class="w">        </span><span class="p">.</span><span class="n">timeout</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="o">::</span><span class="n">seconds</span><span class="p">{</span><span class="mi">30</span><span class="p">}</span>
 <span class="w">    </span><span class="p">};</span>
