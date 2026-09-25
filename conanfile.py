@@ -176,10 +176,10 @@ class Morpheus(ConanFile):
 
     def requirements(self):
         if self.options.get_safe("with_rs_vulkan", False):
-            self.requires("vulkan-headers/1.4.313.0", transitive_headers=True)
+            self.requires("vulkan-headers/1.4.357.0", transitive_headers=True)
 
             if (self.settings.os in ["Macos", "iOS", "tvOS"]):
-                self.requires("moltenvk/1.3.0", transitive_headers=True)
+                self.requires("moltenvk/1.4.2", transitive_headers=True)
 
         if self.options.get_safe("with_rs_opengl", False):
             self.requires("glbinding/3.5.0", transitive_headers=True)
