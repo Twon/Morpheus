@@ -17,10 +17,10 @@ class Derived : public Base
     int value;
 
 public:
-    Derived(int value_)
+    explicit Derived(int value_)
         : value(value_)
     {}
-    int getValue() const { return value; }
+    [[nodiscard]] int getValue() const noexcept { return value; }
 };
 
 TEST_CASE("Ensure value types are supported and working", "[morpheus.conformance.value_types.indirect]")

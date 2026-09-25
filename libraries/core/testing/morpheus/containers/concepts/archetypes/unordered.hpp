@@ -119,9 +119,9 @@ struct Unordered
     constexpr Unordered(std::initializer_list<value_type>, size_type);
     constexpr Unordered(std::initializer_list<value_type>);
     constexpr Unordered(Unordered const&);
-    constexpr Unordered(Unordered&&);
+    constexpr Unordered(Unordered&&) noexcept;
     constexpr Unordered& operator=(Unordered const&);
-    constexpr Unordered& operator=(Unordered&&);
+    constexpr Unordered& operator=(Unordered&&) noexcept;
     constexpr Unordered& operator=(std::initializer_list<value_type>);
 
     constexpr allocator_type get_allocator() const noexcept;

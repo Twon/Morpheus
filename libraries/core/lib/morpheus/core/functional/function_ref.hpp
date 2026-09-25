@@ -1,9 +1,10 @@
 #pragma once
 
-#include <concepts>
-#include <functional>
 #include <morpheus/core/conformance/version.hpp>
 #include <morpheus/core/meta/invocable_traits.hpp>
+
+#include <concepts>
+#include <functional>
 #include <type_traits>
 #include <utility>
 
@@ -11,12 +12,12 @@
 
 namespace morpheus::conf
 {
-namespace func_ref = std;
+namespace fr = std;
 }
 
 #else
 
-namespace morpheus::conf::func_ref
+namespace morpheus::conf::fr
 {
 
 /// \struct nontype_t
@@ -98,7 +99,8 @@ public:
     template <class F>
     function_ref(F* f) noexcept
     requires std::is_function_v<F> and isInvokableWith<F>
-        : mInvoke([](Storage storage, Args... args) noexcept(isNoexcept) { return invoke(function_ref::get<F>(storage), std::forward<Args>(args)...); })
+        : mInvoke([](Storage storage, Args... args) noexcept(isNoexcept) -> Return
+                  { return invoke(function_ref::get<F>(storage), std::forward<Args>(args)...); })
         , mStorage(f)
     {}
 
@@ -180,7 +182,7 @@ private:
         template <class F>
         requires std::is_function_v<F>
         constexpr explicit Storage(F* f) noexcept
-            : fp(f)
+            : fp(reinterpret_cast<void (*)()>(f))
         {}
     };
 
@@ -193,7 +195,7 @@ private:
         else if constexpr (std::is_object_v<T>)
             return static_cast<T*>(storage.p);
         else
-            return static_cast<T*>(storage.fp);
+            return reinterpret_cast<T*>(storage.fp);
     }
 
     using InternalInvocableType = Return(Storage, Args...);
@@ -226,5 +228,6 @@ function_ref(nontype_t<f>) -> function_ref<std::remove_pointer_t<decltype(f)>>;
     function_ref(F) -> function_ref<see below>;
 */
 
-} // namespace morpheus::conf::func_ref
+} // namespace morpheus::conf::fr
+
 #endif

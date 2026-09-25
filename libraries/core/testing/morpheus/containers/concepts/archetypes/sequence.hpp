@@ -26,10 +26,10 @@ struct Sequence : Container
 #endif // (__cpp_lib_containers_ranges >= 202202L)
     constexpr Sequence(std::initializer_list<int>);
     constexpr Sequence(Sequence const&);
-    constexpr Sequence(Sequence&&);
+    constexpr Sequence(Sequence&&) noexcept;
     constexpr ~Sequence();
     constexpr Sequence& operator=(Sequence const&);
-    constexpr Sequence& operator=(Sequence&&);
+    constexpr Sequence& operator=(Sequence&&) noexcept;
     constexpr Sequence& operator=(std::initializer_list<int>);
 
     constexpr auto operator<=>(Sequence const&) const = default;

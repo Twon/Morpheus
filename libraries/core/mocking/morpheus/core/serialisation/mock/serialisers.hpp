@@ -9,6 +9,8 @@ namespace morpheus::serialisation
 {
 
 using MockedWriteSerialiser = WriteSerialiser<mock::Writer>;
-using MockedReadSerialiser = ReadSerialiser<mock::Reader>;
+
+template <bool IsTextual = true>
+using MockedReadSerialiser = ReadSerialiser<mock::Reader<IsTextual>>;
 
 } // namespace morpheus::serialisation

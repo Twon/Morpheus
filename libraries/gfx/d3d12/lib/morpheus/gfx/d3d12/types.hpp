@@ -10,6 +10,8 @@
 namespace morpheus::gfx::d3d12
 {
 
+/// \struct ComDeleter
+///     Fuctor to use as the deleter type with std::unique_ptr when storing COM types.
 struct ComDeleter
 {
     template <typename T>

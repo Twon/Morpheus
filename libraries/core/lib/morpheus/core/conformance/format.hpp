@@ -18,6 +18,7 @@
     #include <fmt/format.h> // IWYU pragma: export
     #include <fmt/chrono.h> // IWYU pragma: export
     #include <fmt/ostream.h> // IWYU pragma: export
+    #include <fmt/ranges.h> // IWYU pragma: export
     namespace morpheus::conf { namespace fmt = ::fmt; }
 
     #if (MORPHEUS_COMPILER == MORPHEUS_GNUC_COMPILER)

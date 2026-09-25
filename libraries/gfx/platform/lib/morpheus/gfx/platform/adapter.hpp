@@ -7,6 +7,7 @@
 #include <string>
 #include <string_view>
 #include <type_traits>
+#include <utility>
 
 namespace morpheus::gfx
 {
@@ -25,7 +26,7 @@ public:
 
     /// Constructs an adapter from name and id.
     constexpr explicit Adapter(IdType adapterId, std::string_view const name, Vendor const vendor) noexcept(noexcept(std::is_nothrow_move_assignable_v<IdType>))
-        : mAdapterId(adapterId)
+        : mAdapterId(std::move(adapterId))
         , mName(name)
         , mVendor(vendor)
     {}

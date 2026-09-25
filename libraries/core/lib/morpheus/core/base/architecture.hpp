@@ -2,6 +2,7 @@
 
 /// \def MORPHEUS_PLATFORM_ARCHITECTURE
 ///		Id for the currently target architecture
+// NOLINTBEGIN(cppcoreguidelines-macro-usage)
 // clang-format off
 #if !defined(MORPHEUS_PLATFORM_ARCHITECTURE)
 
@@ -97,3 +98,4 @@
 
 #endif // !defined (  MORPHEUS_PLATFORM_ARCHITECTURE )
 // clang-format on
+// NOLINTEND(cppcoreguidelines-macro-usage)

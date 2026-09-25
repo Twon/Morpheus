@@ -42,7 +42,7 @@ TEST_CASE("Verify deserialisation of std::monostate", "[morpheus.serialisation.m
     {
         THEN("Expect the following sequence of operations on the underlying reader")
         {
-            MockedReadSerialiser serialiser;
+            MockedReadSerialiser<> serialiser;
             EXPECT_CALL(serialiser.reader(), beginComposite()).Times(1);
             EXPECT_CALL(serialiser.reader(), endComposite()).Times(1);
 

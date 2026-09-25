@@ -8,8 +8,8 @@
 // clang-format off
 #include <morpheus/gfx/gl4/wgl/adapter.hpp>
 #include <morpheus/gfx/gl4/wgl/context.hpp>
+#include <morpheus/gfx/gl4/wgl/render_window.hpp>
 #include <morpheus/gfx/gl4/wgl/video_mode.hpp>
-#include <morpheus/gfx/gl4/wgl/window.hpp>
 // clang-format on
 
 namespace platform = morpheus::gfx::gl4::wgl;

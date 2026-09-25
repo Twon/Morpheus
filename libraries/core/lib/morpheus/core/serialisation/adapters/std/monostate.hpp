@@ -19,7 +19,7 @@ void serialise(Serialiser& serialiser, std::monostate)
 }
 
 template <concepts::ReadSerialiser Serialiser, std::same_as<std::monostate> T>
-T deserialise(Serialiser& serialiser)
+T deserialise(Serialiser& serialiser, std::type_identity<T>)
 {
     serialiser.reader().beginComposite();
     serialiser.reader().endComposite();

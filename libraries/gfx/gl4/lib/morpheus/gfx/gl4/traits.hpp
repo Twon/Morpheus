@@ -13,25 +13,25 @@ namespace morpheus::gfx::gl4
 template <concepts::RenderWindow W>
 struct Traits
 {
-    using Window = W;
+    using RenderWindow = W;
 };
 
 #if (MORPHEUS_BUILD_PLATFORM == MORPHEUS_TARGET_PLATFORM_PC_WINDOWS)
 
-using GL4Traits = Traits<platform::Window>;
+using GL4Traits = Traits<platform::RenderWindow>;
 
 #elif (MORPHEUS_BUILD_PLATFORM == MORPHEUS_TARGET_PLATFORM_APPLE)
 
 struct GL4Traits
 {
-    using Window = int;
+    using RenderWindow = int;
 };
 
 #elif (MORPHEUS_BUILD_PLATFORM == MORPHEUS_TARGET_PLATFORM_LINUX)
 
 struct GL4Traits
 {
-    using Window = int;
+    using RenderWindow = int;
 };
 
 #endif

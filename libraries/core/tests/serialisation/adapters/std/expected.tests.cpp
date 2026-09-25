@@ -81,7 +81,7 @@ TEST_CASE("Verify deserialisation of std::expected", "[morpheus.serialisation.ex
         THEN("Expect the following sequence of operations on the underlying writer")
         {
             InSequence seq;
-            MockedReadSerialiser serialiser;
+            MockedReadSerialiser<> serialiser;
             EXPECT_CALL(serialiser.reader(), beginComposite()).Times(1);
             EXPECT_CALL(serialiser.reader(), beginValue("state"sv)).Times(1);
             EXPECT_CALL(serialiser.reader(), read(An<bool>())).WillOnce(Return(true));
@@ -105,7 +105,7 @@ TEST_CASE("Verify deserialisation of std::expected", "[morpheus.serialisation.ex
         THEN("Expect the following sequence of operations on the underlying writer")
         {
             InSequence seq;
-            MockedReadSerialiser serialiser;
+            MockedReadSerialiser<> serialiser;
             EXPECT_CALL(serialiser.reader(), beginComposite()).Times(1);
             EXPECT_CALL(serialiser.reader(), beginValue("state"sv)).Times(1);
             EXPECT_CALL(serialiser.reader(), read(An<bool>())).WillOnce(Return(false));

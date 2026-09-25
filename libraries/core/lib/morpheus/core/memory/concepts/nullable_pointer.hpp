@@ -7,9 +7,6 @@
 namespace morpheus::memory::concepts
 {
 
-// clang-format off
-// Requires clang-format 18.0 support for AllowShortCompoundRequirementOnASingleLine: true
-
 /// \concept NullablePointer
 ///     Concept capturing the requirements for a nullable pointer, a named requirement outlined in the standard at
 ///     <a href="https://eel.is/c++draft/nullablepointer.requirements">[nullablepointer.requirements]</a>, details at
@@ -26,7 +23,5 @@ concept NullablePointer = requires(T t) {
     { T(nullptr) } -> std::same_as<T>;
     { t = nullptr } -> std::same_as<T&>;
 };
-
-// clang-format off
 
 } // namespace morpheus::memory::concepts

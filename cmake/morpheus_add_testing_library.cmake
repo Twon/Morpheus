@@ -62,6 +62,9 @@ function(morpheus_add_testing_library)
     if (NOT MORPHEUS_ALIAS)
         message(FATAL_ERROR "ALIAS parameter must be supplied")
     endif()
+    if(${MORPHEUS_INTERFACE})
+        set(isInterface "INTERFACE")
+    endif()
 
     if (NOT Catch2::Catch2)
         find_package(Catch2 3 REQUIRED)
@@ -71,35 +74,25 @@ function(morpheus_add_testing_library)
         find_package(GTest REQUIRED)
     endif(NOT GTest::gmock)
 
+    morpheus_add_library(
+        NAME ${MORPHEUS_NAME}
+        ALIAS ${MORPHEUS_ALIAS}
+        FOLDER ${MORPHEUS_FOLDER}
+        NO_INSTALL
+        ${isInterface}
+    )
+
     if (NOT MORPHEUS_INTERFACE)
-        add_library(${MORPHEUS_NAME})
         target_link_libraries(${MORPHEUS_NAME}
             PUBLIC
                  Catch2::Catch2
                  GTest::gmock
         )
     else()
-        add_library(${MORPHEUS_NAME} INTERFACE)
         target_link_libraries(${MORPHEUS_NAME}
             INTERFACE
                  Catch2::Catch2
                  GTest::gmock
-        )
-    endif()
-
-    add_library(${MORPHEUS_ALIAS} ALIAS ${MORPHEUS_NAME})
-
-    set_target_properties(${MORPHEUS_NAME}
-        PROPERTIES
-            ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
-            LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
-            RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
-    )
-
-    if (MORPHEUS_FOLDER)
-        set_target_properties(${MORPHEUS_NAME}
-            PROPERTIES
-                FOLDER ${MORPHEUS_FOLDER}
         )
     endif()
 

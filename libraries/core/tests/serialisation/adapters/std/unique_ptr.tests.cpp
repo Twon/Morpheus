@@ -63,7 +63,7 @@ TEST_CASE("Verify deserialisation of std::unique_ptr", "[morpheus.serialisation.
 
         THEN("Expect the following sequence of operations on the underlying writer")
         {
-            MockedReadSerialiser serialiser;
+            MockedReadSerialiser<> serialiser;
             EXPECT_CALL(serialiser.reader(), beginNullable()).WillOnce(Return(false));
             EXPECT_CALL(serialiser.reader(), read(An<std::int64_t>())).WillOnce(Return(actualValue));
             EXPECT_CALL(serialiser.reader(), endNullable()).Times(1);
@@ -80,7 +80,7 @@ TEST_CASE("Verify deserialisation of std::unique_ptr", "[morpheus.serialisation.
     {
         THEN("Expect the following sequence of operations on the underlying writer")
         {
-            MockedReadSerialiser serialiser;
+            MockedReadSerialiser<> serialiser;
             EXPECT_CALL(serialiser.reader(), beginNullable()).WillOnce(Return(true));
             EXPECT_CALL(serialiser.reader(), endNullable()).Times(1);
 

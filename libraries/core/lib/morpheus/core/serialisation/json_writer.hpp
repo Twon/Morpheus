@@ -9,12 +9,15 @@
 #include <rapidjson/ostreamwrapper.h>
 #include <rapidjson/writer.h>
 
+#include <array>
+#include <concepts>
 #include <cstddef>
 #include <cstdint>
 #include <optional>
 #include <ostream>
 #include <span>
 #include <string_view>
+#include <vector>
 
 namespace morpheus::serialisation
 {
@@ -60,6 +63,8 @@ public:
 
     /// Write a boolean to the serialisation.
     void write(bool const value);
+    /// Write a single byte to the serialisation.
+    void write(std::byte const value);
     /// Write a 8-bit unsigned integer to the serialisation.
     void write(std::uint8_t const value);
     /// Write a 8-bit integer to the serialisation.
@@ -76,14 +81,23 @@ public:
     void write(std::uint64_t const value);
     /// Write a 64-bit integer to the serialisation.
     void write(std::int64_t const value);
-    /// Write a float to the serialisation.
+    /// Write a single precision floating point to the serialisation.
     void write(float const value);
-    /// Write a double to the serialisation.
+    /// Write a double precision floating point to the serialisation.
     void write(double const value);
+
     /// \copydoc morpheus::serialisation::concepts::WriterArchetype::write(std::string_view const)
     void write(std::string_view const value);
-    /// \copydoc morpheus::serialisation::concepts::WriterArchetype::write(std::span<std::byte> const)
+    /// \copydoc morpheus::serialisation::concepts::WriterArchetype::write(std::span<std::byte const>)
     void write(std::span<std::byte const> const value);
+    ///// Write a vector of bytes to the serialisation.
+    // void write(std::vector<std::byte> const& value);
+    ///// Write a fixed size array of bytes to the serialisation.
+    // template <std::size_t N>
+    // void write(std::array<std::byte, N> const& value)
+    //{
+    //     write(std::span<std::byte const>(value));
+    // }
     /// Write a string literal to the serialisation.
     template <std::size_t N>
     void write(char const (&str)[N])

@@ -22,14 +22,14 @@ struct AllocatorAware : public Container
     /// Copy constructor with a specific allocator.
     constexpr AllocatorAware(AllocatorAware const&, allocator_type const&);
     /// Move constructor
-    constexpr AllocatorAware(AllocatorAware&&);
+    constexpr AllocatorAware(AllocatorAware&&) noexcept;
     /// Move constructor with a specific allocator.
     constexpr AllocatorAware(AllocatorAware&&, allocator_type const&);
 
     /// Copy assignment operator
     constexpr AllocatorAware& operator=(AllocatorAware const&);
     /// Move assignment operator
-    constexpr AllocatorAware& operator=(AllocatorAware&&);
+    constexpr AllocatorAware& operator=(AllocatorAware&&) noexcept;
 
     /// Spaceship operator
     constexpr auto operator<=>(AllocatorAware const&) const = default;

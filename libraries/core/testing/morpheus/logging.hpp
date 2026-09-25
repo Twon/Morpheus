@@ -10,7 +10,10 @@ namespace morpheus
 struct LoggingFixture
 {
     LoggingFixture() { boost::log::core::get()->set_logging_enabled(false); }
-
+    LoggingFixture(LoggingFixture const&) = delete;
+    LoggingFixture(LoggingFixture&&) = delete;
+    LoggingFixture& operator=(LoggingFixture const&) = delete;
+    LoggingFixture& operator=(LoggingFixture&&) = delete;
     ~LoggingFixture() { boost::log::core::get()->set_logging_enabled(true); }
 };
 

@@ -38,28 +38,32 @@ template <concepts::Reader ReaderType>
 class ReadSerialiser
 {
 public:
+    using Reader = ReaderType;
+
     /// Constructs a ReadSerialiser when the underlying reader supports default construction.
     template <meta::concepts::DefaultConstructible T = ReaderType>
-    ReadSerialiser() noexcept(meta::concepts::DefaultNothrowConstructible<T>)
+    explicit ReadSerialiser() noexcept(meta::concepts::DefaultNothrowConstructible<T>)
+    {}
+
+    explicit ReadSerialiser(ReaderType&& reader) noexcept
+        : mReader(std::move(reader))
     {}
 
     /// Constructs a ReadSerialiser with the provided arguments when the underlying reader supports construction
     /// with those arguments.
     /// \tparam Args The types of the arguments to forward to the reader's constructor.
+    /// \param tag The tag to indicate that the reader should be constructed in-place.
     /// \param args The arguments to forward to the reader's constructor.
     template <typename... Args>
     requires(std::is_constructible_v<ReaderType, Args...>)
-    ReadSerialiser(Args&&... args) noexcept(meta::concepts::NothrowConstructible<ReaderType, Args...>)
+    explicit ReadSerialiser([[maybe_unused]] std::in_place_t tag, Args&&... args) noexcept(meta::concepts::NothrowConstructible<ReaderType, Args...>)
         : mReader(std::forward<Args>(args)...)
     {}
 
 #if (__cpp_explicit_this_parameter >= 202110)
     /// Access the underlying reader.
-    template <typename Self>
-    [[nodiscard]] auto& reader(this Self&& self) noexcept
-    {
-        return self.mReader;
-    }
+    // template <typename Self>
+    [[nodiscard]] auto reader(this auto&& self) noexcept -> decltype(auto) { return std::forward_like<decltype(self)>(self.mReader); }
 #else
     /// Access the underlying reader.
     [[nodiscard]] ReaderType& reader() noexcept { return mReader; }
@@ -79,14 +83,33 @@ public:
     /// \tparam T The underlying type of value to deserialise.
     /// \return The deserialises value.
     template <typename T>
-    [[nodiscard]] T deserialise();
+    [[nodiscard]] auto deserialise() -> T;
+
+    /// Deserialise to a non-default construtible single value
+    /// \tparam T The underlying type of value to deserialise.
+    /// \param[out] The deserialises value.
+    template <typename T>
+    auto deserialise(T& value) -> void;
 
     /// Deserialise a key value pair
     /// \tparam T The underlying type of value to deserialise.
     /// \param[in] key The key to serialise.
     /// \return The deserialises value.
     template <typename T>
-    [[nodiscard]] T deserialise(std::string_view const key);
+    [[nodiscard]] auto deserialise(std::string_view const key) -> T;
+
+    /// Deserialise a sequence of values
+    /// \tparam T The underlying type of values to deserialise.
+    /// \return A generator yielding the deserialised values.
+    template <typename T>
+    [[nodiscard]] auto sequence() -> concurrency::Generator<T>;
+
+    /// Deserialise a named sequence of values
+    /// \tparam T The underlying type of values to deserialise.
+    /// \param[in] key The key to serialise.
+    /// \return A generator yielding the deserialised values.
+    template <typename T>
+    [[nodiscard]] auto sequence(std::string_view const key) -> concurrency::Generator<T>;
     ///@}
 private:
     ReaderType mReader; ///< The underlying reading for serialising fundamental types.

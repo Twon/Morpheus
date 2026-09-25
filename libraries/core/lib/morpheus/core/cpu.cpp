@@ -89,8 +89,8 @@ auto query_extended_leaf_functions(std::uint32_t const max_extended_leaf)
 
 auto query_vendor_id(CpuidLeafs const& cached_leafs)
 {
-    std::array<char, 16> string_buffer;
-    std::memset(&string_buffer[0], 0, sizeof(string_buffer));
+    constexpr auto vendorIdSize = 16uz;
+    std::array<char, vendorIdSize> string_buffer{};
     std::memcpy(&string_buffer[0], &cached_leafs[0][1], sizeof(std::uint32_t));
     std::memcpy(&string_buffer[4], &cached_leafs[0][3], sizeof(std::uint32_t));
     std::memcpy(&string_buffer[8], &cached_leafs[0][2], sizeof(std::uint32_t));
@@ -101,13 +101,13 @@ auto query_vendor_id(CpuidLeafs const& cached_leafs)
 
 auto query_brand_id(CpuidLeafs const& cached_leafs)
 {
-    std::array<char, 64> string_buffer;
-    std::memset(&string_buffer[0], 0, sizeof(string_buffer));
+    constexpr auto brandIdSize = 64uz;
+    std::array<char, brandIdSize> string_buffer{};
     if (cached_leafs.size() >= 5)
     {
-        std::memcpy(&string_buffer[0], &cached_leafs[2], sizeof(CpuidResults));
-        std::memcpy(&string_buffer[16], &cached_leafs[3], sizeof(CpuidResults));
-        std::memcpy(&string_buffer[32], &cached_leafs[4], sizeof(CpuidResults));
+        std::memcpy(string_buffer.data(), &cached_leafs[2], sizeof(CpuidResults));
+        std::memcpy(string_buffer.data() + sizeof(CpuidResults), &cached_leafs[3], sizeof(CpuidResults));
+        std::memcpy(string_buffer.data() + (2 * sizeof(CpuidResults)), &cached_leafs[4], sizeof(CpuidResults));
     }
     return std::string(string_buffer.data());
 }

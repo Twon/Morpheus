@@ -21,7 +21,7 @@ public:
         \param[in] colourDepth
              The colour depth of the pixels of the render target.
      */
-    RenderTarget(std::uint16_t const width, std::uint16_t const height, std::uint16_t const colourDepth);
+    explicit RenderTarget(std::uint16_t const width, std::uint16_t const height, std::uint16_t const colourDepth);
     ///@}
 
     //! The width in pixels of the render target.

@@ -23,13 +23,13 @@ struct Reversible : Container
     using const_reverse_iterator = std::reverse_iterator<const_iterator>;
 
     /// returns an reverse iterator to the beginning
-    constexpr reverse_iterator rbegin() noexcept;
+    [[nodiscard]] constexpr reverse_iterator rbegin() noexcept;
     /// returns an reverse iterator to the end
-    constexpr reverse_iterator rend() noexcept;
+    [[nodiscard]] constexpr reverse_iterator rend() noexcept;
     /// returns a const reverse iterator to the beginning
-    constexpr const_reverse_iterator rbegin() const noexcept;
+    [[nodiscard]] constexpr const_reverse_iterator rbegin() const noexcept;
     /// returns a const reverse iterator to the end
-    constexpr const_reverse_iterator rend() const noexcept;
+    [[nodiscard]] constexpr const_reverse_iterator rend() const noexcept;
 };
 
 } // namespace morpheus::containers::concepts::archetypes

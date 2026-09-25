@@ -16,14 +16,25 @@ template <concepts::Writer WriterType>
 class WriteSerialiser
 {
 public:
+    using Writer = WriterType;
+
     /// Constructs a WriteSerialiser when the underlying writer supports default construction.
     template <meta::concepts::DefaultConstructible T = WriterType>
-    WriteSerialiser() noexcept(std::is_nothrow_default_constructible_v<T>)
+    explicit WriteSerialiser() noexcept(std::is_nothrow_default_constructible_v<T>)
     {}
 
+    /// Construct a WriteSerialiser by moving the underlying writer into it.
+    explicit WriteSerialiser(WriterType&& writer) noexcept
+        : mWriter(std::move(writer))
+    {}
+
+    /// Construct a WriteSerialiser using the provided arguments to construct the underlying writer in-place.
+    /// \tparam Args The arguments to forward to the underlying writers constructor.
+    /// \param tag The tag to indicate that the writer should be constructed in-place.
+    /// \param args The arguments to forward to the underlying writers constructor.
     template <typename... Args>
     requires(std::is_constructible_v<WriterType, Args...>)
-    WriteSerialiser(Args&&... args) noexcept(meta::concepts::NothrowConstructible<WriterType, Args...>)
+    explicit WriteSerialiser([[maybe_unused]] std::in_place_t tag, Args&&... args) noexcept(meta::concepts::NothrowConstructible<WriterType, Args...>)
         : mWriter(std::forward<Args>(args)...)
     {}
 

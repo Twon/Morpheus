@@ -1,11 +1,14 @@
 target_sources(MorpheusCoreTests
     PRIVATE
+        bitset.tests.cpp
         chrono.tests.cpp
         expected.tests.cpp
+        indirect.tests.cpp
         monostate.tests.cpp
         optional.tests.cpp
         pair.tests.cpp
         ranges.tests.cpp
+        reference_wrapper.tests.cpp
         source_location.cpp
         tuple.tests.cpp
         unique_ptr.tests.cpp

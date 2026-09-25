@@ -24,7 +24,7 @@ void serialise(Serialiser& serialiser, std::tuple<T...> const& value)
 }
 
 template <concepts::ReadSerialiser Serialiser, IsStdTuple T>
-T deserialise(Serialiser& serialiser)
+T deserialise(Serialiser& serialiser, std::type_identity<T>)
 {
     constexpr std::size_t size = std::tuple_size<T>::value;
 
@@ -33,7 +33,7 @@ T deserialise(Serialiser& serialiser)
     {
         // More work required to support std::tuples containing references.
         static_assert((!std::is_reference_v<std::tuple_element_t<Indexes, T>> || ...));
-        return T{serialiser.template deserialise<std::tuple_element_t<Indexes, T>>()...};
+        return T{serialiser.template deserialise<std::remove_const_t<std::tuple_element_t<Indexes, T>>>()...};
     }(std::make_index_sequence<size>());
 }
 

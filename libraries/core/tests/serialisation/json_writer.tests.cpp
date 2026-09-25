@@ -1,6 +1,11 @@
 #include "morpheus/core/conformance/format.hpp"
 #include "morpheus/core/serialisation/adapters/aggregate.hpp"
+#include "morpheus/core/serialisation/adapters/boost/dynamic_bitset.hpp"
+#include "morpheus/core/serialisation/adapters/hex.hpp"
+#include "morpheus/core/serialisation/adapters/std/bitset.hpp"
 #include "morpheus/core/serialisation/adapters/std/chrono.hpp"
+#include "morpheus/core/serialisation/adapters/std/indirect.hpp"
+#include "morpheus/core/serialisation/adapters/std/map.hpp"
 #include "morpheus/core/serialisation/adapters/std/monostate.hpp"
 #include "morpheus/core/serialisation/adapters/std/optional.hpp"
 #include "morpheus/core/serialisation/adapters/std/pair.hpp"
@@ -11,11 +16,13 @@
 #include "morpheus/core/serialisation/json_writer.hpp"
 #include "morpheus/core/serialisation/serialisers.hpp"
 #include "morpheus/core/serialisation/write_serialiser.hpp"
+#include "morpheus/serialisation/types/simple_tuple.hpp"
 
 #include <catch2/catch_template_test_macros.hpp>
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/catch_tostring.hpp>
 
+#include <bitset>
 #include <charconv> // IWYU pragma: keep
 #include <chrono>
 #include <cstdint>
@@ -39,10 +46,10 @@ namespace test
 {
 
 template <class T>
-std::string serialise(T const& value)
+static std::string serialise(T const& value)
 {
     std::ostringstream oss;
-    JsonWriteSerialiser serialiser{oss};
+    JsonWriteSerialiser serialiser{std::in_place, oss};
     serialiser.serialise(value);
     return oss.str();
 }
@@ -50,7 +57,7 @@ std::string serialise(T const& value)
 #if (__cpp_lib_to_chars >= 201611L)
 template <typename T>
 requires std::is_floating_point_v<T>
-T toFloatingPoint(std::string_view value)
+static T toFloatingPoint(std::string_view value)
 {
     T result = 0;
     auto [ptr, ec]{std::from_chars(value.data(), value.data() + value.size(), result)};
@@ -176,6 +183,121 @@ TEST_CASE("Json writer can write simple composite types to underlying text repre
     }
 }
 
+TEST_CASE("Json writer can write byte buffer types to underlying text representation", "[morpheus.serialisation.json_writer.buffers]")
+{
+    GIVEN("A Json writer")
+    {
+        std::ostringstream strStream;
+        JsonWriter writer{strStream};
+
+        WHEN("Writing a vector of bytes")
+        {
+            std::vector<std::byte> const value{std::byte{1}, std::byte{2}, std::byte{3}};
+            writer.write(value);
+
+            THEN("Expect it to be serialises as a blob of binary data via aBase64 encoded string")
+            {
+                REQUIRE(strStream.str() == R"("AQID")");
+            }
+        }
+        WHEN("Writing a span of bytes (blob)")
+        {
+            std::array<std::byte, 3> const raw{std::byte{10}, std::byte{20}, std::byte{30}};
+            std::span<std::byte const> const value{raw};
+            writer.write(value);
+
+            THEN("Expect a Base64 encoded string")
+            {
+                REQUIRE(strStream.str() == R"("ChQe")");
+            }
+        }
+        WHEN("Writing a sequence of 8-bit integers")
+        {
+            std::uint8_t value[]{10, 20, 30};
+            writer.beginSequence(3);
+            writer.write(value[0]);
+            writer.write(value[1]);
+            writer.write(value[2]);
+            writer.endSequence();
+
+            THEN("Expect a JSON array of integers")
+            {
+                REQUIRE(strStream.str() == "[10,20,30]");
+            }
+        }
+        WHEN("Writing a single byte")
+        {
+            writer.write(std::byte{42});
+
+            THEN("Expect a single JSON integer")
+            {
+                REQUIRE(strStream.str() == "42");
+            }
+        }
+    }
+}
+
+/*
+TEST_CASE("Json writer can write hex values to underlying text representation", "[morpheus.serialisation.json_writer.hex]")
+{
+    GIVEN("A Json writer")
+    {
+        std::ostringstream strStream;
+        JsonWriter writer{strStream};
+        WHEN("Writing a single byte using the Hex adapter")
+        {
+            std::byte value{0xB4};
+            writer.beginComposite();
+            writer.beginValue("hex_val");
+            writer.write(Hex{value});
+            writer.endValue();
+            writer.endComposite();
+
+            THEN("Expect a hexadecimal string in the JSON output")
+            {
+                REQUIRE(strStream.str() == R"({"hex_val":"0xB4"})");
+            }
+        }
+    }
+}
+*/
+
+TEMPLATE_TEST_CASE("Hex adapter can write multiple integer types to underlying text representation",
+                   "[morpheus.serialisation.json_writer.hex]",
+                   std::uint8_t,
+                   std::int8_t,
+                   std::uint16_t,
+                   std::int16_t,
+                   std::uint32_t,
+                   std::int32_t,
+                   std::uint64_t,
+                   std::int64_t)
+{
+    GIVEN("A Json writer")
+    {
+        std::ostringstream strStream;
+        JsonWriteSerialiser serialiser{std::in_place, strStream};
+
+        WHEN("Writing a value using the Hex adapter")
+        {
+            TestType value = static_cast<TestType>(255);
+            serialise(serialiser, Hex{value});
+
+            THEN("Expect a hexadecimal string in the JSON output")
+            {
+                if constexpr (sizeof(TestType) == 1)
+                    REQUIRE(strStream.str() == R"("0xFF")");
+                else if constexpr (sizeof(TestType) == 2)
+                    REQUIRE(strStream.str() == R"("0x00FF")");
+                else if constexpr (sizeof(TestType) == 4)
+                    REQUIRE(strStream.str() == R"("0x000000FF")");
+                else
+                    REQUIRE(strStream.str() == R"("0x00000000000000FF")");
+            }
+        }
+    }
+}
+
 TEST_CASE("Json writer can write simple sequence types to underlying text representation", "[morpheus.serialisation.json_writer.sequence]")
 {
     GIVEN("A Json writer")
@@ -292,6 +414,17 @@ TEST_CASE("Json writer can write std types to underlying text representation", "
         REQUIRE(test::serialise(std::chrono::years{100}) == R"("100y")");
         REQUIRE(test::serialise(std::chrono::months{12}) == R"("12m")");
     }
+    SECTION("Container types")
+    {
+        REQUIRE(test::serialise(std::map<int, std::string>{
+                    {1, "a"},
+                    {2, "b"},
+                    {3, "b"}
+        }) == R"([[1,"a"],[2,"b"],[3,"b"]])");
+        REQUIRE(test::serialise(std::vector<int>{1, 2, 3, 4, 5}) == R"([1,2,3,4,5])");
+    }
+    REQUIRE(test::serialise(std::bitset<4>("1101")) == R"("1101")");
+    REQUIRE(test::serialise(conf::vt::indirect<int>(42)) == R"({"value":42})");
     REQUIRE(test::serialise(std::monostate{}) == R"({})");
     REQUIRE(test::serialise(std::optional<int>{100}) == R"(100)");
     REQUIRE(test::serialise(std::optional<int>{}) == R"(null)");
@@ -300,7 +433,22 @@ TEST_CASE("Json writer can write std types to underlying text representation", "
     REQUIRE(test::serialise(std::tuple<int, bool, std::string>{75, true, "Example"}) == R"([75,true,"Example"])");
     REQUIRE(test::serialise(std::make_unique<int>(123)) == R"(123)");
     REQUIRE(test::serialise(std::variant<int, bool, std::string>{true}) == R"({"type":"bool","value":true})");
-    REQUIRE(test::serialise(std::vector<int>{1, 2, 3, 4, 5}) == R"([1,2,3,4,5])");
+}
+
+TEST_CASE("Json writer can write std types to underlying text representation", "[morpheus.serialisation.json_writer.adapters.boost]")
+{
+    REQUIRE(test::serialise(boost::dynamic_bitset<>("1101")) == R"("1101")");
+}
+
+TEST_CASE("Json writer can write ranges of composites", "[morpheus.serialisation.range.serialise.composites]")
+{
+    auto const value = std::vector<testing::SimpleTuple>{
+        {1, true,       {std::byte{1}, std::byte{2}, std::byte{3}}},
+        {2, true,    {std::byte{10}, std::byte{20}, std::byte{30}}},
+        {3, true, {std::byte{100}, std::byte{200}, std::byte{255}}}
+    };
+    REQUIRE(test::serialise(value) ==
+            R"([{"first":1,"second":true,"data":"AQID"},{"first":2,"second":true,"data":"ChQe"},{"first":3,"second":true,"data":"ZMj/"}])");
 }
 
 } // namespace morpheus::serialisation

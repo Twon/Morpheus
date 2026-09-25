@@ -18,7 +18,7 @@ template <class T>
 class RenderSystem : public gfx::RenderSystem
 {
 public:
-    using Window = typename T::Window;
+    using RenderWindow = typename T::RenderWindow;
 
     RenderSystem(RenderSystem const&) = delete;
     RenderSystem& operator=(RenderSystem const&) = delete;

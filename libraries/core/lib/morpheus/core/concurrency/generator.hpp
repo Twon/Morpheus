@@ -5,6 +5,7 @@
 
 #include <cassert>
 #include <concepts>
+#include <exception>
 #include <iterator>
 #include <utility>
 
@@ -27,7 +28,7 @@ struct Generator
     using reference = std::conditional_t<std::is_reference_v<T>, T, value_type const&>; ///< Reference type to the value type.
     using pointer = std::add_pointer_t<reference>;                                      ///< Pointer type to the value type.
 
-    Generator(handle_type h)
+    explicit Generator(handle_type h)
         : coro(h)
     {}
 
@@ -64,13 +65,14 @@ struct Generator
         template <std::convertible_to<T> From>
         auto yield_value(From&& from)
         {
-            current_value = std::forward<From>(from);
+            current_value = std::addressof(from);
             return coro::suspend_always{};
         }
 
-        [[noreturn]] void unhandled_exception() { throw; }
+        void unhandled_exception() { exception = std::current_exception(); }
 
-        T current_value;
+        std::add_pointer_t<std::add_const_t<T>> current_value = nullptr;
+        std::exception_ptr exception;
     };
 
     /// \class iterator
@@ -102,6 +104,10 @@ struct Generator
         {
             assert(!handle.done() && "Can't increment generator end iterator");
             handle.resume();
+            if (handle.promise().exception)
+            {
+                std::rethrow_exception(handle.promise().exception);
+            }
             return *this;
         }
 
@@ -110,7 +116,7 @@ struct Generator
         [[nodiscard]] reference& operator*() const noexcept
         {
             assert(!handle.done() && "Can't dereference generator end iterator");
-            return handle.promise().current_value;
+            return *handle.promise().current_value;
         }
 
         [[nodiscard]] pointer& operator->() const noexcept { return std::addressof(operator*()); }
@@ -136,6 +142,10 @@ struct Generator
 #else
         const_cast<Generator*>(this)->coro.resume(); // std::experimental::resume is not marked const.
 #endif
+        if (coro.promise().exception)
+        {
+            std::rethrow_exception(coro.promise().exception);
+        }
         return iterator(coro);
     }
 

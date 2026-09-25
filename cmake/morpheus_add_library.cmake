@@ -36,6 +36,7 @@ and allows configuration for common optional settings
       [ALIAS <alias>]
       [FOLDER <folder>]
       [INTERFACE]
+      [NO_INSTALL]
   )
    -- Generates library targets with default build directories and install options.
 
@@ -52,9 +53,13 @@ and allows configuration for common optional settings
     The ``INTERFACE`` option is only applicable for library targets and specifies
     the library is an interface library.
 
+  ``NO_INSTALL``
+    The ``NO_INSTALL`` option is only applicable for library targets and specifies
+    the library should not be installed.
+
 #]=======================================================================]
 function(morpheus_add_library)
-    set(options INTERFACE)
+    set(options INTERFACE NO_INSTALL)
     set(oneValueArgs NAME ALIAS FOLDER)
     set(multiValueArgs)
     cmake_parse_arguments(MORPHEUS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
@@ -67,6 +72,9 @@ function(morpheus_add_library)
     if(${MORPHEUS_INTERFACE})
         set(isInterface "INTERFACE")
     endif()
+    if(${MORPHEUS_NO_INSTALL})
+        set(isNoInstall "NO_INSTALL")
+    endif()
 
     morpheus_add_target(
         TYPE library
@@ -74,12 +82,15 @@ function(morpheus_add_library)
         ALIAS ${MORPHEUS_ALIAS}
         FOLDER ${MORPHEUS_FOLDER}
         ${isInterface}
+        ${isNoInstall}
     )
 
-    install(
-        EXPORT morpheus-export-set
-        NAMESPACE morpheus::
-        DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/morpheus"
-    )
+    if (NOT MORPHEUS_NO_INSTALL)
+        install(
+            EXPORT morpheus-export-set
+            NAMESPACE morpheus::
+            DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/morpheus"
+        )
+    endif()
 
 endfunction()

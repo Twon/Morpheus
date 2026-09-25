@@ -56,7 +56,7 @@ struct std::hash<morpheus::network::NamedEndpoint>
     /// Hash function for NamedEndpoint
     /// \param n The NamedEndpoint to hash.
     /// \return The hash value of the NamedEndpoint.
-    std::size_t operator()(morpheus::network::NamedEndpoint const& n) const
+    [[nodiscard]] std::size_t operator()(morpheus::network::NamedEndpoint const& n) const
     {
         std::size_t seed = 0;
         boost::hash_combine(seed, n.name());

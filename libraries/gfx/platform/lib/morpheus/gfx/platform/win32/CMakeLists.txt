@@ -4,6 +4,7 @@ target_sources(MorpheusGfxPlatform
         FILES
             error_codes.hpp
             error.hpp
+            luid.hpp
             monitor.hpp
             render_window.hpp
     PRIVATE

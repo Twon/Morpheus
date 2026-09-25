@@ -3,16 +3,21 @@ target_sources(MorpheusCore
         FILE_SET HEADERS
         FILES
             array.hpp
+            bitset.hpp
             deque.hpp
             expected.hpp
             forward_list.hpp
+            indirect.hpp
             list.hpp
             map.hpp
             monostate.hpp
             optional.hpp
             pair.hpp
+            ranges.hpp
+            reference_wrapper.hpp
             set.hpp
             source_location.hpp
+            span.hpp
             tuple.hpp
             unique_ptr.hpp
             unordered_set.hpp

@@ -1,0 +1,90 @@
+#
+# Copyright 2025 Antony Peacock
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
+# documentation files (the "Software"), to deal in the Software without restriction, including without limitation the
+# rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit
+# persons to whom the Software is furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all copies or substantial portions of the
+# Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+# WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+# COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+# OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+#
+
+name: Clang Tidy
+
+on: workflow_dispatch
+
+env:
+  BUILD_TYPE: Debug
+  COMPILER_TYPE: clang
+  COMPILER_VERSION: 19
+  STDLIB: libc++
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6.0.2
+
+      - name: Install Clang
+        shell: bash
+        run: |
+          wget https://apt.llvm.org/llvm.sh
+          chmod +x llvm.sh
+          sudo ./llvm.sh ${{ env.COMPILER_VERSION }} all
+          sudo rm -f /usr/bin/clang /usr/bin/clang++ /usr/bin/clang-tidy
+          sudo ln -s /usr/bin/clang-${{ env.COMPILER_VERSION }} /usr/bin/clang
+          sudo ln -s /usr/bin/clang++-${{ env.COMPILER_VERSION }} /usr/bin/clang++
+          sudo ln -s /usr/bin/clang-tidy-${{ env.COMPILER_VERSION }} /usr/bin/clang-tidy
+          sudo apt install -y libc++-${{ env.COMPILER_VERSION }}-dev libc++abi-${{ env.COMPILER_VERSION }}-dev libunwind-${{ env.COMPILER_VERSION }}-dev
+
+      - name: Setup Python
+        uses: ./.github/actions/setup-python
+
+      - name: Cache Conan Restore
+        uses: ./.github/actions/conan-cache-restore
+        with:
+          os: Linux
+          build-type: ${{ env.BUILD_TYPE }}
+          conan-compiler: clang
+          compiler-version: ${{ env.COMPILER_VERSION }}
+          stdlib: ${{ env.STDLIB }}
+
+      - name: Setup Conan
+        uses: ./.github/actions/setup-conan
+        with:
+          build-type: ${{ env.BUILD_TYPE }}
+          compiler-type: CLANG
+          compiler-version: ${{ env.COMPILER_VERSION }}
+          conan-compiler: clang
+          stdlib: ${{ env.STDLIB }}
+          cppstd: "23"
+
+      - name: Conan Install
+        shell: bash
+        run: |
+          conan install "${{ github.workspace }}" --build missing
+
+      - name: Configure CMake
+        shell: bash
+        run: |
+          if [ -f build/generators/conanbuild.sh ]; then
+            source build/generators/conanbuild.sh
+          fi
+          cmake --preset ${{ env.CONAN_CONFIGURE_PRESET }} -DCLANG_TIDY_ENABLE=1
+
+      - name: Build
+        shell: bash
+        run: |
+          if [ -f build/generators/conanbuild.sh ]; then
+            source build/generators/conanbuild.sh
+          fi
+          cmake --build --preset ${{ env.CONAN_BUILD_PRESET }}
+
+      - name: Cache Conan Save
+        uses: ./.github/actions/conan-cache-save

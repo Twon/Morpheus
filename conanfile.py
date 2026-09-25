@@ -76,12 +76,12 @@ class Morpheus(ConanFile):
         "with_rs_vulkan": True,
      }
     requires = (
-        "unordered_dense/4.5.0",
-        "boost/1.88.0",
-        "ctre/3.9.0",
+        "unordered_dense/4.8.1",
+        "boost/1.91.0",
+        "ctre/3.10.0",
         "magic_enum/0.9.7",
-        "ms-gsl/4.1.0",
-        "rapidjson/cci.20230929",
+        "ms-gsl/4.2.0",
+        "rapidjson/cci.20250205",
         "scnlib/4.0.1",
     )
 
@@ -161,25 +161,25 @@ class Morpheus(ConanFile):
             self.options.rm_safe("with_rs_direct_x12")
 
     def build_requirements(self):
-        self.tool_requires("ninja/1.13.1")
-        self.test_requires("catch2/3.9.0")
-        self.test_requires("gtest/1.16.0")
+        self.tool_requires("ninja/1.13.2")
+        self.test_requires("catch2/3.15.1")
+        self.test_requires("gtest/1.17.0")
 
-        if get_cmake_version() < Version("4.0.3"):
-            self.tool_requires("cmake/4.0.3")
+        if get_cmake_version() < Version("4.3.0"):
+            self.tool_requires("cmake/4.3.0")
 
         if self.options.build_docs:
-            self.build_requires("doxygen/1.14.0")
+            self.build_requires("doxygen/1.17.0")
 
         if self.options.get_safe("link_with_mold", False):
             self.build_requires("mold/2.36.0")
 
     def requirements(self):
         if self.options.get_safe("with_rs_vulkan", False):
-            self.requires("vulkan-headers/1.4.313.0", transitive_headers=True)
+            self.requires("vulkan-headers/1.4.357.0", transitive_headers=True)
 
             if (self.settings.os in ["Macos", "iOS", "tvOS"]):
-                self.requires("moltenvk/1.3.0", transitive_headers=True)
+                self.requires("moltenvk/1.4.2", transitive_headers=True)
 
         if self.options.get_safe("with_rs_opengl", False):
             self.requires("glbinding/3.5.0", transitive_headers=True)
@@ -195,7 +195,7 @@ class Morpheus(ConanFile):
             self.requires("tl-expected/20190710", transitive_headers=True)
 
         if self.useFMT:
-            self.requires("fmt/11.2.0", transitive_headers=True)
+            self.requires("fmt/12.1.0", transitive_headers=True)
 
         if self.useRanges:
             self.requires("range-v3/0.12.0", transitive_headers=True)
@@ -230,6 +230,8 @@ class Morpheus(ConanFile):
         }
 
     def configure(self):
+        self.options["boost"].without_cobalt = True
+
         if self.settings.compiler.get_safe("cppstd"):
             check_min_cppstd(self, self._minimum_cpp_standard)
         min_version = self._minimum_compilers_version.get(
@@ -250,7 +252,7 @@ class Morpheus(ConanFile):
     def generate(self):
         tc = CMakeToolchain(self)
         tc.variables["BUILD_SHARED_LIBS"] = self.options.shared
-        tc.variables["MORPHEUS_BUILD_DOCS"] = self.options.build_docs
+        tc.variables["MORPHEUS_BUILD_DOCUMENTATION"] = self.options.build_docs
         tc.variables["MORPHEUS_LINK_WITH_MOLD"] = self.options.get_safe("link_with_mold", False)
         tc.variables["MORPHEUS_RENDER_SYSTEM_DIRECT_X12"] = self.options.get_safe("with_rs_direct_x12", False)
         tc.variables["MORPHEUS_RENDER_SYSTEM_METAL"] = self.options.get_safe("with_rs_metal", False)
@@ -264,6 +266,8 @@ class Morpheus(ConanFile):
 
     def layout(self):
         cmake_layout(self)
+        if os.environ.get("VisualStudioVersion"):
+            self.folders.generators = "generators"
 
     def export_sources(self):
         copy(self, "CMakeLists.txt", src=self.recipe_folder, dst=self.export_sources_folder)

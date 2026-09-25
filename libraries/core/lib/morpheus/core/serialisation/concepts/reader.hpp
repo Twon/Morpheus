@@ -1,5 +1,7 @@
 #pragma once
 
+#include "morpheus/core/concurrency/generator.hpp"
+
 #include <concepts>
 #include <cstddef>
 #include <cstdint>
@@ -29,6 +31,7 @@ concept Reader = requires(T t) {
     { t.endNullable() } -> std::same_as<void>;
 
     { t.template read<bool>() } -> std::same_as<bool>;
+    { t.template read<std::byte>() } -> std::same_as<std::byte>;
     { t.template read<std::uint8_t>() } -> std::same_as<std::uint8_t>;
     { t.template read<std::int8_t>() } -> std::same_as<std::int8_t>;
     { t.template read<std::uint16_t>() } -> std::same_as<std::uint16_t>;
@@ -41,6 +44,10 @@ concept Reader = requires(T t) {
     { t.template read<double>() } -> std::same_as<double>;
     { t.template read<std::string>() } -> std::same_as<std::string>;
     { t.template read<std::vector<std::byte>>() } -> std::same_as<std::vector<std::byte>>;
+
+    {
+        t.template readElements<int>([]() { return 0; }, std::optional<std::size_t>{})
+    } -> std::same_as<concurrency::Generator<int>>;
 };
 
 } // namespace morpheus::serialisation::concepts

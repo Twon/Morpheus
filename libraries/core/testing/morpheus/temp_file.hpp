@@ -30,6 +30,11 @@ public:
               }())
     {}
 
+    TempFile(TempFile const&) = delete;
+    TempFile(TempFile&&) = delete;
+    TempFile& operator=(TempFile const&) = delete;
+    TempFile& operator=(TempFile&&) = delete;
+
     ~TempFile()
     {
         // tempfile automatically deletes the file on close.
