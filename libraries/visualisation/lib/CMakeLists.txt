@@ -15,9 +15,9 @@ target_link_libraries(MorpheusVisualisation
         morpheus::core
         $<$<BOOL:${MORPHEUS_RENDER_SYSTEM_DIRECT_X12}>:morpheus::gfx::d3d12>
         $<$<BOOL:${MORPHEUS_RENDER_SYSTEM_METAL}>:morpheus::gfx::metal>
+        morpheus::gfx::platform
         $<$<BOOL:${MORPHEUS_RENDER_SYSTEM_OPENGL}>:morpheus::gfx::gl4>
         $<$<BOOL:${MORPHEUS_RENDER_SYSTEM_VULKAN}>:morpheus::gfx::vulkan>
-        morpheus::gfx::platform
 )
 
 target_compile_definitions(MorpheusVisualisation
