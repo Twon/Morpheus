@@ -162,24 +162,24 @@ class Morpheus(ConanFile):
 
     def build_requirements(self):
         self.tool_requires("ninja/1.13.2")
-        self.test_requires("catch2/3.13.0")
+        self.test_requires("catch2/3.15.1")
         self.test_requires("gtest/1.17.0")
 
         if get_cmake_version() < Version("4.3.0"):
             self.tool_requires("cmake/4.3.0")
 
         if self.options.build_docs:
-            self.build_requires("doxygen/1.16.1")
+            self.build_requires("doxygen/1.17.0")
 
         if self.options.get_safe("link_with_mold", False):
             self.build_requires("mold/2.36.0")
 
     def requirements(self):
         if self.options.get_safe("with_rs_vulkan", False):
-            self.requires("vulkan-headers/1.4.313.0", transitive_headers=True)
+            self.requires("vulkan-headers/1.4.357.0", transitive_headers=True)
 
             if (self.settings.os in ["Macos", "iOS", "tvOS"]):
-                self.requires("moltenvk/1.3.0", transitive_headers=True)
+                self.requires("moltenvk/1.4.2", transitive_headers=True)
 
         if self.options.get_safe("with_rs_opengl", False):
             self.requires("glbinding/3.5.0", transitive_headers=True)
