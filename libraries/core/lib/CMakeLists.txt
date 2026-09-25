@@ -11,8 +11,8 @@ target_include_directories(MorpheusCore
         $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
 )
 
-
 find_package(ctre REQUIRED)
+find_package(hwloc REQUIRED)
 find_package(magic_enum REQUIRED)
 find_package(Microsoft.GSL REQUIRED)
 find_package(unordered_dense REQUIRED)
@@ -22,6 +22,7 @@ target_link_libraries(MorpheusCore
         Boost::headers
         Boost::log
         ctre::ctre
+        hwloc::hwloc
         magic_enum::magic_enum
         morpheus::config
         unordered_dense::unordered_dense
