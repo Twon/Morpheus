@@ -77,7 +77,7 @@ class Morpheus(ConanFile):
      }
     requires = (
         "unordered_dense/4.8.1",
-        "boost/1.90.0",
+        "boost/1.91.0",
         "ctre/3.10.0",
         "magic_enum/0.9.7",
         "ms-gsl/4.2.0",
@@ -162,14 +162,14 @@ class Morpheus(ConanFile):
 
     def build_requirements(self):
         self.tool_requires("ninja/1.13.2")
-        self.test_requires("catch2/3.13.0")
+        self.test_requires("catch2/3.15.1")
         self.test_requires("gtest/1.17.0")
 
         if get_cmake_version() < Version("4.3.0"):
             self.tool_requires("cmake/4.3.0")
 
         if self.options.build_docs:
-            self.build_requires("doxygen/1.16.1")
+            self.build_requires("doxygen/1.17.0")
 
         if self.options.get_safe("link_with_mold", False):
             self.build_requires("mold/2.36.0")
@@ -266,6 +266,8 @@ class Morpheus(ConanFile):
 
     def layout(self):
         cmake_layout(self)
+        if os.environ.get("VisualStudioVersion"):
+            self.folders.generators = "generators"
 
     def export_sources(self):
         copy(self, "CMakeLists.txt", src=self.recipe_folder, dst=self.export_sources_folder)
