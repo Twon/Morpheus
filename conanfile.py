@@ -165,8 +165,8 @@ class Morpheus(ConanFile):
         self.test_requires("catch2/3.15.1")
         self.test_requires("gtest/1.17.0")
 
-        if get_cmake_version() < Version("4.3.0"):
-            self.tool_requires("cmake/4.3.0")
+        if get_cmake_version() < Version("4.4.2"):
+            self.tool_requires("cmake/4.4.2")
 
         if self.options.build_docs:
             self.build_requires("doxygen/1.17.0")
