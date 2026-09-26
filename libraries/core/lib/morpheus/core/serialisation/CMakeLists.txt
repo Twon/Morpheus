@@ -26,5 +26,13 @@ target_link_libraries(MorpheusCore
         rapidjson
 )
 
+if (MORPHEUS_USE_MODULES)
+    target_sources(MorpheusCore
+        PUBLIC
+            FILE_SET CXX_MODULES
+            FILES serialisation.cppm
+    )
+endif()
+
 add_subdirectory(adapters)
 add_subdirectory(concepts)
