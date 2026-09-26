@@ -33,10 +33,7 @@ FetchContent_Declare(
     GIT_REPOSITORY https://github.com/arsenm/sanitizers-cmake
 )
 FetchContent_MakeAvailable(sanitizers)
-
-if(sanitizers_SOURCE_DIR)
-    list(APPEND CMAKE_MODULE_PATH ${sanitizers_SOURCE_DIR}/cmake)
-endif()
+list(APPEND CMAKE_MODULE_PATH "${sanitizers_SOURCE_DIR}/cmake")
 
 set(SANITIZE_ADDRESS ${ENABLE_ADDRESS_SANITIZER} CACHE BOOL "Enable AddressSanitizer for sanitized targets." FORCE)
 set(SANITIZE_MEMORY ${ENABLE_MEMORY_SANITIZER} CACHE BOOL "Enable MemorySanitizer for sanitized targets." FORCE)

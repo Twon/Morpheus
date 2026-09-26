@@ -179,9 +179,9 @@ bool JsonReader::isAtEndSequence()
     return event == Event::EndSequence;
 }
 
-JsonReader::JsonReader(OwnedStream stream, bool validate)
-    : mSourceStream(std::move(stream))
-    , mStream(std::make_unique<rapidjson::IStreamWrapper>(*mSourceStream))
+JsonReader::JsonReader(std::istream& stream, bool validate)
+    : mSourceStream(stream)
+    , mStream(std::make_unique<rapidjson::IStreamWrapper>(mSourceStream.get()))
     , mJsonReader(std::make_unique<rapidjson::Reader>())
     , mExtractor(std::make_unique<JsonExtracter>())
     , mValidate(validate)

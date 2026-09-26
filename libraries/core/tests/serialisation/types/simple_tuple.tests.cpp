@@ -1,7 +1,12 @@
 #include "morpheus/core/conformance/format.hpp"
 #include "morpheus/core/serialisation/adapters/std/vector.hpp"
+#include "morpheus/core/serialisation/binary_reader.hpp"
+#include "morpheus/core/serialisation/binary_writer.hpp"
+#include "morpheus/core/serialisation/json_reader.hpp"
+#include "morpheus/core/serialisation/json_writer.hpp"
 #include "morpheus/core/serialisation/read_serialiser.hpp"
 #include "morpheus/core/serialisation/write_serialiser.hpp"
+
 #include "morpheus/serialisation/helpers.hpp"
 #include "morpheus/serialisation/types/simple_tuple.hpp"
 
@@ -44,7 +49,8 @@ TEST_CASE("Simple tuple can be round trips to binary and back again", "[morpheus
         {2, true,    {std::byte{10}, std::byte{20}, std::byte{30}}},
         {3, true, {std::byte{100}, std::byte{200}, std::byte{255}}}
     };
-    REQUIRE(testing::roundtrip(value) == value);
+    REQUIRE(testing::roundtrip<BinaryWriteSerialiser, BinaryReadSerialiser>(value) == value);
+    // REQUIRE(testing::roundtrip<JsonWriteSerialiser, JsonReadSerialiser>(value) == value);
 }
 
 } // namespace morpheus::serialisation

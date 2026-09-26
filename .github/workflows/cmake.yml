@@ -58,20 +58,6 @@ jobs:
               lib: "libstdc++11"
             }
           - {
-              name: "Ubuntu Clang-14 + libc++",
-              os: ubuntu-22.04,
-              compiler:
-                {
-                  type: CLANG,
-                  version: 14,
-                  conan: "clang",
-                  cc: "clang-14",
-                  cxx: "clang++-14",
-                  std: 20
-                },
-              lib: "libc++",
-            }
-          - {
               name: "Ubuntu Clang-15 + libc++",
               os: ubuntu-22.04,
               compiler:
@@ -156,6 +142,20 @@ jobs:
               lib: "libc++",
             }
           - {
+              name: "Ubuntu Clang-21 + libc++",
+              os: ubuntu-latest,
+              compiler:
+                {
+                  type: CLANG,
+                  version: 21,
+                  conan: "clang",
+                  cc: "clang-21",
+                  cxx: "clang++-21",
+                  std: 23
+                },
+              lib: "libc++",
+            }
+          - {
               name: "Visual Studio 2019",
               os: windows-latest,
               compiler: { type: VISUAL, version: 16, conan: "msvc", cc: "cl", cxx: "cl", std: 23 },
@@ -202,7 +202,20 @@ jobs:
                 },
               lib: "libc++",
             }
-
+          - {
+              name: "MacOS Apple Clang 18",
+              os: macos-26,
+              compiler:
+                {
+                  type: APPLE_CLANG,
+                  version: "26.4.1",
+                  conan: "apple-clang",
+                  cc: "clang",
+                  cxx: "clang++",
+                  std: 23
+                },
+              lib: "libc++",
+            }
     steps:
       - uses: actions/checkout@v6.0.2
 

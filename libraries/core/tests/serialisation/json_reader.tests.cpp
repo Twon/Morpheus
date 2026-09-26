@@ -1,8 +1,13 @@
 #include "morpheus/core/conformance/format.hpp"
+#include "morpheus/core/conformance/value_types.hpp"
 #include "morpheus/core/serialisation/adapters/aggregate.hpp"
+#include "morpheus/core/serialisation/adapters/boost/dynamic_bitset.hpp"
 #include "morpheus/core/serialisation/adapters/hex.hpp"
 #include "morpheus/core/serialisation/adapters/std/array.hpp"
+#include "morpheus/core/serialisation/adapters/std/bitset.hpp"
 #include "morpheus/core/serialisation/adapters/std/chrono.hpp"
+#include "morpheus/core/serialisation/adapters/std/indirect.hpp"
+#include "morpheus/core/serialisation/adapters/std/map.hpp"
 #include "morpheus/core/serialisation/adapters/std/monostate.hpp"
 #include "morpheus/core/serialisation/adapters/std/optional.hpp"
 #include "morpheus/core/serialisation/adapters/std/pair.hpp"
@@ -24,6 +29,7 @@
 #include <catch2/matchers/catch_matchers_string.hpp>
 
 #include <array>
+#include <bitset>
 #include <chrono>
 #include <cmath>
 #include <compare>
@@ -52,29 +58,29 @@ template <typename T>
 static T deserialise(std::string_view const value, bool const validate = true)
 {
 #if (__cpp_lib_sstream_from_string_view >= 202306L)
-    std::unique_ptr<std::istream> iss = std::make_unique<std::istringstream>(value);
+    std::istringstream iss(value);
 #else
-    std::unique_ptr<std::istream> iss = std::make_unique<std::istringstream>(std::string{value});
+    std::istringstream iss(std::string{value});
 #endif
-    JsonReadSerialiser serialiser(std::in_place, std::move(iss), validate);
+    JsonReadSerialiser serialiser(std::in_place, iss, validate);
     return serialiser.template deserialise<T>();
 }
 
-static JsonReader readerFromString(std::string_view const value)
+static auto readerFromString(std::string_view const value) -> std::pair<JsonReader, std::unique_ptr<std::istream>>
 {
 #if (__cpp_lib_sstream_from_string_view >= 202306L)
     std::unique_ptr<std::istream> iss = std::make_unique<std::istringstream>(value);
 #else
     std::unique_ptr<std::istream> iss = std::make_unique<std::istringstream>(std::string{value});
 #endif
-    return JsonReader(std::move(iss), false);
+    return std::make_pair(JsonReader(*iss, false), std::move(iss));
 }
 
 } // namespace test
 
 TEST_CASE("Json reader can read string types to underlying text representation", "[morpheus.serialisation.json_reader.special_member_functions]")
 {
-    STATIC_REQUIRE(std::is_constructible_v<JsonReader, std::unique_ptr<std::istream>, bool>);
+    STATIC_REQUIRE(std::is_constructible_v<JsonReader, std::istream&, bool>);
     STATIC_REQUIRE_FALSE(std::is_copy_constructible_v<JsonReader>);
     STATIC_REQUIRE_FALSE(std::is_copy_assignable_v<JsonReader>);
     STATIC_REQUIRE_FALSE(std::is_nothrow_copy_constructible_v<JsonReader>);
@@ -213,7 +219,7 @@ TEST_CASE("Json reader can read manual composites", "[morpheus.serialisation.jso
 
         WHEN("Read a composite of key pair from the stream")
         {
-            JsonReader reader = test::readerFromString(str);
+            auto [reader, _] = test::readerFromString(str);
 
             THEN("Expect an empty composite in the json document")
             {
@@ -231,7 +237,7 @@ TEST_CASE("Json reader can read manual composites", "[morpheus.serialisation.jso
 
         WHEN("Read a composite of key to null pair from the stream")
         {
-            JsonReader reader = test::readerFromString(str);
+            auto [reader, _] = test::readerFromString(str);
 
             THEN("Expect an empty composite in the json document")
             {
@@ -280,7 +286,8 @@ TEST_CASE("Json reader can read std::byte using the Hex adapter", "[morpheus.ser
         WHEN("Reading using the Hex adapter (0x prefixed)")
         {
             std::byte value{};
-            JsonReadSerialiser serialiser(test::readerFromString(R"("0xB4")"));
+            auto [reader, _] = test::readerFromString(R"("0xB4")");
+            JsonReadSerialiser serialiser(std::move(reader));
             deserialise(serialiser, Hex{value});
 
             THEN("Expect the byte to be correctly parsed")
@@ -291,7 +298,8 @@ TEST_CASE("Json reader can read std::byte using the Hex adapter", "[morpheus.ser
         WHEN("Reading using the Hex adapter (no prefix)")
         {
             std::byte value{};
-            JsonReadSerialiser serialiser(test::readerFromString(R"("A5")"));
+            auto [reader, _] = test::readerFromString(R"("A5")");
+            JsonReadSerialiser serialiser(std::move(reader));
             deserialise(serialiser, Hex{value});
             THEN("Expect the byte to be correctly parsed")
             {
@@ -317,7 +325,8 @@ TEMPLATE_TEST_CASE("Json reader can read multiple integer types using the Hex ad
         WHEN("Reading using the Hex adapter (0x prefixed)")
         {
             TestType value{};
-            JsonReadSerialiser serialiser(test::readerFromString(R"("0xFF")"));
+            auto [reader, _] = test::readerFromString(R"("0xFF")");
+            JsonReadSerialiser serialiser(std::move(reader));
             deserialise(serialiser, Hex{value});
 
             THEN("Expect the value to be correctly parsed")
@@ -328,7 +337,8 @@ TEMPLATE_TEST_CASE("Json reader can read multiple integer types using the Hex ad
         WHEN("Reading using the Hex adapter (no prefix)")
         {
             TestType value{};
-            JsonReadSerialiser serialiser(test::readerFromString(R"("FF")"));
+            auto [reader, _] = test::readerFromString(R"("0xFF")");
+            JsonReadSerialiser serialiser(std::move(reader));
             deserialise(serialiser, Hex{value});
 
             THEN("Expect the value to be correctly parsed")
@@ -571,6 +581,17 @@ TEST_CASE("Json reader can read std types from underlying text representation", 
         REQUIRE(test::deserialise<std::chrono::years>(R"("100y")") == std::chrono::years{100});
         REQUIRE(test::deserialise<std::chrono::months>(R"("12m")") == std::chrono::months{12});
     }
+    SECTION("Container types")
+    {
+        REQUIRE(test::deserialise<std::map<int, std::string>>(R"([[1,"a"],[2,"b"],[3,"b"]])") == std::map<int, std::string>{
+                                                                                                     {1, "a"},
+                                                                                                     {2, "b"},
+                                                                                                     {3, "b"}
+        });
+        REQUIRE(test::deserialise<std::vector<int>>(R"([1, 2, 3, 4, 5])") == std::vector<int>{1, 2, 3, 4, 5});
+    }
+    REQUIRE(test::deserialise<std::bitset<4>>(R"("1101")") == std::bitset<4>("1101"));
+    REQUIRE(test::deserialise<conf::vt::indirect<int>>(R"({"value":42})") == conf::vt::indirect<int>(42));
     REQUIRE(test::deserialise<std::monostate>(R"({})") == std::monostate{});
     REQUIRE(test::deserialise<std::optional<int>>(R"(100)") == std::optional<int>{100});
     REQUIRE(test::deserialise<std::optional<int>>(R"(null)") == std::optional<int>{});
@@ -578,18 +599,22 @@ TEST_CASE("Json reader can read std types from underlying text representation", 
     REQUIRE(test::deserialise<std::string>(R"("Hello")") == std::string("Hello"));
     REQUIRE(test::deserialise<std::tuple<int, bool, std::string>>(R"([75,true,"Example"])") == std::tuple<int, bool, std::string>{75, true, "Example"});
     //    REQUIRE(test::deserialise<std::variant<int, bool, std::string>>(R"({"type":"bool","value":true})") == std::variant<int, bool, std::string>{true});
-    REQUIRE(test::deserialise<std::vector<int>>(R"([1, 2, 3, 4, 5])") == std::vector<int>{1, 2, 3, 4, 5});
     REQUIRE(*test::deserialise<std::unique_ptr<int>>(R"(50)") == 50);
+}
+
+TEST_CASE("Json reader can read std types from underlying text representation", "[morpheus.serialisation.json_reader.adapters.boost]")
+{
+    REQUIRE(test::deserialise<boost::dynamic_bitset<>>(R"("1101")") == boost::dynamic_bitset<>("1101"));
 }
 
 TEST_CASE("Error handling test cases for unexpected errors in the input Json stream", "[morpheus.serialisation.json_reader.error_handling]")
 {
     using Catch::Matchers::ContainsSubstring;
-    REQUIRE_THROWS_WITH(test::readerFromString("50").beginValue("expected_key"),
+    REQUIRE_THROWS_WITH(test::readerFromString("50").first.beginValue("expected_key"),
                         ContainsSubstring("BeginComposite expected") && ContainsSubstring("Value encountered"));
-    REQUIRE_THROWS_WITH(test::readerFromString("[1,2,3]").beginValue("expected_key"),
+    REQUIRE_THROWS_WITH(test::readerFromString("[1,2,3]").first.beginValue("expected_key"),
                         ContainsSubstring("BeginComposite expected") && ContainsSubstring("BeginSequence encountered"));
-    REQUIRE_THROWS_WITH(test::readerFromString("{}").beginValue("expected_key"), ContainsSubstring("empty composite"));
+    REQUIRE_THROWS_WITH(test::readerFromString("{}").first.beginValue("expected_key"), ContainsSubstring("empty composite"));
 
     GIVEN("A type which parses a key value pair")
     {

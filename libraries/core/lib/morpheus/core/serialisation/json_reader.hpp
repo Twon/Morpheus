@@ -17,6 +17,7 @@
 #include <concepts>
 #include <cstddef>
 #include <cstdint>
+#include <functional>
 #include <istream>
 #include <limits>
 #include <memory>
@@ -47,8 +48,6 @@ class MORPHEUSCORE_EXPORT JsonReader
     };
 
 public:
-    using OwnedStream = std::unique_ptr<std::istream>;
-
     static constexpr bool canBeTextual() { return true; }
 
     /// \copydoc morpheus::serialisation::concepts::ReaderArchetype::isTextual()
@@ -57,7 +56,7 @@ public:
     /// Json reader take in a stream of json to extract data members from.
     /// \param[in] stream Stream used to read in the json source.  This must outlive the reader as its held by reference.
     /// \param[in] validate If true, the json will be validated against the schema.  If false, no validation is performed.
-    explicit JsonReader(OwnedStream stream, bool validate = true);
+    explicit JsonReader(std::istream& stream, bool validate = true);
 
     explicit JsonReader(JsonReader const& rhs) = delete;
     JsonReader& operator=(JsonReader const& rhs) = delete;
@@ -207,7 +206,7 @@ private:
     [[nodiscard]] bool isAtEndSequence();
     [[nodiscard]] std::vector<std::byte> readBytes();
 
-    OwnedStream mSourceStream; /// Owned input stream containing the Json source.
+    std::reference_wrapper<std::istream> mSourceStream;
     std::unique_ptr<rapidjson::IStreamWrapper> mStream;
     std::unique_ptr<rapidjson::Reader> mJsonReader;
     std::unique_ptr<struct JsonExtracter> mExtractor;

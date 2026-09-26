@@ -6,4 +6,6 @@ target_sources(MorpheusCore
             hex.hpp
 )
 
+add_subdirectory(ankerl)
+add_subdirectory(boost)
 add_subdirectory(std)

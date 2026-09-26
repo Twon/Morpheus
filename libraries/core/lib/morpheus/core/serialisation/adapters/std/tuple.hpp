@@ -33,7 +33,7 @@ T deserialise(Serialiser& serialiser, std::type_identity<T>)
     {
         // More work required to support std::tuples containing references.
         static_assert((!std::is_reference_v<std::tuple_element_t<Indexes, T>> || ...));
-        return T{serialiser.template deserialise<std::tuple_element_t<Indexes, T>>()...};
+        return T{serialiser.template deserialise<std::remove_const_t<std::tuple_element_t<Indexes, T>>>()...};
     }(std::make_index_sequence<size>());
 }
 

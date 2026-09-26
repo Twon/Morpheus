@@ -33,7 +33,8 @@ T deserialise(Serialiser& serialiser, std::type_identity<T>)
     static_assert(!std::is_reference_v<typename T::second_type>);
 
     auto const scope = makeScopedSequence(serialiser.reader(), std::tuple_size<T>::value);
-    return T{serialiser.template deserialise<typename T::first_type>(), serialiser.template deserialise<typename T::second_type>()};
+    return T{serialiser.template deserialise<std::remove_const_t<typename T::first_type>>(),
+             serialiser.template deserialise<std::remove_const_t<typename T::second_type>>()};
 }
 
 } // namespace morpheus::serialisation::detail
