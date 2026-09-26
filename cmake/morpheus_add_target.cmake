@@ -178,16 +178,29 @@ function(morpheus_add_target_properties)
     # Create an empty header set here so that the subsequent install step finds it.
     if (NOT ${MORPHEUS_NO_INSTALL})
         target_sources(${MORPHEUS_NAME} ${scope} FILE_SET HEADERS FILES)
+        if (MORPHEUS_USE_MODULES AND NOT MORPHEUS_INTERFACE)
+            target_sources(${MORPHEUS_NAME} ${scope} FILE_SET CXX_MODULES FILES)
+        endif()
     endif()
 
     if (NOT ${MORPHEUS_NO_INSTALL})
-        install(TARGETS ${MORPHEUS_NAME}
-                EXPORT morpheus-export-set
-                FILE_SET HEADERS
-                INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-                RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-                ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
-                LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        set(install_args
+            TARGETS ${MORPHEUS_NAME}
+            EXPORT morpheus-export-set
+            FILE_SET HEADERS DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
         )
+
+        if (MORPHEUS_USE_MODULES AND NOT MORPHEUS_INTERFACE)
+            list(APPEND install_args FILE_SET CXX_MODULES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
+        endif()
+
+        list(APPEND install_args
+            INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+            RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+            ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+            LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+        )
+
+        install(${install_args})
     endif()
 endfunction()

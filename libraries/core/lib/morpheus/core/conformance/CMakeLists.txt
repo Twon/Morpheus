@@ -114,3 +114,11 @@ target_compile_definitions(MorpheusCore
     PUBLIC
         $<$<PLATFORM_ID:Darwin>:_GNU_SOURCE=1> # Boost stacktrace requires this for MacOS.
 )
+
+if (MORPHEUS_USE_MODULES)
+    target_sources(MorpheusCore
+        PUBLIC
+            FILE_SET CXX_MODULES
+            FILES conformance.cppm
+    )
+endif()

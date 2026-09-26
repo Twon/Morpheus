@@ -1,4 +1,5 @@
 clang-format==23.1.1
+cmake>=4.0.0
 conan>=2.32.0
 ninja
 pre-commit
