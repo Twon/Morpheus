@@ -17,10 +17,10 @@
 
 name: Clang Tidy
 
-on: 
+on:
   workflow_dispatch:
   schedule:
-    - cron: "0 2 * * *"   # Every day at 02:00 UTC  
+    - cron: "0 2 * * *"   # Every day at 02:00 UTC
 
 env:
   BUILD_TYPE: Debug

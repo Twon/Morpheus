@@ -17,7 +17,7 @@
 
 name: Include What You Use
 
-on: 
+on:
   workflow_dispatch:
   schedule:
     - cron: "0 2 * * *"   # Every day at 02:00 UTC
