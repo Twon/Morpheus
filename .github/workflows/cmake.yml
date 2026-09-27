@@ -58,6 +58,12 @@ jobs:
               lib: "libstdc++11"
             }
           - {
+              name: "Ubuntu GCC-16",
+              os: ubuntu-latest,
+              compiler: { type: GCC, version: 16, conan: "gcc", cc: "gcc-16", cxx: "g++-16", std: 23 },
+              lib: "libstdc++11"
+            }
+          - {
               name: "Ubuntu Clang-15 + libc++",
               os: ubuntu-22.04,
               compiler:
