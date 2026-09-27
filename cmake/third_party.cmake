@@ -17,8 +17,6 @@ OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 
 include_guard(GLOBAL)
 
-find_package(RapidJSON REQUIRED)
-
 if(WIN32)
     find_package(wil REQUIRED)
 endif(WIN32)
