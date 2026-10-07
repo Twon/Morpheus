@@ -172,7 +172,7 @@ class Morpheus(ConanFile):
             self.build_requires("doxygen/1.17.0")
 
         if self.options.get_safe("link_with_mold", False):
-            self.build_requires("mold/2.36.0")
+            self.build_requires("mold/2.41.0")
 
     def requirements(self):
         if self.options.get_safe("with_rs_vulkan", False):
