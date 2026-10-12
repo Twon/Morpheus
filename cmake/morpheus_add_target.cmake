@@ -156,11 +156,20 @@ function(morpheus_add_target_properties)
         set(scope "PUBLIC")
     endif()
 
-    target_compile_features(${MORPHEUS_NAME} ${scope} cxx_std_23)
+    if("cxx_std_26" IN_LIST CMAKE_CXX_COMPILE_FEATURES)
+        set(_cxx_standard 26)
+    elseif("cxx_std_23" IN_LIST CMAKE_CXX_COMPILE_FEATURES)
+        set(_cxx_standard 23)
+    else()
+        message(FATAL_ERROR
+            "This project requires a compiler with C++23 or C++26 support")
+    endif()
+
+    target_compile_features(${MORPHEUS_NAME} ${scope} cxx_std_${_cxx_standard})
 
     set_target_properties(${MORPHEUS_NAME}
         PROPERTIES
-            CXX_STANDARD 23
+            CXX_STANDARD ${_cxx_standard}
             CXX_STANDARD_REQUIRED ON
             CXX_EXTENSIONS OFF
             ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
