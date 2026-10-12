@@ -172,6 +172,8 @@ function(morpheus_add_target_properties)
             CXX_STANDARD ${_cxx_standard}
             CXX_STANDARD_REQUIRED ON
             CXX_EXTENSIONS OFF
+            OBJCXX_STANDARD 23
+            OBJCXX_STANDARD_REQUIRED ON
             ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
             LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib
             RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin
