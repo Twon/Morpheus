@@ -58,20 +58,6 @@ jobs:
               lib: "libstdc++11"
             }
           - {
-              name: "Ubuntu Clang-15 + libc++",
-              os: ubuntu-22.04,
-              compiler:
-                {
-                  type: CLANG,
-                  version: 15,
-                  conan: "clang",
-                  cc: "clang-15",
-                  cxx: "clang++-15",
-                  std: 20
-                },
-              lib: "libc++",
-            }
-          - {
               name: "Ubuntu Clang-16 + libc++",
               os: ubuntu-22.04,
               compiler:
