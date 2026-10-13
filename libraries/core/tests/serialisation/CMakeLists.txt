@@ -9,6 +9,9 @@ target_sources(MorpheusCoreTests
         json_roundtrip.tests.cpp
         json_writer.tests.cpp
         read_serialiser.tests.cpp
+        toml_reader.tests.cpp
+        toml_roundtrip.tests.cpp
+        toml_writer.tests.cpp
         write_serialiser.tests.cpp
 )
 
