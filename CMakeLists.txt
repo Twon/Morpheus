@@ -5,7 +5,7 @@ file(STRINGS "version.txt" MORPHEUS_VERSION)
 project(Morpheus
     VERSION ${MORPHEUS_VERSION}
     DESCRIPTION "A high performance focused game engine using object oriented techniques based in the latest C++"
-    LANGUAGES C CXX
+    LANGUAGES C CXX OBJC OBJCXX
 )
 
 set(CMAKE_POLICY_DEFAULT_CMP0076 NEW)
@@ -106,6 +106,10 @@ if(IS_MULTI_CONFIG)
     set(CMAKE_BUILD_WITH_INSTALL_RPATH OFF)
 endif()
 #------------------------------------------------------------------------------------------------------------------------------------------
+
+if(APPLE)
+    enable_language(OBJCXX)
+endif()
 
 add_subdirectory(libraries)
 add_subdirectory(examples)
