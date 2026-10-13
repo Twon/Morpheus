@@ -37,15 +37,15 @@ TEST_CASE("Verify toString handling for std::chrono::duration types", "[morpheus
 
 TEST_CASE("Verify fromString handling for std::chrono::duration types", "[morpheus.conversion.chrono.duration.fromString]")
 {
-    REQUIRE(fromString<std::chrono::nanoseconds>("123ns") == std::chrono::nanoseconds{123});
-    REQUIRE(fromString<std::chrono::microseconds>("789us") == std::chrono::microseconds{789});
-    REQUIRE(fromString<std::chrono::milliseconds>("456ms") == std::chrono::milliseconds{456});
-    REQUIRE(fromString<std::chrono::seconds>("60s") == std::chrono::seconds{60});
-    REQUIRE(fromString<std::chrono::minutes>("15min") == std::chrono::minutes{15});
-    REQUIRE(fromString<std::chrono::hours>("24h") == std::chrono::hours{24});
-    REQUIRE(fromString<std::chrono::weeks>("12w") == std::chrono::weeks{12});
-    REQUIRE(fromString<std::chrono::years>("100y") == std::chrono::years{100});
-    REQUIRE(fromString<std::chrono::months>("12m") == std::chrono::months{12});
+    REQUIRE(fromString<std::chrono::nanoseconds>("123ns").value() == std::chrono::nanoseconds{123});
+    REQUIRE(fromString<std::chrono::microseconds>("789us").value() == std::chrono::microseconds{789});
+    REQUIRE(fromString<std::chrono::milliseconds>("456ms").value() == std::chrono::milliseconds{456});
+    REQUIRE(fromString<std::chrono::seconds>("60s").value() == std::chrono::seconds{60});
+    REQUIRE(fromString<std::chrono::minutes>("15min").value() == std::chrono::minutes{15});
+    REQUIRE(fromString<std::chrono::hours>("24h").value() == std::chrono::hours{24});
+    REQUIRE(fromString<std::chrono::weeks>("12w").value() == std::chrono::weeks{12});
+    REQUIRE(fromString<std::chrono::years>("100y").value() == std::chrono::years{100});
+    REQUIRE(fromString<std::chrono::months>("12m").value() == std::chrono::months{12});
 }
 
 TEST_CASE("Verify std::format specialisation for std::chrono::date", "[morpheus.conversion.chrono.date.formatter]")
@@ -77,10 +77,10 @@ TEST_CASE("Verify toString handling for std::chrono::time_zone types", "[morpheu
 
 TEST_CASE("Verify fromString handling for std::chrono::time_zone types", "[morpheus.conversion.chrono.time_zone.fromString]")
 {
-    REQUIRE(fromString<conf::date::time_zone>("Africa/Johannesburg") == *conf::date::get_tzdb().locate_zone("Africa/Johannesburg"));
-    REQUIRE(fromString<conf::date::time_zone>("America/New_York") == *conf::date::get_tzdb().locate_zone("America/New_York"));
-    REQUIRE(fromString<conf::date::time_zone>("Asia/Hong_Kong") == *conf::date::get_tzdb().locate_zone("Asia/Hong_Kong"));
-    REQUIRE(fromString<conf::date::time_zone>("Europe/London") == *conf::date::get_tzdb().locate_zone("Europe/London"));
+    REQUIRE(fromString<conf::date::time_zone>("Africa/Johannesburg").value() == *conf::date::get_tzdb().locate_zone("Africa/Johannesburg"));
+    REQUIRE(fromString<conf::date::time_zone>("America/New_York").value() == *conf::date::get_tzdb().locate_zone("America/New_York"));
+    REQUIRE(fromString<conf::date::time_zone>("Asia/Hong_Kong").value() == *conf::date::get_tzdb().locate_zone("Asia/Hong_Kong"));
+    REQUIRE(fromString<conf::date::time_zone>("Europe/London").value() == *conf::date::get_tzdb().locate_zone("Europe/London"));
     REQUIRE(!fromString<conf::date::time_zone>("Invalid").has_value());
 }
 

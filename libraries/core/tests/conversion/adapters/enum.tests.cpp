@@ -27,10 +27,10 @@ TEST_CASE("Verify toString handling for enums", "[morpheus.conversion.enums.toSt
 
 TEST_CASE("Verify fromString handling for enums", "[morpheus.conversion.enums.fromString]")
 {
-    REQUIRE(fromString<CardSuits>("Hearts") == CardSuits::Hearts);
-    REQUIRE(fromString<CardSuits>("Diamonds") == CardSuits::Diamonds);
-    REQUIRE(fromString<CardSuits>("Clubs") == CardSuits::Clubs);
-    REQUIRE(fromString<CardSuits>("Spades") == CardSuits::Spades);
+    REQUIRE(fromString<CardSuits>("Hearts").value() == CardSuits::Hearts);
+    REQUIRE(fromString<CardSuits>("Diamonds").value() == CardSuits::Diamonds);
+    REQUIRE(fromString<CardSuits>("Clubs").value() == CardSuits::Clubs);
+    REQUIRE(fromString<CardSuits>("Spades").value() == CardSuits::Spades);
     REQUIRE(!fromString<CardSuits>("Invalid").has_value());
 }
 
