@@ -61,26 +61,32 @@ morpheus_conformance_check(
 
 if (NOT ${DATE_SUPPORTED})
     find_package(date REQUIRED)
+    message(STATUS "Morpheus: Conformance fallback support for date.")
 endif (NOT ${DATE_SUPPORTED})
 
 if (NOT ${EXPECTED_SUPPORTED})
     find_package(tl-expected REQUIRED)
+    message(STATUS "Morpheus: Conformance fallback support for expected.")
 endif (NOT ${EXPECTED_SUPPORTED})
 
 if (NOT ${FORMAT_SUPPORTED})
     find_package(fmt REQUIRED)
+    message(STATUS "Morpheus: Conformance fallback support for format.")
 endif (NOT ${FORMAT_SUPPORTED})
 
 if (NOT ${OUTPTR_SUPPORTED})
     find_package(out_ptr REQUIRED)
+    message(STATUS "Morpheus: Conformance fallback support for out_ptr.")
 endif (NOT ${OUTPTR_SUPPORTED})
 
 if (NOT ${RANGES_SUPPORTED})
     find_package(range-v3 REQUIRED)
+    message(STATUS "Morpheus: Conformance fallback support for ranges.")
 endif (NOT ${RANGES_SUPPORTED})
 
 if (NOT ${VALUE_TYPES_SUPPORTED})
     find_package(value_types REQUIRED)
+    message(STATUS "Morpheus: Conformance fallback support for value_types.")
 endif (NOT ${VALUE_TYPES_SUPPORTED})
 
 find_package(scn REQUIRED)
@@ -90,9 +96,9 @@ if(${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU" AND ${CMAKE_CXX_COMPILER_VERSION} VER
     include(CheckCXXSymbolExists)
     check_cxx_symbol_exists(_GLIBCXX_HAVE_STACKTRACE "version" GCC_STACKTRACE_SUPPORTED)
     if(${GCC_STACKTRACE_SUPPORTED})
-        message(STATUS "morpheus: GCC version ${CMAKE_CXX_COMPILER_VERSION} is built with support for stacktrace")
+        message(STATUS "Morpheus: GCC version ${CMAKE_CXX_COMPILER_VERSION} is built with support for stacktrace")
     else()
-        message(STATUS "morpheus: GCC version ${CMAKE_CXX_COMPILER_VERSION} is not built with support for stacktrace")
+        message(STATUS "Morpheus: GCC version ${CMAKE_CXX_COMPILER_VERSION} is not built with support for stacktrace")
     endif()
 endif()
 
