@@ -107,6 +107,10 @@ if(IS_MULTI_CONFIG)
 endif()
 #------------------------------------------------------------------------------------------------------------------------------------------
 
+if(APPLE)
+    enable_language(OBJCXX)
+endif()
+
 add_subdirectory(libraries)
 add_subdirectory(examples)
 
