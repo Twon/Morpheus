@@ -55,7 +55,7 @@ TEST_CASE("Binary serialisation can roundtrip standard library types to binary a
         REQUIRE(binaryRoundtrip(std::chrono::months{12}) == std::chrono::months{12});
     }
     REQUIRE(binaryRoundtrip(std::bitset<4>{"1101"}) == std::bitset<4>{"1101"});
-    // REQUIRE(binaryRoundtrip(conf::vt::indirect<int>{42}) == conf::vt::indirect<int>{42});
+    REQUIRE(binaryRoundtrip(conf::vt::indirect<int>{42}) == conf::vt::indirect<int>{42});
     REQUIRE(binaryRoundtrip(std::monostate{}) == std::monostate{});
     REQUIRE(binaryRoundtrip(std::optional<int>{100}) == std::optional<int>{100});
     REQUIRE(binaryRoundtrip(std::optional<int>{}) == std::optional<int>{});

@@ -56,7 +56,7 @@ TEST_CASE("Json serialisation can roundtrip standard library types to binary and
         REQUIRE(jsonRoundtrip(std::chrono::months{12}) == std::chrono::months{12});
     }
     REQUIRE(jsonRoundtrip(std::bitset<4>{"1101"}) == std::bitset<4>{"1101"});
-    // REQUIRE(jsonRoundtrip(conf::vt::indirect<int>{42}) == conf::vt::indirect<int>{42});
+    REQUIRE(jsonRoundtrip(conf::vt::indirect<int>{42}) == conf::vt::indirect<int>{42});
     REQUIRE(jsonRoundtrip(std::monostate{}) == std::monostate{});
     REQUIRE(jsonRoundtrip(std::optional<int>{100}) == std::optional<int>{100});
     REQUIRE(jsonRoundtrip(std::optional<int>{}) == std::optional<int>{});

@@ -591,7 +591,7 @@ TEST_CASE("Json reader can read std types from underlying text representation", 
         REQUIRE(test::deserialise<std::vector<int>>(R"([1, 2, 3, 4, 5])") == std::vector<int>{1, 2, 3, 4, 5});
     }
     REQUIRE(test::deserialise<std::bitset<4>>(R"("1101")") == std::bitset<4>("1101"));
-    // REQUIRE(test::deserialise<conf::vt::indirect<int>>(R"({"value":42})") == conf::vt::indirect<int>(42));
+    REQUIRE(test::deserialise<conf::vt::indirect<int>>(R"({"value":42})") == conf::vt::indirect<int>(42));
     REQUIRE(test::deserialise<std::monostate>(R"({})") == std::monostate{});
     REQUIRE(test::deserialise<std::optional<int>>(R"(100)") == std::optional<int>{100});
     REQUIRE(test::deserialise<std::optional<int>>(R"(null)") == std::optional<int>{});
