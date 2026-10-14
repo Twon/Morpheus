@@ -56,7 +56,7 @@ morpheus_conformance_check(
 
 morpheus_conformance_check(
     RESULT VALUE_TYPES_SUPPORTED
-    GNU_VERSION "16"
+    GNU_VERSION "16.1" # Gcc must contain a fix for: https://gcc.gnu.org/bugzilla/show_bug.cgi?id=124890
 )
 
 if (NOT ${DATE_SUPPORTED})

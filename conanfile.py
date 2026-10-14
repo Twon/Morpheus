@@ -147,7 +147,7 @@ class Morpheus(ConanFile):
         """ Does the current compiler version lack support for std::indirect and std::polymorphic via the STL. """
         compiler = self.settings.compiler
         version = Version(self.settings.compiler.version)
-        std_support = (compiler == "gcc" and version >= Version("16"))
+        std_support = (compiler == "gcc" and version >= Version("16.1"))
         return not std_support
 
     def config_options(self):
