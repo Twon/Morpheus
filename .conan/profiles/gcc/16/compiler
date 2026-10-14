@@ -3,9 +3,5 @@ include(../../compiler/gcc)
 [settings]
 compiler.version=16
 
-{%- set brew_prefix = os.environ.get('HOMEBREW_PREFIX', '') %}
-{%- set c_compiler = (brew_prefix + '/bin/gcc-16') if brew_prefix and os.path.exists(brew_prefix + '/bin/gcc-16') else ('/opt/homebrew/bin/gcc-16' if os.path.exists('/opt/homebrew/bin/gcc-16') else ('/usr/local/bin/gcc-16' if os.path.exists('/usr/local/bin/gcc-16') else 'gcc-16')) %}
-{%- set cpp_compiler = (brew_prefix + '/bin/g++-16') if brew_prefix and os.path.exists(brew_prefix + '/bin/g++-16') else ('/opt/homebrew/bin/g++-16' if os.path.exists('/opt/homebrew/bin/g++-16') else ('/usr/local/bin/g++-16' if os.path.exists('/usr/local/bin/g++-16') else 'g++-16')) %}
-
 [conf]
-tools.build:compiler_executables={"c":"{{ c_compiler }}","cpp":"{{ cpp_compiler }}"}
+tools.build:compiler_executables={"c":"gcc-16","cpp":"g++-16"}
