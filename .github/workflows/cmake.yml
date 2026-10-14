@@ -101,7 +101,7 @@ jobs:
                   conan: "clang",
                   cc: "clang-18",
                   cxx: "clang++-18",
-                  std: 23
+                  std: 26
                 },
               lib: "libc++",
             }
@@ -115,7 +115,7 @@ jobs:
                   conan: "clang",
                   cc: "clang-19",
                   cxx: "clang++-19",
-                  std: 23
+                  std: 26
                 },
               lib: "libc++",
             }
@@ -129,7 +129,7 @@ jobs:
                   conan: "clang",
                   cc: "clang-20",
                   cxx: "clang++-20",
-                  std: 23
+                  std: 26
                 },
               lib: "libc++",
             }
@@ -143,7 +143,21 @@ jobs:
                   conan: "clang",
                   cc: "clang-21",
                   cxx: "clang++-21",
-                  std: 23
+                  std: 26
+                },
+              lib: "libc++",
+            }
+          - {
+              name: "Ubuntu Clang-22 + libc++",
+              os: ubuntu-latest,
+              compiler:
+                {
+                  type: CLANG,
+                  version: 22,
+                  conan: "clang",
+                  cc: "clang-22",
+                  cxx: "clang++-22",
+                  std: 26
                 },
               lib: "libc++",
             }
