@@ -7,7 +7,7 @@
 namespace morpheus::vis
 {
 
-void RenderSystemFactory::addOptions(boost::program_options::options_description& options)
+auto RenderSystemFactory::addOptions(boost::program_options::options_description& options) -> void
 {
     namespace po = boost::program_options;
     options.add_options()(

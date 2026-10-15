@@ -68,7 +68,7 @@ public:
     ///@}
 
     /// Register program options
-    void addOptions(boost::program_options::options_description& options);
+    auto addOptions(boost::program_options::options_description& options) -> void;
 
     auto getActiveAPI() const -> API { return mActiveApi; }
 
