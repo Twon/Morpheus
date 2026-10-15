@@ -47,31 +47,31 @@ public:
     explicit RenderWindow(Config const& config = Config{});
     ///@}
 
-    [[nodiscard]] auto const& name() const noexcept { return mWindowName; }
+    [[nodiscard]] auto name() const noexcept -> auto const& { return mWindowName; }
 
     //! The width in pixels of the render window.
-    [[nodiscard]] std::uint16_t width() const noexcept { return RenderTarget::width(); }
+    [[nodiscard]] auto width() const noexcept -> std::uint16_t { return RenderTarget::width(); }
 
     //! The height in pixels of the render window.
-    [[nodiscard]] std::uint16_t height() const noexcept { return RenderTarget::height(); }
+    [[nodiscard]] auto height() const noexcept -> std::uint16_t { return RenderTarget::height(); }
 
     //! The colour depth of the pixels of the render window.
-    [[nodiscard]] std::uint16_t colourDepth() const noexcept { return RenderTarget::colourDepth(); }
+    [[nodiscard]] auto colourDepth() const noexcept -> std::uint16_t { return RenderTarget::colourDepth(); }
 
     //! The location of the start pixel in the X-coordinate screen space of the render window.
-    [[nodiscard]] std::uint16_t startX() const noexcept { return mStartX; }
+    [[nodiscard]] auto startX() const noexcept -> std::uint16_t { return mStartX; }
 
     //! The location of the start pixel in the Y-coordinate screen space of the render window.
-    [[nodiscard]] std::uint16_t startY() const noexcept { return mStartY; }
+    [[nodiscard]] auto startY() const noexcept -> std::uint16_t { return mStartY; }
 
     //    bool isHidden() const noexcept
     //    bool isFocus() const noexcept
 
     /// Query if the window full screen.
-    [[nodiscard]] bool fullScreen() const noexcept { return mFullScreen; }
+    [[nodiscard]] auto fullScreen() const noexcept -> bool { return mFullScreen; }
 
     /// Query if the window refresh rate in Htz.
-    [[nodiscard]] std::uint16_t refreshRate() const noexcept { return mRefreshRate; }
+    [[nodiscard]] auto refreshRate() const noexcept -> std::uint16_t { return mRefreshRate; }
 
     /// Queries if the window is visible;
     //    bool isVisible() const noexcept

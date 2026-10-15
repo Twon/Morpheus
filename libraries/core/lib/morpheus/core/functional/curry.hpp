@@ -8,6 +8,7 @@
 
 #include <concepts>
 #include <functional>
+#include <tuple>
 #include <utility>
 
 namespace morpheus::functional

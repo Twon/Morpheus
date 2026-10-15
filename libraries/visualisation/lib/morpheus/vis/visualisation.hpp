@@ -16,34 +16,42 @@ template <gfx::concepts::RenderSystem R>
 class Visualisation
 {
 public:
+    using RenderSystemType = R;
+    using WindowType = typename R::Window;
+
     Visualisation(Visualisation const&) = delete;
     Visualisation& operator=(Visualisation const&) = delete;
 
     Visualisation(Visualisation&&) = default;
     Visualisation& operator=(Visualisation&&) = default;
 
-    conf::exp::expected<Visualisation, std::string> create(R&& renderSystem);
+    auto create(RenderSystemType&& renderSystem) -> conf::exp::expected<Visualisation, std::string>;
 
     /// Register program options
-    void addOptions(boost::program_options::options_description&) {}
+    auto addOptions(boost::program_options::options_description&) -> void {}
 
 private:
-    Visualisation(R&& renderSystem, typename R::Window&& window);
+    Visualisation(RenderSystemType&& renderSystem, WindowType&& window);
 
-    R mRenderSystem;
-    typename R::Window mWindow;
+    RenderSystemType mRenderSystem;
+    WindowType mWindow;
 
     // N windows
 };
 
 template <gfx::concepts::RenderSystem R>
-Visualisation<R>::Visualisation(R&& renderSystem, typename R::Window&& window)
+Visualisation<R>::Visualisation(RenderSystemType&& renderSystem, WindowType&& window)
     : mRenderSystem(std::move(renderSystem))
     , mWindow(std::move(window))
 {}
 
 template <gfx::concepts::RenderSystem R>
-conf::exp::expected<Visualisation<R>, std::string> Visualisation<R>::create(R&& renderSystem)
-{}
+auto Visualisation<R>::create(RenderSystemType&& renderSystem) -> conf::exp::expected<Visualisation<R>, std::string>
+{
+
+    return {
+        Visualisation<R>{std::move(renderSystem), {}}
+    };
+}
 
 } // namespace morpheus::vis
