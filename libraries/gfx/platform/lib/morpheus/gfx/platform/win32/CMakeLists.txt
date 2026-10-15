@@ -1,3 +1,4 @@
+target_sources(MorpheusGfxPlatform
     PUBLIC
         FILE_SET HEADERS
         FILES

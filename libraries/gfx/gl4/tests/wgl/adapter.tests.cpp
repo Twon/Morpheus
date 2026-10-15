@@ -36,10 +36,8 @@
 */
 #ifdef _WIN32
     #include <windows.h>
-// extern "C" __declspec(dllexport) DWORD NvOptimusEnablement = 0x00000001;
-// extern "C" __declspec(dllexport) DWORD AmdPowerXpressRequestHighPerformance = 0x00000001;
-extern "C" __declspec(dllexport) DWORD NvOptimusEnablement = 0x00000000;
-extern "C" __declspec(dllexport) DWORD AmdPowerXpressRequestHighPerformance = 0x00000000;
+extern "C" __declspec(dllexport) DWORD NvOptimusEnablement = 0x00000001;
+extern "C" __declspec(dllexport) DWORD AmdPowerXpressRequestHighPerformance = 0x00000001;
 #endif
 
 namespace morpheus::gfx::gl4::wgl

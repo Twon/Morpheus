@@ -40,7 +40,7 @@ using DXGIOutput = std::unique_ptr<IDXGIOutput, ComDeleter>;
 
 /*! \typedef DXGIAdapter
         A RAII wrapper for the IDXGIAdapter1 interface.
-    */
+*/
 using DXGIAdapter = std::unique_ptr<IDXGIAdapter1, ComDeleter>;
 
 /// \using D3D12Device
