@@ -334,74 +334,54 @@ RenderWindow::~RenderWindow()
 conf::exp::expected<RenderWindow, std::string> RenderWindow::create(Config const& config)
 {
     RenderWindow thisWindow;
-    auto requestedCfg = config;
-    auto components = adjustWindowConfig(requestedCfg).and_then(
-    [](DWORD dwStyle) -> conf::exp::expected<std::tuple<DWORD, HINSTANCE>, std::string>
+    auto const getStyleAndModuleHandle = [](DWORD dwStyle) -> conf::exp::expected<std::tuple<DWORD, HINSTANCE>, std::string>
     {
-        auto handle = getModuleHandle();
-        if (!handle)
-        {
-            return conf::exp::unexpected(handle.error());
-        }
-        return makeExpected(std::tuple{dwStyle, handle.value()});
-    }
-    ).and_then(
-    [&](auto&& pair) -> conf::exp::expected<std::tuple<DWORD, HINSTANCE>, std::string>
-    {
-        auto [dwStyle, hInstance] = pair;
-        // Next default values for new objects
-        ::WNDCLASS const wcex{.style = CS_OWNDC,
-                              .lpfnWndProc = WndProc,
-                              .cbClsExtra = 0,
-                              .cbWndExtra = sizeof(RenderWindow*), // Reserve space for the Window pointer returned by GetWindowLong
-                              .hInstance = hInstance,
-                              .hIcon = ::LoadIcon(nullptr, IDI_APPLICATION),
-                              .hCursor = ::LoadCursor(nullptr, IDC_ARROW),
-                              .hbrBackground = (HBRUSH)(COLOR_WINDOW + 1),
-                              .lpszMenuName = nullptr,
-                              .lpszClassName = requestedCfg.windowName.c_str()};
-
-        // Register class  with the game application details
-        if (!::RegisterClass(&wcex))
-        {
-            return makeUnexpected();
-        }
-        return makeExpected(std::tuple{dwStyle, hInstance});
-    }
-    ).and_then(
-    [&config = requestedCfg, &thisWindow](auto&& pair)  -> conf::exp::expected<std::tuple<HINSTANCE, HWND>, std::string>
-    {
-        if (error == ERROR_CLASS_ALREADY_EXISTS)
-        {
-            return std::tuple{dwStyle, hInstance};
-        }
-        return conf::exp::unexpected(error);
+        return getModuleHandle().and_then(
+            [dwStyle](auto handle)
+            {
+                return conf::exp::expected<std::tuple<DWORD, HINSTANCE>, std::string>{
+                    {dwStyle, handle}
+                };
+            });
     };
-    auto const toString = [](DWORD error) -> std::string {
-        return GetLastErrorString(error); };
 
-    return registerClass(hInstance, config.windowName).transform(makeTuple).or_else(ignoreAlreadyRegistered).transform_error(toString);
-};
+    auto const registerClassAndIgnoreDuplicates = [&config](auto&& pair) -> conf::exp::expected<std::tuple<DWORD, HINSTANCE>, std::string>
+    {
+        auto const [dwStyle, hInstance] = pair;
+        auto const makeTuple = [dwStyle, hInstance]() -> std::tuple<DWORD, HINSTANCE> { return std::tuple{dwStyle, hInstance}; };
+        auto const ignoreAlreadyRegistered = [dwStyle, hInstance](DWORD error) -> conf::exp::expected<std::tuple<DWORD, HINSTANCE>, DWORD>
+        {
+            if (error == ERROR_CLASS_ALREADY_EXISTS)
+            {
+                return std::tuple{dwStyle, hInstance};
+            }
+            return conf::exp::unexpected(error);
+        };
+        auto const toString = [](DWORD error) -> std::string { return GetLastErrorString(error); };
 
-auto requestedCfg = config;
-auto const constructWindow = [&config = requestedCfg, &thisWindow](auto&& pair) -> conf::exp::expected<std::tuple<HINSTANCE, HWND>, std::string>
-{
-    auto const [dwStyle, hInstance] = pair;
-    auto const makeTuple = [hInstance](HWND window) -> conf::exp::expected<std::tuple<HINSTANCE, HWND>, std::string> { return std::tuple{hInstance, window}; };
-    return createWindow(config, thisWindow, dwStyle, hInstance).and_then(makeTuple);
-};
+        return registerClass(hInstance, config.windowName).transform(makeTuple).or_else(ignoreAlreadyRegistered).transform_error(toString);
+    };
 
-auto components = adjustWindowConfig(requestedCfg).and_then(getStyleAndModuleHandle).and_then(registerClassAndIgnoreDuplicates).and_then(constructWindow);
+    auto requestedCfg = config;
+    auto const constructWindow = [&config = requestedCfg, &thisWindow](auto&& pair) -> conf::exp::expected<std::tuple<HINSTANCE, HWND>, std::string>
+    {
+        auto const [dwStyle, hInstance] = pair;
+        auto const makeTuple = [hInstance](HWND window) -> conf::exp::expected<std::tuple<HINSTANCE, HWND>, std::string>
+        { return std::tuple{hInstance, window}; };
+        return createWindow(config, thisWindow, dwStyle, hInstance).and_then(makeTuple);
+    };
 
-if (!components)
-{
-    return conf::exp::unexpected(components.error());
-}
+    auto components = adjustWindowConfig(requestedCfg).and_then(getStyleAndModuleHandle).and_then(registerClassAndIgnoreDuplicates).and_then(constructWindow);
 
-auto [hInstance, hWnd] = components.value();
-thisWindow.mHInstance = hInstance;
-thisWindow.mWindow.reset(hWnd);
-return conf::exp::expected<RenderWindow, std::string>(std::move(thisWindow));
+    if (!components)
+    {
+        return conf::exp::unexpected(components.error());
+    }
+
+    auto [hInstance, hWnd] = components.value();
+    thisWindow.mHInstance = hInstance;
+    thisWindow.mWindow.reset(hWnd);
+    return conf::exp::expected<RenderWindow, std::string>(std::move(thisWindow));
 }
 
 bool RenderWindow::visible() const noexcept
