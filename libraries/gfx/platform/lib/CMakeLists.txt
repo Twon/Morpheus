@@ -13,7 +13,6 @@ target_link_libraries(MorpheusGfxPlatform
 	PUBLIC
 		morpheus::application
 		morpheus::core
-        morpheus::application
 )
 
 set_target_properties(MorpheusGfxPlatform

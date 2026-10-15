@@ -23,8 +23,8 @@ public:
 
     /// \name Life cycle
     ///@{
-    void beginFrame() {}
-    void endFrame() {}
+    auto beginFrame() -> void {}
+    auto endFrame() -> void {}
     ///@}
 
 private:

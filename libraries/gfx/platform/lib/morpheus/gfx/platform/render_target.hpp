@@ -25,13 +25,13 @@ public:
     ///@}
 
     //! The width in pixels of the render target.
-    [[nodiscard]] std::uint16_t width() const noexcept { return mWidth; }
+    [[nodiscard]] auto width() const noexcept -> std::uint16_t { return mWidth; }
 
     //! The height in pixels of the render target.
-    [[nodiscard]] std::uint16_t height() const noexcept { return mHeight; }
+    [[nodiscard]] auto height() const noexcept -> std::uint16_t { return mHeight; }
 
     //! The colour depth of the pixels of the render target.
-    [[nodiscard]] std::uint16_t colourDepth() const noexcept { return mColourDepth; }
+    [[nodiscard]] auto colourDepth() const noexcept -> std::uint16_t { return mColourDepth; }
 
 protected:
     /// \name Data Members

@@ -8,7 +8,7 @@ namespace morpheus::gfx::x11
 TEST_CASE("Ensure move construction of a x11 render window", "[morpheus.gfx.x11.render_window.construct.move]")
 {
     RenderWindow::Config const config;
-    RenderWindow::create(config).and_then(
+    [[maybe_unused]] auto const window = RenderWindow::create(config).and_then(
         // LCOV_EXCL_START
         [&](auto&& window) -> conf::exp::expected<RenderWindow, std::string>
         {
