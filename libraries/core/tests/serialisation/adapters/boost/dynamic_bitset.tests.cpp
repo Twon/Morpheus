@@ -48,7 +48,7 @@ TEST_CASE("Verify serialisation of boost::dynamic_bitset", "[morpheus.serialisat
 
         THEN("Expect the following sequence of operations on the underlying writer")
         {
-            InSequence seq;
+            InSequence const seq;
             MockedWriteSerialiser serialiser;
             EXPECT_CALL(serialiser.writer(), isTextual()).WillOnce(Return(true));
             EXPECT_CALL(serialiser.writer(), write(Matcher<std::string_view>(Eq(expectedStringValue)))).Times(1);
@@ -73,7 +73,7 @@ TEST_CASE("Verify serialisation of boost::dynamic_bitset", "[morpheus.serialisat
 
         THEN("Expect the following sequence of operations on the underlying writer")
         {
-            InSequence seq;
+            InSequence const seq;
             MockedWriteSerialiser serialiser;
             EXPECT_CALL(serialiser.writer(), isTextual()).WillOnce(Return(false));
             EXPECT_CALL(serialiser.writer(), beginSequence(std::optional(numBits))).Times(1);
@@ -100,7 +100,7 @@ TEST_CASE("Verify deserialisation of boost::dynamic_bitset", "[morpheus.serialis
 
         THEN("Expect the following sequence of operations on the underlying reader")
         {
-            InSequence seq;
+            InSequence const seq;
             MockedReadSerialiser<true> serialiser;
             EXPECT_CALL(serialiser.reader(), read(An<std::string>())).WillOnce(Return(expectedStringValue));
             WHEN("Deserialising the boost::dynamic_bitset")
@@ -124,7 +124,7 @@ TEST_CASE("Verify deserialisation of boost::dynamic_bitset", "[morpheus.serialis
 
         THEN("Expect the following sequence of operations on the underlying reader")
         {
-            InSequence seq;
+            InSequence const seq;
             MockedReadSerialiser<false> serialiser;
             EXPECT_CALL(serialiser.reader(), beginSequence()).WillOnce(Return(std::optional(numBits)));
             for (std::size_t i = 0uz; i < actualValues.size(); ++i)

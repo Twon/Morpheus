@@ -25,7 +25,7 @@ TEST_CASE("Verify serialisation of std::source_location", "[morpheus.serialisati
 
         THEN("Expect the following sequence of operations on the underlying writer")
         {
-            InSequence seq;
+            InSequence const seq;
             MockedWriteSerialiser serialiser;
             EXPECT_CALL(serialiser.writer(), beginComposite()).Times(1);
             EXPECT_CALL(serialiser.writer(), beginValue("file_name"sv)).Times(1);

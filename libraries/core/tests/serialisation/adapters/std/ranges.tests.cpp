@@ -47,7 +47,7 @@ TEMPLATE_TEST_CASE("Verify serialisation of sequence containers std::ranges",
 
         THEN("Expect the following sequence of operations on the underlying writer")
         {
-            InSequence seq;
+            InSequence const seq;
             MockedWriteSerialiser serialiser;
             EXPECT_CALL(serialiser.writer(), beginSequence(std::optional(conf::ranges::size(container)))).Times(1);
             conf::ranges::for_each(container,
@@ -70,7 +70,7 @@ TEST_CASE("Verify deserialisation of sequence containers std::ranges", "[morpheu
 
         THEN("Expect the following sequence of operations on the underlying reader")
         {
-            InSequence seq;
+            InSequence const seq;
             MockedReadSerialiser<> serialiser;
 
             EXPECT_CALL(serialiser.reader(), beginSequence()).WillOnce(Return(std::optional<std::size_t>(expectedValues.size())));
@@ -98,7 +98,7 @@ TEST_CASE("Verify optimized block-read deserialisation of byte sequence containe
 
         THEN("Expect a single block-read on the underlying reader instead of multiple byte-reads")
         {
-            InSequence seq;
+            InSequence const seq;
             MockedReadSerialiser<false> serialiser;
 
             EXPECT_CALL(serialiser.reader(), beginSequence()).WillOnce(Return(std::optional<std::size_t>(expectedValues.size())));
@@ -126,7 +126,7 @@ TEST_CASE("Verify optimized block-read deserialisation of byte sequence containe
 
         THEN("Expect a single block-read on the underlying reader instead of multiple byte-reads")
         {
-            InSequence seq;
+            InSequence const seq;
             MockedReadSerialiser<true> serialiser;
 
             EXPECT_CALL(serialiser.reader(), read(Matcher<std::vector<std::byte>>(_))).WillOnce(Return(expectedValues));

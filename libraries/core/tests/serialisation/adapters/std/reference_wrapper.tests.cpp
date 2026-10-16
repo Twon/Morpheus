@@ -22,7 +22,7 @@ TEST_CASE("Verify serialisation of std::reference_wrapper", "[morpheus.serialisa
 
         THEN("Expect the following sequence of operations on the underlying writer")
         {
-            InSequence seq;
+            InSequence const seq;
             MockedWriteSerialiser serialiser;
             EXPECT_CALL(serialiser.writer(), write(Matcher<std::int64_t>(Eq(expectedValue)))).Times(1);
 
