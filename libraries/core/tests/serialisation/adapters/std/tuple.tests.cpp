@@ -63,13 +63,13 @@ TEST_CASE("Verify deserialisation of std::tuple", "[morpheus.serialisation.tuple
         THEN("Expect the following sequence of operations on the underlying reader")
         {
             MockedReadSerialiser<> serialiser;
-            EXPECT_CALL(serialiser.reader(), beginSequence()).WillOnce(Return(std::optional<std::size_t>(std::tuple_size<ExpectedTuple>::value)));
+            EXPECT_CALL(serialiser.reader(), beginSequence()).WillOnce(Return(std::optional<std::size_t>(std::tuple_size_v<ExpectedTuple>)));
 
             [&]<std::size_t... Index>(std::index_sequence<Index...>)
             {
                 (EXPECT_CALL(serialiser.reader(), read(An<std::tuple_element_t<Index, ExpectedTuple>>())).WillOnce(Return(std::get<Index>(expectedValues))),
                  ...);
-            }(std::make_index_sequence<std::tuple_size<ExpectedTuple>::value>());
+            }(std::make_index_sequence<std::tuple_size_v<ExpectedTuple>>());
 
             EXPECT_CALL(serialiser.reader(), endSequence()).Times(1);
 
