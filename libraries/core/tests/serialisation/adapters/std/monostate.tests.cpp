@@ -23,7 +23,7 @@ TEST_CASE("Verify serialisation of std::monostate", "[morpheus.serialisation.mon
 
         THEN("Expect the following sequence of operations on the underlying writer")
         {
-            InSequence seq;
+            InSequence const seq;
             MockedWriteSerialiser serialiser;
             EXPECT_CALL(serialiser.writer(), beginComposite()).Times(1);
             EXPECT_CALL(serialiser.writer(), endComposite()).Times(1);

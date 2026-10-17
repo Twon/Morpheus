@@ -31,7 +31,7 @@ TEST_CASE("Verify serialisation of std::indirect", "[morpheus.serialisation.indi
 
         THEN("Expect the following sequence of operations on the underlying writer")
         {
-            InSequence seq;
+            InSequence const seq;
             MockedWriteSerialiser serialiser;
             EXPECT_CALL(serialiser.writer(), beginComposite()).Times(1);
             EXPECT_CALL(serialiser.writer(), beginValue("value"sv)).Times(1);
@@ -53,7 +53,7 @@ TEST_CASE("Verify serialisation of std::indirect", "[morpheus.serialisation.indi
 
         THEN("Expect the following sequence of operations on the underlying writer")
         {
-            InSequence seq;
+            InSequence const seq;
             MockedWriteSerialiser serialiser;
 
             WHEN("Serialising the std::indirect")
@@ -73,7 +73,7 @@ TEST_CASE("Verify deserialisation of std::indirect", "[morpheus.serialisation.in
 
         THEN("Expect the following sequence of operations on the underlying writer")
         {
-            InSequence seq;
+            InSequence const seq;
             MockedReadSerialiser<> serialiser;
             EXPECT_CALL(serialiser.reader(), beginComposite()).Times(1);
             EXPECT_CALL(serialiser.reader(), beginValue("value"sv)).Times(1);

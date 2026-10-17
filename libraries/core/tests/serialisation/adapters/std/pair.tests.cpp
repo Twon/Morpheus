@@ -30,7 +30,7 @@ TEST_CASE("Verify serialisation of std::pair", "[morpheus.serialisation.pair.ser
 
         THEN("Expect the following sequence of operations on the underlying writer")
         {
-            InSequence seq;
+            InSequence const seq;
             MockedWriteSerialiser serialiser;
             EXPECT_CALL(serialiser.writer(), beginSequence(std::optional<std::size_t>(2))).Times(1);
             EXPECT_CALL(serialiser.writer(), write(firstValue)).Times(1);

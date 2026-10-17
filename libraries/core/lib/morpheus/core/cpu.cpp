@@ -1,4 +1,5 @@
 #include "morpheus/core/base/architecture.hpp"
+#include "morpheus/core/conformance/ranges.hpp"
 
 #if (MORPHEUS_PLATFORM_ARCHITECTURE == MORPHEUS_TARGET_ARCHITECTURE_X86) || (MORPHEUS_PLATFORM_ARCHITECTURE == MORPHEUS_TARGET_ARCHITECTURE_X64)
 
@@ -71,7 +72,7 @@ auto query_leaf_functions(std::uint32_t const max_leaf)
 {
     CpuidLeafs results(max_leaf);
     std::uint32_t current_leaf = 0;
-    std::generate(results.begin(), results.end(), [&]() { return cpuid(current_leaf++); });
+    conf::ranges::generate(results, [&]() { return cpuid(current_leaf++); });
     return results;
 }
 
