@@ -43,6 +43,9 @@ struct morpheus::conf::scan::scanner<Coordinates> : morpheus::conf::scan::scanne
 namespace morpheus::application::po
 {
 
+namespace
+{
+
 struct Location
 {
     Coordinates coordinates;
@@ -56,6 +59,8 @@ struct Location
         // clang-format on
     }
 };
+
+} // namespace
 
 TEST_CASE_METHOD(LoggingFixture, "Test parsing of scannable as options", "[morpheus.application.po.adapters.scannable]")
 {
