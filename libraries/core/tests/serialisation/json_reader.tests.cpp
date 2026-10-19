@@ -54,6 +54,9 @@ namespace morpheus::serialisation
 namespace test
 {
 
+namespace
+{
+
 template <typename T>
 static T deserialise(std::string_view const value, bool const validate = true)
 {
@@ -75,6 +78,8 @@ static auto readerFromString(std::string_view const value) -> std::pair<JsonRead
 #endif
     return std::make_pair(JsonReader(*iss, false), std::move(iss));
 }
+
+} // namespace
 
 } // namespace test
 

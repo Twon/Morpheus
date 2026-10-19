@@ -16,6 +16,9 @@
 #include <string_view>
 #include <tuple>
 
+namespace
+{
+
 struct Coordinates
 {
     double x = 0.0;
@@ -23,6 +26,8 @@ struct Coordinates
 
     auto operator<=>(Coordinates const&) const = default;
 };
+
+} // namespace
 
 template <>
 struct morpheus::conf::scan::scanner<Coordinates> : morpheus::conf::scan::scanner<std::string>
@@ -66,7 +71,7 @@ TEST_CASE_METHOD(LoggingFixture, "Test parsing of scannable as options", "[morph
 {
     SECTION("Ensure valid value parse correctly")
     {
-        auto getCoordinates = [](std::string_view param)
+        auto const getCoordinates = [](std::string_view param)
         {
             Location location{};
             std::array cliOptions = {"dummyProgram.exe", "--coordinates", param.data()};
