@@ -59,6 +59,7 @@ TEST_CASE("Verify serialisation of std::indirect", "[morpheus.serialisation.indi
             WHEN("Serialising the std::indirect")
             {
                 using Catch::Matchers::ContainsSubstring;
+                // NOLINTNEXTLINE(bugprone-use-after-move,hicpp-invalid-access-moved)
                 REQUIRE_THROWS_WITH(serialiser.serialise(value), ContainsSubstring("valueless after move"));
             }
         }
