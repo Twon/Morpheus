@@ -260,7 +260,7 @@ std::vector<std::byte> JsonReader::readBytes()
     encoded.erase(std::remove(encoded.begin(), encoded.end(), '='), encoded.end());
 
     using namespace boost::archive::iterators;
-    typedef transform_width<binary_from_base64<std::string::const_iterator>, 8, 6> base64_dec;
+    using base64_dec = transform_width<binary_from_base64<std::string::const_iterator>, 8, 6>;
 
     std::vector<std::byte> decoded;
     try

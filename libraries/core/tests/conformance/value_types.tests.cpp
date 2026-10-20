@@ -5,11 +5,20 @@
 namespace morpheus
 {
 
+namespace
+{
+
 class Base
 {
 public:
-    virtual ~Base() {}
-    virtual int getValue() const = 0;
+    Base() = default;
+    Base(Base const&) = default;
+    Base& operator=(Base const&) = default;
+    Base(Base&&) = default;
+    Base& operator=(Base&&) = default;
+
+    virtual ~Base() = default;
+    [[nodiscard]] virtual int getValue() const = 0;
 };
 
 class Derived : public Base
@@ -20,12 +29,14 @@ public:
     explicit Derived(int value_)
         : value(value_)
     {}
-    [[nodiscard]] int getValue() const noexcept { return value; }
+    [[nodiscard]] int getValue() const noexcept override { return value; }
 };
+
+} // namespace
 
 TEST_CASE("Ensure value types are supported and working", "[morpheus.conformance.value_types.indirect]")
 {
-    using namespace conf::vt;
+    using conf::vt::indirect;
 
     indirect value(42);
     REQUIRE(*value == 42);
@@ -33,7 +44,7 @@ TEST_CASE("Ensure value types are supported and working", "[morpheus.conformance
 
 TEST_CASE("Ensure value types are supported and working", "[morpheus.conformance.value_types.polymorphic]")
 {
-    using namespace conf::vt;
+    using conf::vt::polymorphic;
 
     polymorphic<Base> value(std::in_place_type<Derived>, 64);
     REQUIRE(value->getValue() == 64);

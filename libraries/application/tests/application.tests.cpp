@@ -19,7 +19,7 @@ TEST_CASE_METHOD(LoggingFixture, "Ensure application parse common parameters", "
         std::array const cliOptions = {"dummyProgram.exe", "--logging-enabled", "true", "--log-append", "false", "--log-level", "debug", "--logfile-path", "."};
         WHEN("Parsing valid parameters")
         {
-            Application application(static_cast<int>(cliOptions.size()), cliOptions.data());
+            Application const application(static_cast<int>(cliOptions.size()), cliOptions.data());
 
             THEN("Expect no error results and valid values extracted")
             {

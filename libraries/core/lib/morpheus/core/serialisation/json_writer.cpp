@@ -122,7 +122,7 @@ void JsonWriter::write(std::string_view const value)
 void JsonWriter::write(std::span<std::byte const> const value)
 {
     using namespace boost::archive::iterators;
-    typedef base64_from_binary<transform_width<unsigned char const*, 6, 8>> base64_enc;
+    using base64_enc = base64_from_binary<transform_width<unsigned char const*, 6, 8>>;
 
     auto const* const data = reinterpret_cast<unsigned char const*>(value.data());
     std::string encoded(base64_enc(data), base64_enc(data + value.size()));

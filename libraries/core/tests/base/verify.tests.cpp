@@ -26,18 +26,18 @@ TEST_CASE("Ensure assert functionality responds to appropriate defines", "[morph
             });
     };
 
-    auto const onExit = [&]() { setAssertHandler(currentHandler); };
+    auto const onExit = [&] { setAssertHandler(currentHandler); };
     ScopedAction const restoreAssertHandler(onEntry, onExit);
 
     bool haltFired = false;
     auto const currentHaltHandler = getAssertHaltHandler();
-    auto const onHaltEntry = [&] { setAssertHaltHandler([&]() { haltFired = true; }); };
+    auto const onHaltEntry = [&] { setAssertHaltHandler([&] { haltFired = true; }); };
 
-    auto const onHaltExit = [&]() { setAssertHaltHandler(currentHaltHandler); };
+    auto const onHaltExit = [&] { setAssertHaltHandler(currentHaltHandler); };
     ScopedAction const restoreAssertHaltHandler(onHaltEntry, onHaltExit);
 
-    RedirectStream captureOutStream(std::cout);
-    RedirectStream captureErrorStream(std::cerr);
+    RedirectStream const captureOutStream(std::cout);
+    RedirectStream const captureErrorStream(std::cerr);
 
     MORPHEUS_VERIFY(false);
     REQUIRE(fired);
