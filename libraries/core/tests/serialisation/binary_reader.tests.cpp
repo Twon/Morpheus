@@ -36,7 +36,7 @@ TEST_CASE("Binary reader handles error cases gracefully", "[morpheus.serialisati
     SECTION("Serialise via spanstream to test failure condition when the the underling stream runs out of memory while writing but does not throw an exception")
     {
         REQUIRE(testing::deserialiseWithSpanStream<std::int64_t>(testing::makeCharArray(0x64, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00)) == std::int64_t{100});
-        REQUIRE(testing::deserialiseWithSpanStream<std::string>(binarySerialise(string)) == string);
+        REQUIRE(testing::deserialiseWithSpanStream<std::string>(testing::binarySerialise(string)) == string);
         REQUIRE(conf::ranges::equal(testing::deserialiseWithSpanStream<std::vector<std::byte>>(testing::binarySerialise(std::span{bytes})), std::span{bytes}));
 
         REQUIRE_THROWS_AS(testing::deserialiseWithSpanStream<std::int64_t>(testing::makeCharArray(0x64, 0x00, 0x00, 0x00)), BinaryException);
