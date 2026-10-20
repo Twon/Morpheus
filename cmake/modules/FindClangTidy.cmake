@@ -163,7 +163,7 @@ function(enable_clang_tidy)
 
     if(CLANG_TIDY_ARGS_EXCLUDE_HEADER_FILTER)
         _clang_tidy_args_append("--exclude-header-filter=${CLANG_TIDY_ARGS_EXCLUDE_HEADER_FILTER}")
-    endif()        
+    endif()
 
     set(CMAKE_CXX_CLANG_TIDY "${ClangTidy_EXECUTABLE};-p=${CMAKE_BINARY_DIR};${_clang_tidy_args}" PARENT_SCOPE)
 
