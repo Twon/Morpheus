@@ -72,6 +72,7 @@ TEST_CASE("Verify deserialisation of std::optional", "[morpheus.serialisation.op
             {
                 using ExpectedType = std::optional<std::int64_t>;
                 auto const optional = serialiser.deserialise<ExpectedType>();
+                REQUIRE(optional.has_value());
                 REQUIRE(*optional == actualValue);
             }
         }

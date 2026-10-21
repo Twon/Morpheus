@@ -18,7 +18,7 @@ TEST_CASE("Verify serialisation of std::reference_wrapper", "[morpheus.serialisa
     {
         using namespace std::literals::string_view_literals;
         constexpr std::int64_t expectedValue = 10;
-        std::reference_wrapper value{expectedValue};
+        std::reference_wrapper const value{expectedValue};
 
         THEN("Expect the following sequence of operations on the underlying writer")
         {

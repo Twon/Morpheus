@@ -26,7 +26,7 @@ TEST_CASE("Verify serialisation of std::pair", "[morpheus.serialisation.pair.ser
         using namespace std::literals::string_view_literals;
         constexpr auto firstValue = "value"sv;
         constexpr std::int64_t secondValue = 10;
-        std::pair value{firstValue, secondValue};
+        std::pair const value{firstValue, secondValue};
 
         THEN("Expect the following sequence of operations on the underlying writer")
         {

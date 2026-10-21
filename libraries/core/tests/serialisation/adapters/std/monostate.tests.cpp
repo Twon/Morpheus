@@ -19,7 +19,7 @@ TEST_CASE("Verify serialisation of std::monostate", "[morpheus.serialisation.mon
 {
     GIVEN("A std::monostate holding a value")
     {
-        std::monostate value{};
+        std::monostate const value{};
 
         THEN("Expect the following sequence of operations on the underlying writer")
         {
