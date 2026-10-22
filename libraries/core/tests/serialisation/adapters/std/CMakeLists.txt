@@ -9,7 +9,7 @@ target_sources(MorpheusCoreTests
         pair.tests.cpp
         ranges.tests.cpp
         reference_wrapper.tests.cpp
-        source_location.cpp
+        source_location.tests.cpp
         tuple.tests.cpp
         unique_ptr.tests.cpp
         variant.tests.cpp
