@@ -14,12 +14,12 @@ public:
     /*! Queries a short form descriptive name for the category.
         \return Short form name of the category.
      */
-    char const* name() const noexcept override final { return "vulkan_error_category"; }
+    [[nodiscard]] char const* name() const noexcept final { return "vulkan_error_category"; }
 
     /*! Queries an error string describing the error.
         \return The error message.
      */
-    std::string message(int c) const override final
+    std::string message(int c) const final
     {
         switch (static_cast<VkResult>(c))
         {
