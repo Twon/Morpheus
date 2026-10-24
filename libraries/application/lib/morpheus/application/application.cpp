@@ -54,7 +54,7 @@ Application::Application(int argc, char const* const* argv)
           [&]
           {
               po::Config config;
-              if (auto invalid = parseProgramOptions(argc, argv, po::HelpDocumentation{}, config))
+              if (auto const invalid = parseProgramOptions(argc, argv, po::HelpDocumentation{}, config))
               {}
               return config;
           }())

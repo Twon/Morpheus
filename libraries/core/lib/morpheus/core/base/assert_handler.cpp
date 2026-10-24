@@ -28,7 +28,7 @@ AssertHandler gAssertHandler = [](Assertion assertion)
     // LCOV_EXCL_STOP
 };
 
-AssertHaltHandler gAssertHaltHandler = []() { breakpoint(); }; // LCOV_EXCL_LINE
+AssertHaltHandler gAssertHaltHandler = [] { breakpoint(); }; // LCOV_EXCL_LINE
 
 } // namespace
 

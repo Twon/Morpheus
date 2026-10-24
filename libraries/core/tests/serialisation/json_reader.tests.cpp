@@ -54,8 +54,11 @@ namespace morpheus::serialisation
 namespace test
 {
 
+namespace
+{
+
 template <typename T>
-static T deserialise(std::string_view const value, bool const validate = true)
+T deserialise(std::string_view const value, bool const validate = true)
 {
 #if (__cpp_lib_sstream_from_string_view >= 202306L)
     std::istringstream iss(value);
@@ -66,7 +69,7 @@ static T deserialise(std::string_view const value, bool const validate = true)
     return serialiser.template deserialise<T>();
 }
 
-static auto readerFromString(std::string_view const value) -> std::pair<JsonReader, std::unique_ptr<std::istream>>
+auto readerFromString(std::string_view const value) -> std::pair<JsonReader, std::unique_ptr<std::istream>>
 {
 #if (__cpp_lib_sstream_from_string_view >= 202306L)
     std::unique_ptr<std::istream> iss = std::make_unique<std::istringstream>(value);
@@ -75,6 +78,8 @@ static auto readerFromString(std::string_view const value) -> std::pair<JsonRead
 #endif
     return std::make_pair(JsonReader(*iss, false), std::move(iss));
 }
+
+} // namespace
 
 } // namespace test
 
@@ -215,7 +220,7 @@ TEST_CASE("Json reader can read manual composites", "[morpheus.serialisation.jso
 {
     GIVEN("A Json stream")
     {
-        std::string_view str(R"({"key":"value"})");
+        std::string_view const str(R"({"key":"value"})");
 
         WHEN("Read a composite of key pair from the stream")
         {
@@ -233,7 +238,7 @@ TEST_CASE("Json reader can read manual composites", "[morpheus.serialisation.jso
     }
     GIVEN("A Json stream")
     {
-        std::string_view str(R"({"x":null})");
+        std::string_view const str(R"({"x":null})");
 
         WHEN("Read a composite of key to null pair from the stream")
         {
@@ -349,6 +354,9 @@ TEMPLATE_TEST_CASE("Json reader can read multiple integer types using the Hex ad
     }
 }
 
+namespace
+{
+
 struct PointComposite
 {
     int x;
@@ -390,11 +398,13 @@ struct BlobComposite
     }
 };
 
+} // namespace
+
 TEST_CASE("Json reader can read composite types containing byte buffers", "[morpheus.serialisation.json_reader.composite_buffers]")
 {
     GIVEN("A composite type with a byte vector")
     {
-        auto const json = R"({"id":1,"data":"ChQe","name":"blob"})";
+        auto const* const json = R"({"id":1,"data":"ChQe","name":"blob"})";
         auto const composite = test::deserialise<BlobComposite>(json);
 
         THEN("Expect all fields to be correctly deserialised")
@@ -427,6 +437,9 @@ TEST_CASE("Json reader can read composite types containing byte buffers", "[morp
 //     }
 // }
 
+namespace
+{
+
 struct SimpleComposite
 {
     int first = 0;
@@ -457,42 +470,59 @@ struct ComplexComposite
     }
 };
 
+} // namespace
+
 TEST_CASE("Json reader can read simple composite types from underlying test representation", "[morpheus.serialisation.json_reader.composite.legacy]")
 {
     GIVEN("A Json reader")
     {
-        auto const simple = test::deserialise<SimpleComposite>(R"({"first":100,"second":true,"third":50,"forth":"example"})");
+        auto const firstValue = 100;
+        auto const secondValue = true;
+        auto const thirdValue = 50.0f;
+        auto const* const forthValue = "example";
+        auto const jsonText = conf::fmt::format(R"({{"first":{},"second":{},"third":{},"forth":"{}"}})", firstValue, secondValue, thirdValue, forthValue);
+        auto const simple = test::deserialise<SimpleComposite>(jsonText);
         STATIC_REQUIRE(concepts::ReadSerialisableInsrusive<SimpleComposite>);
 
         WHEN("Writing an empty composite")
         {
             THEN("Expect an empty composite in the json document")
             {
-                REQUIRE(simple.first == 100);
-                REQUIRE(simple.second == true);
-                REQUIRE(simple.third == 50.0);
-                REQUIRE(simple.forth == "example");
+                REQUIRE(simple.first == firstValue);
+                REQUIRE(simple.second == secondValue);
+                REQUIRE(simple.third == thirdValue);
+                REQUIRE(simple.forth == forthValue);
             }
         }
     }
     GIVEN("A Json reader")
     {
-        auto const complex = test::deserialise<ComplexComposite>(R"({"first":{"first":100,"second":true,"third":50,"forth":"example"},"second":3.14})");
+        auto const firstValue = 100;
+        auto const secondValue = true;
+        auto const thirdValue = 50.0f;
+        auto const* const forthValue = "example";
+        auto const complexSecond = 3.14f;
+        auto const jsonText = conf::fmt::format(
+            R"({{"first":{{"first":{},"second":{},"third":{},"forth":"{}"}},"second":{}}})", firstValue, secondValue, thirdValue, forthValue, complexSecond);
+        auto const complex = test::deserialise<ComplexComposite>(jsonText);
         STATIC_REQUIRE(concepts::ReadSerialisableInsrusive<ComplexComposite>);
 
         WHEN("Writing an empty composite")
         {
             THEN("Expect an empty composite in the json document")
             {
-                REQUIRE(complex.first.first == 100);
-                REQUIRE(complex.first.second == true);
-                REQUIRE(complex.first.third == 50.0);
-                REQUIRE(complex.first.forth == "example");
-                REQUIRE(complex.second == Approx(3.14));
+                REQUIRE(complex.first.first == firstValue);
+                REQUIRE(complex.first.second == secondValue);
+                REQUIRE(complex.first.third == thirdValue);
+                REQUIRE(complex.first.forth == forthValue);
+                REQUIRE(complex.second == Approx(complexSecond));
             }
         }
     }
 }
+
+namespace
+{
 
 template <typename T>
 struct ContainsType
@@ -506,6 +536,8 @@ struct ContainsType
     }
 };
 
+} // namespace
+
 TEST_CASE("Json reader handles missing fields gracefully", "[morpheus.serialisation.json_reader.error_handling]")
 {
     GIVEN("A test type for validating serialition of specific types")
@@ -513,11 +545,12 @@ TEST_CASE("Json reader handles missing fields gracefully", "[morpheus.serialisat
         using IntegralType = ContainsType<std::int32_t>;
         WHEN("Deserialising from Json with a string where a integer is expected")
         {
-            auto const jsonText = R"({"value":100})";
+            auto const value = 100;
+            auto const jsonText = conf::fmt::format(R"({{"value":{}}})", value);
             THEN("Ensure serialisation works with valid input")
             {
                 using Catch::Matchers::ContainsSubstring;
-                REQUIRE(test::deserialise<IntegralType>(jsonText, false).value == 100);
+                REQUIRE(test::deserialise<IntegralType>(jsonText, false).value == value);
             }
         }
     }
@@ -526,7 +559,7 @@ TEST_CASE("Json reader handles missing fields gracefully", "[morpheus.serialisat
         using IntegralType = ContainsType<std::int32_t>;
         WHEN("Deserialising from Json with a string where a integer is expected")
         {
-            auto const jsonText = R"({"value":"InvalidValue"})";
+            auto const* const jsonText = R"({"value":"InvalidValue"})";
             THEN("Expect an exception to be thrown on error to convert a string to a integer")
             {
                 using Catch::Matchers::ContainsSubstring;
@@ -539,7 +572,7 @@ TEST_CASE("Json reader handles missing fields gracefully", "[morpheus.serialisat
         using FloatType = ContainsType<float>;
         WHEN("Deserialising from Json with a string where a float is expected")
         {
-            auto const jsonText = R"({"value":"InvalidValue"})";
+            auto const* const jsonText = R"({"value":"InvalidValue"})";
             THEN("Expect an exception to be thrown on error to convert a string to a float")
             {
                 using Catch::Matchers::ContainsSubstring;
@@ -556,7 +589,7 @@ TEST_CASE("Json reader throws an error on invalid json input", "[morpheus.serial
         using IntegralType = ContainsType<std::int32_t>;
         WHEN("Deserialising from invalid Json")
         {
-            auto const jsonText = R"({"value" @ "AtSymbolIsNotAValidSeperator"})";
+            auto const* const jsonText = R"({"value" @ "AtSymbolIsNotAValidSeperator"})";
             THEN("Expect an exception to be thrown on error to convert a string to a integer")
             {
                 using Catch::Matchers::ContainsSubstring;
@@ -621,7 +654,7 @@ TEST_CASE("Error handling test cases for unexpected errors in the input Json str
         using IntegralType = ContainsType<std::int32_t>;
         WHEN("Deserialising from Json with an invalid type for the key (i.e. an integer not a string)")
         {
-            auto const jsonText = R"({100:100})";
+            auto const* const jsonText = R"({100:100})";
             THEN("Ensure serialisation captures the error in key type")
             {
                 using Catch::Matchers::ContainsSubstring;
@@ -634,7 +667,7 @@ TEST_CASE("Error handling test cases for unexpected errors in the input Json str
         using IntegralType = ContainsType<std::int32_t>;
         WHEN("Deserialising from Json with an invalid key")
         {
-            auto const jsonText = R"({"incorrect_key":100})";
+            auto const* const jsonText = R"({"incorrect_key":100})";
             THEN("Ensure serialisation captures the error in key type")
             {
                 using Catch::Matchers::ContainsSubstring;

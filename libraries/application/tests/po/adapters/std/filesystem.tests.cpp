@@ -36,7 +36,7 @@ TEST_CASE_METHOD(LoggingFixture, "Test parsing of std filesystem path as options
 {
     SECTION("Ensure valid value parse correctly")
     {
-        auto getPath = [](std::string_view param)
+        auto const getPath = [](std::string_view param)
         {
             Filesystem filesystem{};
             std::array cliOptions = {"dummyProgram.exe", "--path", param.data()};

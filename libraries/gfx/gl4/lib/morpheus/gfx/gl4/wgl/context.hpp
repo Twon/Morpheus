@@ -23,7 +23,7 @@ public:
     /// \param window The window to create the OpenGL context for.
     /// \param pfd The pixel format descriptor to use for the OpenGL context.
     /// \return Returns an expected containing the new OpenGL context or an error message.
-    static Expected create(HWND const window, PIXELFORMATDESCRIPTOR const& pfd);
+    static auto create(HWND const window, PIXELFORMATDESCRIPTOR const& pfd) -> Expected;
 
     /// Context initialised from the global default.
     Context();
@@ -34,8 +34,8 @@ public:
     Context(Context&&) = default;
     Context& operator=(Context&&) = default;
 
-    Expected enable();
-    void disable();
+    auto enable() -> Expected;
+    auto disable() -> void;
 
     /// Gets the current OpenGL device context handle.
     auto getDC() const noexcept { return mDeviceContext.get(); }

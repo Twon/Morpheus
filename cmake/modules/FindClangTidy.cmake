@@ -24,8 +24,24 @@ option(CLANG_TIDY_ENABLE "Build with support for Include What You Use" OFF)
 
 set(ClangTidy_VERBOSITY_LEVEL 3 CACHE STRING "Clang Tidy verbosity level (the higher the level, the more output)")
 
+set(LLVM_HINTS)
+
+if(APPLE)
+    execute_process(
+        COMMAND brew --prefix llvm
+        OUTPUT_VARIABLE LLVM_PREFIX
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+        ERROR_QUIET
+    )
+
+    if(LLVM_PREFIX)
+        list(APPEND LLVM_HINTS "${LLVM_PREFIX}/bin")
+    endif()
+endif()
+
 find_program(ClangTidy_EXECUTABLE
     NAMES clang-tidy
+    HINTS ${LLVM_HINTS}
 )
 
 macro(_clang_tidy_log)
@@ -125,7 +141,7 @@ built in support.
 #]=======================================================================]
 function(enable_clang_tidy)
     set(options QUIET)
-    set(oneValueArgs CONFIG_FILE)
+    set(oneValueArgs CONFIG_FILE HEADER_FILTER EXCLUDE_HEADER_FILTER)
     set(multiValueArgs KEEP)
     cmake_parse_arguments(CLANG_TIDY_ARGS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
@@ -141,6 +157,14 @@ function(enable_clang_tidy)
         _clang_tidy_args_append("--config-file=${CLANG_TIDY_ARGS_CONFIG_FILE}")
     endif()
 
+    if(CLANG_TIDY_ARGS_HEADER_FILTER)
+        _clang_tidy_args_append("--header-filter=${CLANG_TIDY_ARGS_HEADER_FILTER}")
+    endif()
+
+    if(CLANG_TIDY_ARGS_EXCLUDE_HEADER_FILTER)
+        _clang_tidy_args_append("--exclude-header-filter=${CLANG_TIDY_ARGS_EXCLUDE_HEADER_FILTER}")
+    endif()
+
     set(CMAKE_CXX_CLANG_TIDY "${ClangTidy_EXECUTABLE};-p=${CMAKE_BINARY_DIR};${_clang_tidy_args}" PARENT_SCOPE)
 
     _clang_tidy_log("  Arguments: ${_clang_tidy_args}")
@@ -150,5 +174,6 @@ endfunction()
 if (CLANG_TIDY_ENABLE)
     enable_clang_tidy(
         CONFIG_FILE ${PROJECT_SOURCE_DIR}/.clang-tidy
+        EXCLUDE_HEADER_FILTER ".*/.conan2/.*"
     )
 endif()

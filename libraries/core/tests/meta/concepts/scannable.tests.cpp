@@ -6,11 +6,16 @@
 
 #include <tuple>
 
+namespace
+{
+
 struct ScannableType
 {
     int first = 0;
     double second = 0.0;
 };
+
+} // namespace
 
 template <>
 struct morpheus::conf::scan::scanner<ScannableType> : morpheus::conf::scan::scanner<std::string>

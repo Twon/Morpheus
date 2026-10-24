@@ -45,7 +45,7 @@ TEST_CASE_METHOD(LoggingFixture, "Test parsing of WindowConfig options", "[morph
 TEST_CASE_METHOD(LoggingFixture, "Test construction of a render window via a config", "[morpheus.gfx.window_config.add_options]")
 {
     WindowConfig config;
-    RenderWindow window(config);
+    RenderWindow const window(config);
 
     REQUIRE(window.name() == "MorpheusWindow");
     REQUIRE(window.width() == 800);

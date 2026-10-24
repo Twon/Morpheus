@@ -32,7 +32,7 @@ TEST_CASE("Verify construction of function_ref", "[morpheus.functional.function_
     {
         WHEN("Constructing a function reference to the function")
         {
-            conf::fr::function_ref<void()> functionView = testFunction;
+            conf::fr::function_ref<void()> const functionView = testFunction;
             THEN("Expect the function to be invocable by the function ref")
             {
                 functionView();
@@ -50,7 +50,7 @@ TEST_CASE("Verify construction of function_ref", "[morpheus.functional.function_
         WHEN("Constructing a function reference to the function")
         {
             TestForInvocable instance;
-            conf::fr::function_ref<void(int, int)> functionView = {conf::fr::nontype<&TestForInvocable::function>, instance};
+            conf::fr::function_ref<void(int, int)> const functionView = {conf::fr::nontype<&TestForInvocable::function>, instance};
             THEN("Expect the function to be invocable by the function ref")
             {
                 functionView(0, 1);

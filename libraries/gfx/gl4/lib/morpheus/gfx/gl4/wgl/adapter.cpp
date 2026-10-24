@@ -50,7 +50,7 @@ auto vendorFromDeviceId(std::string_view const deviceId)
     return *vendor;
 }
 
-std::string_view glGetStringView(GLenum name)
+auto glGetStringView(GLenum name) -> std::string_view
 {
     GLubyte const* str = glGetString(name);
     return str ? std::string_view(reinterpret_cast<char const*>(str)) : std::string_view{};
@@ -63,7 +63,7 @@ LRESULT CALLBACK dummyWndProc(HWND hwnd, UINT umsg, WPARAM wp, LPARAM lp)
     return DefWindowProc(hwnd, umsg, wp, lp);
 }
 
-concurrency::Generator<Adapter> enumerateAdapters()
+auto enumerateAdapters() -> concurrency::Generator<Adapter>
 {
     auto displayDevice = DISPLAY_DEVICE{.cb = sizeof(DISPLAY_DEVICE)};
 
