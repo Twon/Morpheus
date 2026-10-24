@@ -19,7 +19,7 @@ public:
     /*! Queries an error string describing the error.
         \return The error message.
      */
-    [nodiscard]] std::string message(int c) const final
+    [[nodiscard]] std::string message(int c) const final
     {
         switch (static_cast<VkResult>(c))
         {
