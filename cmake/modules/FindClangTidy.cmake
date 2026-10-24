@@ -36,7 +36,7 @@ if(APPLE)
 
     if(LLVM_PREFIX)
         list(APPEND LLVM_HINTS "${LLVM_PREFIX}/bin")
-    endif() 
+    endif()
 endif()
 
 find_program(ClangTidy_EXECUTABLE
@@ -176,9 +176,9 @@ function(enable_clang_tidy)
 
         _clang_tidy_args_append("--extra-arg-before=-nostdinc++")
         _clang_tidy_args_append("--extra-arg-before=-isystem")
-        _clang_tidy_args_append("--extra-arg-before=${MACOS_SDK_PATH}/usr/include/c++/v1")    
+        _clang_tidy_args_append("--extra-arg-before=${MACOS_SDK_PATH}/usr/include/c++/v1")
     endif()
-    
+
     set(CMAKE_CXX_CLANG_TIDY "${ClangTidy_EXECUTABLE};-p=${CMAKE_BINARY_DIR};${_clang_tidy_args}" PARENT_SCOPE)
 
     _clang_tidy_log("  Arguments: ${_clang_tidy_args}")
