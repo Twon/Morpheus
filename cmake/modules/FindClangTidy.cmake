@@ -36,7 +36,7 @@ if(APPLE)
 
     if(LLVM_PREFIX)
         list(APPEND LLVM_HINTS "${LLVM_PREFIX}/bin")
-    endif()
+    endif() 
 endif()
 
 find_program(ClangTidy_EXECUTABLE
@@ -165,6 +165,20 @@ function(enable_clang_tidy)
         _clang_tidy_args_append("--exclude-header-filter=${CLANG_TIDY_ARGS_EXCLUDE_HEADER_FILTER}")
     endif()
 
+    if(APPLE)
+        # Ensure if clang-tidy comes from llvm then we ensure the STL used is from apple-clang
+        execute_process(
+            COMMAND xcrun --sdk macosx --show-sdk-path
+            OUTPUT_VARIABLE MACOS_SDK_PATH
+            OUTPUT_STRIP_TRAILING_WHITESPACE
+            COMMAND_ERROR_IS_FATAL ANY
+        )
+
+        _clang_tidy_args_append("--extra-arg-before=-nostdinc++")
+        _clang_tidy_args_append("--extra-arg-before=-isystem")
+        _clang_tidy_args_append("--extra-arg-before=${MACOS_SDK_PATH}/usr/include/c++/v1")    
+    endif()
+    
     set(CMAKE_CXX_CLANG_TIDY "${ClangTidy_EXECUTABLE};-p=${CMAKE_BINARY_DIR};${_clang_tidy_args}" PARENT_SCOPE)
 
     _clang_tidy_log("  Arguments: ${_clang_tidy_args}")
@@ -174,6 +188,6 @@ endfunction()
 if (CLANG_TIDY_ENABLE)
     enable_clang_tidy(
         CONFIG_FILE ${PROJECT_SOURCE_DIR}/.clang-tidy
-        EXCLUDE_HEADER_FILTER ".*/.conan2/.*"
+        #EXCLUDE_HEADER_FILTER ".*/.conan2/.*"
     )
 endif()
