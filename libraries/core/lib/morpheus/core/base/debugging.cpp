@@ -18,7 +18,7 @@ void breakpoint() noexcept
 #endif
 }
 
-void breakpoint_if_debugging() noexcept
+auto breakpoint_if_debugging() noexcept -> void
 {
     if (is_debugger_present())
     {
@@ -26,12 +26,12 @@ void breakpoint_if_debugging() noexcept
     }
 }
 
-bool is_debugger_present() noexcept
+auto is_debugger_present() noexcept -> bool
 {
     return boost::debug::under_debugger(); // LCOV_EXCL_LINE
 }
 
-void debugPrint(std::string_view const message)
+auto debugPrint(std::string_view const message) -> void
 {
     std::cerr << message;
 #if (MORPHEUS_BUILD_PLATFORM == MORPHEUS_TARGET_PLATFORM_PC_WINDOWS)
