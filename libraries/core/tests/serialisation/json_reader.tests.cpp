@@ -58,7 +58,7 @@ namespace
 {
 
 template <typename T>
-static T deserialise(std::string_view const value, bool const validate = true)
+T deserialise(std::string_view const value, bool const validate = true)
 {
 #if (__cpp_lib_sstream_from_string_view >= 202306L)
     std::istringstream iss(value);
@@ -69,7 +69,7 @@ static T deserialise(std::string_view const value, bool const validate = true)
     return serialiser.template deserialise<T>();
 }
 
-static auto readerFromString(std::string_view const value) -> std::pair<JsonReader, std::unique_ptr<std::istream>>
+auto readerFromString(std::string_view const value) -> std::pair<JsonReader, std::unique_ptr<std::istream>>
 {
 #if (__cpp_lib_sstream_from_string_view >= 202306L)
     std::unique_ptr<std::istream> iss = std::make_unique<std::istringstream>(value);

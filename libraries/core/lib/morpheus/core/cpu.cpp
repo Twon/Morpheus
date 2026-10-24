@@ -82,7 +82,7 @@ auto query_extended_leaf_functions(std::uint32_t const max_extended_leaf)
 {
     CpuidLeafs results(extended_leaf_range_mask & max_extended_leaf);
     std::uint32_t current_leaf = 0;
-    std::generate(results.begin(), results.end(), [&]() { return cpuid(extended_leaf_range_start | current_leaf++); });
+    conf::ranges::generate(results, [&]() { return cpuid(extended_leaf_range_start | current_leaf++); });
     return results;
 }
 
