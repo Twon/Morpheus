@@ -5,7 +5,7 @@ namespace morpheus::gfx::d3d12
 
 //---------------------------------------------------------------------------------------------------------------------
 
-DXGI_FORMAT types::map(pixel_format const format)
+DXGI_FORMAT types::map(PixelFormat const format)
 {
     switch (format)
     {
@@ -48,7 +48,7 @@ DXGI_FORMAT types::map(pixel_format const format)
 
 //---------------------------------------------------------------------------------------------------------------------
 
-pixel_format types::map(const DXGI_FORMAT format)
+PixelFormat types::map(DXGI_FORMAT const format)
 {
     switch (format)
     {
