@@ -29,7 +29,7 @@ class RenderWindow::Impl
     [[nodiscard]] bool shouldClose() const noexcept { return mShouldClose; }
 
   private:
-    /// All window resoures on MacOS must be create on the main thread, this
+    /// All window resources on MacOS must be create on the main thread, this
     /// throw an exception if this is not the case.§
     auto throwExceptionIfNotMainThread() -> void;
 

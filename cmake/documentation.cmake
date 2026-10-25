@@ -140,7 +140,7 @@ if(MORPHEUS_BUILD_DOCUMENTATION)
         INPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/examples
         INPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/libraries
         OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/documentation
-        EXCLUDE_FILES 
+        EXCLUDE_FILES
             ${PROJECT_SOURCE_DIR}/libraries/gfx/platform/src/morpheus/gfx/platform/macos/application_delegate.h
             ${PROJECT_SOURCE_DIR}/libraries/gfx/platform/src/morpheus/gfx/platform/macos/window_delegate.h
     )
