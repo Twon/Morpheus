@@ -28,23 +28,23 @@ namespace morpheus
 ///     - https://github.com/scottt/debugbreak
 ///     - https://stackoverflow.com/questions/4326414/set-breakpoint-in-c-or-c-code-programmatically-for-gdb-on-linux
 ///     - https://github.com/bruxisma/breakpoint
-MORPHEUSCORE_EXPORT void breakpoint() noexcept;
+MORPHEUSCORE_EXPORT auto breakpoint() noexcept -> void;
 
 /// Inserts a breakpoint into the code when the process is under a debugger.
 /// \note
 ///     Models std::breakpoint_if_debugging as per:
 ///     - https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2022/p2546r1.html
-MORPHEUSCORE_EXPORT void breakpoint_if_debugging() noexcept;
+MORPHEUSCORE_EXPORT auto breakpoint_if_debugging() noexcept -> void;
 
 /// Detects if a process is debugging the process.
 /// \note
 ///     Models std::is_debugger_present as per:
 ///     - https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2022/p2546r1.html
-MORPHEUSCORE_EXPORT bool is_debugger_present() noexcept;
+MORPHEUSCORE_EXPORT auto is_debugger_present() noexcept -> bool;
 
 /// Prints debug messages to any approptiate error channels.
 /// \param[in] message
 ///     The error message to display.
-MORPHEUSCORE_EXPORT void debugPrint(std::string_view const message);
+MORPHEUSCORE_EXPORT auto debugPrint(std::string_view const message) -> void;
 
 } // namespace morpheus

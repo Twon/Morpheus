@@ -14,6 +14,6 @@ namespace morpheus::gfx::gl4::wgl
 ///
 using Adapter = gfx::Adapter<std::string>;
 
-concurrency::Generator<Adapter> enumerateAdapters();
+auto enumerateAdapters() -> concurrency::Generator<Adapter>;
 
 } // namespace morpheus::gfx::gl4::wgl

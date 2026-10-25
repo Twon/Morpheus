@@ -30,7 +30,7 @@ TEST_CASE("Verify serialisation of std::chrono::duration", "[morpheus.serialisat
 
         THEN("Expect the following sequence of operations on the underlying writer")
         {
-            InSequence seq;
+            InSequence const seq;
             MockedWriteSerialiser serialiser;
             EXPECT_CALL(serialiser.writer(), isTextual()).WillOnce(Return(true));
             EXPECT_CALL(serialiser.writer(), write(Matcher<std::string_view>(Eq("7d")))).Times(1);
@@ -47,7 +47,7 @@ TEST_CASE("Verify serialisation of std::chrono::duration", "[morpheus.serialisat
 
         THEN("Expect the following sequence of operations on the underlying writer")
         {
-            InSequence seq;
+            InSequence const seq;
             MockedWriteSerialiser serialiser;
             EXPECT_CALL(serialiser.writer(), isTextual()).WillOnce(Return(false));
 #if (MORPHEUS_IS_CLANG_COMPILER)
@@ -73,7 +73,7 @@ TEST_CASE("Verify deserialisation of std::chrono::duration", "[morpheus.serialis
 
         THEN("Expect the following sequence of operations on the underlying writer")
         {
-            InSequence seq;
+            InSequence const seq;
             MockedReadSerialiser<true> serialiser;
             EXPECT_CALL(serialiser.reader(), read(An<std::string>())).WillOnce(Return("7d"));
 
@@ -90,7 +90,7 @@ TEST_CASE("Verify deserialisation of std::chrono::duration", "[morpheus.serialis
 
         THEN("Expect the following sequence of operations on the underlying writer")
         {
-            InSequence seq;
+            InSequence const seq;
             MockedReadSerialiser<false> serialiser;
             EXPECT_CALL(serialiser.reader(), read(An<std::chrono::days::rep>())).WillOnce(Return(actualValue.count()));
 

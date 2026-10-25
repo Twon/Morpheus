@@ -3,7 +3,7 @@
 namespace morpheus::gfx::metal
 {
 
-class Adapter::Implementation
+struct Adapter::Implementation
 {
     //    implementation() = default;
 };

@@ -9,7 +9,8 @@
 namespace morpheus
 {
 
-void breakpoint() noexcept
+// LCOV_EXCL_START
+auto breakpoint() noexcept -> void
 {
 #if defined(MORPHEUS_DEBUG_ENABLED)
     boost::debug::debugger_break();
@@ -18,7 +19,7 @@ void breakpoint() noexcept
 #endif
 }
 
-void breakpoint_if_debugging() noexcept
+auto breakpoint_if_debugging() noexcept -> void
 {
     if (is_debugger_present())
     {
@@ -26,17 +27,18 @@ void breakpoint_if_debugging() noexcept
     }
 }
 
-bool is_debugger_present() noexcept
+auto is_debugger_present() noexcept -> bool
 {
-    return boost::debug::under_debugger(); // LCOV_EXCL_LINE
+    return boost::debug::under_debugger();
 }
 
-void debugPrint(std::string_view const message)
+auto debugPrint(std::string_view const message) -> void
 {
     std::cerr << message;
 #if (MORPHEUS_BUILD_PLATFORM == MORPHEUS_TARGET_PLATFORM_PC_WINDOWS)
     OutputDebugString(message.data());
 #endif
 }
+// LCOV_EXCL_STOP
 
 } // namespace morpheus

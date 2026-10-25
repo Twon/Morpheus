@@ -32,13 +32,17 @@ using namespace Catch;
 
 namespace morpheus::serialisation
 {
-using namespace testing;
+
+namespace
+{
 
 template <typename T>
 T jsonRoundtrip(T const& value)
 {
     return testing::roundtrip<JsonWriteSerialiser, JsonReadSerialiser>(value);
 }
+
+} // namespace
 
 TEST_CASE("Json serialisation can roundtrip standard library types to binary and back", "[morpheus.serialisation.json.roundtrip.adapters.std]")
 {

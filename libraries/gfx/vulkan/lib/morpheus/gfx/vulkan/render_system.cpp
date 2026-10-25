@@ -23,10 +23,10 @@ RenderSystem::RenderSystem(std::string_view const appName, std::string_view cons
           [&]
           {
               // initialize the vk::ApplicationInfo structure
-              vk::ApplicationInfo applicationInfo(appName.data(), 1, engineName.data(), 1, VK_API_VERSION_1_1);
+              vk::ApplicationInfo const applicationInfo(appName.data(), 1, engineName.data(), 1, VK_API_VERSION_1_1);
 
               // initialize the vk::InstanceCreateInfo
-              vk::InstanceCreateInfo instanceCreateInfo({}, &applicationInfo);
+              vk::InstanceCreateInfo const instanceCreateInfo({}, &applicationInfo);
 
               // create an Instance
               return vk::raii::Instance(mContext, instanceCreateInfo);

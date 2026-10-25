@@ -29,11 +29,11 @@ TEST_CASE("Ensure assert functionality works and is hooked into by the test fram
             });
     };
 
-    auto const onExit = [&]() { setAssertHandler(currentHandler); };
+    auto const onExit = [&] { setAssertHandler(currentHandler); };
     ScopedAction const restoreAssertHandler(onEntry, onExit);
 
-    RedirectStream captureOutStream(std::cout);
-    RedirectStream captureErrorStream(std::cerr);
+    RedirectStream const captureOutStream(std::cout);
+    RedirectStream const captureErrorStream(std::cerr);
 
     MORPHEUS_ASSERT(false);
     REQUIRE(fired);

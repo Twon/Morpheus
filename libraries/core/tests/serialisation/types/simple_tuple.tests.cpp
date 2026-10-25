@@ -47,7 +47,7 @@ TEST_CASE("Simple tuple can be round trips to binary and back again", "[morpheus
     auto const value = std::vector<testing::SimpleTuple>{
         {1, true,       {std::byte{1}, std::byte{2}, std::byte{3}}},
         {2, true,    {std::byte{10}, std::byte{20}, std::byte{30}}},
-        {3, true, {std::byte{100}, std::byte{200}, std::byte{255}}}
+        {3, true, {std::byte{100}, std::byte{200}, std::byte{255}}},
     };
     REQUIRE(testing::roundtrip<BinaryWriteSerialiser, BinaryReadSerialiser>(value) == value);
     // REQUIRE(testing::roundtrip<JsonWriteSerialiser, JsonReadSerialiser>(value) == value);

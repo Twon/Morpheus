@@ -7,8 +7,15 @@ namespace morpheus
 
 TEST_CASE("Ensure date library is supported and working", "[morpheus.conformance.date]")
 {
-    using namespace std::chrono_literals;
-    using namespace conf::date;
+    using conf::date::day;
+    using conf::date::days;
+    using conf::date::locate_zone;
+    using conf::date::month;
+    using conf::date::months;
+    using conf::date::weeks;
+    using conf::date::year;
+    using conf::date::year_month_day;
+    using conf::date::years;
 
     // Ensure time zones work
     REQUIRE(conf::date::locate_zone("Europe/London"));

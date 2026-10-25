@@ -8,12 +8,17 @@
 namespace morpheus
 {
 
+namespace
+{
+
 enum class TrafficLights : std::int32_t
 {
     Red,
     Yellow,
     Green,
 };
+
+} // namespace
 
 TEST_CASE("Ensure magic enum integrates with the Morpheus framework", "[morpheus.enum.name]")
 {

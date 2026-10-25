@@ -46,12 +46,11 @@ struct Person
 
 auto captureOutput(conf::ranges::contiguous_range auto const& cliOptions, HelpDocumentation msgDetails, CustomProgramOptions auto&... options)
 {
-    RedirectStream captureStream(std::cout);
+    RedirectStream const captureStream(std::cout);
     auto const result = parseProgramOptions(static_cast<int>(conf::ranges::size(cliOptions)), conf::ranges::data(cliOptions), msgDetails, options...);
     REQUIRE(result);
-    auto const output = captureStream.getOutput();
 
-    auto const findOption = [stdOut = std::move(output)](std::string const optionText)
+    auto const findOption = [stdOut = captureStream.getOutput()](std::string const optionText)
     {
         auto linesView = stdOut | conf::ranges::views::split('\n') |
                          conf::ranges::views::transform([](auto&& rng) { return std::string_view(&*rng.begin(), conf::ranges::distance(rng)); });
@@ -98,7 +97,7 @@ TEST_CASE_METHOD(LoggingFixture, "Ensure options parsing of native types works",
         WHEN("Requesting the help text is displayed")
         {
             std::array const cliOptions = {"dummyProgram.exe", "-h"};
-            auto findOption = captureOutput(cliOptions, HelpDocumentation{}, person);
+            auto const findOption = captureOutput(cliOptions, HelpDocumentation{}, person);
             THEN("Expect output to be successfully prints to screen")
             {
                 REQUIRE(findOption("--help"));
@@ -114,7 +113,7 @@ TEST_CASE_METHOD(LoggingFixture, "Ensure options parsing of native types works",
             std::array const cliOptions = {"dummyProgram.exe", "-h"};
             HelpDocumentation helpWithVersion;
             helpWithVersion.version = Version{1, 0, 0};
-            auto findOption = captureOutput(cliOptions, helpWithVersion, person);
+            auto const findOption = captureOutput(cliOptions, helpWithVersion, person);
             THEN("Expect output to be successfully prints to screen with version option")
             {
                 REQUIRE(findOption("--help"));
@@ -144,7 +143,7 @@ TEST_CASE_METHOD(LoggingFixture, "Ensure options parsing of native types works",
                 }
             } extra;
 
-            auto findOption = captureOutput(cliOptions, HelpDocumentation{}, person, extra);
+            auto const findOption = captureOutput(cliOptions, HelpDocumentation{}, person, extra);
 
             THEN("Expect output to be successfully prints to screen with extra parameter")
             {

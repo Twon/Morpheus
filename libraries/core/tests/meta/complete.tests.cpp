@@ -6,6 +6,9 @@
 namespace morpheus::meta
 {
 
+namespace
+{
+
 class IncompleteType;
 
 class CompleteEmptyType
@@ -15,6 +18,8 @@ struct CompleteType
 {
     int member = 0;
 };
+
+} // namespace
 
 TEST_CASE("Meta is complete allows the compile time detection of complete types", "[morpheus.meta.is_complete]")
 {
