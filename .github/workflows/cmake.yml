@@ -168,7 +168,7 @@ jobs:
             }
           - {
               name: "MacOS Apple Clang 15",
-              os: macos-14,
+              os: macos-15,
               compiler:
                 {
                   type: APPLE_CLANG,
@@ -182,7 +182,7 @@ jobs:
             }
           - {
               name: "MacOS Apple Clang 16",
-              os: macos-14,
+              os: macos-15,
               compiler:
                 {
                   type: APPLE_CLANG,
