@@ -79,7 +79,7 @@ jobs:
             }
           - {
               name: "Ubuntu Clang-17 + libc++",
-              os: ubuntu-latest,
+              os: ubuntu-24.04,
               compiler:
                 {
                   type: CLANG,
@@ -93,7 +93,7 @@ jobs:
             }
           - {
               name: "Ubuntu Clang-18 + libc++",
-              os: ubuntu-latest,
+              os: ubuntu-24.04,
               compiler:
                 {
                   type: CLANG,
@@ -107,7 +107,7 @@ jobs:
             }
           - {
               name: "Ubuntu Clang-19 + libc++",
-              os: ubuntu-latest,
+              os: ubuntu-24.04,
               compiler:
                 {
                   type: CLANG,
@@ -121,7 +121,7 @@ jobs:
             }
           - {
               name: "Ubuntu Clang-20 + libc++",
-              os: ubuntu-latest,
+              os: ubuntu-24.04,
               compiler:
                 {
                   type: CLANG,
@@ -167,22 +167,8 @@ jobs:
               compiler: { type: VISUAL, version: 16, conan: "msvc", cc: "cl", cxx: "cl", std: 23 },
             }
           - {
-              name: "MacOS Apple Clang 15",
-              os: macos-14,
-              compiler:
-                {
-                  type: APPLE_CLANG,
-                  version: "15.3",
-                  conan: "apple-clang",
-                  cc: "clang",
-                  cxx: "clang++",
-                  std: 23
-                },
-              lib: "libc++",
-            }
-          - {
               name: "MacOS Apple Clang 16",
-              os: macos-14,
+              os: macos-15,
               compiler:
                 {
                   type: APPLE_CLANG,
