@@ -22,8 +22,23 @@ struct SimpleTuple
     bool second = false;
     std::vector<std::byte> data;
 
+#if defined(__cpp_lib_three_way_comparison) && (__cpp_lib_three_way_comparison >= 201907L)
     /// Compare two endpoint objects.
     [[nodiscard]] auto operator<=>(SimpleTuple const& rhs) const noexcept = default;
+#else
+    /// Compare two endpoint objects.
+    /// \param rhs The NamedEndpoint to compare against.
+    /// \return A comparison result indicating the relative order of the NamedEndpoint objects.
+    [[nodiscard]] auto operator<=>(SimpleTuple const& rhs) const noexcept
+    {
+        return std::tie(first, second, data) <=> std::tie(rhs.first, rhs.second, rhs.data);
+    }
+
+    /// Equality operator for NamedEndpoint.
+    /// \param rhs The NamedEndpoint to compare against.
+    /// \return True if the NamedEndpoint objects are equal, false otherwise.
+    [[nodiscard]] bool operator==(SimpleTuple const& rhs) const noexcept { return std::tie(first, second, data) == std::tie(rhs.first, rhs.second, rhs.data); }
+#endif
 
     template <concepts::WriteSerialiser Serialiser>
     void serialise(Serialiser& s) const

@@ -11,8 +11,10 @@ TEST_CASE("Explicitly check compiler feature flags requirements for language fea
 {
     STATIC_REQUIRE(__cpp_attributes >= 200809L); // attribute support.
     // STATIC_REQUIRE(__cpp_consteval >= 201811L); // consteval support - immediate functions.
-    STATIC_REQUIRE(__cpp_deduction_guides >= 201703L);         // CTAD for class templates.
+    STATIC_REQUIRE(__cpp_deduction_guides >= 201703L); // CTAD for class templates.
+#if defined(__cpp_lib_three_way_comparison)
     STATIC_REQUIRE(__cpp_lib_three_way_comparison >= 201907L); // Spaceship operator support.
+#endif
 }
 
 TEST_CASE("Explicitly check compiler feature flags requirements for library features", "[morpheus.base.compilers.features.library]")
