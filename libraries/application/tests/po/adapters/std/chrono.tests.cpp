@@ -95,9 +95,9 @@ TEST_CASE_METHOD(LoggingFixture, "Test parsing of std chrono time_zone", "[morph
         };
 
         REQUIRE(getTimezone("Australia/Sydney") == *conf::date::get_tzdb().locate_zone("Australia/Sydney"));
-        REQUIRE(getTimezone("Brazil/East") == *conf::date::get_tzdb().locate_zone("Brazil/East"));
-        REQUIRE(getTimezone("Canada/Eastern") == *conf::date::get_tzdb().locate_zone("Canada/Eastern"));
-        REQUIRE(getTimezone("US/Central") == *conf::date::get_tzdb().locate_zone("US/Central"));
+        REQUIRE(getTimezone("America/Sao_Paulo") == *conf::date::get_tzdb().locate_zone("America/Sao_Paulo"));
+        REQUIRE(getTimezone("America/Toronto") == *conf::date::get_tzdb().locate_zone("America/Toronto"));
+        REQUIRE(getTimezone("America/Chicago") == *conf::date::get_tzdb().locate_zone("America/Chicago"));
     }
     SECTION("Ensure invalid value parse correctly")
     {
