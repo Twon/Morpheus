@@ -1,6 +1,7 @@
-#include "morpheus/core/base/assert.hpp"
 #include "morpheus/core/conformance/ranges.hpp"
 #include "morpheus/gfx/vulkan/adapter.hpp"
+
+#include <libassert/assert.hpp>
 
 namespace morpheus::gfx::vulkan
 {
@@ -12,7 +13,7 @@ Adapter::Adapter(vk::raii::PhysicalDevice&& physicalDevice)
 [[nodiscard]] Vendor Adapter::vendor() const noexcept
 {
     auto const vendor = vendorFromPciId(mPhysicalDevice.getProperties().vendorID);
-    MORPHEUS_ASSERT(vendor);
+    DEBUG_ASSERT(vendor);
     return *vendor;
 }
 
