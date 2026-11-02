@@ -101,7 +101,7 @@ public:
         else
         {
             // For mocks, we typically require a size hint as they are not stateful by default for sequences.
-            DEBUG_ASSERT(false && "MockReader::readElements requires a size hint.");
+            DEBUG_ASSERT(false, "MockReader::readElements requires a size hint.", size); // LCOV_EXCL_LINE
         }
     }
 };
