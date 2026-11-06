@@ -32,7 +32,7 @@ import re, os.path
 import subprocess
 import sys
 
-required_conan_version = ">=2.1.0"
+corequired_conan_version = ">=2.28"
 
 def get_cmake_version():
     try:
@@ -76,13 +76,14 @@ class Morpheus(ConanFile):
         "with_rs_vulkan": True,
      }
     requires = (
-        "unordered_dense/4.8.1",
         "boost/1.91.0",
         "ctre/3.10.0",
+        "libassert/2.2.1",
         "magic_enum/0.9.7",
         "ms-gsl/4.2.0",
         "rapidjson/cci.20250205",
         "scnlib/4.0.1",
+        "unordered_dense/4.8.1",
     )
 
     build_requires = (
@@ -297,6 +298,7 @@ class Morpheus(ConanFile):
             "boost::headers",
             "boost::log",
             "ctre::ctre",
+            "libassert::assert",
             "magic_enum::magic_enum",
             "ms-gsl::ms-gsl",
             "range-v3::range-v3",

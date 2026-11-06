@@ -1,10 +1,11 @@
 #pragma once
 
-#include "morpheus/core/base/assert.hpp"
 #include "morpheus/core/serialisation/concepts/reader.hpp"
 #include "morpheus/core/serialisation/concepts/reader_archetype.hpp"
 
 #include <gmock/gmock.h>
+
+#include <libassert/assert.hpp>
 
 #include <cstddef>
 #include <cstdint>
@@ -100,7 +101,7 @@ public:
         else
         {
             // For mocks, we typically require a size hint as they are not stateful by default for sequences.
-            MORPHEUS_ASSERT(false && "MockReader::readElements requires a size hint.");
+            DEBUG_ASSERT(false, "MockReader::readElements requires a size hint.", size); // LCOV_EXCL_LINE
         }
     }
 };

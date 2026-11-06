@@ -13,6 +13,7 @@ target_include_directories(MorpheusCore
 
 
 find_package(ctre REQUIRED)
+find_package(libassert REQUIRED)
 find_package(magic_enum REQUIRED)
 find_package(Microsoft.GSL REQUIRED)
 find_package(unordered_dense REQUIRED)

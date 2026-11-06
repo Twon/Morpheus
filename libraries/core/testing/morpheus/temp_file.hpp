@@ -2,7 +2,8 @@
 #pragma once
 
 #include "morpheus/core/base/compiler.hpp"
-#include "morpheus/core/base/verify.hpp"
+
+#include <libassert/assert.hpp>
 
 #include <cstdio>
 #include <stdio.h>
@@ -22,7 +23,7 @@ public:
               {
 #if MORPHEUS_IS_VISUALSTUDIO_COMPATIBLE_COMPILER
                   std::FILE* file = nullptr;
-                  MORPHEUS_VERIFY(tmpfile_s(&file) == 0);
+                  ASSERT(tmpfile_s(&file) == 0);
                   return file;
 #else
                   return std::tmpfile();
@@ -49,7 +50,7 @@ public:
         std::size_t const filesize = std::ftell(mFile);
         std::string contents(filesize, 0);
         std::fseek(mFile, 0, SEEK_SET); // seek to start
-        MORPHEUS_VERIFY(std::fread(contents.data(), sizeof(char), contents.size(), mFile) == contents.size());
+        ASSERT(std::fread(contents.data(), sizeof(char), contents.size(), mFile) == contents.size());
         std::fseek(mFile, 0, SEEK_END);
         return contents;
     }

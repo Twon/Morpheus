@@ -1,6 +1,6 @@
-#include "morpheus/core/base/assert.hpp"
-#include "morpheus/core/base/verify.hpp"
 #include "morpheus/core/serialisation/json_writer.hpp"
+
+#include <libassert/assert.hpp>
 
 #include <boost/archive/iterators/base64_from_binary.hpp>
 #include <boost/archive/iterators/transform_width.hpp>
@@ -19,43 +19,43 @@ JsonWriter::JsonWriter(std::ostream& stream)
 
 void JsonWriter::beginComposite()
 {
-    MORPHEUS_VERIFY(mJsonWriter.StartObject());
+    ASSERT(mJsonWriter.StartObject());
 }
 
 void JsonWriter::endComposite()
 {
-    MORPHEUS_VERIFY(mJsonWriter.EndObject());
+    ASSERT(mJsonWriter.EndObject());
 }
 
 void JsonWriter::beginValue(std::string_view const key)
 {
-    MORPHEUS_ASSERT(!key.empty());
-    MORPHEUS_VERIFY(mJsonWriter.Key(key.data(), static_cast<rapidjson::SizeType>(key.size())));
+    DEBUG_ASSERT(!key.empty());
+    ASSERT(mJsonWriter.Key(key.data(), static_cast<rapidjson::SizeType>(key.size())));
 }
 
 void JsonWriter::endValue() {}
 
 void JsonWriter::beginSequence(std::optional<std::size_t>)
 {
-    MORPHEUS_VERIFY(mJsonWriter.StartArray());
+    ASSERT(mJsonWriter.StartArray());
 }
 
 void JsonWriter::endSequence()
 {
-    MORPHEUS_VERIFY(mJsonWriter.EndArray());
+    ASSERT(mJsonWriter.EndArray());
 }
 
 void JsonWriter::beginNullable(bool const null)
 {
     if (null)
-        MORPHEUS_VERIFY(mJsonWriter.Null());
+        ASSERT(mJsonWriter.Null());
 }
 
 void JsonWriter::endNullable() {}
 
 void JsonWriter::write(bool const value)
 {
-    MORPHEUS_VERIFY(mJsonWriter.Bool(value));
+    ASSERT(mJsonWriter.Bool(value));
 }
 
 void JsonWriter::write(std::byte const value)
@@ -65,58 +65,58 @@ void JsonWriter::write(std::byte const value)
 
 void JsonWriter::write(std::uint8_t const value)
 {
-    MORPHEUS_VERIFY(mJsonWriter.Uint(value));
+    ASSERT(mJsonWriter.Uint(value));
 }
 
 void JsonWriter::write(std::int8_t const value)
 {
-    MORPHEUS_VERIFY(mJsonWriter.Int(value));
+    ASSERT(mJsonWriter.Int(value));
 }
 
 void JsonWriter::write(std::uint16_t const value)
 {
-    MORPHEUS_VERIFY(mJsonWriter.Uint(value));
+    ASSERT(mJsonWriter.Uint(value));
 }
 
 void JsonWriter::write(std::int16_t const value)
 {
-    MORPHEUS_VERIFY(mJsonWriter.Int(value));
+    ASSERT(mJsonWriter.Int(value));
 }
 
 void JsonWriter::write(std::uint32_t const value)
 {
-    MORPHEUS_VERIFY(mJsonWriter.Uint(value));
+    ASSERT(mJsonWriter.Uint(value));
 }
 
 void JsonWriter::write(std::int32_t const value)
 {
-    MORPHEUS_VERIFY(mJsonWriter.Int(value));
+    ASSERT(mJsonWriter.Int(value));
 }
 
 void JsonWriter::write(std::uint64_t const value)
 {
-    MORPHEUS_VERIFY(mJsonWriter.Uint64(value));
+    ASSERT(mJsonWriter.Uint64(value));
 }
 
 void JsonWriter::write(std::int64_t const value)
 {
-    MORPHEUS_VERIFY(mJsonWriter.Int64(value));
+    ASSERT(mJsonWriter.Int64(value));
 }
 
 void JsonWriter::write(float const value)
 {
-    MORPHEUS_VERIFY(mJsonWriter.Double(value));
+    ASSERT(mJsonWriter.Double(value));
 }
 
 void JsonWriter::write(double const value)
 {
-    MORPHEUS_VERIFY(mJsonWriter.Double(value));
+    ASSERT(mJsonWriter.Double(value));
 }
 
 void JsonWriter::write(std::string_view const value)
 {
-    MORPHEUS_ASSERT(!value.empty());
-    MORPHEUS_VERIFY(mJsonWriter.String(value.data(), static_cast<rapidjson::SizeType>(value.size())));
+    DEBUG_ASSERT(!value.empty());
+    ASSERT(mJsonWriter.String(value.data(), static_cast<rapidjson::SizeType>(value.size())));
 }
 
 void JsonWriter::write(std::span<std::byte const> const value)

@@ -1,7 +1,8 @@
-#include <morpheus/core/base/verify.hpp>
 #include <morpheus/gfx/nvidia/adapter.hpp>
 #include <morpheus/gfx/nvidia/driver.hpp>
 #include <morpheus/gfx/platform/vendor.hpp>
+
+#include <libassert/assert.hpp>
 
 #include <windows.h>
 
@@ -16,14 +17,14 @@ concurrency::Generator<Adapter> enumerateAdapters()
 
     NvU32 gpuCount = 0;
     std::array<NvPhysicalGpuHandle, NVAPI_MAX_PHYSICAL_GPUS> gpus;
-    MORPHEUS_VERIFY(driver.NvAPI_EnumPhysicalGPUs(gpus.data(), &gpuCount) == NVAPI_OK);
+    ASSERT(driver.NvAPI_EnumPhysicalGPUs(gpus.data(), &gpuCount) == NVAPI_OK);
     for (std::uint32_t adapters = 0; adapters < gpuCount; ++adapters)
     {
         using NvAPIShortString = std::array<char, NVAPI_SHORT_STRING_MAX>;
         NvAPIShortString gpuName = {};
         LUID id = {};
-        MORPHEUS_VERIFY(driver.NvAPI_GPU_GetFullName(gpus[adapters], gpuName.data()) == NVAPI_OK);
-        MORPHEUS_VERIFY(driver.NvAPI_GPU_GetAdapterIdFromPhysicalGpu(gpus[adapters], &id) == NVAPI_OK);
+        ASSERT(driver.NvAPI_GPU_GetFullName(gpus[adapters], gpuName.data()) == NVAPI_OK);
+        ASSERT(driver.NvAPI_GPU_GetAdapterIdFromPhysicalGpu(gpus[adapters], &id) == NVAPI_OK);
 
         co_yield Adapter(id.HighPart, gpuName.data(), Vendor::NVidia);
     }

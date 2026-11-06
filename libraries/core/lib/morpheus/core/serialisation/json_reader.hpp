@@ -1,6 +1,5 @@
 #pragma once
 
-#include "morpheus/core/base/assert.hpp"
 #include "morpheus/core/base/export.hpp"
 #include "morpheus/core/functional/overload.hpp"
 #include "morpheus/core/serialisation/concepts/reader_archetype.hpp"
@@ -8,10 +7,12 @@
 
 #include <boost/numeric/conversion/cast.hpp>
 
-#include <rapidjson/istreamwrapper.h>
-#include <rapidjson/reader.h>
+#include <libassert/assert.hpp>
 
 #include <magic_enum/magic_enum.hpp>
+
+#include <rapidjson/istreamwrapper.h>
+#include <rapidjson/reader.h>
 
 #include <cmath>
 #include <concepts>
@@ -98,7 +99,7 @@ public:
     T read()
     {
         auto const [event, next] = getNext();
-        MORPHEUS_ASSERT(next->index() == 0);
+        DEBUG_ASSERT(next->index() == 0);
         return std::get<T>(*next);
     }
 
@@ -150,7 +151,7 @@ public:
     T read()
     {
         auto const [event, next] = getNext();
-        MORPHEUS_ASSERT(next->index() == magic_enum::enum_integer(FundamentalType::String));
+        DEBUG_ASSERT(next->index() == magic_enum::enum_integer(FundamentalType::String));
         return std::get<T>(*next);
     }
 

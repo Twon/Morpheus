@@ -1,5 +1,6 @@
-#include <morpheus/catch2/adapters/assert.hpp>
 #include <morpheus/catch2/adapters/gmock.hpp>
+
+#include <libassert/assert-catch2.hpp>
 
 #include <catch2/catch_config.hpp>
 #include <catch2/catch_session.hpp>
@@ -11,8 +12,6 @@ int main(int argc, char** argv)
 #if __has_include(<gmock/gmock.h>)
     morpheus::enableGmockAdapter(argv);
 #endif
-
-    morpheus::enableCatch2AssertHooks();
 
     Catch::Session session;
     session.configData().name = "@MORPHEUS_NAME@";

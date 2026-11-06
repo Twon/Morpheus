@@ -46,7 +46,7 @@ auto vendorFromDeviceId(std::string_view const deviceId)
 {
     auto const pciId = pciIdFromDeviceId(deviceId);
     auto const vendor = vendorFromPciId(pciId);
-    MORPHEUS_VERIFY(vendor);
+    ASSERT(vendor);
     return *vendor;
 }
 

@@ -1,6 +1,7 @@
-#include "morpheus/core/base/verify.hpp"
 #include "morpheus/core/conformance/format.hpp"
 #include "morpheus/core/serialisation/json_reader.hpp"
+
+#include <libassert/assert.hpp>
 
 #include <rapidjson/encodings.h>
 #include <rapidjson/error/error.h>
@@ -84,7 +85,7 @@ struct JsonExtracter : rapidjson::BaseReaderHandler<rapidjson::UTF8<>, JsonExtra
     bool RawNumber(Ch const*, rapidjson::SizeType, bool /*copy*/)
     {
         // Method enabled via kParseNumbersAsStringsFlag.
-        MORPHEUS_VERIFY(false);
+        ASSERT(false);
         //        mCurrent = std::string(str, len);
         return static_cast<Override&>(*this).Default();
     }
@@ -195,7 +196,7 @@ JsonReader& JsonReader::operator=(JsonReader&& rhs) noexcept = default;
 JsonReader::~JsonReader()
 {
     if (mValidate)
-        MORPHEUS_VERIFY(mJsonReader->IterativeParseComplete());
+        ASSERT(mJsonReader->IterativeParseComplete());
 }
 
 void JsonReader::beginComposite()
@@ -231,14 +232,14 @@ void JsonReader::endValue()
 std::optional<std::size_t> JsonReader::beginSequence()
 {
     auto const [event, next] = getNext();
-    MORPHEUS_VERIFY(event == Event::BeginSequence);
+    ASSERT(event == Event::BeginSequence);
     return std::nullopt;
 }
 
 void JsonReader::endSequence()
 {
     auto const [event, next] = getNext();
-    MORPHEUS_VERIFY(event == Event::EndSequence);
+    ASSERT(event == Event::EndSequence);
 }
 
 bool JsonReader::beginNullable()
@@ -246,7 +247,7 @@ bool JsonReader::beginNullable()
     auto const [event, next] = getNext();
     // if (null)
     //     beginComposite();
-    MORPHEUS_VERIFY(event == Event::Value);
+    ASSERT(event == Event::Value);
     return !next;
 }
 

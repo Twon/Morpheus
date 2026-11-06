@@ -1,7 +1,6 @@
 #pragma once
 
 // IWYU pragma: always_keep
-#include "morpheus/core/base/assert.hpp"
 #include "morpheus/core/base/exceptions.hpp"
 #include "morpheus/core/conformance/format.hpp"
 #include "morpheus/core/conformance/ranges.hpp"
@@ -12,6 +11,8 @@
 #include "morpheus/core/serialisation/concepts/write_serialiser.hpp"
 
 #include <boost/type_index.hpp>
+
+#include <libassert/assert.hpp>
 
 #include <array>
 #include <stdexcept>
@@ -34,7 +35,7 @@ struct TypeListNames<std::variant<T...>>
     /// For a given index position in a std::variant return the name of the type.
     static constexpr std::string_view name(std::size_t const entry)
     {
-        MORPHEUS_ASSERT(entry < sizeof...(T));
+        DEBUG_ASSERT(entry < sizeof...(T));
         return typeNames[entry];
     }
 

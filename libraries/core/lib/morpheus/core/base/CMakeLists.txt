@@ -3,8 +3,6 @@ target_sources(MorpheusCore
         FILE_SET HEADERS
         FILES
             architecture.hpp
-            assert.hpp
-            assert_handler.hpp
             cold.hpp
             compiler.hpp
             debugging.hpp
@@ -13,14 +11,14 @@ target_sources(MorpheusCore
             prerequisites.hpp
             sanitizers.hpp
             scoped_action.hpp
-            verify.hpp
     PRIVATE
-        assert_handler.cpp
         debugging.cpp
         exceptions.cpp
 )
 
 target_link_libraries(MorpheusCore
+    PUBLIC
+        libassert::assert
     PRIVATE
         Boost::unit_test_framework
 )
