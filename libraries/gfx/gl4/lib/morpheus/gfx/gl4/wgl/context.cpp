@@ -1,9 +1,10 @@
-#include <morpheus/core/base/assert.hpp>
 #include <morpheus/core/conformance/bit_cast.hpp>
 #include <morpheus/core/conformance/format.hpp>
 #include <morpheus/gfx/gl4/prerequisites.hpp>
 #include <morpheus/gfx/gl4/wgl/context.hpp>
 #include <morpheus/gfx/gl4/wgl/verify.hpp>
+
+#include <libassert/assert.hpp>
 
 namespace morpheus::gfx::gl4::wgl
 {
@@ -16,7 +17,7 @@ using WGLExpected = conf::exp::expected<T, std::string>;
 
 auto createDC(HWND const window) -> WGLExpected<HDC>
 {
-    MORPHEUS_ASSERT(window);
+    DEBUG_ASSERT(window);
     auto const hDC = GetDC(window);
     if (!hDC)
         return conf::exp::unexpected(getLastErrorMessage());

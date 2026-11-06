@@ -34,6 +34,7 @@ target_link_libraries(MorpheusConfig
 target_compile_options(MorpheusConfig
     INTERFACE
         $<$<CXX_COMPILER_ID:MSVC>:/Zc:__cplusplus> # https://devblogs.microsoft.com/cppblog/msvc-now-correctly-reports-__cplusplus/
+        $<$<CXX_COMPILER_ID:MSVC>:/Zc:preprocessor> # Enable preprocessor conformance mode: https://learn.microsoft.com/en-us/cpp/build/reference/zc-preprocessor?view=msvc-170
         $<$<CXX_COMPILER_ID:MSVC>:/EHsc>
         $<$<CXX_COMPILER_ID:MSVC>:${MSVC_WARNINGS}>
         $<$<CXX_COMPILER_ID:GNU>:${GCC_WARNINGS}>

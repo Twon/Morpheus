@@ -1,4 +1,3 @@
-#include "morpheus/core/base/assert.hpp"
 #include "morpheus/core/conformance/expected.hpp"
 #include "morpheus/core/conformance/format.hpp"
 #include "morpheus/core/conformance/outptr.hpp"
@@ -8,6 +7,8 @@
 #include "morpheus/gfx/d3d12/verify.hpp"
 
 #include <d3d12.h>
+
+#include <libassert/assert.hpp>
 
 #include <wrl/client.h>
 
@@ -95,7 +96,7 @@ Adapter::Adapter(DXGIAdapter dxgiAdapter)
 [[nodiscard]] Vendor Adapter::vendor() const noexcept
 {
     auto const vendor = vendorFromPciId(mDescription.VendorId);
-    MORPHEUS_ASSERT(vendor);
+    DEBUG_ASSERT(vendor);
     return *vendor;
 }
 
