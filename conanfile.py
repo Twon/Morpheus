@@ -78,6 +78,7 @@ class Morpheus(ConanFile):
     requires = (
         "boost/1.91.0",
         "ctre/3.10.0",
+        "ftxui/7.0.3",
         "libassert/2.2.1",
         "magic_enum/0.9.7",
         "ms-gsl/4.2.0",
