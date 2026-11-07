@@ -18,6 +18,8 @@ int main(int argc, char const* argv[])
         return result.value();
     }
 
+    // NSLog (@"Window name: %@\nWidth: %ld\nHeight: %ld\nColour Depth: %ld\n", windowName, static_cast<long>(width), static_cast<long>(height),
+    // static_cast<long>(colourDepth));
     for (auto const& monitors : enumerateMonitors())
     {
         conf::print::print("Monitor: {}\n", monitors);
@@ -25,4 +27,9 @@ int main(int argc, char const* argv[])
     }
 
     RenderWindow window(config);
+
+    while (!window.shouldClose())
+    {
+        window.pollEvents();
+    }
 }
