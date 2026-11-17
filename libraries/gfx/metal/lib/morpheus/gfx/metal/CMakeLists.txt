@@ -7,6 +7,7 @@ target_sources(MorpheusGfxMetal
             video_mode.hpp
     PRIVATE
         adapter.cpp
+        adapter.mm
         render_system.mm
         video_mode.cpp
 )

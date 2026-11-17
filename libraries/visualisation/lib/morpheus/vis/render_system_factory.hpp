@@ -67,14 +67,17 @@ public:
     RenderSystemFactory() = default;
     ///@}
 
-    /// Register program options
+    /// Register command line program options for render system selection.
+    /// \param[in,out] options
+    ///     The boost program options description to add options to.
     auto addOptions(boost::program_options::options_description& options) -> void;
 
-    auto getActiveAPI() const -> API { return mActiveApi; }
+    /// Get the currently active graphics API.
+    /// \return The active graphics API.
+    [[nodiscard]] auto getActiveAPI() const noexcept -> API { return mActiveApi; }
 
-private:
     /// Returns a map of the available rendering systems to their respective underlying graphics APIs.
-    ///
+    /// \return A compile-time boost::hana map from API tag to RenderSystem type.
     static constexpr auto availableAPIs()
     {
         namespace hana = boost::hana;
@@ -103,6 +106,7 @@ private:
         return hana::erase_key(map, hana::type_c<NullRenderSystemAPI>);
     }
 
+private:
     // using APIMap = std::invoke_result_t<decltype(&RenderSystemFactory::availableAPIs)() >;
 
     // constexpr static auto renderSystemAPIs = availableAPIs();

@@ -46,8 +46,21 @@ public:
     /// The colour depth of the pixels of the render target.
     [[nodiscard]] constexpr auto refreshRate() const noexcept { return mRefreshRate; }
 
+#if defined(__cpp_lib_three_way_comparison) && (__cpp_lib_three_way_comparison >= 201907L)
     /// The three-way operator provides strong ordering of types.
     [[nodiscard]] constexpr auto operator<=>(VideoMode const& rhs) const noexcept -> std::strong_ordering = default;
+#else
+    /// Compare two adapter objects.
+    [[nodiscard]] auto operator<=>(VideoMode const& rhs) const noexcept
+    {
+        return std::tie(mWidth, mHeight, mColourDepth, mRefreshRate) <=> std::tie(rhs.mWidth, rhs.mHeight, rhs.mColourDepth, rhs.mRefreshRate);
+    }
+
+    [[nodiscard]] bool operator==(VideoMode const& rhs) const noexcept
+    {
+        return std::tie(mWidth, mHeight, mColourDepth, mRefreshRate) == std::tie(rhs.mWidth, rhs.mHeight, rhs.mColourDepth, rhs.mRefreshRate);
+    }
+#endif
 
 private:
     /// \name Data Members

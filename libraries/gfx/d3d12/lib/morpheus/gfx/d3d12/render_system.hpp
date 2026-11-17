@@ -25,7 +25,10 @@ public:
     RenderSystem& operator=(RenderSystem&&) = default;
 
     /// Get the name of the underlying graphic API.
-    [[nodiscard]] static constexpr auto getGraphicsApi() noexcept -> std::string_view { return "Direct X 12"; }
+    [[nodiscard]] static constexpr auto getGraphicsApi() noexcept -> std::string_view;
+
+    /// Get the description of the underlying graphic API.
+    [[nodiscard]] static constexpr auto getGraphicsApiDescription() noexcept -> std::string_view;
 
     /// Creates the D3D12 render system on the specified graphics adapter.
     /// \param[in] adapter
@@ -37,5 +40,15 @@ private:
 
     D3D12Device mDevice;
 };
+
+constexpr auto RenderSystem::getGraphicsApi() noexcept -> std::string_view
+{
+    return "Direct X 12";
+}
+
+constexpr auto RenderSystem::getGraphicsApiDescription() noexcept -> std::string_view
+{
+    return "DirectX 12: Microsoft low-level 3D graphics API optimized for Windows systems.";
+}
 
 } // namespace morpheus::gfx::d3d12
