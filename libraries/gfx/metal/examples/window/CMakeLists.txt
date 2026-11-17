@@ -12,7 +12,7 @@ target_link_libraries(MacOSWindow
     PRIVATE
         morpheus::gfx::metal
         morpheus::gfx::platform
-        morpheus::vis    
+        morpheus::vis
 )
 
 target_sources(MacOSWindow
