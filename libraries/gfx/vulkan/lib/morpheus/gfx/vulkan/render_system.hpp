@@ -1,6 +1,7 @@
 #pragma once
 
 #include <morpheus/core/conformance/expected.hpp>
+#include <morpheus/gfx/platform/os.hpp>
 #include <morpheus/gfx/platform/render_system.hpp>
 #include <morpheus/gfx/vulkan/adapter.hpp>
 #include <morpheus/gfx/vulkan/version.hpp>
@@ -20,6 +21,8 @@ namespace morpheus::gfx::vulkan
 class RenderSystem : public gfx::RenderSystem
 {
 public:
+    using Window = gfx::os::RenderWindow;
+
     RenderSystem(std::string_view const appName, std::string_view const engineName);
 
     RenderSystem(RenderSystem const&) = delete;
@@ -29,7 +32,10 @@ public:
     RenderSystem& operator=(RenderSystem&&) = default;
 
     /// Get the name of the underlying graphic API.
-    [[nodiscard]] static constexpr auto getGraphicsApi() noexcept -> std::string_view { return "Vulkan"; }
+    [[nodiscard]] static constexpr auto getGraphicsApi() noexcept -> std::string_view;
+
+    /// Get the description of the underlying graphic API.
+    [[nodiscard]] static constexpr auto getGraphicsApiDescription() noexcept -> std::string_view;
 
     [[nodiscard]] static auto create() -> conf::exp::expected<RenderSystem, std::string>;
 
@@ -43,5 +49,15 @@ private:
     std::vector<vk::LayerProperties> mAvailableLayers;         /// The available Vulkan layer properties.
     AdapterList mAdapters;
 };
+
+constexpr auto RenderSystem::getGraphicsApi() noexcept -> std::string_view
+{
+    return "Vulkan";
+}
+
+constexpr auto RenderSystem::getGraphicsApiDescription() noexcept -> std::string_view
+{
+    return "Khronos Vulkan API: Modern, explicit, cross-platform graphics and compute API.";
+}
 
 } // namespace morpheus::gfx::vulkan

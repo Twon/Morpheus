@@ -9,7 +9,8 @@
 namespace morpheus::gfx::macos
 {
 
-RenderWindow::RenderWindow(Config const& config) : gfx::RenderWindow(config)
+RenderWindow::RenderWindow(Config const& config)
+    : gfx::RenderWindow(config)
 {
     @autoreleasepool
     {
@@ -22,18 +23,11 @@ RenderWindow::RenderWindow(Config const& config) : gfx::RenderWindow(config)
                                   "thread. (OS X limitation)");
         }
 
-        NSString* title =
-            [[NSString alloc] initWithUTF8String:config.windowName.c_str()];
+        NSString* title = [[NSString alloc] initWithUTF8String:config.windowName.c_str()];
 
-        NSRect frame = NSMakeRect(config.startX, config.startY, config.width,
-                                  config.height);
-        NSUInteger styleMask = NSWindowStyleMaskTitled |
-                               NSWindowStyleMaskClosable |
-                               NSWindowStyleMaskResizable;
-        mHandle = [[NSWindow alloc] initWithContentRect:frame
-                                              styleMask:styleMask
-                                                backing:NSBackingStoreBuffered
-                                                  defer:NO];
+        NSRect frame = NSMakeRect(config.startX, config.startY, config.width, config.height);
+        NSUInteger styleMask = NSWindowStyleMaskTitled | NSWindowStyleMaskClosable | NSWindowStyleMaskResizable;
+        mHandle = [[NSWindow alloc] initWithContentRect:frame styleMask:styleMask backing:NSBackingStoreBuffered defer:NO];
         [(NSWindow*)mHandle setTitle:title];
 
         if (config.fullScreen)
@@ -59,7 +53,8 @@ RenderWindow::RenderWindow(Config const& config) : gfx::RenderWindow(config)
     }
 }
 
-RenderWindow::RenderWindow(WindowHandle const window) : mHandle(window)
+RenderWindow::RenderWindow(WindowHandle const window)
+    : mHandle(window)
 {
     id const nsHandle = static_cast<id>(mHandle);
     if ([nsHandle isKindOfClass:[NSWindow class]])
@@ -73,6 +68,29 @@ RenderWindow::RenderWindow(WindowHandle const window) : mHandle(window)
         // We have a window.
         // m_delegate = [[SFWindowController alloc] initWithWindow:nsHandle];
     }
+}
+
+RenderWindow::RenderWindow(RenderWindow&& rhs) noexcept
+    : gfx::RenderWindow(std::move(rhs))
+    , mHandle(std::exchange(rhs.mHandle, nullptr))
+{}
+
+RenderWindow& RenderWindow::operator=(RenderWindow&& rhs) noexcept
+{
+    if (this != &rhs)
+    {
+        @autoreleasepool
+        {
+            if (mHandle)
+            {
+                [(NSWindow*)mHandle close];
+                [(NSWindow*)mHandle release];
+            }
+        }
+        gfx::RenderWindow::operator=(std::move(rhs));
+        mHandle = std::exchange(rhs.mHandle, nullptr);
+    }
+    return *this;
 }
 
 RenderWindow::~RenderWindow()
@@ -99,6 +117,9 @@ bool RenderWindow::hasFocus() const
     }
 }
 
-void RenderWindow::show() { [(NSWindow*)mHandle makeKeyAndOrderFront:nil]; }
+void RenderWindow::show()
+{
+    [(NSWindow*)mHandle makeKeyAndOrderFront:nil];
+}
 
 } // namespace morpheus::gfx::macos

@@ -24,7 +24,9 @@ public:
     explicit RenderWindow(RenderWindow const&) = delete;
     RenderWindow& operator=(RenderWindow const&) = delete;
 
+    /// Move constructor transfers window handle ownership.
     explicit RenderWindow(RenderWindow&&) noexcept;
+    /// Move assignment operator transfers window handle ownership.
     RenderWindow& operator=(RenderWindow&&) noexcept;
 
     ~RenderWindow();
