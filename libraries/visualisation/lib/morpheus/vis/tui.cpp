@@ -72,16 +72,22 @@ auto getAvailableSystems() -> std::vector<RenderSystemEntry>
 
 } // namespace
 
+auto getRenderSystemsInfo(API initialApi) -> std::tuple<std::vector<RenderSystemEntry> const, std::vector<std::string> const, int>
+{
+    auto availableSystems = getAvailableSystems();
+    auto renderSystemNames =
+        availableSystems | conf::ranges::views::transform([](auto const& e) { return e.name; }) | conf::ranges::to<std::vector<std::string>>();
+    auto const selectedRenderSystemIt = conf::ranges::find_if(availableSystems, [&](auto const& e) { return e.api == initialApi; });
+    auto selectedRenderSystem =
+        selectedRenderSystemIt != availableSystems.end() ? static_cast<int>(conf::ranges::distance(availableSystems.begin(), selectedRenderSystemIt)) : 0;
+    return std::tuple(std::move(availableSystems), std::move(renderSystemNames), selectedRenderSystem);
+}
+
 auto Tui::run(VisualisationConfig const& initial) -> std::optional<VisualisationConfig>
 {
     using namespace ftxui;
 
-    auto const availableSystems = getAvailableSystems();
-    auto const renderSystemNames =
-        availableSystems | conf::ranges::views::transform([](auto const& e) { return e.name; }) | conf::ranges::to<std::vector<std::string>>();
-    auto const selectedRenderSystemIt = conf::ranges::find_if(availableSystems, [&](auto const& e) { return e.api == initial.selectedApi; });
-    auto selectedRenderSystem =
-        selectedRenderSystemIt != availableSystems.end() ? static_cast<int>(conf::ranges::distance(availableSystems.begin(), selectedRenderSystemIt)) : 0;
+    auto [availableSystems, renderSystemNames, selectedRenderSystem] = getRenderSystemsInfo(initial.selectedApi);
 
     // Detected Monitors
     std::vector<std::string> detected_monitors;
