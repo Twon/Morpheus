@@ -107,7 +107,7 @@ jobs:
             }
           - {
               name: "Ubuntu Clang-19 + libc++",
-              os: ubuntu-24.04,
+              os: ubuntu-24.04, 
               compiler:
                 {
                   type: CLANG,
@@ -135,7 +135,7 @@ jobs:
             }
           - {
               name: "Ubuntu Clang-21 + libc++",
-              os: ubuntu-latest,
+              os: ubuntu-24.04, # Avoid ubuntu-latest because the image 20261116.202.1 added on 2026 Nov 19 causes failures.
               compiler:
                 {
                   type: CLANG,
@@ -149,7 +149,7 @@ jobs:
             }
           - {
               name: "Ubuntu Clang-22 + libc++",
-              os: ubuntu-latest,
+              os: ubuntu-24.04, # Avoid ubuntu-latest because the image 20261116.202.1 added on 2026 Nov 19 causes failures.
               compiler:
                 {
                   type: CLANG,
