@@ -20,7 +20,7 @@ template <class... Ts>
 Overload(Ts...) -> Overload<Ts...>;
 
 template <class... Ts>
-auto makeVisitor(Ts&&... ts)
+auto makeVisitor(Ts&&... ts) noexcept(noexcept(Overload<Ts...>(std::forward<Ts>(ts)...))) -> Overload<std::remove_cvref_t<Ts>...>
 {
     return Overload<Ts...>(std::forward<Ts>(ts)...);
 }
