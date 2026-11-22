@@ -1,9 +1,13 @@
 #include "morpheus/core/conformance/format.hpp"
 #include "morpheus/core/conformance/ranges.hpp"
+#include "morpheus/gfx/platform/os.hpp"
+#include "morpheus/gfx/platform/video_mode.hpp"
 #include "morpheus/vis/render_system_factory.hpp"
 #include "morpheus/vis/tui.hpp"
 
-#include <morpheus/gfx/platform/os.hpp>
+#if (MORPHEUS_RENDER_SYSTEM_METAL)
+    #include <morpheus/gfx/metal/adapter.hpp>
+#endif
 
 #include <ftxui/component/captured_mouse.hpp>
 #include <ftxui/component/component.hpp>
@@ -14,6 +18,7 @@
 
 #include <algorithm>
 #include <cstdint>
+#include <functional>
 #include <string>
 #include <vector>
 
@@ -23,6 +28,8 @@ namespace morpheus::vis
 namespace
 {
 
+/// \struct RenderSystemEntry
+///     Holds descriptor metadata for an available graphics API backend.
 struct RenderSystemEntry
 {
     API api;
@@ -30,14 +37,23 @@ struct RenderSystemEntry
     std::string description;
 };
 
-struct ResPreset
+/// \struct HardwareAdapterEntry
+///     Describes a queried graphics hardware device and its supported video modes.
+struct HardwareAdapterEntry
 {
-    std::string label;
-    std::uint16_t width;
-    std::uint16_t height;
+    std::string name;
+    std::string details;
+    std::vector<gfx::VideoMode> videoModes;
+    std::vector<std::string> videoModeLabels;
 };
 
-auto parseUInt16(std::string const& str, std::uint16_t fallback) -> std::uint16_t
+/// \brief Parse a string to an unsigned 16-bit integer with fallback.
+/// \param[in] str
+///     Input string to parse.
+/// \param[in] fallback
+///     Default value returned if parsing fails.
+/// \return Parsed value or fallback.
+auto parseUInt16(std::string const& str, std::uint16_t const fallback) -> std::uint16_t
 {
     try
     {
@@ -52,9 +68,11 @@ auto parseUInt16(std::string const& str, std::uint16_t fallback) -> std::uint16_
     return fallback;
 }
 
+/// \brief Query all available graphics backends from the RenderSystemFactory.
+/// \return List of supported render system entries.
 auto getAvailableSystems() -> std::vector<RenderSystemEntry>
 {
-    std::vector<RenderSystemEntry> available_systems;
+    std::vector<RenderSystemEntry> systems;
     boost::hana::for_each(RenderSystemFactory::availableAPIs(),
                           [&](auto const& pair)
                           {
@@ -62,569 +80,796 @@ auto getAvailableSystems() -> std::vector<RenderSystemEntry>
                               auto value = boost::hana::second(pair);
                               using KeyType = typename decltype(key)::type;
                               using RenderSystem = typename decltype(value)::type;
-                              API api = KeyType::value;
+                              API const api = KeyType::value;
                               std::string name = std::string(RenderSystem::getGraphicsApi());
                               std::string desc = std::string(RenderSystem::getGraphicsApiDescription());
-                              available_systems.push_back({api, std::move(name), std::move(desc)});
+                              systems.push_back({api, std::move(name), std::move(desc)});
                           });
-    return available_systems;
+    return systems;
 }
 
-} // namespace
-
-auto getRenderSystemsInfo(API initialApi) -> std::tuple<std::vector<RenderSystemEntry> const, std::vector<std::string> const, int>
+/// \brief Query available render systems and resolve initial selection.
+/// \param[in] initialApi
+///     The initial API backend to select.
+/// \return Tuple of (available systems, display names, initially selected index).
+auto getRenderSystemsInfo(API const initialApi) -> std::tuple<std::vector<RenderSystemEntry>, std::vector<std::string>, int>
 {
     auto availableSystems = getAvailableSystems();
     auto renderSystemNames =
         availableSystems | conf::ranges::views::transform([](auto const& e) { return e.name; }) | conf::ranges::to<std::vector<std::string>>();
     auto const selectedRenderSystemIt = conf::ranges::find_if(availableSystems, [&](auto const& e) { return e.api == initialApi; });
-    auto selectedRenderSystem =
+    auto const selectedRenderSystem =
         selectedRenderSystemIt != availableSystems.end() ? static_cast<int>(conf::ranges::distance(availableSystems.begin(), selectedRenderSystemIt)) : 0;
     return std::tuple(std::move(availableSystems), std::move(renderSystemNames), selectedRenderSystem);
 }
+
+/// \brief Query hardware display modes from system monitors as a fallback or cross-platform query.
+/// \return List of video modes detected on connected displays.
+auto queryFallbackVideoModes() -> std::vector<gfx::VideoMode>
+{
+    std::vector<gfx::VideoMode> modes;
+    for (auto const& monitor : gfx::os::enumerateMonitors())
+    {
+        gfx::VideoMode const vm{static_cast<std::uint16_t>(monitor.width()), static_cast<std::uint16_t>(monitor.height()), 32, 60};
+        if (std::find(modes.begin(), modes.end(), vm) == modes.end())
+        {
+            modes.push_back(vm);
+        }
+    }
+    if (modes.empty())
+    {
+        modes.emplace_back(1920, 1080, 32, 60);
+        modes.emplace_back(1280, 720, 32, 60);
+        modes.emplace_back(800, 600, 32, 60);
+    }
+    return modes;
+}
+
+/// \brief Query real hardware adapters and video modes for the selected graphics API.
+/// \param[in] api
+///     The selected graphics backend API.
+/// \return List of hardware adapters with their respective video modes.
+auto queryAdaptersForApi(API const api) -> std::vector<HardwareAdapterEntry>
+{
+    std::vector<HardwareAdapterEntry> result;
+
+#if (MORPHEUS_RENDER_SYSTEM_METAL)
+    if (api == API::Metal)
+    {
+        auto metalAdapters = gfx::metal::enumerateAdapters();
+        for (auto const& adapter : metalAdapters)
+        {
+            HardwareAdapterEntry entry;
+            entry.name = std::string(adapter.name());
+
+            std::string details = conf::fmt::format("Registry ID: {:#x}", adapter.id());
+            if (adapter.isLowPower())
+            {
+                details += " | Low-Power GPU";
+            }
+            if (adapter.isRemovable())
+            {
+                details += " | External eGPU";
+            }
+            if (adapter.memory() > 0)
+            {
+                double const memGb = static_cast<double>(adapter.memory()) / (1024.0 * 1024.0 * 1024.0);
+                details += conf::fmt::format(" | Max Working Memory: {:.1f} GB", memGb);
+            }
+            entry.details = std::move(details);
+            entry.videoModes = adapter.getVideoModes();
+
+            for (auto const& vm : entry.videoModes)
+            {
+                entry.videoModeLabels.push_back(conf::fmt::format("{} x {} @ {} Hz ({} bpp)", vm.width(), vm.height(), vm.refreshRate(), vm.colourDepth()));
+            }
+            result.push_back(std::move(entry));
+        }
+    }
+#endif
+
+    if (result.empty())
+    {
+        HardwareAdapterEntry fallbackEntry;
+        std::string const apiName =
+            (api == API::Vulkan ? "Vulkan Physical Device" : (api == API::OpenGL4 ? "OpenGL Graphics Device" : "Default Graphics Adapter"));
+        fallbackEntry.name = apiName;
+        fallbackEntry.details = "Hardware device queried through system display configuration.";
+        fallbackEntry.videoModes = queryFallbackVideoModes();
+        for (auto const& vm : fallbackEntry.videoModes)
+        {
+            fallbackEntry.videoModeLabels.push_back(conf::fmt::format("{} x {} @ {} Hz ({} bpp)", vm.width(), vm.height(), vm.refreshRate(), vm.colourDepth()));
+        }
+        result.push_back(std::move(fallbackEntry));
+    }
+
+    return result;
+}
+
+/// \struct TuiContext
+///     Shared state across the individual TUI tabs.
+struct TuiContext
+{
+    // Render system state
+    std::vector<RenderSystemEntry> availableSystems;
+    std::vector<std::string> renderSystemNames;
+    int selectedRenderSystem = 0;
+
+    // Hardware adapters & video modes
+    std::vector<HardwareAdapterEntry> adapters;
+    std::vector<std::string> adapterNames;
+    int selectedAdapter = 0;
+    std::vector<std::string> videoModeLabels;
+    int selectedVideoMode = 0;
+
+    // Window options
+    std::string windowTitle;
+    std::string widthStr;
+    std::string heightStr;
+    std::string startXStr;
+    std::string startYStr;
+    std::vector<std::string> colourDepthOptions = {"32-bit (RGBA8888)", "24-bit (RGB888)", "16-bit (RGB565)"};
+    int selectedColourDepth = 0;
+    bool isFullscreen = false;
+    bool isVisible = true;
+
+    // Render system specific options
+    bool enableValidation = false;
+    bool enableDebugOutput = false;
+    bool preferIntegratedGpu = false;
+    bool enableTearing = false;
+    bool enableDxil = false;
+    bool coreProfile = true;
+    bool vsync = true;
+
+    // Visualisation options
+    std::vector<std::string> msaaOptions = {"1x (Disabled)", "2x MSAA", "4x MSAA (Recommended)", "8x MSAA (High Quality)"};
+    std::vector<int> msaaValues = {1, 2, 4, 8};
+    int selectedMsaa = 0;
+
+    std::vector<std::string> fpsOptions = {
+        "30 FPS (Power Saver)", "60 FPS (Standard)", "120 FPS (High Refresh)", "144 FPS (Competitive)", "Unlimited (Uncapped)"};
+    std::vector<int> fpsValues = {30, 60, 120, 144, 0};
+    int selectedFps = 1;
+
+    std::vector<std::string> themeOptions = {"Dark Slate (#1E222B)", "Midnight Black (#000000)", "Cornflower Blue (#6495ED)", "Graphite Gray (#2E3440)"};
+    int selectedTheme = 0;
+
+    // Screen navigation
+    std::vector<std::string> tabTitles = {
+        " 1. Render System ",
+        " 2. Adapters & Modes ",
+        " 3. Render Settings ",
+        " 4. Visualisation ",
+        " 5. Summary & Launch ",
+    };
+    int activeTab = 0;
+    bool confirmed = false;
+
+    /// Refresh adapters and video modes for the currently selected render system.
+    void refreshAdaptersAndModes()
+    {
+        if (selectedRenderSystem >= 0 && selectedRenderSystem < static_cast<int>(availableSystems.size()))
+        {
+            adapters = queryAdaptersForApi(availableSystems[selectedRenderSystem].api);
+        }
+        else
+        {
+            adapters = queryAdaptersForApi(API::Metal);
+        }
+
+        adapterNames.clear();
+        for (auto const& a : adapters)
+        {
+            adapterNames.push_back(a.name);
+        }
+        selectedAdapter = 0;
+        updateVideoModesForSelectedAdapter();
+    }
+
+    /// Update video mode list for the currently selected adapter.
+    void updateVideoModesForSelectedAdapter()
+    {
+        videoModeLabels.clear();
+        if (selectedAdapter >= 0 && selectedAdapter < static_cast<int>(adapters.size()))
+        {
+            videoModeLabels = adapters[selectedAdapter].videoModeLabels;
+        }
+        if (videoModeLabels.empty())
+        {
+            videoModeLabels.push_back("1920 x 1080 @ 60 Hz (32 bpp)");
+        }
+        selectedVideoMode = 0;
+        applySelectedVideoMode();
+    }
+
+    /// Apply the currently selected video mode dimensions to the window settings.
+    void applySelectedVideoMode()
+    {
+        if (selectedAdapter >= 0 && selectedAdapter < static_cast<int>(adapters.size()))
+        {
+            auto const& modes = adapters[selectedAdapter].videoModes;
+            if (selectedVideoMode >= 0 && selectedVideoMode < static_cast<int>(modes.size()))
+            {
+                auto const& vm = modes[selectedVideoMode];
+                widthStr = std::to_string(vm.width());
+                heightStr = std::to_string(vm.height());
+
+                if (vm.colourDepth() == 16)
+                {
+                    selectedColourDepth = 2;
+                }
+                else if (vm.colourDepth() == 24)
+                {
+                    selectedColourDepth = 1;
+                }
+                else
+                {
+                    selectedColourDepth = 0;
+                }
+
+                for (std::size_t i = 0; i < fpsValues.size(); ++i)
+                {
+                    if (fpsValues[i] == vm.refreshRate())
+                    {
+                        selectedFps = static_cast<int>(i);
+                        break;
+                    }
+                }
+            }
+        }
+    }
+};
+
+/// \brief Create the header banner component.
+/// \return FTXUI element representing the header.
+auto createHeader() -> ftxui::Element
+{
+    using namespace ftxui;
+    return vbox({
+        hbox({
+            text(" MORPHEUS ") | bold | inverted | color(Color::Cyan),
+            text(" Visualisation & Window Configuration ") | bold | color(Color::White),
+            filler(),
+            text("[FTXUI] ") | dim,
+        }),
+        separator(),
+    });
+}
+
+/// \brief Create the footer component with keyboard shortcuts.
+/// \return FTXUI element representing the footer.
+auto createFooter() -> ftxui::Element
+{
+    using namespace ftxui;
+    return vbox({
+        separator(),
+        hbox({
+            text("Keys: ") | dim,
+            text("Tab / Shift-Tab") | bold | color(Color::Cyan),
+            text(" Navigate Controls  |  ") | dim,
+            text("Space / Enter") | bold | color(Color::Cyan),
+            text(" Toggle/Select  |  ") | dim,
+            text("Esc") | bold | color(Color::RedLight),
+            text(" Cancel") | dim,
+        }) | center,
+    });
+}
+
+/// \brief Tab 1: Render System Selection.
+/// \param[in,out] context
+///     Shared TUI state context.
+/// \param[in] onSystemChanged
+///     Callback triggered when the render system selection changes.
+/// \return FTXUI component for Tab 1.
+auto createRenderSystemTab(TuiContext& context, std::function<void()> onSystemChanged) -> ftxui::Component
+{
+    using namespace ftxui;
+
+    auto radiobox = Radiobox(&context.renderSystemNames, &context.selectedRenderSystem);
+    int lastSelected = context.selectedRenderSystem;
+
+    auto container = Container::Vertical({radiobox});
+
+    return Renderer(container,
+                    [=, &context]() mutable
+                    {
+                        if (context.selectedRenderSystem != lastSelected)
+                        {
+                            lastSelected = context.selectedRenderSystem;
+                            if (onSystemChanged)
+                            {
+                                onSystemChanged();
+                            }
+                        }
+
+                        return vbox({
+                            text("1. Select Target Graphics Render System") | bold | color(Color::Cyan),
+                            text("Choose the underlying graphics API hardware backend:") | dim,
+                            separator(),
+                            hbox({
+                                vbox({
+                                    text("Available Backends:") | bold,
+                                    radiobox->Render(),
+                                }) | flex,
+                                separator(),
+                                vbox({
+                                    text("API Details:") | bold,
+                                    text(context.availableSystems[context.selectedRenderSystem].name) | bold | color(Color::Yellow),
+                                    separator(),
+                                    paragraph(context.availableSystems[context.selectedRenderSystem].description),
+                                    separator(),
+                                    text("Query status: Hardware adapters will be queried on next tab.") | color(Color::GreenLight),
+                                }) | flex,
+                            }),
+                        });
+                    });
+}
+
+/// \brief Tab 2: Hardware Adapters and Video Modes Query.
+/// \param[in,out] context
+///     Shared TUI state context.
+/// \param[in] onAdapterChanged
+///     Callback invoked when a different adapter is chosen.
+/// \param[in] onModeChanged
+///     Callback invoked when a different video mode is chosen.
+/// \return FTXUI component for Tab 2.
+auto createAdapterVideoModeTab(TuiContext& context, std::function<void()> onAdapterChanged, std::function<void()> onModeChanged) -> ftxui::Component
+{
+    using namespace ftxui;
+
+    auto adapterRadiobox = Radiobox(&context.adapterNames, &context.selectedAdapter);
+    auto modeRadiobox = Radiobox(&context.videoModeLabels, &context.selectedVideoMode);
+
+    auto applyBtn = Button("Apply Video Mode to Window Settings",
+                           [&context, onModeChanged]
+                           {
+                               context.applySelectedVideoMode();
+                               if (onModeChanged)
+                               {
+                                   onModeChanged();
+                               }
+                           });
+
+    int lastAdapter = context.selectedAdapter;
+    int lastMode = context.selectedVideoMode;
+
+    auto container = Container::Vertical({
+        adapterRadiobox,
+        modeRadiobox,
+        applyBtn,
+    });
+
+    return Renderer(container,
+                    [=, &context]() mutable
+                    {
+                        if (context.selectedAdapter != lastAdapter)
+                        {
+                            lastAdapter = context.selectedAdapter;
+                            if (onAdapterChanged)
+                            {
+                                onAdapterChanged();
+                            }
+                        }
+
+                        if (context.selectedVideoMode != lastMode)
+                        {
+                            lastMode = context.selectedVideoMode;
+                            context.applySelectedVideoMode();
+                            if (onModeChanged)
+                            {
+                                onModeChanged();
+                            }
+                        }
+
+                        std::string adapterDetails;
+                        if (context.selectedAdapter >= 0 && context.selectedAdapter < static_cast<int>(context.adapters.size()))
+                        {
+                            adapterDetails = context.adapters[context.selectedAdapter].details;
+                        }
+
+                        return vbox({
+                            text("2. Hardware Adapters & Display Video Modes") | bold | color(Color::Cyan),
+                            text("Queried real devices and supported display modes for: " + context.availableSystems[context.selectedRenderSystem].name) | dim,
+                            separator(),
+                            hbox({
+                                // Left: Adapters
+                                vbox({
+                                    text("Detected Adapters (GPUs):") | bold,
+                                    adapterRadiobox->Render(),
+                                    separator(),
+                                    text("Device Information:") | bold,
+                                    paragraph(adapterDetails) | color(Color::GreenLight),
+                                }) | flex,
+                                separator(),
+                                // Right: Video Modes
+                                vbox({
+                                    text("Available Video Modes (Resolution & Refresh Rate):") | bold,
+                                    modeRadiobox->Render() | vscroll_indicator | frame | size(HEIGHT, LESS_THAN, 12),
+                                    separator(),
+                                    applyBtn->Render() | center,
+                                }) | flex,
+                            }),
+                        });
+                    });
+}
+
+/// \brief Tab 3: Render System Specific Settings.
+/// \param[in,out] context
+///     Shared TUI state context.
+/// \return FTXUI component for Tab 3.
+auto createRenderSettingsTab(TuiContext& context) -> ftxui::Component
+{
+    using namespace ftxui;
+
+    auto cbValidation = Checkbox("Enable Validation Layers / Debug Runtime", &context.enableValidation);
+    auto cbDebug = Checkbox("Enable Debug Output Messages", &context.enableDebugOutput);
+    auto cbLowPower = Checkbox("Prefer Low-Power / Integrated GPU", &context.preferIntegratedGpu);
+    auto cbTearing = Checkbox("Enable Tearing / Variable Refresh Rate", &context.enableTearing);
+    auto cbDxil = Checkbox("Enable Modern DXIL Shader Compiler", &context.enableDxil);
+    auto cbCore = Checkbox("OpenGL Core Profile (vs Compatibility)", &context.coreProfile);
+    auto cbVsync = Checkbox("Enable Vertical Sync (V-Sync)", &context.vsync);
+
+    auto container = Container::Vertical({
+        cbValidation,
+        cbDebug,
+        cbLowPower,
+        cbTearing,
+        cbDxil,
+        cbCore,
+        cbVsync,
+    });
+
+    return Renderer(
+        container,
+        [=, &context]
+        {
+            API const currentApi = context.availableSystems[context.selectedRenderSystem].api;
+            Elements apiOptions;
+
+            if (currentApi == API::Metal)
+            {
+                apiOptions.push_back(cbValidation->Render());
+                apiOptions.push_back(cbLowPower->Render());
+                apiOptions.push_back(cbVsync->Render());
+                apiOptions.push_back(text("Note: Metal validation enables GPU runtime diagnostics in macOS.") | dim);
+            }
+            else if (currentApi == API::Vulkan)
+            {
+                apiOptions.push_back(cbValidation->Render());
+                apiOptions.push_back(cbLowPower->Render());
+                apiOptions.push_back(cbVsync->Render());
+                apiOptions.push_back(text("Note: Requires VK_LAYER_KHRONOS_validation installed on system.") | dim);
+            }
+            else if (currentApi == API::OpenGL4)
+            {
+                apiOptions.push_back(cbCore->Render());
+                apiOptions.push_back(cbDebug->Render());
+                apiOptions.push_back(cbVsync->Render());
+            }
+            else if (currentApi == API::D3D12)
+            {
+                apiOptions.push_back(cbValidation->Render());
+                apiOptions.push_back(cbDxil->Render());
+                apiOptions.push_back(cbTearing->Render());
+                apiOptions.push_back(cbVsync->Render());
+            }
+
+            return vbox({
+                text("3. Render System Specific Settings (" + context.availableSystems[context.selectedRenderSystem].name + ")") | bold | color(Color::Cyan),
+                text(context.availableSystems[context.selectedRenderSystem].description) | dim,
+                separator(),
+                vbox(std::move(apiOptions)),
+            });
+        });
+}
+
+/// \brief Tab 4: Visualisation Settings.
+/// \param[in,out] context
+///     Shared TUI state context.
+/// \return FTXUI component for Tab 4.
+auto createVisualisationTab(TuiContext& context) -> ftxui::Component
+{
+    using namespace ftxui;
+
+    auto msaaRadiobox = Radiobox(&context.msaaOptions, &context.selectedMsaa);
+    auto fpsRadiobox = Radiobox(&context.fpsOptions, &context.selectedFps);
+    auto themeRadiobox = Radiobox(&context.themeOptions, &context.selectedTheme);
+
+    auto container = Container::Vertical({
+        msaaRadiobox,
+        fpsRadiobox,
+        themeRadiobox,
+    });
+
+    return Renderer(container,
+                    [=]
+                    {
+                        return vbox({
+                            text("4. Visualisation Parameters") | bold | color(Color::Cyan),
+                            separator(),
+                            hbox({
+                                vbox({
+                                    text("Multisample Anti-Aliasing (MSAA):") | bold | color(Color::Cyan),
+                                    separator(),
+                                    msaaRadiobox->Render(),
+                                }) | flex,
+                                separator(),
+                                vbox({
+                                    text("Target Refresh Rate:") | bold | color(Color::Cyan),
+                                    separator(),
+                                    fpsRadiobox->Render(),
+                                }) | flex,
+                                separator(),
+                                vbox({
+                                    text("Clear Color & Theme:") | bold | color(Color::Cyan),
+                                    separator(),
+                                    themeRadiobox->Render(),
+                                }) | flex,
+                            }),
+                        });
+                    });
+}
+
+/// \brief Tab 5: Window Configuration and Launch Summary.
+/// \param[in,out] context
+///     Shared TUI state context.
+/// \param[in] onLaunch
+///     Callback triggered to launch the window.
+/// \param[in] onReturn
+///     Callback triggered to return to earlier settings.
+/// \param[in] onExit
+///     Callback triggered to cancel/exit.
+/// \return FTXUI component for Tab 5.
+auto createWindowSummaryTab(TuiContext& context, std::function<void()> onLaunch, std::function<void()> onReturn, std::function<void()> onExit)
+    -> ftxui::Component
+{
+    using namespace ftxui;
+
+    auto inputTitle = Input(&context.windowTitle, "Window Title");
+    auto inputWidth = Input(&context.widthStr, "Width");
+    auto inputHeight = Input(&context.heightStr, "Height");
+    auto inputPosX = Input(&context.startXStr, "Start X");
+    auto inputPosY = Input(&context.startYStr, "Start Y");
+    auto cbFullscreen = Checkbox("Start in Full Screen Mode", &context.isFullscreen);
+    auto cbVisible = Checkbox("Initially Visible", &context.isVisible);
+    auto depthRadiobox = Radiobox(&context.colourDepthOptions, &context.selectedColourDepth);
+
+    auto launchBtn = Button(" Launch Window ", onLaunch, ButtonOption::Animated(Color::Green));
+    auto returnBtn = Button(" Return to Settings ", onReturn);
+    auto exitBtn = Button(" Exit without Launching ", onExit);
+
+    auto container = Container::Vertical({
+        inputTitle,
+        inputWidth,
+        inputHeight,
+        inputPosX,
+        inputPosY,
+        depthRadiobox,
+        cbFullscreen,
+        cbVisible,
+        Container::Horizontal({launchBtn, returnBtn, exitBtn}),
+    });
+
+    return Renderer(container,
+                    [=, &context]
+                    {
+                        std::string const adapterName =
+                            (!context.adapterNames.empty() && context.selectedAdapter < static_cast<int>(context.adapterNames.size()))
+                                ? context.adapterNames[context.selectedAdapter]
+                                : "Default GPU";
+
+                        std::string const modeStr =
+                            (!context.videoModeLabels.empty() && context.selectedVideoMode < static_cast<int>(context.videoModeLabels.size()))
+                                ? context.videoModeLabels[context.selectedVideoMode]
+                                : (context.widthStr + " x " + context.heightStr);
+
+                        return vbox({
+                            text("5. Window Setup & Configuration Summary") | bold | color(Color::Cyan),
+                            separator(),
+                            hbox({
+                                // Left: Window Parameters
+                                vbox({
+                                    text("Window Configuration:") | bold | color(Color::GreenLight),
+                                    separator(),
+                                    hbox(text("Title:   ") | bold, inputTitle->Render() | border | size(WIDTH, GREATER_THAN, 24)),
+                                    hbox({
+                                        text("Width:   ") | bold,
+                                        inputWidth->Render() | border | size(WIDTH, EQUAL, 8),
+                                        text(" Height: ") | bold,
+                                        inputHeight->Render() | border | size(WIDTH, EQUAL, 8),
+                                    }),
+                                    hbox({
+                                        text("Start X: ") | bold,
+                                        inputPosX->Render() | border | size(WIDTH, EQUAL, 8),
+                                        text(" Start Y: ") | bold,
+                                        inputPosY->Render() | border | size(WIDTH, EQUAL, 8),
+                                    }),
+                                    text("Colour Depth:") | bold,
+                                    depthRadiobox->Render(),
+                                    cbFullscreen->Render(),
+                                    cbVisible->Render(),
+                                }) | flex,
+                                separator(),
+                                // Right: Summary Overview
+                                vbox({
+                                    text("Hardware & Backend Review:") | bold | color(Color::Yellow),
+                                    separator(),
+                                    text("  • Render API:   " + context.availableSystems[context.selectedRenderSystem].name) | bold,
+                                    text("  • GPU Adapter:  " + adapterName),
+                                    text("  • Video Mode:   " + modeStr),
+                                    text("  • Anti-Alias:   " + context.msaaOptions[context.selectedMsaa]),
+                                    text("  • Target FPS:   " + context.fpsOptions[context.selectedFps]),
+                                    text("  • View Theme:   " + context.themeOptions[context.selectedTheme]),
+                                    text(std::string("  • V-Sync:       ") + (context.vsync ? "Enabled" : "Disabled")),
+                                    text(std::string("  • Validation:   ") + (context.enableValidation ? "Enabled" : "Disabled")),
+                                }) | border |
+                                    flex,
+                            }),
+                            separator(),
+                            hbox({
+                                launchBtn->Render() | color(Color::GreenLight) | bold,
+                                text("  "),
+                                returnBtn->Render(),
+                                text("  "),
+                                exitBtn->Render() | color(Color::RedLight),
+                            }) | center,
+                        });
+                    });
+}
+
+/// \brief Create the global navigation bar across all tabs.
+/// \param[in,out] context
+///     Shared TUI state context.
+/// \param[in] numTabs
+///     Total number of tabs.
+/// \param[in] onLaunch
+///     Launch callback.
+/// \param[in] onCancel
+///     Cancel callback.
+/// \return FTXUI component for the navigation bar.
+auto createNavigationBar(TuiContext& context, int const numTabs, std::function<void()> onLaunch, std::function<void()> onCancel) -> ftxui::Component
+{
+    using namespace ftxui;
+
+    auto prevBtn = Button(" < Previous ", [&context] { context.activeTab = std::max(0, context.activeTab - 1); });
+    auto nextBtn = Button(" Next > ", [&context, numTabs] { context.activeTab = std::min(numTabs - 1, context.activeTab + 1); });
+    auto launchBtn = Button(" Launch Window ", onLaunch);
+    auto exitBtn = Button(" Cancel / Exit ", onCancel);
+
+    return Container::Horizontal({
+        prevBtn,
+        nextBtn,
+        launchBtn,
+        exitBtn,
+    });
+}
+
+} // namespace
 
 auto Tui::run(VisualisationConfig const& initial) -> std::optional<VisualisationConfig>
 {
     using namespace ftxui;
 
+    TuiContext context;
     auto [availableSystems, renderSystemNames, selectedRenderSystem] = getRenderSystemsInfo(initial.selectedApi);
+    context.availableSystems = std::move(availableSystems);
+    context.renderSystemNames = std::move(renderSystemNames);
+    context.selectedRenderSystem = selectedRenderSystem;
 
-    // Detected Monitors
-    std::vector<std::string> detected_monitors;
-    std::uint16_t primary_monitor_width = 1920;
-    std::uint16_t primary_monitor_height = 1080;
-    bool found_primary = false;
-    for (auto const& monitor : gfx::os::enumerateMonitors())
-    {
-        detected_monitors.push_back(conf::fmt::format("{}", monitor));
-        if (monitor.primary() || !found_primary)
-        {
-            primary_monitor_width = static_cast<std::uint16_t>(monitor.width());
-            primary_monitor_height = static_cast<std::uint16_t>(monitor.height());
-            if (monitor.primary())
-            {
-                found_primary = true;
-            }
-        }
-    }
+    // Query hardware adapters and video modes for the active API
+    context.refreshAdaptersAndModes();
 
-    // Window options state
-    std::string window_title = initial.windowConfig.windowName;
-    std::string width_str = std::to_string(initial.windowConfig.width);
-    std::string height_str = std::to_string(initial.windowConfig.height);
-    std::string start_x_str = std::to_string(initial.windowConfig.startX);
-    std::string start_y_str = std::to_string(initial.windowConfig.startY);
+    // Initial window state
+    context.windowTitle = initial.windowConfig.windowName;
+    context.widthStr = std::to_string(initial.windowConfig.width);
+    context.heightStr = std::to_string(initial.windowConfig.height);
+    context.startXStr = std::to_string(initial.windowConfig.startX);
+    context.startYStr = std::to_string(initial.windowConfig.startY);
+    context.selectedColourDepth = (initial.windowConfig.colourDepth == 16 ? 2 : (initial.windowConfig.colourDepth == 24 ? 1 : 0));
+    context.isFullscreen = initial.windowConfig.fullScreen;
+    context.isVisible = initial.windowConfig.visible;
 
-    std::vector<ResPreset> const presets = {
-        {       "800 x 600 (SVGA)",  800,  600},
-        {       "1024 x 768 (XGA)", 1024,  768},
-        {   "1280 x 720 (720p HD)", 1280,  720},
-        {"1920 x 1080 (1080p FHD)", 1920, 1080},
-        {"2560 x 1440 (1440p QHD)", 2560, 1440},
-        {   "3840 x 2160 (4K UHD)", 3840, 2160},
-        {                 "Custom",    0,    0},
-    };
-    std::vector<std::string> preset_labels;
-    for (auto const& p : presets)
-    {
-        preset_labels.push_back(p.label);
-    }
-    int selected_preset = static_cast<int>(presets.size()) - 1; // Default to Custom
-    for (std::size_t i = 0; i < presets.size() - 1; ++i)
-    {
-        if (presets[i].width == initial.windowConfig.width && presets[i].height == initial.windowConfig.height)
-        {
-            selected_preset = static_cast<int>(i);
-            break;
-        }
-    }
-
-    std::vector<std::string> colour_depth_options = {
-        "32-bit (RGBA8888)",
-        "24-bit (RGB888)",
-        "16-bit (RGB565)",
-    };
-    int selected_colour_depth = 0;
-    if (initial.windowConfig.colourDepth == 16)
-    {
-        selected_colour_depth = 2;
-    }
-    else if (initial.windowConfig.colourDepth == 24)
-    {
-        selected_colour_depth = 1;
-    }
-
-    bool is_fullscreen = initial.windowConfig.fullScreen;
-    bool is_visible = initial.windowConfig.visible;
-
-    // Render System settings state
-    bool enable_validation = initial.enableValidationLayers;
-    bool enable_debug_output = initial.enableDebugOutput;
-    bool prefer_integrated_gpu = initial.preferIntegratedGpu;
-    bool enable_tearing = initial.enableTearing;
-    bool enable_dxil = initial.enableDxil;
-    bool core_profile = initial.coreProfile;
-    bool vsync = initial.vsync;
-
-    // Visualisation settings state
-    std::vector<std::string> msaa_options = {"1x (Disabled)", "2x MSAA", "4x MSAA (Recommended)", "8x MSAA (High Quality)"};
-    std::vector<int> const msaa_values = {1, 2, 4, 8};
-    int selected_msaa = 0;
-    for (std::size_t i = 0; i < msaa_values.size(); ++i)
-    {
-        if (msaa_values[i] == initial.msaaSamples)
-        {
-            selected_msaa = static_cast<int>(i);
-            break;
-        }
-    }
-
-    std::vector<std::string> fps_options = {
-        "30 FPS (Power Saver)", "60 FPS (Standard)", "120 FPS (High Refresh)", "144 FPS (Competitive)", "Unlimited (Uncapped)"};
-    std::vector<int> const fps_values = {30, 60, 120, 144, 0};
-    int selected_fps = 1; // Default to 60 FPS
-    for (std::size_t i = 0; i < fps_values.size(); ++i)
-    {
-        if (fps_values[i] == initial.targetFps)
-        {
-            selected_fps = static_cast<int>(i);
-            break;
-        }
-    }
-
-    std::vector<std::string> theme_options = {"Dark Slate (#1E222B)", "Midnight Black (#000000)", "Cornflower Blue (#6495ED)", "Graphite Gray (#2E3440)"};
-    int selected_theme = 0;
-    for (std::size_t i = 0; i < theme_options.size(); ++i)
-    {
-        if (theme_options[i].find(initial.theme) != std::string::npos)
-        {
-            selected_theme = static_cast<int>(i);
-            break;
-        }
-    }
-
-    // Navigation and screen state
-    int activeTab = 0;
-    std::vector<std::string> tabTitles = {
-        " 1. Render System ",
-        " 2. Window Setup ",
-        " 3. Render Settings ",
-        " 4. Visualisation ",
-        " 5. Summary & Launch ",
-    };
-    bool confirmed = false;
+    // Initial render and vis flags
+    context.enableValidation = initial.enableValidationLayers;
+    context.enableDebugOutput = initial.enableDebugOutput;
+    context.preferIntegratedGpu = initial.preferIntegratedGpu;
+    context.enableTearing = initial.enableTearing;
+    context.enableDxil = initial.enableDxil;
+    context.coreProfile = initial.coreProfile;
+    context.vsync = initial.vsync;
 
     auto screen = ScreenInteractive::TerminalOutput();
 
-    // -- Tab 0: Render System Components
-    auto render_system_radiobox = Radiobox(&renderSystemNames, &selectedRenderSystem);
-    auto tab0_container = Container::Vertical({render_system_radiobox});
+    auto onLaunch = [&context, &screen]
+    {
+        context.confirmed = true;
+        screen.Exit();
+    };
 
-    // -- Tab 1: Window Setup Components
-    auto input_title = Input(&window_title, "Window Title");
-    auto preset_radiobox = Radiobox(&preset_labels, &selected_preset);
-    auto input_width = Input(&width_str, "Width");
-    auto input_height = Input(&height_str, "Height");
-    auto input_pos_x = Input(&start_x_str, "Start X");
-    auto input_pos_y = Input(&start_y_str, "Start Y");
-    auto colour_depth_radiobox = Radiobox(&colour_depth_options, &selected_colour_depth);
-    auto checkbox_fullscreen = Checkbox("Full Screen Mode", &is_fullscreen);
-    auto checkbox_visible = Checkbox("Initially Visible", &is_visible);
-    auto fit_monitor_btn = Button("Fit to Primary Display",
-                                  [&]
-                                  {
-                                      width_str = std::to_string(primary_monitor_width);
-                                      height_str = std::to_string(primary_monitor_height);
-                                      selected_preset = static_cast<int>(presets.size()) - 1; // Custom
-                                  });
+    auto onCancel = [&context, &screen]
+    {
+        context.confirmed = false;
+        screen.Exit();
+    };
 
-    auto tab1_container = Container::Vertical({
-        input_title,
-        preset_radiobox,
-        input_width,
-        input_height,
-        input_pos_x,
-        input_pos_y,
-        colour_depth_radiobox,
-        checkbox_fullscreen,
-        checkbox_visible,
-        fit_monitor_btn,
+    auto onReturn = [&context] { context.activeTab = 0; };
+
+    // Build tabs using single responsibility principle
+    auto tab0 = createRenderSystemTab(context, [&context] { context.refreshAdaptersAndModes(); });
+    auto tab1 = createAdapterVideoModeTab(context, [&context] { context.updateVideoModesForSelectedAdapter(); }, [] {});
+    auto tab2 = createRenderSettingsTab(context);
+    auto tab3 = createVisualisationTab(context);
+    auto tab4 = createWindowSummaryTab(context, onLaunch, onReturn, onCancel);
+
+    auto tabContent = Container::Tab({tab0, tab1, tab2, tab3, tab4}, &context.activeTab);
+    auto tabMenu = Menu(&context.tabTitles, &context.activeTab, MenuOption::HorizontalAnimated());
+    auto navBar = createNavigationBar(context, static_cast<int>(context.tabTitles.size()), onLaunch, onCancel);
+
+    auto mainLayout = Container::Vertical({
+        tabMenu,
+        tabContent,
+        navBar,
     });
 
-    // Update width & height when preset changes
-    int last_preset = selected_preset;
-    auto tab1_renderer = Renderer(tab1_container,
-                                  [&]
-                                  {
-                                      if (selected_preset != last_preset)
-                                      {
-                                          last_preset = selected_preset;
-                                          if (selected_preset >= 0 && selected_preset < static_cast<int>(presets.size()) - 1)
-                                          {
-                                              width_str = std::to_string(presets[selected_preset].width);
-                                              height_str = std::to_string(presets[selected_preset].height);
-                                          }
-                                      }
+    auto rootRenderer = Renderer(mainLayout,
+                                 [&]
+                                 {
+                                     return vbox({
+                                                createHeader(),
+                                                tabMenu->Render() | center,
+                                                separator(),
+                                                tabContent->Render() | flex,
+                                                separator(),
+                                                navBar->Render(),
+                                                createFooter(),
+                                            }) |
+                                            border;
+                                 });
 
-                                      Elements monitor_elements;
-                                      if (detected_monitors.empty())
-                                      {
-                                          monitor_elements.push_back(text("No external monitors enumerated") | dim);
-                                      }
-                                      else
-                                      {
-                                          for (auto const& m : detected_monitors)
-                                          {
-                                              monitor_elements.push_back(text("  • " + m) | color(Color::GreenLight));
-                                          }
-                                      }
+    auto rootWithEvents = CatchEvent(rootRenderer,
+                                     [&](Event event)
+                                     {
+                                         if (event == Event::Escape)
+                                         {
+                                             context.confirmed = false;
+                                             screen.Exit();
+                                             return true;
+                                         }
+                                         return false;
+                                     });
 
-                                      return vbox({
-                                          hbox({
-                                              // Left column: Window ID & Dimensions
-                                              vbox({
-                                                  text("Window Identity & Sizing") | bold | color(Color::Cyan),
-                                                  separator(),
-                                                  hbox(text("Title: ") | bold, input_title->Render() | border | size(WIDTH, GREATER_THAN, 25)),
-                                                  separator(),
-                                                  text("Resolution Presets:") | bold,
-                                                  preset_radiobox->Render(),
-                                                  separator(),
-                                                  hbox({
-                                                      text("Width:  ") | bold,
-                                                      input_width->Render() | border | size(WIDTH, EQUAL, 10),
-                                                      text("  Height: ") | bold,
-                                                      input_height->Render() | border | size(WIDTH, EQUAL, 10),
-                                                  }),
-                                              }) | flex,
-                                              separator(),
-                                              // Right column: Position & Attributes
-                                              vbox({
-                                                  text("Placement & Mode") | bold | color(Color::Cyan),
-                                                  separator(),
-                                                  hbox({
-                                                      text("Start X: ") | bold,
-                                                      input_pos_x->Render() | border | size(WIDTH, EQUAL, 8),
-                                                      text("  Start Y: ") | bold,
-                                                      input_pos_y->Render() | border | size(WIDTH, EQUAL, 8),
-                                                  }),
-                                                  separator(),
-                                                  text("Colour Depth:") | bold,
-                                                  colour_depth_radiobox->Render(),
-                                                  separator(),
-                                                  checkbox_fullscreen->Render(),
-                                                  checkbox_visible->Render(),
-                                                  separator(),
-                                                  text("Detected Displays:") | bold,
-                                                  vbox(std::move(monitor_elements)),
-                                                  fit_monitor_btn->Render(),
-                                              }) | flex,
-                                          }),
-                                      });
-                                  });
+    screen.Loop(rootWithEvents);
 
-    // -- Tab 2: Render System Specific Settings
-    auto cb_validation = Checkbox("Enable Validation Layers / Debug Runtime", &enable_validation);
-    auto cb_debug_output = Checkbox("Enable Debug Output Messages", &enable_debug_output);
-    auto cb_lowpower = Checkbox("Prefer Low-Power / Integrated GPU", &prefer_integrated_gpu);
-    auto cb_tearing = Checkbox("Enable Tearing / Variable Refresh Rate", &enable_tearing);
-    auto cb_dxil = Checkbox("Enable Modern DXIL Shader Compiler", &enable_dxil);
-    auto cb_core = Checkbox("OpenGL Core Profile (vs Compatibility)", &core_profile);
-    auto cb_vsync = Checkbox("Enable Vertical Sync (V-Sync)", &vsync);
-
-    auto tab2_container = Container::Vertical({
-        cb_validation,
-        cb_debug_output,
-        cb_lowpower,
-        cb_tearing,
-        cb_dxil,
-        cb_core,
-        cb_vsync,
-    });
-
-    auto tab2_renderer = Renderer(tab2_container,
-                                  [&]
-                                  {
-                                      API current_api = availableSystems[selectedRenderSystem].api;
-                                      Elements specific_options;
-
-                                      if (current_api == API::Metal)
-                                      {
-                                          specific_options.push_back(cb_validation->Render());
-                                          specific_options.push_back(cb_lowpower->Render());
-                                          specific_options.push_back(cb_vsync->Render());
-                                          specific_options.push_back(text("Note: Metal API validation enables GPU trace diagnostics in macOS.") | dim);
-                                      }
-                                      else if (current_api == API::Vulkan)
-                                      {
-                                          specific_options.push_back(cb_validation->Render());
-                                          specific_options.push_back(cb_lowpower->Render());
-                                          specific_options.push_back(cb_vsync->Render());
-                                          specific_options.push_back(text("Note: Requires VK_LAYER_KHRONOS_validation installed on host.") | dim);
-                                      }
-                                      else if (current_api == API::OpenGL4)
-                                      {
-                                          specific_options.push_back(cb_core->Render());
-                                          specific_options.push_back(cb_debug_output->Render());
-                                          specific_options.push_back(cb_vsync->Render());
-                                      }
-                                      else if (current_api == API::D3D12)
-                                      {
-                                          specific_options.push_back(cb_validation->Render());
-                                          specific_options.push_back(cb_dxil->Render());
-                                          specific_options.push_back(cb_tearing->Render());
-                                          specific_options.push_back(cb_vsync->Render());
-                                      }
-
-                                      return vbox({
-                                          text("Configuring backend: " + availableSystems[selectedRenderSystem].name) | bold | color(Color::Cyan),
-                                          text(availableSystems[selectedRenderSystem].description) | dim,
-                                          separator(),
-                                          vbox(std::move(specific_options)),
-                                      });
-                                  });
-
-    // -- Tab 3: Visualisation Settings Components
-    auto msaa_radiobox = Radiobox(&msaa_options, &selected_msaa);
-    auto fps_radiobox = Radiobox(&fps_options, &selected_fps);
-    auto theme_radiobox = Radiobox(&theme_options, &selected_theme);
-
-    auto tab3_container = Container::Vertical({
-        msaa_radiobox,
-        fps_radiobox,
-        theme_radiobox,
-    });
-
-    auto tab3_renderer = Renderer(tab3_container,
-                                  [&]
-                                  {
-                                      return hbox({
-                                          vbox({
-                                              text("Multisample Anti-Aliasing (MSAA)") | bold | color(Color::Cyan),
-                                              separator(),
-                                              msaa_radiobox->Render(),
-                                          }) | flex,
-                                          separator(),
-                                          vbox({
-                                              text("Target Refresh Rate") | bold | color(Color::Cyan),
-                                              separator(),
-                                              fps_radiobox->Render(),
-                                          }) | flex,
-                                          separator(),
-                                          vbox({
-                                              text("Clear Color & Theme") | bold | color(Color::Cyan),
-                                              separator(),
-                                              theme_radiobox->Render(),
-                                          }) | flex,
-                                      });
-                                  });
-
-    // -- Tab 4: Summary & Launch Components
-    auto launch_summary_btn = Button(
-        "Launch Window",
-        [&]
-        {
-            confirmed = true;
-            screen.Exit();
-        },
-        ButtonOption::Animated(Color::Green));
-
-    auto edit_summary_btn = Button("Return to Settings", [&] { activeTab = 0; });
-    auto cancel_summary_btn = Button("Exit Without Launching", [&] { screen.Exit(); });
-
-    auto tab4_container = Container::Horizontal({
-        launch_summary_btn,
-        edit_summary_btn,
-        cancel_summary_btn,
-    });
-
-    auto tab4_renderer = Renderer(tab4_container,
-                                  [&]
-                                  {
-                                      std::uint16_t const final_width = parseUInt16(width_str, initial.windowConfig.width);
-                                      std::uint16_t const final_height = parseUInt16(height_str, initial.windowConfig.height);
-                                      std::uint16_t const final_x = parseUInt16(start_x_str, initial.windowConfig.startX);
-                                      std::uint16_t const final_y = parseUInt16(start_y_str, initial.windowConfig.startY);
-                                      std::uint16_t const final_depth = (selected_colour_depth == 2 ? 16 : (selected_colour_depth == 1 ? 24 : 32));
-
-                                      return vbox({
-                                          text("Review Configuration Before Launch") | bold | color(Color::GreenLight),
-                                          separator(),
-                                          hbox({
-                                              // Left Card: Render System & Window
-                                              vbox({
-                                                  text("Render Backend & Target:") | bold | color(Color::Cyan),
-                                                  text("  • API:          " + availableSystems[selectedRenderSystem].name) | bold,
-                                                  text("  • Window Title: " + window_title),
-                                                  text("  • Resolution:   " + std::to_string(final_width) + " x " + std::to_string(final_height) + " px"),
-                                                  text("  • Position:     (" + std::to_string(final_x) + ", " + std::to_string(final_y) + ")"),
-                                                  text("  • Colour Depth: " + std::to_string(final_depth) + " bits"),
-                                                  text(std::string("  • Fullscreen:   ") + (is_fullscreen ? "Yes" : "No")),
-                                                  text(std::string("  • Visible:      ") + (is_visible ? "Yes" : "No")),
-                                              }) | border |
-                                                  flex,
-                                              // Right Card: Vis & Features
-                                              vbox({
-                                                  text("Visualisation & Graphics Options:") | bold | color(Color::Cyan),
-                                                  text(std::string("  • Validation:   ") + (enable_validation ? "Enabled" : "Disabled")),
-                                                  text(std::string("  • V-Sync:       ") + (vsync ? "Enabled" : "Disabled")),
-                                                  text(std::string("  • Low-Power:    ") + (prefer_integrated_gpu ? "Enabled" : "Disabled")),
-                                                  text("  • Anti-Aliasing " + msaa_options[selected_msaa]),
-                                                  text("  • Refresh Rate: " + fps_options[selected_fps]),
-                                                  text("  • Clear Theme:  " + theme_options[selected_theme]),
-                                              }) | border |
-                                                  flex,
-                                          }),
-                                          separator(),
-                                          hbox({
-                                              launch_summary_btn->Render() | color(Color::GreenLight) | bold,
-                                              text("  "),
-                                              edit_summary_btn->Render(),
-                                              text("  "),
-                                              cancel_summary_btn->Render() | color(Color::RedLight),
-                                          }) | center,
-                                      });
-                                  });
-
-    // -- Tab 0 full renderer
-    auto tab0_renderer = Renderer(tab0_container,
-                                  [&]
-                                  {
-                                      return vbox({
-                                          text("Select Active Graphics Render System:") | bold | color(Color::Cyan),
-                                          separator(),
-                                          hbox({
-                                              vbox({
-                                                  text("Available Hardware Backends:") | bold,
-                                                  render_system_radiobox->Render(),
-                                              }) | flex,
-                                              separator(),
-                                              vbox({
-                                                  text("Backend Description:") | bold,
-                                                  text(availableSystems[selectedRenderSystem].name) | bold | color(Color::Yellow),
-                                                  separator(),
-                                                  paragraph(availableSystems[selectedRenderSystem].description),
-                                              }) | flex,
-                                          }),
-                                      });
-                                  });
-
-    // Master Tab Container
-    auto tab_content = Container::Tab(
-        {
-            tab0_renderer,
-            tab1_renderer,
-            tab2_renderer,
-            tab3_renderer,
-            tab4_renderer,
-        },
-        &activeTab);
-
-    // Global Menu & Navigation
-    auto tabMenu = Menu(&tabTitles, &activeTab, MenuOption::HorizontalAnimated());
-    auto prevBtn = Button(" < Previous ", [&] { activeTab = std::max(0, --activeTab); });
-    auto nextBtn = Button(" Next > ", [&] { activeTab = std::min(++activeTab, static_cast<int>(tabTitles.size()) - 1); });
-    auto launchBtn = Button(" Launch Window ",
-                            [&]
-                            {
-                                confirmed = true;
-                                screen.Exit();
-                            });
-    auto exitBtn = Button(" Cancel / Exit ",
-                          [&]
-                          {
-                              confirmed = false;
-                              screen.Exit();
-                          });
-    auto navBar = Container::Horizontal({prevBtn, nextBtn, launchBtn, exitBtn});
-    auto main_layout = Container::Vertical({tabMenu, tab_content, navBar});
-
-    auto root_renderer = Renderer(main_layout,
-                                  [&]
-                                  {
-                                      return vbox({
-                                                 // Header Banner
-                                                 hbox({
-                                                     text(" MORPHEUS ") | bold | inverted | color(Color::Cyan),
-                                                     text(" Visualisation & Window Setup ") | bold | color(Color::White),
-                                                     filler(),
-                                                     text("[FTXUI] ") | dim,
-                                                 }),
-                                                 separator(),
-                                                 // Tab Bar
-                                                 tabMenu->Render() | center,
-                                                 separator(),
-                                                 // Page Content
-                                                 tab_content->Render() | flex,
-                                                 separator(),
-                                                 // Bottom Controls
-                                                 hbox({
-                                                     prevBtn->Render(),
-                                                     text(" "),
-                                                     nextBtn->Render(),
-                                                     filler(),
-                                                     launchBtn->Render() | color(Color::GreenLight) | bold,
-                                                     text(" "),
-                                                     exitBtn->Render() | color(Color::RedLight),
-                                                 }),
-                                                 // Keyboard Help
-                                                 hbox({
-                                                     text("Keys: ") | dim,
-                                                     text("← / → / Tab") | bold | color(Color::Cyan),
-                                                     text(" Navigate Controls  |  ") | dim,
-                                                     text("Space / Enter") | bold | color(Color::Cyan),
-                                                     text(" Select/Toggle  |  ") | dim,
-                                                     text("Esc") | bold | color(Color::RedLight),
-                                                     text(" Cancel") | dim,
-                                                 }) | center,
-                                             }) |
-                                             border;
-                                  });
-
-    // Escape handler
-    auto root_with_events = CatchEvent(root_renderer,
-                                       [&](Event event)
-                                       {
-                                           if (event == Event::Escape)
-                                           {
-                                               confirmed = false;
-                                               screen.Exit();
-                                               return true;
-                                           }
-                                           return false;
-                                       });
-
-    screen.Loop(root_with_events);
-
-    if (!confirmed)
+    if (!context.confirmed)
     {
         return std::nullopt;
     }
 
     VisualisationConfig result = initial;
-    result.selectedApi = availableSystems[selectedRenderSystem].api;
-    result.renderSystemName = availableSystems[selectedRenderSystem].name;
+    result.selectedApi = context.availableSystems[context.selectedRenderSystem].api;
+    result.renderSystemName = context.availableSystems[context.selectedRenderSystem].name;
 
-    result.windowConfig.windowName = window_title;
-    result.windowConfig.width = parseUInt16(width_str, initial.windowConfig.width);
-    result.windowConfig.height = parseUInt16(height_str, initial.windowConfig.height);
-    result.windowConfig.startX = parseUInt16(start_x_str, initial.windowConfig.startX);
-    result.windowConfig.startY = parseUInt16(start_y_str, initial.windowConfig.startY);
-    result.windowConfig.colourDepth = (selected_colour_depth == 2 ? 16 : (selected_colour_depth == 1 ? 24 : 32));
-    result.windowConfig.fullScreen = is_fullscreen;
-    result.windowConfig.visible = is_visible;
+    result.windowConfig.windowName = context.windowTitle;
+    result.windowConfig.width = parseUInt16(context.widthStr, initial.windowConfig.width);
+    result.windowConfig.height = parseUInt16(context.heightStr, initial.windowConfig.height);
+    result.windowConfig.startX = parseUInt16(context.startXStr, initial.windowConfig.startX);
+    result.windowConfig.startY = parseUInt16(context.startYStr, initial.windowConfig.startY);
+    result.windowConfig.colourDepth = (context.selectedColourDepth == 2 ? 16 : (context.selectedColourDepth == 1 ? 24 : 32));
+    result.windowConfig.fullScreen = context.isFullscreen;
+    result.windowConfig.visible = context.isVisible;
 
-    result.enableValidationLayers = enable_validation;
-    result.enableDebugOutput = enable_debug_output;
-    result.preferIntegratedGpu = prefer_integrated_gpu;
-    result.enableTearing = enable_tearing;
-    result.enableDxil = enable_dxil;
-    result.coreProfile = core_profile;
-    result.vsync = vsync;
+    result.enableValidationLayers = context.enableValidation;
+    result.enableDebugOutput = context.enableDebugOutput;
+    result.preferIntegratedGpu = context.preferIntegratedGpu;
+    result.enableTearing = context.enableTearing;
+    result.enableDxil = context.enableDxil;
+    result.coreProfile = context.coreProfile;
+    result.vsync = context.vsync;
 
-    result.msaaSamples = msaa_values[selected_msaa];
-    result.targetFps = fps_values[selected_fps];
-    result.theme = theme_options[selected_theme];
+    result.msaaSamples = context.msaaValues[context.selectedMsaa];
+    result.targetFps = context.fpsValues[context.selectedFps];
+    result.theme = context.themeOptions[context.selectedTheme];
 
     return result;
 }
