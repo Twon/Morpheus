@@ -118,7 +118,7 @@ public:
     {
         auto const [event, next] = getNext();
         return std::visit(functional::Overload{
-            [](std::integral auto const value) { return boost::numeric_cast<Integer>(value); },
+            [](std::integral auto const value) -> Integer { return boost::numeric_cast<Integer>(value); },
             [](auto const) -> Integer { throwJsonException("Unable to convert to integral representation"); }
         }, *next);
     }
@@ -129,8 +129,8 @@ public:
     {
         auto const [event, next] = getNext();
         return std::visit(functional::Overload {
-            [](std::integral auto const value) { return boost::numeric_cast<Float>(value); },
-            [](std::floating_point auto const value)
+            [](std::integral auto const value) -> Float { return boost::numeric_cast<Float>(value); },
+            [](std::floating_point auto const value) -> Float
             {
                 if (std::isinf(value)) [[unlikely]]
                 {
