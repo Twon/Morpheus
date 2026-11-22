@@ -107,7 +107,7 @@ jobs:
             }
           - {
               name: "Ubuntu Clang-19 + libc++",
-              os: ubuntu-24.04, 
+              os: ubuntu-24.04,
               compiler:
                 {
                   type: CLANG,
