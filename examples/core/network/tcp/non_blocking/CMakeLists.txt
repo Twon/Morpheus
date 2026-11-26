@@ -1,0 +1,9 @@
+morpheus_add_executable(NAME non_blocking_client)
+target_include_directories(non_blocking_client PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_sources(non_blocking_client PRIVATE client.cpp)
+target_link_libraries(non_blocking_client PRIVATE morpheus::core)
+
+morpheus_add_executable(NAME non_blocking_server)
+target_include_directories(non_blocking_server PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+target_sources(non_blocking_server PRIVATE server.cpp)
+target_link_libraries(non_blocking_server PRIVATE morpheus::core)
