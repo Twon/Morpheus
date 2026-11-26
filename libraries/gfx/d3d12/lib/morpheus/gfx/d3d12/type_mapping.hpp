@@ -20,9 +20,9 @@ public:
         \return
             The underlying hardware pixel format which represents the user requested type in the hardware API.
      */
-    static DXGI_FORMAT map(pixel_format const format);
+    static DXGI_FORMAT map(PixelFormat const format);
 
-    static pixel_format map(const DXGI_FORMAT format);
+    static PixelFormat map(DXGI_FORMAT const format);
 
 private:
     /// \name Data Members
