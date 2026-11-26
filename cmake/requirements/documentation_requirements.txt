@@ -1,4 +1,4 @@
-breathe==4.36.0
+breathe==5.0.0
 exhale==0.3.7
 myst-parser==4.0.1
 Sphinx==8.2.3
