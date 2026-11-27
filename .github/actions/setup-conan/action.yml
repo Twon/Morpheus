@@ -51,6 +51,7 @@ runs:
 
         echo 'core.sources:download_urls=["origin", "https://c3i.jfrog.io/artifactory/conan-center-backup-sources/"]' >> .conan2/global.conf
         echo "tools.cmake.cmaketoolchain:generator = ${{ inputs.generator }}" >> .conan2/global.conf
+        echo "ftxui/*:tools.cmake.cmaketoolchain:generator = Ninja" >> .conan2/global.conf
 
         if [[ "${{ runner.os }}" != "Windows" ]]; then
           echo "tools.system.package_manager:mode = install" >> .conan2/global.conf
