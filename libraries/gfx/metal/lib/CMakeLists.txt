@@ -14,6 +14,8 @@ target_include_directories(MorpheusGfxMetal
 target_link_libraries(MorpheusGfxMetal
     PUBLIC
         morpheus::gfx::platform
+        "-framework Metal"
+        "-framework QuartzCore"
 )
 
 add_subdirectory(morpheus/gfx/metal)

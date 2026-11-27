@@ -4,6 +4,8 @@ morpheus_add_library(
     FOLDER "Libraries/Vis"
 )
 
+find_package(ftxui REQUIRED)
+
 target_include_directories(MorpheusVisualisation
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
@@ -18,6 +20,8 @@ target_link_libraries(MorpheusVisualisation
         morpheus::gfx::platform
         $<$<BOOL:${MORPHEUS_RENDER_SYSTEM_OPENGL}>:morpheus::gfx::gl4>
         $<$<BOOL:${MORPHEUS_RENDER_SYSTEM_VULKAN}>:morpheus::gfx::vulkan>
+    PRIVATE
+        ftxui::ftxui
 )
 
 target_compile_definitions(MorpheusVisualisation

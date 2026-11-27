@@ -6,6 +6,7 @@ morpheus_add_tests(
 target_sources(MorpheusVisualisationTests
     PRIVATE
         render_system_factory.tests.cpp
+        tui.tests.cpp
 )
 
 target_link_libraries(MorpheusVisualisationTests

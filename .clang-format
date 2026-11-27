@@ -223,6 +223,8 @@ UseTab:          Never
 #WrapNamespaceBodyWithEmptyLinesStyle: Always # Clang-20
 ---
 Language: ObjC
+AllowShortFunctionsOnASingleLine: None
+AllowShortBlocksOnASingleLine: Never
 BraceWrapping:
   AfterCaseLabel:  true
   AfterClass:      true
@@ -242,7 +244,10 @@ BraceWrapping:
   SplitEmptyFunction: false
   SplitEmptyRecord: false
   SplitEmptyNamespace: false
+BreakAfterReturnType: Automatic
 BreakBeforeBraces: Custom
+BreakConstructorInitializers: BeforeComma
+ColumnLimit:     160
 IndentWidth: 4
 ObjCBinPackProtocolList: Auto
 ObjCBlockIndentWidth: 4

@@ -10,7 +10,9 @@ target_include_directories(MacOSWindow
 
 target_link_libraries(MacOSWindow
     PRIVATE
+        morpheus::gfx::metal
         morpheus::gfx::platform
+        morpheus::vis
 )
 
 target_sources(MacOSWindow
